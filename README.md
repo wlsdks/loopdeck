@@ -673,7 +673,7 @@ Codex, or any MCP client through a stdio MCP server:
 prompt-coach mcp
 ```
 
-The MCP server exposes thirteen tools:
+The MCP server exposes fifteen tools:
 
 - `get_prompt_coach_status`: check whether the local archive is initialized,
   whether prompts have been captured, and which MCP tool to call next.
@@ -706,6 +706,10 @@ The MCP server exposes thirteen tools:
   (`prompt_improvement_drafts`). Returns metadata only (`draft_id`,
   `answers_count`, `changed_sections`, …) — the prompt body and the draft
   text are never echoed in the response. Local-only write tool.
+- `get_loopdeck_status`: check whether local Loopdeck loop snapshots exist and
+  return safe latest-loop metadata plus next actions.
+- `prepare_loop_brief`: prepare a copy-ready continuation prompt from the
+  latest local Loopdeck snapshot without returning prompt bodies or raw paths.
 - `prepare_agent_rewrite`: prepare one locally redacted prompt packet, local
   score metadata, local baseline draft, and rewrite contract so the active
   Claude Code/Codex/Gemini CLI session can semantically improve the prompt.

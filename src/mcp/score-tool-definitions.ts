@@ -8,6 +8,10 @@ import {
 } from "./agent-judge-tool-definitions.js";
 import { APPLY_CLARIFICATIONS_TOOL_DEFINITION } from "./apply-clarifications-tool.js";
 import { ASK_CLARIFYING_QUESTIONS_TOOL_DEFINITION } from "./ask-clarifying-questions-tool.js";
+import {
+  GET_LOOPDECK_STATUS_TOOL_DEFINITION,
+  PREPARE_LOOP_BRIEF_TOOL_DEFINITION,
+} from "./loop-tool-definitions.js";
 import { RECORD_CLARIFICATIONS_TOOL_DEFINITION } from "./record-clarifications-tool.js";
 
 export {
@@ -18,6 +22,10 @@ export {
   PREPARE_AGENT_JUDGE_BATCH_TOOL_DEFINITION,
   RECORD_AGENT_JUDGMENTS_TOOL_DEFINITION,
 } from "./agent-judge-tool-definitions.js";
+export {
+  GET_LOOPDECK_STATUS_TOOL_DEFINITION,
+  PREPARE_LOOP_BRIEF_TOOL_DEFINITION,
+} from "./loop-tool-definitions.js";
 
 type JsonValue =
   | string
@@ -854,6 +862,8 @@ export const PROMPT_COACH_MCP_TOOL_DEFINITIONS: readonly PromptCoachMcpToolDefin
     APPLY_CLARIFICATIONS_TOOL_DEFINITION,
     ASK_CLARIFYING_QUESTIONS_TOOL_DEFINITION,
     RECORD_CLARIFICATIONS_TOOL_DEFINITION,
+    GET_LOOPDECK_STATUS_TOOL_DEFINITION,
+    PREPARE_LOOP_BRIEF_TOOL_DEFINITION,
     SCORE_PROMPT_ARCHIVE_TOOL_DEFINITION,
     REVIEW_PROJECT_INSTRUCTIONS_TOOL_DEFINITION,
     PREPARE_AGENT_REWRITE_TOOL_DEFINITION,

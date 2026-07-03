@@ -40,6 +40,12 @@ describe("MCP stdio server", () => {
             name: "record_clarifications",
           }),
           expect.objectContaining({
+            name: "get_loopdeck_status",
+          }),
+          expect.objectContaining({
+            name: "prepare_loop_brief",
+          }),
+          expect.objectContaining({
             name: "score_prompt_archive",
           }),
           expect.objectContaining({
@@ -71,7 +77,7 @@ describe("MCP stdio server", () => {
 
     const tools = (response?.result as { tools: Array<unknown> }).tools;
 
-    expect(tools).toHaveLength(13);
+    expect(tools).toHaveLength(15);
     for (const tool of tools.filter(
       (tool) =>
         ![
@@ -193,6 +199,15 @@ describe("MCP stdio server", () => {
               next_prompt_template: expect.any(Object),
               practice_plan: expect.any(Object),
               top_gaps: expect.any(Object),
+              privacy: expect.any(Object),
+            }),
+          }),
+        }),
+        expect.objectContaining({
+          name: "prepare_loop_brief",
+          outputSchema: expect.objectContaining({
+            properties: expect.objectContaining({
+              prompt: expect.any(Object),
               privacy: expect.any(Object),
             }),
           }),

@@ -22,7 +22,9 @@ import {
   COACH_PROMPT_TOOL_DEFINITION,
   GET_PROMPT_COACH_STATUS_TOOL_DEFINITION,
   IMPROVE_PROMPT_TOOL_DEFINITION,
+  GET_LOOPDECK_STATUS_TOOL_DEFINITION,
   PREPARE_AGENT_REWRITE_TOOL_DEFINITION,
+  PREPARE_LOOP_BRIEF_TOOL_DEFINITION,
   PREPARE_AGENT_JUDGE_BATCH_TOOL_DEFINITION,
   PROMPT_COACH_MCP_TOOL_DEFINITIONS,
   RECORD_AGENT_REWRITE_TOOL_DEFINITION,
@@ -43,6 +45,10 @@ import {
   scorePromptArchiveTool,
   scorePromptTool,
 } from "./score-tool.js";
+import {
+  getLoopdeckStatusTool,
+  prepareLoopBriefTool,
+} from "./loop-tool.js";
 import type {
   PrepareAgentJudgeBatchToolArguments,
   RecordAgentJudgmentsToolArguments,
@@ -102,6 +108,8 @@ type PromptCoachToolResult =
   | ReturnType<typeof applyClarificationsTool>
   | Awaited<ReturnType<typeof askClarifyingQuestionsTool>>
   | ReturnType<typeof recordClarificationsTool>
+  | ReturnType<typeof getLoopdeckStatusTool>
+  | ReturnType<typeof prepareLoopBriefTool>
   | ReturnType<typeof scorePromptArchiveTool>
   | ReturnType<typeof reviewProjectInstructionsTool>
   | ReturnType<typeof prepareAgentRewriteTool>
@@ -138,6 +146,10 @@ const PROMPT_COACH_MCP_TOOL_HANDLERS: Record<string, PromptCoachToolHandler> = {
       args as RecordClarificationsToolArguments,
       options,
     ),
+  [GET_LOOPDECK_STATUS_TOOL_DEFINITION.name]: (args, options) =>
+    getLoopdeckStatusTool(args, options),
+  [PREPARE_LOOP_BRIEF_TOOL_DEFINITION.name]: (args, options) =>
+    prepareLoopBriefTool(args, options),
   [SCORE_PROMPT_ARCHIVE_TOOL_DEFINITION.name]: (args, options) =>
     scorePromptArchiveTool(args as ScorePromptArchiveToolArguments, options),
   [REVIEW_PROJECT_INSTRUCTIONS_TOOL_DEFINITION.name]: (args, options) =>

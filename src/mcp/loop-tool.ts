@@ -1,0 +1,161 @@
+import { loadHookAuth, loadPromptCoachConfig } from "../config/config.js";
+import { createLoopBrief } from "../loop/brief.js";
+import type { LoopSnapshot } from "../loop/types.js";
+import { createSqlitePromptStorage } from "../storage/sqlite.js";
+import type { ScorePromptToolOptions } from "./score-tool-types.js";
+import type {
+  GetLoopdeckStatusToolArguments,
+  GetLoopdeckStatusToolResult,
+  PrepareLoopBriefToolArguments,
+  PrepareLoopBriefToolResult,
+} from "./loop-tool-types.js";
+
+const LOOP_TOOL_NAMES = ["get_loopdeck_status", "prepare_loop_brief"];
+
+export function getLoopdeckStatusTool(
+  args: GetLoopdeckStatusToolArguments,
+  options: ScorePromptToolOptions = {},
+): GetLoopdeckStatusToolResult {
+  const privacy = loopToolPrivacy();
+
+  try {
+    const config = loadPromptCoachConfig(options.dataDir);
+    const auth = loadHookAuth(options.dataDir);
+    const storage = createSqlitePromptStorage({
+      dataDir: config.data_dir,
+      hmacSecret: auth.web_session_secret,
+    });
+
+    try {
+      const snapshots = storage.listLoopSnapshots({ limit: 100 }).items;
+      const latest =
+        args.include_latest === false ? undefined : snapshots.at(0);
+      const hasSnapshots = snapshots.length > 0;
+
+      return {
+        status: hasSnapshots ? "ready" : "empty",
+        snapshot_count: snapshots.length,
+        ...(latest ? { latest_snapshot: toSafeLatestLoopSnapshot(latest) } : {}),
+        available_tools: LOOP_TOOL_NAMES,
+        next_actions: hasSnapshots
+          ? [
+              "Use prepare_loop_brief to get a copy-ready continuation prompt for the latest loop.",
+              "Run prompt-coach loop collect again after the next agent turn to refresh the snapshot.",
+            ]
+          : [
+              "Run prompt-coach loop collect to create the first local loop snapshot.",
+              "Capture at least one Claude Code or Codex prompt before expecting useful loop context.",
+            ],
+        privacy,
+      };
+    } finally {
+      storage.close();
+    }
+  } catch {
+    return {
+      status: "setup_needed",
+      snapshot_count: 0,
+      available_tools: LOOP_TOOL_NAMES,
+      next_actions: [
+        "Run prompt-coach init or prompt-coach setup before using Loopdeck MCP tools.",
+        "Then run prompt-coach loop collect from the project you want to continue.",
+      ],
+      privacy,
+    };
+  }
+}
+
+export function prepareLoopBriefTool(
+  args: PrepareLoopBriefToolArguments,
+  options: ScorePromptToolOptions = {},
+): PrepareLoopBriefToolResult {
+  if (args.latest === false) {
+    return loopToolError(
+      "invalid_input",
+      "`latest` is the only supported loop snapshot selection mode today.",
+    );
+  }
+
+  try {
+    const config = loadPromptCoachConfig(options.dataDir);
+    const auth = loadHookAuth(options.dataDir);
+    const storage = createSqlitePromptStorage({
+      dataDir: config.data_dir,
+      hmacSecret: auth.web_session_secret,
+    });
+
+    try {
+      const snapshot = storage.getLatestLoopSnapshot();
+      if (!snapshot) {
+        return loopToolError(
+          "not_found",
+          "No loop snapshot found. Run `prompt-coach loop collect` first.",
+        );
+      }
+
+      const brief = createLoopBrief({ snapshot });
+      return {
+        source: "latest",
+        snapshot_id: snapshot.id,
+        title: brief.title,
+        prompt: brief.prompt,
+        next_action:
+          "Ask the user to review this continuation prompt before submitting it to Codex or Claude Code.",
+        privacy: {
+          ...loopToolPrivacy(),
+          auto_submits: false,
+        },
+      };
+    } finally {
+      storage.close();
+    }
+  } catch (error) {
+    return loopToolError("storage_unavailable", storageUnavailableMessage(error));
+  }
+}
+
+function toSafeLatestLoopSnapshot(snapshot: LoopSnapshot) {
+  return {
+    id: snapshot.id,
+    created_at: snapshot.created_at,
+    tool: snapshot.tool,
+    source: snapshot.source,
+    project: snapshot.cwd_label,
+    ...(snapshot.branch ? { branch: snapshot.branch } : {}),
+    ...(snapshot.worktree_label ? { worktree: snapshot.worktree_label } : {}),
+    prompt_count: snapshot.event_counts.prompts,
+    ...(snapshot.quality.average_prompt_score === undefined
+      ? {}
+      : { average_prompt_score: snapshot.quality.average_prompt_score }),
+    top_gaps: snapshot.quality.top_gaps,
+  };
+}
+
+function loopToolPrivacy() {
+  return {
+    local_only: true,
+    external_calls: false,
+    returns_prompt_bodies: false,
+    returns_raw_paths: false,
+  } as const;
+}
+
+function loopToolError(
+  errorCode: PrepareLoopBriefToolResult extends infer Result
+    ? Result extends { error_code: infer Code }
+      ? Code
+      : never
+    : never,
+  message: string,
+): Extract<PrepareLoopBriefToolResult, { is_error: true }> {
+  return {
+    is_error: true,
+    error_code: errorCode,
+    message,
+  };
+}
+
+function storageUnavailableMessage(error: unknown): string {
+  const name = error instanceof Error ? error.name : "Error";
+  return `${name}: local prompt-coach storage is not available. Run prompt-coach init or pass the correct dataDir.`;
+}

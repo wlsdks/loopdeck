@@ -54,12 +54,14 @@
 - [x] Task 4 RED: loop CLI 테스트가 missing module로 실패하는지 확인
 - [x] Task 4 GREEN: `prompt-coach loop collect` / `prompt-coach loop brief` CLI 등록
 - [x] Task 5: architecture 문서에 `src/loop/` 경계 추가
-- [ ] 다음 slice: MCP loop status/brief tool 설계 및 구현
+- [x] Task 6 RED: Loopdeck MCP tool 테스트가 missing module/tool list로 실패하는지 확인
+- [x] Task 6 GREEN: `get_loopdeck_status` / `prepare_loop_brief` MCP tool 구현
+- [ ] 다음 slice: `record_loop_outcome` 설계 및 구현
 
 ### 판단 기준
 
-- 이번 slice는 prompt body와 raw path를 저장하거나 출력하지 않는 domain/storage/CLI contract만 증명한다.
-- MCP, hook, web, rename 작업은 이 커밋에 섞지 않는다.
+- 이번 slice는 prompt body와 raw path를 저장하거나 출력하지 않는 domain/storage/CLI/MCP read contract만 증명한다.
+- hook, web, rename 작업은 이 커밋에 섞지 않는다.
 - 다음 slice도 RED-GREEN 단위로 storage integration부터 진행한다.
 
 ## 2026-05-04 Habit Coach Panel Extraction
