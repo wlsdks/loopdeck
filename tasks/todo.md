@@ -189,7 +189,9 @@
 - [x] Task 36 GREEN: Codex plugin 사용자-facing copy를 Loopdeck으로 정리하고 plugin id/path/hook command는 유지
 - [x] Task 37 RED: hook binary compatibility smoke script/package 계약이 없어 packaging focused test 실패 확인
 - [x] Task 37 GREEN: built `prompt-coach`/`loopdeck` entrypoint hook status/claude-code/codex fail-open smoke 추가
-- [ ] 다음 slice: Slice R6 MCP Server Name Compatibility Decision 구현
+- [x] Task 38 RED: MCP server name compatibility decision artifact가 없어 packaging focused test 실패 확인
+- [x] Task 38 GREEN: `prompt-coach` canonical MCP server name 유지와 `loopdeck` server-name alias 보류 조건 문서화
+- [ ] 다음 slice: Slice R7 Deprecation Window Readiness 구현
 
 ### 판단 기준
 

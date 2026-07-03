@@ -396,6 +396,45 @@ describe("plugin packaging files", () => {
     );
   });
 
+  it("ships an MCP server name compatibility decision before adding loopdeck server aliases", () => {
+    const decisionPath =
+      "docs/superpowers/plans/2026-07-04-loopdeck-mcp-server-name-decision.md";
+    const packageJson = readJson<{ files: string[] }>("package.json");
+    const decision = readFileSync(join(process.cwd(), decisionPath), "utf8");
+    const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
+    const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
+    const plugins = readFileSync(join(process.cwd(), "docs/PLUGINS.md"), "utf8");
+    const setupCommand = readFileSync(
+      join(process.cwd(), "commands/setup.md"),
+      "utf8",
+    );
+    const webMcpView = readFileSync(
+      join(process.cwd(), "src/web/src/mcp-tools-view.tsx"),
+      "utf8",
+    );
+
+    expect(packageJson.files).toContain(decisionPath);
+    expect(decision).toContain("# Loopdeck MCP Server Name Decision");
+    expect(decision).toContain("Decision: keep `prompt-coach` canonical");
+    expect(decision).toContain("Do not add `loopdeck` MCP server-name examples yet");
+    expect(decision).toContain("codex mcp add <server-name> --");
+    expect(decision).toContain("claude mcp add");
+    expect(decision).toContain("prompt-coach mcp");
+    expect(decision).toContain("loopdeck mcp");
+    expect(decision).toContain("alias behavior");
+    expect(decision).toContain("https://developers.openai.com/codex/mcp");
+    expect(decision).toContain("https://docs.anthropic.com/en/docs/claude-code/mcp");
+    expect(decision).not.toContain("Make this better");
+    expect(decision).not.toContain("sk-proj");
+    expect(decision).not.toContain("/Users/");
+
+    for (const content of [readme, readmeKo, plugins, setupCommand, webMcpView]) {
+      expect(content).toContain("prompt-coach mcp");
+      expect(content).toContain("mcp add");
+      expect(content).not.toContain("mcp add loopdeck");
+    }
+  });
+
   it("ships a machine-checkable runtime id inventory before rename work", () => {
     const inventoryPath =
       "docs/superpowers/plans/2026-07-04-loopdeck-runtime-id-inventory.json";

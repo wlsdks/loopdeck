@@ -34,6 +34,9 @@ The npm package intentionally includes:
   - includes `docs/superpowers/plans/2026-07-04-loopdeck-claude-dual-namespace-decision.md`
     so the package records why `/loopdeck:*` command files are deferred until a
     real Claude Code namespace alias path is proven
+  - includes `docs/superpowers/plans/2026-07-04-loopdeck-mcp-server-name-decision.md`
+    so the package records why `prompt-coach` remains the canonical MCP server
+    name during the Loopdeck migration
 - Claude Code plugin artifacts under `.claude-plugin`, `commands`, and
   `integrations/claude-code`
 - Codex plugin artifacts under `plugins/prompt-coach`

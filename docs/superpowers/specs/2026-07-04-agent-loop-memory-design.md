@@ -1181,6 +1181,25 @@ Do not add:
 - raw prompt, transcript, compact summary, raw path, API token, or provider
   credential output
 
+### Slice 4.35: MCP Server Name Compatibility Decision
+
+Add:
+
+- R6 decision artifact documenting that `prompt-coach` remains the canonical MCP
+  server name during the Loopdeck compatibility window
+- official Codex and Claude Code MCP command-shape references showing the server
+  name is user-chosen persisted configuration
+- packaging test coverage that keeps README, README.ko, PLUGINS, slash setup
+  docs, and web MCP snippets on `prompt-coach mcp`
+
+Do not add:
+
+- `mcp add loopdeck` examples
+- MCP server-name rename
+- hidden hosted service, provider credential proxy, or external LLM call
+- prompt body, transcript, compact summary, raw path, API token, or provider
+  credential output
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.
