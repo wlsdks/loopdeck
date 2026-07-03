@@ -1163,6 +1163,24 @@ Do not add:
 - hook command changes
 - MCP server-name changes
 
+### Slice 4.34: Hook Binary Compatibility Smoke
+
+Add:
+
+- hook binary smoke script that runs built `prompt-coach` and `loopdeck`
+  entrypoints through `hook status`, `hook claude-code`, and `hook codex`
+- packaging test coverage that ships the smoke script and keeps both package
+  binaries mapped to the same compiled CLI entrypoint
+- privacy checks proving fail-open hook smoke output does not print synthetic
+  prompt text or API-key-shaped markers
+
+Do not add:
+
+- hook command changes in installed Claude Code or Codex configs
+- `loopdeck hook ...` as the primary installed hook command
+- raw prompt, transcript, compact summary, raw path, API token, or provider
+  credential output
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

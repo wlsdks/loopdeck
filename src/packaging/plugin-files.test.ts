@@ -524,6 +524,34 @@ describe("plugin packaging files", () => {
     expect(command).not.toMatch(/PROMPT_COACH_TOKEN|Bearer|token=/i);
   });
 
+  it("ships a hook binary compatibility smoke for prompt-coach and loopdeck entrypoints", () => {
+    const packageJson = readJson<{
+      bin: Record<string, string>;
+      files: string[];
+      scripts: Record<string, string>;
+    }>("package.json");
+    const smoke = readFileSync(
+      join(process.cwd(), "scripts/hook-binary-smoke.mjs"),
+      "utf8",
+    );
+
+    expect(packageJson.bin["prompt-coach"]).toBe("./dist/cli/index.js");
+    expect(packageJson.bin.loopdeck).toBe("./dist/cli/index.js");
+    expect(packageJson.files).toContain("scripts/hook-binary-smoke.mjs");
+    expect(packageJson.scripts["smoke:hooks"]).toBe(
+      "pnpm build && node scripts/hook-binary-smoke.mjs",
+    );
+    expect(smoke).toContain("prompt-coach");
+    expect(smoke).toContain("loopdeck");
+    expect(smoke).toContain("hook claude-code");
+    expect(smoke).toContain("hook codex");
+    expect(smoke).toContain("hook status");
+    expect(smoke).toContain("PROMPT_COACH_SMOKE_SECRET");
+    expect(smoke).toContain("assertNotIncludes");
+    expect(smoke).toContain("sk-proj");
+    expect(smoke).not.toContain("/Users/");
+  });
+
   it("documents Claude Code as a hook integration without embedding secrets", () => {
     const example = readJson<{
       hooks: {
