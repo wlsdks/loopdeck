@@ -126,6 +126,18 @@ describe("createLoopdeckStatus", () => {
       ],
       compactBoundaries: [],
       includeLatest: false,
+      mergeDecisions: [
+        {
+          id: "mdec_status",
+          snapshot_id: "loop_latest",
+          project_id: "proj_private",
+          worktree: "agent-loop-worktree",
+          decision: "continue",
+          reason: "Needs one more verification pass before merge.",
+          decided_by: "user",
+          created_at: "2026-07-04T01:30:00.000Z",
+        },
+      ],
     });
     const serialized = JSON.stringify(status);
 
@@ -137,6 +149,16 @@ describe("createLoopdeckStatus", () => {
       needs_review: true,
       next_action:
         "compare loop snapshots by worktree before merging agent output",
+      recent_decisions: [
+        {
+          snapshot_id: "loop_latest",
+          worktree: "agent-loop-worktree",
+          decision: "continue",
+          reason: "Needs one more verification pass before merge.",
+          decided_by: "user",
+          created_at: "2026-07-04T01:30:00.000Z",
+        },
+      ],
       worktrees: [
         {
           worktree: "agent-loop-worktree",

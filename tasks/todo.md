@@ -217,7 +217,11 @@
 - [x] Task 48 RED: `loop decision record/list`가 없어 CLI focused tests 실패 확인
 - [x] Task 48 GREEN: worktree별 merge/continue/defer decision journal을 SQLite에 기록하고 CLI record/list로 노출
 - [x] Task 48 PRIVACY: decision reason은 raw path/secret-looking token을 거부하고 prompt body/evidence refs/git writes/external calls를 포함하지 않음
-- [ ] 다음 slice: recent merge decisions를 status/MCP/web에 read-only로 노출할지 결정
+- [x] Task 49 DECISION: recent merge decisions는 status/MCP/web에 read-only로 노출하고 write boundary는 CLI-only 유지
+- [x] Task 49 RED: `activity.recent_decisions`가 없어 domain/CLI/MCP/web focused tests 실패 확인
+- [x] Task 49 GREEN: 최근 decision 3개를 `LoopdeckStatus.activity`, CLI status, MCP schema/runtime, API type, web Loops summary에 노출
+- [x] Task 49 PRIVACY: recent decision은 snapshot_id/worktree/decision/reason/decided_by/created_at만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
+- [ ] 다음 slice: recent decisions가 review packet next-action 문구에 advisory-only로 반영될지 결정
 
 ### 판단 기준
 

@@ -230,6 +230,7 @@ export function loopStatusForCli(options: LoopCliOptions = {}): string {
             .length
         : 0,
       memoryCandidate: latest ? decideLoopMemoryCandidate(latest) : undefined,
+      mergeDecisions: storage.listLoopMergeDecisions({ limit: 3 }).items,
     });
 
     return options.json
@@ -555,6 +556,12 @@ function formatLoopStatus(status: LoopdeckStatus): string {
     ...(
       status.activity.command_center?.review_packet.checklist.map(
         (item) => `checklist ${item.label} ${item.status}`,
+      ) ?? []
+    ),
+    ...(
+      status.activity.recent_decisions?.map(
+        (decision) =>
+          `recent decision ${decision.worktree} ${decision.decision} ${decision.reason}`,
       ) ?? []
     ),
     ...(

@@ -45,6 +45,23 @@ describe("MCP stdio server", () => {
               properties: expect.objectContaining({
                 activity: expect.objectContaining({
                   properties: expect.objectContaining({
+                    recent_decisions: expect.objectContaining({
+                      items: expect.objectContaining({
+                        required: expect.arrayContaining([
+                          "snapshot_id",
+                          "worktree",
+                          "decision",
+                          "reason",
+                          "decided_by",
+                          "created_at",
+                        ]),
+                        properties: expect.objectContaining({
+                          decision: expect.objectContaining({
+                            enum: ["merge", "continue", "defer"],
+                          }),
+                        }),
+                      }),
+                    }),
                     command_center: expect.objectContaining({
                       properties: expect.objectContaining({
                         title: expect.any(Object),

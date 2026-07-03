@@ -26,6 +26,9 @@ describe("LoopsView", () => {
     expect(html).toContain("Human checklist");
     expect(html).toContain("Compare ready evidence before merge");
     expect(html).toContain("required");
+    expect(html).toContain("Recent decisions");
+    expect(html).toContain("agent-loop-worktree continue");
+    expect(html).toContain("Needs one more verification pass before merge.");
     expect(html).toContain("review before merge");
     expect(html).toContain("ready for continuation");
     expect(html).toContain("Merge readiness needs_review");
@@ -104,6 +107,16 @@ function loopList(): LoopListResponse {
         needs_review: true,
         next_action:
           "compare loop snapshots by worktree before merging agent output",
+        recent_decisions: [
+          {
+            snapshot_id: "loop_web",
+            worktree: "agent-loop-worktree",
+            decision: "continue",
+            reason: "Needs one more verification pass before merge.",
+            decided_by: "user",
+            created_at: "2026-07-04T01:30:00.000Z",
+          },
+        ],
         worktrees: [
           {
             worktree: "agent-loop-worktree",

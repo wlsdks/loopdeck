@@ -20,6 +20,7 @@ import {
 } from "../../loop/snapshot-selection.js";
 import type {
   CompactBoundaryStoragePort,
+  LoopMergeDecisionStoragePort,
   LoopMemoryStoragePort,
   LoopSnapshotStoragePort,
 } from "../../storage/ports.js";
@@ -29,7 +30,10 @@ import { problem } from "../errors.js";
 export type LoopRouteOptions = {
   auth: ServerAuthConfig;
   storage: Partial<
-    LoopSnapshotStoragePort & CompactBoundaryStoragePort & LoopMemoryStoragePort
+    LoopSnapshotStoragePort &
+      CompactBoundaryStoragePort &
+      LoopMemoryStoragePort &
+      LoopMergeDecisionStoragePort
   >;
 };
 
@@ -72,6 +76,8 @@ export function registerLoopRoutes(
         latest && !hasApprovedMemoryForSnapshot(projectMemories, latest.id)
           ? decideLoopMemoryCandidate(latest)
           : undefined,
+      mergeDecisions:
+        options.storage.listLoopMergeDecisions?.({ limit: 3 }).items ?? [],
     });
 
     return {

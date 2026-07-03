@@ -149,6 +149,7 @@ describe("loop CLI command", () => {
         cwdPrefix: "/Users/example/private-project",
         now: new Date("2026-07-04T01:00:00.000Z"),
         cwd: "/Users/example/private-project",
+        worktree: "primary-worktree",
       }),
     ) as { id: string };
     seedLoopOutcome(dataDir, snapshot.id);
@@ -234,10 +235,19 @@ describe("loop CLI command", () => {
         cwdPrefix: "/Users/example/private-project",
         now: new Date("2026-07-04T01:00:00.000Z"),
         cwd: "/Users/example/private-project",
+        worktree: "primary-worktree",
       }),
     ) as { id: string };
     seedLoopOutcome(dataDir, snapshot.id);
     loopMemoryApproveForCli({ dataDir, approvedBy: "user" });
+    loopDecisionRecordForCli({
+      dataDir,
+      worktree: "primary-worktree",
+      decision: "continue",
+      reason: "Needs one more verification pass before merge.",
+      decidedBy: "user",
+      now: new Date("2026-07-04T01:30:00.000Z"),
+    });
     seedOtherProjectMemory(dataDir);
     seedCompactBoundary(dataDir);
 
@@ -260,6 +270,9 @@ describe("loop CLI command", () => {
     );
     expect(text).toContain(
       "checklist Compare ready evidence before merge required",
+    );
+    expect(text).toContain(
+      "recent decision primary-worktree continue Needs one more verification pass before merge.",
     );
     expect(text).toContain(
       "review primary-worktree ready for continuation",
@@ -328,6 +341,12 @@ describe("loop CLI command", () => {
             };
           }>;
         };
+        recent_decisions?: Array<{
+          worktree?: string;
+          decision?: string;
+          reason?: string;
+          decided_by?: string;
+        }>;
       };
       project_memory?: { approved_count?: number; included_in_brief?: boolean };
       memory_candidate?: {
@@ -406,6 +425,16 @@ describe("loop CLI command", () => {
           },
         ],
       },
+      recent_decisions: [
+        {
+          snapshot_id: snapshot.id,
+          worktree: "primary-worktree",
+          decision: "continue",
+          reason: "Needs one more verification pass before merge.",
+          decided_by: "user",
+          created_at: expect.any(String),
+        },
+      ],
     });
     expect(parsed.project_memory).toEqual({
       approved_count: 1,

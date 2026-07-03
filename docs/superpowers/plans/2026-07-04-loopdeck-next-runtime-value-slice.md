@@ -160,6 +160,10 @@ Implementation checkpoint:
   `prompt-coach loop decision record/list` stores an explicit local operator
   decision for a selected worktree without prompt bodies, raw paths, external
   calls, or git writes.
-- The next runtime slice should decide whether to expose recent merge decisions
-  read-only through status/MCP/web so Codex and Claude Code can see prior human
-  decisions without gaining a write-capable merge journal tool.
+- Recent merge decisions now flow read-only through `LoopdeckStatus.activity`,
+  CLI `loop status`, MCP `get_loopdeck_status`, `/api/v1/loops`, and the web
+  Loops summary so Codex and Claude Code can see prior human decisions without
+  gaining a write-capable merge journal tool.
+- The next runtime slice should decide whether recent decisions should influence
+  review packet next-action text, while preserving advisory-only behavior and
+  no git writes.

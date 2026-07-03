@@ -69,6 +69,7 @@ export function getLoopdeckStatusTool(
               .length
           : 0,
         memoryCandidate: latest ? decideLoopMemoryCandidate(latest) : undefined,
+        mergeDecisions: storage.listLoopMergeDecisions({ limit: 3 }).items,
       });
 
       return {

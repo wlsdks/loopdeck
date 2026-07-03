@@ -96,6 +96,15 @@ export type LoopdeckStatusActivityCommandCenter = {
   review_items: LoopdeckStatusActivityCommandCenterItem[];
 };
 
+export type LoopdeckStatusActivityRecentDecision = {
+  snapshot_id: string;
+  worktree: string;
+  decision: "merge" | "continue" | "defer";
+  reason: string;
+  decided_by: string;
+  created_at: string;
+};
+
 export type LoopdeckStatusActivity = {
   active_worktrees: number;
   active_sessions: number;
@@ -105,6 +114,7 @@ export type LoopdeckStatusActivity = {
   next_action:
     | "compare loop snapshots by worktree before merging agent output"
     | "continue current worktree loop";
+  recent_decisions?: LoopdeckStatusActivityRecentDecision[];
   worktrees: LoopdeckStatusActivityWorktree[];
   command_center?: LoopdeckStatusActivityCommandCenter;
 };
@@ -135,6 +145,7 @@ export function createLoopdeckStatus(input: {
     LoopMemoryCandidateDecision,
     "eligible" | "reason" | "snapshot_id"
   >;
+  mergeDecisions?: readonly LoopdeckStatusActivityRecentDecision[];
 }): LoopdeckStatus {
   const latest = input.snapshots.at(0);
   const projectMemoryCount = input.projectMemoryCount ?? 0;
@@ -151,7 +162,7 @@ export function createLoopdeckStatus(input: {
   return {
     status: hasSnapshots ? "ready" : "empty",
     snapshot_count: input.snapshots.length,
-    activity: summarizeLoopActivity(input.snapshots),
+    activity: summarizeLoopActivity(input.snapshots, input.mergeDecisions ?? []),
     project_memory: {
       approved_count: projectMemoryCount,
       included_in_brief: Boolean(latest && projectMemoryCount > 0),
@@ -179,6 +190,7 @@ export function createLoopdeckStatus(input: {
 
 export function summarizeLoopActivity(
   snapshots: readonly LoopSnapshot[],
+  mergeDecisions: readonly LoopdeckStatusActivityRecentDecision[] = [],
 ): LoopdeckStatusActivity {
   const latest = snapshots.at(0);
   const activeWorktrees = uniqueNonEmpty(
@@ -200,8 +212,24 @@ export function summarizeLoopActivity(
     next_action: needsReview
       ? "compare loop snapshots by worktree before merging agent output"
       : "continue current worktree loop",
+    ...(mergeDecisions.length > 0
+      ? { recent_decisions: mergeDecisions.slice(0, 3).map(toRecentDecision) }
+      : {}),
     worktrees,
     ...(needsReview ? { command_center: createCommandCenter(worktrees) } : {}),
+  };
+}
+
+function toRecentDecision(
+  decision: LoopdeckStatusActivityRecentDecision,
+): LoopdeckStatusActivityRecentDecision {
+  return {
+    snapshot_id: decision.snapshot_id,
+    worktree: decision.worktree,
+    decision: decision.decision,
+    reason: decision.reason,
+    decided_by: decision.decided_by,
+    created_at: decision.created_at,
   };
 }
 

@@ -37,6 +37,7 @@ describe("Loopdeck MCP tools", () => {
       },
     });
     recordLoopMemoryTool({ latest: true, approved_by: "user" }, { dataDir });
+    seedLoopMergeDecision(dataDir);
     seedOtherProjectMemory(dataDir);
 
     const result = getLoopdeckStatusTool({}, { dataDir });
@@ -54,6 +55,16 @@ describe("Loopdeck MCP tools", () => {
         needs_review: true,
         next_action:
           "compare loop snapshots by worktree before merging agent output",
+        recent_decisions: [
+          {
+            snapshot_id: "loop_mcp",
+            worktree: "worktree-mcp",
+            decision: "continue",
+            reason: "Needs one more verification pass before merge.",
+            decided_by: "user",
+            created_at: "2026-07-04T01:30:00.000Z",
+          },
+        ],
         worktrees: [
           {
             worktree: "worktree-mcp",
@@ -144,6 +155,7 @@ describe("Loopdeck MCP tools", () => {
       "Shared status surfaces should use one model instead of duplicating readiness logic.",
     );
     expect(serialized).not.toContain("commit:11d8426");
+    expect(serialized).not.toContain("sk-proj-secret");
     expect(serialized).not.toContain(
       "This unrelated project memory should not appear",
     );
@@ -668,6 +680,27 @@ function seedOtherProjectMemory(dataDir: string): void {
       statement: "This unrelated project memory should not appear.",
       evidence_refs: ["commit:other"],
       approved_by: "user",
+    });
+  } finally {
+    storage.close();
+  }
+}
+
+function seedLoopMergeDecision(dataDir: string): void {
+  const init = initializePromptCoach({ dataDir });
+  const storage = createSqlitePromptStorage({
+    dataDir,
+    hmacSecret: init.hookAuth.web_session_secret,
+    now: () => new Date("2026-07-04T01:30:00.000Z"),
+  });
+  try {
+    storage.recordLoopMergeDecision({
+      snapshot_id: "loop_mcp",
+      project_id: "proj_mcp",
+      worktree: "worktree-mcp",
+      decision: "continue",
+      reason: "Needs one more verification pass before merge.",
+      decided_by: "user",
     });
   } finally {
     storage.close();

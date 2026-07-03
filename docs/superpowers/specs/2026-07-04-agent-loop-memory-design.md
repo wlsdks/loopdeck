@@ -1488,6 +1488,41 @@ Do not add:
 - prompt body, outcome summary, transcript, compact summary, raw path, API
   token, provider credential, or raw evidence ref output
 
+### Slice 4.46: Recent Merge Decisions Read-Only Exposure
+
+Decision:
+
+- Expose recent local merge decisions read-only through existing status surfaces
+  so Codex and Claude Code can see prior human intent before continuing a loop.
+- Keep the write boundary CLI-only. Do not add MCP or web write paths.
+- Decision records remain advisory context only; they must not trigger merge,
+  checkout, diff inspection, conflict prediction, or git writes.
+
+Add:
+
+- `LoopdeckStatus.activity.recent_decisions`, limited to the latest three local
+  decisions
+- CLI `loop status` lines for recent decisions
+- MCP `get_loopdeck_status` schema/runtime coverage for the read-only field
+- `/api/v1/loops` status propagation for recent decisions
+- web Loops summary rendering for recent decisions
+- focused domain, CLI, MCP schema/runtime, and web tests proving the field does
+  not reveal prompt bodies, outcome summaries, evidence refs, raw paths,
+  transcripts, compact summaries, API tokens, provider credentials, external
+  calls, or git writes
+
+Do not add:
+
+- merge decision writes outside `prompt-coach loop decision record`
+- MCP write tools, web write buttons, checklist completion state, or approval
+  toggles
+- automatic merge, branch checkout, conflict prediction, diff inspection, or git
+  writes
+- hidden external model calls or background agent evaluation
+- package, plugin, slash command, hook, or MCP server-name rename
+- prompt body, outcome summary, transcript, compact summary, raw path, API
+  token, provider credential, or raw evidence ref output
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

@@ -213,6 +213,20 @@ export function LoopsView({
                 ))}
             </div>
           )}
+          {loops.status.activity.recent_decisions &&
+            loops.status.activity.recent_decisions.length > 0 && (
+              <div>
+                <p className="loops-status-line">Recent decisions</p>
+                {loops.status.activity.recent_decisions.map((decision) => (
+                  <p
+                    className="loops-status-line"
+                    key={`${decision.snapshot_id}:${decision.created_at}`}
+                  >
+                    {decision.worktree} {decision.decision} {decision.reason}
+                  </p>
+                ))}
+              </div>
+            )}
           {loops.status.activity.worktrees.slice(0, 2).map((worktree) => (
             <div className="loop-worktree-line" key={worktree.worktree}>
               <p className="loops-status-line">

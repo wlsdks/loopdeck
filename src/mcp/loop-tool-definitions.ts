@@ -99,6 +99,32 @@ export const GET_LOOPDECK_STATUS_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
                 "continue current worktree loop",
               ],
             },
+            recent_decisions: {
+              type: "array",
+              items: {
+                type: "object",
+                required: [
+                  "snapshot_id",
+                  "worktree",
+                  "decision",
+                  "reason",
+                  "decided_by",
+                  "created_at",
+                ],
+                properties: {
+                  snapshot_id: { type: "string" },
+                  worktree: { type: "string" },
+                  decision: {
+                    type: "string",
+                    enum: ["merge", "continue", "defer"],
+                  },
+                  reason: { type: "string" },
+                  decided_by: { type: "string" },
+                  created_at: { type: "string" },
+                },
+                additionalProperties: false,
+              },
+            },
             worktrees: {
               type: "array",
               items: {
