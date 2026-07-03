@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { mkdirSync, rmSync } from "node:fs";
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -8,6 +8,7 @@ import { initializePromptCoach } from "../config/config.js";
 import type { LoopSnapshot } from "../loop/types.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import {
+  applyInstructionPatchTool,
   getLoopdeckStatusTool,
   prepareLoopBriefTool,
   proposeInstructionPatchTool,
@@ -287,6 +288,62 @@ describe("Loopdeck MCP tools", () => {
     expect(result.diff).toContain("## Loopdeck Memories");
     expect(result.diff).toContain("Scheduler lifecycle should stay plist-only");
     expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("/Users/example");
+  });
+
+  it("applies an instruction patch only with explicit confirmation", () => {
+    const dataDir = seedLoopSnapshot({
+      outcome: {
+        status: "passed",
+        summary:
+          "Scheduler lifecycle should stay plist-only unless the user explicitly asks for launchctl mutation.",
+        evidence_refs: ["commit:568e2b4", "test:pnpm test"],
+      },
+    });
+    const projectDir = createTempDir();
+    writeFileSync(join(projectDir, "AGENTS.md"), "# Project Rules\n");
+    recordLoopMemoryTool({ latest: true, approved_by: "user" }, { dataDir });
+
+    expect(
+      applyInstructionPatchTool(
+        {
+          target_file: "AGENTS.md",
+          target_dir: projectDir,
+        },
+        { dataDir },
+      ),
+    ).toEqual({
+      is_error: true,
+      error_code: "approval_required",
+      message: "Instruction patch apply requires confirm_apply=true.",
+    });
+
+    const result = applyInstructionPatchTool(
+      {
+        target_file: "AGENTS.md",
+        target_dir: projectDir,
+        confirm_apply: true,
+      },
+      { dataDir },
+    );
+    const serialized = JSON.stringify(result);
+
+    expect(result).toMatchObject({
+      target_file: "AGENTS.md",
+      applied: true,
+      writes_files: true,
+      privacy: {
+        local_only: true,
+        external_calls: false,
+        returns_prompt_bodies: false,
+        returns_raw_paths: false,
+        writes_instruction_files: true,
+      },
+    });
+    expect(readFileSync(join(projectDir, "AGENTS.md"), "utf8")).toContain(
+      "source_memory:",
+    );
+    expect(serialized).not.toContain(projectDir);
     expect(serialized).not.toContain("/Users/example");
   });
 

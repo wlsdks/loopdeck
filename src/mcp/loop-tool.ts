@@ -4,6 +4,7 @@ import {
   latestCompactBoundaryAfterSnapshot,
 } from "../loop/brief.js";
 import {
+  applyInstructionPatchFromMemory,
   parseInstructionPatchTarget,
   proposeInstructionPatchFromMemory,
 } from "../loop/instruction-patch.js";
@@ -12,6 +13,8 @@ import type { LoopSnapshot } from "../loop/types.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import type { ScorePromptToolOptions } from "./score-tool-types.js";
 import type {
+  ApplyInstructionPatchToolArguments,
+  ApplyInstructionPatchToolResult,
   GetLoopdeckStatusToolArguments,
   GetLoopdeckStatusToolResult,
   PrepareLoopBriefToolArguments,
@@ -33,6 +36,7 @@ const LOOP_TOOL_NAMES = [
   "propose_loop_memory_candidate",
   "record_loop_memory",
   "propose_instruction_patch",
+  "apply_instruction_patch",
 ];
 
 export function getLoopdeckStatusTool(
@@ -382,6 +386,54 @@ export function proposeInstructionPatchTool(
   }
 }
 
+export function applyInstructionPatchTool(
+  args: ApplyInstructionPatchToolArguments,
+  options: ScorePromptToolOptions = {},
+): ApplyInstructionPatchToolResult {
+  if (args.confirm_apply !== true) {
+    return loopToolError(
+      "approval_required",
+      "Instruction patch apply requires confirm_apply=true.",
+    );
+  }
+
+  let targetFile: "AGENTS.md" | "CLAUDE.md";
+  try {
+    targetFile = parseInstructionPatchTarget(args.target_file ?? "AGENTS.md");
+  } catch (error) {
+    return loopToolError("invalid_input", errorMessage(error));
+  }
+
+  try {
+    const config = loadPromptCoachConfig(options.dataDir);
+    const auth = loadHookAuth(options.dataDir);
+    const storage = createSqlitePromptStorage({
+      dataDir: config.data_dir,
+      hmacSecret: auth.web_session_secret,
+    });
+
+    try {
+      const memory = storage.listLoopMemories({ limit: 1 }).items.at(0);
+      if (!memory) {
+        return loopToolError(
+          "not_found",
+          "No loop memory found. Run `prompt-coach loop memory-approve` first.",
+        );
+      }
+      return applyInstructionPatchFromMemory({
+        memory,
+        targetDir: args.target_dir ?? process.cwd(),
+        targetFile,
+        confirmApply: true,
+      });
+    } finally {
+      storage.close();
+    }
+  } catch (error) {
+    return loopToolError("apply_failed", errorMessage(error));
+  }
+}
+
 function toSafeLatestLoopSnapshot(snapshot: LoopSnapshot) {
   return {
     id: snapshot.id,
@@ -413,7 +465,8 @@ type LoopToolErrorCode = Extract<
   | RecordLoopOutcomeToolResult
   | ProposeLoopMemoryCandidateToolResult
   | RecordLoopMemoryToolResult
-  | ProposeInstructionPatchToolResult,
+  | ProposeInstructionPatchToolResult
+  | ApplyInstructionPatchToolResult,
   { is_error: true }
 >["error_code"];
 
@@ -423,10 +476,10 @@ type LoopToolError = {
   message: string;
 };
 
-function loopToolError(
-  errorCode: LoopToolErrorCode,
+function loopToolError<T extends LoopToolErrorCode>(
+  errorCode: T,
   message: string,
-): LoopToolError {
+): LoopToolError & { error_code: T } {
   return {
     is_error: true,
     error_code: errorCode,

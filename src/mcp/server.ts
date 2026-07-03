@@ -32,6 +32,7 @@ import {
   SCORE_PROMPT_TOOL_DEFINITION,
 } from "./score-tool-definitions.js";
 import {
+  APPLY_INSTRUCTION_PATCH_TOOL_DEFINITION,
   GET_LOOPDECK_STATUS_TOOL_DEFINITION,
   PREPARE_LOOP_BRIEF_TOOL_DEFINITION,
   PROPOSE_INSTRUCTION_PATCH_TOOL_DEFINITION,
@@ -52,6 +53,7 @@ import {
   scorePromptTool,
 } from "./score-tool.js";
 import {
+  applyInstructionPatchTool,
   getLoopdeckStatusTool,
   prepareLoopBriefTool,
   proposeInstructionPatchTool,
@@ -60,6 +62,7 @@ import {
   recordLoopOutcomeTool,
 } from "./loop-tool.js";
 import type {
+  ApplyInstructionPatchToolArguments,
   ProposeInstructionPatchToolArguments,
   ProposeLoopMemoryCandidateToolArguments,
   RecordLoopMemoryToolArguments,
@@ -130,6 +133,7 @@ type PromptCoachToolResult =
   | ReturnType<typeof proposeLoopMemoryCandidateTool>
   | ReturnType<typeof recordLoopMemoryTool>
   | ReturnType<typeof proposeInstructionPatchTool>
+  | ReturnType<typeof applyInstructionPatchTool>
   | ReturnType<typeof scorePromptArchiveTool>
   | ReturnType<typeof reviewProjectInstructionsTool>
   | ReturnType<typeof prepareAgentRewriteTool>
@@ -182,6 +186,11 @@ const PROMPT_COACH_MCP_TOOL_HANDLERS: Record<string, PromptCoachToolHandler> = {
   [PROPOSE_INSTRUCTION_PATCH_TOOL_DEFINITION.name]: (args, options) =>
     proposeInstructionPatchTool(
       args as ProposeInstructionPatchToolArguments,
+      options,
+    ),
+  [APPLY_INSTRUCTION_PATCH_TOOL_DEFINITION.name]: (args, options) =>
+    applyInstructionPatchTool(
+      args as ApplyInstructionPatchToolArguments,
       options,
     ),
   [SCORE_PROMPT_ARCHIVE_TOOL_DEFINITION.name]: (args, options) =>

@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { mkdirSync, rmSync } from "node:fs";
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -11,6 +11,7 @@ import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import {
   loopBriefForCli,
   loopCollectForCli,
+  loopInstructionPatchApplyForCli,
   loopInstructionPatchForCli,
   loopMemoryApproveForCli,
   loopMemoryCandidateForCli,
@@ -317,6 +318,69 @@ describe("loop CLI command", () => {
     expect(text).toContain("Next: review");
     expect(text).not.toContain("Make this better");
     expect(text).not.toContain("/Users/example");
+  });
+
+  it("applies an approved instruction patch only with explicit confirmation", async () => {
+    const dataDir = createTempDir();
+    const projectDir = createTempDir();
+    writeFileSync(join(projectDir, "AGENTS.md"), "# Project Rules\n");
+    await seedPrompts(dataDir);
+    const snapshot = JSON.parse(
+      loopCollectForCli({
+        dataDir,
+        json: true,
+        cwdPrefix: "/Users/example/private-project",
+        now: new Date("2026-07-04T01:00:00.000Z"),
+        cwd: "/Users/example/private-project",
+      }),
+    ) as { id: string };
+    seedLoopOutcome(dataDir, snapshot.id);
+    loopMemoryApproveForCli({ dataDir, approvedBy: "user" });
+
+    expect(() =>
+      loopInstructionPatchApplyForCli({
+        dataDir,
+        targetDir: projectDir,
+        targetFile: "AGENTS.md",
+      }),
+    ).toThrow("Instruction patch apply requires --confirm-apply.");
+
+    const json = loopInstructionPatchApplyForCli({
+      dataDir,
+      json: true,
+      targetDir: projectDir,
+      targetFile: "AGENTS.md",
+      confirmApply: true,
+    });
+    const parsed = JSON.parse(json) as {
+      applied: boolean;
+      writes_files: boolean;
+      target_file: string;
+      privacy: { writes_instruction_files: boolean };
+    };
+
+    expect(parsed).toMatchObject({
+      applied: true,
+      writes_files: true,
+      target_file: "AGENTS.md",
+      privacy: { writes_instruction_files: true },
+    });
+    expect(json).not.toContain(projectDir);
+    expect(json).not.toContain("/Users/example");
+    expect(readFileSync(join(projectDir, "AGENTS.md"), "utf8")).toContain(
+      "source_memory:",
+    );
+
+    const text = loopInstructionPatchApplyForCli({
+      dataDir,
+      targetDir: projectDir,
+      targetFile: "AGENTS.md",
+      confirmApply: true,
+    });
+
+    expect(text).toContain("Loop instruction patch applied");
+    expect(text).toContain("already present yes");
+    expect(text).not.toContain(projectDir);
   });
 });
 

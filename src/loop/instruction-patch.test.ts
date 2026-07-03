@@ -1,6 +1,18 @@
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { proposeInstructionPatchFromMemory } from "./instruction-patch.js";
+import {
+  applyInstructionPatchFromMemory,
+  proposeInstructionPatchFromMemory,
+} from "./instruction-patch.js";
 import type { LoopMemory } from "../storage/loop-memories.js";
 
 describe("proposeInstructionPatchFromMemory", () => {
@@ -46,6 +58,64 @@ describe("proposeInstructionPatchFromMemory", () => {
         targetFile: "README.md",
       }),
     ).toThrow("Instruction patch target must be AGENTS.md or CLAUDE.md.");
+  });
+
+  it("applies an approved memory to AGENTS.md only after explicit confirmation", () => {
+    const targetDir = join(tmpdir(), `prompt-coach-instruction-${Date.now()}`);
+    const targetPath = join(targetDir, "AGENTS.md");
+    try {
+      mkdirSync(targetDir, { recursive: true });
+      writeFileSync(targetPath, "# Project Rules\n\nKeep changes focused.\n", {
+        flag: "wx",
+      });
+
+      expect(() =>
+        applyInstructionPatchFromMemory({
+          memory: loopMemory(),
+          targetDir,
+          targetFile: "AGENTS.md",
+          confirmApply: false,
+        }),
+      ).toThrow("Instruction patch apply requires explicit confirmation.");
+
+      const result = applyInstructionPatchFromMemory({
+        memory: loopMemory(),
+        targetDir,
+        targetFile: "AGENTS.md",
+        confirmApply: true,
+      });
+
+      expect(result).toMatchObject({
+        target_file: "AGENTS.md",
+        applied: true,
+        already_present: false,
+        writes_files: true,
+        requires_user_approval: false,
+        source_memory_id: "mem_123",
+        privacy: {
+          local_only: true,
+          external_calls: false,
+          returns_prompt_bodies: false,
+          returns_raw_paths: false,
+          writes_instruction_files: true,
+        },
+      });
+      expect(JSON.stringify(result)).not.toContain(targetDir);
+      expect(readFileSync(targetPath, "utf8")).toContain("## Loopdeck Memories");
+      expect(readFileSync(targetPath, "utf8")).toContain("source_memory: mem_123");
+
+      const second = applyInstructionPatchFromMemory({
+        memory: loopMemory(),
+        targetDir,
+        targetFile: "AGENTS.md",
+        confirmApply: true,
+      });
+
+      expect(second.already_present).toBe(true);
+      expect(readFileSync(targetPath, "utf8").match(/source_memory: mem_123/g)).toHaveLength(1);
+    } finally {
+      if (existsSync(targetDir)) rmSync(targetDir, { recursive: true, force: true });
+    }
   });
 });
 

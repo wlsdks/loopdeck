@@ -685,7 +685,7 @@ Codex, or any MCP client through a stdio MCP server:
 prompt-coach mcp
 ```
 
-The MCP server exposes nineteen tools:
+The MCP server exposes twenty tools:
 
 - `get_prompt_coach_status`: check whether the local archive is initialized,
   whether prompts have been captured, and which MCP tool to call next.
@@ -740,16 +740,21 @@ The MCP server exposes nineteen tools:
 - `propose_instruction_patch`: propose a reviewable unified diff for adding the
   latest approved Loopdeck memory to `AGENTS.md` or `CLAUDE.md`. It returns the
   patch text only and does not write files.
+- `apply_instruction_patch`: apply the latest approved Loopdeck memory to
+  `AGENTS.md` or `CLAUDE.md` only when the caller explicitly confirms the file
+  write. It is idempotent by source memory id and does not return raw paths.
 
 The matching local CLI surface is `prompt-coach loop status`,
 `prompt-coach loop collect`, `prompt-coach loop brief`, and
 `prompt-coach loop memory-candidate`; approved memories are recorded with
 `prompt-coach loop memory-approve`. Use
 `prompt-coach loop instruction-patch --target-file AGENTS.md` to generate the
-review-only instruction patch from the latest approved memory. `loop collect`
-also accepts `--source service` for explicit cron or LaunchAgent one-shot
-collection without creating hidden background automation. Users who want an
-opt-in macOS schedule can preview or install it with
+review-only instruction patch from the latest approved memory. Use
+`prompt-coach loop instruction-apply --target-file AGENTS.md --confirm-apply`
+only after reviewing the proposal and intending to write the instruction file.
+`loop collect` also accepts `--source service` for explicit cron or LaunchAgent
+one-shot collection without creating hidden background automation. Users who
+want an opt-in macOS schedule can preview or install it with
 `prompt-coach loop schedule install --dry-run` or
 `prompt-coach loop schedule install --cwd-prefix <project>`, check it with
 `prompt-coach loop schedule status`, and remove the plist with

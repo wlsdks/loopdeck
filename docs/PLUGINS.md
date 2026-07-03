@@ -184,7 +184,7 @@ uses the exact CLI path from the current installation.
 prompt-coach mcp
 ```
 
-This server exposes nineteen model-controlled tools:
+This server exposes twenty model-controlled tools:
 
 - `get_prompt_coach_status`
 - `coach_prompt`
@@ -199,6 +199,7 @@ This server exposes nineteen model-controlled tools:
 - `propose_loop_memory_candidate`
 - `record_loop_memory`
 - `propose_instruction_patch`
+- `apply_instruction_patch`
 - `prepare_agent_rewrite`
 - `record_agent_rewrite`
 - `score_prompt_archive`
@@ -227,18 +228,22 @@ user-reviewable candidate without writing memory or instruction files.
 prompt-coach storage only; instruction-file patches remain a separate explicit
 workflow. `propose_instruction_patch` returns a reviewable unified diff for
 adding the latest approved memory to `AGENTS.md` or `CLAUDE.md`, but it never
-writes those files.
+writes those files. `apply_instruction_patch` writes the latest approved memory
+only when `confirm_apply` is true, is idempotent by source memory id, and does
+not return raw paths.
 
 The local CLI mirrors that loop surface with `prompt-coach loop status`,
 `prompt-coach loop collect`, `prompt-coach loop brief`, and
 `prompt-coach loop memory-candidate`; approved memories are recorded with
 `prompt-coach loop memory-approve`. Use
 `prompt-coach loop instruction-patch --target-file AGENTS.md` to generate the
-review-only instruction patch. Use `prompt-coach loop collect --source service`
-as the explicit one-shot command for cron or LaunchAgent collection; it does
-not silently install a scheduler. The opt-in macOS schedule is `prompt-coach
-loop schedule install`; use `--dry-run` to inspect the LaunchAgent before
-writing it. Use
+review-only instruction patch. Use
+`prompt-coach loop instruction-apply --target-file AGENTS.md --confirm-apply`
+only after reviewing the proposal and intending to write the file. Use
+`prompt-coach loop collect --source service` as the explicit one-shot command
+for cron or LaunchAgent collection; it does not silently install a scheduler.
+The opt-in macOS schedule is `prompt-coach loop schedule install`; use
+`--dry-run` to inspect the LaunchAgent before writing it. Use
 `prompt-coach loop schedule status` to check whether the plist exists and
 `prompt-coach loop schedule uninstall` to remove it. `loop status` prints
 snapshot readiness, latest safe loop metadata, and compact refresh guidance

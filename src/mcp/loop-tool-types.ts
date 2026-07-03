@@ -1,6 +1,9 @@
 import type { LoopOutcomeStatus } from "../loop/types.js";
 import type { LoopBriefCompactBoundary } from "../loop/brief.js";
-import type { InstructionPatchProposal } from "../loop/instruction-patch.js";
+import type {
+  InstructionPatchApplyResult,
+  InstructionPatchProposal,
+} from "../loop/instruction-patch.js";
 import type { LoopMemoryCandidateDecision } from "../loop/memory-candidate.js";
 
 export type GetLoopdeckStatusToolArguments = {
@@ -30,6 +33,12 @@ export type RecordLoopMemoryToolArguments = {
 
 export type ProposeInstructionPatchToolArguments = {
   target_file?: "AGENTS.md" | "CLAUDE.md";
+};
+
+export type ApplyInstructionPatchToolArguments = {
+  target_file?: "AGENTS.md" | "CLAUDE.md";
+  target_dir?: string;
+  confirm_apply?: boolean;
 };
 
 export type LoopdeckToolPrivacy = {
@@ -144,5 +153,18 @@ export type ProposeInstructionPatchToolResult =
   | {
       is_error: true;
       error_code: "invalid_input" | "not_found" | "storage_unavailable";
+      message: string;
+    };
+
+export type ApplyInstructionPatchToolResult =
+  | InstructionPatchApplyResult
+  | {
+      is_error: true;
+      error_code:
+        | "approval_required"
+        | "invalid_input"
+        | "not_found"
+        | "storage_unavailable"
+        | "apply_failed";
       message: string;
     };

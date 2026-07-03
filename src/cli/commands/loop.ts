@@ -7,6 +7,8 @@ import {
 } from "../../loop/brief.js";
 import { collectLoopSnapshot } from "../../loop/collect.js";
 import {
+  applyInstructionPatchFromMemory,
+  type InstructionPatchApplyResult,
   parseInstructionPatchTarget,
   proposeInstructionPatchFromMemory,
   type InstructionPatchProposal,
@@ -30,6 +32,8 @@ type LoopCliOptions = {
   now?: Date;
   source?: string;
   targetFile?: string;
+  targetDir?: string;
+  confirmApply?: boolean;
   worktree?: string;
   approvedBy?: string;
 };
@@ -102,6 +106,22 @@ export function registerLoopCommand(program: Command): void {
     .option("--json", "Print JSON.")
     .action((options: LoopCliOptions) => {
       console.log(loopInstructionPatchForCli(options));
+    });
+
+  loop
+    .command("instruction-apply")
+    .description("Apply an approved Loopdeck memory to an instruction file.")
+    .option("--data-dir <path>", "Override the prompt-coach data directory.")
+    .option(
+      "--target-file <file>",
+      "Instruction file target (AGENTS.md or CLAUDE.md).",
+      "AGENTS.md",
+    )
+    .option("--target-dir <path>", "Project directory to update.", process.cwd())
+    .option("--confirm-apply", "Confirm writing the instruction file.")
+    .option("--json", "Print JSON.")
+    .action((options: LoopCliOptions) => {
+      console.log(loopInstructionPatchApplyForCli(options));
     });
 
   registerLoopScheduleCommand(loop);
@@ -235,6 +255,36 @@ export function loopInstructionPatchForCli(
     return options.json
       ? JSON.stringify(proposal, null, 2)
       : formatInstructionPatchProposal(proposal);
+  });
+}
+
+export function loopInstructionPatchApplyForCli(
+  options: LoopCliOptions = {},
+): string {
+  if (!options.confirmApply) {
+    throw new UserError("Instruction patch apply requires --confirm-apply.");
+  }
+
+  return withStorage(options.dataDir, (storage) => {
+    const targetFile = parseInstructionPatchTarget(
+      options.targetFile ?? "AGENTS.md",
+    );
+    const memory = storage.listLoopMemories({ limit: 1 }).items.at(0);
+    if (!memory) {
+      throw new UserError(
+        "No loop memory found. Run `prompt-coach loop memory-approve` first.",
+      );
+    }
+    const result = applyInstructionPatchFromMemory({
+      memory,
+      targetDir: options.targetDir ?? process.cwd(),
+      targetFile,
+      confirmApply: true,
+    });
+
+    return options.json
+      ? JSON.stringify(result, null, 2)
+      : formatInstructionPatchApplyResult(result);
   });
 }
 
@@ -381,6 +431,22 @@ function formatInstructionPatchProposal(
     `Next: ${proposal.next_action}`,
     "",
     "Privacy: local-only, no prompt bodies, no raw paths, no external calls, no instruction file writes.",
+  ].join("\n");
+}
+
+function formatInstructionPatchApplyResult(
+  result: InstructionPatchApplyResult,
+): string {
+  return [
+    "Loop instruction patch applied",
+    `target ${result.target_file}`,
+    `applied ${result.applied ? "yes" : "no"}`,
+    `already present ${result.already_present ? "yes" : "no"}`,
+    `writes files ${result.writes_files ? "yes" : "no"}`,
+    "",
+    `Next: ${result.next_action}`,
+    "",
+    "Privacy: local-only, no prompt bodies, no raw paths, no external calls.",
   ].join("\n");
 }
 

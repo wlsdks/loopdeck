@@ -611,6 +611,28 @@ Do not add:
   external LLM results
 - generating instruction changes from unapproved or unsafe memory candidates
 
+### Slice 4.9: Explicit Instruction Patch Apply
+
+Add:
+
+- pure apply function that appends the latest approved Loopdeck memory to
+  `AGENTS.md` or `CLAUDE.md` only when explicit confirmation is present
+  (**implemented**)
+- CLI `prompt-coach loop instruction-apply --target-file AGENTS.md
+  --confirm-apply` for deliberate local file writes (**implemented**)
+- MCP `apply_instruction_patch` for Codex and Claude Code, requiring
+  `confirm_apply=true` and returning no raw paths (**implemented**)
+- idempotency by `source_memory` marker so repeat calls do not duplicate the
+  same memory (**implemented**)
+
+Do not add:
+
+- applying patches without explicit confirmation
+- applying unapproved or unsafe memory candidates
+- editing any file outside `AGENTS.md` or `CLAUDE.md`
+- returning prompt bodies, raw paths, transcripts, compact summaries, or
+  external LLM results
+
 ### Slice 5: Brand Migration
 
 Add:

@@ -133,7 +133,9 @@
 - [x] Task 10 GREEN: `loop_memories`, `loop memory-approve`, `record_loop_memory` local-only 승인 저장 구현
 - [x] Task 11 RED: instruction-file patch proposal generator/CLI/MCP가 missing module/export/tool로 실패하는지 확인
 - [x] Task 11 GREEN: `loop instruction-patch`, `propose_instruction_patch`, review-only unified diff proposal 구현
-- [ ] 다음 slice: explicit apply-approved-instruction-patch workflow, brand migration, 또는 CLI/MCP/web status model 공통화
+- [x] Task 12 RED: explicit instruction patch apply 함수/CLI/MCP/tool list가 missing export/tool로 실패하는지 확인
+- [x] Task 12 GREEN: `loop instruction-apply`, `apply_instruction_patch`, confirm-required/idempotent file write 구현
+- [ ] 다음 slice: brand migration 또는 CLI/MCP/web status model 공통화
 
 ### 판단 기준
 
@@ -196,6 +198,15 @@
 - `prompt-coach loop instruction-patch`와 MCP `propose_instruction_patch`는 같은 pure proposal generator를 사용한다.
 - 결과는 `AGENTS.md` 또는 `CLAUDE.md` 대상 unified diff 문자열과 approval-required metadata만 반환한다.
 - 명령과 MCP tool은 instruction file, project docs, memory files를 직접 쓰지 않는다.
+- prompt body, compact summary, transcript body, raw path, secret-looking token은 출력하지 않는다.
+
+### Explicit Instruction Patch Apply 판단 기준
+
+- instruction apply는 승인된 최신 `loop_memories` record에서만 동작한다.
+- CLI는 `--confirm-apply`, MCP는 `confirm_apply=true` 없이는 파일을 쓰지 않는다.
+- 적용 대상은 `AGENTS.md` 또는 `CLAUDE.md`로 제한한다.
+- 같은 `source_memory` marker가 이미 있으면 중복 append하지 않는다.
+- 결과는 target file name, applied/already_present, source_memory id, privacy metadata만 반환하고 raw path를 반환하지 않는다.
 - prompt body, compact summary, transcript body, raw path, secret-looking token은 출력하지 않는다.
 
 ## 2026-05-04 Habit Coach Panel Extraction

@@ -445,3 +445,78 @@ export const PROPOSE_INSTRUCTION_PATCH_TOOL_DEFINITION: PromptCoachMcpToolDefini
       ],
     },
   } as const;
+
+export const APPLY_INSTRUCTION_PATCH_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
+  {
+    name: "apply_instruction_patch",
+    description:
+      "Apply the latest approved Loopdeck memory to AGENTS.md or CLAUDE.md only when confirm_apply is true. This writes one local instruction file, is idempotent by source memory id, and never returns prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
+    annotations: {
+      ...LOCAL_LOOP_WRITE_TOOL_ANNOTATIONS,
+      idempotentHint: true,
+      title: "Apply instruction patch",
+    },
+    inputSchema: {
+      type: "object",
+      required: ["confirm_apply"],
+      properties: {
+        target_file: {
+          type: "string",
+          enum: ["AGENTS.md", "CLAUDE.md"],
+          description: "Instruction file target. Defaults to AGENTS.md.",
+        },
+        target_dir: {
+          type: "string",
+          description:
+            "Project directory to update. Defaults to the MCP server working directory. This path is not returned.",
+        },
+        confirm_apply: {
+          type: "boolean",
+          description:
+            "Must be true to write the instruction file after user review.",
+        },
+      },
+      additionalProperties: false,
+    },
+    outputSchema: {
+      type: "object",
+      properties: {
+        target_file: { type: "string", enum: ["AGENTS.md", "CLAUDE.md"] },
+        applied: { type: "boolean" },
+        already_present: { type: "boolean" },
+        writes_files: { const: true },
+        requires_user_approval: { const: false },
+        source_memory_id: { type: "string" },
+        next_action: { type: "string" },
+        privacy: {
+          ...LOOP_TOOL_PRIVACY_SCHEMA,
+          required: [
+            ...LOOP_TOOL_PRIVACY_SCHEMA.required,
+            "writes_instruction_files",
+          ],
+          properties: {
+            ...LOOP_TOOL_PRIVACY_SCHEMA.properties,
+            writes_instruction_files: { const: true },
+          },
+        },
+        is_error: TOOL_ERROR_OUTPUT_SCHEMA.properties.is_error,
+        error_code: TOOL_ERROR_OUTPUT_SCHEMA.properties.error_code,
+        message: TOOL_ERROR_OUTPUT_SCHEMA.properties.message,
+      },
+      oneOf: [
+        {
+          required: [
+            "target_file",
+            "applied",
+            "already_present",
+            "writes_files",
+            "requires_user_approval",
+            "source_memory_id",
+            "next_action",
+            "privacy",
+          ],
+        },
+        TOOL_ERROR_OUTPUT_SCHEMA,
+      ],
+    },
+  } as const;
