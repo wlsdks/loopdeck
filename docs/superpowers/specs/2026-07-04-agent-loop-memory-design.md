@@ -812,6 +812,25 @@ Do not add:
 - hook marker rename
 - MCP server name rename
 
+### Slice 4.18: Memory Approval Next Actions
+
+Add:
+
+- CLI `prompt-coach loop memory-approve --json` result with structured
+  `next_actions`
+- CLI text output that lists the immediate follow-up commands after recording
+  memory
+- MCP `record_loop_memory` result and schema with structured `next_actions`
+- focused tests proving approval still does not write AGENTS.md, CLAUDE.md, or
+  project docs
+
+Do not add:
+
+- automatic instruction-file writes
+- automatic memory approval
+- hidden external LLM calls
+- removal of the existing `next_action` compatibility field
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

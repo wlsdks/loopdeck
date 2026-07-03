@@ -129,6 +129,7 @@ export type RecordLoopMemoryToolResult =
         created_at: string;
       };
       next_action: string;
+      next_actions: string[];
       privacy: LoopdeckToolPrivacy & {
         stores_prompt_bodies: false;
         stores_raw_paths: false;

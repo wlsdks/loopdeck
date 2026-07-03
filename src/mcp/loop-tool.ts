@@ -333,6 +333,10 @@ export function recordLoopMemoryTool(
         },
         next_action:
           "Use this local memory as context in future loop briefs; writing AGENTS.md or CLAUDE.md still requires a separate explicit patch.",
+        next_actions: [
+          "prepare_loop_brief",
+          "propose_instruction_patch target_file=AGENTS.md",
+        ],
         privacy: {
           ...loopToolPrivacy(),
           stores_prompt_bodies: false,

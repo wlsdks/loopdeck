@@ -244,6 +244,10 @@ export function loopMemoryApproveForCli(options: LoopCliOptions = {}): string {
       recorded: true as const,
       memory,
       next_action: "use recorded memory as local context in future loop briefs",
+      next_actions: [
+        "prompt-coach loop brief",
+        "prompt-coach loop instruction-patch --target-file AGENTS.md",
+      ],
       privacy: {
         ...memory.privacy,
         returns_prompt_bodies: false,
@@ -429,6 +433,7 @@ function formatLoopMemoryApproval(result: {
   recorded: true;
   memory: ReturnType<ReturnType<typeof createSqlitePromptStorage>["recordLoopMemory"]>;
   next_action: string;
+  next_actions: string[];
 }): string {
   return [
     "Loop memory recorded",
@@ -439,6 +444,7 @@ function formatLoopMemoryApproval(result: {
     `evidence ${result.memory.evidence_refs.join(", ")}`,
     "",
     `Next: ${result.next_action}`,
+    ...result.next_actions.map((action) => `- ${action}`),
     "",
     "Privacy: local-only, no prompt bodies, no raw paths, no external calls, no instruction file writes.",
   ].join("\n");

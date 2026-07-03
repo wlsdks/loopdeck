@@ -155,7 +155,9 @@
 - [x] Task 19 GREEN: `LoopdeckStatus.memory_candidate`를 CLI/MCP/API/web status에 statement/evidence 없이 연결
 - [x] Task 20 RED: plugin command docs/default prompts가 `loopdeck` CLI alias와 `/prompt-coach:*` namespace compatibility를 설명하지 않는 packaging focused test 실패 확인
 - [x] Task 20 GREEN: Claude command docs, Codex default prompt, README/PLUGINS에 `loopdeck` CLI alias guidance를 추가하고 slash namespace는 유지
-- [ ] 다음 slice: memory candidate approval UX refinement 또는 dedicated plugin rename plan
+- [x] Task 21 RED: memory approval result가 다음 실행 명령을 structured `next_actions`로 안내하지 않는 CLI/MCP focused test 실패 확인
+- [x] Task 21 GREEN: CLI `loop memory-approve`와 MCP `record_loop_memory`에 brief/patch proposal 후속 명령을 추가하되 instruction file write는 하지 않음
+- [ ] 다음 slice: web memory approval UX refinement 또는 dedicated plugin rename plan
 
 ### 판단 기준
 

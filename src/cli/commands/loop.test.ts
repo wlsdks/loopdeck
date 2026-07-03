@@ -325,6 +325,7 @@ describe("loop CLI command", () => {
     const parsed = JSON.parse(json) as {
       recorded: boolean;
       memory: { statement: string; evidence_refs: string[] };
+      next_actions?: string[];
       privacy: { writes_instruction_files: boolean };
     };
 
@@ -333,6 +334,10 @@ describe("loop CLI command", () => {
       "Scheduler lifecycle should stay plist-only",
     );
     expect(parsed.memory.evidence_refs).toContain("commit:2a91de0");
+    expect(parsed.next_actions).toEqual([
+      "prompt-coach loop brief",
+      "prompt-coach loop instruction-patch --target-file AGENTS.md",
+    ]);
     expect(parsed.privacy.writes_instruction_files).toBe(false);
     expect(json).not.toContain("Make this better");
     expect(json).not.toContain("/Users/example");
@@ -342,6 +347,10 @@ describe("loop CLI command", () => {
     expect(text).toContain("Loop memory recorded");
     expect(text).toContain("approved by user");
     expect(text).toContain("Next: use recorded memory as local context");
+    expect(text).toContain("- prompt-coach loop brief");
+    expect(text).toContain(
+      "- prompt-coach loop instruction-patch --target-file AGENTS.md",
+    );
     expect(text).not.toContain("Make this better");
     expect(text).not.toContain("/Users/example");
   });

@@ -387,6 +387,7 @@ export const RECORD_LOOP_MEMORY_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
           },
         },
         next_action: { type: "string" },
+        next_actions: { type: "array", items: { type: "string" } },
         privacy: {
           ...LOOP_TOOL_PRIVACY_SCHEMA,
           required: [
@@ -408,7 +409,13 @@ export const RECORD_LOOP_MEMORY_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
       },
       oneOf: [
         {
-          required: ["recorded", "memory", "next_action", "privacy"],
+          required: [
+            "recorded",
+            "memory",
+            "next_action",
+            "next_actions",
+            "privacy",
+          ],
         },
         TOOL_ERROR_OUTPUT_SCHEMA,
       ],

@@ -231,7 +231,9 @@ the latest passed loop outcome and safe evidence refs, then returns a
 user-reviewable candidate without writing memory or instruction files.
 `record_loop_memory` records a user-approved candidate into local
 prompt-coach storage only; instruction-file patches remain a separate explicit
-workflow. `propose_instruction_patch` returns a reviewable unified diff for
+workflow. Its structured `next_actions` point agents to `prepare_loop_brief`
+and `propose_instruction_patch target_file=AGENTS.md`.
+`propose_instruction_patch` returns a reviewable unified diff for
 adding the latest approved memory to `AGENTS.md` or `CLAUDE.md`, but it never
 writes those files. `apply_instruction_patch` writes the latest approved memory
 only when `confirm_apply` is true, is idempotent by source memory id, and does
