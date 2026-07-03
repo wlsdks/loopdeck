@@ -1,7 +1,7 @@
 import type Database from "better-sqlite3";
 
 import type { LoopSnapshot } from "../loop/types.js";
-import type { LoopSnapshotListResult } from "./ports.js";
+import type { LoopOutcomeUpdate, LoopSnapshotListResult } from "./ports.js";
 
 export function createLoopSnapshot(
   db: Database.Database,
@@ -76,6 +76,26 @@ export function listLoopSnapshots(
     .all(limit) as LoopSnapshotRow[];
 
   return { items: rows.map(loopSnapshotFromRow) };
+}
+
+export function recordLoopOutcome(
+  db: Database.Database,
+  snapshotId: string,
+  outcome: LoopOutcomeUpdate,
+): LoopSnapshot | undefined {
+  const result = db
+    .prepare("UPDATE loop_snapshots SET outcome_json = ? WHERE id = ?")
+    .run(JSON.stringify(outcome), snapshotId);
+
+  if (result.changes === 0) {
+    return undefined;
+  }
+
+  const row = db
+    .prepare("SELECT * FROM loop_snapshots WHERE id = ?")
+    .get(snapshotId) as LoopSnapshotRow | undefined;
+
+  return row ? loopSnapshotFromRow(row) : undefined;
 }
 
 type LoopSnapshotRow = {

@@ -127,7 +127,7 @@ import {
 import { applyMigrations } from "./sqlite-migrations.js";
 import { createProjectKey } from "./project-id.js";
 import { projectLabel } from "./project-label.js";
-import { createLoopSnapshot, getLatestLoopSnapshot, listLoopSnapshots } from "./loop-snapshots.js";
+import * as loopSnapshots from "./loop-snapshots.js";
 
 export type { PromptRow } from "./sqlite-rows.js";
 
@@ -195,9 +195,10 @@ export function createSqlitePromptStorage(
         .prepare("SELECT * FROM prompts ORDER BY received_at DESC, id DESC")
         .all() as PromptRow[];
     },
-    createLoopSnapshot: (input) => createLoopSnapshot(db, input),
-    getLatestLoopSnapshot: () => getLatestLoopSnapshot(db),
-    listLoopSnapshots: (options = {}) => listLoopSnapshots(db, options),
+    createLoopSnapshot: (input) => loopSnapshots.createLoopSnapshot(db, input),
+    getLatestLoopSnapshot: () => loopSnapshots.getLatestLoopSnapshot(db),
+    listLoopSnapshots: (options = {}) => loopSnapshots.listLoopSnapshots(db, options),
+    recordLoopOutcome: (snapshotId, outcome) => loopSnapshots.recordLoopOutcome(db, snapshotId, outcome),
     listPrompts(options) {
       return listPrompts(db, options);
     },

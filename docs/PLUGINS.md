@@ -183,7 +183,7 @@ uses the exact CLI path from the current installation.
 prompt-coach mcp
 ```
 
-This server exposes fifteen model-controlled tools:
+This server exposes sixteen model-controlled tools:
 
 - `get_prompt_coach_status`
 - `coach_prompt`
@@ -194,6 +194,7 @@ This server exposes fifteen model-controlled tools:
 - `record_clarifications`
 - `get_loopdeck_status`
 - `prepare_loop_brief`
+- `record_loop_outcome`
 - `prepare_agent_rewrite`
 - `record_agent_rewrite`
 - `score_prompt_archive`
@@ -209,7 +210,9 @@ counts, latest prompt metadata, available tool names, and next actions.
 `get_loopdeck_status` checks whether local loop snapshots exist and returns
 safe latest-loop metadata. `prepare_loop_brief` returns a copy-ready
 continuation prompt from the latest Loopdeck snapshot without prompt bodies,
-raw paths, or auto-submission.
+raw paths, or auto-submission. `record_loop_outcome` writes only
+user-approved status, summary, and evidence references for a Loopdeck snapshot;
+it does not store prompt bodies, raw paths, or external LLM results.
 `score_prompt` scores direct prompt text, a stored prompt id, or the latest
 stored prompt with the same local deterministic `0-100` Prompt Quality Score
 used by the web UI. The response also includes a per-criterion `breakdown`

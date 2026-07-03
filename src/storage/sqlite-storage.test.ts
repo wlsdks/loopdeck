@@ -89,6 +89,65 @@ describe("SQLite prompt storage", () => {
     storage.close();
   });
 
+  it("records loop snapshot outcomes without prompt bodies or raw paths", () => {
+    const dataDir = createTempDir();
+    initializePromptCoach({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+      now: () => new Date("2026-07-04T01:00:00.000Z"),
+    });
+
+    storage.createLoopSnapshot({
+      id: "loop_outcome",
+      created_at: "2026-07-04T01:00:00.000Z",
+      tool: "codex",
+      source: "cli",
+      cwd_label: "private-project",
+      project_id: "proj_outcome",
+      prompt_ids: ["prmt_one"],
+      event_counts: {
+        prompts: 1,
+      },
+      quality: {
+        average_prompt_score: 72,
+        top_gaps: [],
+        unresolved_questions: [],
+      },
+      outcome: {
+        status: "unknown",
+        summary: "Loop snapshot collected from 1 prompts.",
+        evidence_refs: ["prompt:prmt_one"],
+      },
+      next_brief: {
+        generated: false,
+        summary: "Run prompt-coach loop brief to generate the next request.",
+      },
+      privacy: {
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        local_only: true,
+      },
+    });
+
+    const updated = storage.recordLoopOutcome("loop_outcome", {
+      status: "passed",
+      summary: "Focused tests and build passed.",
+      evidence_refs: ["test:src/mcp/loop-tool.test.ts", "build:pnpm-build"],
+    });
+
+    expect(updated?.outcome).toEqual({
+      status: "passed",
+      summary: "Focused tests and build passed.",
+      evidence_refs: ["test:src/mcp/loop-tool.test.ts", "build:pnpm-build"],
+    });
+    expect(storage.getLatestLoopSnapshot()?.outcome.status).toBe("passed");
+    expect(JSON.stringify(updated)).not.toContain("Make this better");
+    expect(JSON.stringify(updated)).not.toContain("/Users/example");
+
+    storage.close();
+  });
+
   it("initializes directories, applies migration, stores Markdown, indexes FTS, and deduplicates", async () => {
     const dataDir = createTempDir();
     initializePromptCoach({ dataDir });

@@ -56,11 +56,13 @@
 - [x] Task 5: architecture 문서에 `src/loop/` 경계 추가
 - [x] Task 6 RED: Loopdeck MCP tool 테스트가 missing module/tool list로 실패하는지 확인
 - [x] Task 6 GREEN: `get_loopdeck_status` / `prepare_loop_brief` MCP tool 구현
-- [ ] 다음 slice: `record_loop_outcome` 설계 및 구현
+- [x] Task 7 RED: loop outcome storage/MCP 테스트가 missing method/tool로 실패하는지 확인
+- [x] Task 7 GREEN: `record_loop_outcome` MCP write tool과 SQLite outcome update 구현
+- [ ] 다음 slice: Codex/Claude Code hook 기반 loop snapshot 수집 설계 및 구현
 
 ### 판단 기준
 
-- 이번 slice는 prompt body와 raw path를 저장하거나 출력하지 않는 domain/storage/CLI/MCP read contract만 증명한다.
+- 이번 slice는 prompt body와 raw path를 저장하거나 출력하지 않는 domain/storage/CLI/MCP read contract와 user-approved outcome metadata write contract만 증명한다.
 - hook, web, rename 작업은 이 커밋에 섞지 않는다.
 - 다음 slice도 RED-GREEN 단위로 storage integration부터 진행한다.
 

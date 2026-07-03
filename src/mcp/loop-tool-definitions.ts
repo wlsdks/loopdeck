@@ -7,6 +7,13 @@ const LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS = {
   readOnlyHint: true,
 } as const;
 
+const LOCAL_LOOP_WRITE_TOOL_ANNOTATIONS = {
+  destructiveHint: false,
+  idempotentHint: false,
+  openWorldHint: false,
+  readOnlyHint: false,
+} as const;
+
 const LOOP_TOOL_PRIVACY_SCHEMA = {
   type: "object",
   required: [
@@ -21,6 +28,11 @@ const LOOP_TOOL_PRIVACY_SCHEMA = {
     returns_prompt_bodies: { const: false },
     returns_raw_paths: { const: false },
   },
+} as const;
+
+const LOOP_OUTCOME_STATUS_SCHEMA = {
+  type: "string",
+  enum: ["unknown", "in_progress", "passed", "failed", "blocked", "abandoned"],
 } as const;
 
 const TOOL_ERROR_OUTPUT_SCHEMA = {
@@ -134,6 +146,91 @@ export const PREPARE_LOOP_BRIEF_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
             "snapshot_id",
             "title",
             "prompt",
+            "next_action",
+            "privacy",
+          ],
+        },
+        TOOL_ERROR_OUTPUT_SCHEMA,
+      ],
+    },
+  } as const;
+
+export const RECORD_LOOP_OUTCOME_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
+  {
+    name: "record_loop_outcome",
+    description:
+      "Record user-approved outcome metadata for a local Loopdeck snapshot after Codex or Claude Code has verified a loop result. Use this to mark a specific snapshot, or the latest snapshot when snapshot_id is omitted, as passed, failed, blocked, abandoned, in progress, or unknown. This writes only status, summary, and evidence references; it never stores prompt bodies, raw absolute paths, secrets, transcripts, or external LLM results.",
+    annotations: {
+      ...LOCAL_LOOP_WRITE_TOOL_ANNOTATIONS,
+      title: "Record Loopdeck outcome",
+    },
+    inputSchema: {
+      type: "object",
+      required: ["status", "summary"],
+      properties: {
+        snapshot_id: {
+          type: "string",
+          description:
+            "Optional local Loopdeck snapshot id. Omit this to update the latest snapshot.",
+        },
+        latest: {
+          type: "boolean",
+          description:
+            "Set true to update the latest local loop snapshot. Defaults to true when snapshot_id is omitted.",
+        },
+        status: LOOP_OUTCOME_STATUS_SCHEMA,
+        summary: {
+          type: "string",
+          description:
+            "Concise user-approved result summary. Must not include prompt bodies or raw absolute paths.",
+        },
+        evidence_refs: {
+          type: "array",
+          items: { type: "string" },
+          description:
+            "Optional safe evidence labels, for example test command names, commit ids, or document ids. Do not include raw paths or secrets.",
+        },
+      },
+      additionalProperties: false,
+    },
+    outputSchema: {
+      type: "object",
+      properties: {
+        recorded: { const: true },
+        snapshot_id: { type: "string" },
+        outcome: {
+          type: "object",
+          required: ["status", "summary", "evidence_refs"],
+          properties: {
+            status: LOOP_OUTCOME_STATUS_SCHEMA,
+            summary: { type: "string" },
+            evidence_refs: { type: "array", items: { type: "string" } },
+          },
+        },
+        next_action: { type: "string" },
+        privacy: {
+          ...LOOP_TOOL_PRIVACY_SCHEMA,
+          required: [
+            ...LOOP_TOOL_PRIVACY_SCHEMA.required,
+            "stores_prompt_bodies",
+            "stores_raw_paths",
+          ],
+          properties: {
+            ...LOOP_TOOL_PRIVACY_SCHEMA.properties,
+            stores_prompt_bodies: { const: false },
+            stores_raw_paths: { const: false },
+          },
+        },
+        is_error: TOOL_ERROR_OUTPUT_SCHEMA.properties.is_error,
+        error_code: TOOL_ERROR_OUTPUT_SCHEMA.properties.error_code,
+        message: TOOL_ERROR_OUTPUT_SCHEMA.properties.message,
+      },
+      oneOf: [
+        {
+          required: [
+            "recorded",
+            "snapshot_id",
+            "outcome",
             "next_action",
             "privacy",
           ],

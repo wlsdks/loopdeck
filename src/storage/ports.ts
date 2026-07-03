@@ -109,10 +109,16 @@ export type LoopSnapshotListResult = {
   items: LoopSnapshot[];
 };
 
+export type LoopOutcomeUpdate = LoopSnapshot["outcome"];
+
 export type LoopSnapshotStoragePort = {
   createLoopSnapshot(input: LoopSnapshot): LoopSnapshot;
   getLatestLoopSnapshot(): LoopSnapshot | undefined;
   listLoopSnapshots(options?: { limit?: number }): LoopSnapshotListResult;
+  recordLoopOutcome(
+    snapshotId: string,
+    outcome: LoopOutcomeUpdate,
+  ): LoopSnapshot | undefined;
 };
 
 export type DeletePromptResult = {

@@ -46,6 +46,9 @@ describe("MCP stdio server", () => {
             name: "prepare_loop_brief",
           }),
           expect.objectContaining({
+            name: "record_loop_outcome",
+          }),
+          expect.objectContaining({
             name: "score_prompt_archive",
           }),
           expect.objectContaining({
@@ -77,13 +80,14 @@ describe("MCP stdio server", () => {
 
     const tools = (response?.result as { tools: Array<unknown> }).tools;
 
-    expect(tools).toHaveLength(15);
+    expect(tools).toHaveLength(16);
     for (const tool of tools.filter(
       (tool) =>
         ![
           "record_agent_rewrite",
           "record_agent_judgments",
           "record_clarifications",
+          "record_loop_outcome",
         ].includes((tool as { name?: string }).name ?? ""),
     )) {
       expect(tool).toEqual(
@@ -110,6 +114,15 @@ describe("MCP stdio server", () => {
         }),
         expect.objectContaining({
           name: "record_clarifications",
+          annotations: expect.objectContaining({
+            destructiveHint: false,
+            idempotentHint: false,
+            openWorldHint: false,
+            readOnlyHint: false,
+          }),
+        }),
+        expect.objectContaining({
+          name: "record_loop_outcome",
           annotations: expect.objectContaining({
             destructiveHint: false,
             idempotentHint: false,
@@ -208,6 +221,16 @@ describe("MCP stdio server", () => {
           outputSchema: expect.objectContaining({
             properties: expect.objectContaining({
               prompt: expect.any(Object),
+              privacy: expect.any(Object),
+            }),
+          }),
+        }),
+        expect.objectContaining({
+          name: "record_loop_outcome",
+          outputSchema: expect.objectContaining({
+            properties: expect.objectContaining({
+              recorded: expect.any(Object),
+              outcome: expect.any(Object),
               privacy: expect.any(Object),
             }),
           }),

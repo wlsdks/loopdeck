@@ -1,9 +1,19 @@
+import type { LoopOutcomeStatus } from "../loop/types.js";
+
 export type GetLoopdeckStatusToolArguments = {
   include_latest?: boolean;
 };
 
 export type PrepareLoopBriefToolArguments = {
   latest?: boolean;
+};
+
+export type RecordLoopOutcomeToolArguments = {
+  snapshot_id?: string;
+  latest?: boolean;
+  status: LoopOutcomeStatus;
+  summary: string;
+  evidence_refs?: string[];
 };
 
 export type LoopdeckToolPrivacy = {
@@ -42,6 +52,27 @@ export type PrepareLoopBriefToolResult =
       next_action: string;
       privacy: LoopdeckToolPrivacy & {
         auto_submits: false;
+      };
+    }
+  | {
+      is_error: true;
+      error_code: "invalid_input" | "not_found" | "storage_unavailable";
+      message: string;
+    };
+
+export type RecordLoopOutcomeToolResult =
+  | {
+      recorded: true;
+      snapshot_id: string;
+      outcome: {
+        status: LoopOutcomeStatus;
+        summary: string;
+        evidence_refs: string[];
+      };
+      next_action: string;
+      privacy: LoopdeckToolPrivacy & {
+        stores_prompt_bodies: false;
+        stores_raw_paths: false;
       };
     }
   | {

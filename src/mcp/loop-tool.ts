@@ -8,9 +8,15 @@ import type {
   GetLoopdeckStatusToolResult,
   PrepareLoopBriefToolArguments,
   PrepareLoopBriefToolResult,
+  RecordLoopOutcomeToolArguments,
+  RecordLoopOutcomeToolResult,
 } from "./loop-tool-types.js";
 
-const LOOP_TOOL_NAMES = ["get_loopdeck_status", "prepare_loop_brief"];
+const LOOP_TOOL_NAMES = [
+  "get_loopdeck_status",
+  "prepare_loop_brief",
+  "record_loop_outcome",
+];
 
 export function getLoopdeckStatusTool(
   args: GetLoopdeckStatusToolArguments,
@@ -114,6 +120,72 @@ export function prepareLoopBriefTool(
   }
 }
 
+export function recordLoopOutcomeTool(
+  args: RecordLoopOutcomeToolArguments,
+  options: ScorePromptToolOptions = {},
+): RecordLoopOutcomeToolResult {
+  const summary = typeof args.summary === "string" ? args.summary.trim() : "";
+
+  if (!summary) {
+    return loopToolError("invalid_input", "`summary` must not be empty.");
+  }
+
+  if (args.snapshot_id && args.latest === true) {
+    return loopToolError(
+      "invalid_input",
+      "Use either `snapshot_id` or `latest`, not both.",
+    );
+  }
+
+  try {
+    const config = loadPromptCoachConfig(options.dataDir);
+    const auth = loadHookAuth(options.dataDir);
+    const storage = createSqlitePromptStorage({
+      dataDir: config.data_dir,
+      hmacSecret: auth.web_session_secret,
+    });
+
+    try {
+      const snapshotId =
+        args.snapshot_id ?? storage.getLatestLoopSnapshot()?.id;
+
+      if (!snapshotId) {
+        return loopToolError(
+          "not_found",
+          "No loop snapshot found. Run `prompt-coach loop collect` first.",
+        );
+      }
+
+      const snapshot = storage.recordLoopOutcome(snapshotId, {
+        status: args.status,
+        summary,
+        evidence_refs: args.evidence_refs ?? [],
+      });
+
+      if (!snapshot) {
+        return loopToolError("not_found", `Loop snapshot not found: ${snapshotId}.`);
+      }
+
+      return {
+        recorded: true,
+        snapshot_id: snapshot.id,
+        outcome: snapshot.outcome,
+        next_action:
+          "Use prepare_loop_brief to continue the loop or run prompt-coach loop collect after the next agent turn.",
+        privacy: {
+          ...loopToolPrivacy(),
+          stores_prompt_bodies: false,
+          stores_raw_paths: false,
+        },
+      };
+    } finally {
+      storage.close();
+    }
+  } catch (error) {
+    return loopToolError("storage_unavailable", storageUnavailableMessage(error));
+  }
+}
+
 function toSafeLatestLoopSnapshot(snapshot: LoopSnapshot) {
   return {
     id: snapshot.id,
@@ -140,14 +212,21 @@ function loopToolPrivacy() {
   } as const;
 }
 
+type LoopToolErrorCode = Extract<
+  PrepareLoopBriefToolResult | RecordLoopOutcomeToolResult,
+  { is_error: true }
+>["error_code"];
+
+type LoopToolError = {
+  is_error: true;
+  error_code: LoopToolErrorCode;
+  message: string;
+};
+
 function loopToolError(
-  errorCode: PrepareLoopBriefToolResult extends infer Result
-    ? Result extends { error_code: infer Code }
-      ? Code
-      : never
-    : never,
+  errorCode: LoopToolErrorCode,
   message: string,
-): Extract<PrepareLoopBriefToolResult, { is_error: true }> {
+): LoopToolError {
   return {
     is_error: true,
     error_code: errorCode,

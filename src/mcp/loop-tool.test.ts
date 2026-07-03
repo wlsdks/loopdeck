@@ -10,6 +10,7 @@ import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import {
   getLoopdeckStatusTool,
   prepareLoopBriefTool,
+  recordLoopOutcomeTool,
 } from "./loop-tool.js";
 
 const tempDirs: string[] = [];
@@ -86,6 +87,60 @@ describe("Loopdeck MCP tools", () => {
       error_code: "not_found",
       message:
         "No loop snapshot found. Run `prompt-coach loop collect` first.",
+    });
+  });
+
+  it("records user-approved loop outcome metadata without prompt bodies or raw paths", () => {
+    const dataDir = seedLoopSnapshot();
+
+    const result = recordLoopOutcomeTool(
+      {
+        snapshot_id: "loop_mcp",
+        status: "passed",
+        summary: "Focused MCP tests and full build passed.",
+        evidence_refs: ["test:src/mcp/loop-tool.test.ts", "build:pnpm-build"],
+      },
+      { dataDir },
+    );
+    const serialized = JSON.stringify(result);
+
+    expect(result).toMatchObject({
+      recorded: true,
+      snapshot_id: "loop_mcp",
+      outcome: {
+        status: "passed",
+        summary: "Focused MCP tests and full build passed.",
+        evidence_refs: ["test:src/mcp/loop-tool.test.ts", "build:pnpm-build"],
+      },
+      privacy: {
+        local_only: true,
+        external_calls: false,
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        returns_prompt_bodies: false,
+        returns_raw_paths: false,
+      },
+    });
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("/Users/example");
+  });
+
+  it("rejects empty loop outcome summaries", () => {
+    const dataDir = seedLoopSnapshot();
+
+    const result = recordLoopOutcomeTool(
+      {
+        snapshot_id: "loop_mcp",
+        status: "failed",
+        summary: " ",
+      },
+      { dataDir },
+    );
+
+    expect(result).toEqual({
+      is_error: true,
+      error_code: "invalid_input",
+      message: "`summary` must not be empty.",
     });
   });
 });
