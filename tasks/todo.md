@@ -135,7 +135,10 @@
 - [x] Task 11 GREEN: `loop instruction-patch`, `propose_instruction_patch`, review-only unified diff proposal 구현
 - [x] Task 12 RED: explicit instruction patch apply 함수/CLI/MCP/tool list가 missing export/tool로 실패하는지 확인
 - [x] Task 12 GREEN: `loop instruction-apply`, `apply_instruction_patch`, confirm-required/idempotent file write 구현
-- [ ] 다음 slice: brand migration 또는 CLI/MCP/web status model 공통화
+- [x] Task 13 RED: package/plugin product-facing metadata가 Loopdeck이 아니라는 manifest 테스트 실패 확인
+- [x] Task 13 GREEN: package/plugin/README/docs product-facing metadata를 Loopdeck으로 갱신하고 CLI/package id는 `prompt-coach` 유지
+- [x] Task 13 META: GitHub repo를 `wlsdks/loopdeck`으로 rename, origin URL과 repo description/topics 갱신
+- [ ] 다음 slice: CLI/MCP/web status model 공통화 또는 package/CLI alias migration plan
 
 ### 판단 기준
 
@@ -208,6 +211,14 @@
 - 같은 `source_memory` marker가 이미 있으면 중복 append하지 않는다.
 - 결과는 target file name, applied/already_present, source_memory id, privacy metadata만 반환하고 raw path를 반환하지 않는다.
 - prompt body, compact summary, transcript body, raw path, secret-looking token은 출력하지 않는다.
+
+### Brand Migration 판단 기준
+
+- GitHub repository는 `wlsdks/loopdeck`이고 local `origin`도 새 URL을 사용한다.
+- GitHub description/topics는 local-first agent loop memory/meta-prompting 포지션을 반영한다.
+- package/plugin product-facing description, homepage, repository, display name은 Loopdeck을 사용한다.
+- npm package name, CLI binary, plugin command id는 compatibility window 동안 `prompt-coach`를 유지한다.
+- README/docs는 `Loopdeck`을 제품명으로 소개하고 `prompt-coach`를 현재 CLI/package 이름으로 설명한다.
 
 ## 2026-05-04 Habit Coach Panel Extraction
 

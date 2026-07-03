@@ -1,18 +1,18 @@
 ---
 name: prompt-coach
-description: Use when the user wants to install, verify, search, or troubleshoot the local prompt-coach archive for Codex or Claude Code prompts.
+description: Use when the user wants to install, verify, search, or troubleshoot Loopdeck, the local prompt-coach CLI archive and loop memory workspace for Codex or Claude Code.
 ---
 
-# Prompt Memory
+# Loopdeck
 
-Use this skill when the user wants Codex to work with the local `prompt-coach`
-archive.
+Use this skill when the user wants Codex to work with Loopdeck through the local
+`prompt-coach` CLI/archive.
 
 ## What This Plugin Does
 
-`prompt-coach` stores coding-agent prompts locally. It redacts sensitive values
-before writing Markdown files, indexes the archive in SQLite, and exposes a
-local web UI at `http://127.0.0.1:17373`.
+Loopdeck stores coding-agent prompts and loop metadata locally. It redacts
+sensitive values before writing Markdown files, indexes the archive in SQLite,
+and exposes a local web UI at `http://127.0.0.1:17373`.
 
 The plugin hook is fail-open and expects the `prompt-coach` CLI to be available
 on `PATH`. For the most useful local setup, run the coach profile from the

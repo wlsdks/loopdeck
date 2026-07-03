@@ -39,8 +39,8 @@ The current name `prompt-coach` is accurate for the old scope but too narrow for
 Verified locally:
 
 - package name: `prompt-coach`
-- current GitHub repo metadata via `gh repo view`: `wlsdks/prompt-coach`
-- local git remote still points at `https://github.com/wlsdks/prompt-memory.git`
+- current GitHub repo metadata via `gh repo view`: `wlsdks/loopdeck`
+- local git remote points at `https://github.com/wlsdks/loopdeck.git`
 - Node 22 baseline: `PATH=/Users/jinan/.nvm/versions/node/v22.15.0/bin:$PATH corepack pnpm test`
 - test result: 83 files, 589 tests passed
 - default shell currently uses Node 24 and pnpm 11; existing `better-sqlite3` native module was built for Node 22 ABI, so Node 24 tests require rebuild or fresh install before they are meaningful
@@ -160,9 +160,9 @@ worktrees
 
 Rename sequencing:
 
-1. Rename GitHub repository from `wlsdks/prompt-coach` to `wlsdks/loopdeck`.
-2. Update local `origin` from stale `wlsdks/prompt-memory.git` to the new repo URL.
-3. Update README and docs to say `Loopdeck` as product name while preserving `prompt-coach` as the current CLI/package during a deprecation window.
+1. Rename GitHub repository from `wlsdks/prompt-coach` to `wlsdks/loopdeck`. (**implemented**)
+2. Update local `origin` from stale prompt-coach/prompt-memory URLs to the new repo URL. (**implemented**)
+3. Update README and docs to say `Loopdeck` as product name while preserving `prompt-coach` as the current CLI/package during a deprecation window. (**implemented**)
 4. Add `loopdeck` CLI/package rename as a separate migration plan because it touches npm, plugin commands, docs, binary names, package files, and tests.
 
 Do not rename the npm package and CLI command in the same commit as the product/repo rename. That would mix brand migration with runtime compatibility risk.

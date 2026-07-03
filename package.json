@@ -1,12 +1,12 @@
 {
   "name": "prompt-coach",
   "version": "0.1.0-beta.0",
-  "description": "Local-first prompt archive for AI coding tools.",
+  "description": "Local-first agent loop memory and meta-prompting workbench for Codex, Claude Code, and coding-agent workflows.",
   "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wlsdks/prompt-coach.git"
+    "url": "https://github.com/wlsdks/loopdeck.git"
   },
   "packageManager": "pnpm@10.18.0",
   "engines": {

@@ -1,21 +1,24 @@
 {
   "name": "prompt-coach",
   "owner": {
-    "name": "prompt-coach contributors",
+    "name": "Loopdeck contributors",
     "email": "wlsdks@users.noreply.github.com"
   },
   "metadata": {
-    "description": "Local-first prompt archive for Claude Code and Codex prompts.",
+    "description": "Loopdeck is a local-first agent loop memory and meta-prompting workbench for Claude Code and Codex.",
     "version": "0.1.0-beta.0"
   },
   "plugins": [
     {
       "name": "prompt-coach",
       "source": "./",
-      "description": "Capture Claude Code prompts locally, redact secrets before storage, search the archive, and show capture health in the Claude Code status line.",
+      "description": "Capture Claude Code and Codex prompts locally, collect loop metadata, redact secrets before storage, and prepare continuation briefs.",
       "category": "memory",
       "tags": [
+        "loopdeck",
         "prompt-coach",
+        "loop-engineering",
+        "meta-prompting",
         "memory",
         "hooks",
         "statusline",

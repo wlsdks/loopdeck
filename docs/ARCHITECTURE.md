@@ -1,7 +1,9 @@
-# prompt-coach Architecture
+# Loopdeck Architecture
 
-`prompt-coach` is an AI coding prompt memory and improvement workspace,
-local-first. The architecture is intentionally modular without copying a
+Loopdeck is a local-first agent loop memory and meta-prompting workbench for
+Claude Code, Codex, and coding-agent workflows. The current npm package and CLI
+command remain `prompt-coach` during the compatibility window. The architecture
+is intentionally modular without copying a
 Spring-style class hierarchy into Node.js. The project uses TypeScript modules,
 plain functions, explicit ports, and small runtime entrypoints.
 

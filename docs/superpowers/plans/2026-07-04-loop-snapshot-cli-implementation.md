@@ -1481,7 +1481,7 @@ Expected: branch `codex/agent-loop-memory-design` updates on origin.
 Run:
 
 ```bash
-gh pr edit 280 --repo wlsdks/prompt-coach --body-file /tmp/loopdeck-pr-body.md
+gh pr edit 280 --repo wlsdks/loopdeck --body-file /tmp/loopdeck-pr-body.md
 ```
 
 Use this PR body:

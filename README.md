@@ -1,8 +1,8 @@
-# prompt-coach
+# Loopdeck
 
 [English](README.md) | [한국어](README.ko.md)
 
-**Local-first prompt memory and coach for Claude Code and Codex.**
+**Local-first agent loop memory and meta-prompting workbench for Claude Code and Codex.**
 
 - 🗂️ Captures every prompt you send to Claude Code / Codex into a local
   Markdown + SQLite archive — nothing leaves your machine.
@@ -18,7 +18,7 @@ prompt-coach setup --profile coach --register-mcp --open-web
 prompt-coach coach
 ```
 
-`prompt-coach` is a developer tool that safely records prompts you enter into AI coding tools such as Claude Code and Codex, helps you find them again, analyzes weak prompting patterns, and helps you write better follow-up requests.
+Loopdeck is a developer tool that safely records prompts and loop metadata from AI coding tools such as Claude Code and Codex, helps you find them again, analyzes weak prompting patterns, and helps you write better follow-up requests. The current npm package and CLI command are still named `prompt-coach` during the compatibility window.
 
 It collects supported tool prompts locally, redacts sensitive values before storage, writes Markdown files, indexes them in SQLite, and serves a local web UI for search, review, archive scoring, prompt practice, analysis, deletion, and copy-based prompt improvement.
 
@@ -114,8 +114,8 @@ npm install -g prompt-coach
 For local development from this repository:
 
 ```sh
-git clone https://github.com/wlsdks/prompt-coach.git
-cd prompt-coach
+git clone https://github.com/wlsdks/loopdeck.git
+cd loopdeck
 pnpm install   # also builds dist via the prepare lifecycle
 pnpm setup     # installs Claude Code + Codex hooks, MCP, status line, and service
 ```
@@ -134,7 +134,7 @@ enables the local server on session start.
 Inside Claude Code:
 
 ```text
-/plugin marketplace add wlsdks/prompt-coach
+/plugin marketplace add wlsdks/loopdeck
 /plugin install prompt-coach
 /reload-plugins
 /prompt-coach:setup
@@ -149,7 +149,7 @@ settings, and then runs the real setup if approved.
 From your shell:
 
 ```sh
-codex plugin marketplace add wlsdks/prompt-coach
+codex plugin marketplace add wlsdks/loopdeck
 ```
 
 Then run the local coach setup:
@@ -496,7 +496,7 @@ Recommended order:
 Claude Code can consume this repository as a marketplace:
 
 ```text
-/plugin marketplace add wlsdks/prompt-coach
+/plugin marketplace add wlsdks/loopdeck
 /plugin install prompt-coach
 /reload-plugins
 /prompt-coach:setup
@@ -576,7 +576,7 @@ pnpm prompt-coach buddy --once
 Codex can add the same repository as a marketplace:
 
 ```sh
-codex plugin marketplace add wlsdks/prompt-coach
+codex plugin marketplace add wlsdks/loopdeck
 ```
 
 After that, use `prompt-coach setup` to install the Codex hook and enable Codex hooks.

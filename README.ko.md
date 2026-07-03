@@ -1,8 +1,8 @@
-# prompt-coach
+# Loopdeck
 
 [English](README.md) | [한국어](README.ko.md)
 
-**Claude Code · Codex용 로컬 prompt 기억 및 코치 도구.**
+**Claude Code · Codex용 local-first agent loop memory 및 meta-prompting workbench.**
 
 - 🗂️ Claude Code / Codex에 보낸 모든 prompt를 로컬 Markdown + SQLite에
   보관합니다 — 외부로 나가지 않습니다.
@@ -18,7 +18,7 @@ prompt-coach setup --profile coach --register-mcp --open-web
 prompt-coach coach
 ```
 
-`prompt-coach`는 Claude Code, Codex 같은 AI 코딩 도구에 입력한 프롬프트를 안전하게 로컬에 기록하고, 나중에 다시 찾고, 반복되는 약한 프롬프트 패턴을 분석하고, 다음 요청을 더 잘 쓰도록 돕는 developer tool입니다.
+Loopdeck은 Claude Code, Codex 같은 AI 코딩 도구에 입력한 프롬프트와 loop metadata를 안전하게 로컬에 기록하고, 나중에 다시 찾고, 반복되는 약한 프롬프트 패턴을 분석하고, 다음 요청을 더 잘 쓰도록 돕는 developer tool입니다. 현재 npm package와 CLI 명령은 호환성 기간 동안 계속 `prompt-coach` 이름을 사용합니다.
 
 지원되는 도구의 프롬프트를 로컬에서 수집하고, 민감값을 저장 전에 마스킹하고, 사람이 읽을 수 있는 Markdown을 원본으로 남기며, SQLite/FTS 인덱스와 로컬 웹 UI를 통해 검색, 상세 보기, 누적 점수 측정, 프롬프트 연습, 분석, 삭제, 승인형 Prompt Coach 개선안을 제공합니다.
 
@@ -106,8 +106,8 @@ npm install -g prompt-coach
 이 저장소에서 로컬 개발로 실행:
 
 ```sh
-git clone https://github.com/wlsdks/prompt-coach.git
-cd prompt-coach
+git clone https://github.com/wlsdks/loopdeck.git
+cd loopdeck
 pnpm install
 pnpm build
 ```
@@ -117,7 +117,7 @@ pnpm build
 Claude Code 안에서:
 
 ```text
-/plugin marketplace add wlsdks/prompt-coach
+/plugin marketplace add wlsdks/loopdeck
 /plugin install prompt-coach
 /reload-plugins
 /prompt-coach:setup
@@ -130,7 +130,7 @@ Claude Code 안에서:
 쉘에서:
 
 ```sh
-codex plugin marketplace add wlsdks/prompt-coach
+codex plugin marketplace add wlsdks/loopdeck
 ```
 
 그 다음 로컬 coach setup을 실행합니다.

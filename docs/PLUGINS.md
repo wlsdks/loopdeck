@@ -74,7 +74,7 @@ local service.
 Claude Code can consume this repository as a plugin marketplace:
 
 ```text
-/plugin marketplace add wlsdks/prompt-coach
+/plugin marketplace add wlsdks/loopdeck
 /plugin install prompt-coach
 /reload-plugins
 /prompt-coach:setup

@@ -7,6 +7,52 @@ function readJson<T>(path: string): T {
 }
 
 describe("plugin packaging files", () => {
+  it("brands product-facing package and plugin metadata as Loopdeck while preserving prompt-coach command ids", () => {
+    const packageJson = readJson<{
+      name: string;
+      description: string;
+      repository: { url: string };
+      bin: Record<string, string>;
+    }>("package.json");
+    const claudeManifest = readJson<{
+      name: string;
+      description: string;
+      homepage: string;
+      repository: string;
+      keywords: string[];
+    }>(".claude-plugin/plugin.json");
+    const codexManifest = readJson<{
+      name: string;
+      description: string;
+      homepage: string;
+      repository: string;
+      keywords: string[];
+      interface: { displayName: string; shortDescription: string };
+    }>("plugins/prompt-coach/.codex-plugin/plugin.json");
+
+    expect(packageJson.name).toBe("prompt-coach");
+    expect(packageJson.bin).toHaveProperty("prompt-coach");
+    expect(packageJson.description).toBe(
+      "Local-first agent loop memory and meta-prompting workbench for Codex, Claude Code, and coding-agent workflows.",
+    );
+    expect(packageJson.repository.url).toBe(
+      "https://github.com/wlsdks/loopdeck.git",
+    );
+
+    for (const manifest of [claudeManifest, codexManifest]) {
+      expect(manifest.name).toBe("prompt-coach");
+      expect(manifest.description).toContain("Loopdeck");
+      expect(manifest.homepage).toBe("https://github.com/wlsdks/loopdeck");
+      expect(manifest.repository).toBe("https://github.com/wlsdks/loopdeck");
+      expect(manifest.keywords).toEqual(expect.arrayContaining(["loopdeck"]));
+    }
+
+    expect(codexManifest.interface.displayName).toBe("Loopdeck");
+    expect(codexManifest.interface.shortDescription).toContain(
+      "agent loop memory",
+    );
+  });
+
   it("ships a Claude Code plugin marketplace and manifest with slash commands", () => {
     const marketplace = readJson<{
       plugins: Array<{ name: string; source: string; category: string }>;
@@ -132,7 +178,7 @@ describe("plugin packaging files", () => {
     expect(manifest.name).toBe("prompt-coach");
     expect(manifest.hooks).toBe("./hooks.json");
     expect(manifest.skills).toBe("./skills/");
-    expect(manifest.interface.displayName).toBe("Prompt Memory");
+    expect(manifest.interface.displayName).toBe("Loopdeck");
     expect(manifest.interface.category).toBe("Coding");
     expect(manifest.interface.defaultPrompt).toEqual(
       expect.arrayContaining([
