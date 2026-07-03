@@ -6,7 +6,7 @@ import {
   latestCompactBoundaryAfterSnapshot,
 } from "../../loop/brief.js";
 import { collectLoopSnapshot } from "../../loop/collect.js";
-import type { LoopSnapshot } from "../../loop/types.js";
+import type { LoopSnapshot, LoopSnapshotSource } from "../../loop/types.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import { UserError } from "../user-error.js";
 
@@ -18,6 +18,7 @@ type LoopCliOptions = {
   json?: boolean;
   limit?: string | number;
   now?: Date;
+  source?: string;
   worktree?: string;
 };
 
@@ -42,6 +43,7 @@ export function registerLoopCommand(program: Command): void {
     .option("--json", "Print JSON.")
     .option("--limit <count>", "Maximum recent prompts to include.")
     .option("--cwd-prefix <path>", "Only include prompts from this project/path.")
+    .option("--source <source>", "Collection source label (cli or service).")
     .option("--branch <name>", "Git branch label to attach to the snapshot.")
     .option("--worktree <name>", "Worktree label to attach to the snapshot.")
     .action((options: LoopCliOptions) => {
@@ -65,7 +67,7 @@ export function loopCollectForCli(options: LoopCliOptions = {}): string {
     const stored = collectLoopSnapshot({
       storage,
       hmacSecret,
-      source: "cli",
+      source: parseSource(options.source),
       now: options.now,
       cwd,
       cwdPrefix,
@@ -137,12 +139,19 @@ function parseLimit(value: string | number | undefined): number {
   return Math.min(parsed, 100);
 }
 
+function parseSource(value: string | undefined): LoopSnapshotSource {
+  if (value === undefined || value === "cli") return "cli";
+  if (value === "service") return "service";
+  throw new UserError("--source must be either cli or service.");
+}
+
 function formatLoopSnapshot(snapshot: LoopSnapshot): string {
   return [
     "Loop snapshot collected",
     `id ${snapshot.id}`,
     `project ${snapshot.cwd_label}`,
     `tool ${snapshot.tool}`,
+    `source ${snapshot.source}`,
     `prompts ${snapshot.event_counts.prompts}`,
     snapshot.quality.average_prompt_score === undefined
       ? "average prompt score n/a"

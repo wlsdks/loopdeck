@@ -68,6 +68,48 @@ describe("loop CLI command", () => {
     expect(text).not.toContain("/Users/example");
   });
 
+  it("collects a cron-safe service loop snapshot without prompt bodies or raw paths", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+
+    const json = loopCollectForCli({
+      dataDir,
+      json: true,
+      cwdPrefix: "/Users/example/private-project",
+      limit: 10,
+      now: new Date("2026-07-04T02:00:00.000Z"),
+      cwd: "/Users/example/private-project",
+      source: "service",
+    });
+    const parsed = JSON.parse(json) as {
+      source: string;
+      prompt_ids: string[];
+      privacy: { stores_prompt_bodies: boolean; stores_raw_paths: boolean };
+    };
+
+    expect(parsed.source).toBe("service");
+    expect(parsed.prompt_ids).toHaveLength(2);
+    expect(parsed.privacy).toMatchObject({
+      stores_prompt_bodies: false,
+      stores_raw_paths: false,
+    });
+    expect(json).not.toContain("Make this better");
+    expect(json).not.toContain("/Users/example");
+
+    const text = loopCollectForCli({
+      dataDir,
+      cwdPrefix: "/Users/example/private-project",
+      now: new Date("2026-07-04T02:00:00.000Z"),
+      cwd: "/Users/example/private-project",
+      source: "service",
+    });
+
+    expect(text).toContain("source service");
+    expect(text).toContain("Next: prompt-coach loop brief");
+    expect(text).not.toContain("Make this better");
+    expect(text).not.toContain("/Users/example");
+  });
+
   it("prints the latest continuation brief without prompt bodies", async () => {
     const dataDir = createTempDir();
     await seedPrompts(dataDir);

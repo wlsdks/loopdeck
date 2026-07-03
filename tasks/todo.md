@@ -121,7 +121,9 @@
 - [x] Task 4: README/PLUGINS/spec/todo에 Web Loops first slice 범위와 한계 반영
 - [x] Task 5 RED: `/api/v1/loops/:id/brief`와 `getLoopBrief()`가 missing route/function으로 실패하는지 확인
 - [x] Task 5 GREEN: row-level `Copy brief` action이 privacy-safe continuation brief를 가져와 복사
-- [ ] 다음 slice: cron collection, semantic memory decision gate, brand migration, 또는 CLI/MCP/web status model 공통화
+- [x] Task 6 RED: `loop collect`가 `source: "service"` snapshot을 만들지 못하는 실패 확인
+- [x] Task 6 GREEN: `prompt-coach loop collect --source service` 명시적 one-shot collector 구현
+- [ ] 다음 slice: opt-in scheduler install, semantic memory decision gate, brand migration, 또는 CLI/MCP/web status model 공통화
 
 ### 판단 기준
 
@@ -149,7 +151,13 @@
 - 현재 web slice는 list, empty state, compact refresh marker, copy-ready next
   brief action까지 포함한다.
 - prompt body, compact summary, custom instructions, transcript body, raw path는 API/화면/테스트 출력에 포함하지 않는다.
-- raw prompt detail panel, cron collection, semantic memory는 다음 slice로 남긴다.
+- raw prompt detail panel, opt-in scheduler install, semantic memory는 다음 slice로 남긴다.
+
+### Explicit Service Collection 판단 기준
+
+- `prompt-coach loop collect --source service`는 cron/LaunchAgent가 호출할 수 있는 명시적 one-shot 명령이다.
+- 이번 slice는 scheduler를 자동 설치하지 않는다. 사용자가 명시적으로 설정한 외부 cron/service가 이 명령을 호출할 수 있게 하는 데까지만 포함한다.
+- service-origin snapshot도 prompt body, compact summary, custom instructions, transcript body, raw path를 출력하지 않는다.
 
 ## 2026-05-04 Habit Coach Panel Extraction
 

@@ -88,7 +88,7 @@ Development must start from this portfolio decision, not from novelty.
 | `coach_prompt` one-call MCP workflow | Existing one-call agent workflow | **Improve after loop model** | It should eventually include latest loop status and brief, but not in Slice 1. |
 | Project policies | capture/export flags exist | **Extend later** | Add loop capture/export policy only after loop data exists. |
 | Agent wrappers `pc-claude` / `pc-codex` | Experimental initial prompt wrappers | **Do not expand now** | Hooks and MCP are tighter official surfaces. Wrappers do not cover later interactive turns. |
-| Cron/service | Server service exists, no loop cron | **New after Slice 1** | Periodic collection is useful but should run only after manual `loop collect` proves the schema. |
+| Cron/service | Server service exists; `loop collect --source service` now provides an explicit one-shot collection command | **Improve after manual proof** | Periodic collection is useful, but scheduling must stay opt-in and call an explicit command rather than hidden automation. |
 | Full trace ingestion | Not implemented | **Do not build now** | OpenAI/ADK-style traces are useful references, but ingesting full traces/transcripts risks privacy and scope explosion. |
 | Semantic vector memory | Not implemented | **Do not build by default** | Start with structured SQLite summaries. Add embeddings only if exact search and structured fields are insufficient. |
 | Repo/package rename | Partially renamed repo metadata, package still `prompt-coach` | **Plan, do not execute in Slice 1** | Branding is important but should not block proving the loop model. |
@@ -527,6 +527,21 @@ Verification:
 - console/network clean
 - API and web output contain no prompt bodies, compact summaries, custom
   compact instructions, transcript bodies, or raw paths
+
+### Slice 4.5: Explicit Service Collection Entry Point
+
+Add:
+
+- `prompt-coach loop collect --source service` for cron or LaunchAgent one-shot
+  collection (**implemented**)
+- output that labels service-origin snapshots without prompt bodies or raw paths
+  (**implemented**)
+
+Do not add:
+
+- hidden background scheduling
+- automatic prompt resubmission
+- transcript or compact summary ingestion
 
 ### Slice 5: Brand Migration
 
