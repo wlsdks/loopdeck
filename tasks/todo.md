@@ -43,6 +43,21 @@
 - Loopdeck은 generic agent runtime이 아니라 Codex/Claude Code loop memory workbench로 좁힌다.
 - 기획서가 승인되기 전 package/CLI/repo/plugin rename과 hook/MCP/web 구현을 섞지 않는다.
 
+## 2026-07-04 Loop Snapshot Domain Slice
+
+- [x] Task 1 RED: loop snapshot builder 테스트가 missing module로 실패하는지 확인
+- [x] Task 1 GREEN: `src/loop/types.ts`와 `src/loop/snapshot.ts` 최소 구현
+- [x] Task 2 RED: continuation brief formatter 테스트가 missing module로 실패하는지 확인
+- [x] Task 2 GREEN: `src/loop/brief.ts` 최소 구현
+- [ ] 다음 slice: SQLite storage migration과 persistence port 구현
+- [ ] 다음 slice: `prompt-coach loop collect` / `prompt-coach loop brief` CLI 등록
+
+### 판단 기준
+
+- 이번 slice는 prompt body와 raw path를 저장하거나 출력하지 않는 domain contract만 증명한다.
+- storage, CLI, MCP, hook, web, rename 작업은 이 커밋에 섞지 않는다.
+- 다음 slice도 RED-GREEN 단위로 storage integration부터 진행한다.
+
 ## 2026-05-04 Habit Coach Panel Extraction
 
 - [x] 기능/코드/UI 관점에서 다음 고효과 개선 후보 재점검
