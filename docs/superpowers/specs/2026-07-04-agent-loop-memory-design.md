@@ -1068,6 +1068,27 @@ Do not add:
 - transcript, prompt body, compact summary, or evidence drilldown
 - external LLM summarization
 
+### Slice 4.29: Plugin Rename Issue Slices
+
+Add:
+
+- dedicated `docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-issue-slices.md`
+  that decomposes the rename plan into independently shippable issues
+- compatibility invariants that preserve `prompt-coach` package, binary,
+  plugin id, hook command, slash command, and MCP server-name contracts until
+  each later phase has proof
+- per-slice RED/GREEN expectations and smoke gates for Fresh install, Codex
+  plugin, Claude Code plugin, hook binary, MCP server-name, and release notes
+- packaging test coverage that locks the issue-slice plan into the npm package
+  files list
+
+Do not add:
+
+- `/loopdeck:*` command files
+- package, plugin id, hook marker, or MCP server-name rename
+- deprecation banners
+- hidden external LLM, hosted migration, or provider credential proxy
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

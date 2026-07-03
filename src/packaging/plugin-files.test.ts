@@ -251,6 +251,33 @@ describe("plugin packaging files", () => {
     expect(plan).toContain("docs/PLUGINS.md");
   });
 
+  it("breaks the Loopdeck rename into independently shippable issue slices", () => {
+    const issuePlanPath =
+      "docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-issue-slices.md";
+    const packageJson = readJson<{ files: string[] }>("package.json");
+    const issuePlan = readFileSync(join(process.cwd(), issuePlanPath), "utf8");
+
+    expect(packageJson.files).toContain(issuePlanPath);
+    expect(issuePlan).toContain("# Loopdeck Plugin Rename Issue Slices");
+    expect(issuePlan).toContain("Slice R1: Compatibility Inventory Gate");
+    expect(issuePlan).toContain("Slice R2: Alias-Only Command Docs");
+    expect(issuePlan).toContain("Slice R3: Claude Code Dual Namespace Packaging");
+    expect(issuePlan).toContain("Slice R4: Codex Plugin Display Rename Without ID Rename");
+    expect(issuePlan).toContain("Slice R5: Hook Binary Compatibility Smoke");
+    expect(issuePlan).toContain("Slice R6: MCP Server Name Compatibility Decision");
+    expect(issuePlan).toContain("Slice R7: Deprecation Window Readiness");
+    expect(issuePlan).toContain("Do not remove `/prompt-coach:*`");
+    expect(issuePlan).toContain("Do not rename `package.json#name`");
+    expect(issuePlan).toContain("Do not rename plugin ids");
+    expect(issuePlan).toContain("Fresh install smoke");
+    expect(issuePlan).toContain("Codex plugin smoke");
+    expect(issuePlan).toContain("Claude Code plugin smoke");
+    expect(issuePlan).toContain("TDD proof");
+    expect(issuePlan).not.toContain("Make this better");
+    expect(issuePlan).not.toContain("sk-proj");
+    expect(issuePlan).not.toContain("/Users/");
+  });
+
   it("ships a fail-open Codex prompt hook without embedding secrets", () => {
     const hooks = readJson<{
       hooks: {

@@ -177,7 +177,9 @@
 - [x] Task 30 GREEN: `session_id` API query, `getLoopWorktree(..., { sessionId })`, `/loops?worktree=...&session=...`, active session label 연결
 - [x] Task 31 RED: worktree drilldown을 branch 단위로 좁히는 API/client/routing/UI focused tests 실패 확인
 - [x] Task 31 GREEN: `branch` API query, `getLoopWorktree(..., { branch })`, `/loops?worktree=...&session=...&branch=...`, active branch label 연결
-- [ ] 다음 slice: plugin rename plan을 issue slice로 분해
+- [x] Task 32 RED: Loopdeck rename issue-slice plan과 package files 계약이 없어 packaging focused test 실패 확인
+- [x] Task 32 GREEN: rename issue-slice plan을 R1-R7로 분해하고 package files/spec/todo에 연결
+- [ ] 다음 slice: Slice R1 Compatibility Inventory Gate 구현
 
 ### 판단 기준
 
