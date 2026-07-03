@@ -139,8 +139,10 @@
 - [x] Task 13 GREEN: package/plugin/README/docs product-facing metadata를 Loopdeck으로 갱신하고 CLI/package id는 `prompt-coach` 유지
 - [x] Task 13 META: GitHub repo를 `wlsdks/loopdeck`으로 rename, origin URL과 repo description/topics 갱신
 - [x] Task 14 PLAN: CLI/MCP/web status model 공통화 구현 계획을 `docs/superpowers/plans/2026-07-04-loop-status-model-commonization.md`로 작성
-- [ ] Task 14 RED: CLI/MCP/API/web loop status surfaces가 공유 status shape 없이 drift할 수 있음을 focused test로 고정
-- [ ] Task 14 GREEN: `src/loop/status.ts` 공유 모델이 CLI `loop status`, MCP `get_loopdeck_status`, `/api/v1/loops`, web Loops status header를 구동
+- [x] Task 14.1 RED: `src/loop/status.test.ts`가 missing `src/loop/status.ts`로 실패하는지 확인
+- [x] Task 14.1 GREEN: `createLoopdeckStatus` 공유 모델과 privacy-safe snapshot mapper 구현
+- [ ] Task 14.2 RED: CLI/MCP/API/web loop status surfaces가 공유 status shape 없이 drift할 수 있음을 focused test로 고정
+- [ ] Task 14.2 GREEN: CLI `loop status`, MCP `get_loopdeck_status`, `/api/v1/loops`, web Loops status header를 `src/loop/status.ts`로 연결
 - [ ] 다음 slice: package/CLI alias migration plan 또는 loop memory in continuation brief
 
 ### 판단 기준
