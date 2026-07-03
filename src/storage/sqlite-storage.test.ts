@@ -31,6 +31,64 @@ afterEach(() => {
 });
 
 describe("SQLite prompt storage", () => {
+  it("stores and reads privacy-safe loop snapshots", () => {
+    const dataDir = createTempDir();
+    initializePromptCoach({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+      now: () => new Date("2026-07-04T01:00:00.000Z"),
+    });
+
+    const snapshot = storage.createLoopSnapshot({
+      id: "loop_storage",
+      created_at: "2026-07-04T01:00:00.000Z",
+      tool: "codex",
+      source: "cli",
+      session_id: "session-storage",
+      cwd_label: "private-project",
+      project_id: "proj_storage",
+      git_root_hash: "git_storage",
+      branch: "codex/agent-loop-memory-design",
+      worktree_label: "worktree-storage",
+      prompt_ids: ["prmt_one", "prmt_two"],
+      event_counts: {
+        prompts: 2,
+      },
+      quality: {
+        average_prompt_score: 58,
+        top_gaps: ["Goal clarity"],
+        unresolved_questions: [],
+      },
+      outcome: {
+        status: "unknown",
+        summary: "Loop snapshot collected from 2 prompts.",
+        evidence_refs: ["prompt:prmt_one", "prompt:prmt_two"],
+      },
+      next_brief: {
+        generated: false,
+        summary: "Run prompt-coach loop brief to generate the next request.",
+      },
+      privacy: {
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        local_only: true,
+      },
+    });
+
+    expect(snapshot.id).toBe("loop_storage");
+    expect(storage.getLatestLoopSnapshot()?.id).toBe("loop_storage");
+    expect(storage.listLoopSnapshots({ limit: 10 }).items).toHaveLength(1);
+    expect(JSON.stringify(snapshot)).not.toContain("/Users/example");
+    expect(JSON.stringify(snapshot)).not.toContain("Make this better");
+    expect(storage.getAppliedMigrations()).toContainEqual({
+      version: 16,
+      name: "016_loop_snapshots",
+    });
+
+    storage.close();
+  });
+
   it("initializes directories, applies migration, stores Markdown, indexes FTS, and deduplicates", async () => {
     const dataDir = createTempDir();
     initializePromptCoach({ dataDir });
@@ -74,6 +132,7 @@ describe("SQLite prompt storage", () => {
       { version: 13, name: "013_prompt_judge_scores" },
       { version: 14, name: "014_drop_dead_analysis_columns" },
       { version: 15, name: "015_prompt_ask_events" },
+      { version: 16, name: "016_loop_snapshots" },
     ]);
     const db = new Database(join(dataDir, "prompt-coach.sqlite"));
     try {

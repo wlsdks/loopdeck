@@ -5,6 +5,7 @@ import type {
   PromptQualityScoreBand,
   RedactionResult,
 } from "../shared/schema.js";
+import type { LoopSnapshot } from "../loop/types.js";
 import type {
   CoachFeedbackEntry,
   CoachFeedbackRating,
@@ -102,6 +103,16 @@ export type PromptFocusFilter =
 export type PromptListResult = {
   items: PromptSummary[];
   nextCursor?: string;
+};
+
+export type LoopSnapshotListResult = {
+  items: LoopSnapshot[];
+};
+
+export type LoopSnapshotStoragePort = {
+  createLoopSnapshot(input: LoopSnapshot): LoopSnapshot;
+  getLatestLoopSnapshot(): LoopSnapshot | undefined;
+  listLoopSnapshots(options?: { limit?: number }): LoopSnapshotListResult;
 };
 
 export type DeletePromptResult = {

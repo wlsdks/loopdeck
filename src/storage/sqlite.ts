@@ -51,6 +51,7 @@ import type {
   ImportJobStoragePort,
   JudgeScoreStoragePort,
   ListPromptsOptions,
+  LoopSnapshotStoragePort,
   PromptDetail,
   ProjectListResult,
   ProjectInstructionReview,
@@ -126,6 +127,7 @@ import {
 import { applyMigrations } from "./sqlite-migrations.js";
 import { createProjectKey } from "./project-id.js";
 import { projectLabel } from "./project-label.js";
+import { createLoopSnapshot, getLatestLoopSnapshot, listLoopSnapshots } from "./loop-snapshots.js";
 
 export type { PromptRow } from "./sqlite-rows.js";
 
@@ -136,10 +138,7 @@ export type SqlitePromptStorageOptions = {
   experimentalRules?: readonly ExperimentalRuleId[];
 };
 
-export type AppliedMigration = {
-  version: number;
-  name: string;
-};
+export type AppliedMigration = { version: number; name: string };
 
 export type SqlitePromptStorage = PromptStoragePort &
   PromptReadStoragePort &
@@ -150,7 +149,7 @@ export type SqlitePromptStorage = PromptStoragePort &
   AgentPromptJudgmentStoragePort &
   CoachFeedbackStoragePort &
   JudgeScoreStoragePort &
-  AskEventStoragePort & {
+  AskEventStoragePort & LoopSnapshotStoragePort & {
     close(): void;
     getAppliedMigrations(): AppliedMigration[];
     listPromptRows(): PromptRow[];
@@ -196,6 +195,9 @@ export function createSqlitePromptStorage(
         .prepare("SELECT * FROM prompts ORDER BY received_at DESC, id DESC")
         .all() as PromptRow[];
     },
+    createLoopSnapshot: (input) => createLoopSnapshot(db, input),
+    getLatestLoopSnapshot: () => getLatestLoopSnapshot(db),
+    listLoopSnapshots: (options = {}) => listLoopSnapshots(db, options),
     listPrompts(options) {
       return listPrompts(db, options);
     },

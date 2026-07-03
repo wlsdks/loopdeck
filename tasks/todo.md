@@ -49,7 +49,8 @@
 - [x] Task 1 GREEN: `src/loop/types.ts`와 `src/loop/snapshot.ts` 최소 구현
 - [x] Task 2 RED: continuation brief formatter 테스트가 missing module로 실패하는지 확인
 - [x] Task 2 GREEN: `src/loop/brief.ts` 최소 구현
-- [ ] 다음 slice: SQLite storage migration과 persistence port 구현
+- [x] Task 3 RED: SQLite loop snapshot storage 테스트가 missing method로 실패하는지 확인
+- [x] Task 3 GREEN: migration 16과 loop snapshot persistence port 구현
 - [ ] 다음 slice: `prompt-coach loop collect` / `prompt-coach loop brief` CLI 등록
 
 ### 판단 기준
