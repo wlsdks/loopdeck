@@ -1200,6 +1200,25 @@ Do not add:
 - prompt body, transcript, compact summary, raw path, API token, or provider
   credential output
 
+### Slice 4.36: Deprecation Window Readiness
+
+Add:
+
+- R7 readiness artifact with alias-only, deprecation, and breaking release note
+  templates
+- support guidance for saved `/prompt-coach:*` slash command snippets
+- minimum evidence gates before marking any `prompt-coach` runtime id deprecated
+- rollback and upgrade smoke requirements for future rename slices
+- packaging test coverage that confirms readiness exists while public README and
+  PLUGINS do not show a deprecation banner yet
+
+Do not add:
+
+- deprecation banners
+- removal of `/prompt-coach:*`, plugin ids, hook commands, package names, or MCP
+  server names
+- breaking-change language outside the readiness artifact
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

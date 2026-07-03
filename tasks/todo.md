@@ -191,7 +191,9 @@
 - [x] Task 37 GREEN: built `prompt-coach`/`loopdeck` entrypoint hook status/claude-code/codex fail-open smoke 추가
 - [x] Task 38 RED: MCP server name compatibility decision artifact가 없어 packaging focused test 실패 확인
 - [x] Task 38 GREEN: `prompt-coach` canonical MCP server name 유지와 `loopdeck` server-name alias 보류 조건 문서화
-- [ ] 다음 slice: Slice R7 Deprecation Window Readiness 구현
+- [x] Task 39 RED: deprecation readiness artifact가 없어 packaging focused test 실패 확인
+- [x] Task 39 GREEN: alias-only/deprecation/breaking release note template, saved snippet support, rollback/upgrade smoke gate 문서화
+- [ ] 다음 slice: runtime rename line에서 벗어나 Loopdeck product/runtime value slice 재선정
 
 ### 판단 기준
 

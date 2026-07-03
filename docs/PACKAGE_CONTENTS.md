@@ -37,6 +37,9 @@ The npm package intentionally includes:
   - includes `docs/superpowers/plans/2026-07-04-loopdeck-mcp-server-name-decision.md`
     so the package records why `prompt-coach` remains the canonical MCP server
     name during the Loopdeck migration
+  - includes `docs/superpowers/plans/2026-07-04-loopdeck-deprecation-readiness.md`
+    so future rename work has release-note, support, rollback, and upgrade-smoke
+    gates before any old id is deprecated
 - Claude Code plugin artifacts under `.claude-plugin`, `commands`, and
   `integrations/claude-code`
 - Codex plugin artifacts under `plugins/prompt-coach`

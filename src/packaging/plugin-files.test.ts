@@ -435,6 +435,46 @@ describe("plugin packaging files", () => {
     }
   });
 
+  it("ships deprecation readiness gates without deprecating prompt-coach ids yet", () => {
+    const readinessPath =
+      "docs/superpowers/plans/2026-07-04-loopdeck-deprecation-readiness.md";
+    const packageJson = readJson<{ files: string[] }>("package.json");
+    const readiness = readFileSync(join(process.cwd(), readinessPath), "utf8");
+    const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
+    const plugins = readFileSync(join(process.cwd(), "docs/PLUGINS.md"), "utf8");
+    const claudeManifest = readJson<{ name: string; commands: string[] }>(
+      ".claude-plugin/plugin.json",
+    );
+    const codexManifest = readJson<{ name: string }>(
+      "plugins/prompt-coach/.codex-plugin/plugin.json",
+    );
+
+    expect(packageJson.files).toContain(readinessPath);
+    expect(readiness).toContain("# Loopdeck Deprecation Readiness");
+    expect(readiness).toContain("Decision: not deprecated");
+    expect(readiness).toContain("Alias-only release note template");
+    expect(readiness).toContain("Deprecation release note template");
+    expect(readiness).toContain("Breaking release note template");
+    expect(readiness).toContain("saved slash command snippets");
+    expect(readiness).toContain("minimum evidence before deprecation");
+    expect(readiness).toContain("rollback");
+    expect(readiness).toContain("upgrade smoke");
+    expect(readiness).toContain("/prompt-coach:* remains supported");
+    expect(readiness).toContain("Do not show a deprecation banner yet");
+    expect(readiness).not.toContain("Make this better");
+    expect(readiness).not.toContain("sk-proj");
+    expect(readiness).not.toContain("/Users/");
+    expect(readme).toContain("slash commands remain under /prompt-coach:*");
+    expect(plugins).toContain("`/prompt-coach:*` remains required");
+    expect(readme).not.toMatch(/deprecated/i);
+    expect(plugins).not.toMatch(/deprecated/i);
+    expect(claudeManifest.name).toBe("prompt-coach");
+    expect(codexManifest.name).toBe("prompt-coach");
+    expect(claudeManifest.commands).toEqual(
+      expect.arrayContaining(["./commands/setup.md"]),
+    );
+  });
+
   it("ships a machine-checkable runtime id inventory before rename work", () => {
     const inventoryPath =
       "docs/superpowers/plans/2026-07-04-loopdeck-runtime-id-inventory.json";

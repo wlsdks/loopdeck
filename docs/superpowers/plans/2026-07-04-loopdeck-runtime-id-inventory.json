@@ -72,5 +72,5 @@
     "API tokens",
     "provider credentials"
   ],
-  "next_slice": "Slice R7: Deprecation Window Readiness"
+  "next_slice": "Rename compatibility issue slices complete; next implementation slice should return to product/runtime value."
 }
