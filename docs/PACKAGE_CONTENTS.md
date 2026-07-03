@@ -25,6 +25,8 @@ The npm package intentionally includes:
 - public product and release docs under `docs/`
   - includes `docs/LEGAL_USAGE_GUIDE.md` so users can inspect the provider
     documentation boundary for agent-judge mode
+  - includes `docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md`
+    so package-local README and plugin docs can link to the compatibility gate
 - Claude Code plugin artifacts under `.claude-plugin`, `commands`, and
   `integrations/claude-code`
 - Codex plugin artifacts under `plugins/prompt-coach`

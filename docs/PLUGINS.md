@@ -107,7 +107,8 @@ The plugin exposes:
 Claude Code slash commands remain under `/prompt-coach:*` during the Loopdeck
 migration. The npm package also installs a `loopdeck` CLI alias for manual
 terminal fallbacks, but plugin command ids stay stable until a dedicated plugin
-rename plan is ready.
+rename plan is implemented. That gate is documented in
+`docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md`.
 
 Prompt capture still uses Claude Code hook configuration in settings files. The
 supported install paths are:

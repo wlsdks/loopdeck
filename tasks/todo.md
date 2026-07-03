@@ -161,7 +161,9 @@
 - [x] Task 22 GREEN: CSRF-protected `/api/v1/loops/memory/approve`, `approveLoopMemory()`, Loops summary approval CTA, App refresh 연결, same-snapshot 중복 승인 방지
 - [x] Task 23 RED: web에서 latest approved memory의 instruction patch proposal을 review-only로 볼 수 없는 focused test 실패 확인
 - [x] Task 23 GREEN: `/api/v1/loops/instruction-patch`, `getLoopInstructionPatch()`, Loops summary review CTA/diff preview 구현
-- [ ] 다음 slice: web explicit instruction apply UX gate 또는 dedicated plugin rename plan
+- [x] Task 24 RED: dedicated plugin rename plan이 없어 slash command/plugin id rename compatibility gate를 증명하지 못하는 packaging focused test 실패 확인
+- [x] Task 24 GREEN: `2026-07-04-loopdeck-plugin-rename-plan.md`로 package/CLI/plugin/slash namespace/hook/MCP rename phases와 acceptance gates 고정
+- [ ] 다음 slice: web explicit instruction apply UX gate 또는 plugin rename plan을 issue slice로 분해
 
 ### 판단 기준
 

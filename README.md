@@ -23,6 +23,10 @@ Loopdeck is a developer tool that safely records prompts and loop metadata from 
 The npm package now also installs `loopdeck`; loopdeck is a CLI alias for the same binary.
 Use `prompt-coach` in existing scripts and plugin commands; use `loopdeck` for
 new manual terminal workflows when you want the product-name command.
+Slash command and plugin id migration is gated by
+`docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md`; Claude Code
+slash commands remain under /prompt-coach:* until that compatibility plan is
+implemented.
 
 It collects supported tool prompts locally, redacts sensitive values before storage, writes Markdown files, indexes them in SQLite, and serves a local web UI for search, review, archive scoring, prompt practice, analysis, deletion, and copy-based prompt improvement.
 

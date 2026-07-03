@@ -211,7 +211,7 @@ Use these Claude Code surfaces:
 - MCP server for loop memory and active-agent rewrite/judge handoff
 - `CLAUDE.md` for Claude-specific repo behavior, with `AGENTS.md` as the cross-agent source of truth
 
-Required Claude-facing Loopdeck capabilities:
+Future Claude-facing Loopdeck namespace target:
 
 - `/loopdeck:setup`
 - `/loopdeck:status`
@@ -220,7 +220,9 @@ Required Claude-facing Loopdeck capabilities:
 - `/loopdeck:review-loop`
 - `/loopdeck:open`
 
-During migration, keep `/prompt-coach:*` commands as aliases until docs and marketplace users have moved.
+Current Claude Code slash commands remain `/prompt-coach:*`. The `/loopdeck:*`
+namespace must not ship until the dedicated plugin rename plan proves a dual
+namespace migration path.
 
 Claude Code acceptance criteria:
 
@@ -880,6 +882,27 @@ Do not add:
 - editing any file outside `AGENTS.md` or `CLAUDE.md`
 - external LLM calls
 - plugin rename or slash command namespace changes
+
+### Slice 4.21: Dedicated Plugin Rename Plan
+
+Add:
+
+- `docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md` as the
+  compatibility gate for plugin id and slash namespace migration
+- packaging tests proving the plan exists and locks the current
+  `prompt-coach` package, primary CLI, plugin id, `/prompt-coach:*` slash
+  namespace, hook marker, and MCP server compatibility requirements
+- README and PLUGINS links that route future rename work through the dedicated
+  plan instead of ad hoc copy changes
+
+Do not add:
+
+- `/loopdeck:*` slash commands
+- plugin id rename
+- npm package rename
+- removal of the `prompt-coach` CLI
+- hook marker rename
+- MCP server name rename
 
 ## 10. First Implementation Plan Boundary
 

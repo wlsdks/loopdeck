@@ -220,6 +220,37 @@ describe("plugin packaging files", () => {
     expect(plugins).toContain("`loopdeck` CLI alias");
   });
 
+  it("keeps slash command and plugin rename behind a dedicated compatibility plan", () => {
+    const plan = readFileSync(
+      join(
+        process.cwd(),
+        "docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md",
+      ),
+      "utf8",
+    );
+
+    expect(plan).toContain("current package name remains `prompt-coach`");
+    expect(plan).toContain("current primary CLI remains `prompt-coach`");
+    expect(plan).toContain("`loopdeck` is a compatibility-preserving CLI alias");
+    expect(plan).toContain("Claude Code slash commands remain `/prompt-coach:*`");
+    expect(plan).toContain("Do not ship `/loopdeck:*` as the only namespace");
+    expect(plan).toContain("Phase 1: Observe compatibility");
+    expect(plan).toContain("Phase 2: Add dual namespace aliases");
+    expect(plan).toContain("Phase 3: Deprecate old namespace");
+    expect(plan).toContain("Phase 4: Remove only after a major/versioned window");
+    expect(plan).toContain("fresh install smoke");
+    expect(plan).toContain("Codex plugin smoke");
+    expect(plan).toContain("Claude Code plugin smoke");
+    expect(plan).toContain("hook marker");
+    expect(plan).toContain("MCP server name");
+    expect(plan).toContain("package.json");
+    expect(plan).toContain(".claude-plugin/plugin.json");
+    expect(plan).toContain("plugins/prompt-coach/.codex-plugin/plugin.json");
+    expect(plan).toContain("commands/*.md");
+    expect(plan).toContain("README.md");
+    expect(plan).toContain("docs/PLUGINS.md");
+  });
+
   it("ships a fail-open Codex prompt hook without embedding secrets", () => {
     const hooks = readJson<{
       hooks: {
@@ -268,6 +299,9 @@ describe("plugin packaging files", () => {
     expect(packageJson.files).toContain("integrations");
     expect(packageJson.files).toContain("docs/ARCHITECTURE.md");
     expect(packageJson.files).toContain("docs/PLUGINS.md");
+    expect(packageJson.files).toContain(
+      "docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md",
+    );
     expect(packageJson.files).toContain("docs/LEGAL_USAGE_GUIDE.md");
   });
 
