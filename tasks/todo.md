@@ -185,7 +185,9 @@
 - [x] Task 34 GREEN: README/README.ko/PLUGINS가 `/loopdeck:*`를 future alias-only namespace로 설명하고 command files/runtime ids는 유지
 - [x] Task 35 RED: R3 Claude Code dual namespace decision artifact가 없어 packaging focused test 실패 확인
 - [x] Task 35 GREEN: 공식 plugin namespace 모델 근거로 `/loopdeck:*` command file 추가를 보류하고 safe future path를 문서화
-- [ ] 다음 slice: Slice R4 Codex Plugin Display Rename Without ID Rename 구현
+- [x] Task 36 RED: Codex plugin display/default prompt가 아직 prompt-coach 중심이라 packaging focused test 실패 확인
+- [x] Task 36 GREEN: Codex plugin 사용자-facing copy를 Loopdeck으로 정리하고 plugin id/path/hook command는 유지
+- [ ] 다음 slice: Slice R5 Hook Binary Compatibility Smoke 구현
 
 ### 판단 기준
 

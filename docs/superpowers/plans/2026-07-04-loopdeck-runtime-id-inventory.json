@@ -72,5 +72,5 @@
     "API tokens",
     "provider credentials"
   ],
-  "next_slice": "Slice R4: Codex Plugin Display Rename Without ID Rename"
+  "next_slice": "Slice R5: Hook Binary Compatibility Smoke"
 }

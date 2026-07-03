@@ -23,7 +23,7 @@
   "hooks": "./hooks.json",
   "interface": {
     "displayName": "Loopdeck",
-    "shortDescription": "Local-first agent loop memory for coding-agent workflows",
+    "shortDescription": "Loopdeck local-first agent loop memory for coding-agent workflows",
     "longDescription": "Loopdeck captures prompts and loop metadata from supported coding agents through local hooks, redacts sensitive values before storage, indexes Markdown and SQLite locally, and exposes MCP/CLI workflows for loop briefs, prompt coaching, memory approval, and project instruction review.",
     "developerName": "Loopdeck contributors",
     "category": "Coding",
@@ -32,18 +32,18 @@
     "privacyPolicyURL": "https://github.com/wlsdks/loopdeck/blob/main/SECURITY.md",
     "termsOfServiceURL": "https://github.com/wlsdks/loopdeck/blob/main/README.md",
     "defaultPrompt": [
-      "Set up prompt-coach for this machine",
-      "Check whether prompt-coach is capturing Codex prompts",
+      "Set up Loopdeck for this machine",
+      "Check whether Loopdeck is capturing Codex prompts",
       "Use the loopdeck CLI alias for my next manual command",
-      "Show my prompt-coach hook rewrite-guard mode",
-      "Toggle the prompt-coach rewrite guard between off / context / ask / block-and-copy",
-      "Show my prompt-coach buddy side pane command",
-      "Run my full prompt coach workflow",
+      "Show my Loopdeck hook rewrite-guard mode",
+      "Toggle the Loopdeck rewrite guard between off / context / ask / block-and-copy",
+      "Show my Loopdeck buddy side pane command",
+      "Run my full Loopdeck coach workflow",
       "Score my latest captured prompt",
       "Improve my latest captured prompt",
       "Judge my low-scoring prompts with the active agent session",
       "Summarize my prompt habits",
-      "Open my local prompt-coach archive"
+      "Open my local Loopdeck archive"
     ],
     "brandColor": "#2563EB",
     "screenshots": []

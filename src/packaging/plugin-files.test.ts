@@ -187,13 +187,13 @@ describe("plugin packaging files", () => {
     expect(manifest.interface.category).toBe("Coding");
     expect(manifest.interface.defaultPrompt).toEqual(
       expect.arrayContaining([
-        "Show my prompt-coach buddy side pane command",
+        "Show my Loopdeck buddy side pane command",
         "Use the loopdeck CLI alias for my next manual command",
-        "Show my prompt-coach hook rewrite-guard mode",
-        "Toggle the prompt-coach rewrite guard between off / context / ask / block-and-copy",
+        "Show my Loopdeck hook rewrite-guard mode",
+        "Toggle the Loopdeck rewrite guard between off / context / ask / block-and-copy",
         "Score my latest captured prompt",
         "Improve my latest captured prompt",
-        "Run my full prompt coach workflow",
+        "Run my full Loopdeck coach workflow",
         "Judge my low-scoring prompts with the active agent session",
         "Summarize my prompt habits",
       ]),
@@ -204,6 +204,58 @@ describe("plugin packaging files", () => {
     expect(manifest.interface.defaultPrompt).not.toContain(
       "Review my current project AGENTS.md or CLAUDE.md rules",
     );
+  });
+
+  it("uses Loopdeck-facing Codex plugin copy while preserving prompt-coach ids and hook commands", () => {
+    const manifest = readJson<{
+      name: string;
+      hooks: string;
+      skills: string;
+      interface: {
+        displayName: string;
+        shortDescription: string;
+        longDescription: string;
+        defaultPrompt: string[];
+      };
+    }>("plugins/prompt-coach/.codex-plugin/plugin.json");
+    const hooks = readJson<{
+      hooks: Record<string, Array<{ hooks: Array<{ command: string }> }>>;
+    }>("plugins/prompt-coach/hooks.json");
+    const skill = readFileSync(
+      join(process.cwd(), "plugins/prompt-coach/skills/prompt-coach/SKILL.md"),
+      "utf8",
+    );
+    const hookCommands = Object.values(hooks.hooks)
+      .flatMap((entries) => entries.flatMap((entry) => entry.hooks))
+      .map((hook) => hook.command);
+
+    expect(manifest.name).toBe("prompt-coach");
+    expect(manifest.hooks).toBe("./hooks.json");
+    expect(manifest.skills).toBe("./skills/");
+    expect(manifest.interface.displayName).toBe("Loopdeck");
+    expect(manifest.interface.shortDescription).toContain("Loopdeck");
+    expect(manifest.interface.longDescription).toContain("Loopdeck");
+    expect(manifest.interface.defaultPrompt).toEqual(
+      expect.arrayContaining([
+        "Set up Loopdeck for this machine",
+        "Check whether Loopdeck is capturing Codex prompts",
+        "Open my local Loopdeck archive",
+      ]),
+    );
+    expect(manifest.interface.defaultPrompt).not.toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("prompt-coach"),
+        expect.stringContaining("prompt coach"),
+      ]),
+    );
+    expect(skill).toContain("description: Use when the user wants to install, verify, search, or troubleshoot Loopdeck");
+    expect(skill).toContain("Use this skill when the user wants Codex to work with Loopdeck");
+    expect(skill).toContain("The compatibility CLI command remains `prompt-coach`");
+    for (const command of hookCommands) {
+      expect(command).toContain("prompt-coach hook codex");
+      expect(command).toContain("|| true");
+      expect(command).not.toContain("loopdeck hook codex");
+    }
   });
 
   it("documents plugin command namespace compatibility during the Loopdeck migration", () => {

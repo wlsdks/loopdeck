@@ -1,12 +1,13 @@
 ---
 name: prompt-coach
-description: Use when the user wants to install, verify, search, or troubleshoot Loopdeck, the local prompt-coach CLI archive and loop memory workspace for Codex or Claude Code.
+description: Use when the user wants to install, verify, search, or troubleshoot Loopdeck, the local loop memory workspace for Codex or Claude Code.
 ---
 
 # Loopdeck
 
 Use this skill when the user wants Codex to work with Loopdeck through the local
-`prompt-coach` CLI/archive.
+CLI/archive. The compatibility CLI command remains `prompt-coach` during the
+Loopdeck migration.
 
 ## What This Plugin Does
 

@@ -1145,6 +1145,24 @@ Do not add:
 - Claude Code plugin manifest command entries for loopdeck aliases
 - package, plugin id, hook command, or MCP server-name changes
 
+### Slice 4.33: Codex Plugin Display Rename Without ID Rename
+
+Add:
+
+- Codex plugin interface copy and default prompts that use Loopdeck as the
+  product-facing name
+- Codex skill copy that explains the compatibility CLI command remains
+  `prompt-coach`
+- packaging test coverage that locks Codex plugin id, install path, skill path,
+  and hook command compatibility while display copy says Loopdeck
+
+Do not add:
+
+- Codex plugin id rename
+- `plugins/prompt-coach` install path rename
+- hook command changes
+- MCP server-name changes
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.
