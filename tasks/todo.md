@@ -183,7 +183,9 @@
 - [x] Task 33 GREEN: package/bin/plugin/command/hook/MCP runtime id inventory JSON을 추가하고 live manifest 비교 테스트로 잠금
 - [x] Task 34 RED: `/loopdeck:*` alias-only slash namespace docs 계약이 없어 packaging focused test 실패 확인
 - [x] Task 34 GREEN: README/README.ko/PLUGINS가 `/loopdeck:*`를 future alias-only namespace로 설명하고 command files/runtime ids는 유지
-- [ ] 다음 slice: Slice R3 Claude Code Dual Namespace Packaging 구현 여부와 호환성 gate 결정
+- [x] Task 35 RED: R3 Claude Code dual namespace decision artifact가 없어 packaging focused test 실패 확인
+- [x] Task 35 GREEN: 공식 plugin namespace 모델 근거로 `/loopdeck:*` command file 추가를 보류하고 safe future path를 문서화
+- [ ] 다음 slice: Slice R4 Codex Plugin Display Rename Without ID Rename 구현
 
 ### 판단 기준
 

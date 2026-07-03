@@ -313,6 +313,37 @@ describe("plugin packaging files", () => {
     expect(issuePlan).not.toContain("/Users/");
   });
 
+  it("ships a Claude Code dual namespace decision gate before adding /loopdeck:* packaging", () => {
+    const decisionPath =
+      "docs/superpowers/plans/2026-07-04-loopdeck-claude-dual-namespace-decision.md";
+    const packageJson = readJson<{ files: string[] }>("package.json");
+    const decision = readFileSync(join(process.cwd(), decisionPath), "utf8");
+    const claudeManifest = readJson<{ name: string; commands: string[] }>(
+      ".claude-plugin/plugin.json",
+    );
+
+    expect(packageJson.files).toContain(decisionPath);
+    expect(decision).toContain("# Loopdeck Claude Code Dual Namespace Decision");
+    expect(decision).toContain("Decision: defer");
+    expect(decision).toContain("Claude Code plugin `name` is the namespace");
+    expect(decision).toContain("commands/loopdeck-*.md");
+    expect(decision).toContain("would not create `/loopdeck:*`");
+    expect(decision).toContain("Do not add `/loopdeck:*` command files yet");
+    expect(decision).toContain("dual plugin package");
+    expect(decision).toContain("official namespace alias support");
+    expect(decision).toContain("/prompt-coach:* remains required");
+    expect(decision).toContain("https://code.claude.com/docs/en/plugins-reference");
+    expect(decision).not.toContain("Make this better");
+    expect(decision).not.toContain("sk-proj");
+    expect(decision).not.toContain("/Users/");
+    expect(claudeManifest.name).toBe("prompt-coach");
+    expect(claudeManifest.commands).not.toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("loopdeck"),
+      ]),
+    );
+  });
+
   it("ships a machine-checkable runtime id inventory before rename work", () => {
     const inventoryPath =
       "docs/superpowers/plans/2026-07-04-loopdeck-runtime-id-inventory.json";

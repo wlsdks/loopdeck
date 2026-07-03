@@ -31,6 +31,9 @@ The npm package intentionally includes:
     and `docs/superpowers/plans/2026-07-04-loopdeck-runtime-id-inventory.json`
     so rename work starts from shippable slices and a machine-checkable runtime
     id inventory
+  - includes `docs/superpowers/plans/2026-07-04-loopdeck-claude-dual-namespace-decision.md`
+    so the package records why `/loopdeck:*` command files are deferred until a
+    real Claude Code namespace alias path is proven
 - Claude Code plugin artifacts under `.claude-plugin`, `commands`, and
   `integrations/claude-code`
 - Codex plugin artifacts under `plugins/prompt-coach`

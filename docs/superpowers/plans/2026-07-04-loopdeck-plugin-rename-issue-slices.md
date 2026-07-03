@@ -93,30 +93,35 @@ Acceptance:
 - Do not add new command files that shadow old commands yet.
 - Claude Code plugin smoke proves old commands remain discoverable.
 
-## Slice R3: Claude Code Dual Namespace Packaging
+## Slice R3: Claude Code Dual Namespace Packaging Decision
 
-Goal: package `/loopdeck:*` command aliases for Claude Code while keeping
-`/prompt-coach:*` commands intact.
+Goal: decide whether `/loopdeck:*` command aliases can be packaged for Claude
+Code while keeping `/prompt-coach:*` commands intact.
 
 Scope:
 
-- add alias command docs only when they route to the same local CLI/MCP workflow
-- keep command bodies free of prompt body capture or external LLM calls
-- update `.claude-plugin/plugin.json` only if needed for discoverability
-- update install docs and package contents
+- check the current Claude Code plugin namespace model before adding files
+- document whether command-file aliases can actually create `/loopdeck:*`
+- define safe future paths for dual plugin package, official namespace alias
+  support, or a later major rename window
+- keep command bodies and manifest unchanged unless a fresh RED test proves a
+  real alias path exists
 
 TDD proof:
 
-- RED: packaging test fails because `/loopdeck:*` command files are absent or do
-  not map to equivalent `/prompt-coach:*` commands.
-- GREEN: both namespaces are packaged and old command docs remain unchanged or
-  backward compatible.
+- RED: packaging test fails because the R3 decision artifact does not exist.
+- GREEN: decision artifact documents why current `commands/loopdeck-*.md` files
+  would not create `/loopdeck:*`, keeps `/prompt-coach:*` required, and names the
+  allowed future paths.
 
 Acceptance:
 
-- Claude Code plugin smoke proves both namespaces are discoverable.
+- Do not add `/loopdeck:*` command files unless Claude Code plugin smoke can
+  prove both namespaces are discoverable.
 - `prompt-coach` binary remains the command used in hook-sensitive paths unless
   a later hook slice proves otherwise.
+- R3 may end as "defer" if the current official namespace model cannot support
+  alias-only commands without a second plugin identity or plugin id rename.
 
 ## Slice R4: Codex Plugin Display Rename Without ID Rename
 
@@ -218,7 +223,7 @@ Acceptance:
 
 1. Slice R1: Compatibility Inventory Gate
 2. Slice R2: Alias-Only Command Docs
-3. Slice R3: Claude Code Dual Namespace Packaging
+3. Slice R3: Claude Code Dual Namespace Packaging Decision
 4. Slice R4: Codex Plugin Display Rename Without ID Rename
 5. Slice R5: Hook Binary Compatibility Smoke
 6. Slice R6: MCP Server Name Compatibility Decision

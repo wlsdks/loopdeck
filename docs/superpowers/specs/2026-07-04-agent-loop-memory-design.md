@@ -1127,6 +1127,24 @@ Do not add:
 - package, plugin id, hook command, or MCP server-name changes
 - runtime command alias behavior
 
+### Slice 4.32: Claude Code Dual Namespace Decision
+
+Add:
+
+- R3 decision artifact documenting that current Claude Code command namespace is
+  tied to plugin identity, so `commands/loopdeck-*.md` would not create
+  `/loopdeck:*`
+- packaging test coverage that keeps `/prompt-coach:*` required and prevents
+  accidental loopdeck command file/manifest additions
+- safe future paths: dual plugin package, official namespace alias support, or a
+  later major rename window with smoke and rollback gates
+
+Do not add:
+
+- `/loopdeck:*` command files
+- Claude Code plugin manifest command entries for loopdeck aliases
+- package, plugin id, hook command, or MCP server-name changes
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.
