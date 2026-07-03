@@ -1,7 +1,10 @@
 import type { Command } from "commander";
 
 import { loadHookAuth, loadPromptCoachConfig } from "../../config/config.js";
-import { createLoopBrief } from "../../loop/brief.js";
+import {
+  createLoopBrief,
+  latestCompactBoundaryAfterSnapshot,
+} from "../../loop/brief.js";
 import { collectLoopSnapshot } from "../../loop/collect.js";
 import type { LoopSnapshot } from "../../loop/types.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
@@ -76,7 +79,11 @@ export function loopBriefForCli(options: LoopCliOptions = {}): string {
         "No loop snapshot found. Run `prompt-coach loop collect` first.",
       );
     }
-    const brief = createLoopBrief({ snapshot });
+    const compactBoundary = latestCompactBoundaryAfterSnapshot(
+      snapshot,
+      storage.listCompactBoundaries({ limit: 20 }).items,
+    );
+    const brief = createLoopBrief({ snapshot, compactBoundary });
     return options.json
       ? JSON.stringify(brief, null, 2)
       : `${brief.title}\n\n${brief.prompt}`;

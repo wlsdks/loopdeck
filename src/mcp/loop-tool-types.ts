@@ -1,4 +1,5 @@
 import type { LoopOutcomeStatus } from "../loop/types.js";
+import type { LoopBriefCompactBoundary } from "../loop/brief.js";
 
 export type GetLoopdeckStatusToolArguments = {
   include_latest?: boolean;
@@ -38,6 +39,7 @@ export type GetLoopdeckStatusToolResult = {
     average_prompt_score?: number;
     top_gaps: string[];
   };
+  latest_compact_boundary?: LoopBriefCompactBoundary;
   available_tools: string[];
   next_actions: string[];
   privacy: LoopdeckToolPrivacy;
@@ -49,6 +51,7 @@ export type PrepareLoopBriefToolResult =
       snapshot_id: string;
       title: string;
       prompt: string;
+      compact_boundary?: LoopBriefCompactBoundary;
       next_action: string;
       privacy: LoopdeckToolPrivacy & {
         auto_submits: false;

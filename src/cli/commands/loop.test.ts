@@ -86,6 +86,26 @@ describe("loop CLI command", () => {
     expect(text).not.toContain("Make this better");
     expect(text).not.toContain("/Users/example");
   });
+
+  it("marks continuation briefs when compact happened after the latest snapshot", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    loopCollectForCli({
+      dataDir,
+      cwdPrefix: "/Users/example/private-project",
+      now: new Date("2026-07-04T01:00:00.000Z"),
+      cwd: "/Users/example/private-project",
+    });
+    seedCompactBoundary(dataDir);
+
+    const text = loopBriefForCli({ dataDir });
+
+    expect(text).toContain("## Compaction Boundary");
+    expect(text).toContain("PostCompact at 2026-07-04T01:05:00.000Z");
+    expect(text).toContain("Run prompt-coach loop collect again");
+    expect(text).not.toContain("Compact summary with sk-proj-secret");
+    expect(text).not.toContain("/Users/example");
+  });
 });
 
 async function seedPrompts(dataDir: string): Promise<void> {
@@ -135,6 +155,27 @@ async function storeClaudePrompt(
     event,
     redaction: redactPrompt(event.prompt, "mask"),
   });
+}
+
+function seedCompactBoundary(dataDir: string): void {
+  const init = initializePromptCoach({ dataDir });
+  const storage = createSqlitePromptStorage({
+    dataDir,
+    hmacSecret: init.hookAuth.web_session_secret,
+    now: () => new Date("2026-07-04T01:05:00.000Z"),
+  });
+  try {
+    storage.recordCompactBoundary({
+      tool: "claude-code",
+      event_name: "PostCompact",
+      trigger: "auto",
+      session_id: "session-loop-cli",
+      cwd: "/Users/example/private-project",
+      content: "Compact summary with sk-proj-secret and /Users/example.",
+    });
+  } finally {
+    storage.close();
+  }
 }
 
 function nextDate(values: string[]): () => Date {

@@ -209,11 +209,14 @@ project instruction review, and next request guidance in one read-only call.
 `get_prompt_coach_status` checks local archive readiness and returns safe
 counts, latest prompt metadata, available tool names, and next actions.
 `get_loopdeck_status` checks whether local loop snapshots exist and returns
-safe latest-loop metadata. `prepare_loop_brief` returns a copy-ready
-continuation prompt from the latest Loopdeck snapshot without prompt bodies,
-raw paths, or auto-submission. `record_loop_outcome` writes only
-user-approved status, summary, and evidence references for a Loopdeck snapshot;
-it does not store prompt bodies, raw paths, or external LLM results.
+safe latest-loop metadata. It also reports safe compact-boundary metadata when
+a compact happened after the latest snapshot. `prepare_loop_brief` returns a
+copy-ready continuation prompt from the latest Loopdeck snapshot without prompt
+bodies, raw paths, or auto-submission; when the latest snapshot is pre-compact,
+it asks the user to refresh the snapshot instead of replaying compact summaries
+or custom compact instructions. `record_loop_outcome` writes only user-approved
+status, summary, and evidence references for a Loopdeck snapshot; it does not
+store prompt bodies, raw paths, or external LLM results.
 `score_prompt` scores direct prompt text, a stored prompt id, or the latest
 stored prompt with the same local deterministic `0-100` Prompt Quality Score
 used by the web UI. The response also includes a per-criterion `breakdown`

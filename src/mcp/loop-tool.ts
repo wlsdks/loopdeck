@@ -1,5 +1,8 @@
 import { loadHookAuth, loadPromptCoachConfig } from "../config/config.js";
-import { createLoopBrief } from "../loop/brief.js";
+import {
+  createLoopBrief,
+  latestCompactBoundaryAfterSnapshot,
+} from "../loop/brief.js";
 import type { LoopSnapshot } from "../loop/types.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import type { ScorePromptToolOptions } from "./score-tool-types.js";
@@ -36,12 +39,22 @@ export function getLoopdeckStatusTool(
       const snapshots = storage.listLoopSnapshots({ limit: 100 }).items;
       const latest =
         args.include_latest === false ? undefined : snapshots.at(0);
+      const latestForBoundary = snapshots.at(0);
+      const compactBoundary = latestForBoundary
+        ? latestCompactBoundaryAfterSnapshot(
+            latestForBoundary,
+            storage.listCompactBoundaries({ limit: 20 }).items,
+          )
+        : undefined;
       const hasSnapshots = snapshots.length > 0;
 
       return {
         status: hasSnapshots ? "ready" : "empty",
         snapshot_count: snapshots.length,
         ...(latest ? { latest_snapshot: toSafeLatestLoopSnapshot(latest) } : {}),
+        ...(compactBoundary
+          ? { latest_compact_boundary: compactBoundary }
+          : {}),
         available_tools: LOOP_TOOL_NAMES,
         next_actions: hasSnapshots
           ? [
@@ -99,12 +112,19 @@ export function prepareLoopBriefTool(
         );
       }
 
-      const brief = createLoopBrief({ snapshot });
+      const compactBoundary = latestCompactBoundaryAfterSnapshot(
+        snapshot,
+        storage.listCompactBoundaries({ limit: 20 }).items,
+      );
+      const brief = createLoopBrief({ snapshot, compactBoundary });
       return {
         source: "latest",
         snapshot_id: snapshot.id,
         title: brief.title,
         prompt: brief.prompt,
+        ...(brief.compact_boundary
+          ? { compact_boundary: brief.compact_boundary }
+          : {}),
         next_action:
           "Ask the user to review this continuation prompt before submitting it to Codex or Claude Code.",
         privacy: {

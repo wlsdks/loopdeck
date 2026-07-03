@@ -490,6 +490,9 @@ Add:
 - setup dry-run preview (**implemented for Stop/PreCompact/PostCompact hook
   registration**)
 - hook trust/setup docs (**updated for metadata-only compact boundaries**)
+- loop status and brief awareness (**implemented for CLI `loop brief`, MCP
+  `get_loopdeck_status`, and MCP `prepare_loop_brief`; it only reports safe
+  compact boundary metadata newer than the latest loop snapshot**)
 
 Verification:
 
@@ -498,6 +501,8 @@ Verification:
 - hook can run from subdirectories by resolving git root
 - compact hooks do not store `custom_instructions`, `compact_summary`,
   transcript bodies, or raw paths
+- compact-aware status and brief output do not return compact summary bodies,
+  custom instructions, transcript bodies, or raw paths
 
 ### Slice 4: Web Loops View
 

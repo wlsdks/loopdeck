@@ -1,9 +1,20 @@
 import type { LoopSnapshot } from "./types.js";
 
+export type LoopBriefCompactBoundary = {
+  id: string;
+  created_at: string;
+  tool: string;
+  event_name: "PreCompact" | "PostCompact";
+  trigger: "manual" | "auto" | "unknown";
+  content_hash?: string;
+  after_latest_snapshot: true;
+};
+
 export type LoopBrief = {
   title: string;
   prompt: string;
   source_snapshot_id: string;
+  compact_boundary?: LoopBriefCompactBoundary;
   privacy: {
     local_only: true;
     returns_prompt_bodies: false;
@@ -11,7 +22,10 @@ export type LoopBrief = {
   };
 };
 
-export function createLoopBrief(input: { snapshot: LoopSnapshot }): LoopBrief {
+export function createLoopBrief(input: {
+  snapshot: LoopSnapshot;
+  compactBoundary?: LoopBriefCompactBoundary;
+}): LoopBrief {
   const snapshot = input.snapshot;
   const gaps =
     snapshot.quality.top_gaps.length > 0
@@ -48,6 +62,14 @@ export function createLoopBrief(input: { snapshot: LoopSnapshot }): LoopBrief {
       "## Current Loop State",
       snapshot.outcome.summary,
       "",
+      ...(input.compactBoundary
+        ? [
+            "## Compaction Boundary",
+            `${input.compactBoundary.event_name} at ${input.compactBoundary.created_at} (${input.compactBoundary.trigger}).`,
+            "Run prompt-coach loop collect again if the next turn needs post-compact context.",
+            "",
+          ]
+        : []),
       "## Prompt Habits To Improve",
       gaps,
       "",
@@ -62,6 +84,9 @@ export function createLoopBrief(input: { snapshot: LoopSnapshot }): LoopBrief {
     ]
       .filter((line): line is string => line !== undefined)
       .join("\n"),
+    ...(input.compactBoundary
+      ? { compact_boundary: input.compactBoundary }
+      : {}),
     privacy: {
       local_only: true,
       returns_prompt_bodies: false,
@@ -69,3 +94,35 @@ export function createLoopBrief(input: { snapshot: LoopSnapshot }): LoopBrief {
     },
   };
 }
+
+export function latestCompactBoundaryAfterSnapshot(
+  snapshot: LoopSnapshot,
+  boundaries: readonly CompactBoundaryCandidate[],
+): LoopBriefCompactBoundary | undefined {
+  const latest = boundaries.find(
+    (boundary) =>
+      boundary.project_id === snapshot.project_id &&
+      boundary.created_at > snapshot.created_at,
+  );
+  if (!latest) return undefined;
+
+  return {
+    id: latest.id,
+    created_at: latest.created_at,
+    tool: latest.tool,
+    event_name: latest.event_name,
+    trigger: latest.trigger,
+    ...(latest.content_hash ? { content_hash: latest.content_hash } : {}),
+    after_latest_snapshot: true,
+  };
+}
+
+type CompactBoundaryCandidate = {
+  id: string;
+  created_at: string;
+  tool: string;
+  event_name: "PreCompact" | "PostCompact";
+  trigger: "manual" | "auto" | "unknown";
+  project_id: string;
+  content_hash?: string;
+};

@@ -52,6 +52,29 @@ describe("Loopdeck MCP tools", () => {
     expect(serialized).not.toContain("/Users/example");
   });
 
+  it("reports compact boundaries newer than the latest loop snapshot", () => {
+    const dataDir = seedLoopSnapshot({ withCompactBoundary: true });
+
+    const result = getLoopdeckStatusTool({}, { dataDir });
+    const serialized = JSON.stringify(result);
+
+    expect(result).toMatchObject({
+      latest_compact_boundary: {
+        id: expect.stringMatching(/^cmp_/),
+        event_name: "PostCompact",
+        trigger: "auto",
+        tool: "claude-code",
+        created_at: "2026-07-04T01:05:00.000Z",
+        after_latest_snapshot: true,
+      },
+      next_actions: expect.arrayContaining([
+        expect.stringContaining("prompt-coach loop collect"),
+      ]),
+    });
+    expect(serialized).not.toContain("Compact summary with sk-proj-secret");
+    expect(serialized).not.toContain("/Users/example");
+  });
+
   it("prepares a continuation brief from the latest loop snapshot", () => {
     const dataDir = seedLoopSnapshot();
 
@@ -73,6 +96,26 @@ describe("Loopdeck MCP tools", () => {
     expect(result.prompt).toContain("## Goal");
     expect(result.prompt).toContain("prompt ids: prmt_one, prmt_two");
     expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("/Users/example");
+  });
+
+  it("includes compact boundary awareness in continuation briefs", () => {
+    const dataDir = seedLoopSnapshot({ withCompactBoundary: true });
+
+    const result = prepareLoopBriefTool({}, { dataDir });
+    const serialized = JSON.stringify(result);
+
+    expect(result).toMatchObject({
+      compact_boundary: {
+        event_name: "PostCompact",
+        trigger: "auto",
+        after_latest_snapshot: true,
+      },
+    });
+    expect(result.prompt).toContain("## Compaction Boundary");
+    expect(result.prompt).toContain("PostCompact at 2026-07-04T01:05:00.000Z");
+    expect(result.prompt).toContain("Run prompt-coach loop collect again");
+    expect(serialized).not.toContain("Compact summary with sk-proj-secret");
     expect(serialized).not.toContain("/Users/example");
   });
 
@@ -145,22 +188,35 @@ describe("Loopdeck MCP tools", () => {
   });
 });
 
-function seedLoopSnapshot(): string {
+function seedLoopSnapshot(options: { withCompactBoundary?: boolean } = {}): string {
   const dataDir = createTempDir();
   const init = initializePromptCoach({ dataDir });
   const storage = createSqlitePromptStorage({
     dataDir,
     hmacSecret: init.hookAuth.web_session_secret,
+    now: () => new Date("2026-07-04T01:05:00.000Z"),
   });
   try {
-    storage.createLoopSnapshot(loopSnapshot());
+    if (options.withCompactBoundary) {
+      const boundary = storage.recordCompactBoundary({
+        tool: "claude-code",
+        event_name: "PostCompact",
+        trigger: "auto",
+        session_id: "session-mcp",
+        cwd: "/Users/example/private-project",
+        content: "Compact summary with sk-proj-secret and /Users/example.",
+      });
+      storage.createLoopSnapshot(loopSnapshot({ project_id: boundary.project_id }));
+    } else {
+      storage.createLoopSnapshot(loopSnapshot());
+    }
   } finally {
     storage.close();
   }
   return dataDir;
 }
 
-function loopSnapshot(): LoopSnapshot {
+function loopSnapshot(patch: Partial<LoopSnapshot> = {}): LoopSnapshot {
   return {
     id: "loop_mcp",
     created_at: "2026-07-04T01:00:00.000Z",
@@ -195,6 +251,7 @@ function loopSnapshot(): LoopSnapshot {
       stores_raw_paths: false,
       local_only: true,
     },
+    ...patch,
   };
 }
 

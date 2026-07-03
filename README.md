@@ -719,9 +719,13 @@ The MCP server exposes sixteen tools:
   `answers_count`, `changed_sections`, …) — the prompt body and the draft
   text are never echoed in the response. Local-only write tool.
 - `get_loopdeck_status`: check whether local Loopdeck loop snapshots exist and
-  return safe latest-loop metadata plus next actions.
+  return safe latest-loop metadata plus compact-boundary awareness when a
+  compact happened after the latest snapshot.
 - `prepare_loop_brief`: prepare a copy-ready continuation prompt from the
   latest local Loopdeck snapshot without returning prompt bodies or raw paths.
+  If the latest snapshot is older than a compact boundary, the brief says to
+  refresh the loop snapshot but does not include compact summaries or custom
+  compact instructions.
 - `record_loop_outcome`: store user-approved loop outcome metadata for a
   Loopdeck snapshot without storing prompt bodies or raw paths.
 - `prepare_agent_rewrite`: prepare one locally redacted prompt packet, local

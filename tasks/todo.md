@@ -92,7 +92,16 @@
 - [x] Task 3 RED: installer dry-run이 `PreCompact`/`PostCompact` hook 등록을 요구하는지 확인
 - [x] Task 3 GREEN: Claude/Codex installer, plugin hook, example settings에 compact hooks 추가
 - [x] Task 4: README/PLUGINS/spec/todo에 compact boundary 범위와 공식 hook 근거 반영
-- [ ] 다음 slice: loop status/brief에 compact boundary awareness 반영
+- [x] 다음 slice: loop status/brief에 compact boundary awareness 반영
+
+## 2026-07-04 Compact Boundary Awareness Slice
+
+- [x] Task 1 RED: `prompt-coach loop brief`가 최신 snapshot 이후 compact boundary section을 요구하도록 CLI 테스트 작성
+- [x] Task 1 GREEN: `createLoopBrief`와 CLI가 최신 snapshot 이후 compact boundary metadata를 표시
+- [x] Task 2 RED: `get_loopdeck_status` / `prepare_loop_brief`가 compact boundary awareness를 요구하도록 MCP 테스트 작성
+- [x] Task 2 GREEN: MCP status/brief result에 raw-free compact boundary metadata 추가
+- [x] Task 3: spec/README/PLUGINS에 compact boundary awareness 범위와 한계 반영
+- [ ] 다음 slice: compact-aware loop status CLI 또는 web Loops view 설계
 
 ### 판단 기준
 
@@ -100,6 +109,13 @@
 - `PreCompact`/`PostCompact` lifecycle payload는 prompt ingest route로 보내지 않는다.
 - Hook output은 기존처럼 fail-open이며 stdout/stderr에 원문을 노출하지 않는다.
 - 이번 slice는 boundary metadata만 포함하고 compact summary 재주입, semantic memory, web UI는 다음 slice로 남긴다.
+
+### Compact Boundary Awareness 판단 기준
+
+- `loop brief`, `prepare_loop_brief`, `get_loopdeck_status`는 최신 loop snapshot 이후 발생한 compact boundary만 표시한다.
+- 표시되는 boundary 정보는 event name, trigger, time, tool, id, optional hash 같은 safe metadata로 제한한다.
+- compact summary, custom instructions, transcript body, raw path는 CLI/MCP 출력과 테스트 결과에 노출하지 않는다.
+- 이번 slice는 "다시 collect할 필요가 있음"을 알려주는 awareness까지만 포함하고 summary 재주입, semantic memory, web UI는 다음 slice로 남긴다.
 
 ## 2026-05-04 Habit Coach Panel Extraction
 
