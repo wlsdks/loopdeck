@@ -8,6 +8,7 @@ import {
 import { collectLoopSnapshot } from "../../loop/collect.js";
 import type { LoopSnapshot, LoopSnapshotSource } from "../../loop/types.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
+import { registerLoopScheduleCommand } from "./loop-schedule.js";
 import { UserError } from "../user-error.js";
 
 type LoopCliOptions = {
@@ -58,6 +59,8 @@ export function registerLoopCommand(program: Command): void {
     .action((options: LoopCliOptions) => {
       console.log(loopBriefForCli(options));
     });
+
+  registerLoopScheduleCommand(loop);
 }
 
 export function loopCollectForCli(options: LoopCliOptions = {}): string {

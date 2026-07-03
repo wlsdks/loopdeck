@@ -222,9 +222,11 @@ The local CLI mirrors that loop surface with `prompt-coach loop status`,
 `prompt-coach loop collect`, and `prompt-coach loop brief`. Use
 `prompt-coach loop collect --source service` as the explicit one-shot command
 for cron or LaunchAgent collection; it does not silently install a scheduler.
-`loop status` prints snapshot readiness, latest safe loop metadata, and compact
-refresh guidance without prompt bodies, compact summaries, custom compact
-instructions, or raw paths.
+The opt-in macOS schedule is `prompt-coach loop schedule install`; use
+`--dry-run` to inspect the LaunchAgent before writing it. `loop status` prints
+snapshot readiness, latest safe loop metadata, and compact refresh guidance
+without prompt bodies, compact summaries, custom compact instructions, or raw
+paths.
 The web Loops view uses the same privacy boundary for recent loop snapshots,
 empty state guidance, compact refresh markers, and copy-ready next loop briefs;
 it does not render prompt bodies, compact summaries, custom compact

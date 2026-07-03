@@ -536,10 +536,12 @@ Add:
   collection (**implemented**)
 - output that labels service-origin snapshots without prompt bodies or raw paths
   (**implemented**)
+- opt-in macOS LaunchAgent preview/install via `prompt-coach loop schedule
+  install` (**implemented; dry-run supported**)
 
 Do not add:
 
-- hidden background scheduling
+- hidden background scheduling without explicit user command
 - automatic prompt resubmission
 - transcript or compact summary ingestion
 

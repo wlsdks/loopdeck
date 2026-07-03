@@ -732,9 +732,12 @@ The MCP server exposes sixteen tools:
 The matching local CLI surface is `prompt-coach loop status`,
 `prompt-coach loop collect`, and `prompt-coach loop brief`. `loop collect` also
 accepts `--source service` for explicit cron or LaunchAgent one-shot collection
-without creating hidden background automation. `loop status` shows snapshot
-readiness, latest safe metadata, and compact refresh guidance without printing
-prompt bodies, compact summaries, custom compact instructions, or raw paths.
+without creating hidden background automation. Users who want an opt-in macOS
+schedule can preview or install it with `prompt-coach loop schedule install
+--dry-run` or `prompt-coach loop schedule install --cwd-prefix <project>`.
+`loop status` shows snapshot readiness, latest safe metadata, and compact
+refresh guidance without printing prompt bodies, compact summaries, custom
+compact instructions, or raw paths.
 The web UI also includes a Loops view for local snapshot readiness, recent loop
 metadata, compact refresh markers, and a copy action for the next loop brief.
 It does not render prompt bodies, compact summaries, custom compact
