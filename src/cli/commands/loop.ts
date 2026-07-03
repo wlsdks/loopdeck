@@ -176,7 +176,10 @@ export function loopBriefForCli(options: LoopCliOptions = {}): string {
       snapshot,
       storage.listCompactBoundaries({ limit: 20 }).items,
     );
-    const approvedMemories = storage.listLoopMemories({ limit: 3 }).items;
+    const approvedMemories = storage.listLoopMemories({
+      projectId: snapshot.project_id,
+      limit: 3,
+    }).items;
     const brief = createLoopBrief({
       snapshot,
       compactBoundary,

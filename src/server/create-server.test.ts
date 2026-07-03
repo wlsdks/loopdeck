@@ -438,6 +438,13 @@ describe("createServer P2 ingest boundary", () => {
     const storage = createMemoryStorage();
     storage.loopSnapshots.push(loopSnapshot());
     storage.loopMemories.push(loopMemory());
+    storage.loopMemories.push(
+      loopMemory({
+        id: "mem_other",
+        snapshot_id: "loop_other",
+        statement: "This unrelated project memory should not appear.",
+      }),
+    );
     const server = createTestServer({ storage });
 
     const response = await server.inject({
@@ -455,6 +462,7 @@ describe("createServer P2 ingest boundary", () => {
     expect(prompt).toContain(
       "Keep web, CLI, MCP, and API loop status on the shared model.",
     );
+    expect(prompt).not.toContain("This unrelated project memory");
     expect(prompt).not.toContain("/Users/example");
     expect(prompt).not.toContain("sk-proj-secret");
   });
@@ -1581,8 +1589,16 @@ function createMemoryStorage() {
     listCompactBoundaries() {
       return { items: compactBoundaries };
     },
-    listLoopMemories() {
-      return { items: loopMemories };
+    listLoopMemories(options: { limit?: number; projectId?: string } = {}) {
+      const scoped = options.projectId
+        ? loopMemories.filter((memory) => {
+            const snapshot = loopSnapshots.find(
+              (item) => item.id === memory.snapshot_id,
+            );
+            return snapshot?.project_id === options.projectId;
+          })
+        : loopMemories;
+      return { items: scoped.slice(0, options.limit ?? scoped.length) };
     },
     getPrompt(id: string) {
       return this.promptDetails.find((prompt) => prompt.id === id);
@@ -1740,7 +1756,7 @@ function loopSnapshot(): LoopSnapshot {
   };
 }
 
-function loopMemory(): LoopMemory {
+function loopMemory(patch: Partial<LoopMemory> = {}): LoopMemory {
   return {
     id: "mem_web",
     snapshot_id: "loop_web",
@@ -1756,5 +1772,6 @@ function loopMemory(): LoopMemory {
       writes_instruction_files: false,
       external_calls: false,
     },
+    ...patch,
   };
 }

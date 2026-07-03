@@ -84,7 +84,10 @@ export function registerLoopRoutes(
           boundaries,
         ),
         approvedMemories:
-          options.storage.listLoopMemories?.({ limit: 3 }).items ?? [],
+          options.storage.listLoopMemories?.({
+            projectId: snapshot.project_id,
+            limit: 3,
+          }).items ?? [],
       }),
     };
   });

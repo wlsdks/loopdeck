@@ -116,6 +116,7 @@ describe("Loopdeck MCP tools", () => {
       },
     });
     recordLoopMemoryTool({ latest: true, approved_by: "user" }, { dataDir });
+    seedOtherProjectMemory(dataDir);
 
     const result = prepareLoopBriefTool({}, { dataDir });
     const serialized = JSON.stringify(result);
@@ -127,6 +128,9 @@ describe("Loopdeck MCP tools", () => {
     expect(result.prompt).toContain("## Approved Loop Memories");
     expect(result.prompt).toContain(
       "Shared status surfaces should use one model instead of duplicating readiness logic.",
+    );
+    expect(result.prompt).not.toContain(
+      "This unrelated project memory should not appear",
     );
     expect(serialized).not.toContain("Make this better");
     expect(serialized).not.toContain("/Users/example");
@@ -473,6 +477,40 @@ function loopSnapshot(patch: Partial<LoopSnapshot> = {}): LoopSnapshot {
     },
     ...patch,
   };
+}
+
+function seedOtherProjectMemory(dataDir: string): void {
+  const init = initializePromptCoach({ dataDir });
+  const storage = createSqlitePromptStorage({
+    dataDir,
+    hmacSecret: init.hookAuth.web_session_secret,
+    now: () => new Date("2026-07-04T01:30:00.000Z"),
+  });
+  try {
+    const latest = storage.getLatestLoopSnapshot();
+    if (!latest) return;
+    storage.createLoopSnapshot({
+      ...latest,
+      id: "loop_other_project",
+      created_at: "2026-07-03T01:00:00.000Z",
+      cwd_label: "other-project",
+      project_id: "proj_other",
+      outcome: {
+        status: "passed",
+        summary: "This unrelated project memory should not appear.",
+        evidence_refs: ["commit:other"],
+      },
+    });
+    storage.recordLoopMemory({
+      snapshot_id: "loop_other_project",
+      title: "Other project memory",
+      statement: "This unrelated project memory should not appear.",
+      evidence_refs: ["commit:other"],
+      approved_by: "user",
+    });
+  } finally {
+    storage.close();
+  }
 }
 
 function createTempDir(): string {

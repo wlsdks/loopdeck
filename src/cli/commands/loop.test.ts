@@ -151,6 +151,7 @@ describe("loop CLI command", () => {
     ) as { id: string };
     seedLoopOutcome(dataDir, snapshot.id);
     loopMemoryApproveForCli({ dataDir, approvedBy: "user" });
+    seedOtherProjectMemory(dataDir);
 
     const text = loopBriefForCli({ dataDir });
 
@@ -158,6 +159,7 @@ describe("loop CLI command", () => {
     expect(text).toContain(
       "Scheduler lifecycle should stay plist-only unless the user explicitly asks for launchctl mutation.",
     );
+    expect(text).not.toContain("This unrelated project memory should not appear");
     expect(text).not.toContain("Make this better");
     expect(text).not.toContain("/Users/example");
   });
@@ -506,6 +508,40 @@ function seedLoopOutcome(dataDir: string, snapshotId: string): void {
       summary:
         "Scheduler lifecycle should stay plist-only unless the user explicitly asks for launchctl mutation.",
       evidence_refs: ["commit:2a91de0", "test:pnpm test"],
+    });
+  } finally {
+    storage.close();
+  }
+}
+
+function seedOtherProjectMemory(dataDir: string): void {
+  const init = initializePromptCoach({ dataDir });
+  const storage = createSqlitePromptStorage({
+    dataDir,
+    hmacSecret: init.hookAuth.web_session_secret,
+    now: () => new Date("2026-07-04T01:30:00.000Z"),
+  });
+  try {
+    const latest = storage.getLatestLoopSnapshot();
+    if (!latest) return;
+    storage.createLoopSnapshot({
+      ...latest,
+      id: "loop_other_project",
+      created_at: "2026-07-03T01:00:00.000Z",
+      cwd_label: "other-project",
+      project_id: "proj_other",
+      outcome: {
+        status: "passed",
+        summary: "This unrelated project memory should not appear.",
+        evidence_refs: ["commit:other"],
+      },
+    });
+    storage.recordLoopMemory({
+      snapshot_id: "loop_other_project",
+      title: "Other project memory",
+      statement: "This unrelated project memory should not appear.",
+      evidence_refs: ["commit:other"],
+      approved_by: "user",
     });
   } finally {
     storage.close();

@@ -138,7 +138,10 @@ export type CompactBoundaryStoragePort = {
 
 export type LoopMemoryStoragePort = {
   recordLoopMemory(input: RecordLoopMemoryInput): LoopMemory;
-  listLoopMemories(options?: { limit?: number }): LoopMemoryListResult;
+  listLoopMemories(options?: {
+    limit?: number;
+    projectId?: string;
+  }): LoopMemoryListResult;
 };
 
 export type DeletePromptResult = {

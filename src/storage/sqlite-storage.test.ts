@@ -13,6 +13,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { normalizeClaudeCodePayload } from "../adapters/claude-code.js";
 import { normalizeCodexPayload } from "../adapters/codex.js";
+import type { LoopSnapshot } from "../loop/types.js";
 import { redactPrompt } from "../redaction/redact.js";
 import { createServer } from "../server/create-server.js";
 import { initializePromptCoach } from "../config/config.js";
@@ -234,6 +235,60 @@ describe("SQLite prompt storage", () => {
     });
     expect(JSON.stringify(memory)).not.toContain("/Users/example");
     expect(JSON.stringify(memory)).not.toContain("Make this better");
+
+    storage.close();
+  });
+
+  it("filters approved loop memories by source snapshot project", () => {
+    const dataDir = createTempDir();
+    initializePromptCoach({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+      now: nextDate([
+        "2026-07-04T02:00:00.000Z",
+        "2026-07-04T02:01:00.000Z",
+      ]),
+    });
+    storage.createLoopSnapshot(
+      loopSnapshot({
+        id: "loop_project_a",
+        project_id: "proj_a",
+        cwd_label: "project-a",
+      }),
+    );
+    storage.createLoopSnapshot(
+      loopSnapshot({
+        id: "loop_project_b",
+        project_id: "proj_b",
+        cwd_label: "project-b",
+      }),
+    );
+    storage.recordLoopMemory({
+      snapshot_id: "loop_project_a",
+      title: "Project A memory",
+      statement: "Use the shared Loopdeck status model for project A.",
+      evidence_refs: ["commit:a"],
+      approved_by: "user",
+    });
+    storage.recordLoopMemory({
+      snapshot_id: "loop_project_b",
+      title: "Project B memory",
+      statement: "Use a different retry policy for project B.",
+      evidence_refs: ["commit:b"],
+      approved_by: "user",
+    });
+
+    const projectMemories = storage.listLoopMemories({
+      projectId: "proj_a",
+      limit: 10,
+    }).items;
+
+    expect(projectMemories).toHaveLength(1);
+    expect(projectMemories[0]?.statement).toBe(
+      "Use the shared Loopdeck status model for project A.",
+    );
+    expect(JSON.stringify(projectMemories)).not.toContain("project B");
 
     storage.close();
   });
@@ -2043,6 +2098,45 @@ function nextDate(values: string[]): () => Date {
   let index = 0;
 
   return () => new Date(values[index++] ?? values.at(-1)!);
+}
+
+function loopSnapshot(patch: Partial<LoopSnapshot> = {}): LoopSnapshot {
+  return {
+    id: "loop_storage",
+    created_at: "2026-07-04T01:00:00.000Z",
+    tool: "codex",
+    source: "cli",
+    session_id: "session-storage",
+    cwd_label: "private-project",
+    project_id: "proj_storage",
+    git_root_hash: "git_storage",
+    branch: "codex/agent-loop-memory-design",
+    worktree_label: "worktree-storage",
+    prompt_ids: ["prmt_one", "prmt_two"],
+    event_counts: {
+      prompts: 2,
+    },
+    quality: {
+      average_prompt_score: 58,
+      top_gaps: ["Goal clarity"],
+      unresolved_questions: [],
+    },
+    outcome: {
+      status: "unknown",
+      summary: "Loop snapshot collected from 2 prompts.",
+      evidence_refs: ["prompt:prmt_one", "prompt:prmt_two"],
+    },
+    next_brief: {
+      generated: false,
+      summary: "Run prompt-coach loop brief to generate the next request.",
+    },
+    privacy: {
+      stores_prompt_bodies: false,
+      stores_raw_paths: false,
+      local_only: true,
+    },
+    ...patch,
+  };
 }
 
 function createTempDir(): string {

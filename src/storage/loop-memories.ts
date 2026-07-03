@@ -113,11 +113,30 @@ export function recordLoopMemory(
 
 export function listLoopMemories(
   db: Database.Database,
-  options: { limit?: number },
+  options: { limit?: number; projectId?: string },
 ): LoopMemoryListResult {
+  const limit = normalizeLimit(options.limit);
+  if (options.projectId) {
+    const rows = db
+      .prepare(
+        `
+        SELECT loop_memories.*
+        FROM loop_memories
+        INNER JOIN loop_snapshots
+          ON loop_snapshots.id = loop_memories.snapshot_id
+        WHERE loop_snapshots.project_id = ?
+        ORDER BY loop_memories.created_at DESC, loop_memories.id DESC
+        LIMIT ?
+        `,
+      )
+      .all(options.projectId, limit) as LoopMemoryRow[];
+
+    return { items: rows.map(loopMemoryFromRow) };
+  }
+
   const rows = db
     .prepare("SELECT * FROM loop_memories ORDER BY created_at DESC, id DESC LIMIT ?")
-    .all(normalizeLimit(options.limit)) as LoopMemoryRow[];
+    .all(limit) as LoopMemoryRow[];
 
   return { items: rows.map(loopMemoryFromRow) };
 }

@@ -698,6 +698,29 @@ Do not add:
   project relation
 - package or CLI alias migration
 
+### Slice 4.13: Project-Scoped Loop Memory Briefs
+
+Add:
+
+- `listLoopMemories({ projectId })` storage filtering that joins
+  `loop_memories.snapshot_id` to `loop_snapshots.id`
+- CLI `prompt-coach loop brief` project-scoped approved memory lookup using
+  the latest snapshot `project_id`
+- MCP `prepare_loop_brief` project-scoped approved memory lookup using the
+  latest snapshot `project_id`
+- `/api/v1/loops/:id/brief` project-scoped approved memory lookup using the
+  requested snapshot `project_id`
+- focused tests proving memories approved from other projects do not appear in
+  the continuation prompt
+
+Do not add:
+
+- new memory schema columns before a stronger project relation is needed
+- semantic/vector memory retrieval
+- cross-project global memory injection
+- automatic instruction-file writes
+- package or CLI alias migration
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

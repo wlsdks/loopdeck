@@ -145,7 +145,9 @@
 - [x] Task 14.2 GREEN: CLI `loop status`, MCP `get_loopdeck_status`, `/api/v1/loops`, web Loops status header를 `src/loop/status.ts`로 연결
 - [x] Task 15 RED: approved loop memory가 continuation brief에 포함되지 않는 CLI/MCP/API focused test 실패 확인
 - [x] Task 15 GREEN: `createLoopBrief`와 CLI `loop brief`, MCP `prepare_loop_brief`, `/api/v1/loops/:id/brief`가 최신 approved memory를 privacy-safe section으로 포함
-- [ ] 다음 slice: package/CLI alias migration plan 또는 loop memory filtering/project scoping
+- [x] Task 16 RED: approved loop memory가 다른 project continuation brief에 섞이는 storage/CLI/MCP/API focused test 실패 확인
+- [x] Task 16 GREEN: `listLoopMemories({ projectId })`와 brief 호출부 project scoping으로 현재 snapshot project memory만 포함
+- [ ] 다음 slice: package/CLI alias migration plan 또는 project-scoped memory UX/status
 
 ### 판단 기준
 
@@ -239,6 +241,7 @@
 
 - CLI `prompt-coach loop brief`, MCP `prepare_loop_brief`, `/api/v1/loops/:id/brief`는 최신 approved `loop_memories`를 continuation prompt의 `Approved Loop Memories` 섹션에 포함한다.
 - memory section은 statement와 safe evidence refs만 포함한다.
+- continuation brief는 현재 snapshot의 `project_id`와 같은 source snapshot에서 승인된 memory만 포함한다.
 - prompt body, compact summary, custom instructions, transcript body, raw path, secret-looking token은 brief 출력에 포함하지 않는다.
 - memory inclusion은 read-only이며 AGENTS.md, CLAUDE.md, project docs, vector store를 쓰지 않는다.
 - package/CLI alias migration은 이 slice에서 하지 않는다.
