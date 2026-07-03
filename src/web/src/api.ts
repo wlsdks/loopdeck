@@ -710,9 +710,33 @@ export async function listLoops(): Promise<LoopListResponse> {
 
 export async function getLoopBrief(id: string): Promise<LoopBrief> {
   await ensureSession();
-  const response = await fetch(`/api/v1/loops/${encodeURIComponent(id)}/brief`, {
+  const response = await fetch(
+    `/api/v1/loops/${encodeURIComponent(id)}/brief`,
+    {
+      credentials: "same-origin",
+    },
+  );
+  const body = (await response.json()) as { data: LoopBrief };
+  return body.data;
+}
+
+export async function getSelectedLoopBrief(options: {
+  worktree: string;
+  branch?: string;
+  sessionId?: string;
+}): Promise<LoopBrief> {
+  await ensureSession();
+  const params = new URLSearchParams({ worktree: options.worktree });
+  if (options.sessionId) params.set("session_id", options.sessionId);
+  if (options.branch) params.set("branch", options.branch);
+  const response = await fetch(`/api/v1/loops/brief?${params}`, {
     credentials: "same-origin",
   });
+
+  if (!response.ok) {
+    await failApi(response, "Selected loop brief failed");
+  }
+
   const body = (await response.json()) as { data: LoopBrief };
   return body.data;
 }
@@ -741,9 +765,11 @@ export async function getLoopWorktree(
   return body.data;
 }
 
-export async function approveLoopMemory(options: {
-  approvedBy?: string;
-} = {}): Promise<LoopMemoryApprovalResult> {
+export async function approveLoopMemory(
+  options: {
+    approvedBy?: string;
+  } = {},
+): Promise<LoopMemoryApprovalResult> {
   await ensureSession();
   const response = await fetch("/api/v1/loops/memory/approve", {
     method: "POST",
@@ -763,9 +789,11 @@ export async function approveLoopMemory(options: {
   return body.data;
 }
 
-export async function getLoopInstructionPatch(options: {
-  targetFile?: "AGENTS.md" | "CLAUDE.md";
-} = {}): Promise<LoopInstructionPatchProposal> {
+export async function getLoopInstructionPatch(
+  options: {
+    targetFile?: "AGENTS.md" | "CLAUDE.md";
+  } = {},
+): Promise<LoopInstructionPatchProposal> {
   await ensureSession();
   const params = new URLSearchParams({
     target_file: options.targetFile ?? "AGENTS.md",

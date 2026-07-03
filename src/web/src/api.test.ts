@@ -183,15 +183,48 @@ describe("web api export client", () => {
         after_latest_snapshot: true,
       },
     });
+    expect(fetchMock).toHaveBeenLastCalledWith("/api/v1/loops/loop_web/brief", {
+      credentials: "same-origin",
+    });
+    expect(JSON.stringify(brief)).not.toContain("Make this better");
+    expect(JSON.stringify(brief)).not.toContain("Compact summary");
+    expect(JSON.stringify(brief)).not.toContain("/Users/example");
+  });
+
+  it("gets a selected worktree loop brief with session and branch filters", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            title: "Continue agent loop loop_web",
+            source_snapshot_id: "loop_web",
+            prompt:
+              "worktree: agent-loop-worktree\nsession: session-web\nbranch: feature/branch-filter",
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+            },
+          },
+        }),
+      );
+    const { getSelectedLoopBrief } = await import("./api.js");
+
+    const brief = await getSelectedLoopBrief({
+      worktree: "agent-loop-worktree",
+      sessionId: "session-web",
+      branch: "feature/branch-filter",
+    });
+
+    expect(brief.source_snapshot_id).toBe("loop_web");
+    expect(brief.prompt).toContain("worktree: agent-loop-worktree");
     expect(fetchMock).toHaveBeenLastCalledWith(
-      "/api/v1/loops/loop_web/brief",
+      "/api/v1/loops/brief?worktree=agent-loop-worktree&session_id=session-web&branch=feature%2Fbranch-filter",
       {
         credentials: "same-origin",
       },
     );
-    expect(JSON.stringify(brief)).not.toContain("Make this better");
-    expect(JSON.stringify(brief)).not.toContain("Compact summary");
-    expect(JSON.stringify(brief)).not.toContain("/Users/example");
   });
 
   it("gets a worktree drilldown without raw prompt or compact content", async () => {
@@ -300,18 +333,15 @@ describe("web api export client", () => {
       "prompt-coach loop brief",
       "prompt-coach loop instruction-patch --target-file AGENTS.md",
     ]);
-    expect(fetchMock).toHaveBeenLastCalledWith(
-      "/api/v1/loops/memory/approve",
-      {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-          "content-type": "application/json",
-          "x-csrf-token": "csrf-1",
-        },
-        body: JSON.stringify({ approved_by: "web" }),
+    expect(fetchMock).toHaveBeenLastCalledWith("/api/v1/loops/memory/approve", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "content-type": "application/json",
+        "x-csrf-token": "csrf-1",
       },
-    );
+      body: JSON.stringify({ approved_by: "web" }),
+    });
     expect(JSON.stringify(result)).not.toContain("Make this better");
     expect(JSON.stringify(result)).not.toContain("/Users/example");
     expect(JSON.stringify(result)).not.toContain("sk-proj-secret");

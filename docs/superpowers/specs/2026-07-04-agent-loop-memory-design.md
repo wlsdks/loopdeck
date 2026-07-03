@@ -1271,6 +1271,26 @@ Do not add:
 - prompt body, transcript, compact summary, raw path, API token, or provider
   credential output
 
+### Slice 4.39: Web Selected Detail Brief Action
+
+Add:
+
+- read-only `/api/v1/loops/brief` endpoint using the same worktree/session/branch
+  selection semantics as CLI and MCP
+- web client helper for selected loop brief filters
+- selected worktree detail action that copies the filtered continuation brief
+  for the active worktree/session/branch
+- focused server/API/LoopsView tests proving the selected detail action does
+  not fall back to a newer unrelated worktree snapshot
+
+Do not add:
+
+- web apply/write behavior
+- background worktree scanning
+- DB schema/index migration
+- prompt body, transcript, compact summary, raw path, API token, or provider
+  credential output
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.
@@ -1303,8 +1323,8 @@ Still open:
 
 - What exact product/package migration date should move from `prompt-coach` to `loopdeck`?
 - Should loop snapshots get a numeric "loop quality" score, or only structured outcome status and evidence?
-- Should Web selected worktree detail expose the same filtered brief action
-  inline or through a broader command center?
+- Should selected brief actions later move into a broader multi-worktree command
+  center, or remain inline in worktree detail?
 
 ## 12. Decision
 

@@ -17,12 +17,14 @@ export function LoopsView({
   loading,
   loops,
   onApproveMemoryCandidate,
+  onCopySelectedBrief,
   onSelectWorktree,
   worktreeDetail,
 }: {
   loading: boolean;
   loops?: LoopListResponse;
   onApproveMemoryCandidate?: () => Promise<void>;
+  onCopySelectedBrief?: (detail: LoopWorktreeResponse) => Promise<void>;
   onSelectWorktree?: (worktree: string) => Promise<void>;
   worktreeDetail?: LoopWorktreeResponse;
 }) {
@@ -33,6 +35,8 @@ export function LoopsView({
   const [patchProposal, setPatchProposal] = useState<
     LoopInstructionPatchProposal | undefined
   >();
+  const [selectedBriefBusy, setSelectedBriefBusy] = useState(false);
+  const [selectedBriefCopied, setSelectedBriefCopied] = useState(false);
 
   async function approveCandidate(): Promise<void> {
     if (!onApproveMemoryCandidate) return;
@@ -55,6 +59,19 @@ export function LoopsView({
       );
     } finally {
       setPatchBusy(false);
+    }
+  }
+
+  async function copySelectedBrief(): Promise<void> {
+    if (!worktreeDetail || !onCopySelectedBrief) return;
+
+    setSelectedBriefBusy(true);
+    try {
+      await onCopySelectedBrief(worktreeDetail);
+      setSelectedBriefCopied(true);
+      window.setTimeout(() => setSelectedBriefCopied(false), 2_500);
+    } finally {
+      setSelectedBriefBusy(false);
     }
   }
 
@@ -207,6 +224,21 @@ export function LoopsView({
                 Branch {worktreeDetail.branch}
               </p>
             )}
+            <div className="loop-memory-action">
+              <code>Continue {worktreeDetail.worktree}</code>
+              <button
+                className="loop-copy-button"
+                disabled={!onCopySelectedBrief || selectedBriefBusy}
+                onClick={() => void copySelectedBrief()}
+                title="Copy selected worktree continuation brief"
+                type="button"
+              >
+                <Copy aria-hidden size={15} />
+                {selectedBriefCopied
+                  ? "Copied selected brief"
+                  : "Copy selected brief"}
+              </button>
+            </div>
           </div>
           <div className="loop-row loop-row-head">
             <span>Loop</span>
@@ -225,7 +257,9 @@ export function LoopsView({
               </div>
               <div>
                 <strong>{loop.project}</strong>
-                {loop.branch && <span className="loop-muted">{loop.branch}</span>}
+                {loop.branch && (
+                  <span className="loop-muted">{loop.branch}</span>
+                )}
                 {loop.worktree && (
                   <span className="loop-muted">{loop.worktree}</span>
                 )}

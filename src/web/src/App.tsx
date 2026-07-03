@@ -29,6 +29,7 @@ import {
   getAskEventSummary,
   getCoachFeedbackSummary,
   getHealth,
+  getSelectedLoopBrief,
   getLoopWorktree,
   getPrompt,
   getQualityDashboard,
@@ -455,6 +456,25 @@ export function App() {
       }
     } catch {
       setError("Could not load loop worktree detail.");
+    }
+  }
+
+  async function copySelectedLoopBrief(
+    detail: LoopWorktreeResponse,
+  ): Promise<void> {
+    setError(undefined);
+    try {
+      const brief = await getSelectedLoopBrief({
+        worktree: detail.worktree,
+        ...(detail.session_id ? { sessionId: detail.session_id } : {}),
+        ...(detail.branch ? { branch: detail.branch } : {}),
+      });
+      const copied = await copyTextToClipboard(brief.prompt);
+      if (!copied) {
+        setError("Could not copy selected loop brief.");
+      }
+    } catch {
+      setError("Could not copy selected loop brief.");
     }
   }
 
@@ -1061,6 +1081,7 @@ export function App() {
             loops={loops}
             loading={!loops}
             onApproveMemoryCandidate={() => approveLatestLoopMemory()}
+            onCopySelectedBrief={(detail) => copySelectedLoopBrief(detail)}
             onSelectWorktree={(worktree) => openLoopWorktree(worktree)}
             worktreeDetail={loopWorktree}
           />

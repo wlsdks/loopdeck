@@ -14,6 +14,10 @@ import {
   toLoopdeckStatusSnapshot,
 } from "../../loop/status.js";
 import { decideLoopMemoryCandidate } from "../../loop/memory-candidate.js";
+import {
+  hasLoopSnapshotSelection,
+  selectLoopSnapshot,
+} from "../../loop/snapshot-selection.js";
 import type {
   CompactBoundaryStoragePort,
   LoopMemoryStoragePort,
@@ -33,6 +37,12 @@ const LoopMemoryApprovalBodySchema = z.object({
   approved_by: z.string().trim().min(1).max(80).optional(),
 });
 
+const LoopBriefSelectionQuerySchema = z.object({
+  worktree: z.string().trim().min(1).optional(),
+  session_id: z.string().trim().min(1).optional(),
+  branch: z.string().trim().min(1).optional(),
+});
+
 const LoopInstructionPatchQuerySchema = z.object({
   target_file: z.enum(["AGENTS.md", "CLAUDE.md"]).optional(),
 });
@@ -44,7 +54,8 @@ export function registerLoopRoutes(
   server.get("/api/v1/loops", async (request) => {
     requireAppAccess(request, options.auth);
 
-    const snapshots = options.storage.listLoopSnapshots?.({ limit: 100 }).items ?? [];
+    const snapshots =
+      options.storage.listLoopSnapshots?.({ limit: 100 }).items ?? [];
     const boundaries =
       options.storage.listCompactBoundaries?.({ limit: 100 }).items ?? [];
     const latest = snapshots.at(0);
@@ -99,8 +110,7 @@ export function registerLoopRoutes(
             snapshot.worktree_label === params.worktree &&
             (!query.session_id || snapshot.session_id === query.session_id) &&
             (!query.branch || snapshot.branch === query.branch),
-        ) ??
-      [];
+        ) ?? [];
     const boundaries =
       options.storage.listCompactBoundaries?.({ limit: 100 }).items ?? [];
 
@@ -123,6 +133,50 @@ export function registerLoopRoutes(
           returns_compact_content: false,
         },
       },
+    };
+  });
+
+  server.get("/api/v1/loops/brief", async (request) => {
+    requireAppAccess(request, options.auth);
+    const query = LoopBriefSelectionQuerySchema.parse(request.query);
+    const selection = {
+      worktree: query.worktree,
+      sessionId: query.session_id,
+      branch: query.branch,
+    };
+    const snapshots =
+      options.storage.listLoopSnapshots?.({ limit: 100 }).items ?? [];
+    const snapshot = hasLoopSnapshotSelection(selection)
+      ? selectLoopSnapshot(snapshots, selection)
+      : snapshots.at(0);
+
+    if (!snapshot) {
+      throw problem(
+        404,
+        "Not Found",
+        hasLoopSnapshotSelection(selection)
+          ? "No loop snapshot matched the selected worktree/session/branch filters."
+          : "Loop snapshot not found.",
+        request.url,
+      );
+    }
+
+    const boundaries =
+      options.storage.listCompactBoundaries?.({ limit: 100 }).items ?? [];
+
+    return {
+      data: createLoopBrief({
+        snapshot,
+        compactBoundary: latestCompactBoundaryAfterSnapshot(
+          snapshot,
+          boundaries,
+        ),
+        approvedMemories:
+          options.storage.listLoopMemories?.({
+            projectId: snapshot.project_id,
+            limit: 3,
+          }).items ?? [],
+      }),
     };
   });
 
@@ -181,7 +235,10 @@ export function registerLoopRoutes(
 
   server.post("/api/v1/loops/memory/approve", async (request) => {
     requireAppAccess(request, options.auth, { csrf: true });
-    const storage = requireLoopMemoryApprovalStorage(options.storage, request.url);
+    const storage = requireLoopMemoryApprovalStorage(
+      options.storage,
+      request.url,
+    );
     const body = LoopMemoryApprovalBodySchema.parse(request.body ?? {});
     const latest = storage.getLatestLoopSnapshot();
 
@@ -230,7 +287,8 @@ export function registerLoopRoutes(
           created_at: memory.created_at,
           privacy: memory.privacy,
         },
-        next_action: "use recorded memory as local context in future loop briefs",
+        next_action:
+          "use recorded memory as local context in future loop briefs",
         next_actions: [
           "prompt-coach loop brief",
           "prompt-coach loop instruction-patch --target-file AGENTS.md",

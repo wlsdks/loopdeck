@@ -307,7 +307,9 @@ describe("createServer P2 ingest boundary", () => {
 
   it("returns loop snapshots without prompt bodies, compact summaries, or raw paths", async () => {
     const storage = createMemoryStorage();
-    storage.loopSnapshots.push(loopSnapshot({ worktree_label: "worktree-web" }));
+    storage.loopSnapshots.push(
+      loopSnapshot({ worktree_label: "worktree-web" }),
+    );
     storage.loopSnapshots.push(
       loopSnapshot({
         id: "loop_other",
@@ -428,12 +430,16 @@ describe("createServer P2 ingest boundary", () => {
     expect(serialized).not.toContain(
       "Keep web, CLI, MCP, and API loop status on the shared model.",
     );
-    expect(serialized).not.toContain("This unrelated project memory should not appear");
+    expect(serialized).not.toContain(
+      "This unrelated project memory should not appear",
+    );
   });
 
   it("returns a worktree drilldown without prompt bodies or raw paths", async () => {
     const storage = createMemoryStorage();
-    storage.loopSnapshots.push(loopSnapshot({ worktree_label: "worktree-web" }));
+    storage.loopSnapshots.push(
+      loopSnapshot({ worktree_label: "worktree-web" }),
+    );
     storage.loopSnapshots.push(
       loopSnapshot({
         branch: "feature/branch-filter",
@@ -443,7 +449,8 @@ describe("createServer P2 ingest boundary", () => {
         worktree_label: "worktree-web",
         outcome: {
           status: "passed",
-          summary: "Keep web, CLI, MCP, and API loop status on the shared model.",
+          summary:
+            "Keep web, CLI, MCP, and API loop status on the shared model.",
           evidence_refs: ["commit:web"],
         },
       }),
@@ -467,7 +474,10 @@ describe("createServer P2 ingest boundary", () => {
       },
     });
     const body = response.json<{
-      data: { worktree: string; items: Array<{ id: string; worktree?: string }> };
+      data: {
+        worktree: string;
+        items: Array<{ id: string; worktree?: string }>;
+      };
     }>();
     const serialized = JSON.stringify(body);
 
@@ -514,7 +524,7 @@ describe("createServer P2 ingest boundary", () => {
         worktree: "worktree-web",
       }),
     ]);
-    expect(JSON.stringify(sessionBody)).not.toContain("loop_web\"");
+    expect(JSON.stringify(sessionBody)).not.toContain('loop_web"');
     expect(JSON.stringify(sessionBody)).not.toContain("Make this better");
     expect(JSON.stringify(sessionBody)).not.toContain("/Users/example");
 
@@ -542,7 +552,7 @@ describe("createServer P2 ingest boundary", () => {
         worktree: "worktree-web",
       }),
     ]);
-    expect(JSON.stringify(branchBody)).not.toContain("loop_web\"");
+    expect(JSON.stringify(branchBody)).not.toContain('loop_web"');
     expect(JSON.stringify(branchBody)).not.toContain("Make this better");
     expect(JSON.stringify(branchBody)).not.toContain("/Users/example");
   });
@@ -600,6 +610,60 @@ describe("createServer P2 ingest boundary", () => {
     );
     expect(serialized).not.toContain("Make this better");
     expect(serialized).not.toContain("Compact summary with sk-proj-secret");
+    expect(serialized).not.toContain("/Users/example");
+  });
+
+  it("returns a selected worktree loop brief without falling back to global latest", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_selected_web",
+        worktree_label: "worktree-web",
+        session_id: "session-web",
+        branch: "feature/branch-filter",
+        outcome: {
+          status: "passed",
+          summary: "Selected web worktree should continue from this branch.",
+          evidence_refs: ["commit:selected"],
+        },
+      }),
+    );
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_newer_other_web",
+        created_at: "2026-07-04T01:10:00.000Z",
+        worktree_label: "other-worktree",
+        session_id: "session-other",
+        branch: "feature/other",
+        outcome: {
+          status: "passed",
+          summary: "Other worktree has a newer web snapshot.",
+          evidence_refs: ["commit:other"],
+        },
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/brief?worktree=worktree-web&session_id=session-web&branch=feature%2Fbranch-filter",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const serialized = JSON.stringify(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        title: "Continue agent loop loop_selected_web",
+        source_snapshot_id: "loop_selected_web",
+      },
+    });
+    expect(serialized).toContain("Selected web worktree should continue");
+    expect(serialized).not.toContain("Other worktree has a newer web snapshot");
+    expect(serialized).not.toContain("Make this better");
     expect(serialized).not.toContain("/Users/example");
   });
 

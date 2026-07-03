@@ -117,11 +117,10 @@ Implementation checkpoint:
 
 - CLI `loop brief` and MCP `prepare_loop_brief` now share selected
   worktree/session/branch snapshot selection.
+- Web selected worktree detail can copy a continuation brief using the same
+  selected worktree/session/branch filters.
 - The latest-only behavior remains the default when no filters are provided.
 - Non-matching MCP filters return `not_found`.
-- Browser/UI filtered brief action remains separate.
 
-After CLI/MCP parity lands, add a small Web action in the selected worktree
-detail panel that requests a filtered continuation brief using the same
-selection semantics. That should be a separate UI slice with browser
-verification.
+The next runtime slice should decide whether selected brief actions need a
+broader command center for comparing multiple worktrees before merge.

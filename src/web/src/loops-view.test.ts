@@ -25,7 +25,9 @@ describe("LoopsView", () => {
     expect(html).toContain("Approve memory");
     expect(html).toContain("prompt-coach loop memory-approve");
     expect(html).toContain("Review AGENTS.md patch");
-    expect(html).toContain("prompt-coach loop instruction-patch --target-file AGENTS.md");
+    expect(html).toContain(
+      "prompt-coach loop instruction-patch --target-file AGENTS.md",
+    );
     expect(html).not.toContain("Make this better");
     expect(html).not.toContain("Safe memory statement");
     expect(html).not.toContain("Compact summary with sk-proj-secret");
@@ -49,6 +51,24 @@ describe("LoopsView", () => {
     expect(html).toContain("passed");
     expect(html).not.toContain("Make this better");
     expect(html).not.toContain("Safe worktree summary");
+    expect(html).not.toContain("/Users/example");
+  });
+
+  it("renders a selected worktree continuation brief action", () => {
+    const html = renderToStaticMarkup(
+      createElement(LoopsView, {
+        loading: false,
+        loops: loopList(),
+        worktreeDetail: loopWorktree(),
+        onCopySelectedBrief: async () => {},
+      }),
+    );
+
+    expect(html).toContain("Copy selected brief");
+    expect(html).toContain("Continue agent-loop-worktree");
+    expect(html).toContain("session-web");
+    expect(html).toContain("feature/branch-filter");
+    expect(html).not.toContain("Make this better");
     expect(html).not.toContain("/Users/example");
   });
 });
