@@ -11,11 +11,28 @@ import "./loops-view.css";
 export function LoopsView({
   loading,
   loops,
+  onApproveMemoryCandidate,
 }: {
   loading: boolean;
   loops?: LoopListResponse;
+  onApproveMemoryCandidate?: () => Promise<void>;
 }) {
   const items = loops?.items ?? [];
+  const [approvalBusy, setApprovalBusy] = useState(false);
+  const [approvalRecorded, setApprovalRecorded] = useState(false);
+
+  async function approveCandidate(): Promise<void> {
+    if (!onApproveMemoryCandidate) return;
+
+    setApprovalBusy(true);
+    try {
+      await onApproveMemoryCandidate();
+      setApprovalRecorded(true);
+      window.setTimeout(() => setApprovalRecorded(false), 2_500);
+    } finally {
+      setApprovalBusy(false);
+    }
+  }
 
   if (loading) {
     return <section className="panel">Loading loop snapshots...</section>;
@@ -59,6 +76,25 @@ export function LoopsView({
                 ? "eligible"
                 : loops.status.memory_candidate.reason}
             </p>
+          )}
+          {loops.status.memory_candidate?.eligible && (
+            <div className="loop-memory-action">
+              <code>{loops.status.memory_candidate.next_action}</code>
+              <button
+                className="loop-copy-button"
+                disabled={approvalBusy || !onApproveMemoryCandidate}
+                onClick={() => void approveCandidate()}
+                title="Approve latest loop memory candidate"
+                type="button"
+              >
+                <ShieldCheck size={15} />
+                {approvalRecorded
+                  ? "Memory approved"
+                  : approvalBusy
+                    ? "Approving..."
+                    : "Approve memory"}
+              </button>
+            </div>
           )}
           <p className="loops-status-line">Next: {loops.status.next_action}</p>
           <p>

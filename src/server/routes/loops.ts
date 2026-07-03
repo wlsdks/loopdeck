@@ -1,4 +1,5 @@
 import type { FastifyInstance } from "fastify";
+import { z } from "zod";
 
 import {
   createLoopBrief,
@@ -24,6 +25,10 @@ export type LoopRouteOptions = {
   >;
 };
 
+const LoopMemoryApprovalBodySchema = z.object({
+  approved_by: z.string().trim().min(1).max(80).optional(),
+});
+
 export function registerLoopRoutes(
   server: FastifyInstance,
   options: LoopRouteOptions,
@@ -35,15 +40,19 @@ export function registerLoopRoutes(
     const boundaries =
       options.storage.listCompactBoundaries?.({ limit: 100 }).items ?? [];
     const latest = snapshots.at(0);
+    const projectMemories = latest
+      ? (options.storage.listLoopMemories?.({
+          projectId: latest.project_id,
+        }).items ?? [])
+      : [];
     const status = createLoopdeckStatus({
       snapshots,
       compactBoundaries: boundaries,
-      projectMemoryCount: latest
-        ? (options.storage.listLoopMemories?.({
-            projectId: latest.project_id,
-          }).items.length ?? 0)
-        : 0,
-      memoryCandidate: latest ? decideLoopMemoryCandidate(latest) : undefined,
+      projectMemoryCount: projectMemories.length,
+      memoryCandidate:
+        latest && !hasApprovedMemoryForSnapshot(projectMemories, latest.id)
+          ? decideLoopMemoryCandidate(latest)
+          : undefined,
     });
 
     return {
@@ -99,4 +108,98 @@ export function registerLoopRoutes(
       }),
     };
   });
+
+  server.post("/api/v1/loops/memory/approve", async (request) => {
+    requireAppAccess(request, options.auth, { csrf: true });
+    const storage = requireLoopMemoryApprovalStorage(options.storage, request.url);
+    const body = LoopMemoryApprovalBodySchema.parse(request.body ?? {});
+    const latest = storage.getLatestLoopSnapshot();
+
+    if (!latest) {
+      throw problem(404, "Not Found", "Loop snapshot not found.", request.url);
+    }
+
+    const decision = decideLoopMemoryCandidate(latest);
+    if (!decision.eligible || !decision.candidate) {
+      throw problem(
+        409,
+        "Conflict",
+        `Latest loop memory candidate is not eligible: ${decision.reason}.`,
+        request.url,
+      );
+    }
+    const existingMemories = storage.listLoopMemories({
+      projectId: latest.project_id,
+    }).items;
+    if (hasApprovedMemoryForSnapshot(existingMemories, latest.id)) {
+      throw problem(
+        409,
+        "Conflict",
+        "Latest loop memory candidate is already approved.",
+        request.url,
+      );
+    }
+
+    const memory = storage.recordLoopMemory({
+      snapshot_id: latest.id,
+      title: decision.candidate.title,
+      statement: decision.candidate.statement,
+      evidence_refs: decision.candidate.evidence_refs,
+      approved_by: body.approved_by ?? "web",
+    });
+
+    return {
+      data: {
+        recorded: true as const,
+        memory: {
+          id: memory.id,
+          snapshot_id: memory.snapshot_id,
+          title: memory.title,
+          evidence_refs: memory.evidence_refs,
+          approved_by: memory.approved_by,
+          created_at: memory.created_at,
+          privacy: memory.privacy,
+        },
+        next_action: "use recorded memory as local context in future loop briefs",
+        next_actions: [
+          "prompt-coach loop brief",
+          "prompt-coach loop instruction-patch --target-file AGENTS.md",
+        ],
+        privacy: {
+          local_only: true,
+          returns_prompt_bodies: false,
+          returns_raw_paths: false,
+          writes_instruction_files: false,
+          external_calls: false,
+        },
+      },
+    };
+  });
+}
+
+function requireLoopMemoryApprovalStorage(
+  storage: LoopRouteOptions["storage"],
+  instance: string,
+): LoopSnapshotStoragePort & LoopMemoryStoragePort {
+  if (
+    !storage.getLatestLoopSnapshot ||
+    !storage.recordLoopMemory ||
+    !storage.listLoopMemories
+  ) {
+    throw problem(
+      500,
+      "Internal Server Error",
+      "Loop memory approval storage is not configured.",
+      instance,
+    );
+  }
+
+  return storage as LoopSnapshotStoragePort & LoopMemoryStoragePort;
+}
+
+function hasApprovedMemoryForSnapshot(
+  memories: readonly { snapshot_id: string }[],
+  snapshotId: string,
+): boolean {
+  return memories.some((memory) => memory.snapshot_id === snapshotId);
 }

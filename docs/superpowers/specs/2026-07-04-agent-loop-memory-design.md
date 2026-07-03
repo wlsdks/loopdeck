@@ -831,6 +831,33 @@ Do not add:
 - hidden external LLM calls
 - removal of the existing `next_action` compatibility field
 
+### Slice 4.19: Web Memory Approval UX
+
+Add:
+
+- web API `POST /api/v1/loops/memory/approve` protected by the existing app
+  session and CSRF boundary
+- server-side latest-candidate revalidation before recording approved memory
+- web client `approveLoopMemory()` helper using the same CSRF pattern as other
+  write actions
+- Loops summary CTA for eligible memory candidates, showing only raw-free
+  status and command guidance
+- App wiring that refreshes `/api/v1/loops` after approval so approved memory
+  count and candidate status stay server-derived
+- duplicate approval prevention for the same latest snapshot; once approved,
+  the web status no longer exposes an approval candidate for that snapshot
+- focused tests proving the web path does not write AGENTS.md, CLAUDE.md,
+  project docs, prompt bodies, raw paths, transcripts, compact summaries, or
+  external LLM results
+
+Do not add:
+
+- automatic memory approval
+- automatic instruction-file writes
+- candidate statement exposure in the status/list payload
+- external LLM calls
+- plugin rename or slash command namespace changes
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.
@@ -863,7 +890,9 @@ Still open:
 
 - What exact product/package migration date should move from `prompt-coach` to `loopdeck`?
 - Should loop snapshots get a numeric "loop quality" score, or only structured outcome status and evidence?
-- Which web workflow should be first: loop list, loop detail, or cross-worktree command center?
+- Which web workflow should follow the first list/brief/approval flow:
+  dedicated loop detail, instruction patch review, or cross-worktree command
+  center?
 
 ## 12. Decision
 

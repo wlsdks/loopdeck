@@ -362,11 +362,6 @@ describe("createServer P2 ingest boundary", () => {
             approved_count: 1,
             included_in_brief: true,
           },
-          memory_candidate: {
-            eligible: false,
-            reason: "outcome_not_passed",
-            next_action: "prompt-coach loop memory-candidate",
-          },
           latest_snapshot: {
             id: "loop_web",
             outcome_status: "unknown",
@@ -498,6 +493,133 @@ describe("createServer P2 ingest boundary", () => {
     expect(prompt).not.toContain("This unrelated project memory");
     expect(prompt).not.toContain("/Users/example");
     expect(prompt).not.toContain("sk-proj-secret");
+  });
+
+  it("records latest eligible loop memory from the web behind csrf without writing instruction files", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        outcome: {
+          status: "passed",
+          summary:
+            "Use focused tests before full verification for loop memory changes.",
+          evidence_refs: ["test:web loops", "commit:abc1234"],
+        },
+      }),
+    );
+    const server = createTestServer({ storage });
+    const session = await server.inject({
+      method: "GET",
+      url: "/api/v1/session",
+      headers: { host: "127.0.0.1:17373" },
+    });
+    const cookie = String(session.headers["set-cookie"]);
+    const csrfToken = session.json<{ data: { csrf_token: string } }>().data
+      .csrf_token;
+
+    const noCsrf = await server.inject({
+      method: "POST",
+      url: "/api/v1/loops/memory/approve",
+      headers: {
+        host: "127.0.0.1:17373",
+        cookie,
+      },
+      payload: { approved_by: "web" },
+    });
+    expect(noCsrf.statusCode).toBe(403);
+
+    const approved = await server.inject({
+      method: "POST",
+      url: "/api/v1/loops/memory/approve",
+      headers: {
+        host: "127.0.0.1:17373",
+        cookie,
+        "x-csrf-token": csrfToken,
+      },
+      payload: { approved_by: "web" },
+    });
+    const serialized = JSON.stringify(approved.json());
+
+    expect(approved.statusCode).toBe(200);
+    expect(approved.json()).toMatchObject({
+      data: {
+        recorded: true,
+        memory: {
+          snapshot_id: "loop_web",
+          title: "Remember loop outcome for private-project",
+          evidence_refs: ["test:web loops", "commit:abc1234"],
+          approved_by: "web",
+          privacy: {
+            local_only: true,
+            stores_prompt_bodies: false,
+            stores_raw_paths: false,
+            writes_instruction_files: false,
+            external_calls: false,
+          },
+        },
+        next_actions: [
+          "prompt-coach loop brief",
+          "prompt-coach loop instruction-patch --target-file AGENTS.md",
+        ],
+        privacy: {
+          local_only: true,
+          returns_prompt_bodies: false,
+          returns_raw_paths: false,
+          writes_instruction_files: false,
+          external_calls: false,
+        },
+      },
+    });
+    expect(storage.loopMemories).toHaveLength(1);
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-secret");
+  });
+
+  it("hides and rejects already approved latest web memory candidates", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        outcome: {
+          status: "passed",
+          summary:
+            "Use focused tests before full verification for loop memory changes.",
+          evidence_refs: ["test:web loops"],
+        },
+      }),
+    );
+    storage.loopMemories.push(loopMemory({ snapshot_id: "loop_web" }));
+    const server = createTestServer({ storage });
+
+    const list = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+
+    expect(list.statusCode).toBe(200);
+    expect(
+      list.json<{ data: { status: { memory_candidate?: unknown } } }>().data
+        .status.memory_candidate,
+    ).toBeUndefined();
+
+    const duplicate = await server.inject({
+      method: "POST",
+      url: "/api/v1/loops/memory/approve",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+      payload: { approved_by: "web" },
+    });
+
+    expect(duplicate.statusCode).toBe(409);
+    expect(storage.loopMemories).toHaveLength(1);
+    expect(duplicate.body).not.toContain("/Users/example");
+    expect(duplicate.body).not.toContain("sk-proj-secret");
   });
 
   it("requires app access and csrf before updating project policy", async () => {
@@ -1619,8 +1741,29 @@ function createMemoryStorage() {
     listLoopSnapshots() {
       return { items: loopSnapshots };
     },
+    getLatestLoopSnapshot() {
+      return loopSnapshots.at(0);
+    },
     listCompactBoundaries() {
       return { items: compactBoundaries };
+    },
+    recordLoopMemory(input: {
+      snapshot_id: string;
+      title: string;
+      statement: string;
+      evidence_refs: string[];
+      approved_by: string;
+    }) {
+      const memory = loopMemory({
+        id: `mem_${loopMemories.length + 1}`,
+        snapshot_id: input.snapshot_id,
+        title: input.title,
+        statement: input.statement,
+        evidence_refs: input.evidence_refs,
+        approved_by: input.approved_by,
+      });
+      loopMemories.unshift(memory);
+      return memory;
     },
     listLoopMemories(options: { limit?: number; projectId?: string } = {}) {
       const scoped = options.projectId

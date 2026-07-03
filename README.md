@@ -774,8 +774,11 @@ refresh guidance without printing prompt bodies, compact summaries, custom
 compact instructions, or raw paths.
 The web UI also includes a Loops view for local snapshot readiness, recent loop
 metadata, compact refresh markers, and a copy action for the next loop brief.
-It does not render prompt bodies, compact summaries, custom compact
-instructions, transcript bodies, or raw paths.
+When the latest loop has an eligible memory candidate, the Loops summary can
+record that approved memory through the local web session; this only writes the
+local Loopdeck memory record and still leaves AGENTS.md/CLAUDE.md changes to
+the explicit instruction patch workflow. It does not render prompt bodies,
+compact summaries, custom compact instructions, transcript bodies, or raw paths.
 - `prepare_agent_rewrite`: prepare one locally redacted prompt packet, local
   score metadata, local baseline draft, and rewrite contract so the active
   Claude Code/Codex/Gemini CLI session can semantically improve the prompt.

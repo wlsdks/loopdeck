@@ -21,6 +21,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { PromptImprovement } from "../../analysis/improve.js";
 import {
   analyzeProjectInstructions,
+  approveLoopMemory,
   createExportPreview,
   deletePrompt,
   executeExportJob,
@@ -389,6 +390,17 @@ export function App() {
       setError("Could not bulk delete some prompts.");
     } finally {
       setBulkDeleteBusy(false);
+    }
+  }
+
+  async function approveLatestLoopMemory(): Promise<void> {
+    setError(undefined);
+    try {
+      await approveLoopMemory({ approvedBy: "web" });
+      const nextLoops = await listLoops();
+      setLoops(nextLoops);
+    } catch {
+      setError("Could not approve loop memory.");
     }
   }
 
@@ -1010,7 +1022,11 @@ export function App() {
           />
         )}
         {view.name === "loops" && (
-          <LoopsView loops={loops} loading={!loops} />
+          <LoopsView
+            loops={loops}
+            loading={!loops}
+            onApproveMemoryCandidate={() => approveLatestLoopMemory()}
+          />
         )}
         {view.name === "projects" && (
           <ProjectsView

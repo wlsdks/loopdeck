@@ -15,6 +15,8 @@ describe("LoopsView", () => {
     expect(html).toContain("Next: prompt-coach loop brief");
     expect(html).toContain("Approved memories 1");
     expect(html).toContain("Memory candidate eligible");
+    expect(html).toContain("Approve memory");
+    expect(html).toContain("prompt-coach loop memory-approve");
     expect(html).not.toContain("Make this better");
     expect(html).not.toContain("Safe memory statement");
     expect(html).not.toContain("Compact summary with sk-proj-secret");

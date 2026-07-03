@@ -152,6 +152,34 @@ export type LoopBrief = {
   };
 };
 
+export type LoopMemoryApprovalResult = {
+  recorded: true;
+  memory: {
+    id: string;
+    snapshot_id: string;
+    title: string;
+    evidence_refs: string[];
+    approved_by: string;
+    created_at: string;
+    privacy: {
+      local_only: true;
+      stores_prompt_bodies: false;
+      stores_raw_paths: false;
+      writes_instruction_files: false;
+      external_calls: false;
+    };
+  };
+  next_action: string;
+  next_actions: string[];
+  privacy: {
+    local_only: true;
+    returns_prompt_bodies: false;
+    returns_raw_paths: false;
+    writes_instruction_files: false;
+    external_calls: false;
+  };
+};
+
 export type PromptFilters = {
   query?: string;
   tool?: string;
@@ -630,6 +658,28 @@ export async function getLoopBrief(id: string): Promise<LoopBrief> {
     credentials: "same-origin",
   });
   const body = (await response.json()) as { data: LoopBrief };
+  return body.data;
+}
+
+export async function approveLoopMemory(options: {
+  approvedBy?: string;
+} = {}): Promise<LoopMemoryApprovalResult> {
+  await ensureSession();
+  const response = await fetch("/api/v1/loops/memory/approve", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "content-type": "application/json",
+      "x-csrf-token": csrfToken ?? "",
+    },
+    body: JSON.stringify({ approved_by: options.approvedBy ?? "web" }),
+  });
+
+  if (!response.ok) {
+    await failApi(response, "Loop memory approval failed");
+  }
+
+  const body = (await response.json()) as { data: LoopMemoryApprovalResult };
   return body.data;
 }
 

@@ -161,6 +161,70 @@ describe("web api export client", () => {
     expect(JSON.stringify(brief)).not.toContain("/Users/example");
   });
 
+  it("approves the latest eligible loop memory candidate with csrf", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            recorded: true,
+            memory: {
+              id: "mem_web",
+              snapshot_id: "loop_web",
+              title: "Remember loop outcome for private-project",
+              evidence_refs: ["test:web loops"],
+              approved_by: "web",
+              created_at: "2026-07-04T01:10:00.000Z",
+              privacy: {
+                local_only: true,
+                stores_prompt_bodies: false,
+                stores_raw_paths: false,
+                writes_instruction_files: false,
+                external_calls: false,
+              },
+            },
+            next_action:
+              "use recorded memory as local context in future loop briefs",
+            next_actions: [
+              "prompt-coach loop brief",
+              "prompt-coach loop instruction-patch --target-file AGENTS.md",
+            ],
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+              writes_instruction_files: false,
+              external_calls: false,
+            },
+          },
+        }),
+      );
+    const { approveLoopMemory } = await import("./api.js");
+
+    const result = await approveLoopMemory({ approvedBy: "web" });
+
+    expect(result.recorded).toBe(true);
+    expect(result.next_actions).toEqual([
+      "prompt-coach loop brief",
+      "prompt-coach loop instruction-patch --target-file AGENTS.md",
+    ]);
+    expect(fetchMock).toHaveBeenLastCalledWith(
+      "/api/v1/loops/memory/approve",
+      {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "content-type": "application/json",
+          "x-csrf-token": "csrf-1",
+        },
+        body: JSON.stringify({ approved_by: "web" }),
+      },
+    );
+    expect(JSON.stringify(result)).not.toContain("Make this better");
+    expect(JSON.stringify(result)).not.toContain("/Users/example");
+    expect(JSON.stringify(result)).not.toContain("sk-proj-secret");
+  });
+
   it("shares an in-flight csrf session request across parallel API calls", async () => {
     fetchMock.mockImplementation(async (url: string) => {
       if (url === "/api/v1/session") {
