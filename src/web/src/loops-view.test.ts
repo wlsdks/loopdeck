@@ -23,6 +23,8 @@ describe("LoopsView", () => {
     expect(html).toContain("Review packet ready");
     expect(html).toContain("2 ready, 0 needs review, 0 missing evidence");
     expect(html).toContain("Next compare ready evidence before merge");
+    expect(html).toContain("Decision advisory");
+    expect(html).toContain("honor recent continue decision before merge");
     expect(html).toContain("Human checklist");
     expect(html).toContain("Compare ready evidence before merge");
     expect(html).toContain("required");
@@ -146,6 +148,11 @@ function loopList(): LoopListResponse {
             status: "ready",
             summary: "2 ready, 0 needs review, 0 missing evidence",
             next_action: "compare ready evidence before merge",
+            decision_advisory: {
+              summary:
+                "recent continue decision recorded for agent-loop-worktree",
+              next_action: "honor recent continue decision before merge",
+            },
             ready_count: 2,
             needs_review_count: 0,
             missing_evidence_count: 0,

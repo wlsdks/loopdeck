@@ -98,6 +98,21 @@ describe("MCP stdio server", () => {
                                 ]),
                               }),
                             }),
+                            decision_advisory: expect.objectContaining({
+                              required: expect.arrayContaining([
+                                "summary",
+                                "next_action",
+                              ]),
+                              properties: expect.objectContaining({
+                                next_action: expect.objectContaining({
+                                  enum: [
+                                    "honor recent continue decision before merge",
+                                    "honor recent defer decision before merge",
+                                    "confirm recent merge decision before merge",
+                                  ],
+                                }),
+                              }),
+                            }),
                           }),
                         }),
                         review_items: expect.objectContaining({

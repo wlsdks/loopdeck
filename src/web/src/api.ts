@@ -141,6 +141,13 @@ export type LoopListResponse = {
             | "compare ready evidence before merge"
             | "review non-passing worktrees before merge"
             | "record missing evidence before merge";
+          decision_advisory?: {
+            summary: string;
+            next_action:
+              | "honor recent continue decision before merge"
+              | "honor recent defer decision before merge"
+              | "confirm recent merge decision before merge";
+          };
           ready_count: number;
           needs_review_count: number;
           missing_evidence_count: number;

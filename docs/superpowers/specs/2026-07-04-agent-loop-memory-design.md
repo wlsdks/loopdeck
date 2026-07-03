@@ -1523,6 +1523,44 @@ Do not add:
 - prompt body, outcome summary, transcript, compact summary, raw path, API
   token, provider credential, or raw evidence ref output
 
+### Slice 4.47: Review Packet Decision Advisory
+
+Decision:
+
+- Recent merge decisions may influence review packet next-action text only as an
+  advisory. They must not change merge-readiness status, checklist completion,
+  branch state, git state, or command execution.
+- Keep `review_packet.next_action` deterministic from aggregate readiness.
+  Add a separate `review_packet.decision_advisory` when a recent decision
+  exists for a reviewed worktree.
+
+Add:
+
+- optional `review_packet.decision_advisory`
+- advisory summaries such as `recent continue decision recorded for <worktree>`
+- advisory next actions:
+  - `honor recent continue decision before merge`
+  - `honor recent defer decision before merge`
+  - `confirm recent merge decision before merge`
+- CLI `loop status` advisory output
+- MCP `get_loopdeck_status` schema/runtime coverage for the advisory
+- web Loops command-center rendering for the advisory
+- focused domain, CLI, MCP schema/runtime, and web tests proving the advisory
+  remains read-only and does not reveal prompt bodies, outcome summaries,
+  evidence refs, raw paths, transcripts, compact summaries, API tokens, provider
+  credentials, external calls, or git writes
+
+Do not add:
+
+- automatic merge, branch checkout, conflict prediction, diff inspection, or git
+  writes
+- MCP write tools, web write buttons, checklist completion state, approval
+  toggles, or stateful acknowledgement
+- changes to `review_packet.status` or `review_packet.next_action` based solely
+  on a decision record
+- hidden external model calls or background agent evaluation
+- package, plugin, slash command, hook, or MCP server-name rename
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

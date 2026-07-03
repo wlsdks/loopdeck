@@ -221,7 +221,11 @@
 - [x] Task 49 RED: `activity.recent_decisions`가 없어 domain/CLI/MCP/web focused tests 실패 확인
 - [x] Task 49 GREEN: 최근 decision 3개를 `LoopdeckStatus.activity`, CLI status, MCP schema/runtime, API type, web Loops summary에 노출
 - [x] Task 49 PRIVACY: recent decision은 snapshot_id/worktree/decision/reason/decided_by/created_at만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
-- [ ] 다음 slice: recent decisions가 review packet next-action 문구에 advisory-only로 반영될지 결정
+- [x] Task 50 DECISION: recent decisions는 `review_packet.decision_advisory`로만 반영하고 readiness status/next_action/git state는 변경하지 않음
+- [x] Task 50 RED: `review_packet.decision_advisory`가 없어 domain/CLI/MCP/web focused tests 실패 확인
+- [x] Task 50 GREEN: continue/defer/merge decision advisory next-action을 review packet에 optional read-only로 노출
+- [x] Task 50 PRIVACY: advisory는 summary/next_action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
+- [ ] 다음 slice: selected worktree detail에 matching latest decision을 read-only로 노출할지 결정
 
 ### 판단 기준
 

@@ -553,6 +553,9 @@ function formatLoopStatus(status: LoopdeckStatus): string {
     status.activity.command_center
       ? `review packet next ${status.activity.command_center.review_packet.next_action}`
       : undefined,
+    status.activity.command_center?.review_packet.decision_advisory
+      ? `review packet advisory ${status.activity.command_center.review_packet.decision_advisory.next_action}`
+      : undefined,
     ...(
       status.activity.command_center?.review_packet.checklist.map(
         (item) => `checklist ${item.label} ${item.status}`,

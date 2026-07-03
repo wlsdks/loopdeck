@@ -193,6 +193,22 @@ export const GET_LOOPDECK_STATUS_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
                         "record missing evidence before merge",
                       ],
                     },
+                    decision_advisory: {
+                      type: "object",
+                      required: ["summary", "next_action"],
+                      properties: {
+                        summary: { type: "string" },
+                        next_action: {
+                          type: "string",
+                          enum: [
+                            "honor recent continue decision before merge",
+                            "honor recent defer decision before merge",
+                            "confirm recent merge decision before merge",
+                          ],
+                        },
+                      },
+                      additionalProperties: false,
+                    },
                     ready_count: { type: "integer", minimum: 0 },
                     needs_review_count: { type: "integer", minimum: 0 },
                     missing_evidence_count: { type: "integer", minimum: 0 },

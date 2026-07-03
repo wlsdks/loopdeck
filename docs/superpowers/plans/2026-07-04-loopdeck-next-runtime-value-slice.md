@@ -164,6 +164,10 @@ Implementation checkpoint:
   CLI `loop status`, MCP `get_loopdeck_status`, `/api/v1/loops`, and the web
   Loops summary so Codex and Claude Code can see prior human decisions without
   gaining a write-capable merge journal tool.
-- The next runtime slice should decide whether recent decisions should influence
-  review packet next-action text, while preserving advisory-only behavior and
-  no git writes.
+- Recent merge decisions now influence review packet next-action text only via
+  optional `review_packet.decision_advisory`; `review_packet.status`,
+  `review_packet.next_action`, readiness counts, checklist status, and git state
+  remain unchanged by decision records.
+- The next runtime slice should decide whether selected worktree detail should
+  show the matching latest decision read-only, without adding web write buttons
+  or checklist completion state.

@@ -162,6 +162,16 @@ export function LoopsView({
                 Next{" "}
                 {loops.status.activity.command_center.review_packet.next_action}
               </p>
+              {loops.status.activity.command_center.review_packet
+                .decision_advisory && (
+                <p className="loops-status-line">
+                  Decision advisory{" "}
+                  {
+                    loops.status.activity.command_center.review_packet
+                      .decision_advisory.next_action
+                  }
+                </p>
+              )}
               <div>
                 <p className="loops-status-line">Human checklist</p>
                 {loops.status.activity.command_center.review_packet.checklist.map(

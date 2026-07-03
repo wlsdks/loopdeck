@@ -75,6 +75,13 @@ export type LoopdeckStatusActivityReviewPacket = {
     | "compare ready evidence before merge"
     | "review non-passing worktrees before merge"
     | "record missing evidence before merge";
+  decision_advisory?: {
+    summary: string;
+    next_action:
+      | "honor recent continue decision before merge"
+      | "honor recent defer decision before merge"
+      | "confirm recent merge decision before merge";
+  };
   ready_count: number;
   needs_review_count: number;
   missing_evidence_count: number;
@@ -216,7 +223,9 @@ export function summarizeLoopActivity(
       ? { recent_decisions: mergeDecisions.slice(0, 3).map(toRecentDecision) }
       : {}),
     worktrees,
-    ...(needsReview ? { command_center: createCommandCenter(worktrees) } : {}),
+    ...(needsReview
+      ? { command_center: createCommandCenter(worktrees, mergeDecisions) }
+      : {}),
   };
 }
 
@@ -235,6 +244,7 @@ function toRecentDecision(
 
 function createCommandCenter(
   worktrees: LoopdeckStatusActivityWorktree[],
+  mergeDecisions: readonly LoopdeckStatusActivityRecentDecision[],
 ): LoopdeckStatusActivityCommandCenter {
   const reviewItems = worktrees.map((worktree) => ({
     ...worktree,
@@ -254,13 +264,14 @@ function createCommandCenter(
     primary_action: primary
       ? `review ${primary.worktree} before merge`
       : "compare worktrees before merge",
-    review_packet: createReviewPacket(reviewItems),
+    review_packet: createReviewPacket(reviewItems, mergeDecisions),
     review_items: reviewItems,
   };
 }
 
 function createReviewPacket(
   reviewItems: LoopdeckStatusActivityCommandCenterItem[],
+  mergeDecisions: readonly LoopdeckStatusActivityRecentDecision[] = [],
 ): LoopdeckStatusActivityReviewPacket {
   const readyCount = reviewItems.filter(
     (item) => item.merge_readiness.status === "ready",
@@ -295,18 +306,51 @@ function createReviewPacket(
     status: "required" as const,
     action,
   }));
+  const decisionAdvisory = decisionAdvisoryForReviewPacket(
+    mergeDecisions,
+    reviewItems,
+  );
 
   return {
     title: "Review-before-merge packet",
     status,
     summary: `${readyCount} ready, ${needsReviewCount} needs review, ${missingEvidenceCount} missing evidence`,
     next_action: nextAction,
+    ...(decisionAdvisory ? { decision_advisory: decisionAdvisory } : {}),
     ready_count: readyCount,
     needs_review_count: needsReviewCount,
     missing_evidence_count: missingEvidenceCount,
     actions,
     checklist,
   };
+}
+
+function decisionAdvisoryForReviewPacket(
+  mergeDecisions: readonly LoopdeckStatusActivityRecentDecision[],
+  reviewItems: readonly LoopdeckStatusActivityCommandCenterItem[],
+): LoopdeckStatusActivityReviewPacket["decision_advisory"] | undefined {
+  const worktrees = new Set(reviewItems.map((item) => item.worktree));
+  const decision = mergeDecisions.find((item) => worktrees.has(item.worktree));
+  if (!decision) return undefined;
+
+  return {
+    summary: `recent ${decision.decision} decision recorded for ${decision.worktree}`,
+    next_action: decisionAdvisoryNextAction(decision.decision),
+  };
+}
+
+function decisionAdvisoryNextAction(
+  decision: LoopdeckStatusActivityRecentDecision["decision"],
+): NonNullable<
+  LoopdeckStatusActivityReviewPacket["decision_advisory"]
+>["next_action"] {
+  if (decision === "merge") {
+    return "confirm recent merge decision before merge";
+  }
+  if (decision === "defer") {
+    return "honor recent defer decision before merge";
+  }
+  return "honor recent continue decision before merge";
 }
 
 function checklistLabelForAction(
