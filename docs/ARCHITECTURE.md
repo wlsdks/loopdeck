@@ -40,6 +40,7 @@ src/
   exporter/    anonymized export preview and execution
   hooks/       fail-open hook wrapper and delivery status
   importer/    markdown/source import and dry-run planning
+  loop/        loop snapshots, continuation briefs, and local agent-loop summaries
   mcp/         MCP tool definitions, typed contracts, handlers, and stdio server
   redaction/   secret detection and redacted prompt representations
   server/      Fastify routes, auth, browser/API boundary
@@ -58,6 +59,12 @@ Entry points are `cli`, `server`, `hooks`, `mcp`, and `web`. They may orchestrat
 work but should not own domain rules that need to be reused elsewhere. Shared
 rules such as scoring, redaction, project instruction review, and archive
 analysis belong in `analysis`, `redaction`, or `storage`.
+
+`src/loop/` owns privacy-safe loop snapshot and continuation brief domain
+logic. It may consume prompt summaries and storage ports, but it must not read
+raw transcripts, provider credentials, or private agent state databases. CLI,
+MCP, hook, and web surfaces should call into `src/loop/` instead of formatting
+loop state independently.
 
 ## Spring-To-Node Translation
 
