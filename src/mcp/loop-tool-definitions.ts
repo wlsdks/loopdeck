@@ -380,3 +380,68 @@ export const RECORD_LOOP_MEMORY_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
       ],
     },
   } as const;
+
+export const PROPOSE_INSTRUCTION_PATCH_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
+  {
+    name: "propose_instruction_patch",
+    description:
+      "Propose a reviewable unified diff for adding the latest approved Loopdeck memory to AGENTS.md or CLAUDE.md. This is read-only: it returns a patch proposal string and never writes instruction files, project docs, prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
+    annotations: {
+      ...LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS,
+      title: "Propose instruction patch",
+    },
+    inputSchema: {
+      type: "object",
+      properties: {
+        target_file: {
+          type: "string",
+          enum: ["AGENTS.md", "CLAUDE.md"],
+          description: "Instruction file target. Defaults to AGENTS.md.",
+        },
+      },
+      additionalProperties: false,
+    },
+    outputSchema: {
+      type: "object",
+      properties: {
+        target_file: { type: "string", enum: ["AGENTS.md", "CLAUDE.md"] },
+        patch_kind: { const: "append_section" },
+        title: { type: "string" },
+        diff: { type: "string" },
+        writes_files: { const: false },
+        requires_user_approval: { const: true },
+        source_memory_id: { type: "string" },
+        next_action: { type: "string" },
+        privacy: {
+          ...LOOP_TOOL_PRIVACY_SCHEMA,
+          required: [
+            ...LOOP_TOOL_PRIVACY_SCHEMA.required,
+            "writes_instruction_files",
+          ],
+          properties: {
+            ...LOOP_TOOL_PRIVACY_SCHEMA.properties,
+            writes_instruction_files: { const: false },
+          },
+        },
+        is_error: TOOL_ERROR_OUTPUT_SCHEMA.properties.is_error,
+        error_code: TOOL_ERROR_OUTPUT_SCHEMA.properties.error_code,
+        message: TOOL_ERROR_OUTPUT_SCHEMA.properties.message,
+      },
+      oneOf: [
+        {
+          required: [
+            "target_file",
+            "patch_kind",
+            "title",
+            "diff",
+            "writes_files",
+            "requires_user_approval",
+            "source_memory_id",
+            "next_action",
+            "privacy",
+          ],
+        },
+        TOOL_ERROR_OUTPUT_SCHEMA,
+      ],
+    },
+  } as const;

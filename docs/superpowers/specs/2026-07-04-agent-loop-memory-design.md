@@ -591,6 +591,26 @@ Do not add:
   results
 - automatic approval of failed, unevidenced, or unsafe candidates
 
+### Slice 4.8: Instruction File Patch Proposal
+
+Add:
+
+- pure proposal generator that converts the latest approved Loopdeck memory
+  into a reviewable unified diff for `AGENTS.md` or `CLAUDE.md`
+  (**implemented**)
+- CLI `prompt-coach loop instruction-patch --target-file AGENTS.md` for local
+  review without file writes (**implemented**)
+- MCP `propose_instruction_patch` so Codex and Claude Code can ask for the
+  same proposal through a structured local-only tool (**implemented**)
+
+Do not add:
+
+- automatic AGENTS.md, CLAUDE.md, or project-doc edits
+- applying patches without explicit user review
+- returning prompt bodies, raw paths, transcripts, compact summaries, or
+  external LLM results
+- generating instruction changes from unapproved or unsafe memory candidates
+
 ### Slice 5: Brand Migration
 
 Add:

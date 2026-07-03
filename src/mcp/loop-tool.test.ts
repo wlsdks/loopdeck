@@ -10,6 +10,7 @@ import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import {
   getLoopdeckStatusTool,
   prepareLoopBriefTool,
+  proposeInstructionPatchTool,
   proposeLoopMemoryCandidateTool,
   recordLoopMemoryTool,
   recordLoopOutcomeTool,
@@ -248,6 +249,43 @@ describe("Loopdeck MCP tools", () => {
         writes_instruction_files: false,
       },
     });
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("/Users/example");
+  });
+
+  it("proposes an instruction patch from approved memory without writing files", () => {
+    const dataDir = seedLoopSnapshot({
+      outcome: {
+        status: "passed",
+        summary:
+          "Scheduler lifecycle should stay plist-only unless the user explicitly asks for launchctl mutation.",
+        evidence_refs: ["commit:568e2b4", "test:pnpm test"],
+      },
+    });
+    recordLoopMemoryTool({ latest: true, approved_by: "user" }, { dataDir });
+
+    const result = proposeInstructionPatchTool(
+      {
+        target_file: "AGENTS.md",
+      },
+      { dataDir },
+    );
+    const serialized = JSON.stringify(result);
+
+    expect(result).toMatchObject({
+      target_file: "AGENTS.md",
+      writes_files: false,
+      requires_user_approval: true,
+      privacy: {
+        local_only: true,
+        external_calls: false,
+        returns_prompt_bodies: false,
+        returns_raw_paths: false,
+        writes_instruction_files: false,
+      },
+    });
+    expect(result.diff).toContain("## Loopdeck Memories");
+    expect(result.diff).toContain("Scheduler lifecycle should stay plist-only");
     expect(serialized).not.toContain("Make this better");
     expect(serialized).not.toContain("/Users/example");
   });

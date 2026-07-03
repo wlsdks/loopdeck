@@ -3,6 +3,10 @@ import {
   createLoopBrief,
   latestCompactBoundaryAfterSnapshot,
 } from "../loop/brief.js";
+import {
+  parseInstructionPatchTarget,
+  proposeInstructionPatchFromMemory,
+} from "../loop/instruction-patch.js";
 import { decideLoopMemoryCandidate } from "../loop/memory-candidate.js";
 import type { LoopSnapshot } from "../loop/types.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
@@ -12,6 +16,8 @@ import type {
   GetLoopdeckStatusToolResult,
   PrepareLoopBriefToolArguments,
   PrepareLoopBriefToolResult,
+  ProposeInstructionPatchToolArguments,
+  ProposeInstructionPatchToolResult,
   ProposeLoopMemoryCandidateToolArguments,
   ProposeLoopMemoryCandidateToolResult,
   RecordLoopMemoryToolArguments,
@@ -26,6 +32,7 @@ const LOOP_TOOL_NAMES = [
   "record_loop_outcome",
   "propose_loop_memory_candidate",
   "record_loop_memory",
+  "propose_instruction_patch",
 ];
 
 export function getLoopdeckStatusTool(
@@ -339,6 +346,42 @@ export function recordLoopMemoryTool(
   }
 }
 
+export function proposeInstructionPatchTool(
+  args: ProposeInstructionPatchToolArguments,
+  options: ScorePromptToolOptions = {},
+): ProposeInstructionPatchToolResult {
+  let targetFile: "AGENTS.md" | "CLAUDE.md";
+  try {
+    targetFile = parseInstructionPatchTarget(args.target_file ?? "AGENTS.md");
+  } catch (error) {
+    return loopToolError("invalid_input", errorMessage(error));
+  }
+
+  try {
+    const config = loadPromptCoachConfig(options.dataDir);
+    const auth = loadHookAuth(options.dataDir);
+    const storage = createSqlitePromptStorage({
+      dataDir: config.data_dir,
+      hmacSecret: auth.web_session_secret,
+    });
+
+    try {
+      const memory = storage.listLoopMemories({ limit: 1 }).items.at(0);
+      if (!memory) {
+        return loopToolError(
+          "not_found",
+          "No loop memory found. Run `prompt-coach loop memory-approve` first.",
+        );
+      }
+      return proposeInstructionPatchFromMemory({ memory, targetFile });
+    } finally {
+      storage.close();
+    }
+  } catch (error) {
+    return loopToolError("storage_unavailable", storageUnavailableMessage(error));
+  }
+}
+
 function toSafeLatestLoopSnapshot(snapshot: LoopSnapshot) {
   return {
     id: snapshot.id,
@@ -369,7 +412,8 @@ type LoopToolErrorCode = Extract<
   | PrepareLoopBriefToolResult
   | RecordLoopOutcomeToolResult
   | ProposeLoopMemoryCandidateToolResult
-  | RecordLoopMemoryToolResult,
+  | RecordLoopMemoryToolResult
+  | ProposeInstructionPatchToolResult,
   { is_error: true }
 >["error_code"];
 
@@ -393,4 +437,8 @@ function loopToolError(
 function storageUnavailableMessage(error: unknown): string {
   const name = error instanceof Error ? error.name : "Error";
   return `${name}: local prompt-coach storage is not available. Run prompt-coach init or pass the correct dataDir.`;
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : "Invalid instruction patch input.";
 }

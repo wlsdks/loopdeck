@@ -7,6 +7,11 @@ import {
 } from "../../loop/brief.js";
 import { collectLoopSnapshot } from "../../loop/collect.js";
 import {
+  parseInstructionPatchTarget,
+  proposeInstructionPatchFromMemory,
+  type InstructionPatchProposal,
+} from "../../loop/instruction-patch.js";
+import {
   decideLoopMemoryCandidate,
   type LoopMemoryCandidateDecision,
 } from "../../loop/memory-candidate.js";
@@ -24,6 +29,7 @@ type LoopCliOptions = {
   limit?: string | number;
   now?: Date;
   source?: string;
+  targetFile?: string;
   worktree?: string;
   approvedBy?: string;
 };
@@ -82,6 +88,20 @@ export function registerLoopCommand(program: Command): void {
     .option("--json", "Print JSON.")
     .action((options: LoopCliOptions) => {
       console.log(loopMemoryApproveForCli(options));
+    });
+
+  loop
+    .command("instruction-patch")
+    .description("Propose an instruction-file patch from approved Loopdeck memory.")
+    .option("--data-dir <path>", "Override the prompt-coach data directory.")
+    .option(
+      "--target-file <file>",
+      "Instruction file target (AGENTS.md or CLAUDE.md).",
+      "AGENTS.md",
+    )
+    .option("--json", "Print JSON.")
+    .action((options: LoopCliOptions) => {
+      console.log(loopInstructionPatchForCli(options));
     });
 
   registerLoopScheduleCommand(loop);
@@ -191,6 +211,30 @@ export function loopMemoryApproveForCli(options: LoopCliOptions = {}): string {
     return options.json
       ? JSON.stringify(result, null, 2)
       : formatLoopMemoryApproval(result);
+  });
+}
+
+export function loopInstructionPatchForCli(
+  options: LoopCliOptions = {},
+): string {
+  return withStorage(options.dataDir, (storage) => {
+    const targetFile = parseInstructionPatchTarget(
+      options.targetFile ?? "AGENTS.md",
+    );
+    const memory = storage.listLoopMemories({ limit: 1 }).items.at(0);
+    if (!memory) {
+      throw new UserError(
+        "No loop memory found. Run `prompt-coach loop memory-approve` first.",
+      );
+    }
+    const proposal = proposeInstructionPatchFromMemory({
+      memory,
+      targetFile,
+    });
+
+    return options.json
+      ? JSON.stringify(proposal, null, 2)
+      : formatInstructionPatchProposal(proposal);
   });
 }
 
@@ -318,6 +362,23 @@ function formatLoopMemoryApproval(result: {
     `evidence ${result.memory.evidence_refs.join(", ")}`,
     "",
     `Next: ${result.next_action}`,
+    "",
+    "Privacy: local-only, no prompt bodies, no raw paths, no external calls, no instruction file writes.",
+  ].join("\n");
+}
+
+function formatInstructionPatchProposal(
+  proposal: InstructionPatchProposal,
+): string {
+  return [
+    "Loop instruction patch proposal",
+    `target ${proposal.target_file}`,
+    `writes files ${proposal.writes_files ? "yes" : "no"}`,
+    `requires approval ${proposal.requires_user_approval ? "yes" : "no"}`,
+    "",
+    proposal.diff.trimEnd(),
+    "",
+    `Next: ${proposal.next_action}`,
     "",
     "Privacy: local-only, no prompt bodies, no raw paths, no external calls, no instruction file writes.",
   ].join("\n");

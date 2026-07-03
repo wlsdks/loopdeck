@@ -55,6 +55,9 @@ describe("MCP stdio server", () => {
             name: "record_loop_memory",
           }),
           expect.objectContaining({
+            name: "propose_instruction_patch",
+          }),
+          expect.objectContaining({
             name: "score_prompt_archive",
           }),
           expect.objectContaining({
@@ -86,7 +89,7 @@ describe("MCP stdio server", () => {
 
     const tools = (response?.result as { tools: Array<unknown> }).tools;
 
-    expect(tools).toHaveLength(18);
+    expect(tools).toHaveLength(19);
     for (const tool of tools.filter(
       (tool) =>
         ![
@@ -144,6 +147,17 @@ describe("MCP stdio server", () => {
             idempotentHint: false,
             openWorldHint: false,
             readOnlyHint: false,
+          }),
+        }),
+        expect.objectContaining({
+          name: "propose_instruction_patch",
+          outputSchema: expect.objectContaining({
+            properties: expect.objectContaining({
+              target_file: expect.any(Object),
+              diff: expect.any(Object),
+              writes_files: expect.any(Object),
+              privacy: expect.any(Object),
+            }),
           }),
         }),
         expect.objectContaining({

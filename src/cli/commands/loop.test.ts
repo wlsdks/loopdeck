@@ -11,6 +11,7 @@ import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import {
   loopBriefForCli,
   loopCollectForCli,
+  loopInstructionPatchForCli,
   loopMemoryApproveForCli,
   loopMemoryCandidateForCli,
   loopStatusForCli,
@@ -269,6 +270,51 @@ describe("loop CLI command", () => {
     expect(text).toContain("Loop memory recorded");
     expect(text).toContain("approved by user");
     expect(text).toContain("Next: use recorded memory as local context");
+    expect(text).not.toContain("Make this better");
+    expect(text).not.toContain("/Users/example");
+  });
+
+  it("prints an instruction patch proposal from the latest approved memory without writing files", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    const snapshot = JSON.parse(
+      loopCollectForCli({
+        dataDir,
+        json: true,
+        cwdPrefix: "/Users/example/private-project",
+        now: new Date("2026-07-04T01:00:00.000Z"),
+        cwd: "/Users/example/private-project",
+      }),
+    ) as { id: string };
+    seedLoopOutcome(dataDir, snapshot.id);
+    loopMemoryApproveForCli({ dataDir, approvedBy: "user" });
+
+    const json = loopInstructionPatchForCli({
+      dataDir,
+      json: true,
+      targetFile: "AGENTS.md",
+    });
+    const parsed = JSON.parse(json) as {
+      target_file: string;
+      writes_files: boolean;
+      diff: string;
+      privacy: { writes_instruction_files: boolean };
+    };
+
+    expect(parsed.target_file).toBe("AGENTS.md");
+    expect(parsed.writes_files).toBe(false);
+    expect(parsed.diff).toContain("## Loopdeck Memories");
+    expect(parsed.diff).toContain("Scheduler lifecycle should stay plist-only");
+    expect(parsed.privacy.writes_instruction_files).toBe(false);
+    expect(json).not.toContain("Make this better");
+    expect(json).not.toContain("/Users/example");
+
+    const text = loopInstructionPatchForCli({ dataDir, targetFile: "AGENTS.md" });
+
+    expect(text).toContain("Loop instruction patch proposal");
+    expect(text).toContain("target AGENTS.md");
+    expect(text).toContain("writes files no");
+    expect(text).toContain("Next: review");
     expect(text).not.toContain("Make this better");
     expect(text).not.toContain("/Users/example");
   });

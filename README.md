@@ -685,7 +685,7 @@ Codex, or any MCP client through a stdio MCP server:
 prompt-coach mcp
 ```
 
-The MCP server exposes eighteen tools:
+The MCP server exposes nineteen tools:
 
 - `get_prompt_coach_status`: check whether the local archive is initialized,
   whether prompts have been captured, and which MCP tool to call next.
@@ -737,14 +737,20 @@ The MCP server exposes eighteen tools:
   eligible candidate into local prompt-coach storage. It does not write
   AGENTS.md, CLAUDE.md, project docs, prompt bodies, raw paths, transcripts,
   compact summaries, or external LLM results.
+- `propose_instruction_patch`: propose a reviewable unified diff for adding the
+  latest approved Loopdeck memory to `AGENTS.md` or `CLAUDE.md`. It returns the
+  patch text only and does not write files.
 
 The matching local CLI surface is `prompt-coach loop status`,
 `prompt-coach loop collect`, `prompt-coach loop brief`, and
 `prompt-coach loop memory-candidate`; approved memories are recorded with
-`prompt-coach loop memory-approve`. `loop collect` also accepts `--source
-service` for explicit cron or LaunchAgent one-shot collection without creating
-hidden background automation. Users who want an opt-in macOS schedule can
-preview or install it with `prompt-coach loop schedule install --dry-run` or
+`prompt-coach loop memory-approve`. Use
+`prompt-coach loop instruction-patch --target-file AGENTS.md` to generate the
+review-only instruction patch from the latest approved memory. `loop collect`
+also accepts `--source service` for explicit cron or LaunchAgent one-shot
+collection without creating hidden background automation. Users who want an
+opt-in macOS schedule can preview or install it with
+`prompt-coach loop schedule install --dry-run` or
 `prompt-coach loop schedule install --cwd-prefix <project>`, check it with
 `prompt-coach loop schedule status`, and remove the plist with
 `prompt-coach loop schedule uninstall`.
