@@ -49,7 +49,35 @@ describe("MCP stdio server", () => {
                       properties: expect.objectContaining({
                         title: expect.any(Object),
                         primary_action: expect.any(Object),
-                        review_items: expect.any(Object),
+                        review_items: expect.objectContaining({
+                          items: expect.objectContaining({
+                            required: expect.arrayContaining([
+                              "evidence_count",
+                              "merge_readiness",
+                            ]),
+                            properties: expect.objectContaining({
+                              evidence_count: expect.any(Object),
+                              merge_readiness: expect.objectContaining({
+                                properties: expect.objectContaining({
+                                  status: expect.objectContaining({
+                                    enum: [
+                                      "ready",
+                                      "needs_review",
+                                      "missing_evidence",
+                                    ],
+                                  }),
+                                  evidence: expect.objectContaining({
+                                    enum: [
+                                      "evidence present",
+                                      "missing evidence",
+                                    ],
+                                  }),
+                                  next_action: expect.any(Object),
+                                }),
+                              }),
+                            }),
+                          }),
+                        }),
                       }),
                     }),
                   }),

@@ -22,6 +22,9 @@ describe("LoopsView", () => {
     expect(html).toContain("review agent-loop-worktree before merge");
     expect(html).toContain("review before merge");
     expect(html).toContain("ready for continuation");
+    expect(html).toContain("Merge readiness needs_review");
+    expect(html).toContain("Evidence evidence present");
+    expect(html).toContain("Evidence refs 2");
     expect(html).toContain(
       "prompt-coach loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
     );
@@ -104,6 +107,7 @@ function loopList(): LoopListResponse {
             latest_snapshot_id: "loop_web",
             latest_created_at: "2026-07-04T01:00:00.000Z",
             latest_outcome_status: "unknown",
+            evidence_count: 2,
           },
           {
             worktree: "main-worktree",
@@ -112,6 +116,7 @@ function loopList(): LoopListResponse {
             latest_snapshot_id: "loop_main",
             latest_created_at: "2026-07-03T01:00:00.000Z",
             latest_outcome_status: "passed",
+            evidence_count: 1,
           },
         ],
         command_center: {
@@ -126,9 +131,15 @@ function loopList(): LoopListResponse {
               latest_snapshot_id: "loop_web",
               latest_created_at: "2026-07-04T01:00:00.000Z",
               latest_outcome_status: "unknown",
+              evidence_count: 2,
               recommendation: "review before merge",
               continuation_command:
                 "prompt-coach loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
+              merge_readiness: {
+                status: "needs_review",
+                evidence: "evidence present",
+                next_action: "review outcome before merge",
+              },
             },
             {
               worktree: "main-worktree",
@@ -137,9 +148,15 @@ function loopList(): LoopListResponse {
               latest_snapshot_id: "loop_main",
               latest_created_at: "2026-07-03T01:00:00.000Z",
               latest_outcome_status: "passed",
+              evidence_count: 1,
               recommendation: "ready for continuation",
               continuation_command:
                 "prompt-coach loop brief --worktree main-worktree",
+              merge_readiness: {
+                status: "ready",
+                evidence: "evidence present",
+                next_action: "compare evidence before merge",
+              },
             },
           ],
         },

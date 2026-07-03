@@ -141,5 +141,12 @@ Implementation checkpoint:
 - Command-center review items now include a safe `continuation_command`, CLI
   `loop status` prints that command, MCP `get_loopdeck_status` schemas it, and
   the web Loops summary can copy a filtered selected brief for each worktree.
-- The next runtime slice should decide whether command-center review items need
-  merge-readiness evidence grouping before any future merge workflow.
+- Command-center review items now include `evidence_count` and
+  `merge_readiness`, derived from the latest snapshot outcome metadata without
+  returning evidence ref strings or outcome summaries.
+- CLI `loop status`, MCP `get_loopdeck_status`, and the web Loops summary now
+  show whether each worktree is ready, needs review, or is missing evidence
+  before any future merge workflow.
+- The next runtime slice should decide whether merge-readiness remains a
+  read-only review aid or becomes the input to an explicit review-before-merge
+  workflow.

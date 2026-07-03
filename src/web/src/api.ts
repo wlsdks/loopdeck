@@ -120,6 +120,7 @@ export type LoopListResponse = {
         latest_snapshot_id: string;
         latest_created_at: string;
         latest_outcome_status: string;
+        evidence_count: number;
       }>;
       command_center?: {
         title: "Multi-worktree review";
@@ -132,8 +133,17 @@ export type LoopListResponse = {
           latest_snapshot_id: string;
           latest_created_at: string;
           latest_outcome_status: string;
+          evidence_count: number;
           recommendation: "review before merge" | "ready for continuation";
           continuation_command: string;
+          merge_readiness: {
+            status: "ready" | "needs_review" | "missing_evidence";
+            evidence: "evidence present" | "missing evidence";
+            next_action:
+              | "compare evidence before merge"
+              | "review outcome before merge"
+              | "record loop outcome evidence";
+          };
         }>;
       };
     };

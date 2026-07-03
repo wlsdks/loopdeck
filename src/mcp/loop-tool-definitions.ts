@@ -110,6 +110,7 @@ export const GET_LOOPDECK_STATUS_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
                   "latest_snapshot_id",
                   "latest_created_at",
                   "latest_outcome_status",
+                  "evidence_count",
                 ],
                 properties: {
                   worktree: { type: "string" },
@@ -119,6 +120,7 @@ export const GET_LOOPDECK_STATUS_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
                   latest_snapshot_id: { type: "string" },
                   latest_created_at: { type: "string" },
                   latest_outcome_status: LOOP_OUTCOME_STATUS_SCHEMA,
+                  evidence_count: { type: "integer", minimum: 0 },
                 },
                 additionalProperties: false,
               },
@@ -140,8 +142,10 @@ export const GET_LOOPDECK_STATUS_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
                       "latest_snapshot_id",
                       "latest_created_at",
                       "latest_outcome_status",
+                      "evidence_count",
                       "recommendation",
                       "continuation_command",
+                      "merge_readiness",
                     ],
                     properties: {
                       worktree: { type: "string" },
@@ -151,6 +155,7 @@ export const GET_LOOPDECK_STATUS_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
                       latest_snapshot_id: { type: "string" },
                       latest_created_at: { type: "string" },
                       latest_outcome_status: LOOP_OUTCOME_STATUS_SCHEMA,
+                      evidence_count: { type: "integer", minimum: 0 },
                       recommendation: {
                         type: "string",
                         enum: [
@@ -159,6 +164,29 @@ export const GET_LOOPDECK_STATUS_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
                         ],
                       },
                       continuation_command: { type: "string" },
+                      merge_readiness: {
+                        type: "object",
+                        required: ["status", "evidence", "next_action"],
+                        properties: {
+                          status: {
+                            type: "string",
+                            enum: ["ready", "needs_review", "missing_evidence"],
+                          },
+                          evidence: {
+                            type: "string",
+                            enum: ["evidence present", "missing evidence"],
+                          },
+                          next_action: {
+                            type: "string",
+                            enum: [
+                              "compare evidence before merge",
+                              "review outcome before merge",
+                              "record loop outcome evidence",
+                            ],
+                          },
+                        },
+                        additionalProperties: false,
+                      },
                     },
                     additionalProperties: false,
                   },

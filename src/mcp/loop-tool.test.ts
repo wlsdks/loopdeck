@@ -62,6 +62,7 @@ describe("Loopdeck MCP tools", () => {
             snapshots: 1,
             latest_snapshot_id: "loop_mcp",
             latest_outcome_status: "passed",
+            evidence_count: 2,
           },
           {
             worktree: "other-worktree",
@@ -69,8 +70,31 @@ describe("Loopdeck MCP tools", () => {
             snapshots: 1,
             latest_snapshot_id: "loop_other_project",
             latest_outcome_status: "passed",
+            evidence_count: 1,
           },
         ],
+        command_center: {
+          review_items: [
+            {
+              worktree: "worktree-mcp",
+              evidence_count: 2,
+              merge_readiness: {
+                status: "ready",
+                evidence: "evidence present",
+                next_action: "compare evidence before merge",
+              },
+            },
+            {
+              worktree: "other-worktree",
+              evidence_count: 1,
+              merge_readiness: {
+                status: "ready",
+                evidence: "evidence present",
+                next_action: "compare evidence before merge",
+              },
+            },
+          ],
+        },
       },
       memory_candidate: {
         eligible: true,

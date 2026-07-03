@@ -159,6 +159,13 @@ export function LoopsView({
                       <p className="loops-status-line">
                         {item.worktree}: {item.recommendation}
                       </p>
+                      <p className="loops-status-line">
+                        Merge readiness {item.merge_readiness.status}
+                      </p>
+                      <p className="loops-status-line">
+                        Evidence {item.merge_readiness.evidence} / Evidence
+                        refs {item.evidence_count}
+                      </p>
                       <code>{item.continuation_command}</code>
                     </div>
                     <button

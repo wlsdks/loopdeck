@@ -255,6 +255,8 @@ describe("loop CLI command", () => {
     expect(text).toContain(
       "command prompt-coach loop brief --worktree primary-worktree",
     );
+    expect(text).toContain("merge readiness primary-worktree ready");
+    expect(text).toContain("evidence primary-worktree evidence present refs 2");
     expect(text).toContain(
       "worktree primary-worktree snapshots 1 sessions 1 latest passed",
     );
@@ -284,6 +286,7 @@ describe("loop CLI command", () => {
           snapshots?: number;
           sessions?: number;
           latest_outcome_status?: string;
+          evidence_count?: number;
         }>;
         command_center?: {
           title?: string;
@@ -291,6 +294,12 @@ describe("loop CLI command", () => {
           review_items?: Array<{
             worktree?: string;
             recommendation?: string;
+            evidence_count?: number;
+            merge_readiness?: {
+              status?: string;
+              evidence?: string;
+              next_action?: string;
+            };
           }>;
         };
       };
@@ -315,12 +324,14 @@ describe("loop CLI command", () => {
           snapshots: 1,
           sessions: 1,
           latest_outcome_status: "passed",
+          evidence_count: 2,
         },
         {
           worktree: "other-worktree",
           snapshots: 1,
           sessions: 1,
           latest_outcome_status: "passed",
+          evidence_count: 1,
         },
       ],
       command_center: {
@@ -332,12 +343,24 @@ describe("loop CLI command", () => {
             recommendation: "ready for continuation",
             continuation_command:
               "prompt-coach loop brief --worktree primary-worktree",
+            evidence_count: 2,
+            merge_readiness: {
+              status: "ready",
+              evidence: "evidence present",
+              next_action: "compare evidence before merge",
+            },
           },
           {
             worktree: "other-worktree",
             recommendation: "ready for continuation",
             continuation_command:
               "prompt-coach loop brief --worktree other-worktree",
+            evidence_count: 1,
+            merge_readiness: {
+              status: "ready",
+              evidence: "evidence present",
+              next_action: "compare evidence before merge",
+            },
           },
         ],
       },

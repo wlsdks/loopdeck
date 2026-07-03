@@ -435,6 +435,8 @@ function formatLoopStatus(status: LoopdeckStatus): string {
         .slice(0, 3)
         .flatMap((item) => [
           `review ${item.worktree} ${item.recommendation}`,
+          `merge readiness ${item.worktree} ${item.merge_readiness.status}`,
+          `evidence ${item.worktree} ${item.merge_readiness.evidence} refs ${item.evidence_count}`,
           `command ${item.continuation_command}`,
         ]) ?? []
     ),

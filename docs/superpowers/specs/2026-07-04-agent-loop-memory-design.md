@@ -1350,6 +1350,37 @@ Do not add:
 - prompt body, outcome summary, transcript, compact summary, raw path, API
   token, or provider credential output
 
+### Slice 4.42: Command Center Merge-Readiness Evidence Grouping
+
+Add:
+
+- `evidence_count` metadata on worktree activity and command-center review
+  items, derived only from the latest snapshot outcome evidence ref count
+- `merge_readiness` metadata on each command-center review item with safe
+  status, evidence presence, and next-action labels
+- shared readiness rules:
+  - no evidence refs means `missing_evidence`
+  - non-passed latest outcome with evidence means `needs_review`
+  - passed latest outcome with evidence means `ready`
+- CLI `loop status` text output that prints merge readiness and evidence count
+  for each review item
+- MCP `get_loopdeck_status` output schema coverage for the new fields
+- web Loops command-center rendering for merge readiness and evidence ref count
+- focused domain, CLI, MCP schema/runtime, and web tests proving the grouping
+  does not reveal evidence ref strings, outcome summaries, prompt bodies, raw
+  paths, transcripts, compact summaries, API tokens, or provider credentials
+
+Do not add:
+
+- raw evidence ref strings to status, command-center, or web summary output
+- automatic merge, conflict prediction, branch checkout, or git writes
+- hidden external model calls or background agent evaluation
+- new database schema/index migration
+- writes to `AGENTS.md`, `CLAUDE.md`, project docs, memory files, or git state
+- package, plugin, slash command, hook, or MCP server-name rename
+- prompt body, outcome summary, transcript, compact summary, raw path, API
+  token, or provider credential output
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

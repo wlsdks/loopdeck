@@ -204,7 +204,10 @@
 - [x] Task 44 RED: command-center review item별 selected brief shortcut/command metadata가 없어 focused tests 실패 확인
 - [x] Task 44 GREEN: `continuation_command`, CLI/MCP schema, web `Copy review brief` action, App filtered brief copy 연결
 - [x] Task 44 PRIVACY: continuation brief outcome summary가 unsafe raw path/secret-looking text를 포함하면 출력하지 않도록 회귀 테스트와 필터 추가
-- [ ] 다음 slice: command-center merge-readiness evidence grouping 재선정
+- [x] Task 45 RED: command-center review item에 merge-readiness/evidence grouping metadata가 없어 domain/web/CLI/MCP focused tests 실패 확인
+- [x] Task 45 GREEN: `evidence_count`와 `merge_readiness`를 shared status, CLI status, MCP schema, web Loops summary에 연결
+- [x] Task 45 PRIVACY: evidence refs 원문, unsafe raw path, outcome summary, prompt body가 status/summary surface에 노출되지 않는 회귀 테스트 유지
+- [ ] 다음 slice: merge-readiness를 사용한 review-before-merge workflow 설계 또는 web/API QA 보강 재선정
 
 ### 판단 기준
 

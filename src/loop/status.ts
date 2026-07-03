@@ -48,12 +48,23 @@ export type LoopdeckStatusActivityWorktree = {
   latest_snapshot_id: string;
   latest_created_at: string;
   latest_outcome_status: LoopSnapshot["outcome"]["status"];
+  evidence_count: number;
+};
+
+export type LoopdeckStatusActivityMergeReadiness = {
+  status: "ready" | "needs_review" | "missing_evidence";
+  evidence: "evidence present" | "missing evidence";
+  next_action:
+    | "compare evidence before merge"
+    | "review outcome before merge"
+    | "record loop outcome evidence";
 };
 
 export type LoopdeckStatusActivityCommandCenterItem =
   LoopdeckStatusActivityWorktree & {
     recommendation: "review before merge" | "ready for continuation";
     continuation_command: string;
+    merge_readiness: LoopdeckStatusActivityMergeReadiness;
   };
 
 export type LoopdeckStatusActivityCommandCenter = {
@@ -181,6 +192,7 @@ function createCommandCenter(
         ? ("ready for continuation" as const)
         : ("review before merge" as const),
     continuation_command: continuationCommandForWorktree(worktree),
+    merge_readiness: mergeReadinessForWorktree(worktree),
   }));
   const primary = reviewItems.find(
     (item) => item.recommendation === "review before merge",
@@ -192,6 +204,32 @@ function createCommandCenter(
       ? `review ${primary.worktree} before merge`
       : "compare worktrees before merge",
     review_items: reviewItems,
+  };
+}
+
+function mergeReadinessForWorktree(
+  worktree: LoopdeckStatusActivityWorktree,
+): LoopdeckStatusActivityMergeReadiness {
+  if (worktree.evidence_count === 0) {
+    return {
+      status: "missing_evidence",
+      evidence: "missing evidence",
+      next_action: "record loop outcome evidence",
+    };
+  }
+
+  if (worktree.latest_outcome_status !== "passed") {
+    return {
+      status: "needs_review",
+      evidence: "evidence present",
+      next_action: "review outcome before merge",
+    };
+  }
+
+  return {
+    status: "ready",
+    evidence: "evidence present",
+    next_action: "compare evidence before merge",
   };
 }
 
@@ -248,6 +286,7 @@ function summarizeWorktreeActivity(
       latest_snapshot_id: group.latest.id,
       latest_created_at: group.latest.created_at,
       latest_outcome_status: group.latest.outcome.status,
+      evidence_count: group.latest.outcome.evidence_refs.length,
     }))
     .sort((left, right) =>
       right.latest_created_at.localeCompare(left.latest_created_at),

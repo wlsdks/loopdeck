@@ -146,6 +146,7 @@ describe("createLoopdeckStatus", () => {
           latest_snapshot_id: "loop_latest",
           latest_created_at: "2026-07-04T01:00:00.000Z",
           latest_outcome_status: "passed",
+          evidence_count: 1,
         },
         {
           worktree: "main-worktree",
@@ -155,6 +156,7 @@ describe("createLoopdeckStatus", () => {
           latest_snapshot_id: "loop_previous",
           latest_created_at: "2026-07-04T01:00:00.000Z",
           latest_outcome_status: "passed",
+          evidence_count: 1,
         },
       ],
       command_center: {
@@ -169,9 +171,15 @@ describe("createLoopdeckStatus", () => {
             latest_snapshot_id: "loop_latest",
             latest_created_at: "2026-07-04T01:00:00.000Z",
             latest_outcome_status: "passed",
+            evidence_count: 1,
             recommendation: "ready for continuation",
             continuation_command:
               "prompt-coach loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
+            merge_readiness: {
+              status: "ready",
+              evidence: "evidence present",
+              next_action: "compare evidence before merge",
+            },
           },
           {
             worktree: "main-worktree",
@@ -181,9 +189,15 @@ describe("createLoopdeckStatus", () => {
             latest_snapshot_id: "loop_previous",
             latest_created_at: "2026-07-04T01:00:00.000Z",
             latest_outcome_status: "passed",
+            evidence_count: 1,
             recommendation: "ready for continuation",
             continuation_command:
               "prompt-coach loop brief --worktree main-worktree --branch codex/agent-loop-memory-design",
+            merge_readiness: {
+              status: "ready",
+              evidence: "evidence present",
+              next_action: "compare evidence before merge",
+            },
           },
         ],
       },
@@ -204,7 +218,7 @@ describe("createLoopdeckStatus", () => {
           outcome: {
             status: "unknown",
             summary: "Investigate before merge",
-            evidence_refs: ["pnpm test"],
+            evidence_refs: ["pnpm test", "/Users/example/private-project/log.txt"],
           },
         }),
         loopSnapshot({
@@ -229,11 +243,17 @@ describe("createLoopdeckStatus", () => {
           latest_snapshot_id: "loop_needs_review",
           latest_created_at: "2026-07-04T01:00:00.000Z",
           latest_outcome_status: "unknown",
+          evidence_count: 2,
           sessions: 1,
           snapshots: 1,
           recommendation: "review before merge",
           continuation_command:
             "prompt-coach loop brief --worktree agent-loop-worktree --branch feature/agent-loop",
+          merge_readiness: {
+            status: "needs_review",
+            evidence: "evidence present",
+            next_action: "review outcome before merge",
+          },
         },
         {
           worktree: "main-worktree",
@@ -241,15 +261,22 @@ describe("createLoopdeckStatus", () => {
           latest_snapshot_id: "loop_ready",
           latest_created_at: "2026-07-04T01:00:00.000Z",
           latest_outcome_status: "passed",
+          evidence_count: 1,
           sessions: 1,
           snapshots: 1,
           recommendation: "ready for continuation",
           continuation_command:
             "prompt-coach loop brief --worktree main-worktree --branch main",
+          merge_readiness: {
+            status: "ready",
+            evidence: "evidence present",
+            next_action: "compare evidence before merge",
+          },
         },
       ],
     });
     expect(serialized).not.toContain("Investigate before merge");
+    expect(serialized).not.toContain("/Users/example/private-project/log.txt");
     expect(serialized).not.toContain("Make this better");
     expect(serialized).not.toContain("/Users/example");
     expect(serialized).not.toContain("sk-proj-secret");
