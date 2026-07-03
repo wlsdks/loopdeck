@@ -15,6 +15,19 @@
 - `prompt-coach`의 기존 privacy/local-first 원칙은 유지하되 제품 포지션은 prompt 단위에서 agent loop/worktree/session 단위로 확장한다.
 - 설계 문서는 실제 TDD 구현 계획으로 내려갈 수 있는 첫 slice를 포함해야 한다.
 
+## 2026-07-04 Loop Snapshot CLI Implementation Plan
+
+- [x] 설계 문서의 Slice 1 범위를 CLI/storage/domain으로 제한
+- [x] CLI, SQLite storage, migration, prompt summary 패턴 확인
+- [x] `docs/superpowers/plans/2026-07-04-loop-snapshot-cli-implementation.md` 작성
+- [x] placeholder scan과 `git diff --check` 검증
+
+### 판단 기준
+
+- 구현 계획은 `prompt-coach` CLI/package 이름을 유지하고 Loopdeck rename은 별도 slice로 남긴다.
+- 각 단계는 실패 테스트, 최소 구현, focused test, commit 단위로 쪼갠다.
+- 계획은 prompt body/raw path/privacy 경계를 첫 slice의 검증 조건으로 포함해야 한다.
+
 ## 2026-05-04 Habit Coach Panel Extraction
 
 - [x] 기능/코드/UI 관점에서 다음 고효과 개선 후보 재점검
