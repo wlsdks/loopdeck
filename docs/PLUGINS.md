@@ -104,6 +104,11 @@ The plugin exposes:
 - `/prompt-coach:habits` to summarize recurring prompt habit gaps
 - `/prompt-coach:open` to open the local archive
 
+Claude Code slash commands remain under `/prompt-coach:*` during the Loopdeck
+migration. The npm package also installs a `loopdeck` CLI alias for manual
+terminal fallbacks, but plugin command ids stay stable until a dedicated plugin
+rename plan is ready.
+
 Prompt capture still uses Claude Code hook configuration in settings files. The
 supported install paths are:
 

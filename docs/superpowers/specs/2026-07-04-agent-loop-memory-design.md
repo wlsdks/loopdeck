@@ -790,6 +790,28 @@ Do not add:
 - hidden external LLM summarization
 - plugin command id rename
 
+### Slice 4.17: Plugin CLI Alias Guidance
+
+Add:
+
+- Claude Code command docs that check for either `prompt-coach` or `loopdeck`
+  when running manual CLI fallbacks
+- setup/status/coach command docs that show `loopdeck` as the product-name CLI
+  alias while preserving existing `prompt-coach` examples
+- Codex plugin default prompt that advertises the `loopdeck` CLI alias for
+  manual terminal workflows
+- README and PLUGINS documentation clarifying that Claude Code slash commands
+  remain under `/prompt-coach:*` during the migration
+- packaging tests proving this compatibility guidance is present
+
+Do not add:
+
+- `/loopdeck:*` slash command namespace before a dedicated plugin rename plan
+- removal of `/prompt-coach:*` commands
+- plugin id rename
+- hook marker rename
+- MCP server name rename
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

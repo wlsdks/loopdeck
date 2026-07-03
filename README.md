@@ -521,6 +521,10 @@ The Claude Code plugin provides slash commands:
 /prompt-coach:open
 ```
 
+Claude Code slash commands remain under /prompt-coach:* during the Loopdeck
+migration. Existing plugin users can keep those commands, while manual terminal
+fallbacks can use the loopdeck CLI alias when preferred.
+
 `/prompt-coach:guard` opens an interactive picker (off / context / ask /
 block-and-copy) that flips the `UserPromptSubmit` rewrite-guard mode without
 requiring you to remember CLI flags. Run `prompt-coach hook status` to see

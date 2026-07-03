@@ -34,6 +34,7 @@
     "defaultPrompt": [
       "Set up prompt-coach for this machine",
       "Check whether prompt-coach is capturing Codex prompts",
+      "Use the loopdeck CLI alias for my next manual command",
       "Show my prompt-coach hook rewrite-guard mode",
       "Toggle the prompt-coach rewrite guard between off / context / ask / block-and-copy",
       "Show my prompt-coach buddy side pane command",

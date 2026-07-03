@@ -133,16 +133,20 @@ describe("plugin packaging files", () => {
     expect(setup).toContain(
       "prompt-coach setup --profile coach --register-mcp --dry-run",
     );
+    expect(setup).toContain("command -v prompt-coach || command -v loopdeck");
+    expect(setup).toContain("loopdeck setup --profile coach --register-mcp");
     expect(setup).toContain(
       "prompt-coach setup --profile coach --register-mcp",
     );
     expect(setup).toContain("prompt-coach statusline claude-code");
     expect(status).toContain("prompt-coach doctor claude-code");
+    expect(status).toContain("loopdeck doctor claude-code");
     expect(status).toContain("prompt-coach statusline claude-code");
     expect(buddy).toContain("prompt-coach buddy");
     expect(buddy).toContain("prompt-coach buddy --json");
     expect(coach).toContain("prompt-coach:coach_prompt");
     expect(coach).toContain("prompt-coach coach --json");
+    expect(coach).toContain("loopdeck coach --json");
     expect(score).toContain("prompt-coach score --json");
     expect(score).toContain("prompt-coach:score_prompt_archive");
     expect(judge).toContain("prompt-coach:prepare_agent_judge_batch");
@@ -184,6 +188,7 @@ describe("plugin packaging files", () => {
     expect(manifest.interface.defaultPrompt).toEqual(
       expect.arrayContaining([
         "Show my prompt-coach buddy side pane command",
+        "Use the loopdeck CLI alias for my next manual command",
         "Show my prompt-coach hook rewrite-guard mode",
         "Toggle the prompt-coach rewrite guard between off / context / ask / block-and-copy",
         "Score my latest captured prompt",
@@ -199,6 +204,20 @@ describe("plugin packaging files", () => {
     expect(manifest.interface.defaultPrompt).not.toContain(
       "Review my current project AGENTS.md or CLAUDE.md rules",
     );
+  });
+
+  it("documents plugin command namespace compatibility during the Loopdeck migration", () => {
+    const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
+    const plugins = readFileSync(join(process.cwd(), "docs/PLUGINS.md"), "utf8");
+
+    expect(readme).toContain(
+      "Claude Code slash commands remain under /prompt-coach:*",
+    );
+    expect(readme).toContain("use the loopdeck CLI alias");
+    expect(plugins).toContain(
+      "Claude Code slash commands remain under `/prompt-coach:*`",
+    );
+    expect(plugins).toContain("`loopdeck` CLI alias");
   });
 
   it("ships a fail-open Codex prompt hook without embedding secrets", () => {

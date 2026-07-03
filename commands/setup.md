@@ -8,7 +8,7 @@ allowed-tools: Bash, Read, AskUserQuestion
 First check that the CLI is installed:
 
 ```bash
-command -v prompt-coach
+command -v prompt-coach || command -v loopdeck
 ```
 
 If this returns nothing, stop and tell the user to install the CLI first. After
@@ -33,12 +33,17 @@ this is the preferred path because it avoids relying on a global
 `prompt-coach` binary in PATH. Use `pnpm setup` when the user just wants
 "make it work"; only fall back to the explicit `prompt-coach setup ...`
 invocations below when the user wants a different profile or a dry-run preview.
+The `loopdeck` CLI alias points at the same binary and can be used for manual
+terminal workflows, but Claude Code slash commands remain under
+`/prompt-coach:*` during the migration.
 
 For the lowest-friction setup with the explicit invocation, preview the
 coach profile first:
 
 ```bash
 prompt-coach setup --profile coach --register-mcp --dry-run
+# or, with the product-name CLI alias:
+loopdeck setup --profile coach --register-mcp --dry-run
 ```
 
 Explain the planned changes to the user. The setup may initialize
@@ -61,6 +66,8 @@ If the user approves, run:
 
 ```bash
 prompt-coach setup --profile coach --register-mcp
+# or:
+loopdeck setup --profile coach --register-mcp
 ```
 
 If the user approved automatic web opening, include `--open-web` in the real

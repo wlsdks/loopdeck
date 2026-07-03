@@ -20,6 +20,7 @@ If MCP is not configured, use the privacy-safe CLI fallback:
 
 ```bash
 prompt-coach coach --json
+loopdeck coach --json
 ```
 
 Summarize the result as:

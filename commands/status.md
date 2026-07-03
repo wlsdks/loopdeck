@@ -8,16 +8,18 @@ allowed-tools: Bash
 First check that the CLI is installed:
 
 ```bash
-command -v prompt-coach
+command -v prompt-coach || command -v loopdeck
 ```
 
-If this returns nothing, report that the plugin is installed but the
-`prompt-coach` CLI is not on `PATH` yet.
+If this returns nothing, report that the plugin is installed but neither the
+`prompt-coach` CLI nor the `loopdeck` alias is on `PATH` yet.
 
-Run:
+Run the `prompt-coach` commands by default. If only the product-name alias is
+available, use the matching `loopdeck` command:
 
 ```bash
 prompt-coach doctor claude-code
+loopdeck doctor claude-code
 prompt-coach statusline claude-code
 ```
 
