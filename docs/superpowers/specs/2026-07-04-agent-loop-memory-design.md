@@ -633,16 +633,48 @@ Do not add:
 - returning prompt bodies, raw paths, transcripts, compact summaries, or
   external LLM results
 
-### Slice 5: Brand Migration
+### Slice 4.10: Product-Facing Brand Migration
 
 Add:
 
-- product name in README/docs: Loopdeck
-- GitHub repo rename and remote update
-- aliases for old commands
-- package rename plan
+- product name in README/docs: Loopdeck (**implemented**)
+- GitHub repo rename and remote update (**implemented**)
+- package/plugin product-facing metadata update (**implemented**)
+- explicit compatibility statement that npm package name, CLI binary, and
+  plugin command ids remain `prompt-coach` during the transition
+  (**implemented**)
 
-Do this after Slice 1 or 2 proves the new direction.
+Do not add:
+
+- `loopdeck` CLI/package alias in the same slice
+- npm package rename
+- plugin command id rename
+- marketplace command rename without compatibility aliases
+
+### Slice 4.11: Shared Loop Status Model
+
+Add:
+
+- `src/loop/status.ts` pure model for readiness, latest safe snapshot,
+  compact refresh marker, next action, and privacy contract
+- model-level tests proving no prompt bodies, compact summaries, custom
+  instructions, transcript bodies, raw paths, or secret-looking tokens are
+  returned
+- CLI `prompt-coach loop status` powered by the shared model
+- MCP `get_loopdeck_status` powered by the shared model, with MCP-only
+  `available_tools` added at the boundary
+- `/api/v1/loops` response with a top-level `status` object from the shared
+  model plus list items from the same safe snapshot mapper
+- web Loops header that consumes server-provided status instead of inferring
+  readiness from list length
+
+Do not add:
+
+- package or CLI alias migration
+- new scheduler behavior
+- hidden external LLM calls
+- raw prompt detail panel
+- compact summary replay
 
 ## 10. First Implementation Plan Boundary
 

@@ -138,7 +138,10 @@
 - [x] Task 13 RED: package/plugin product-facing metadata가 Loopdeck이 아니라는 manifest 테스트 실패 확인
 - [x] Task 13 GREEN: package/plugin/README/docs product-facing metadata를 Loopdeck으로 갱신하고 CLI/package id는 `prompt-coach` 유지
 - [x] Task 13 META: GitHub repo를 `wlsdks/loopdeck`으로 rename, origin URL과 repo description/topics 갱신
-- [ ] 다음 slice: CLI/MCP/web status model 공통화 또는 package/CLI alias migration plan
+- [x] Task 14 PLAN: CLI/MCP/web status model 공통화 구현 계획을 `docs/superpowers/plans/2026-07-04-loop-status-model-commonization.md`로 작성
+- [ ] Task 14 RED: CLI/MCP/API/web loop status surfaces가 공유 status shape 없이 drift할 수 있음을 focused test로 고정
+- [ ] Task 14 GREEN: `src/loop/status.ts` 공유 모델이 CLI `loop status`, MCP `get_loopdeck_status`, `/api/v1/loops`, web Loops status header를 구동
+- [ ] 다음 slice: package/CLI alias migration plan 또는 loop memory in continuation brief
 
 ### 판단 기준
 
@@ -219,6 +222,14 @@
 - package/plugin product-facing description, homepage, repository, display name은 Loopdeck을 사용한다.
 - npm package name, CLI binary, plugin command id는 compatibility window 동안 `prompt-coach`를 유지한다.
 - README/docs는 `Loopdeck`을 제품명으로 소개하고 `prompt-coach`를 현재 CLI/package 이름으로 설명한다.
+
+### Shared Loop Status Model 판단 기준
+
+- CLI `prompt-coach loop status`, MCP `get_loopdeck_status`, `/api/v1/loops`, web Loops status header는 같은 `src/loop/status.ts` 모델에서 나온 readiness, latest snapshot, compact refresh, next action 값을 사용한다.
+- 공유 모델은 prompt body, compact summary, custom instructions, transcript body, raw path, secret-looking token을 입력으로 받거나 출력하지 않는다.
+- MCP surface는 `available_tools`만 추가하고 readiness 판단 자체는 shared model을 따른다.
+- Web API는 list item metadata와 별개로 `status` object를 반환해 web client가 list length로 상태를 재추론하지 않게 한다.
+- package/CLI alias migration은 이 slice에서 하지 않는다.
 
 ## 2026-05-04 Habit Coach Panel Extraction
 
@@ -1429,8 +1440,8 @@
 
 - README 상단에 Quick Start를 추가해 `prompt-coach` CLI 설치와 Claude Code/Codex marketplace 추가를 분리했다.
 - marketplace plugin은 CLI binary를 설치하지 않으므로, 권장 순서를 CLI 설치 후 marketplace 추가로 명시했다.
-- Claude Code는 `/plugin marketplace add wlsdks/prompt-coach`, `/plugin install prompt-coach`, `/reload-plugins`, `/prompt-coach:setup` 순서로 정리했다.
-- Codex는 `codex plugin marketplace add wlsdks/prompt-coach` 후 `prompt-coach setup`으로 hook을 설치하고 Codex hooks를 활성화한다고 정리했다.
+- Claude Code는 `/plugin marketplace add wlsdks/loopdeck`, `/plugin install prompt-coach`, `/reload-plugins`, `/prompt-coach:setup` 순서로 정리했다.
+- Codex는 `codex plugin marketplace add wlsdks/loopdeck` 후 `prompt-coach setup`으로 hook을 설치하고 Codex hooks를 활성화한다고 정리했다.
 - 검증 명령: `git diff --check`, `pnpm pack:dry-run` 통과. Node 20.20.0에서 실행되어 `engines.node >=22 <25` 경고는 계속 발생한다.
 
 ## 2026-05-02 Claude HUD-style Plugin
@@ -1445,7 +1456,7 @@
 
 ### 점검 결과
 
-- Claude Code repo-local marketplace 파일을 `.claude-plugin/marketplace.json`에 추가했다. 사용 흐름은 `/plugin marketplace add wlsdks/prompt-coach`, `/plugin install prompt-coach`, `/reload-plugins`다.
+- Claude Code repo-local marketplace 파일을 `.claude-plugin/marketplace.json`에 추가했다. 사용 흐름은 `/plugin marketplace add wlsdks/loopdeck`, `/plugin install prompt-coach`, `/reload-plugins`다.
 - Claude Code plugin manifest `.claude-plugin/plugin.json`에 `/prompt-coach:setup`, `/prompt-coach:status`, `/prompt-coach:open` command 문서를 연결했다.
 - `/prompt-coach:setup`은 CLI 존재 여부를 먼저 확인하고, `prompt-coach setup --dry-run`을 보여준 뒤 승인 시 실제 setup을 실행하도록 작성했다. statusLine은 기존 Claude `statusLine`을 대체할 수 있어서 별도 승인 후 `install-statusline`을 실행하게 했다.
 - `prompt-coach statusline claude-code`, `install-statusline claude-code`, `uninstall-statusline claude-code`를 추가했다. statusLine은 capture on/paused/setup needed, server 상태, last ingest 상태를 한 줄로 출력한다.
