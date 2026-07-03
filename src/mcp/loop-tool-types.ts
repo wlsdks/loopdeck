@@ -1,5 +1,6 @@
 import type { LoopOutcomeStatus } from "../loop/types.js";
 import type { LoopBriefCompactBoundary } from "../loop/brief.js";
+import type { LoopdeckStatus } from "../loop/status.js";
 import type {
   InstructionPatchApplyResult,
   InstructionPatchProposal,
@@ -48,26 +49,18 @@ export type LoopdeckToolPrivacy = {
   returns_raw_paths: false;
 };
 
-export type GetLoopdeckStatusToolResult = {
-  status: "ready" | "empty" | "setup_needed";
-  snapshot_count: number;
-  latest_snapshot?: {
-    id: string;
-    created_at: string;
-    tool: string;
-    source: string;
-    project: string;
-    branch?: string;
-    worktree?: string;
-    prompt_count: number;
-    average_prompt_score?: number;
-    top_gaps: string[];
-  };
-  latest_compact_boundary?: LoopBriefCompactBoundary;
-  available_tools: string[];
-  next_actions: string[];
-  privacy: LoopdeckToolPrivacy;
-};
+export type GetLoopdeckStatusToolResult =
+  | (LoopdeckStatus & {
+      available_tools: string[];
+    })
+  | {
+      status: "setup_needed";
+      snapshot_count: 0;
+      available_tools: string[];
+      next_action: string;
+      next_actions: string[];
+      privacy: LoopdeckStatus["privacy"];
+    };
 
 export type PrepareLoopBriefToolResult =
   | {

@@ -100,6 +100,21 @@ export type LoopSummary = {
 };
 
 export type LoopListResponse = {
+  status: {
+    status: "ready" | "empty";
+    snapshot_count: number;
+    latest_snapshot?: LoopSummary;
+    latest_compact_boundary?: LoopSummary["compact_boundary"];
+    next_action: string;
+    next_actions: string[];
+    privacy: {
+      local_only: true;
+      external_calls: false;
+      returns_prompt_bodies: false;
+      returns_raw_paths: false;
+      returns_compact_content: false;
+    };
+  };
   items: LoopSummary[];
   privacy: {
     local_only: true;

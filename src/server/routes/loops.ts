@@ -4,6 +4,10 @@ import {
   createLoopBrief,
   latestCompactBoundaryAfterSnapshot,
 } from "../../loop/brief.js";
+import {
+  createLoopdeckStatus,
+  toLoopdeckStatusSnapshot,
+} from "../../loop/status.js";
 import type {
   CompactBoundaryStoragePort,
   LoopSnapshotStoragePort,
@@ -26,9 +30,14 @@ export function registerLoopRoutes(
     const snapshots = options.storage.listLoopSnapshots?.({ limit: 100 }).items ?? [];
     const boundaries =
       options.storage.listCompactBoundaries?.({ limit: 100 }).items ?? [];
+    const status = createLoopdeckStatus({
+      snapshots,
+      compactBoundaries: boundaries,
+    });
 
     return {
       data: {
+        status,
         items: snapshots.map((snapshot) => {
           const compactBoundary = latestCompactBoundaryAfterSnapshot(
             snapshot,
@@ -36,17 +45,7 @@ export function registerLoopRoutes(
           );
 
           return {
-            id: snapshot.id,
-            created_at: snapshot.created_at,
-            tool: snapshot.tool,
-            source: snapshot.source,
-            project: snapshot.cwd_label,
-            branch: snapshot.branch,
-            worktree: snapshot.worktree_label,
-            prompt_count: snapshot.event_counts.prompts,
-            average_prompt_score: snapshot.quality.average_prompt_score,
-            top_gaps: snapshot.quality.top_gaps,
-            outcome_status: snapshot.outcome.status,
+            ...toLoopdeckStatusSnapshot(snapshot),
             compact_boundary: compactBoundary,
           };
         }),

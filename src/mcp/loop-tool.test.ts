@@ -41,7 +41,9 @@ describe("Loopdeck MCP tools", () => {
         project: "private-project",
         prompt_count: 2,
         average_prompt_score: 58,
+        outcome_status: "unknown",
       },
+      next_action: "prompt-coach loop brief",
       next_actions: expect.arrayContaining([
         expect.stringContaining("prepare_loop_brief"),
       ]),
@@ -50,6 +52,7 @@ describe("Loopdeck MCP tools", () => {
         external_calls: false,
         returns_prompt_bodies: false,
         returns_raw_paths: false,
+        returns_compact_content: false,
       },
     });
     expect(serialized).not.toContain("Make this better");

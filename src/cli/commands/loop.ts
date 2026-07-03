@@ -17,6 +17,10 @@ import {
   decideLoopMemoryCandidate,
   type LoopMemoryCandidateDecision,
 } from "../../loop/memory-candidate.js";
+import {
+  createLoopdeckStatus,
+  type LoopdeckStatus,
+} from "../../loop/status.js";
 import type { LoopSnapshot, LoopSnapshotSource } from "../../loop/types.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import { registerLoopScheduleCommand } from "./loop-schedule.js";
@@ -151,7 +155,10 @@ export function loopCollectForCli(options: LoopCliOptions = {}): string {
 
 export function loopStatusForCli(options: LoopCliOptions = {}): string {
   return withStorage(options.dataDir, (storage) => {
-    const status = createLoopStatus(storage);
+    const status = createLoopdeckStatus({
+      snapshots: storage.listLoopSnapshots({ limit: 100 }).items,
+      compactBoundaries: storage.listCompactBoundaries({ limit: 20 }).items,
+    });
 
     return options.json ? JSON.stringify(status, null, 2) : formatLoopStatus(status);
   });
@@ -345,7 +352,7 @@ function formatLoopSnapshot(snapshot: LoopSnapshot): string {
   ].join("\n");
 }
 
-function formatLoopStatus(status: ReturnType<typeof createLoopStatus>): string {
+function formatLoopStatus(status: LoopdeckStatus): string {
   return [
     `Loopdeck status ${status.status}`,
     `snapshots ${status.snapshot_count}`,
@@ -448,45 +455,4 @@ function formatInstructionPatchApplyResult(
     "",
     "Privacy: local-only, no prompt bodies, no raw paths, no external calls.",
   ].join("\n");
-}
-
-function createLoopStatus(storage: ReturnType<typeof createSqlitePromptStorage>) {
-  const snapshots = storage.listLoopSnapshots({ limit: 100 }).items;
-  const latest = snapshots.at(0);
-  const compactBoundary = latest
-    ? latestCompactBoundaryAfterSnapshot(
-        latest,
-        storage.listCompactBoundaries({ limit: 20 }).items,
-      )
-    : undefined;
-
-  return {
-    status: snapshots.length > 0 ? "ready" : "empty",
-    snapshot_count: snapshots.length,
-    latest_snapshot: latest ? toSafeLoopStatusSnapshot(latest) : undefined,
-    latest_compact_boundary: compactBoundary,
-    next_action: compactBoundary
-      ? "prompt-coach loop collect"
-      : latest
-        ? "prompt-coach loop brief"
-        : "prompt-coach loop collect",
-    privacy: {
-      local_only: true,
-      returns_prompt_bodies: false,
-      returns_raw_paths: false,
-    },
-  };
-}
-
-function toSafeLoopStatusSnapshot(snapshot: LoopSnapshot) {
-  return {
-    id: snapshot.id,
-    created_at: snapshot.created_at,
-    tool: snapshot.tool,
-    source: snapshot.source,
-    project: snapshot.cwd_label,
-    prompt_count: snapshot.event_counts.prompts,
-    average_prompt_score: snapshot.quality.average_prompt_score,
-    top_gaps: snapshot.quality.top_gaps,
-  };
 }

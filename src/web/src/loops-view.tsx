@@ -21,7 +21,7 @@ export function LoopsView({
     return <section className="panel">Loading loop snapshots...</section>;
   }
 
-  if (items.length === 0) {
+  if (!loops || items.length === 0) {
     return (
       <section className="panel loops-empty">
         <div>
@@ -46,6 +46,10 @@ export function LoopsView({
         <div>
           <span className="panel-eyebrow">Loopdeck</span>
           <h2>{items.length} loop snapshots</h2>
+          <p className="loops-status-line">
+            Loopdeck status {loops.status.status}
+          </p>
+          <p className="loops-status-line">Next: {loops.status.next_action}</p>
           <p>
             Recent local agent loops grouped by safe project metadata. Compact
             markers show when a fresh snapshot should be collected.

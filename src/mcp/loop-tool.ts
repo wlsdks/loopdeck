@@ -9,7 +9,10 @@ import {
   proposeInstructionPatchFromMemory,
 } from "../loop/instruction-patch.js";
 import { decideLoopMemoryCandidate } from "../loop/memory-candidate.js";
-import type { LoopSnapshot } from "../loop/types.js";
+import {
+  createLoopdeckStatus,
+  loopdeckStatusPrivacy,
+} from "../loop/status.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import type { ScorePromptToolOptions } from "./score-tool-types.js";
 import type {
@@ -43,7 +46,7 @@ export function getLoopdeckStatusTool(
   args: GetLoopdeckStatusToolArguments,
   options: ScorePromptToolOptions = {},
 ): GetLoopdeckStatusToolResult {
-  const privacy = loopToolPrivacy();
+  const privacy = loopdeckStatusPrivacy();
 
   try {
     const config = loadPromptCoachConfig(options.dataDir);
@@ -55,35 +58,15 @@ export function getLoopdeckStatusTool(
 
     try {
       const snapshots = storage.listLoopSnapshots({ limit: 100 }).items;
-      const latest =
-        args.include_latest === false ? undefined : snapshots.at(0);
-      const latestForBoundary = snapshots.at(0);
-      const compactBoundary = latestForBoundary
-        ? latestCompactBoundaryAfterSnapshot(
-            latestForBoundary,
-            storage.listCompactBoundaries({ limit: 20 }).items,
-          )
-        : undefined;
-      const hasSnapshots = snapshots.length > 0;
+      const status = createLoopdeckStatus({
+        snapshots,
+        compactBoundaries: storage.listCompactBoundaries({ limit: 20 }).items,
+        includeLatest: args.include_latest !== false,
+      });
 
       return {
-        status: hasSnapshots ? "ready" : "empty",
-        snapshot_count: snapshots.length,
-        ...(latest ? { latest_snapshot: toSafeLatestLoopSnapshot(latest) } : {}),
-        ...(compactBoundary
-          ? { latest_compact_boundary: compactBoundary }
-          : {}),
+        ...status,
         available_tools: LOOP_TOOL_NAMES,
-        next_actions: hasSnapshots
-          ? [
-              "Use prepare_loop_brief to get a copy-ready continuation prompt for the latest loop.",
-              "Run prompt-coach loop collect again after the next agent turn to refresh the snapshot.",
-            ]
-          : [
-              "Run prompt-coach loop collect to create the first local loop snapshot.",
-              "Capture at least one Claude Code or Codex prompt before expecting useful loop context.",
-            ],
-        privacy,
       };
     } finally {
       storage.close();
@@ -93,6 +76,7 @@ export function getLoopdeckStatusTool(
       status: "setup_needed",
       snapshot_count: 0,
       available_tools: LOOP_TOOL_NAMES,
+      next_action: "prompt-coach setup",
       next_actions: [
         "Run prompt-coach init or prompt-coach setup before using Loopdeck MCP tools.",
         "Then run prompt-coach loop collect from the project you want to continue.",
@@ -432,23 +416,6 @@ export function applyInstructionPatchTool(
   } catch (error) {
     return loopToolError("apply_failed", errorMessage(error));
   }
-}
-
-function toSafeLatestLoopSnapshot(snapshot: LoopSnapshot) {
-  return {
-    id: snapshot.id,
-    created_at: snapshot.created_at,
-    tool: snapshot.tool,
-    source: snapshot.source,
-    project: snapshot.cwd_label,
-    ...(snapshot.branch ? { branch: snapshot.branch } : {}),
-    ...(snapshot.worktree_label ? { worktree: snapshot.worktree_label } : {}),
-    prompt_count: snapshot.event_counts.prompts,
-    ...(snapshot.quality.average_prompt_score === undefined
-      ? {}
-      : { average_prompt_score: snapshot.quality.average_prompt_score }),
-    top_gaps: snapshot.quality.top_gaps,
-  };
 }
 
 function loopToolPrivacy() {

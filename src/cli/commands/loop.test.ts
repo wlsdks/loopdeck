@@ -179,6 +179,21 @@ describe("loop CLI command", () => {
     expect(text).not.toContain("Make this better");
     expect(text).not.toContain("Compact summary with sk-proj-secret");
     expect(text).not.toContain("/Users/example");
+
+    const json = loopStatusForCli({ dataDir, json: true });
+    const parsed = JSON.parse(json) as {
+      latest_snapshot?: { outcome_status?: string };
+      next_actions?: string[];
+      privacy?: { returns_compact_content?: boolean };
+    };
+
+    expect(parsed.latest_snapshot?.outcome_status).toBe("unknown");
+    expect(parsed.next_actions).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("prompt-coach loop collect"),
+      ]),
+    );
+    expect(parsed.privacy?.returns_compact_content).toBe(false);
   });
 
   it("prints empty loop status guidance", () => {

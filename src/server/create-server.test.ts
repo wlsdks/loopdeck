@@ -339,6 +339,20 @@ describe("createServer P2 ingest boundary", () => {
     expect(response.statusCode).toBe(200);
     expect(response.json()).toMatchObject({
       data: {
+        status: {
+          status: "ready",
+          snapshot_count: 1,
+          latest_snapshot: {
+            id: "loop_web",
+            outcome_status: "unknown",
+          },
+          privacy: {
+            local_only: true,
+            returns_prompt_bodies: false,
+            returns_raw_paths: false,
+            returns_compact_content: false,
+          },
+        },
         items: [
           {
             id: "loop_web",

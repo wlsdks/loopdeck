@@ -17,6 +17,30 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(
         jsonResponse({
           data: {
+            status: {
+              status: "ready",
+              snapshot_count: 1,
+              latest_snapshot: {
+                id: "loop_web",
+                created_at: "2026-07-04T01:00:00.000Z",
+                tool: "codex",
+                source: "cli",
+                project: "private-project",
+                prompt_count: 2,
+                average_prompt_score: 58,
+                top_gaps: ["Goal clarity"],
+                outcome_status: "unknown",
+              },
+              next_action: "prompt-coach loop collect",
+              next_actions: ["Run prompt-coach loop collect again"],
+              privacy: {
+                local_only: true,
+                external_calls: false,
+                returns_prompt_bodies: false,
+                returns_raw_paths: false,
+                returns_compact_content: false,
+              },
+            },
             items: [
               {
                 id: "loop_web",
@@ -52,6 +76,8 @@ describe("web api export client", () => {
     const loops = await listLoops();
 
     expect(loops.items).toHaveLength(1);
+    expect(loops.status.status).toBe("ready");
+    expect(loops.status.next_action).toBe("prompt-coach loop collect");
     expect(loops.items[0]).toMatchObject({
       id: "loop_web",
       project: "private-project",
