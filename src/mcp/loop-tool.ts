@@ -58,10 +58,14 @@ export function getLoopdeckStatusTool(
 
     try {
       const snapshots = storage.listLoopSnapshots({ limit: 100 }).items;
+      const latest = snapshots.at(0);
       const status = createLoopdeckStatus({
         snapshots,
         compactBoundaries: storage.listCompactBoundaries({ limit: 20 }).items,
         includeLatest: args.include_latest !== false,
+        projectMemoryCount: latest
+          ? storage.listLoopMemories({ projectId: latest.project_id }).items.length
+          : 0,
       });
 
       return {

@@ -187,18 +187,25 @@ describe("loop CLI command", () => {
   it("prints compact-aware loop status without prompt bodies or raw paths", async () => {
     const dataDir = createTempDir();
     await seedPrompts(dataDir);
-    loopCollectForCli({
-      dataDir,
-      cwdPrefix: "/Users/example/private-project",
-      now: new Date("2026-07-04T01:00:00.000Z"),
-      cwd: "/Users/example/private-project",
-    });
+    const snapshot = JSON.parse(
+      loopCollectForCli({
+        dataDir,
+        json: true,
+        cwdPrefix: "/Users/example/private-project",
+        now: new Date("2026-07-04T01:00:00.000Z"),
+        cwd: "/Users/example/private-project",
+      }),
+    ) as { id: string };
+    seedLoopOutcome(dataDir, snapshot.id);
+    loopMemoryApproveForCli({ dataDir, approvedBy: "user" });
+    seedOtherProjectMemory(dataDir);
     seedCompactBoundary(dataDir);
 
     const text = loopStatusForCli({ dataDir });
 
     expect(text).toContain("Loopdeck status ready");
-    expect(text).toContain("snapshots 1");
+    expect(text).toContain("snapshots 2");
+    expect(text).toContain("approved memories 1");
     expect(text).toContain("latest loop");
     expect(text).toContain("project private-project");
     expect(text).toContain("compact boundary PostCompact at 2026-07-04T01:05:00.000Z");
@@ -210,17 +217,26 @@ describe("loop CLI command", () => {
     const json = loopStatusForCli({ dataDir, json: true });
     const parsed = JSON.parse(json) as {
       latest_snapshot?: { outcome_status?: string };
+      project_memory?: { approved_count?: number; included_in_brief?: boolean };
       next_actions?: string[];
       privacy?: { returns_compact_content?: boolean };
     };
 
-    expect(parsed.latest_snapshot?.outcome_status).toBe("unknown");
+    expect(parsed.latest_snapshot?.outcome_status).toBe("passed");
+    expect(parsed.project_memory).toEqual({
+      approved_count: 1,
+      included_in_brief: true,
+    });
     expect(parsed.next_actions).toEqual(
       expect.arrayContaining([
         expect.stringContaining("prompt-coach loop collect"),
       ]),
     );
     expect(parsed.privacy?.returns_compact_content).toBe(false);
+    expect(json).not.toContain(
+      "Scheduler lifecycle should stay plist-only unless the user explicitly asks for launchctl mutation.",
+    );
+    expect(json).not.toContain("This unrelated project memory should not appear");
   });
 
   it("prints empty loop status guidance", () => {

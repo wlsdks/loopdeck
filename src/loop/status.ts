@@ -26,9 +26,15 @@ export type LoopdeckStatusSnapshot = {
   outcome_status: LoopSnapshot["outcome"]["status"];
 };
 
+export type LoopdeckStatusProjectMemory = {
+  approved_count: number;
+  included_in_brief: boolean;
+};
+
 export type LoopdeckStatus = {
   status: LoopdeckStatusLevel;
   snapshot_count: number;
+  project_memory: LoopdeckStatusProjectMemory;
   latest_snapshot?: LoopdeckStatusSnapshot;
   latest_compact_boundary?: LoopBriefCompactBoundary;
   next_action: string;
@@ -44,8 +50,10 @@ export function createLoopdeckStatus(input: {
   snapshots: readonly LoopSnapshot[];
   compactBoundaries: readonly CompactBoundaryCandidate[];
   includeLatest?: boolean;
+  projectMemoryCount?: number;
 }): LoopdeckStatus {
   const latest = input.snapshots.at(0);
+  const projectMemoryCount = input.projectMemoryCount ?? 0;
   const compactBoundary = latest
     ? latestCompactBoundaryAfterSnapshot(latest, input.compactBoundaries)
     : undefined;
@@ -59,6 +67,10 @@ export function createLoopdeckStatus(input: {
   return {
     status: hasSnapshots ? "ready" : "empty",
     snapshot_count: input.snapshots.length,
+    project_memory: {
+      approved_count: projectMemoryCount,
+      included_in_brief: Boolean(latest && projectMemoryCount > 0),
+    },
     ...(latest && input.includeLatest !== false
       ? { latest_snapshot: toLoopdeckStatusSnapshot(latest) }
       : {}),

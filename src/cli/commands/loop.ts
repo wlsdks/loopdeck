@@ -155,9 +155,14 @@ export function loopCollectForCli(options: LoopCliOptions = {}): string {
 
 export function loopStatusForCli(options: LoopCliOptions = {}): string {
   return withStorage(options.dataDir, (storage) => {
+    const snapshots = storage.listLoopSnapshots({ limit: 100 }).items;
+    const latest = snapshots.at(0);
     const status = createLoopdeckStatus({
-      snapshots: storage.listLoopSnapshots({ limit: 100 }).items,
+      snapshots,
       compactBoundaries: storage.listCompactBoundaries({ limit: 20 }).items,
+      projectMemoryCount: latest
+        ? storage.listLoopMemories({ projectId: latest.project_id }).items.length
+        : 0,
     });
 
     return options.json ? JSON.stringify(status, null, 2) : formatLoopStatus(status);
@@ -364,6 +369,7 @@ function formatLoopStatus(status: LoopdeckStatus): string {
   return [
     `Loopdeck status ${status.status}`,
     `snapshots ${status.snapshot_count}`,
+    `approved memories ${status.project_memory.approved_count}`,
     status.latest_snapshot ? "latest loop" : "latest loop none",
     status.latest_snapshot
       ? `id ${status.latest_snapshot.id}`

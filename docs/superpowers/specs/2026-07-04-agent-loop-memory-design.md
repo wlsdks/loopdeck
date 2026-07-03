@@ -721,6 +721,29 @@ Do not add:
 - automatic instruction-file writes
 - package or CLI alias migration
 
+### Slice 4.14: Project-Scoped Memory Status
+
+Add:
+
+- shared `LoopdeckStatus.project_memory` summary with only
+  `approved_count` and `included_in_brief`
+- CLI `prompt-coach loop status` text and JSON showing the latest snapshot
+  project's approved memory count
+- MCP `get_loopdeck_status` result and schema exposing the same count
+- `/api/v1/loops` status payload exposing the same count for the latest
+  snapshot project
+- web Loops summary header showing the approved memory count
+- focused tests proving status surfaces do not expose memory statements,
+  evidence refs, prompt bodies, raw paths, or unrelated project memory text
+
+Do not add:
+
+- memory statements or evidence refs to status payloads
+- global cross-project memory counts in project status
+- semantic/vector memory retrieval
+- automatic instruction-file writes
+- package or CLI alias migration
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

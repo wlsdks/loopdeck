@@ -13,6 +13,7 @@ describe("LoopsView", () => {
 
     expect(html).toContain("Loopdeck status ready");
     expect(html).toContain("Next: prompt-coach loop brief");
+    expect(html).toContain("Approved memories 1");
     expect(html).not.toContain("Make this better");
     expect(html).not.toContain("Compact summary with sk-proj-secret");
     expect(html).not.toContain("/Users/example");
@@ -24,6 +25,10 @@ function loopList(): LoopListResponse {
     status: {
       status: "ready",
       snapshot_count: 1,
+      project_memory: {
+        approved_count: 1,
+        included_in_brief: true,
+      },
       latest_snapshot: loopSummary(),
       next_action: "prompt-coach loop brief",
       next_actions: [

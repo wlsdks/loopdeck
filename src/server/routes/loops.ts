@@ -33,9 +33,15 @@ export function registerLoopRoutes(
     const snapshots = options.storage.listLoopSnapshots?.({ limit: 100 }).items ?? [];
     const boundaries =
       options.storage.listCompactBoundaries?.({ limit: 100 }).items ?? [];
+    const latest = snapshots.at(0);
     const status = createLoopdeckStatus({
       snapshots,
       compactBoundaries: boundaries,
+      projectMemoryCount: latest
+        ? (options.storage.listLoopMemories?.({
+            projectId: latest.project_id,
+          }).items.length ?? 0)
+        : 0,
     });
 
     return {

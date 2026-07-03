@@ -77,6 +77,15 @@ export const GET_LOOPDECK_STATUS_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
       properties: {
         status: { type: "string", enum: ["ready", "empty", "setup_needed"] },
         snapshot_count: { type: "integer", minimum: 0 },
+        project_memory: {
+          type: "object",
+          required: ["approved_count", "included_in_brief"],
+          properties: {
+            approved_count: { type: "integer", minimum: 0 },
+            included_in_brief: { type: "boolean" },
+          },
+          additionalProperties: false,
+        },
         latest_snapshot: {
           type: "object",
           properties: {

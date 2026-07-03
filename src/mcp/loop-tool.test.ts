@@ -28,20 +28,33 @@ afterEach(() => {
 
 describe("Loopdeck MCP tools", () => {
   it("returns latest loop status without prompt bodies or raw paths", () => {
-    const dataDir = seedLoopSnapshot();
+    const dataDir = seedLoopSnapshot({
+      outcome: {
+        status: "passed",
+        summary:
+          "Shared status surfaces should use one model instead of duplicating readiness logic.",
+        evidence_refs: ["commit:11d8426", "test:pnpm test"],
+      },
+    });
+    recordLoopMemoryTool({ latest: true, approved_by: "user" }, { dataDir });
+    seedOtherProjectMemory(dataDir);
 
     const result = getLoopdeckStatusTool({}, { dataDir });
     const serialized = JSON.stringify(result);
 
     expect(result).toMatchObject({
       status: "ready",
+      project_memory: {
+        approved_count: 1,
+        included_in_brief: true,
+      },
       latest_snapshot: {
         id: "loop_mcp",
         tool: "codex",
         project: "private-project",
         prompt_count: 2,
         average_prompt_score: 58,
-        outcome_status: "unknown",
+        outcome_status: "passed",
       },
       next_action: "prompt-coach loop brief",
       next_actions: expect.arrayContaining([
@@ -57,6 +70,10 @@ describe("Loopdeck MCP tools", () => {
     });
     expect(serialized).not.toContain("Make this better");
     expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain(
+      "Shared status surfaces should use one model instead of duplicating readiness logic.",
+    );
+    expect(serialized).not.toContain("This unrelated project memory should not appear");
   });
 
   it("reports compact boundaries newer than the latest loop snapshot", () => {

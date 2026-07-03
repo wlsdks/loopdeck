@@ -49,6 +49,9 @@ export function LoopsView({
           <p className="loops-status-line">
             Loopdeck status {loops.status.status}
           </p>
+          <p className="loops-status-line">
+            Approved memories {loops.status.project_memory.approved_count}
+          </p>
           <p className="loops-status-line">Next: {loops.status.next_action}</p>
           <p>
             Recent local agent loops grouped by safe project metadata. Compact

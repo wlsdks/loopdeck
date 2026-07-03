@@ -73,6 +73,24 @@ describe("createLoopdeckStatus", () => {
     expect(status.latest_snapshot).toBeUndefined();
     expect(status.next_action).toBe("prompt-coach loop brief");
   });
+
+  it("reports project-approved memory availability without memory contents", () => {
+    const status = createLoopdeckStatus({
+      snapshots: [loopSnapshot()],
+      compactBoundaries: [],
+      projectMemoryCount: 2,
+    });
+    const serialized = JSON.stringify(status);
+
+    expect(status.project_memory).toEqual({
+      approved_count: 2,
+      included_in_brief: true,
+    });
+    expect(serialized).not.toContain(
+      "Scheduler lifecycle should stay plist-only",
+    );
+    expect(serialized).not.toContain("commit:2a91de0");
+  });
 });
 
 function loopSnapshot(): LoopSnapshot {

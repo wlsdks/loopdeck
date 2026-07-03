@@ -308,6 +308,21 @@ describe("createServer P2 ingest boundary", () => {
   it("returns loop snapshots without prompt bodies, compact summaries, or raw paths", async () => {
     const storage = createMemoryStorage();
     storage.loopSnapshots.push(loopSnapshot());
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_other",
+        project_id: "proj_other",
+        cwd_label: "other-project",
+      }),
+    );
+    storage.loopMemories.push(loopMemory());
+    storage.loopMemories.push(
+      loopMemory({
+        id: "mem_other",
+        snapshot_id: "loop_other",
+        statement: "This unrelated project memory should not appear.",
+      }),
+    );
     storage.compactBoundaries.push({
       id: "cmp_web",
       created_at: "2026-07-04T01:05:00.000Z",
@@ -342,7 +357,11 @@ describe("createServer P2 ingest boundary", () => {
       data: {
         status: {
           status: "ready",
-          snapshot_count: 1,
+          snapshot_count: 2,
+          project_memory: {
+            approved_count: 1,
+            included_in_brief: true,
+          },
           latest_snapshot: {
             id: "loop_web",
             outcome_status: "unknown",
@@ -354,17 +373,6 @@ describe("createServer P2 ingest boundary", () => {
             returns_compact_content: false,
           },
         },
-        items: [
-          {
-            id: "loop_web",
-            project: "private-project",
-            prompt_count: 2,
-            compact_boundary: {
-              event_name: "PostCompact",
-              after_latest_snapshot: true,
-            },
-          },
-        ],
         privacy: {
           local_only: true,
           returns_prompt_bodies: false,
@@ -373,9 +381,29 @@ describe("createServer P2 ingest boundary", () => {
         },
       },
     });
+    expect(
+      response.json<{ data: { items: Array<Record<string, unknown>> } }>().data
+        .items,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "loop_web",
+          project: "private-project",
+          prompt_count: 2,
+          compact_boundary: expect.objectContaining({
+            event_name: "PostCompact",
+            after_latest_snapshot: true,
+          }),
+        }),
+      ]),
+    );
     expect(serialized).not.toContain("Make this better");
     expect(serialized).not.toContain("Compact summary with sk-proj-secret");
     expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain(
+      "Keep web, CLI, MCP, and API loop status on the shared model.",
+    );
+    expect(serialized).not.toContain("This unrelated project memory should not appear");
   });
 
   it("returns a copy-ready loop brief without prompt bodies, compact summaries, or raw paths", async () => {
@@ -1720,7 +1748,7 @@ function createMemoryStorage() {
   };
 }
 
-function loopSnapshot(): LoopSnapshot {
+function loopSnapshot(patch: Partial<LoopSnapshot> = {}): LoopSnapshot {
   return {
     id: "loop_web",
     created_at: "2026-07-04T01:00:00.000Z",
@@ -1753,6 +1781,7 @@ function loopSnapshot(): LoopSnapshot {
       stores_prompt_bodies: false,
       stores_raw_paths: false,
     },
+    ...patch,
   };
 }
 

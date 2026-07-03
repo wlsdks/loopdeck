@@ -103,6 +103,10 @@ export type LoopListResponse = {
   status: {
     status: "ready" | "empty";
     snapshot_count: number;
+    project_memory: {
+      approved_count: number;
+      included_in_brief: boolean;
+    };
     latest_snapshot?: LoopSummary;
     latest_compact_boundary?: LoopSummary["compact_boundary"];
     next_action: string;

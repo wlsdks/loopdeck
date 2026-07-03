@@ -147,7 +147,9 @@
 - [x] Task 15 GREEN: `createLoopBrief`와 CLI `loop brief`, MCP `prepare_loop_brief`, `/api/v1/loops/:id/brief`가 최신 approved memory를 privacy-safe section으로 포함
 - [x] Task 16 RED: approved loop memory가 다른 project continuation brief에 섞이는 storage/CLI/MCP/API focused test 실패 확인
 - [x] Task 16 GREEN: `listLoopMemories({ projectId })`와 brief 호출부 project scoping으로 현재 snapshot project memory만 포함
-- [ ] 다음 slice: package/CLI alias migration plan 또는 project-scoped memory UX/status
+- [x] Task 17 RED: CLI/MCP/API/web status가 project-scoped approved memory count를 노출하지 않는 focused test 실패 확인
+- [x] Task 17 GREEN: `LoopdeckStatus.project_memory` count를 CLI `loop status`, MCP `get_loopdeck_status`, `/api/v1/loops`, web Loops summary에 raw-free로 연결
+- [ ] 다음 slice: package/CLI alias migration plan 또는 memory candidate UX/status refinement
 
 ### 판단 기준
 

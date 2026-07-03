@@ -20,6 +20,10 @@ describe("web api export client", () => {
             status: {
               status: "ready",
               snapshot_count: 1,
+              project_memory: {
+                approved_count: 1,
+                included_in_brief: true,
+              },
               latest_snapshot: {
                 id: "loop_web",
                 created_at: "2026-07-04T01:00:00.000Z",
@@ -78,6 +82,10 @@ describe("web api export client", () => {
     expect(loops.items).toHaveLength(1);
     expect(loops.status.status).toBe("ready");
     expect(loops.status.next_action).toBe("prompt-coach loop collect");
+    expect(loops.status.project_memory).toEqual({
+      approved_count: 1,
+      included_in_brief: true,
+    });
     expect(loops.items[0]).toMatchObject({
       id: "loop_web",
       project: "private-project",
