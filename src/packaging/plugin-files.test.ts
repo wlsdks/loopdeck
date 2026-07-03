@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -276,6 +276,119 @@ describe("plugin packaging files", () => {
     expect(issuePlan).not.toContain("Make this better");
     expect(issuePlan).not.toContain("sk-proj");
     expect(issuePlan).not.toContain("/Users/");
+  });
+
+  it("ships a machine-checkable runtime id inventory before rename work", () => {
+    const inventoryPath =
+      "docs/superpowers/plans/2026-07-04-loopdeck-runtime-id-inventory.json";
+    const packageJson = readJson<{
+      name: string;
+      bin: Record<string, string>;
+      files: string[];
+    }>("package.json");
+    const claudeManifest = readJson<{
+      name: string;
+      commands: string[];
+    }>(".claude-plugin/plugin.json");
+    const codexManifest = readJson<{
+      name: string;
+      interface: { displayName: string };
+    }>("plugins/prompt-coach/.codex-plugin/plugin.json");
+    const hooks = readJson<{
+      hooks: Record<string, Array<{ hooks: Array<{ command: string }> }>>;
+    }>("plugins/prompt-coach/hooks.json");
+    const inventory = readJson<{
+      schema_version: 1;
+      package: {
+        name: string;
+        bins: Record<string, string>;
+      };
+      claude_code_plugin: {
+        manifest_name: string;
+        command_files: string[];
+        slash_namespace: string;
+      };
+      codex_plugin: {
+        manifest_name: string;
+        display_name: string;
+        install_path: string;
+      };
+      hooks: {
+        file: string;
+        events: string[];
+        required_command_substring: string;
+      };
+      mcp: {
+        canonical_server_name: string;
+        command: string;
+        docs: string[];
+      };
+      invariants: string[];
+      privacy_exclusions: string[];
+    }>(inventoryPath);
+
+    const commandFiles = readdirSync(join(process.cwd(), "commands"))
+      .filter((file) => file.endsWith(".md"))
+      .map((file) => `./commands/${file}`)
+      .sort();
+    const hookEvents = Object.keys(hooks.hooks).sort();
+    const hookCommands = Object.values(hooks.hooks)
+      .flatMap((entries) => entries.flatMap((entry) => entry.hooks))
+      .map((hook) => hook.command);
+
+    expect(packageJson.files).toContain(inventoryPath);
+    expect(inventory.schema_version).toBe(1);
+    expect(inventory.package.name).toBe(packageJson.name);
+    expect(inventory.package.bins).toMatchObject({
+      "prompt-coach": packageJson.bin["prompt-coach"],
+      loopdeck: packageJson.bin.loopdeck,
+      "pc-claude": packageJson.bin["pc-claude"],
+      "pc-codex": packageJson.bin["pc-codex"],
+    });
+    expect(inventory.claude_code_plugin.manifest_name).toBe(
+      claudeManifest.name,
+    );
+    expect(inventory.claude_code_plugin.command_files.slice().sort()).toEqual(
+      claudeManifest.commands.slice().sort(),
+    );
+    expect(inventory.claude_code_plugin.command_files.slice().sort()).toEqual(
+      commandFiles,
+    );
+    expect(inventory.claude_code_plugin.slash_namespace).toBe(
+      "/prompt-coach:*",
+    );
+    expect(inventory.codex_plugin.manifest_name).toBe(codexManifest.name);
+    expect(inventory.codex_plugin.display_name).toBe(
+      codexManifest.interface.displayName,
+    );
+    expect(inventory.codex_plugin.install_path).toBe("plugins/prompt-coach");
+    expect(inventory.hooks.file).toBe("plugins/prompt-coach/hooks.json");
+    expect(inventory.hooks.events.slice().sort()).toEqual(hookEvents);
+    for (const command of hookCommands) {
+      expect(command).toContain(inventory.hooks.required_command_substring);
+    }
+    expect(inventory.mcp.canonical_server_name).toBe("prompt-coach");
+    expect(inventory.mcp.command).toBe("prompt-coach mcp");
+    expect(inventory.mcp.docs).toEqual(
+      expect.arrayContaining(["README.md", "README.ko.md", "docs/PLUGINS.md"]),
+    );
+    expect(inventory.invariants).toEqual(
+      expect.arrayContaining([
+        "Do not remove /prompt-coach:*.",
+        "Do not rename package.json#name.",
+        "Do not rename plugin ids.",
+      ]),
+    );
+    expect(inventory.privacy_exclusions).toEqual(
+      expect.arrayContaining([
+        "prompt bodies",
+        "raw paths",
+        "provider credentials",
+      ]),
+    );
+    expect(JSON.stringify(inventory)).not.toContain("Make this better");
+    expect(JSON.stringify(inventory)).not.toContain("sk-proj");
+    expect(JSON.stringify(inventory)).not.toContain("/Users/");
   });
 
   it("ships a fail-open Codex prompt hook without embedding secrets", () => {

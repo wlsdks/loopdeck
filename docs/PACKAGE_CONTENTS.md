@@ -27,6 +27,10 @@ The npm package intentionally includes:
     documentation boundary for agent-judge mode
   - includes `docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md`
     so package-local README and plugin docs can link to the compatibility gate
+  - includes `docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-issue-slices.md`
+    and `docs/superpowers/plans/2026-07-04-loopdeck-runtime-id-inventory.json`
+    so rename work starts from shippable slices and a machine-checkable runtime
+    id inventory
 - Claude Code plugin artifacts under `.claude-plugin`, `commands`, and
   `integrations/claude-code`
 - Codex plugin artifacts under `plugins/prompt-coach`

@@ -1089,6 +1089,25 @@ Do not add:
 - deprecation banners
 - hidden external LLM, hosted migration, or provider credential proxy
 
+### Slice 4.30: Runtime ID Compatibility Inventory
+
+Add:
+
+- dedicated `docs/superpowers/plans/2026-07-04-loopdeck-runtime-id-inventory.json`
+  with the current package, binary, Claude Code plugin, Codex plugin, command,
+  hook, and MCP server-name compatibility surface
+- packaging test coverage that compares the inventory against live manifests,
+  command files, and hook events
+- package contents documentation that explains why the inventory ships
+
+Do not add:
+
+- runtime rename behavior
+- `/loopdeck:*` command aliases
+- package, plugin id, hook command, or MCP server-name changes
+- prompt bodies, transcript text, compact summaries, raw paths, API tokens, or
+  provider credentials
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

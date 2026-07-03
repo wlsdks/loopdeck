@@ -179,7 +179,9 @@
 - [x] Task 31 GREEN: `branch` API query, `getLoopWorktree(..., { branch })`, `/loops?worktree=...&session=...&branch=...`, active branch label 연결
 - [x] Task 32 RED: Loopdeck rename issue-slice plan과 package files 계약이 없어 packaging focused test 실패 확인
 - [x] Task 32 GREEN: rename issue-slice plan을 R1-R7로 분해하고 package files/spec/todo에 연결
-- [ ] 다음 slice: Slice R1 Compatibility Inventory Gate 구현
+- [x] Task 33 RED: runtime id inventory artifact가 없어 packaging focused test 실패 확인
+- [x] Task 33 GREEN: package/bin/plugin/command/hook/MCP runtime id inventory JSON을 추가하고 live manifest 비교 테스트로 잠금
+- [ ] 다음 slice: Slice R2 Alias-Only Command Docs 구현
 
 ### 판단 기준
 
