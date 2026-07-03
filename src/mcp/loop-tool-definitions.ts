@@ -84,6 +84,7 @@ export const GET_LOOPDECK_STATUS_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
             "active_sessions",
             "needs_review",
             "next_action",
+            "worktrees",
           ],
           properties: {
             active_worktrees: { type: "integer", minimum: 0 },
@@ -97,6 +98,30 @@ export const GET_LOOPDECK_STATUS_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
                 "compare loop snapshots by worktree before merging agent output",
                 "continue current worktree loop",
               ],
+            },
+            worktrees: {
+              type: "array",
+              items: {
+                type: "object",
+                required: [
+                  "worktree",
+                  "sessions",
+                  "snapshots",
+                  "latest_snapshot_id",
+                  "latest_created_at",
+                  "latest_outcome_status",
+                ],
+                properties: {
+                  worktree: { type: "string" },
+                  branch: { type: "string" },
+                  sessions: { type: "integer", minimum: 0 },
+                  snapshots: { type: "integer", minimum: 0 },
+                  latest_snapshot_id: { type: "string" },
+                  latest_created_at: { type: "string" },
+                  latest_outcome_status: LOOP_OUTCOME_STATUS_SCHEMA,
+                },
+                additionalProperties: false,
+              },
             },
           },
           additionalProperties: false,

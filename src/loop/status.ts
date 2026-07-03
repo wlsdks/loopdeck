@@ -40,6 +40,16 @@ export type LoopdeckStatusMemoryCandidate = {
     | "prompt-coach loop memory-candidate";
 };
 
+export type LoopdeckStatusActivityWorktree = {
+  worktree: string;
+  branch?: string;
+  sessions: number;
+  snapshots: number;
+  latest_snapshot_id: string;
+  latest_created_at: string;
+  latest_outcome_status: LoopSnapshot["outcome"]["status"];
+};
+
 export type LoopdeckStatusActivity = {
   active_worktrees: number;
   active_sessions: number;
@@ -49,6 +59,7 @@ export type LoopdeckStatusActivity = {
   next_action:
     | "compare loop snapshots by worktree before merging agent output"
     | "continue current worktree loop";
+  worktrees: LoopdeckStatusActivityWorktree[];
 };
 
 export type LoopdeckStatus = {
@@ -140,7 +151,55 @@ export function summarizeLoopActivity(
     next_action: needsReview
       ? "compare loop snapshots by worktree before merging agent output"
       : "continue current worktree loop",
+    worktrees: summarizeWorktreeActivity(snapshots),
   };
+}
+
+function summarizeWorktreeActivity(
+  snapshots: readonly LoopSnapshot[],
+): LoopdeckStatusActivityWorktree[] {
+  const groups = new Map<
+    string,
+    {
+      latest: LoopSnapshot;
+      sessions: Set<string>;
+      snapshots: number;
+    }
+  >();
+
+  for (const snapshot of snapshots) {
+    const worktree = snapshot.worktree_label || "unknown";
+    const existing = groups.get(worktree);
+
+    if (!existing) {
+      groups.set(worktree, {
+        latest: snapshot,
+        sessions: uniqueNonEmpty([snapshot.session_id]),
+        snapshots: 1,
+      });
+      continue;
+    }
+
+    existing.snapshots += 1;
+    if (snapshot.session_id) existing.sessions.add(snapshot.session_id);
+    if (snapshot.created_at > existing.latest.created_at) {
+      existing.latest = snapshot;
+    }
+  }
+
+  return [...groups.entries()]
+    .map(([worktree, group]) => ({
+      worktree,
+      ...(group.latest.branch ? { branch: group.latest.branch } : {}),
+      sessions: group.sessions.size,
+      snapshots: group.snapshots,
+      latest_snapshot_id: group.latest.id,
+      latest_created_at: group.latest.created_at,
+      latest_outcome_status: group.latest.outcome.status,
+    }))
+    .sort((left, right) =>
+      right.latest_created_at.localeCompare(left.latest_created_at),
+    );
 }
 
 export function toLoopdeckStatusMemoryCandidate(

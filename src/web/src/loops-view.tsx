@@ -97,6 +97,13 @@ export function LoopsView({
           {loops.status.activity.needs_review && (
             <p className="loops-status-line">Worktree review needed</p>
           )}
+          {loops.status.activity.worktrees.slice(0, 2).map((worktree) => (
+            <p className="loops-status-line" key={worktree.worktree}>
+              {worktree.worktree} {worktree.snapshots}{" "}
+              {pluralize(worktree.snapshots, "snapshot")} / {worktree.sessions}{" "}
+              {pluralize(worktree.sessions, "session")}
+            </p>
+          ))}
           {loops.status.memory_candidate && (
             <p className="loops-status-line">
               Memory candidate{" "}
@@ -182,6 +189,10 @@ export function LoopsView({
       </div>
     </section>
   );
+}
+
+function pluralize(count: number, singular: string): string {
+  return count === 1 ? singular : `${singular}s`;
 }
 
 function LoopRow({ loop }: { loop: LoopSummary }) {

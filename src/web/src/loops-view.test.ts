@@ -17,6 +17,8 @@ describe("LoopsView", () => {
     expect(html).toContain("Active worktrees 2");
     expect(html).toContain("Active sessions 2");
     expect(html).toContain("Worktree review needed");
+    expect(html).toContain("agent-loop-worktree 2 snapshots / 2 sessions");
+    expect(html).toContain("main-worktree 1 snapshot / 1 session");
     expect(html).toContain("Memory candidate eligible");
     expect(html).toContain("Approve memory");
     expect(html).toContain("prompt-coach loop memory-approve");
@@ -42,6 +44,25 @@ function loopList(): LoopListResponse {
         needs_review: true,
         next_action:
           "compare loop snapshots by worktree before merging agent output",
+        worktrees: [
+          {
+            worktree: "agent-loop-worktree",
+            branch: "codex/agent-loop-memory-design",
+            sessions: 2,
+            snapshots: 2,
+            latest_snapshot_id: "loop_web",
+            latest_created_at: "2026-07-04T01:00:00.000Z",
+            latest_outcome_status: "unknown",
+          },
+          {
+            worktree: "main-worktree",
+            sessions: 1,
+            snapshots: 1,
+            latest_snapshot_id: "loop_main",
+            latest_created_at: "2026-07-03T01:00:00.000Z",
+            latest_outcome_status: "passed",
+          },
+        ],
       },
       project_memory: {
         approved_count: 1,

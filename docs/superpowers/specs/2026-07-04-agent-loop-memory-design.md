@@ -948,6 +948,30 @@ Do not add:
 - background worktree scanning outside explicit loop snapshots
 - hidden external LLM summarization
 
+### Slice 4.24: Worktree Activity Detail
+
+Add:
+
+- `LoopdeckStatus.activity.worktrees` detail derived only from existing local
+  loop snapshots
+- per-worktree safe label, session count, snapshot count, latest snapshot id,
+  latest timestamp, latest branch when already present, and latest outcome
+  status
+- CLI `loop status` worktree detail lines capped to the first recent groups
+- MCP `get_loopdeck_status`, `/api/v1/loops`, web API type, and Loops summary
+  display of the same raw-free detail model
+- focused tests proving worktree detail does not expose prompt bodies, raw
+  paths, compact summaries, secrets, transcripts, or external LLM results
+
+Do not add:
+
+- raw worktree paths or cwd disclosure
+- reading Codex or Claude Code private session state
+- automatic git merge/rebase recommendations
+- background scanning of uncollected worktrees
+- full drilldown routes, filters, or branch comparison UI
+- external LLM summarization
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

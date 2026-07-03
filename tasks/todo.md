@@ -167,7 +167,9 @@
 - [x] Task 25 GREEN: core proposal, MCP schema/result, API client type, web review panel에 explicit apply gate 연결
 - [x] Task 26 RED: shared Loopdeck status에 worktree/session activity summary가 없어 CLI/API/web/MCP focused tests 실패 확인
 - [x] Task 26 GREEN: `LoopdeckStatus.activity`를 active worktree/session counts, review-needed signal, CLI/MCP/API/web summary로 연결
-- [ ] 다음 slice: plugin rename plan을 issue slice로 분해 또는 worktree activity detail/drilldown surface 설계
+- [x] Task 27 RED: shared Loopdeck status에 worktree별 activity detail이 없어 CLI/API/web/MCP focused tests 실패 확인
+- [x] Task 27 GREEN: `LoopdeckStatus.activity.worktrees`를 safe worktree label, sessions, snapshots, latest outcome으로 CLI/MCP/API/web summary에 연결
+- [ ] 다음 slice: plugin rename plan을 issue slice로 분해 또는 dedicated worktree drilldown route 설계
 
 ### 판단 기준
 

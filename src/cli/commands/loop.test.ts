@@ -209,6 +209,8 @@ describe("loop CLI command", () => {
     expect(text).toContain("active worktrees 2");
     expect(text).toContain("active sessions 2");
     expect(text).toContain("worktree review needed yes");
+    expect(text).toContain("worktree primary-worktree snapshots 1 sessions 1 latest passed");
+    expect(text).toContain("worktree other-worktree snapshots 1 sessions 1 latest passed");
     expect(text).toContain("memory candidate eligible");
     expect(text).toContain("latest loop");
     expect(text).toContain("project private-project");
@@ -225,6 +227,12 @@ describe("loop CLI command", () => {
         active_worktrees?: number;
         active_sessions?: number;
         needs_review?: boolean;
+        worktrees?: Array<{
+          worktree?: string;
+          snapshots?: number;
+          sessions?: number;
+          latest_outcome_status?: string;
+        }>;
       };
       project_memory?: { approved_count?: number; included_in_brief?: boolean };
       memory_candidate?: {
@@ -241,6 +249,20 @@ describe("loop CLI command", () => {
       active_worktrees: 2,
       active_sessions: 2,
       needs_review: true,
+      worktrees: [
+        {
+          worktree: "primary-worktree",
+          snapshots: 1,
+          sessions: 1,
+          latest_outcome_status: "passed",
+        },
+        {
+          worktree: "other-worktree",
+          snapshots: 1,
+          sessions: 1,
+          latest_outcome_status: "passed",
+        },
+      ],
     });
     expect(parsed.project_memory).toEqual({
       approved_count: 1,

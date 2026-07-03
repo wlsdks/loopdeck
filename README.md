@@ -769,8 +769,10 @@ review-only instruction patch from the latest approved memory. Use
 only after reviewing the proposal and intending to write the instruction file;
 the web review panel intentionally has no apply button.
 `get_loopdeck_status`, `/api/v1/loops`, and `prompt-coach loop status` also
-include a raw-free worktree/session activity summary so agents can notice when
-recent snapshots span multiple worktrees or sessions before merging output.
+include a raw-free worktree/session activity summary with per-worktree safe
+labels, session counts, snapshot counts, and latest outcome status so agents can
+notice when recent snapshots span multiple worktrees or sessions before merging
+output.
 `loop collect` also accepts `--source service` for explicit cron or LaunchAgent
 one-shot collection without creating hidden background automation. Users who
 want an opt-in macOS schedule can preview or install it with

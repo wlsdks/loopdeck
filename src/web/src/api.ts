@@ -112,6 +112,15 @@ export type LoopListResponse = {
       next_action:
         | "compare loop snapshots by worktree before merging agent output"
         | "continue current worktree loop";
+      worktrees: Array<{
+        worktree: string;
+        branch?: string;
+        sessions: number;
+        snapshots: number;
+        latest_snapshot_id: string;
+        latest_created_at: string;
+        latest_outcome_status: string;
+      }>;
     };
     project_memory: {
       approved_count: number;

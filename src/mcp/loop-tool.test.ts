@@ -54,6 +54,23 @@ describe("Loopdeck MCP tools", () => {
         needs_review: true,
         next_action:
           "compare loop snapshots by worktree before merging agent output",
+        worktrees: [
+          {
+            worktree: "worktree-mcp",
+            branch: "codex/agent-loop-memory-design",
+            sessions: 1,
+            snapshots: 1,
+            latest_snapshot_id: "loop_mcp",
+            latest_outcome_status: "passed",
+          },
+          {
+            worktree: "other-worktree",
+            sessions: 1,
+            snapshots: 1,
+            latest_snapshot_id: "loop_other_project",
+            latest_outcome_status: "passed",
+          },
+        ],
       },
       memory_candidate: {
         eligible: true,

@@ -28,6 +28,17 @@ describe("web api export client", () => {
                 needs_review: true,
                 next_action:
                   "compare loop snapshots by worktree before merging agent output",
+                worktrees: [
+                  {
+                    worktree: "agent-loop-worktree",
+                    branch: "codex/agent-loop-memory-design",
+                    sessions: 1,
+                    snapshots: 1,
+                    latest_snapshot_id: "loop_web",
+                    latest_created_at: "2026-07-04T01:00:00.000Z",
+                    latest_outcome_status: "unknown",
+                  },
+                ],
               },
               project_memory: {
                 approved_count: 1,
@@ -100,6 +111,14 @@ describe("web api export client", () => {
       active_worktrees: 2,
       active_sessions: 2,
       needs_review: true,
+      worktrees: [
+        {
+          worktree: "agent-loop-worktree",
+          snapshots: 1,
+          sessions: 1,
+          latest_outcome_status: "unknown",
+        },
+      ],
     });
     expect(loops.status.project_memory).toEqual({
       approved_count: 1,

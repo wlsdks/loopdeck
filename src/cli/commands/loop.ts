@@ -380,6 +380,12 @@ function formatLoopStatus(status: LoopdeckStatus): string {
     `active worktrees ${status.activity.active_worktrees}`,
     `active sessions ${status.activity.active_sessions}`,
     `worktree review needed ${status.activity.needs_review ? "yes" : "no"}`,
+    ...status.activity.worktrees
+      .slice(0, 3)
+      .map(
+        (worktree) =>
+          `worktree ${worktree.worktree} snapshots ${worktree.snapshots} sessions ${worktree.sessions} latest ${worktree.latest_outcome_status}`,
+      ),
     status.memory_candidate
       ? `memory candidate ${status.memory_candidate.eligible ? "eligible" : status.memory_candidate.reason}`
       : "memory candidate none",

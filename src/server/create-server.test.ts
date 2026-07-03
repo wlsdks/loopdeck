@@ -366,6 +366,22 @@ describe("createServer P2 ingest boundary", () => {
             needs_review: true,
             next_action:
               "compare loop snapshots by worktree before merging agent output",
+            worktrees: [
+              {
+                worktree: "worktree-web",
+                sessions: 1,
+                snapshots: 1,
+                latest_snapshot_id: "loop_web",
+                latest_outcome_status: "unknown",
+              },
+              {
+                worktree: "other-worktree",
+                sessions: 1,
+                snapshots: 1,
+                latest_snapshot_id: "loop_other",
+                latest_outcome_status: "unknown",
+              },
+            ],
           },
           project_memory: {
             approved_count: 1,
