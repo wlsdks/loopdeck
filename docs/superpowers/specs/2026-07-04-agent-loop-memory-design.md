@@ -75,23 +75,23 @@ Missing model:
 
 Development must start from this portfolio decision, not from novelty.
 
-| Area | Current state | Decision | Reason |
-| --- | --- | --- | --- |
-| Prompt capture | Claude Code and Codex adapters plus fail-open hooks exist | **Keep and harden** | This is the data foundation. Loop snapshots should reference captured prompts instead of replacing them. |
-| Prompt archive Markdown | Markdown remains source of truth for prompts | **Keep unchanged in Slice 1** | Human-readable local archive is still valuable. Do not move loop state into project docs by default. |
-| SQLite prompt index/FTS | Existing local index and search | **Keep and extend** | Add loop snapshot tables beside prompt tables. Do not rebuild storage around a new runtime. |
-| Local prompt scoring | Rule-based `0-100` scoring exists | **Improve later, do not replace** | Existing score powers habit gaps. It is not enough for loop quality but remains useful input. |
-| Prompt improvement drafts | Copy-based deterministic drafts exist | **Keep and reframe** | Drafts become one kind of "next loop brief." Do not auto-submit. |
-| MCP agent rewrite/judge | Active-agent mediated, opt-in | **Keep and extend** | This is the correct safety pattern for semantic judgment. Add loop tools later using the same privacy boundary. |
-| Web archive/detail/dashboard | Existing operational UI | **Keep; add Loops later** | Web remains useful, but Slice 1 must prove loop model before UI work. |
-| Import/export jobs | Prompt/archive-oriented | **Keep; defer loop export** | Loop snapshots should not be exported into project docs until privacy and usefulness are proven. |
-| `coach_prompt` one-call MCP workflow | Existing one-call agent workflow | **Improve after loop model** | It should eventually include latest loop status and brief, but not in Slice 1. |
-| Project policies | capture/export flags exist | **Extend later** | Add loop capture/export policy only after loop data exists. |
-| Agent wrappers `pc-claude` / `pc-codex` | Experimental initial prompt wrappers | **Do not expand now** | Hooks and MCP are tighter official surfaces. Wrappers do not cover later interactive turns. |
-| Cron/service | Server service exists; `loop collect --source service` now provides an explicit one-shot collection command | **Improve after manual proof** | Periodic collection is useful, but scheduling must stay opt-in and call an explicit command rather than hidden automation. |
-| Full trace ingestion | Not implemented | **Do not build now** | OpenAI/ADK-style traces are useful references, but ingesting full traces/transcripts risks privacy and scope explosion. |
-| Semantic vector memory | Not implemented | **Do not build by default** | Start with structured SQLite summaries. Add embeddings only if exact search and structured fields are insufficient. |
-| Repo/package rename | Partially renamed repo metadata, package still `prompt-coach` | **Plan, do not execute in Slice 1** | Branding is important but should not block proving the loop model. |
+| Area                                    | Current state                                                                                               | Decision                            | Reason                                                                                                                     |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Prompt capture                          | Claude Code and Codex adapters plus fail-open hooks exist                                                   | **Keep and harden**                 | This is the data foundation. Loop snapshots should reference captured prompts instead of replacing them.                   |
+| Prompt archive Markdown                 | Markdown remains source of truth for prompts                                                                | **Keep unchanged in Slice 1**       | Human-readable local archive is still valuable. Do not move loop state into project docs by default.                       |
+| SQLite prompt index/FTS                 | Existing local index and search                                                                             | **Keep and extend**                 | Add loop snapshot tables beside prompt tables. Do not rebuild storage around a new runtime.                                |
+| Local prompt scoring                    | Rule-based `0-100` scoring exists                                                                           | **Improve later, do not replace**   | Existing score powers habit gaps. It is not enough for loop quality but remains useful input.                              |
+| Prompt improvement drafts               | Copy-based deterministic drafts exist                                                                       | **Keep and reframe**                | Drafts become one kind of "next loop brief." Do not auto-submit.                                                           |
+| MCP agent rewrite/judge                 | Active-agent mediated, opt-in                                                                               | **Keep and extend**                 | This is the correct safety pattern for semantic judgment. Add loop tools later using the same privacy boundary.            |
+| Web archive/detail/dashboard            | Existing operational UI                                                                                     | **Keep; add Loops later**           | Web remains useful, but Slice 1 must prove loop model before UI work.                                                      |
+| Import/export jobs                      | Prompt/archive-oriented                                                                                     | **Keep; defer loop export**         | Loop snapshots should not be exported into project docs until privacy and usefulness are proven.                           |
+| `coach_prompt` one-call MCP workflow    | Existing one-call agent workflow                                                                            | **Improve after loop model**        | It should eventually include latest loop status and brief, but not in Slice 1.                                             |
+| Project policies                        | capture/export flags exist                                                                                  | **Extend later**                    | Add loop capture/export policy only after loop data exists.                                                                |
+| Agent wrappers `pc-claude` / `pc-codex` | Experimental initial prompt wrappers                                                                        | **Do not expand now**               | Hooks and MCP are tighter official surfaces. Wrappers do not cover later interactive turns.                                |
+| Cron/service                            | Server service exists; `loop collect --source service` now provides an explicit one-shot collection command | **Improve after manual proof**      | Periodic collection is useful, but scheduling must stay opt-in and call an explicit command rather than hidden automation. |
+| Full trace ingestion                    | Not implemented                                                                                             | **Do not build now**                | OpenAI/ADK-style traces are useful references, but ingesting full traces/transcripts risks privacy and scope explosion.    |
+| Semantic vector memory                  | Not implemented                                                                                             | **Do not build by default**         | Start with structured SQLite summaries. Add embeddings only if exact search and structured fields are insufficient.        |
+| Repo/package rename                     | Partially renamed repo metadata, package still `prompt-coach`                                               | **Plan, do not execute in Slice 1** | Branding is important but should not block proving the loop model.                                                         |
 
 This matrix is the planning gate. If an implementation task is not supported by one row above, it belongs in a later proposal.
 
@@ -303,12 +303,12 @@ Instruction-file rules:
 
 Required harness document set before large implementation:
 
-| Document | Purpose | Required before |
-| --- | --- | --- |
-| `docs/LOOPDECK.md` | Product thesis, loop model, user workflows, feature portfolio | Brand migration or web Loops UI |
-| `docs/AGENT-HARNESS.md` | Codex/Claude Code hooks, MCP, plugin commands, setup verification | Hook/MCP loop integration |
-| `docs/INSTRUCTION-FILES.md` | AGENTS.md/CLAUDE.md layering, size limits, examples, anti-patterns | AGENTS/CLAUDE rewrite |
-| `docs/LOOP-SNAPSHOT-SCHEMA.md` | Storage schema, privacy fields, raw-data exclusions | SQLite loop snapshot migration |
+| Document                       | Purpose                                                            | Required before                 |
+| ------------------------------ | ------------------------------------------------------------------ | ------------------------------- |
+| `docs/LOOPDECK.md`             | Product thesis, loop model, user workflows, feature portfolio      | Brand migration or web Loops UI |
+| `docs/AGENT-HARNESS.md`        | Codex/Claude Code hooks, MCP, plugin commands, setup verification  | Hook/MCP loop integration       |
+| `docs/INSTRUCTION-FILES.md`    | AGENTS.md/CLAUDE.md layering, size limits, examples, anti-patterns | AGENTS/CLAUDE rewrite           |
+| `docs/LOOP-SNAPSHOT-SCHEMA.md` | Storage schema, privacy fields, raw-data exclusions                | SQLite loop snapshot migration  |
 
 ## 6. Data Model
 
@@ -341,7 +341,13 @@ type LoopSnapshot = {
     unresolved_questions: string[];
   };
   outcome: {
-    status: "unknown" | "in_progress" | "passed" | "failed" | "blocked" | "abandoned";
+    status:
+      | "unknown"
+      | "in_progress"
+      | "passed"
+      | "failed"
+      | "blocked"
+      | "abandoned";
     summary: string;
     evidence_refs: string[];
   };
@@ -416,16 +422,16 @@ These are either outside the local-first promise or too large before proving the
 
 ## 8.1 Technical Risks And Mitigations
 
-| Risk | Why it matters | Mitigation |
-| --- | --- | --- |
-| Prompt body leakage | Hook stdout, CLI JSON, MCP results, tests, or docs can accidentally expose user prompts | Add privacy assertions for prompt bodies, raw paths, tokens, transcript paths, and redaction placeholders on every new surface. |
-| Raw path leakage | Worktree/session features naturally tempt raw path output | Store `cwd_label`, `project_id`, optional hash fields by default. Raw local diagnostics require explicit flags. |
-| Overbuilding runtime | Building a graph runtime would delay product proof | Keep Slice 1 as snapshot/brief only. No background cron until manual collection proves value. |
-| Brand migration churn | Renaming package/CLI/plugin/repo together can break users | Split brand migration into repo/docs first, CLI aliases second, package rename last. |
-| Hook fragility | Codex/Claude hook surfaces are powerful but can disrupt agent use | Hook collection must be fail-open, bounded, and raw-free. Manual CLI path comes first. |
-| Multi-worktree ambiguity | Git branch ownership and detached worktrees make identity confusing | Use git root hash, branch label, worktree label, and session id separately. Do not assume branch uniquely identifies a loop. |
-| Scoring tunnel vision | Existing prompt score may optimize form over actual agent outcome | Treat prompt score as one signal. Add outcome status and verification evidence fields before any "loop quality" score. |
-| External-source drift | Codex/Claude/ADK docs change quickly | Keep source URLs and reviewed date in planning docs. Re-check before hook/plugin implementation. |
+| Risk                     | Why it matters                                                                          | Mitigation                                                                                                                      |
+| ------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Prompt body leakage      | Hook stdout, CLI JSON, MCP results, tests, or docs can accidentally expose user prompts | Add privacy assertions for prompt bodies, raw paths, tokens, transcript paths, and redaction placeholders on every new surface. |
+| Raw path leakage         | Worktree/session features naturally tempt raw path output                               | Store `cwd_label`, `project_id`, optional hash fields by default. Raw local diagnostics require explicit flags.                 |
+| Overbuilding runtime     | Building a graph runtime would delay product proof                                      | Keep Slice 1 as snapshot/brief only. No background cron until manual collection proves value.                                   |
+| Brand migration churn    | Renaming package/CLI/plugin/repo together can break users                               | Split brand migration into repo/docs first, CLI aliases second, package rename last.                                            |
+| Hook fragility           | Codex/Claude hook surfaces are powerful but can disrupt agent use                       | Hook collection must be fail-open, bounded, and raw-free. Manual CLI path comes first.                                          |
+| Multi-worktree ambiguity | Git branch ownership and detached worktrees make identity confusing                     | Use git root hash, branch label, worktree label, and session id separately. Do not assume branch uniquely identifies a loop.    |
+| Scoring tunnel vision    | Existing prompt score may optimize form over actual agent outcome                       | Treat prompt score as one signal. Add outcome status and verification evidence fields before any "loop quality" score.          |
+| External-source drift    | Codex/Claude/ADK docs change quickly                                                    | Keep source URLs and reviewed date in planning docs. Re-check before hook/plugin implementation.                                |
 
 ## 8.2 Go/No-Go Gate Before Development
 
@@ -539,7 +545,7 @@ Add:
 - output that labels service-origin snapshots without prompt bodies or raw paths
   (**implemented**)
 - opt-in macOS LaunchAgent preview/install via `prompt-coach loop schedule
-  install` (**implemented; dry-run supported**)
+install` (**implemented; dry-run supported**)
 - explicit scheduler lifecycle commands via `prompt-coach loop schedule status`
   and `prompt-coach loop schedule uninstall` (**implemented; plist-only status
   and removal**)
@@ -621,7 +627,7 @@ Add:
   `AGENTS.md` or `CLAUDE.md` only when explicit confirmation is present
   (**implemented**)
 - CLI `prompt-coach loop instruction-apply --target-file AGENTS.md
-  --confirm-apply` for deliberate local file writes (**implemented**)
+--confirm-apply` for deliberate local file writes (**implemented**)
 - MCP `apply_instruction_patch` for Codex and Claude Code, requiring
   `confirm_apply=true` and returning no raw paths (**implemented**)
 - idempotency by `source_memory` marker so repeat calls do not duplicate the
@@ -1242,6 +1248,29 @@ Do not add:
 - prompt body, transcript, compact summary, raw path, API token, or provider
   credential output
 
+### Slice 4.38: CLI/MCP Selected Brief Implementation
+
+Add:
+
+- shared `src/loop/snapshot-selection.ts` helper for newest matching snapshot
+  selection from already-loaded recent snapshots
+- CLI `loop brief --worktree <label> --session <id> --branch <name>` filters
+  while keeping no-filter latest behavior
+- MCP `prepare_loop_brief` optional `worktree`, `session_id`, and `branch`
+  arguments with `source: "selected"` result metadata
+- not-found handling when selected filters match no local snapshot
+- focused CLI and MCP tests proving selected continuation briefs do not fall
+  back to a newer unrelated worktree snapshot
+
+Do not add:
+
+- DB schema/index migration
+- background worktree scanning
+- web selected-detail brief action
+- package, plugin, slash command, hook, or MCP server-name rename
+- prompt body, transcript, compact summary, raw path, API token, or provider
+  credential output
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.
@@ -1274,9 +1303,8 @@ Still open:
 
 - What exact product/package migration date should move from `prompt-coach` to `loopdeck`?
 - Should loop snapshots get a numeric "loop quality" score, or only structured outcome status and evidence?
-- After selected CLI/MCP continuation brief parity lands, should Web selected
-  worktree detail expose the same filtered brief action inline or through a
-  broader command center?
+- Should Web selected worktree detail expose the same filtered brief action
+  inline or through a broader command center?
 
 ## 12. Decision
 

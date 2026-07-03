@@ -10,9 +10,10 @@ import {
 } from "../loop/instruction-patch.js";
 import { decideLoopMemoryCandidate } from "../loop/memory-candidate.js";
 import {
-  createLoopdeckStatus,
-  loopdeckStatusPrivacy,
-} from "../loop/status.js";
+  hasLoopSnapshotSelection,
+  selectLoopSnapshot,
+} from "../loop/snapshot-selection.js";
+import { createLoopdeckStatus, loopdeckStatusPrivacy } from "../loop/status.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import type { ScorePromptToolOptions } from "./score-tool-types.js";
 import type {
@@ -64,11 +65,10 @@ export function getLoopdeckStatusTool(
         compactBoundaries: storage.listCompactBoundaries({ limit: 20 }).items,
         includeLatest: args.include_latest !== false,
         projectMemoryCount: latest
-          ? storage.listLoopMemories({ projectId: latest.project_id }).items.length
+          ? storage.listLoopMemories({ projectId: latest.project_id }).items
+              .length
           : 0,
-        memoryCandidate: latest
-          ? decideLoopMemoryCandidate(latest)
-          : undefined,
+        memoryCandidate: latest ? decideLoopMemoryCandidate(latest) : undefined,
       });
 
       return {
@@ -97,7 +97,13 @@ export function prepareLoopBriefTool(
   args: PrepareLoopBriefToolArguments,
   options: ScorePromptToolOptions = {},
 ): PrepareLoopBriefToolResult {
-  if (args.latest === false) {
+  const selection = {
+    worktree: args.worktree,
+    sessionId: args.session_id,
+    branch: args.branch,
+  };
+  const hasSelection = hasLoopSnapshotSelection(selection);
+  if (args.latest === false && !hasSelection) {
     return loopToolError(
       "invalid_input",
       "`latest` is the only supported loop snapshot selection mode today.",
@@ -113,11 +119,18 @@ export function prepareLoopBriefTool(
     });
 
     try {
-      const snapshot = storage.getLatestLoopSnapshot();
+      const snapshot = hasSelection
+        ? selectLoopSnapshot(
+            storage.listLoopSnapshots({ limit: 100 }).items,
+            selection,
+          )
+        : storage.getLatestLoopSnapshot();
       if (!snapshot) {
         return loopToolError(
           "not_found",
-          "No loop snapshot found. Run `prompt-coach loop collect` first.",
+          hasSelection
+            ? "No loop snapshot matched the selected worktree/session/branch filters."
+            : "No loop snapshot found. Run `prompt-coach loop collect` first.",
         );
       }
 
@@ -133,8 +146,7 @@ export function prepareLoopBriefTool(
           limit: 3,
         }).items,
       });
-      return {
-        source: "latest",
+      const baseResult = {
         snapshot_id: snapshot.id,
         title: brief.title,
         prompt: brief.prompt,
@@ -145,14 +157,32 @@ export function prepareLoopBriefTool(
           "Ask the user to review this continuation prompt before submitting it to Codex or Claude Code.",
         privacy: {
           ...loopToolPrivacy(),
-          auto_submits: false,
+          auto_submits: false as const,
         },
+      };
+      if (hasSelection) {
+        return {
+          source: "selected",
+          selection: {
+            ...(args.worktree ? { worktree: args.worktree } : {}),
+            ...(args.session_id ? { session_id: args.session_id } : {}),
+            ...(args.branch ? { branch: args.branch } : {}),
+          },
+          ...baseResult,
+        };
+      }
+      return {
+        source: "latest",
+        ...baseResult,
       };
     } finally {
       storage.close();
     }
   } catch (error) {
-    return loopToolError("storage_unavailable", storageUnavailableMessage(error));
+    return loopToolError(
+      "storage_unavailable",
+      storageUnavailableMessage(error),
+    );
   }
 }
 
@@ -199,7 +229,10 @@ export function recordLoopOutcomeTool(
       });
 
       if (!snapshot) {
-        return loopToolError("not_found", `Loop snapshot not found: ${snapshotId}.`);
+        return loopToolError(
+          "not_found",
+          `Loop snapshot not found: ${snapshotId}.`,
+        );
       }
 
       return {
@@ -218,7 +251,10 @@ export function recordLoopOutcomeTool(
       storage.close();
     }
   } catch (error) {
-    return loopToolError("storage_unavailable", storageUnavailableMessage(error));
+    return loopToolError(
+      "storage_unavailable",
+      storageUnavailableMessage(error),
+    );
   }
 }
 
@@ -267,7 +303,10 @@ export function proposeLoopMemoryCandidateTool(
       storage.close();
     }
   } catch (error) {
-    return loopToolError("storage_unavailable", storageUnavailableMessage(error));
+    return loopToolError(
+      "storage_unavailable",
+      storageUnavailableMessage(error),
+    );
   }
 }
 
@@ -348,7 +387,10 @@ export function recordLoopMemoryTool(
       storage.close();
     }
   } catch (error) {
-    return loopToolError("storage_unavailable", storageUnavailableMessage(error));
+    return loopToolError(
+      "storage_unavailable",
+      storageUnavailableMessage(error),
+    );
   }
 }
 
@@ -384,7 +426,10 @@ export function proposeInstructionPatchTool(
       storage.close();
     }
   } catch (error) {
-    return loopToolError("storage_unavailable", storageUnavailableMessage(error));
+    return loopToolError(
+      "storage_unavailable",
+      storageUnavailableMessage(error),
+    );
   }
 }
 
@@ -478,5 +523,7 @@ function storageUnavailableMessage(error: unknown): string {
 }
 
 function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : "Invalid instruction patch input.";
+  return error instanceof Error
+    ? error.message
+    : "Invalid instruction patch input.";
 }

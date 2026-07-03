@@ -13,6 +13,9 @@ export type GetLoopdeckStatusToolArguments = {
 
 export type PrepareLoopBriefToolArguments = {
   latest?: boolean;
+  worktree?: string;
+  session_id?: string;
+  branch?: string;
 };
 
 export type RecordLoopOutcomeToolArguments = {
@@ -65,6 +68,22 @@ export type GetLoopdeckStatusToolResult =
 export type PrepareLoopBriefToolResult =
   | {
       source: "latest";
+      snapshot_id: string;
+      title: string;
+      prompt: string;
+      compact_boundary?: LoopBriefCompactBoundary;
+      next_action: string;
+      privacy: LoopdeckToolPrivacy & {
+        auto_submits: false;
+      };
+    }
+  | {
+      source: "selected";
+      selection: {
+        worktree?: string;
+        session_id?: string;
+        branch?: string;
+      };
       snapshot_id: string;
       title: string;
       prompt: string;

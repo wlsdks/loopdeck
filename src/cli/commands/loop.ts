@@ -18,6 +18,10 @@ import {
   type LoopMemoryCandidateDecision,
 } from "../../loop/memory-candidate.js";
 import {
+  hasLoopSnapshotSelection,
+  selectLoopSnapshot,
+} from "../../loop/snapshot-selection.js";
+import {
   createLoopdeckStatus,
   type LoopdeckStatus,
 } from "../../loop/status.js";
@@ -39,6 +43,7 @@ type LoopCliOptions = {
   targetDir?: string;
   confirmApply?: boolean;
   worktree?: string;
+  session?: string;
   approvedBy?: string;
 };
 
@@ -62,7 +67,10 @@ export function registerLoopCommand(program: Command): void {
     .option("--data-dir <path>", "Override the prompt-coach data directory.")
     .option("--json", "Print JSON.")
     .option("--limit <count>", "Maximum recent prompts to include.")
-    .option("--cwd-prefix <path>", "Only include prompts from this project/path.")
+    .option(
+      "--cwd-prefix <path>",
+      "Only include prompts from this project/path.",
+    )
     .option("--source <source>", "Collection source label (cli or service).")
     .option("--branch <name>", "Git branch label to attach to the snapshot.")
     .option("--worktree <name>", "Worktree label to attach to the snapshot.")
@@ -72,16 +80,30 @@ export function registerLoopCommand(program: Command): void {
 
   loop
     .command("brief")
-    .description("Print a continuation prompt from the latest loop snapshot.")
+    .description("Print a continuation prompt from a local loop snapshot.")
     .option("--data-dir <path>", "Override the prompt-coach data directory.")
     .option("--json", "Print JSON.")
+    .option(
+      "--worktree <name>",
+      "Select the newest snapshot for this worktree label.",
+    )
+    .option(
+      "--session <id>",
+      "Select the newest snapshot for this agent session id.",
+    )
+    .option(
+      "--branch <name>",
+      "Select the newest snapshot for this branch label.",
+    )
     .action((options: LoopCliOptions) => {
       console.log(loopBriefForCli(options));
     });
 
   loop
     .command("memory-candidate")
-    .description("Decide whether the latest loop can become an approved memory.")
+    .description(
+      "Decide whether the latest loop can become an approved memory.",
+    )
     .option("--data-dir <path>", "Override the prompt-coach data directory.")
     .option("--json", "Print JSON.")
     .action((options: LoopCliOptions) => {
@@ -90,7 +112,9 @@ export function registerLoopCommand(program: Command): void {
 
   loop
     .command("memory-approve")
-    .description("Record the latest eligible loop memory candidate after approval.")
+    .description(
+      "Record the latest eligible loop memory candidate after approval.",
+    )
     .option("--data-dir <path>", "Override the prompt-coach data directory.")
     .option("--approved-by <actor>", "Approval actor label.", "user")
     .option("--json", "Print JSON.")
@@ -100,7 +124,9 @@ export function registerLoopCommand(program: Command): void {
 
   loop
     .command("instruction-patch")
-    .description("Propose an instruction-file patch from approved Loopdeck memory.")
+    .description(
+      "Propose an instruction-file patch from approved Loopdeck memory.",
+    )
     .option("--data-dir <path>", "Override the prompt-coach data directory.")
     .option(
       "--target-file <file>",
@@ -121,7 +147,11 @@ export function registerLoopCommand(program: Command): void {
       "Instruction file target (AGENTS.md or CLAUDE.md).",
       "AGENTS.md",
     )
-    .option("--target-dir <path>", "Project directory to update.", process.cwd())
+    .option(
+      "--target-dir <path>",
+      "Project directory to update.",
+      process.cwd(),
+    )
     .option("--confirm-apply", "Confirm writing the instruction file.")
     .option("--json", "Print JSON.")
     .action((options: LoopCliOptions) => {
@@ -161,23 +191,37 @@ export function loopStatusForCli(options: LoopCliOptions = {}): string {
       snapshots,
       compactBoundaries: storage.listCompactBoundaries({ limit: 20 }).items,
       projectMemoryCount: latest
-        ? storage.listLoopMemories({ projectId: latest.project_id }).items.length
+        ? storage.listLoopMemories({ projectId: latest.project_id }).items
+            .length
         : 0,
-      memoryCandidate: latest
-        ? decideLoopMemoryCandidate(latest)
-        : undefined,
+      memoryCandidate: latest ? decideLoopMemoryCandidate(latest) : undefined,
     });
 
-    return options.json ? JSON.stringify(status, null, 2) : formatLoopStatus(status);
+    return options.json
+      ? JSON.stringify(status, null, 2)
+      : formatLoopStatus(status);
   });
 }
 
 export function loopBriefForCli(options: LoopCliOptions = {}): string {
   return withStorage(options.dataDir, (storage) => {
-    const snapshot = storage.getLatestLoopSnapshot();
+    const selection = {
+      worktree: options.worktree,
+      sessionId: options.session,
+      branch: options.branch,
+    };
+    const hasSelection = hasLoopSnapshotSelection(selection);
+    const snapshot = hasSelection
+      ? selectLoopSnapshot(
+          storage.listLoopSnapshots({ limit: 100 }).items,
+          selection,
+        )
+      : storage.getLatestLoopSnapshot();
     if (!snapshot) {
       throw new UserError(
-        "No loop snapshot found. Run `prompt-coach loop collect` first.",
+        hasSelection
+          ? "No loop snapshot matched the selected worktree/session/branch filters."
+          : "No loop snapshot found. Run `prompt-coach loop collect` first.",
       );
     }
     const compactBoundary = latestCompactBoundaryAfterSnapshot(
@@ -390,9 +434,7 @@ function formatLoopStatus(status: LoopdeckStatus): string {
       ? `memory candidate ${status.memory_candidate.eligible ? "eligible" : status.memory_candidate.reason}`
       : "memory candidate none",
     status.latest_snapshot ? "latest loop" : "latest loop none",
-    status.latest_snapshot
-      ? `id ${status.latest_snapshot.id}`
-      : undefined,
+    status.latest_snapshot ? `id ${status.latest_snapshot.id}` : undefined,
     status.latest_snapshot
       ? `project ${status.latest_snapshot.project}`
       : undefined,
@@ -423,7 +465,9 @@ function formatLoopMemoryCandidate(
     `snapshot ${decision.snapshot_id}`,
     `reason ${decision.reason}`,
     decision.candidate ? `title ${decision.candidate.title}` : undefined,
-    decision.candidate ? `statement ${decision.candidate.statement}` : undefined,
+    decision.candidate
+      ? `statement ${decision.candidate.statement}`
+      : undefined,
     decision.candidate
       ? `evidence ${decision.candidate.evidence_refs.join(", ")}`
       : undefined,
@@ -440,7 +484,9 @@ function formatLoopMemoryCandidate(
 
 function formatLoopMemoryApproval(result: {
   recorded: true;
-  memory: ReturnType<ReturnType<typeof createSqlitePromptStorage>["recordLoopMemory"]>;
+  memory: ReturnType<
+    ReturnType<typeof createSqlitePromptStorage>["recordLoopMemory"]
+  >;
   next_action: string;
   next_actions: string[];
 }): string {

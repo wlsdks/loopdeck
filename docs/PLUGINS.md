@@ -224,12 +224,14 @@ counts, latest prompt metadata, available tool names, and next actions.
 `get_loopdeck_status` checks whether local loop snapshots exist and returns
 safe latest-loop metadata. It also reports safe compact-boundary metadata when
 a compact happened after the latest snapshot. `prepare_loop_brief` returns a
-copy-ready continuation prompt from the latest Loopdeck snapshot without prompt
-bodies, raw paths, or auto-submission; when the latest snapshot is pre-compact,
-it asks the user to refresh the snapshot instead of replaying compact summaries
-or custom compact instructions. `record_loop_outcome` writes only user-approved
-status, summary, and evidence references for a Loopdeck snapshot; it does not
-store prompt bodies, raw paths, or external LLM results.
+copy-ready continuation prompt from the latest Loopdeck snapshot, or from the
+newest snapshot matching optional `worktree`, `session_id`, and `branch`
+filters, without prompt bodies, raw paths, or auto-submission; when the
+selected snapshot is pre-compact, it asks the user to refresh the snapshot
+instead of replaying compact summaries or custom compact instructions.
+`record_loop_outcome` writes only user-approved status, summary, and evidence
+references for a Loopdeck snapshot; it does not store prompt bodies, raw paths,
+or external LLM results.
 `propose_loop_memory_candidate` is the semantic-memory decision gate: it checks
 the latest passed loop outcome and safe evidence refs, then returns a
 user-reviewable candidate without writing memory or instruction files.
@@ -247,7 +249,10 @@ raw paths.
 The local CLI mirrors that loop surface with `prompt-coach loop status`,
 `prompt-coach loop collect`, `prompt-coach loop brief`, and
 `prompt-coach loop memory-candidate`; approved memories are recorded with
-`prompt-coach loop memory-approve`. Use
+`prompt-coach loop memory-approve`. `prompt-coach loop brief` accepts optional
+`--worktree`, `--session`, and `--branch` filters so Codex or Claude Code can
+continue the same selected worktree/session/branch even when another worktree
+has a newer snapshot. Use
 `prompt-coach loop instruction-patch --target-file AGENTS.md` to generate the
 review-only instruction patch. Use
 `prompt-coach loop instruction-apply --target-file AGENTS.md --confirm-apply`

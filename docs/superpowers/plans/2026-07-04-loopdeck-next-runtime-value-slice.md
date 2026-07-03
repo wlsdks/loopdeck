@@ -113,6 +113,14 @@ unchanged.
 
 ## First Follow-Up After This Slice
 
+Implementation checkpoint:
+
+- CLI `loop brief` and MCP `prepare_loop_brief` now share selected
+  worktree/session/branch snapshot selection.
+- The latest-only behavior remains the default when no filters are provided.
+- Non-matching MCP filters return `not_found`.
+- Browser/UI filtered brief action remains separate.
+
 After CLI/MCP parity lands, add a small Web action in the selected worktree
 detail panel that requests a filtered continuation brief using the same
 selection semantics. That should be a separate UI slice with browser

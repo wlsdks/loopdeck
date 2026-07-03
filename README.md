@@ -728,7 +728,7 @@ The MCP server exposes twenty tools:
      `ask_user_question` ships upstream.
   3. Otherwise returns `clarifying_questions` metadata
      (`interaction_status: unsupported|declined|timeout`).
-  Never auto-submits a rewrite.
+     Never auto-submits a rewrite.
 - `record_clarifications`: persist the user's verbatim answers and the
   resulting draft against a stored prompt in the local archive
   (`prompt_improvement_drafts`). Returns metadata only (`draft_id`,
@@ -738,10 +738,11 @@ The MCP server exposes twenty tools:
   return safe latest-loop metadata plus compact-boundary awareness when a
   compact happened after the latest snapshot.
 - `prepare_loop_brief`: prepare a copy-ready continuation prompt from the
-  latest local Loopdeck snapshot without returning prompt bodies or raw paths.
-  If the latest snapshot is older than a compact boundary, the brief says to
-  refresh the loop snapshot but does not include compact summaries or custom
-  compact instructions.
+  latest local Loopdeck snapshot, or from the newest snapshot matching optional
+  `worktree`, `session_id`, and `branch` filters, without returning prompt
+  bodies or raw paths. If the selected snapshot is older than a compact
+  boundary, the brief says to refresh the loop snapshot but does not include
+  compact summaries or custom compact instructions.
 - `record_loop_outcome`: store user-approved loop outcome metadata for a
   Loopdeck snapshot without storing prompt bodies or raw paths.
 - `propose_loop_memory_candidate`: decide whether the latest verified loop
@@ -766,7 +767,10 @@ The MCP server exposes twenty tools:
 The matching local CLI surface is `prompt-coach loop status`,
 `prompt-coach loop collect`, `prompt-coach loop brief`, and
 `prompt-coach loop memory-candidate`; approved memories are recorded with
-`prompt-coach loop memory-approve`. Use
+`prompt-coach loop memory-approve`. `prompt-coach loop brief` accepts optional
+`--worktree`, `--session`, and `--branch` filters so a continuation prompt can
+resume the same worktree/session/branch selected in the Loops view instead of
+falling back to the global latest snapshot. Use
 `prompt-coach loop instruction-patch --target-file AGENTS.md` to generate the
 review-only instruction patch from the latest approved memory. Use
 `prompt-coach loop instruction-apply --target-file AGENTS.md --confirm-apply`
@@ -801,6 +805,7 @@ the explicit instruction patch workflow. After a memory is approved, the Loops
 summary can fetch a review-only AGENTS.md patch preview without writing files.
 It does not render prompt bodies, compact summaries, custom compact
 instructions, transcript bodies, or raw paths.
+
 - `prepare_agent_rewrite`: prepare one locally redacted prompt packet, local
   score metadata, local baseline draft, and rewrite contract so the active
   Claude Code/Codex/Gemini CLI session can semantically improve the prompt.

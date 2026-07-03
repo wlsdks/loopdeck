@@ -195,7 +195,9 @@
 - [x] Task 39 GREEN: alias-only/deprecation/breaking release note template, saved snippet support, rollback/upgrade smoke gate 문서화
 - [x] Task 40 RED: rename line 이후 다음 runtime value slice artifact/package 계약이 없어 packaging focused test 실패 확인
 - [x] Task 40 GREEN: selected worktree continuation brief parity를 다음 product/runtime slice로 확정하고 spec/package/todo에 연결
-- [ ] 다음 slice: CLI/MCP `loop brief` worktree/session/branch filtered selection TDD 구현
+- [x] Task 41 RED: CLI/MCP `loop brief`가 worktree/session/branch filter를 무시하고 global latest snapshot을 쓰는 실패 확인
+- [x] Task 41 GREEN: 공유 snapshot selector와 CLI/MCP filtered continuation brief selection 구현
+- [ ] 다음 slice: Web selected worktree detail에서 filtered continuation brief action 설계 및 TDD 구현
 
 ### 판단 기준
 

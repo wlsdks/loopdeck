@@ -186,7 +186,7 @@ export const PREPARE_LOOP_BRIEF_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
   {
     name: "prepare_loop_brief",
     description:
-      "Prepare a copy-ready continuation prompt from the latest local Loopdeck snapshot. Use this when Codex or Claude Code is resuming an agent loop, handing off work across sessions/worktrees, or needs the next prompt after `prompt-coach loop collect`. This is read-only and never auto-submits the prompt. It returns prompt ids and loop metadata only, never prompt bodies, raw paths, secrets, transcripts, or external LLM results.",
+      "Prepare a copy-ready continuation prompt from a local Loopdeck snapshot. Use this when Codex or Claude Code is resuming an agent loop, handing off work across sessions/worktrees, or needs the next prompt after `prompt-coach loop collect`. Omit filters for the latest snapshot, or pass worktree/session/branch filters to continue a selected loop. This is read-only and never auto-submits the prompt. It returns prompt ids and loop metadata only, never prompt bodies, raw paths, secrets, transcripts, or external LLM results.",
     annotations: {
       ...LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS,
       title: "Prepare Loopdeck continuation brief",
@@ -197,7 +197,22 @@ export const PREPARE_LOOP_BRIEF_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
         latest: {
           type: "boolean",
           description:
-            "Use the latest local loop snapshot. Defaults to true; no other selection mode exists yet.",
+            "Use the latest local loop snapshot when no worktree/session/branch filter is provided. Defaults to true.",
+        },
+        worktree: {
+          type: "string",
+          description:
+            "Optional safe worktree label. Selects the newest matching local loop snapshot.",
+        },
+        session_id: {
+          type: "string",
+          description:
+            "Optional agent session id. Selects the newest matching local loop snapshot.",
+        },
+        branch: {
+          type: "string",
+          description:
+            "Optional branch label. Selects the newest matching local loop snapshot.",
         },
       },
       additionalProperties: false,
@@ -205,7 +220,16 @@ export const PREPARE_LOOP_BRIEF_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
     outputSchema: {
       type: "object",
       properties: {
-        source: { const: "latest" },
+        source: { enum: ["latest", "selected"] },
+        selection: {
+          type: "object",
+          properties: {
+            worktree: { type: "string" },
+            session_id: { type: "string" },
+            branch: { type: "string" },
+          },
+          additionalProperties: false,
+        },
         snapshot_id: { type: "string" },
         title: { type: "string" },
         prompt: { type: "string" },

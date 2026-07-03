@@ -159,7 +159,45 @@ describe("loop CLI command", () => {
     expect(text).toContain(
       "Scheduler lifecycle should stay plist-only unless the user explicitly asks for launchctl mutation.",
     );
-    expect(text).not.toContain("This unrelated project memory should not appear");
+    expect(text).not.toContain(
+      "This unrelated project memory should not appear",
+    );
+    expect(text).not.toContain("Make this better");
+    expect(text).not.toContain("/Users/example");
+  });
+
+  it("prints a continuation brief for the selected worktree session and branch", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    const selected = JSON.parse(
+      loopCollectForCli({
+        dataDir,
+        json: true,
+        cwdPrefix: "/Users/example/private-project",
+        now: new Date("2026-07-04T01:00:00.000Z"),
+        cwd: "/Users/example/private-project",
+        branch: "feature/selected-loop",
+        worktree: "selected-worktree",
+      }),
+    ) as { id: string };
+    seedLoopOutcome(dataDir, selected.id);
+    seedNewerOtherWorktreeSnapshot(dataDir);
+
+    const text = loopBriefForCli({
+      dataDir,
+      worktree: "selected-worktree",
+      session: "session-loop-cli",
+      branch: "feature/selected-loop",
+    } as Parameters<typeof loopBriefForCli>[0] & { session: string });
+
+    expect(text).toContain(`Continue agent loop ${selected.id}`);
+    expect(text).toContain("worktree: selected-worktree");
+    expect(text).toContain("session: session-loop-cli");
+    expect(text).toContain("branch: feature/selected-loop");
+    expect(text).toContain(
+      "Scheduler lifecycle should stay plist-only unless the user explicitly asks for launchctl mutation.",
+    );
+    expect(text).not.toContain("Other worktree has a newer snapshot.");
     expect(text).not.toContain("Make this better");
     expect(text).not.toContain("/Users/example");
   });
@@ -209,12 +247,18 @@ describe("loop CLI command", () => {
     expect(text).toContain("active worktrees 2");
     expect(text).toContain("active sessions 2");
     expect(text).toContain("worktree review needed yes");
-    expect(text).toContain("worktree primary-worktree snapshots 1 sessions 1 latest passed");
-    expect(text).toContain("worktree other-worktree snapshots 1 sessions 1 latest passed");
+    expect(text).toContain(
+      "worktree primary-worktree snapshots 1 sessions 1 latest passed",
+    );
+    expect(text).toContain(
+      "worktree other-worktree snapshots 1 sessions 1 latest passed",
+    );
     expect(text).toContain("memory candidate eligible");
     expect(text).toContain("latest loop");
     expect(text).toContain("project private-project");
-    expect(text).toContain("compact boundary PostCompact at 2026-07-04T01:05:00.000Z");
+    expect(text).toContain(
+      "compact boundary PostCompact at 2026-07-04T01:05:00.000Z",
+    );
     expect(text).toContain("Next: prompt-coach loop collect");
     expect(text).not.toContain("Make this better");
     expect(text).not.toContain("Compact summary with sk-proj-secret");
@@ -284,7 +328,9 @@ describe("loop CLI command", () => {
       "Scheduler lifecycle should stay plist-only unless the user explicitly asks for launchctl mutation.",
     );
     expect(json).not.toContain("commit:2a91de0");
-    expect(json).not.toContain("This unrelated project memory should not appear");
+    expect(json).not.toContain(
+      "This unrelated project memory should not appear",
+    );
   });
 
   it("prints empty loop status guidance", () => {
@@ -425,7 +471,10 @@ describe("loop CLI command", () => {
     expect(json).not.toContain("Make this better");
     expect(json).not.toContain("/Users/example");
 
-    const text = loopInstructionPatchForCli({ dataDir, targetFile: "AGENTS.md" });
+    const text = loopInstructionPatchForCli({
+      dataDir,
+      targetFile: "AGENTS.md",
+    });
 
     expect(text).toContain("Loop instruction patch proposal");
     expect(text).toContain("target AGENTS.md");
@@ -504,10 +553,7 @@ async function seedPrompts(dataDir: string): Promise<void> {
   const storage = createSqlitePromptStorage({
     dataDir,
     hmacSecret: init.hookAuth.web_session_secret,
-    now: nextDate([
-      "2026-07-04T00:58:00.000Z",
-      "2026-07-04T00:59:00.000Z",
-    ]),
+    now: nextDate(["2026-07-04T00:58:00.000Z", "2026-07-04T00:59:00.000Z"]),
   });
   try {
     await storeClaudePrompt(
@@ -581,6 +627,33 @@ function seedLoopOutcome(dataDir: string, snapshotId: string): void {
       summary:
         "Scheduler lifecycle should stay plist-only unless the user explicitly asks for launchctl mutation.",
       evidence_refs: ["commit:2a91de0", "test:pnpm test"],
+    });
+  } finally {
+    storage.close();
+  }
+}
+
+function seedNewerOtherWorktreeSnapshot(dataDir: string): void {
+  const init = initializePromptCoach({ dataDir });
+  const storage = createSqlitePromptStorage({
+    dataDir,
+    hmacSecret: init.hookAuth.web_session_secret,
+  });
+  try {
+    const latest = storage.getLatestLoopSnapshot();
+    if (!latest) return;
+    storage.createLoopSnapshot({
+      ...latest,
+      id: "loop_newer_other_worktree",
+      created_at: "2026-07-04T01:10:00.000Z",
+      session_id: "session-other-cli",
+      branch: "feature/other-loop",
+      worktree_label: "other-worktree",
+      outcome: {
+        status: "passed",
+        summary: "Other worktree has a newer snapshot.",
+        evidence_refs: ["commit:other"],
+      },
     });
   } finally {
     storage.close();

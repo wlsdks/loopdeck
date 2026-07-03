@@ -103,7 +103,9 @@ describe("Loopdeck MCP tools", () => {
       "Shared status surfaces should use one model instead of duplicating readiness logic.",
     );
     expect(serialized).not.toContain("commit:11d8426");
-    expect(serialized).not.toContain("This unrelated project memory should not appear");
+    expect(serialized).not.toContain(
+      "This unrelated project memory should not appear",
+    );
   });
 
   it("reports compact boundaries newer than the latest loop snapshot", () => {
@@ -183,6 +185,64 @@ describe("Loopdeck MCP tools", () => {
     expect(serialized).not.toContain("/Users/example");
   });
 
+  it("prepares a continuation brief for the selected worktree session and branch", () => {
+    const dataDir = seedLoopSnapshot({
+      outcome: {
+        status: "passed",
+        summary:
+          "Selected worktree brief should resume the reviewed branch, not the newest unrelated worktree.",
+        evidence_refs: ["commit:selected"],
+      },
+    });
+    seedNewerOtherWorktreeSnapshot(dataDir);
+
+    const result = prepareLoopBriefTool(
+      {
+        worktree: "worktree-mcp",
+        session_id: "session-mcp",
+        branch: "codex/agent-loop-memory-design",
+      } as Parameters<typeof prepareLoopBriefTool>[0] & {
+        worktree: string;
+        session_id: string;
+        branch: string;
+      },
+      { dataDir },
+    );
+    const serialized = JSON.stringify(result);
+
+    expect(result).toMatchObject({
+      source: "selected",
+      snapshot_id: "loop_mcp",
+    });
+    expect(result.prompt).toContain("worktree: worktree-mcp");
+    expect(result.prompt).toContain("session: session-mcp");
+    expect(result.prompt).toContain("branch: codex/agent-loop-memory-design");
+    expect(result.prompt).toContain(
+      "Selected worktree brief should resume the reviewed branch, not the newest unrelated worktree.",
+    );
+    expect(result.prompt).not.toContain("Other worktree has a newer snapshot.");
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("/Users/example");
+  });
+
+  it("returns not_found when selected loop brief filters match no snapshot", () => {
+    const dataDir = seedLoopSnapshot();
+
+    const result = prepareLoopBriefTool(
+      { worktree: "missing-worktree" } as Parameters<
+        typeof prepareLoopBriefTool
+      >[0] & { worktree: string },
+      { dataDir },
+    );
+
+    expect(result).toEqual({
+      is_error: true,
+      error_code: "not_found",
+      message:
+        "No loop snapshot matched the selected worktree/session/branch filters.",
+    });
+  });
+
   it("includes compact boundary awareness in continuation briefs", () => {
     const dataDir = seedLoopSnapshot({ withCompactBoundary: true });
 
@@ -212,8 +272,7 @@ describe("Loopdeck MCP tools", () => {
     expect(result).toEqual({
       is_error: true,
       error_code: "not_found",
-      message:
-        "No loop snapshot found. Run `prompt-coach loop collect` first.",
+      message: "No loop snapshot found. Run `prompt-coach loop collect` first.",
     });
   });
 
@@ -569,6 +628,32 @@ function seedOtherProjectMemory(dataDir: string): void {
       evidence_refs: ["commit:other"],
       approved_by: "user",
     });
+  } finally {
+    storage.close();
+  }
+}
+
+function seedNewerOtherWorktreeSnapshot(dataDir: string): void {
+  const init = initializePromptCoach({ dataDir });
+  const storage = createSqlitePromptStorage({
+    dataDir,
+    hmacSecret: init.hookAuth.web_session_secret,
+  });
+  try {
+    storage.createLoopSnapshot(
+      loopSnapshot({
+        id: "loop_newer_other_worktree",
+        created_at: "2026-07-04T01:10:00.000Z",
+        session_id: "session-other-mcp",
+        branch: "feature/other-loop",
+        worktree_label: "other-worktree",
+        outcome: {
+          status: "passed",
+          summary: "Other worktree has a newer snapshot.",
+          evidence_refs: ["commit:other"],
+        },
+      }),
+    );
   } finally {
     storage.close();
   }
