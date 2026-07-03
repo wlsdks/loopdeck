@@ -239,3 +239,73 @@ export const RECORD_LOOP_OUTCOME_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
       ],
     },
   } as const;
+
+export const PROPOSE_LOOP_MEMORY_CANDIDATE_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
+  {
+    name: "propose_loop_memory_candidate",
+    description:
+      "Decide whether the latest local Loopdeck outcome is safe and evidence-backed enough to propose as a memory candidate. This is read-only and approval-gated: it never writes AGENTS.md, CLAUDE.md, memory files, prompt bodies, raw paths, secrets, transcripts, compact summaries, or external LLM results.",
+    annotations: {
+      ...LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS,
+      title: "Propose Loopdeck memory candidate",
+    },
+    inputSchema: {
+      type: "object",
+      properties: {
+        latest: {
+          type: "boolean",
+          description:
+            "Use the latest local loop snapshot. Defaults to true; no other selection mode exists yet.",
+        },
+      },
+      additionalProperties: false,
+    },
+    outputSchema: {
+      type: "object",
+      properties: {
+        eligible: { type: "boolean" },
+        reason: { type: "string" },
+        snapshot_id: { type: "string" },
+        candidate: {
+          type: "object",
+          properties: {
+            title: { type: "string" },
+            scope: { const: "project" },
+            statement: { type: "string" },
+            evidence_refs: { type: "array", items: { type: "string" } },
+          },
+        },
+        next_action: { type: "string" },
+        privacy: {
+          ...LOOP_TOOL_PRIVACY_SCHEMA,
+          required: [
+            ...LOOP_TOOL_PRIVACY_SCHEMA.required,
+            "stores_prompt_bodies",
+            "stores_raw_paths",
+            "auto_writes_memory",
+          ],
+          properties: {
+            ...LOOP_TOOL_PRIVACY_SCHEMA.properties,
+            stores_prompt_bodies: { const: false },
+            stores_raw_paths: { const: false },
+            auto_writes_memory: { const: false },
+          },
+        },
+        is_error: TOOL_ERROR_OUTPUT_SCHEMA.properties.is_error,
+        error_code: TOOL_ERROR_OUTPUT_SCHEMA.properties.error_code,
+        message: TOOL_ERROR_OUTPUT_SCHEMA.properties.message,
+      },
+      oneOf: [
+        {
+          required: [
+            "eligible",
+            "reason",
+            "snapshot_id",
+            "next_action",
+            "privacy",
+          ],
+        },
+        TOOL_ERROR_OUTPUT_SCHEMA,
+      ],
+    },
+  } as const;

@@ -3,6 +3,7 @@ import {
   createLoopBrief,
   latestCompactBoundaryAfterSnapshot,
 } from "../loop/brief.js";
+import { decideLoopMemoryCandidate } from "../loop/memory-candidate.js";
 import type { LoopSnapshot } from "../loop/types.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import type { ScorePromptToolOptions } from "./score-tool-types.js";
@@ -11,6 +12,8 @@ import type {
   GetLoopdeckStatusToolResult,
   PrepareLoopBriefToolArguments,
   PrepareLoopBriefToolResult,
+  ProposeLoopMemoryCandidateToolArguments,
+  ProposeLoopMemoryCandidateToolResult,
   RecordLoopOutcomeToolArguments,
   RecordLoopOutcomeToolResult,
 } from "./loop-tool-types.js";
@@ -19,6 +22,7 @@ const LOOP_TOOL_NAMES = [
   "get_loopdeck_status",
   "prepare_loop_brief",
   "record_loop_outcome",
+  "propose_loop_memory_candidate",
 ];
 
 export function getLoopdeckStatusTool(
@@ -206,6 +210,55 @@ export function recordLoopOutcomeTool(
   }
 }
 
+export function proposeLoopMemoryCandidateTool(
+  args: ProposeLoopMemoryCandidateToolArguments,
+  options: ScorePromptToolOptions = {},
+): ProposeLoopMemoryCandidateToolResult {
+  if (args.latest === false) {
+    return loopToolError(
+      "invalid_input",
+      "`latest` is the only supported loop snapshot selection mode today.",
+    );
+  }
+
+  try {
+    const config = loadPromptCoachConfig(options.dataDir);
+    const auth = loadHookAuth(options.dataDir);
+    const storage = createSqlitePromptStorage({
+      dataDir: config.data_dir,
+      hmacSecret: auth.web_session_secret,
+    });
+
+    try {
+      const snapshot = storage.getLatestLoopSnapshot();
+      if (!snapshot) {
+        return loopToolError(
+          "not_found",
+          "No loop snapshot found. Run `prompt-coach loop collect` first.",
+        );
+      }
+
+      const decision = decideLoopMemoryCandidate(snapshot);
+      return {
+        ...decision,
+        next_action: decision.eligible
+          ? "Ask the user to approve this candidate before writing it into AGENTS.md, CLAUDE.md, or any memory store."
+          : "Record a passed loop outcome with safe evidence before proposing memory.",
+        privacy: {
+          ...loopToolPrivacy(),
+          stores_prompt_bodies: false,
+          stores_raw_paths: false,
+          auto_writes_memory: false,
+        },
+      };
+    } finally {
+      storage.close();
+    }
+  } catch (error) {
+    return loopToolError("storage_unavailable", storageUnavailableMessage(error));
+  }
+}
+
 function toSafeLatestLoopSnapshot(snapshot: LoopSnapshot) {
   return {
     id: snapshot.id,
@@ -233,7 +286,9 @@ function loopToolPrivacy() {
 }
 
 type LoopToolErrorCode = Extract<
-  PrepareLoopBriefToolResult | RecordLoopOutcomeToolResult,
+  | PrepareLoopBriefToolResult
+  | RecordLoopOutcomeToolResult
+  | ProposeLoopMemoryCandidateToolResult,
   { is_error: true }
 >["error_code"];
 

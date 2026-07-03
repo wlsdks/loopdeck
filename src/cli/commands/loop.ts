@@ -6,6 +6,10 @@ import {
   latestCompactBoundaryAfterSnapshot,
 } from "../../loop/brief.js";
 import { collectLoopSnapshot } from "../../loop/collect.js";
+import {
+  decideLoopMemoryCandidate,
+  type LoopMemoryCandidateDecision,
+} from "../../loop/memory-candidate.js";
 import type { LoopSnapshot, LoopSnapshotSource } from "../../loop/types.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import { registerLoopScheduleCommand } from "./loop-schedule.js";
@@ -60,6 +64,15 @@ export function registerLoopCommand(program: Command): void {
       console.log(loopBriefForCli(options));
     });
 
+  loop
+    .command("memory-candidate")
+    .description("Decide whether the latest loop can become an approved memory.")
+    .option("--data-dir <path>", "Override the prompt-coach data directory.")
+    .option("--json", "Print JSON.")
+    .action((options: LoopCliOptions) => {
+      console.log(loopMemoryCandidateForCli(options));
+    });
+
   registerLoopScheduleCommand(loop);
 }
 
@@ -109,6 +122,24 @@ export function loopBriefForCli(options: LoopCliOptions = {}): string {
     return options.json
       ? JSON.stringify(brief, null, 2)
       : `${brief.title}\n\n${brief.prompt}`;
+  });
+}
+
+export function loopMemoryCandidateForCli(
+  options: LoopCliOptions = {},
+): string {
+  return withStorage(options.dataDir, (storage) => {
+    const snapshot = storage.getLatestLoopSnapshot();
+    if (!snapshot) {
+      throw new UserError(
+        "No loop snapshot found. Run `prompt-coach loop collect` first.",
+      );
+    }
+
+    const decision = decideLoopMemoryCandidate(snapshot);
+    return options.json
+      ? JSON.stringify(decision, null, 2)
+      : formatLoopMemoryCandidate(decision);
   });
 }
 
@@ -194,6 +225,29 @@ function formatLoopStatus(status: ReturnType<typeof createLoopStatus>): string {
     `Next: ${status.next_action}`,
     "",
     "Privacy: local-only, no prompt bodies, no raw paths.",
+  ]
+    .filter((line): line is string => line !== undefined)
+    .join("\n");
+}
+
+function formatLoopMemoryCandidate(
+  decision: LoopMemoryCandidateDecision,
+): string {
+  return [
+    `Loop memory candidate ${decision.eligible ? "eligible" : "not eligible"}`,
+    `snapshot ${decision.snapshot_id}`,
+    `reason ${decision.reason}`,
+    decision.candidate ? `title ${decision.candidate.title}` : undefined,
+    decision.candidate ? `statement ${decision.candidate.statement}` : undefined,
+    decision.candidate
+      ? `evidence ${decision.candidate.evidence_refs.join(", ")}`
+      : undefined,
+    "",
+    decision.eligible
+      ? "Next: review and approve before writing memory"
+      : "Next: record a passed loop outcome with evidence before proposing memory",
+    "",
+    "Privacy: local-only, no prompt bodies, no raw paths, no external calls, no automatic memory writes.",
   ]
     .filter((line): line is string => line !== undefined)
     .join("\n");

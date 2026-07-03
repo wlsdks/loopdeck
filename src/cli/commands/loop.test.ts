@@ -8,7 +8,12 @@ import { normalizeClaudeCodePayload } from "../../adapters/claude-code.js";
 import { initializePromptCoach } from "../../config/config.js";
 import { redactPrompt } from "../../redaction/redact.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
-import { loopBriefForCli, loopCollectForCli, loopStatusForCli } from "./loop.js";
+import {
+  loopBriefForCli,
+  loopCollectForCli,
+  loopMemoryCandidateForCli,
+  loopStatusForCli,
+} from "./loop.js";
 
 const tempDirs: string[] = [];
 
@@ -183,6 +188,46 @@ describe("loop CLI command", () => {
     expect(text).toContain("snapshots 0");
     expect(text).toContain("Next: prompt-coach loop collect");
   });
+
+  it("prints a privacy-safe memory candidate decision for the latest passed loop", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    const snapshot = JSON.parse(
+      loopCollectForCli({
+        dataDir,
+        json: true,
+        cwdPrefix: "/Users/example/private-project",
+        now: new Date("2026-07-04T01:00:00.000Z"),
+        cwd: "/Users/example/private-project",
+      }),
+    ) as { id: string };
+    seedLoopOutcome(dataDir, snapshot.id);
+
+    const json = loopMemoryCandidateForCli({ dataDir, json: true });
+    const parsed = JSON.parse(json) as {
+      eligible: boolean;
+      candidate?: { statement: string; evidence_refs: string[] };
+      privacy: { auto_writes_memory: boolean; external_calls: boolean };
+    };
+
+    expect(parsed.eligible).toBe(true);
+    expect(parsed.candidate?.statement).toContain(
+      "Scheduler lifecycle should stay plist-only",
+    );
+    expect(parsed.candidate?.evidence_refs).toContain("commit:2a91de0");
+    expect(parsed.privacy.auto_writes_memory).toBe(false);
+    expect(parsed.privacy.external_calls).toBe(false);
+    expect(json).not.toContain("Make this better");
+    expect(json).not.toContain("/Users/example");
+
+    const text = loopMemoryCandidateForCli({ dataDir });
+
+    expect(text).toContain("Loop memory candidate eligible");
+    expect(text).toContain("reason passed_with_evidence");
+    expect(text).toContain("Next: review and approve before writing memory");
+    expect(text).not.toContain("Make this better");
+    expect(text).not.toContain("/Users/example");
+  });
 });
 
 async function seedPrompts(dataDir: string): Promise<void> {
@@ -249,6 +294,24 @@ function seedCompactBoundary(dataDir: string): void {
       session_id: "session-loop-cli",
       cwd: "/Users/example/private-project",
       content: "Compact summary with sk-proj-secret and /Users/example.",
+    });
+  } finally {
+    storage.close();
+  }
+}
+
+function seedLoopOutcome(dataDir: string, snapshotId: string): void {
+  const init = initializePromptCoach({ dataDir });
+  const storage = createSqlitePromptStorage({
+    dataDir,
+    hmacSecret: init.hookAuth.web_session_secret,
+  });
+  try {
+    storage.recordLoopOutcome(snapshotId, {
+      status: "passed",
+      summary:
+        "Scheduler lifecycle should stay plist-only unless the user explicitly asks for launchctl mutation.",
+      evidence_refs: ["commit:2a91de0", "test:pnpm test"],
     });
   } finally {
     storage.close();

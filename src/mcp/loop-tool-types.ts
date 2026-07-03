@@ -1,5 +1,6 @@
 import type { LoopOutcomeStatus } from "../loop/types.js";
 import type { LoopBriefCompactBoundary } from "../loop/brief.js";
+import type { LoopMemoryCandidateDecision } from "../loop/memory-candidate.js";
 
 export type GetLoopdeckStatusToolArguments = {
   include_latest?: boolean;
@@ -15,6 +16,10 @@ export type RecordLoopOutcomeToolArguments = {
   status: LoopOutcomeStatus;
   summary: string;
   evidence_refs?: string[];
+};
+
+export type ProposeLoopMemoryCandidateToolArguments = {
+  latest?: boolean;
 };
 
 export type LoopdeckToolPrivacy = {
@@ -78,6 +83,21 @@ export type RecordLoopOutcomeToolResult =
         stores_raw_paths: false;
       };
     }
+  | {
+      is_error: true;
+      error_code: "invalid_input" | "not_found" | "storage_unavailable";
+      message: string;
+    };
+
+export type ProposeLoopMemoryCandidateToolResult =
+  | (LoopMemoryCandidateDecision & {
+      next_action: string;
+      privacy: LoopdeckToolPrivacy & {
+        stores_prompt_bodies: false;
+        stores_raw_paths: false;
+        auto_writes_memory: false;
+      };
+    })
   | {
       is_error: true;
       error_code: "invalid_input" | "not_found" | "storage_unavailable";

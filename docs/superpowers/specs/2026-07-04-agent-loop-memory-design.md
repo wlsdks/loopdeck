@@ -549,6 +549,28 @@ Do not add:
 - automatic prompt resubmission
 - transcript or compact summary ingestion
 
+### Slice 4.6: Semantic Memory Decision Gate
+
+Add:
+
+- deterministic decision gate for the latest loop outcome
+  (**implemented in `decideLoopMemoryCandidate`**)
+- CLI `prompt-coach loop memory-candidate` for a local, copy-reviewable memory
+  candidate (**implemented**)
+- MCP `propose_loop_memory_candidate` so Codex and Claude Code can ask whether
+  a verified loop outcome is eligible for user-approved memory (**implemented**)
+- acceptance rule: only `passed` outcomes with non-empty safe evidence refs can
+  produce a candidate (**implemented**)
+- privacy rule: no prompt bodies, raw paths, transcripts, compact summaries,
+  external LLM results, or automatic memory writes (**implemented**)
+
+Do not add:
+
+- automatic writes to AGENTS.md, CLAUDE.md, memory files, or project docs
+- semantic vector storage before the candidate gate proves useful
+- hidden external LLM calls for memory extraction
+- storing rejected unsafe summaries
+
 ### Slice 5: Brand Migration
 
 Add:

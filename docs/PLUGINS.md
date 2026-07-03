@@ -217,13 +217,17 @@ it asks the user to refresh the snapshot instead of replaying compact summaries
 or custom compact instructions. `record_loop_outcome` writes only user-approved
 status, summary, and evidence references for a Loopdeck snapshot; it does not
 store prompt bodies, raw paths, or external LLM results.
+`propose_loop_memory_candidate` is the semantic-memory decision gate: it checks
+the latest passed loop outcome and safe evidence refs, then returns a
+user-reviewable candidate without writing memory or instruction files.
 
 The local CLI mirrors that loop surface with `prompt-coach loop status`,
-`prompt-coach loop collect`, and `prompt-coach loop brief`. Use
-`prompt-coach loop collect --source service` as the explicit one-shot command
-for cron or LaunchAgent collection; it does not silently install a scheduler.
-The opt-in macOS schedule is `prompt-coach loop schedule install`; use
-`--dry-run` to inspect the LaunchAgent before writing it. Use
+`prompt-coach loop collect`, `prompt-coach loop brief`, and
+`prompt-coach loop memory-candidate`. Use `prompt-coach loop collect --source
+service` as the explicit one-shot command for cron or LaunchAgent collection;
+it does not silently install a scheduler. The opt-in macOS schedule is
+`prompt-coach loop schedule install`; use `--dry-run` to inspect the
+LaunchAgent before writing it. Use
 `prompt-coach loop schedule status` to check whether the plist exists and
 `prompt-coach loop schedule uninstall` to remove it. `loop status` prints
 snapshot readiness, latest safe loop metadata, and compact refresh guidance

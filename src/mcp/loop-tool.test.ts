@@ -10,6 +10,7 @@ import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import {
   getLoopdeckStatusTool,
   prepareLoopBriefTool,
+  proposeLoopMemoryCandidateTool,
   recordLoopOutcomeTool,
 } from "./loop-tool.js";
 
@@ -168,6 +169,44 @@ describe("Loopdeck MCP tools", () => {
     expect(serialized).not.toContain("/Users/example");
   });
 
+  it("proposes a memory candidate from the latest passed loop without writing memory", () => {
+    const dataDir = seedLoopSnapshot({
+      outcome: {
+        status: "passed",
+        summary:
+          "Scheduler lifecycle should stay plist-only unless the user explicitly asks for launchctl mutation.",
+        evidence_refs: ["commit:2a91de0", "test:pnpm test"],
+      },
+    });
+
+    const result = proposeLoopMemoryCandidateTool({}, { dataDir });
+    const serialized = JSON.stringify(result);
+
+    expect(result).toMatchObject({
+      eligible: true,
+      reason: "passed_with_evidence",
+      snapshot_id: "loop_mcp",
+      candidate: {
+        statement:
+          "Scheduler lifecycle should stay plist-only unless the user explicitly asks for launchctl mutation.",
+        evidence_refs: ["commit:2a91de0", "test:pnpm test"],
+      },
+      next_action:
+        "Ask the user to approve this candidate before writing it into AGENTS.md, CLAUDE.md, or any memory store.",
+      privacy: {
+        local_only: true,
+        external_calls: false,
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        returns_prompt_bodies: false,
+        returns_raw_paths: false,
+        auto_writes_memory: false,
+      },
+    });
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("/Users/example");
+  });
+
   it("rejects empty loop outcome summaries", () => {
     const dataDir = seedLoopSnapshot();
 
@@ -188,7 +227,12 @@ describe("Loopdeck MCP tools", () => {
   });
 });
 
-function seedLoopSnapshot(options: { withCompactBoundary?: boolean } = {}): string {
+function seedLoopSnapshot(
+  options: {
+    withCompactBoundary?: boolean;
+    outcome?: LoopSnapshot["outcome"];
+  } = {},
+): string {
   const dataDir = createTempDir();
   const init = initializePromptCoach({ dataDir });
   const storage = createSqlitePromptStorage({
@@ -206,9 +250,16 @@ function seedLoopSnapshot(options: { withCompactBoundary?: boolean } = {}): stri
         cwd: "/Users/example/private-project",
         content: "Compact summary with sk-proj-secret and /Users/example.",
       });
-      storage.createLoopSnapshot(loopSnapshot({ project_id: boundary.project_id }));
+      storage.createLoopSnapshot(
+        loopSnapshot({
+          project_id: boundary.project_id,
+          ...(options.outcome ? { outcome: options.outcome } : {}),
+        }),
+      );
     } else {
-      storage.createLoopSnapshot(loopSnapshot());
+      storage.createLoopSnapshot(
+        loopSnapshot(options.outcome ? { outcome: options.outcome } : {}),
+      );
     }
   } finally {
     storage.close();

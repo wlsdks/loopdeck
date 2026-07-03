@@ -49,6 +49,9 @@ describe("MCP stdio server", () => {
             name: "record_loop_outcome",
           }),
           expect.objectContaining({
+            name: "propose_loop_memory_candidate",
+          }),
+          expect.objectContaining({
             name: "score_prompt_archive",
           }),
           expect.objectContaining({
@@ -80,7 +83,7 @@ describe("MCP stdio server", () => {
 
     const tools = (response?.result as { tools: Array<unknown> }).tools;
 
-    expect(tools).toHaveLength(16);
+    expect(tools).toHaveLength(17);
     for (const tool of tools.filter(
       (tool) =>
         ![
@@ -231,6 +234,17 @@ describe("MCP stdio server", () => {
             properties: expect.objectContaining({
               recorded: expect.any(Object),
               outcome: expect.any(Object),
+              privacy: expect.any(Object),
+            }),
+          }),
+        }),
+        expect.objectContaining({
+          name: "propose_loop_memory_candidate",
+          outputSchema: expect.objectContaining({
+            properties: expect.objectContaining({
+              eligible: expect.any(Object),
+              reason: expect.any(Object),
+              candidate: expect.any(Object),
               privacy: expect.any(Object),
             }),
           }),

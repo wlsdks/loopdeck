@@ -685,7 +685,7 @@ Codex, or any MCP client through a stdio MCP server:
 prompt-coach mcp
 ```
 
-The MCP server exposes sixteen tools:
+The MCP server exposes seventeen tools:
 
 - `get_prompt_coach_status`: check whether the local archive is initialized,
   whether prompts have been captured, and which MCP tool to call next.
@@ -728,14 +728,20 @@ The MCP server exposes sixteen tools:
   compact instructions.
 - `record_loop_outcome`: store user-approved loop outcome metadata for a
   Loopdeck snapshot without storing prompt bodies or raw paths.
+- `propose_loop_memory_candidate`: decide whether the latest verified loop
+  outcome is safe and evidence-backed enough to become a user-approved memory
+  candidate. It is read-only and never writes AGENTS.md, CLAUDE.md, memory
+  files, prompt bodies, raw paths, transcripts, compact summaries, or external
+  LLM results.
 
 The matching local CLI surface is `prompt-coach loop status`,
-`prompt-coach loop collect`, and `prompt-coach loop brief`. `loop collect` also
-accepts `--source service` for explicit cron or LaunchAgent one-shot collection
-without creating hidden background automation. Users who want an opt-in macOS
-schedule can preview or install it with `prompt-coach loop schedule install
---dry-run` or `prompt-coach loop schedule install --cwd-prefix <project>`,
-check it with `prompt-coach loop schedule status`, and remove the plist with
+`prompt-coach loop collect`, `prompt-coach loop brief`, and
+`prompt-coach loop memory-candidate`. `loop collect` also accepts
+`--source service` for explicit cron or LaunchAgent one-shot collection without
+creating hidden background automation. Users who want an opt-in macOS schedule
+can preview or install it with `prompt-coach loop schedule install --dry-run`
+or `prompt-coach loop schedule install --cwd-prefix <project>`, check it with
+`prompt-coach loop schedule status`, and remove the plist with
 `prompt-coach loop schedule uninstall`.
 `loop status` shows snapshot readiness, latest safe metadata, and compact
 refresh guidance without printing prompt bodies, compact summaries, custom
