@@ -10,6 +10,20 @@
 
 ---
 
+## Planning Gate
+
+Before executing this plan, read `docs/superpowers/specs/2026-07-04-agent-loop-memory-design.md` and verify its go/no-go gate is satisfied.
+
+This plan is executable only if:
+
+- the first implementation slice is still limited to domain/storage/CLI/docs
+- the public command remains `prompt-coach`
+- package, GitHub repository, plugin, hook, MCP, and web UI rename work is deferred
+- loop snapshots store prompt IDs and metadata, not prompt bodies or raw paths
+- Node 22 + pnpm 10 remains the verification baseline for this checkout
+
+If any condition is false, update the design spec before writing code.
+
 ## Pre-Flight
 
 Run all commands with the repository's known-good Node 22 toolchain:

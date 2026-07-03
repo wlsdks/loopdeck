@@ -8,7 +8,7 @@
 
 **Repository target:** `wlsdks/loopdeck`
 
-**Status:** Proposed design, ready for user review.
+**Status:** Product planning hardening in progress. Do not start implementation until the feature portfolio and go/no-go gates in this document are accepted.
 
 ---
 
@@ -54,6 +54,14 @@ Existing product surfaces:
 - Agent rewrite/judge flows already use the active user-controlled agent session and avoid hidden provider calls.
 - Storage is prompt-centric: prompt rows, events, redactions, tags, drafts, project policies, import/export jobs, judgments, ask events.
 
+Planning gaps before development:
+
+- The first version of this spec defined direction and a first slice, but did not explicitly decide which existing features stay unchanged, which become Loopdeck features, which should be deprecated, and which are new.
+- It did not define acceptance criteria per Codex and Claude Code integration surface.
+- It did not separate "core product" from "harness/instruction docs" strongly enough.
+- It did not define a stop condition for avoiding overbuilt agent-runtime infrastructure.
+- It did not include a clear go/no-go gate before implementation.
+
 Missing model:
 
 - no first-class loop/run/session snapshot
@@ -62,6 +70,30 @@ Missing model:
 - no cross-session continuation brief
 - no "agent loop health" dashboard
 - no canonical export path for project instruction and harness docs
+
+## 2.1 Feature Portfolio Decision Matrix
+
+Development must start from this portfolio decision, not from novelty.
+
+| Area | Current state | Decision | Reason |
+| --- | --- | --- | --- |
+| Prompt capture | Claude Code and Codex adapters plus fail-open hooks exist | **Keep and harden** | This is the data foundation. Loop snapshots should reference captured prompts instead of replacing them. |
+| Prompt archive Markdown | Markdown remains source of truth for prompts | **Keep unchanged in Slice 1** | Human-readable local archive is still valuable. Do not move loop state into project docs by default. |
+| SQLite prompt index/FTS | Existing local index and search | **Keep and extend** | Add loop snapshot tables beside prompt tables. Do not rebuild storage around a new runtime. |
+| Local prompt scoring | Rule-based `0-100` scoring exists | **Improve later, do not replace** | Existing score powers habit gaps. It is not enough for loop quality but remains useful input. |
+| Prompt improvement drafts | Copy-based deterministic drafts exist | **Keep and reframe** | Drafts become one kind of "next loop brief." Do not auto-submit. |
+| MCP agent rewrite/judge | Active-agent mediated, opt-in | **Keep and extend** | This is the correct safety pattern for semantic judgment. Add loop tools later using the same privacy boundary. |
+| Web archive/detail/dashboard | Existing operational UI | **Keep; add Loops later** | Web remains useful, but Slice 1 must prove loop model before UI work. |
+| Import/export jobs | Prompt/archive-oriented | **Keep; defer loop export** | Loop snapshots should not be exported into project docs until privacy and usefulness are proven. |
+| `coach_prompt` one-call MCP workflow | Existing one-call agent workflow | **Improve after loop model** | It should eventually include latest loop status and brief, but not in Slice 1. |
+| Project policies | capture/export flags exist | **Extend later** | Add loop capture/export policy only after loop data exists. |
+| Agent wrappers `pc-claude` / `pc-codex` | Experimental initial prompt wrappers | **Do not expand now** | Hooks and MCP are tighter official surfaces. Wrappers do not cover later interactive turns. |
+| Cron/service | Server service exists, no loop cron | **New after Slice 1** | Periodic collection is useful but should run only after manual `loop collect` proves the schema. |
+| Full trace ingestion | Not implemented | **Do not build now** | OpenAI/ADK-style traces are useful references, but ingesting full traces/transcripts risks privacy and scope explosion. |
+| Semantic vector memory | Not implemented | **Do not build by default** | Start with structured SQLite summaries. Add embeddings only if exact search and structured fields are insufficient. |
+| Repo/package rename | Partially renamed repo metadata, package still `prompt-coach` | **Plan, do not execute in Slice 1** | Branding is important but should not block proving the loop model. |
+
+This matrix is the planning gate. If an implementation task is not supported by one row above, it belongs in a later proposal.
 
 ### 2026 External Direction
 
@@ -161,6 +193,15 @@ Required Codex-facing Loopdeck capabilities:
 - Hook `Stop`: collect loop snapshot and optionally suggest next command without blocking the agent.
 - Hook `PreCompact` or `PostCompact`: record compaction boundary metadata, not raw transcript dumps.
 
+Codex acceptance criteria:
+
+- `prompt-coach setup --profile coach --register-mcp --open-web` still works during the Loopdeck transition.
+- Project `.codex/config.toml` and hook examples use current Codex surfaces: `AGENTS.md`, MCP server config, lifecycle hooks, and worktrees.
+- The loop collector does not require reading `$CODEX_HOME` private state or Codex app databases.
+- Worktree awareness comes from git commands and safe labels first. Codex-managed worktree metadata is used only when it is exposed through documented or user-approved local surfaces.
+- A Codex user can ask the active agent for the next loop prompt through MCP without receiving prompt bodies or raw paths.
+- Hook failures remain fail-open and do not block Codex.
+
 ### Claude Code
 
 Use these Claude Code surfaces:
@@ -180,6 +221,27 @@ Required Claude-facing Loopdeck capabilities:
 - `/loopdeck:open`
 
 During migration, keep `/prompt-coach:*` commands as aliases until docs and marketplace users have moved.
+
+Claude Code acceptance criteria:
+
+- Claude Code plugin setup remains explicit and consent-based.
+- Claude Code hooks preserve the `UserPromptSubmit` stdout safety rule: do not print raw prompt bodies or secrets into model-visible output.
+- The Claude plugin can expose `/loopdeck:*` commands later, but existing `/prompt-coach:*` commands must continue during migration.
+- Claude Code MCP usage follows the same active-agent mediated pattern as the existing rewrite/judge tools.
+- Hook examples use deterministic shell hooks for collection and reserve prompt/agent hooks for review suggestions only.
+
+## 4.1 Why Not Build A Generic Agent Runtime
+
+Loopdeck should not compete with LangGraph, ADK, Temporal, or hosted agent runtimes. Those systems own durable execution, graph orchestration, and generalized tool dispatch.
+
+Loopdeck's lane is narrower:
+
+- local capture of coding-agent prompts and loop metadata
+- privacy-safe summaries of work across sessions/worktrees
+- continuation prompts and review prompts for existing agents
+- local diagnostics for whether agent loops are improving
+
+Use runtime ecosystems as references for trace shape, memory boundaries, and eval patterns. Do not reimplement them.
 
 ## 5. Instruction And Harness Docs
 
@@ -228,6 +290,23 @@ Add or revise:
 - `docs/LOOP-SNAPSHOT-SCHEMA.md`: loop snapshot schema and privacy rules.
 
 Existing `docs/PLUGINS.md` and `docs/ADAPTERS.md` should be updated after the design is approved.
+
+Instruction-file rules:
+
+- `AGENTS.md` is the source of truth for cross-agent behavior because Codex and the broader AGENTS.md convention both use it as a predictable agent README.
+- `CLAUDE.md` should become a Claude Code adapter document, not a duplicate full project manual.
+- Long-lived product and harness rules belong in docs files linked from AGENTS.md, not embedded in AGENTS.md until it exceeds useful context size.
+- Harness docs must include exact setup verification commands, not prose-only intent.
+- Generated loop briefs must not overwrite AGENTS.md or CLAUDE.md. They can propose patches for user review.
+
+Required harness document set before large implementation:
+
+| Document | Purpose | Required before |
+| --- | --- | --- |
+| `docs/LOOPDECK.md` | Product thesis, loop model, user workflows, feature portfolio | Brand migration or web Loops UI |
+| `docs/AGENT-HARNESS.md` | Codex/Claude Code hooks, MCP, plugin commands, setup verification | Hook/MCP loop integration |
+| `docs/INSTRUCTION-FILES.md` | AGENTS.md/CLAUDE.md layering, size limits, examples, anti-patterns | AGENTS/CLAUDE rewrite |
+| `docs/LOOP-SNAPSHOT-SCHEMA.md` | Storage schema, privacy fields, raw-data exclusions | SQLite loop snapshot migration |
 
 ## 6. Data Model
 
@@ -333,6 +412,32 @@ Do not build these in the first slice:
 
 These are either outside the local-first promise or too large before proving the loop snapshot model.
 
+## 8.1 Technical Risks And Mitigations
+
+| Risk | Why it matters | Mitigation |
+| --- | --- | --- |
+| Prompt body leakage | Hook stdout, CLI JSON, MCP results, tests, or docs can accidentally expose user prompts | Add privacy assertions for prompt bodies, raw paths, tokens, transcript paths, and redaction placeholders on every new surface. |
+| Raw path leakage | Worktree/session features naturally tempt raw path output | Store `cwd_label`, `project_id`, optional hash fields by default. Raw local diagnostics require explicit flags. |
+| Overbuilding runtime | Building a graph runtime would delay product proof | Keep Slice 1 as snapshot/brief only. No background cron until manual collection proves value. |
+| Brand migration churn | Renaming package/CLI/plugin/repo together can break users | Split brand migration into repo/docs first, CLI aliases second, package rename last. |
+| Hook fragility | Codex/Claude hook surfaces are powerful but can disrupt agent use | Hook collection must be fail-open, bounded, and raw-free. Manual CLI path comes first. |
+| Multi-worktree ambiguity | Git branch ownership and detached worktrees make identity confusing | Use git root hash, branch label, worktree label, and session id separately. Do not assume branch uniquely identifies a loop. |
+| Scoring tunnel vision | Existing prompt score may optimize form over actual agent outcome | Treat prompt score as one signal. Add outcome status and verification evidence fields before any "loop quality" score. |
+| External-source drift | Codex/Claude/ADK docs change quickly | Keep source URLs and reviewed date in planning docs. Re-check before hook/plugin implementation. |
+
+## 8.2 Go/No-Go Gate Before Development
+
+Implementation can begin only when these are true:
+
+- The feature portfolio matrix has an explicit decision for every existing major feature surface.
+- Slice 1 is still limited to domain/storage/CLI/docs.
+- The plan does not require package, CLI, GitHub repo, plugin, hook, MCP, or web UI rename.
+- Privacy invariants are testable in focused unit/integration tests.
+- Node 22 pnpm verification command is recorded.
+- `.serena/project.yml` and `.codex/` local changes remain out of unrelated commits.
+
+If any item is false, update this spec before coding.
+
 ## 9. MVP Slices
 
 ### Slice 1: Loop Snapshot CLI
@@ -434,15 +539,23 @@ Do not touch web UI or rename package in Slice 1.
 
 ## 11. Open Questions
 
-- Should the product command become `loopdeck` eventually, or should `prompt-coach` remain the CLI for backward compatibility while the product name changes?
-- Should raw local file paths be available behind an explicit local diagnostic flag for loop snapshots?
-- Should loop snapshots be exportable as Markdown files into a project, or only rendered through the app and copied on demand?
-- Should Codex and Claude Code plugins remain separate packages or share one generated command/skill source?
-- How much of Codex-managed worktree metadata can be discovered without reading private app state?
+Resolved for the first development phase:
+
+- Keep the public CLI command as `prompt-coach` through Slice 1. `loopdeck` can become an alias or package rename only in a brand migration slice.
+- Raw local paths are not stored or returned by default. A future explicit local diagnostic flag may show them to the local user only.
+- Loop snapshots are stored in the local SQLite database first. Markdown export into a project is opt-in and deferred.
+- Codex and Claude Code plugin surfaces may keep separate packaging, but command text and workflow docs should eventually be generated from shared source to reduce drift.
+- Do not read Codex-managed private state. Worktree metadata starts from documented hooks, current cwd, git commands, and user-approved configuration.
+
+Still open:
+
+- What exact product/package migration date should move from `prompt-coach` to `loopdeck`?
+- Should loop snapshots get a numeric "loop quality" score, or only structured outcome status and evidence?
+- Which web workflow should be first: loop list, loop detail, or cross-worktree command center?
 
 ## 12. Decision
 
-Proceed with Loopdeck as the product direction and write the implementation plan for Slice 1 after user review.
+Proceed with Loopdeck as the product direction, but treat the planning document as the primary artifact until the go/no-go gate is satisfied.
 
 The immediate next artifact should be:
 
@@ -455,9 +568,11 @@ The plan must use TDD and preserve the existing `prompt-coach` command until a s
 ## 13. Sources Checked
 
 - OpenAI Codex manual fetched on 2026-07-04: AGENTS.md discovery, MCP configuration, hooks, worktrees, record/replay.
-- OpenAI Agents SDK tracing and agent eval docs.
-- Anthropic Claude Code docs: plugins, hooks, MCP, subagents, monitors.
-- Anthropic context engineering and multi-agent research system articles.
-- Google ADK and Memory docs.
-- AGENTS.md official site.
-- Andrej Karpathy Software 3.0 talk summary via YC Startup Library.
+- OpenAI Agents SDK tracing: https://openai.github.io/openai-agents-python/tracing/
+- OpenAI agent evals: https://developers.openai.com/api/docs/guides/agent-evals
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview
+- Claude Code hooks reference: https://code.claude.com/docs/en/hooks
+- Claude Code plugins reference: https://code.claude.com/docs/en/plugins-reference
+- Google ADK sessions/state/memory/events/artifacts docs: https://google.github.io/adk-docs/sessions/
+- AGENTS.md official site: https://agents.md/
+- Andrej Karpathy Software Is Changing Again talk summary via YC Startup Library: https://www.ycombinator.com/library/MW-andrej-karpathy-software-is-changing-again

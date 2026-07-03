@@ -28,6 +28,21 @@
 - 각 단계는 실패 테스트, 최소 구현, focused test, commit 단위로 쪼갠다.
 - 계획은 prompt body/raw path/privacy 경계를 첫 slice의 검증 조건으로 포함해야 한다.
 
+## 2026-07-04 Product Planning Hardening
+
+- [x] 기존 기획서가 개발 착수 기준으로 부족한 항목 감사
+- [x] Codex/Claude Code/Google ADK/AGENTS.md 최신 공식 자료 보강 확인
+- [x] 기존 기능 유지/개선/폐기/신규 개발 결정표 추가
+- [x] Codex/Claude Code acceptance criteria 추가
+- [x] AGENTS.md/CLAUDE.md/harness 문서 개편 원칙 추가
+- [x] 기술 리스크, 완화책, 개발 전 go/no-go gate 추가
+
+### 판단 기준
+
+- 개발 착수 전 제품 포트폴리오 결정이 명시되어야 한다.
+- Loopdeck은 generic agent runtime이 아니라 Codex/Claude Code loop memory workbench로 좁힌다.
+- 기획서가 승인되기 전 package/CLI/repo/plugin rename과 hook/MCP/web 구현을 섞지 않는다.
+
 ## 2026-05-04 Habit Coach Panel Extraction
 
 - [x] 기능/코드/UI 관점에서 다음 고효과 개선 후보 재점검
