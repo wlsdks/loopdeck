@@ -24,6 +24,9 @@ describe("routing", () => {
     stubLocation("/mcp");
     expect(routeFromLocation()).toEqual({ name: "mcp" });
 
+    stubLocation("/loops");
+    expect(routeFromLocation()).toEqual({ name: "loops" });
+
     stubLocation("/prompts/prompt%201");
     expect(routeFromLocation()).toEqual({ id: "prompt 1", name: "detail" });
   });

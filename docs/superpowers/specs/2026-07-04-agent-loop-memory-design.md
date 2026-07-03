@@ -510,16 +510,22 @@ Verification:
 
 Add:
 
-- left nav item: Loops
-- loop list grouped by project/worktree/session
+- left nav item: Loops (**implemented**)
+- `/api/v1/loops` safe metadata endpoint (**implemented**)
+- loop list grouped by safe project/worktree/session metadata (**first list
+  slice implemented**)
 - loop detail with next brief copy action
-- privacy-safe empty state and diagnostics
+- privacy-safe empty state and diagnostics (**first empty state implemented**)
+- compact boundary refresh marker when the latest loop snapshot is pre-compact
+  (**implemented without compact summary/custom instruction replay**)
 
 Verification:
 
 - Playwright desktop and mobile screenshots
 - no horizontal overflow
 - console/network clean
+- API and web output contain no prompt bodies, compact summaries, custom
+  compact instructions, transcript bodies, or raw paths
 
 ### Slice 5: Brand Migration
 

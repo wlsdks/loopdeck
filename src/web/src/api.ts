@@ -76,6 +76,39 @@ export type PromptListResponse = {
   next_cursor?: string;
 };
 
+export type LoopSummary = {
+  id: string;
+  created_at: string;
+  tool: string;
+  source: string;
+  project: string;
+  branch?: string;
+  worktree?: string;
+  prompt_count: number;
+  average_prompt_score?: number;
+  top_gaps: string[];
+  outcome_status: string;
+  compact_boundary?: {
+    id: string;
+    created_at: string;
+    tool: string;
+    event_name: "PreCompact" | "PostCompact";
+    trigger: "manual" | "auto" | "unknown";
+    content_hash?: string;
+    after_latest_snapshot: true;
+  };
+};
+
+export type LoopListResponse = {
+  items: LoopSummary[];
+  privacy: {
+    local_only: true;
+    returns_prompt_bodies: false;
+    returns_raw_paths: false;
+    returns_compact_content: false;
+  };
+};
+
 export type PromptFilters = {
   query?: string;
   tool?: string;
@@ -537,6 +570,15 @@ export async function listProjects(): Promise<ProjectSummary[]> {
     data: { items: ProjectSummary[] };
   };
   return body.data.items;
+}
+
+export async function listLoops(): Promise<LoopListResponse> {
+  await ensureSession();
+  const response = await fetch("/api/v1/loops", {
+    credentials: "same-origin",
+  });
+  const body = (await response.json()) as { data: LoopListResponse };
+  return body.data;
 }
 
 async function failApi(response: Response, label: string): Promise<never> {

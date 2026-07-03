@@ -6,6 +6,7 @@ export type View =
   | { name: "detail"; id: string }
   | { name: "dashboard" }
   | { name: "coach" }
+  | { name: "loops" }
   | { name: "scores" }
   | { name: "projects" }
   | { name: "mcp" }
@@ -21,6 +22,10 @@ export function routeFromLocation(): View {
 
   if (window.location.pathname === "/coach") {
     return { name: "coach" };
+  }
+
+  if (window.location.pathname === "/loops") {
+    return { name: "loops" };
   }
 
   if (window.location.pathname === "/scores") {

@@ -2100,6 +2100,12 @@ dd {
   color: var(--pm-accent-strong);
 }
 
+.status-pill.good {
+  background: var(--pm-accent-weak);
+  border-color: rgba(31, 111, 100, 0.22);
+  color: var(--pm-accent-strong);
+}
+
 .status-pill.warning {
   background: var(--pm-warning-weak);
   border-color: rgba(154, 91, 0, 0.24);

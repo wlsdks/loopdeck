@@ -11,6 +11,63 @@ beforeEach(() => {
 });
 
 describe("web api export client", () => {
+  it("lists Loopdeck snapshots without raw prompt or compact content", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            items: [
+              {
+                id: "loop_web",
+                created_at: "2026-07-04T01:00:00.000Z",
+                tool: "codex",
+                source: "cli",
+                project: "private-project",
+                prompt_count: 2,
+                average_prompt_score: 58,
+                top_gaps: ["Goal clarity"],
+                outcome_status: "unknown",
+                compact_boundary: {
+                  id: "cmp_web",
+                  created_at: "2026-07-04T01:05:00.000Z",
+                  tool: "claude-code",
+                  event_name: "PostCompact",
+                  trigger: "auto",
+                  after_latest_snapshot: true,
+                },
+              },
+            ],
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+              returns_compact_content: false,
+            },
+          },
+        }),
+      );
+    const { listLoops } = await import("./api.js");
+
+    const loops = await listLoops();
+
+    expect(loops.items).toHaveLength(1);
+    expect(loops.items[0]).toMatchObject({
+      id: "loop_web",
+      project: "private-project",
+      compact_boundary: {
+        event_name: "PostCompact",
+        after_latest_snapshot: true,
+      },
+    });
+    expect(fetchMock).toHaveBeenLastCalledWith("/api/v1/loops", {
+      credentials: "same-origin",
+    });
+    expect(JSON.stringify(loops)).not.toContain("Make this better");
+    expect(JSON.stringify(loops)).not.toContain("Compact summary");
+    expect(JSON.stringify(loops)).not.toContain("/Users/example");
+  });
+
   it("shares an in-flight csrf session request across parallel API calls", async () => {
     fetchMock.mockImplementation(async (url: string) => {
       if (url === "/api/v1/session") {

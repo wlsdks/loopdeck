@@ -109,7 +109,17 @@
 - [x] Task 1 GREEN: local loop snapshot readiness와 latest snapshot metadata를 표시하는 CLI status 구현
 - [x] Task 2 GREEN: 최신 snapshot 이후 compact boundary가 있으면 `prompt-coach loop collect` refresh action 표시
 - [x] Task 3: README/PLUGINS/spec/todo에 `loop status` 범위와 privacy contract 반영
-- [ ] 다음 slice: web Loops view 또는 CLI/MCP status 모델 공통화
+- [x] 다음 slice: web Loops view 또는 CLI/MCP status 모델 공통화
+
+## 2026-07-04 Web Loops View First Slice
+
+- [x] Task 1 RED: `/api/v1/loops`가 404로 실패하는지 확인
+- [x] Task 1 GREEN: loop snapshot list API가 safe metadata와 compact boundary marker를 반환
+- [x] Task 2 RED: `/loops` routing과 `listLoops()` client가 missing route/function으로 실패하는지 확인
+- [x] Task 2 GREEN: sidebar Loops navigation과 dense loop list/empty state 구현
+- [x] Task 3: component-owned `loops-view.css`로 CSS line budget 유지
+- [x] Task 4: README/PLUGINS/spec/todo에 Web Loops first slice 범위와 한계 반영
+- [ ] 다음 slice: loop detail + next brief copy action 또는 CLI/MCP/web status model 공통화
 
 ### 판단 기준
 
@@ -130,6 +140,13 @@
 - `prompt-coach loop status`는 사람용 터미널 readiness surface이며 MCP `get_loopdeck_status`와 같은 local-first privacy 경계를 따른다.
 - 출력은 snapshot count, latest loop safe metadata, compact refresh action, next command만 포함한다.
 - prompt body, compact summary, custom instructions, transcript body, raw path는 text/JSON 출력에 포함하지 않는다.
+
+### Web Loops View 판단 기준
+
+- `/api/v1/loops`와 `/loops` view는 loop snapshot safe metadata만 표시한다.
+- 첫 web slice는 list, empty state, compact refresh marker까지만 포함한다.
+- prompt body, compact summary, custom instructions, transcript body, raw path는 API/화면/테스트 출력에 포함하지 않는다.
+- loop detail, next brief copy action, cron collection, semantic memory는 다음 slice로 남긴다.
 
 ## 2026-05-04 Habit Coach Panel Extraction
 

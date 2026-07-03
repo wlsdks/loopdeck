@@ -6,7 +6,9 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { initializePromptCoach } from "../config/config.js";
+import type { LoopSnapshot } from "../loop/types.js";
 import { createServer } from "./create-server.js";
+import type { CompactBoundary } from "../storage/compact-boundaries.js";
 import type {
   ExportJob,
   ProjectInstructionReview,
@@ -302,6 +304,65 @@ describe("createServer P2 ingest boundary", () => {
     expect(response.body).not.toContain("web-session-secret");
   });
 
+  it("returns loop snapshots without prompt bodies, compact summaries, or raw paths", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(loopSnapshot());
+    storage.compactBoundaries.push({
+      id: "cmp_web",
+      created_at: "2026-07-04T01:05:00.000Z",
+      tool: "claude-code",
+      event_name: "PostCompact",
+      trigger: "auto",
+      session_id: "session-web",
+      cwd_label: "private-project",
+      project_id: "proj_web",
+      content_hash: "compact_abcdef1234567890",
+      privacy: {
+        local_only: true,
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        stores_compact_content: false,
+      },
+    });
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const serialized = JSON.stringify(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        items: [
+          {
+            id: "loop_web",
+            project: "private-project",
+            prompt_count: 2,
+            compact_boundary: {
+              event_name: "PostCompact",
+              after_latest_snapshot: true,
+            },
+          },
+        ],
+        privacy: {
+          local_only: true,
+          returns_prompt_bodies: false,
+          returns_raw_paths: false,
+          returns_compact_content: false,
+        },
+      },
+    });
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("Compact summary with sk-proj-secret");
+    expect(serialized).not.toContain("/Users/example");
+  });
+
   it("requires app access and csrf before updating project policy", async () => {
     const storage = createMemoryStorage();
     const server = createTestServer({ storage });
@@ -553,6 +614,7 @@ describe("createServer P2 ingest boundary", () => {
       "/scores",
       "/benchmark",
       "/insights",
+      "/loops",
       "/projects",
       "/mcp",
       "/exports",
@@ -1283,6 +1345,8 @@ function createMemoryStorage() {
   }> = [];
   const exportJobs = new Map<string, ExportJob>();
   const instructionReviews = new Map<string, ProjectInstructionReview>();
+  const loopSnapshots: LoopSnapshot[] = [];
+  const compactBoundaries: CompactBoundary[] = [];
   const coachFeedback: Array<{
     id: string;
     prompt_id: string;
@@ -1294,6 +1358,8 @@ function createMemoryStorage() {
     events,
     policyUpdates,
     promptDetails: [] as PromptDetail[],
+    loopSnapshots,
+    compactBoundaries,
     exportJobs,
     instructionReviews,
     policyForIngest: undefined as
@@ -1410,6 +1476,12 @@ function createMemoryStorage() {
     },
     searchPrompts() {
       return this.listPrompts();
+    },
+    listLoopSnapshots() {
+      return { items: loopSnapshots };
+    },
+    listCompactBoundaries() {
+      return { items: compactBoundaries };
     },
     getPrompt(id: string) {
       return this.promptDetails.find((prompt) => prompt.id === id);
@@ -1528,5 +1600,41 @@ function createMemoryStorage() {
         }
       | undefined;
     failPolicyLookup: boolean;
+  };
+}
+
+function loopSnapshot(): LoopSnapshot {
+  return {
+    id: "loop_web",
+    created_at: "2026-07-04T01:00:00.000Z",
+    tool: "codex",
+    source: "cli",
+    session_id: "session-web",
+    cwd_label: "private-project",
+    project_id: "proj_web",
+    branch: "codex/agent-loop-memory-design",
+    prompt_ids: ["prmt_one", "prmt_two"],
+    event_counts: {
+      prompts: 2,
+    },
+    quality: {
+      average_prompt_score: 58,
+      top_gaps: ["Goal clarity", "Verification criteria"],
+      unresolved_questions: [],
+    },
+    outcome: {
+      status: "unknown",
+      summary: "Loop snapshot collected from 2 prompts.",
+      evidence_refs: ["prompt:prmt_one", "prompt:prmt_two"],
+    },
+    next_brief: {
+      generated: false,
+      summary: "Run prompt-coach loop brief to generate the next request.",
+    },
+    privacy: {
+      local_only: true,
+      stores_prompt_bodies: false,
+      stores_raw_paths: false,
+    },
   };
 }
