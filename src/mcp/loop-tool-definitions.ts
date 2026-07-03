@@ -77,6 +77,30 @@ export const GET_LOOPDECK_STATUS_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
       properties: {
         status: { type: "string", enum: ["ready", "empty", "setup_needed"] },
         snapshot_count: { type: "integer", minimum: 0 },
+        activity: {
+          type: "object",
+          required: [
+            "active_worktrees",
+            "active_sessions",
+            "needs_review",
+            "next_action",
+          ],
+          properties: {
+            active_worktrees: { type: "integer", minimum: 0 },
+            active_sessions: { type: "integer", minimum: 0 },
+            latest_branch: { type: "string" },
+            latest_worktree: { type: "string" },
+            needs_review: { type: "boolean" },
+            next_action: {
+              type: "string",
+              enum: [
+                "compare loop snapshots by worktree before merging agent output",
+                "continue current worktree loop",
+              ],
+            },
+          },
+          additionalProperties: false,
+        },
         project_memory: {
           type: "object",
           required: ["approved_count", "included_in_brief"],

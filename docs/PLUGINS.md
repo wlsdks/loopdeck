@@ -249,7 +249,10 @@ The local CLI mirrors that loop surface with `prompt-coach loop status`,
 review-only instruction patch. Use
 `prompt-coach loop instruction-apply --target-file AGENTS.md --confirm-apply`
 only after reviewing the proposal and intending to write the file; the web
-review panel intentionally has no apply button. Use
+review panel intentionally has no apply button. `get_loopdeck_status`,
+`/api/v1/loops`, and `prompt-coach loop status` include raw-free worktree and
+session activity counts so active agents can notice parallel work before
+merging or handing off. Use
 `prompt-coach loop collect --source service` as the explicit one-shot command
 for cron or LaunchAgent collection; it does not silently install a scheduler.
 The opt-in macOS schedule is `prompt-coach loop schedule install`; use

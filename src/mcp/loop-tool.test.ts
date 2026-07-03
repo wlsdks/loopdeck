@@ -48,6 +48,13 @@ describe("Loopdeck MCP tools", () => {
         approved_count: 1,
         included_in_brief: true,
       },
+      activity: {
+        active_worktrees: 2,
+        active_sessions: 2,
+        needs_review: true,
+        next_action:
+          "compare loop snapshots by worktree before merging agent output",
+      },
       memory_candidate: {
         eligible: true,
         reason: "passed_with_evidence",
@@ -528,8 +535,10 @@ function seedOtherProjectMemory(dataDir: string): void {
       ...latest,
       id: "loop_other_project",
       created_at: "2026-07-03T01:00:00.000Z",
+      session_id: "session-other-project",
       cwd_label: "other-project",
       project_id: "proj_other",
+      worktree_label: "other-worktree",
       outcome: {
         status: "passed",
         summary: "This unrelated project memory should not appear.",

@@ -14,6 +14,9 @@ describe("LoopsView", () => {
     expect(html).toContain("Loopdeck status ready");
     expect(html).toContain("Next: prompt-coach loop brief");
     expect(html).toContain("Approved memories 1");
+    expect(html).toContain("Active worktrees 2");
+    expect(html).toContain("Active sessions 2");
+    expect(html).toContain("Worktree review needed");
     expect(html).toContain("Memory candidate eligible");
     expect(html).toContain("Approve memory");
     expect(html).toContain("prompt-coach loop memory-approve");
@@ -31,6 +34,15 @@ function loopList(): LoopListResponse {
     status: {
       status: "ready",
       snapshot_count: 1,
+      activity: {
+        active_worktrees: 2,
+        active_sessions: 2,
+        latest_branch: "codex/agent-loop-memory-design",
+        latest_worktree: "agent-loop-worktree",
+        needs_review: true,
+        next_action:
+          "compare loop snapshots by worktree before merging agent output",
+      },
       project_memory: {
         approved_count: 1,
         included_in_brief: true,

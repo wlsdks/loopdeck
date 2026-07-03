@@ -107,9 +107,44 @@ describe("createLoopdeckStatus", () => {
     expect(serialized).not.toContain("Safe summary only");
     expect(serialized).not.toContain("commit:2a91de0");
   });
+
+  it("summarizes worktree and session activity without prompt bodies or raw paths", () => {
+    const status = createLoopdeckStatus({
+      snapshots: [
+        loopSnapshot({
+          id: "loop_latest",
+          session_id: "session-two",
+          branch: "codex/agent-loop-memory-design",
+          worktree_label: "agent-loop-worktree",
+        }),
+        loopSnapshot({
+          id: "loop_previous",
+          session_id: "session-one",
+          branch: "codex/agent-loop-memory-design",
+          worktree_label: "main-worktree",
+        }),
+      ],
+      compactBoundaries: [],
+      includeLatest: false,
+    });
+    const serialized = JSON.stringify(status);
+
+    expect(status.activity).toEqual({
+      active_worktrees: 2,
+      active_sessions: 2,
+      latest_branch: "codex/agent-loop-memory-design",
+      latest_worktree: "agent-loop-worktree",
+      needs_review: true,
+      next_action:
+        "compare loop snapshots by worktree before merging agent output",
+    });
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-secret");
+  });
 });
 
-function loopSnapshot(): LoopSnapshot {
+function loopSnapshot(patch: Partial<LoopSnapshot> = {}): LoopSnapshot {
   return {
     id: "loop_status",
     created_at: "2026-07-04T01:00:00.000Z",
@@ -140,6 +175,7 @@ function loopSnapshot(): LoopSnapshot {
       stores_prompt_bodies: false,
       stores_raw_paths: false,
     },
+    ...patch,
   };
 }
 

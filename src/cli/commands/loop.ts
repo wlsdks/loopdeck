@@ -377,6 +377,9 @@ function formatLoopStatus(status: LoopdeckStatus): string {
     `Loopdeck status ${status.status}`,
     `snapshots ${status.snapshot_count}`,
     `approved memories ${status.project_memory.approved_count}`,
+    `active worktrees ${status.activity.active_worktrees}`,
+    `active sessions ${status.activity.active_sessions}`,
+    `worktree review needed ${status.activity.needs_review ? "yes" : "no"}`,
     status.memory_candidate
       ? `memory candidate ${status.memory_candidate.eligible ? "eligible" : status.memory_candidate.reason}`
       : "memory candidate none",

@@ -88,6 +88,15 @@ export function LoopsView({
           <p className="loops-status-line">
             Approved memories {loops.status.project_memory.approved_count}
           </p>
+          <p className="loops-status-line">
+            Active worktrees {loops.status.activity.active_worktrees}
+          </p>
+          <p className="loops-status-line">
+            Active sessions {loops.status.activity.active_sessions}
+          </p>
+          {loops.status.activity.needs_review && (
+            <p className="loops-status-line">Worktree review needed</p>
+          )}
           {loops.status.memory_candidate && (
             <p className="loops-status-line">
               Memory candidate{" "}

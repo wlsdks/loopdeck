@@ -40,9 +40,21 @@ export type LoopdeckStatusMemoryCandidate = {
     | "prompt-coach loop memory-candidate";
 };
 
+export type LoopdeckStatusActivity = {
+  active_worktrees: number;
+  active_sessions: number;
+  latest_branch?: string;
+  latest_worktree?: string;
+  needs_review: boolean;
+  next_action:
+    | "compare loop snapshots by worktree before merging agent output"
+    | "continue current worktree loop";
+};
+
 export type LoopdeckStatus = {
   status: LoopdeckStatusLevel;
   snapshot_count: number;
+  activity: LoopdeckStatusActivity;
   project_memory: LoopdeckStatusProjectMemory;
   memory_candidate?: LoopdeckStatusMemoryCandidate;
   latest_snapshot?: LoopdeckStatusSnapshot;
@@ -81,6 +93,7 @@ export function createLoopdeckStatus(input: {
   return {
     status: hasSnapshots ? "ready" : "empty",
     snapshot_count: input.snapshots.length,
+    activity: summarizeLoopActivity(input.snapshots),
     project_memory: {
       approved_count: projectMemoryCount,
       included_in_brief: Boolean(latest && projectMemoryCount > 0),
@@ -103,6 +116,30 @@ export function createLoopdeckStatus(input: {
       memoryCandidate: input.memoryCandidate,
     }),
     privacy: loopdeckStatusPrivacy(),
+  };
+}
+
+export function summarizeLoopActivity(
+  snapshots: readonly LoopSnapshot[],
+): LoopdeckStatusActivity {
+  const latest = snapshots.at(0);
+  const activeWorktrees = uniqueNonEmpty(
+    snapshots.map((snapshot) => snapshot.worktree_label),
+  ).size;
+  const activeSessions = uniqueNonEmpty(
+    snapshots.map((snapshot) => snapshot.session_id),
+  ).size;
+  const needsReview = activeWorktrees > 1 || activeSessions > 1;
+
+  return {
+    active_worktrees: activeWorktrees,
+    active_sessions: activeSessions,
+    ...(latest?.branch ? { latest_branch: latest.branch } : {}),
+    ...(latest?.worktree_label ? { latest_worktree: latest.worktree_label } : {}),
+    needs_review: needsReview,
+    next_action: needsReview
+      ? "compare loop snapshots by worktree before merging agent output"
+      : "continue current worktree loop",
   };
 }
 
@@ -182,4 +219,8 @@ function withMemoryCandidateAction(
     ...actions,
     "Run prompt-coach loop memory-approve after reviewing the latest passed loop outcome.",
   ];
+}
+
+function uniqueNonEmpty(values: Array<string | undefined>): Set<string> {
+  return new Set(values.filter((value): value is string => Boolean(value)));
 }

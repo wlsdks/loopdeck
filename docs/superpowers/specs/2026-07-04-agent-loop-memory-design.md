@@ -926,6 +926,28 @@ Do not add:
 - editing any file outside `AGENTS.md` or `CLAUDE.md`
 - hidden external LLM calls
 
+### Slice 4.23: Worktree And Session Activity Summary
+
+Add:
+
+- shared `LoopdeckStatus.activity` summary derived from existing loop snapshots
+- raw-free counts for active worktrees and active sessions
+- latest branch and latest worktree label when already present in safe snapshot
+  metadata
+- `needs_review` signal when multiple worktrees or multiple agent sessions are
+  represented in recent snapshots
+- CLI, MCP, API, and web Loops summary display of the same activity model
+- focused tests proving activity summary does not expose prompt bodies, raw
+  paths, compact summaries, secrets, or external LLM results
+
+Do not add:
+
+- raw worktree paths
+- reading private Codex or Claude Code state
+- automatic git merge/rebase decisions
+- background worktree scanning outside explicit loop snapshots
+- hidden external LLM summarization
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

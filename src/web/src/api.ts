@@ -103,6 +103,16 @@ export type LoopListResponse = {
   status: {
     status: "ready" | "empty";
     snapshot_count: number;
+    activity: {
+      active_worktrees: number;
+      active_sessions: number;
+      latest_branch?: string;
+      latest_worktree?: string;
+      needs_review: boolean;
+      next_action:
+        | "compare loop snapshots by worktree before merging agent output"
+        | "continue current worktree loop";
+    };
     project_memory: {
       approved_count: number;
       included_in_brief: boolean;

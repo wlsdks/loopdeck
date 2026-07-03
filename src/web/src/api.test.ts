@@ -20,6 +20,15 @@ describe("web api export client", () => {
             status: {
               status: "ready",
               snapshot_count: 1,
+              activity: {
+                active_worktrees: 2,
+                active_sessions: 2,
+                latest_branch: "codex/agent-loop-memory-design",
+                latest_worktree: "agent-loop-worktree",
+                needs_review: true,
+                next_action:
+                  "compare loop snapshots by worktree before merging agent output",
+              },
               project_memory: {
                 approved_count: 1,
                 included_in_brief: true,
@@ -87,6 +96,11 @@ describe("web api export client", () => {
     expect(loops.items).toHaveLength(1);
     expect(loops.status.status).toBe("ready");
     expect(loops.status.next_action).toBe("prompt-coach loop collect");
+    expect(loops.status.activity).toMatchObject({
+      active_worktrees: 2,
+      active_sessions: 2,
+      needs_review: true,
+    });
     expect(loops.status.project_memory).toEqual({
       approved_count: 1,
       included_in_brief: true,

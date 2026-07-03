@@ -206,6 +206,9 @@ describe("loop CLI command", () => {
     expect(text).toContain("Loopdeck status ready");
     expect(text).toContain("snapshots 2");
     expect(text).toContain("approved memories 1");
+    expect(text).toContain("active worktrees 2");
+    expect(text).toContain("active sessions 2");
+    expect(text).toContain("worktree review needed yes");
     expect(text).toContain("memory candidate eligible");
     expect(text).toContain("latest loop");
     expect(text).toContain("project private-project");
@@ -218,6 +221,11 @@ describe("loop CLI command", () => {
     const json = loopStatusForCli({ dataDir, json: true });
     const parsed = JSON.parse(json) as {
       latest_snapshot?: { outcome_status?: string };
+      activity?: {
+        active_worktrees?: number;
+        active_sessions?: number;
+        needs_review?: boolean;
+      };
       project_memory?: { approved_count?: number; included_in_brief?: boolean };
       memory_candidate?: {
         eligible?: boolean;
@@ -229,6 +237,11 @@ describe("loop CLI command", () => {
     };
 
     expect(parsed.latest_snapshot?.outcome_status).toBe("passed");
+    expect(parsed.activity).toMatchObject({
+      active_worktrees: 2,
+      active_sessions: 2,
+      needs_review: true,
+    });
     expect(parsed.project_memory).toEqual({
       approved_count: 1,
       included_in_brief: true,
@@ -564,10 +577,16 @@ function seedOtherProjectMemory(dataDir: string): void {
     if (!latest) return;
     storage.createLoopSnapshot({
       ...latest,
+      worktree_label: "primary-worktree",
+    });
+    storage.createLoopSnapshot({
+      ...latest,
       id: "loop_other_project",
       created_at: "2026-07-03T01:00:00.000Z",
+      session_id: "session-other-project",
       cwd_label: "other-project",
       project_id: "proj_other",
+      worktree_label: "other-worktree",
       outcome: {
         status: "passed",
         summary: "This unrelated project memory should not appear.",

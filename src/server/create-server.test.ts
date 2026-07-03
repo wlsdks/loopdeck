@@ -307,12 +307,13 @@ describe("createServer P2 ingest boundary", () => {
 
   it("returns loop snapshots without prompt bodies, compact summaries, or raw paths", async () => {
     const storage = createMemoryStorage();
-    storage.loopSnapshots.push(loopSnapshot());
+    storage.loopSnapshots.push(loopSnapshot({ worktree_label: "worktree-web" }));
     storage.loopSnapshots.push(
       loopSnapshot({
         id: "loop_other",
         project_id: "proj_other",
         cwd_label: "other-project",
+        worktree_label: "other-worktree",
       }),
     );
     storage.loopMemories.push(loopMemory());
@@ -358,6 +359,14 @@ describe("createServer P2 ingest boundary", () => {
         status: {
           status: "ready",
           snapshot_count: 2,
+          activity: {
+            active_worktrees: 2,
+            active_sessions: 1,
+            latest_worktree: "worktree-web",
+            needs_review: true,
+            next_action:
+              "compare loop snapshots by worktree before merging agent output",
+          },
           project_memory: {
             approved_count: 1,
             included_in_brief: true,
