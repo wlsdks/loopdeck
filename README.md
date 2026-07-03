@@ -331,6 +331,12 @@ not type into the terminal, press Enter, replace the composer contents, or
 auto-submit anything. If the local ingest server is unavailable or ingest fails,
 the hook fails open and does not block the prompt.
 
+The same installation also registers a fail-open `Stop` hook. On stop events,
+prompt-coach collects a local Loopdeck snapshot from recent prompt metadata for
+the current project. This snapshot stores prompt ids, safe project labels, and
+quality metadata only; it does not store prompt bodies, raw paths, or transcript
+contents.
+
 The `--rewrite-guard` flag accepts four modes:
 
 - `off` — capture only; no coaching or blocking
@@ -397,6 +403,10 @@ Codex support uses the same safe hook command path. Because Codex plugin-local
 hooks may vary by Codex version, `prompt-coach setup` / `install-hook` still
 writes the user-level hook config. If the local ingest server is unavailable or
 ingest fails, the hook fails open and does not block the prompt.
+
+The Codex install also registers a fail-open `Stop` hook for Loopdeck snapshot
+collection. Stop handling is local-only and does not post the lifecycle payload
+to the prompt ingest route.
 
 Preview the `hooks.json` and `config.toml` changes without writing:
 
@@ -534,8 +544,8 @@ Use `pnpm prompt-coach buddy --once` for a one-shot text snapshot, or
 `pnpm prompt-coach buddy --json` for automation.
 
 The Codex package under `plugins/prompt-coach` contains a `.codex-plugin`
-manifest, a fail-open `UserPromptSubmit` hook, and a small skill that helps
-Codex install, diagnose, and use the local archive.
+manifest, fail-open `UserPromptSubmit` and `Stop` hooks, and a small skill that
+helps Codex install, diagnose, and use the local archive.
 
 Claude Code prompt capture is exposed through its documented hook settings, so
 `integrations/claude-code/settings.example.json` is provided as a manual example.

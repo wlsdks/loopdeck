@@ -424,32 +424,16 @@ function ensureHook(
   options: { sessionStartCommand?: string } = {},
 ): ClaudeSettings & { hooks: Record<string, ClaudeHookGroup[]> } {
   const hooks = { ...(settings.hooks ?? {}) };
-  let found = false;
-  const userPromptSubmit = [...(hooks.UserPromptSubmit ?? [])].map((group) => ({
-    ...group,
-    hooks: group.hooks.map((hook) => {
-      if (!isClaudePromptCoachHook(hook.command)) {
-        return hook;
-      }
-
-      found = true;
-      return { ...hook, command };
-    }),
-  }));
-
-  if (!found) {
-    userPromptSubmit.push({
-      hooks: [
-        {
-          type: "command",
-          command,
-          timeout: 2,
-        },
-      ],
-    });
-  }
-
-  hooks.UserPromptSubmit = userPromptSubmit;
+  hooks.UserPromptSubmit = ensurePromptCoachHookGroups(
+    hooks.UserPromptSubmit ?? [],
+    command,
+    isClaudePromptCoachHook,
+  );
+  hooks.Stop = ensurePromptCoachHookGroups(
+    hooks.Stop ?? [],
+    command,
+    isClaudePromptCoachHook,
+  );
   if (options.sessionStartCommand) {
     hooks.SessionStart = ensureSessionStartHook(
       hooks.SessionStart ?? [],
@@ -468,16 +452,14 @@ function removeHook(
   settings: ClaudeSettings,
 ): ClaudeSettings & { hooks: Record<string, ClaudeHookGroup[]> } {
   const hooks = { ...(settings.hooks ?? {}) };
-  const userPromptSubmit = [...(hooks.UserPromptSubmit ?? [])]
-    .map((group) => ({
-      ...group,
-      hooks: group.hooks.filter(
-        (hook) => !isClaudePromptCoachHook(hook.command),
-      ),
-    }))
-    .filter((group) => group.hooks.length > 0);
-
-  hooks.UserPromptSubmit = userPromptSubmit;
+  hooks.UserPromptSubmit = removePromptCoachHookGroups(
+    hooks.UserPromptSubmit ?? [],
+    isClaudePromptCoachHook,
+  );
+  hooks.Stop = removePromptCoachHookGroups(
+    hooks.Stop ?? [],
+    isClaudePromptCoachHook,
+  );
   hooks.SessionStart = removeSessionStartHook(
     hooks.SessionStart ?? [],
     PROMPT_COACH_SESSION_MARKER,
@@ -495,32 +477,16 @@ function ensureCodexHook(
   options: { sessionStartCommand?: string } = {},
 ): CodexHooksSettings & { hooks: Record<string, ClaudeHookGroup[]> } {
   const hooks = { ...(settings.hooks ?? {}) };
-  let found = false;
-  const userPromptSubmit = [...(hooks.UserPromptSubmit ?? [])].map((group) => ({
-    ...group,
-    hooks: group.hooks.map((hook) => {
-      if (!isCodexPromptCoachHook(hook.command)) {
-        return hook;
-      }
-
-      found = true;
-      return { ...hook, command };
-    }),
-  }));
-
-  if (!found) {
-    userPromptSubmit.push({
-      hooks: [
-        {
-          type: "command",
-          command,
-          timeout: 2,
-        },
-      ],
-    });
-  }
-
-  hooks.UserPromptSubmit = userPromptSubmit;
+  hooks.UserPromptSubmit = ensurePromptCoachHookGroups(
+    hooks.UserPromptSubmit ?? [],
+    command,
+    isCodexPromptCoachHook,
+  );
+  hooks.Stop = ensurePromptCoachHookGroups(
+    hooks.Stop ?? [],
+    command,
+    isCodexPromptCoachHook,
+  );
   if (options.sessionStartCommand) {
     hooks.SessionStart = ensureSessionStartHook(
       hooks.SessionStart ?? [],
@@ -539,16 +505,14 @@ function removeCodexHook(
   settings: CodexHooksSettings,
 ): CodexHooksSettings & { hooks: Record<string, ClaudeHookGroup[]> } {
   const hooks = { ...(settings.hooks ?? {}) };
-  const userPromptSubmit = [...(hooks.UserPromptSubmit ?? [])]
-    .map((group) => ({
-      ...group,
-      hooks: group.hooks.filter(
-        (hook) => !isCodexPromptCoachHook(hook.command),
-      ),
-    }))
-    .filter((group) => group.hooks.length > 0);
-
-  hooks.UserPromptSubmit = userPromptSubmit;
+  hooks.UserPromptSubmit = removePromptCoachHookGroups(
+    hooks.UserPromptSubmit ?? [],
+    isCodexPromptCoachHook,
+  );
+  hooks.Stop = removePromptCoachHookGroups(
+    hooks.Stop ?? [],
+    isCodexPromptCoachHook,
+  );
   hooks.SessionStart = removeSessionStartHook(
     hooks.SessionStart ?? [],
     CODEX_PROMPT_COACH_SESSION_MARKER,
@@ -558,6 +522,51 @@ function removeCodexHook(
     ...settings,
     hooks,
   };
+}
+
+function ensurePromptCoachHookGroups(
+  groups: ClaudeHookGroup[],
+  command: string,
+  isPromptCoachHook: (command: string) => boolean,
+): ClaudeHookGroup[] {
+  let found = false;
+  const next = [...groups].map((group) => ({
+    ...group,
+    hooks: group.hooks.map((hook) => {
+      if (!isPromptCoachHook(hook.command)) {
+        return hook;
+      }
+
+      found = true;
+      return { ...hook, command };
+    }),
+  }));
+
+  if (!found) {
+    next.push({
+      hooks: [
+        {
+          type: "command",
+          command,
+          timeout: 2,
+        },
+      ],
+    });
+  }
+
+  return next;
+}
+
+function removePromptCoachHookGroups(
+  groups: ClaudeHookGroup[],
+  isPromptCoachHook: (command: string) => boolean,
+): ClaudeHookGroup[] {
+  return [...groups]
+    .map((group) => ({
+      ...group,
+      hooks: group.hooks.filter((hook) => !isPromptCoachHook(hook.command)),
+    }))
+    .filter((group) => group.hooks.length > 0);
 }
 
 function ensureSessionStartHook(

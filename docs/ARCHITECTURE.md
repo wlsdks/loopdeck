@@ -60,11 +60,11 @@ work but should not own domain rules that need to be reused elsewhere. Shared
 rules such as scoring, redaction, project instruction review, and archive
 analysis belong in `analysis`, `redaction`, or `storage`.
 
-`src/loop/` owns privacy-safe loop snapshot and continuation brief domain
-logic. It may consume prompt summaries and storage ports, but it must not read
-raw transcripts, provider credentials, or private agent state databases. CLI,
-MCP, hook, and web surfaces should call into `src/loop/` instead of formatting
-loop state independently.
+`src/loop/` owns privacy-safe loop snapshot collection, snapshot domain rules,
+and continuation brief formatting. It may consume prompt summaries and storage
+ports, but it must not read raw transcripts, provider credentials, or private
+agent state databases. CLI, MCP, hook, and web surfaces should call into
+`src/loop/` instead of formatting loop state independently.
 
 ## Spring-To-Node Translation
 

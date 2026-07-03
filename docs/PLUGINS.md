@@ -59,7 +59,7 @@ plugins/prompt-coach
 It includes:
 
 - `.codex-plugin/plugin.json` for plugin metadata
-- `hooks.json` for a fail-open Codex `UserPromptSubmit` hook
+- `hooks.json` for fail-open Codex `UserPromptSubmit` and `Stop` hooks
 - `skills/prompt-coach/SKILL.md` so Codex can help install, diagnose, and use
   the archive
 
@@ -283,6 +283,11 @@ improved draft, and tries to copy the draft to the clipboard. The user still
 pastes and submits the draft manually. It does not simulate keyboard input,
 rewrite the interactive composer, or auto-submit prompts. If local ingest is
 unavailable or fails, the hook fails open and does not block.
+
+The installed hook set also includes `Stop`. Stop events are handled locally:
+prompt-coach collects a Loopdeck snapshot from recent prompt metadata without
+posting the lifecycle event to the prompt ingest route, and without storing
+prompt bodies, raw paths, or transcript contents.
 
 `--rewrite-guard context` is less disruptive: it allows the original prompt to
 continue and adds model-visible rewrite guidance. That mode is not a true

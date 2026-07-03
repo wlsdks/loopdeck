@@ -4,7 +4,11 @@ import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { afterEach, describe, expect, it } from "vitest";
 
+import { normalizeClaudeCodePayload } from "../adapters/claude-code.js";
+import { normalizeCodexPayload } from "../adapters/codex.js";
 import { initializePromptCoach } from "../config/config.js";
+import { redactPrompt } from "../redaction/redact.js";
+import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import { readLastHookStatus } from "./hook-status.js";
 import { runClaudeCodeHook, runCodexHook } from "./wrapper.js";
 
@@ -141,6 +145,50 @@ describe("runClaudeCodeHook", () => {
 
     expect(result).toEqual({ exitCode: 0, stdout: "", stderr: "" });
   });
+
+  it("collects a local loop snapshot on Stop without posting the lifecycle payload to prompt ingest", async () => {
+    const dataDir = createTempDir();
+    await seedPrompt(dataDir, "claude-code");
+    const posted: unknown[] = [];
+
+    const result = await runClaudeCodeHook({
+      stdin: JSON.stringify({
+        hook_event_name: "Stop",
+        session_id: "session-stop",
+        cwd: "/Users/example/private-project",
+        transcript_path: "/Users/example/.claude/session.jsonl",
+      }),
+      dataDir,
+      postPayload: async (request) => {
+        posted.push(request);
+        return { ok: true, status: 200 };
+      },
+    });
+
+    const storage = openStorage(dataDir);
+    const snapshot = storage.getLatestLoopSnapshot();
+    storage.close();
+    const serialized = JSON.stringify({ result, snapshot });
+
+    expect(result).toEqual({ exitCode: 0, stdout: "", stderr: "" });
+    expect(posted).toHaveLength(0);
+    expect(snapshot).toMatchObject({
+      source: "hook",
+      tool: "claude-code",
+      session_id: "session-stop",
+      cwd_label: "private-project",
+      event_counts: {
+        prompts: 1,
+      },
+      privacy: {
+        local_only: true,
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+      },
+    });
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("/Users/example");
+  });
 });
 
 describe("runCodexHook", () => {
@@ -229,7 +277,104 @@ describe("runCodexHook", () => {
 
     expect(output.suppressOutput).toBeUndefined();
   });
+
+  it("collects a local loop snapshot on Stop without posting the lifecycle payload to prompt ingest", async () => {
+    const dataDir = createTempDir();
+    await seedPrompt(dataDir, "codex");
+    const posted: unknown[] = [];
+
+    const result = await runCodexHook({
+      stdin: JSON.stringify({
+        hook_event_name: "Stop",
+        session_id: "session-stop",
+        cwd: "/Users/example/private-project",
+        transcript_path: "/Users/example/.codex/session.jsonl",
+        stop_hook_active: false,
+      }),
+      dataDir,
+      postPayload: async (request) => {
+        posted.push(request);
+        return { ok: true, status: 200 };
+      },
+    });
+
+    const storage = openStorage(dataDir);
+    const snapshot = storage.getLatestLoopSnapshot();
+    storage.close();
+    const serialized = JSON.stringify({ result, snapshot });
+
+    expect(result).toEqual({ exitCode: 0, stdout: "", stderr: "" });
+    expect(posted).toHaveLength(0);
+    expect(snapshot).toMatchObject({
+      source: "hook",
+      tool: "codex",
+      session_id: "session-stop",
+      cwd_label: "private-project",
+      event_counts: {
+        prompts: 1,
+      },
+      privacy: {
+        local_only: true,
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+      },
+    });
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("/Users/example");
+  });
 });
+
+async function seedPrompt(
+  dataDir: string,
+  tool: "claude-code" | "codex",
+): Promise<void> {
+  initializePromptCoach({ dataDir });
+  const storage = openStorage(dataDir);
+  try {
+    const event =
+      tool === "codex"
+        ? normalizeCodexPayload(
+            {
+              session_id: "session-stop",
+              turn_id: "turn-stop",
+              transcript_path: "/Users/example/.codex/session.jsonl",
+              cwd: "/Users/example/private-project",
+              hook_event_name: "UserPromptSubmit",
+              model: "gpt-5-codex",
+              prompt: "Make this better",
+            },
+            new Date("2026-07-04T00:59:00.000Z"),
+          )
+        : normalizeClaudeCodePayload(
+            {
+              session_id: "session-stop",
+              transcript_path: "/Users/example/.claude/session.jsonl",
+              cwd: "/Users/example/private-project",
+              permission_mode: "default",
+              hook_event_name: "UserPromptSubmit",
+              prompt: "Make this better",
+            },
+            new Date("2026-07-04T00:59:00.000Z"),
+          );
+    await storage.storePrompt({
+      event,
+      redaction: redactPrompt(event.prompt, "mask"),
+    });
+  } finally {
+    storage.close();
+  }
+}
+
+function openStorage(
+  dataDir: string,
+): ReturnType<typeof createSqlitePromptStorage> {
+  const init = initializePromptCoach({ dataDir });
+  return createSqlitePromptStorage({
+    dataDir,
+    hmacSecret: init.hookAuth.web_session_secret,
+    now: () => new Date("2026-07-04T01:00:00.000Z"),
+  });
+}
 
 function createTempDir(): string {
   const dir = join(tmpdir(), `prompt-coach-hook-${randomUUID()}`);

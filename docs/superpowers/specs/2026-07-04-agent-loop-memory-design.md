@@ -482,7 +482,8 @@ Verification:
 
 Add:
 
-- Stop hook loop collection
+- Stop hook loop collection (**implemented first under the current
+  `prompt-coach` CLI/package name**)
 - PostCompact boundary metadata
 - setup dry-run preview
 - hook trust/setup docs

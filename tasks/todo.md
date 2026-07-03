@@ -58,13 +58,30 @@
 - [x] Task 6 GREEN: `get_loopdeck_status` / `prepare_loop_brief` MCP tool 구현
 - [x] Task 7 RED: loop outcome storage/MCP 테스트가 missing method/tool로 실패하는지 확인
 - [x] Task 7 GREEN: `record_loop_outcome` MCP write tool과 SQLite outcome update 구현
-- [ ] 다음 slice: Codex/Claude Code hook 기반 loop snapshot 수집 설계 및 구현
+- [x] 다음 slice: Codex/Claude Code hook 기반 loop snapshot 수집 설계 및 구현
 
 ### 판단 기준
 
 - 이번 slice는 prompt body와 raw path를 저장하거나 출력하지 않는 domain/storage/CLI/MCP read contract와 user-approved outcome metadata write contract만 증명한다.
 - hook, web, rename 작업은 이 커밋에 섞지 않는다.
 - 다음 slice도 RED-GREEN 단위로 storage integration부터 진행한다.
+
+## 2026-07-04 Hook Loop Snapshot Collection Slice
+
+- [x] Task 1 RED: Claude Code/Codex `Stop` hook이 prompt ingest route로 가지 않고 local loop snapshot을 생성해야 한다는 wrapper 테스트 작성
+- [x] Task 1 GREEN: Stop hook용 local-only loop snapshot collector 구현
+- [x] Task 2 RED: Stop hook 출력과 저장 snapshot이 prompt body/raw path를 노출하지 않는 회귀 테스트 작성
+- [x] Task 2 GREEN: fail-open/privacy-safe stdout/stderr contract 유지
+- [x] Task 3: CLI loop collect와 hook collect가 같은 snapshot builder 경계를 공유하도록 정리
+- [x] Task 4: docs/README/PLUGINS/PR에 Stop hook loop collection 범위와 한계 반영
+- [ ] 다음 slice: PostCompact/PreCompact boundary metadata 설계 및 구현
+
+### 판단 기준
+
+- Stop hook은 `UserPromptSubmit` ingest 흐름을 깨지 않고, prompt body가 없는 lifecycle event를 별도 local collector로 처리한다.
+- Hook 실패는 기존처럼 fail-open이며 stdout/stderr에 prompt body, raw path, token을 노출하지 않는다.
+- 이번 slice는 hook 기반 수집까지만 포함하고 cron, web loops view, repo/package rename은 섞지 않는다.
+- Codex/Claude Code acceptance criteria 중 "Hook `Stop`: collect loop snapshot"을 현재 `prompt-coach` CLI/package 이름 아래에서 먼저 증명한다.
 
 ## 2026-05-04 Habit Coach Panel Extraction
 

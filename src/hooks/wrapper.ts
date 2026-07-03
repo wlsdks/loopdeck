@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 
 import { loadHookAuth, loadPromptCoachConfig } from "../config/config.js";
+import { collectLoopSnapshot } from "../loop/collect.js";
+import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import {
   postHookPayload,
   type PostHookPayloadResult,
@@ -55,6 +57,19 @@ async function runPromptCoachHook(
     const payload = JSON.parse(options.stdin);
     const config = loadPromptCoachConfig(options.dataDir);
     const hookAuth = loadHookAuth(options.dataDir);
+    if (isStopHookPayload(payload)) {
+      collectStopLoopSnapshot(payload, {
+        dataDir: config.data_dir,
+        hmacSecret: hookAuth.web_session_secret,
+      });
+      writeLastHookStatus(options.dataDir, {
+        ok: true,
+        status: 200,
+        checked_at: new Date().toISOString(),
+      });
+      return { exitCode: 0, stdout, stderr: "" };
+    }
+
     const postPayload = options.postPayload ?? postHookPayload;
     const url = `http://${config.server.host}:${config.server.port}/api/v1/ingest/${tool}`;
 
@@ -110,6 +125,39 @@ async function runPromptCoachHook(
   }
 
   return { exitCode: 0, stdout, stderr: "" };
+}
+
+function collectStopLoopSnapshot(
+  payload: { cwd?: unknown },
+  options: { dataDir: string; hmacSecret: string },
+): void {
+  const storage = createSqlitePromptStorage({
+    dataDir: options.dataDir,
+    hmacSecret: options.hmacSecret,
+  });
+
+  try {
+    const cwd = typeof payload.cwd === "string" ? payload.cwd : process.cwd();
+    collectLoopSnapshot({
+      storage,
+      hmacSecret: options.hmacSecret,
+      source: "hook",
+      cwd,
+      cwdPrefix: cwd,
+    });
+  } finally {
+    storage.close();
+  }
+}
+
+function isStopHookPayload(
+  payload: unknown,
+): payload is { hook_event_name: "Stop"; cwd?: unknown } {
+  return (
+    Boolean(payload) &&
+    typeof payload === "object" &&
+    (payload as { hook_event_name?: unknown }).hook_event_name === "Stop"
+  );
 }
 
 export async function readStdin(): Promise<string> {
