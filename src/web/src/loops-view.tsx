@@ -5,6 +5,7 @@ import type {
   LoopInstructionPatchProposal,
   LoopListResponse,
   LoopSummary,
+  LoopWorktreeResponse,
 } from "./api.js";
 import { getLoopBrief, getLoopInstructionPatch } from "./api.js";
 import { copyTextToClipboard } from "./clipboard.js";
@@ -16,10 +17,14 @@ export function LoopsView({
   loading,
   loops,
   onApproveMemoryCandidate,
+  onSelectWorktree,
+  worktreeDetail,
 }: {
   loading: boolean;
   loops?: LoopListResponse;
   onApproveMemoryCandidate?: () => Promise<void>;
+  onSelectWorktree?: (worktree: string) => Promise<void>;
+  worktreeDetail?: LoopWorktreeResponse;
 }) {
   const items = loops?.items ?? [];
   const [approvalBusy, setApprovalBusy] = useState(false);
@@ -98,11 +103,22 @@ export function LoopsView({
             <p className="loops-status-line">Worktree review needed</p>
           )}
           {loops.status.activity.worktrees.slice(0, 2).map((worktree) => (
-            <p className="loops-status-line" key={worktree.worktree}>
-              {worktree.worktree} {worktree.snapshots}{" "}
-              {pluralize(worktree.snapshots, "snapshot")} / {worktree.sessions}{" "}
-              {pluralize(worktree.sessions, "session")}
-            </p>
+            <div className="loop-worktree-line" key={worktree.worktree}>
+              <p className="loops-status-line">
+                {worktree.worktree} {worktree.snapshots}{" "}
+                {pluralize(worktree.snapshots, "snapshot")} /{" "}
+                {worktree.sessions} {pluralize(worktree.sessions, "session")}
+              </p>
+              <button
+                className="loop-copy-button"
+                disabled={!onSelectWorktree}
+                onClick={() => void onSelectWorktree?.(worktree.worktree)}
+                title={`Open ${worktree.worktree}`}
+                type="button"
+              >
+                Open {worktree.worktree}
+              </button>
+            </div>
           ))}
           {loops.status.memory_candidate && (
             <p className="loops-status-line">
@@ -174,6 +190,50 @@ export function LoopsView({
             <p>{patchProposal.apply_gate.reason}</p>
           </div>
           <pre>{patchProposal.diff}</pre>
+        </div>
+      )}
+      {worktreeDetail && (
+        <div className="loop-table panel">
+          <div>
+            <span className="panel-eyebrow">Worktree detail</span>
+            <h2>{worktreeDetail.worktree}</h2>
+          </div>
+          <div className="loop-row loop-row-head">
+            <span>Loop</span>
+            <span>Project</span>
+            <span>Signals</span>
+            <span>Outcome</span>
+          </div>
+          {worktreeDetail.items.map((loop) => (
+            <div className="loop-row" key={loop.id}>
+              <div className="loop-primary">
+                <strong>{loop.id}</strong>
+                <span>{formatDate(loop.created_at)}</span>
+                <span>
+                  {loop.tool} / {loop.source}
+                </span>
+              </div>
+              <div>
+                <strong>{loop.project}</strong>
+                {loop.branch && <span className="loop-muted">{loop.branch}</span>}
+                {loop.worktree && (
+                  <span className="loop-muted">{loop.worktree}</span>
+                )}
+              </div>
+              <div className="loop-signals">
+                <span>{loop.prompt_count} prompts</span>
+                {loop.average_prompt_score !== undefined && (
+                  <span>{loop.average_prompt_score}/100 avg</span>
+                )}
+                {loop.top_gaps.slice(0, 2).map((gap) => (
+                  <span key={gap}>{gap}</span>
+                ))}
+              </div>
+              <div className="loop-next">
+                <span>{loop.outcome_status}</span>
+              </div>
+            </div>
+          ))}
         </div>
       )}
       <div className="loop-table panel">

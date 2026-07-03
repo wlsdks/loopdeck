@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import { LoopsView } from "./loops-view.js";
-import type { LoopListResponse } from "./api.js";
+import type { LoopListResponse, LoopWorktreeResponse } from "./api.js";
 
 describe("LoopsView", () => {
   it("renders server-provided Loopdeck status and next action", () => {
@@ -19,6 +19,8 @@ describe("LoopsView", () => {
     expect(html).toContain("Worktree review needed");
     expect(html).toContain("agent-loop-worktree 2 snapshots / 2 sessions");
     expect(html).toContain("main-worktree 1 snapshot / 1 session");
+    expect(html).toContain("Open agent-loop-worktree");
+    expect(html).toContain("Open main-worktree");
     expect(html).toContain("Memory candidate eligible");
     expect(html).toContain("Approve memory");
     expect(html).toContain("prompt-coach loop memory-approve");
@@ -27,6 +29,24 @@ describe("LoopsView", () => {
     expect(html).not.toContain("Make this better");
     expect(html).not.toContain("Safe memory statement");
     expect(html).not.toContain("Compact summary with sk-proj-secret");
+    expect(html).not.toContain("/Users/example");
+  });
+
+  it("renders a selected worktree drilldown without prompt bodies or raw paths", () => {
+    const html = renderToStaticMarkup(
+      createElement(LoopsView, {
+        loading: false,
+        loops: loopList(),
+        worktreeDetail: loopWorktree(),
+      }),
+    );
+
+    expect(html).toContain("Worktree detail");
+    expect(html).toContain("agent-loop-worktree");
+    expect(html).toContain("loop_web");
+    expect(html).toContain("passed");
+    expect(html).not.toContain("Make this better");
+    expect(html).not.toContain("Safe worktree summary");
     expect(html).not.toContain("/Users/example");
   });
 });
@@ -107,5 +127,24 @@ function loopSummary(): LoopListResponse["items"][number] {
     average_prompt_score: 58,
     top_gaps: ["Goal clarity"],
     outcome_status: "unknown",
+  };
+}
+
+function loopWorktree(): LoopWorktreeResponse {
+  return {
+    worktree: "agent-loop-worktree",
+    items: [
+      {
+        ...loopSummary(),
+        worktree: "agent-loop-worktree",
+        outcome_status: "passed",
+      },
+    ],
+    privacy: {
+      local_only: true,
+      returns_prompt_bodies: false,
+      returns_raw_paths: false,
+      returns_compact_content: false,
+    },
   };
 }

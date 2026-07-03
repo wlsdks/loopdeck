@@ -87,6 +87,37 @@ export function registerLoopRoutes(
     };
   });
 
+  server.get("/api/v1/loops/worktrees/:worktree", async (request) => {
+    requireAppAccess(request, options.auth);
+    const params = request.params as { worktree: string };
+    const snapshots =
+      options.storage
+        .listLoopSnapshots?.({ limit: 100 })
+        .items.filter((snapshot) => snapshot.worktree_label === params.worktree) ??
+      [];
+    const boundaries =
+      options.storage.listCompactBoundaries?.({ limit: 100 }).items ?? [];
+
+    return {
+      data: {
+        worktree: params.worktree,
+        items: snapshots.map((snapshot) => ({
+          ...toLoopdeckStatusSnapshot(snapshot),
+          compact_boundary: latestCompactBoundaryAfterSnapshot(
+            snapshot,
+            boundaries,
+          ),
+        })),
+        privacy: {
+          local_only: true,
+          returns_prompt_bodies: false,
+          returns_raw_paths: false,
+          returns_compact_content: false,
+        },
+      },
+    };
+  });
+
   server.get("/api/v1/loops/:id/brief", async (request) => {
     requireAppAccess(request, options.auth);
     const params = request.params as { id: string };

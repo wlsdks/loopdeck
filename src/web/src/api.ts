@@ -159,6 +159,17 @@ export type LoopListResponse = {
   };
 };
 
+export type LoopWorktreeResponse = {
+  worktree: string;
+  items: LoopSummary[];
+  privacy: {
+    local_only: true;
+    returns_prompt_bodies: false;
+    returns_raw_paths: false;
+    returns_compact_content: false;
+  };
+};
+
 export type LoopBrief = {
   title: string;
   prompt: string;
@@ -701,6 +712,25 @@ export async function getLoopBrief(id: string): Promise<LoopBrief> {
     credentials: "same-origin",
   });
   const body = (await response.json()) as { data: LoopBrief };
+  return body.data;
+}
+
+export async function getLoopWorktree(
+  worktree: string,
+): Promise<LoopWorktreeResponse> {
+  await ensureSession();
+  const response = await fetch(
+    `/api/v1/loops/worktrees/${encodeURIComponent(worktree)}`,
+    {
+      credentials: "same-origin",
+    },
+  );
+
+  if (!response.ok) {
+    await failApi(response, "Loop worktree drilldown failed");
+  }
+
+  const body = (await response.json()) as { data: LoopWorktreeResponse };
   return body.data;
 }
 

@@ -972,6 +972,30 @@ Do not add:
 - full drilldown routes, filters, or branch comparison UI
 - external LLM summarization
 
+### Slice 4.25: Worktree Drilldown Surface
+
+Add:
+
+- read-only `/api/v1/loops/worktrees/:worktree` endpoint scoped to one safe
+  worktree label
+- web client helper `getLoopWorktree(worktree)` using the existing local app
+  session boundary
+- Loops summary open action for recent worktree groups
+- selected worktree detail panel listing safe loop snapshot metadata for that
+  worktree
+- focused tests proving drilldown excludes other worktrees and does not return
+  prompt bodies, raw paths, compact summaries, secrets, transcripts, or
+  external LLM results
+
+Do not add:
+
+- prompt body or transcript drilldown
+- raw cwd/worktree path disclosure
+- automatic branch comparison, merge, rebase, or conflict resolution advice
+- background scanning of worktrees that do not have explicit loop snapshots
+- persistent deep-link routing or query-state until a later slice
+- hidden external LLM summarization
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

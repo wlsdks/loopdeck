@@ -29,6 +29,7 @@ import {
   getAskEventSummary,
   getCoachFeedbackSummary,
   getHealth,
+  getLoopWorktree,
   getPrompt,
   getQualityDashboard,
   getSettings,
@@ -46,6 +47,7 @@ import {
   type ExportJob,
   type ExportPreset,
   type LoopListResponse,
+  type LoopWorktreeResponse,
   type ProjectSummary,
   type QualityDashboard,
   type PromptFilters,
@@ -136,6 +138,9 @@ export function App() {
   const [measurementBusy, setMeasurementBusy] = useState(false);
   const [projects, setProjects] = useState<ProjectSummary[]>([]);
   const [loops, setLoops] = useState<LoopListResponse | undefined>();
+  const [loopWorktree, setLoopWorktree] = useState<
+    LoopWorktreeResponse | undefined
+  >();
   const [projectInstructionBusy, setProjectInstructionBusy] = useState<
     Record<string, boolean>
   >({});
@@ -401,6 +406,15 @@ export function App() {
       setLoops(nextLoops);
     } catch {
       setError("Could not approve loop memory.");
+    }
+  }
+
+  async function openLoopWorktree(worktree: string): Promise<void> {
+    setError(undefined);
+    try {
+      setLoopWorktree(await getLoopWorktree(worktree));
+    } catch {
+      setError("Could not load loop worktree detail.");
     }
   }
 
@@ -1026,6 +1040,8 @@ export function App() {
             loops={loops}
             loading={!loops}
             onApproveMemoryCandidate={() => approveLatestLoopMemory()}
+            onSelectWorktree={(worktree) => openLoopWorktree(worktree)}
+            worktreeDetail={loopWorktree}
           />
         )}
         {view.name === "projects" && (

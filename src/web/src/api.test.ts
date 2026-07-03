@@ -194,6 +194,62 @@ describe("web api export client", () => {
     expect(JSON.stringify(brief)).not.toContain("/Users/example");
   });
 
+  it("gets a worktree drilldown without raw prompt or compact content", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            worktree: "agent-loop-worktree",
+            items: [
+              {
+                id: "loop_web",
+                created_at: "2026-07-04T01:00:00.000Z",
+                tool: "codex",
+                source: "cli",
+                project: "private-project",
+                branch: "codex/agent-loop-memory-design",
+                worktree: "agent-loop-worktree",
+                prompt_count: 2,
+                average_prompt_score: 58,
+                top_gaps: ["Goal clarity"],
+                outcome_status: "passed",
+              },
+            ],
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+              returns_compact_content: false,
+            },
+          },
+        }),
+      );
+    const { getLoopWorktree } = await import("./api.js");
+
+    const detail = await getLoopWorktree("agent-loop-worktree");
+
+    expect(detail).toMatchObject({
+      worktree: "agent-loop-worktree",
+      items: [
+        {
+          id: "loop_web",
+          worktree: "agent-loop-worktree",
+          outcome_status: "passed",
+        },
+      ],
+    });
+    expect(fetchMock).toHaveBeenLastCalledWith(
+      "/api/v1/loops/worktrees/agent-loop-worktree",
+      {
+        credentials: "same-origin",
+      },
+    );
+    expect(JSON.stringify(detail)).not.toContain("Make this better");
+    expect(JSON.stringify(detail)).not.toContain("Compact summary");
+    expect(JSON.stringify(detail)).not.toContain("/Users/example");
+  });
+
   it("approves the latest eligible loop memory candidate with csrf", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))

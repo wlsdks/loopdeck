@@ -431,6 +431,66 @@ describe("createServer P2 ingest boundary", () => {
     expect(serialized).not.toContain("This unrelated project memory should not appear");
   });
 
+  it("returns a worktree drilldown without prompt bodies or raw paths", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(loopSnapshot({ worktree_label: "worktree-web" }));
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_web_second",
+        created_at: "2026-07-04T01:10:00.000Z",
+        session_id: "session-web-two",
+        worktree_label: "worktree-web",
+        outcome: {
+          status: "passed",
+          summary: "Keep web, CLI, MCP, and API loop status on the shared model.",
+          evidence_refs: ["commit:web"],
+        },
+      }),
+    );
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_other",
+        project_id: "proj_other",
+        cwd_label: "other-project",
+        worktree_label: "other-worktree",
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/worktrees/worktree-web",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const body = response.json<{
+      data: { worktree: string; items: Array<{ id: string; worktree?: string }> };
+    }>();
+    const serialized = JSON.stringify(body);
+
+    expect(response.statusCode).toBe(200);
+    expect(body.data.worktree).toBe("worktree-web");
+    expect(body.data.items).toEqual([
+      expect.objectContaining({
+        id: "loop_web",
+        worktree: "worktree-web",
+      }),
+      expect.objectContaining({
+        id: "loop_web_second",
+        worktree: "worktree-web",
+      }),
+    ]);
+    expect(serialized).not.toContain("loop_other");
+    expect(serialized).not.toContain("other-project");
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain(
+      "Keep web, CLI, MCP, and API loop status on the shared model.",
+    );
+    expect(serialized).not.toContain("/Users/example");
+  });
+
   it("returns a copy-ready loop brief without prompt bodies, compact summaries, or raw paths", async () => {
     const storage = createMemoryStorage();
     storage.loopSnapshots.push(loopSnapshot());
