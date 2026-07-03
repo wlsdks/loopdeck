@@ -156,5 +156,10 @@ Implementation checkpoint:
 - `review_packet.checklist` now exposes a read-only human checklist derived from
   safe aggregate actions, so Codex and Claude Code can tell the user what to do
   before a merge decision without storing completion state.
-- The next runtime slice should decide whether to add a local merge decision
-  journal, and if so where its write/approval boundary belongs.
+- Local merge decisions now have a CLI-only journal boundary:
+  `prompt-coach loop decision record/list` stores an explicit local operator
+  decision for a selected worktree without prompt bodies, raw paths, external
+  calls, or git writes.
+- The next runtime slice should decide whether to expose recent merge decisions
+  read-only through status/MCP/web so Codex and Claude Code can see prior human
+  decisions without gaining a write-capable merge journal tool.

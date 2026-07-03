@@ -13,6 +13,8 @@ import {
   loopCollectForCli,
   loopInstructionPatchApplyForCli,
   loopInstructionPatchForCli,
+  loopDecisionListForCli,
+  loopDecisionRecordForCli,
   loopMemoryApproveForCli,
   loopMemoryCandidateForCli,
   loopStatusForCli,
@@ -531,6 +533,95 @@ describe("loop CLI command", () => {
     );
     expect(text).not.toContain("Make this better");
     expect(text).not.toContain("/Users/example");
+  });
+
+  it("records and lists explicit local merge decisions without prompt bodies or raw paths", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    loopCollectForCli({
+      dataDir,
+      cwdPrefix: "/Users/example/private-project",
+      now: new Date("2026-07-04T01:00:00.000Z"),
+      cwd: "/Users/example/private-project",
+      worktree: "primary-worktree",
+      branch: "codex/agent-loop-memory-design",
+    });
+
+    const json = loopDecisionRecordForCli({
+      dataDir,
+      json: true,
+      worktree: "primary-worktree",
+      decision: "continue",
+      reason: "Need one more focused verification pass before merge.",
+      decidedBy: "user",
+      now: new Date("2026-07-04T01:30:00.000Z"),
+    });
+    const parsed = JSON.parse(json) as {
+      recorded: boolean;
+      decision: {
+        id: string;
+        worktree: string;
+        decision: string;
+        reason: string;
+        decided_by: string;
+        privacy: {
+          local_only: boolean;
+          stores_prompt_bodies: boolean;
+          stores_raw_paths: boolean;
+          writes_git_state: boolean;
+          external_calls: boolean;
+        };
+      };
+      next_action: string;
+    };
+
+    expect(parsed.recorded).toBe(true);
+    expect(parsed.decision).toMatchObject({
+      worktree: "primary-worktree",
+      decision: "continue",
+      reason: "Need one more focused verification pass before merge.",
+      decided_by: "user",
+      privacy: {
+        local_only: true,
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        writes_git_state: false,
+        external_calls: false,
+      },
+    });
+    expect(parsed.next_action).toBe("review recorded merge decision before merge");
+    expect(json).not.toContain("Make this better");
+    expect(json).not.toContain("/Users/example");
+
+    const text = loopDecisionListForCli({ dataDir });
+
+    expect(text).toContain("Loop merge decisions");
+    expect(text).toContain("primary-worktree continue");
+    expect(text).toContain("Need one more focused verification pass before merge.");
+    expect(text).toContain("Privacy: local-only, no prompt bodies, no raw paths, no git writes.");
+    expect(text).not.toContain("Make this better");
+    expect(text).not.toContain("/Users/example");
+  });
+
+  it("rejects unsafe local merge decision reasons", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    loopCollectForCli({
+      dataDir,
+      cwdPrefix: "/Users/example/private-project",
+      now: new Date("2026-07-04T01:00:00.000Z"),
+      cwd: "/Users/example/private-project",
+      worktree: "primary-worktree",
+    });
+
+    expect(() =>
+      loopDecisionRecordForCli({
+        dataDir,
+        worktree: "primary-worktree",
+        decision: "continue",
+        reason: "Check /Users/example/private-project/log.txt with sk-proj-secret",
+      }),
+    ).toThrow("Loop merge decision reason must not include raw paths or secrets.");
   });
 
   it("prints an instruction patch proposal from the latest approved memory without writing files", async () => {

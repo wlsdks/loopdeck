@@ -1446,6 +1446,48 @@ Do not add:
 - prompt body, outcome summary, transcript, compact summary, raw path, API
   token, or provider credential output
 
+### Slice 4.45: Local Merge Decision Journal CLI Boundary
+
+Decision:
+
+- Add a local merge decision journal, but start with an explicit CLI write
+  boundary only.
+- Codex and Claude Code may suggest the command, and a human/local operator runs
+  it. Do not expose a write-capable MCP tool or web button in this slice.
+- The first journal record stores only safe merge-review metadata:
+  - latest matching loop snapshot id
+  - project id
+  - worktree label
+  - decision: `merge`, `continue`, or `defer`
+  - privacy-safe reason
+  - actor label
+  - created time
+  - privacy flags proving no prompt bodies, raw paths, git writes, or external
+    calls
+
+Add:
+
+- `prompt-coach loop decision record --worktree <name> --decision <merge|continue|defer> --reason <text>`
+- `prompt-coach loop decision list`
+- local SQLite journal table for merge decisions
+- privacy guard rejecting raw local paths and secret-looking tokens in decision
+  reasons
+- focused CLI/storage coverage proving records are local-only and do not include
+  prompt bodies, raw paths, evidence refs, transcripts, compact summaries, API
+  tokens, provider credentials, or git writes
+
+Do not add:
+
+- automatic merge, branch checkout, conflict prediction, diff inspection, or git
+  writes
+- MCP write tool for merge decisions
+- web write button or checklist completion state
+- hidden external model calls or background agent evaluation
+- writes to `AGENTS.md`, `CLAUDE.md`, project docs, memory files, or git state
+- package, plugin, slash command, hook, or MCP server-name rename
+- prompt body, outcome summary, transcript, compact summary, raw path, API
+  token, provider credential, or raw evidence ref output
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

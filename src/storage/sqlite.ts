@@ -52,6 +52,7 @@ import type { AskEventStoragePort, CompactBoundaryStoragePort,
   ListPromptsOptions,
   LoopSnapshotStoragePort,
   LoopMemoryStoragePort,
+  LoopMergeDecisionStoragePort,
   PromptDetail,
   ProjectListResult,
   ProjectInstructionReview,
@@ -74,11 +75,7 @@ import type { AskEventStoragePort, CompactBoundaryStoragePort,
   StorePromptResult,
   UsefulPrompt,
 } from "./ports.js";
-import {
-  parsePromptMarkdown,
-  readPromptMarkdown,
-  writePromptMarkdown,
-} from "./markdown.js";
+import { parsePromptMarkdown, readPromptMarkdown, writePromptMarkdown } from "./markdown.js";
 import {
   isExportPreviewCounts,
   parseJson,
@@ -130,6 +127,7 @@ import { projectLabel } from "./project-label.js";
 import * as loopSnapshots from "./loop-snapshots.js";
 import * as compactBoundaries from "./compact-boundaries.js";
 import * as loopMemories from "./loop-memories.js";
+import * as loopDecisions from "./loop-decisions.js";
 
 export type { PromptRow } from "./sqlite-rows.js";
 
@@ -150,7 +148,7 @@ export type SqlitePromptStorage = PromptStoragePort &
   AgentPromptJudgmentStoragePort &
   CoachFeedbackStoragePort &
   JudgeScoreStoragePort &
-  AskEventStoragePort & LoopSnapshotStoragePort & CompactBoundaryStoragePort & LoopMemoryStoragePort & {
+  AskEventStoragePort & LoopSnapshotStoragePort & CompactBoundaryStoragePort & LoopMemoryStoragePort & LoopMergeDecisionStoragePort & {
     close(): void;
     getAppliedMigrations(): AppliedMigration[];
     listPromptRows(): PromptRow[];
@@ -200,6 +198,8 @@ export function createSqlitePromptStorage(
     listCompactBoundaries: (options = {}) => compactBoundaries.listCompactBoundaries(db, options),
     recordLoopMemory: (input) => loopMemories.recordLoopMemory(db, input, options.now?.() ?? new Date()),
     listLoopMemories: (options = {}) => loopMemories.listLoopMemories(db, options),
+    recordLoopMergeDecision: (input) => loopDecisions.recordLoopMergeDecision(db, input, options.now?.() ?? new Date()),
+    listLoopMergeDecisions: (options = {}) => loopDecisions.listLoopMergeDecisions(db, options),
     listPrompts(options) {
       return listPrompts(db, options);
     },

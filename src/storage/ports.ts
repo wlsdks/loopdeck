@@ -17,6 +17,11 @@ import type {
   RecordLoopMemoryInput,
 } from "./loop-memories.js";
 import type {
+  LoopMergeDecision,
+  LoopMergeDecisionListResult,
+  RecordLoopMergeDecisionInput,
+} from "./loop-decisions.js";
+import type {
   CoachFeedbackEntry,
   CoachFeedbackRating,
   CoachFeedbackSummary,
@@ -142,6 +147,17 @@ export type LoopMemoryStoragePort = {
     limit?: number;
     projectId?: string;
   }): LoopMemoryListResult;
+};
+
+export type LoopMergeDecisionStoragePort = {
+  recordLoopMergeDecision(
+    input: RecordLoopMergeDecisionInput,
+  ): LoopMergeDecision;
+  listLoopMergeDecisions(options?: {
+    limit?: number;
+    projectId?: string;
+    worktree?: string;
+  }): LoopMergeDecisionListResult;
 };
 
 export type DeletePromptResult = {

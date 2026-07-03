@@ -26,6 +26,7 @@ import {
   type LoopdeckStatus,
 } from "../../loop/status.js";
 import type { LoopSnapshot, LoopSnapshotSource } from "../../loop/types.js";
+import type { LoopMergeDecisionValue } from "../../storage/loop-decisions.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import { registerLoopScheduleCommand } from "./loop-schedule.js";
 import { UserError } from "../user-error.js";
@@ -45,6 +46,9 @@ type LoopCliOptions = {
   worktree?: string;
   session?: string;
   approvedBy?: string;
+  decidedBy?: string;
+  decision?: string;
+  reason?: string;
 };
 
 export function registerLoopCommand(program: Command): void {
@@ -156,6 +160,37 @@ export function registerLoopCommand(program: Command): void {
     .option("--json", "Print JSON.")
     .action((options: LoopCliOptions) => {
       console.log(loopInstructionPatchApplyForCli(options));
+    });
+
+  const decision = loop
+    .command("decision")
+    .description("Record and list explicit local merge decisions.");
+
+  decision
+    .command("record")
+    .description("Record a local merge decision for a worktree.")
+    .requiredOption("--worktree <name>", "Worktree label being reviewed.")
+    .requiredOption(
+      "--decision <merge|continue|defer>",
+      "Local merge decision.",
+    )
+    .requiredOption("--reason <text>", "Privacy-safe decision reason.")
+    .option("--decided-by <actor>", "Decision actor label.", "user")
+    .option("--data-dir <path>", "Override the prompt-coach data directory.")
+    .option("--json", "Print JSON.")
+    .action((options: LoopCliOptions) => {
+      console.log(loopDecisionRecordForCli(options));
+    });
+
+  decision
+    .command("list")
+    .description("List recent local merge decisions.")
+    .option("--data-dir <path>", "Override the prompt-coach data directory.")
+    .option("--json", "Print JSON.")
+    .option("--limit <count>", "Maximum decisions to include.")
+    .option("--worktree <name>", "Only include this worktree label.")
+    .action((options: LoopCliOptions) => {
+      console.log(loopDecisionListForCli(options));
     });
 
   registerLoopScheduleCommand(loop);
@@ -359,6 +394,75 @@ export function loopInstructionPatchApplyForCli(
   });
 }
 
+export function loopDecisionRecordForCli(
+  options: LoopCliOptions = {},
+): string {
+  const worktree = options.worktree?.trim();
+  if (!worktree) {
+    throw new UserError("--worktree is required.");
+  }
+
+  const decision = parseLoopMergeDecision(options.decision);
+  const reason = options.reason ?? "";
+
+  return withStorage(options.dataDir, (storage) => {
+    const snapshot = selectLoopSnapshot(
+      storage.listLoopSnapshots({ limit: 100 }).items,
+      { worktree },
+    );
+    if (!snapshot) {
+      throw new UserError(
+        "No loop snapshot matched the selected worktree for decision recording.",
+      );
+    }
+
+    const recorded = storage.recordLoopMergeDecision({
+      snapshot_id: snapshot.id,
+      project_id: snapshot.project_id,
+      worktree,
+      decision,
+      reason,
+      decided_by: options.decidedBy ?? "user",
+    });
+    const result = {
+      recorded: true as const,
+      decision: recorded,
+      next_action: "review recorded merge decision before merge",
+      privacy: {
+        ...recorded.privacy,
+        returns_prompt_bodies: false,
+        returns_raw_paths: false,
+      },
+    };
+
+    return options.json
+      ? JSON.stringify(result, null, 2)
+      : formatLoopMergeDecisionRecord(result);
+  });
+}
+
+export function loopDecisionListForCli(options: LoopCliOptions = {}): string {
+  return withStorage(options.dataDir, (storage) => {
+    const result = {
+      decisions: storage.listLoopMergeDecisions({
+        limit: parseLimit(options.limit),
+        worktree: options.worktree,
+      }).items,
+      privacy: {
+        local_only: true,
+        returns_prompt_bodies: false,
+        returns_raw_paths: false,
+        writes_git_state: false,
+        external_calls: false,
+      },
+    };
+
+    return options.json
+      ? JSON.stringify(result, null, 2)
+      : formatLoopMergeDecisionList(result);
+  });
+}
+
 function withStorage<T>(
   dataDir: string | undefined,
   callback: (
@@ -393,6 +497,15 @@ function parseSource(value: string | undefined): LoopSnapshotSource {
   if (value === undefined || value === "cli") return "cli";
   if (value === "service") return "service";
   throw new UserError("--source must be either cli or service.");
+}
+
+function parseLoopMergeDecision(
+  value: string | undefined,
+): LoopMergeDecisionValue {
+  if (value === "merge" || value === "continue" || value === "defer") {
+    return value;
+  }
+  throw new UserError("--decision must be merge, continue, or defer.");
 }
 
 function formatLoopSnapshot(snapshot: LoopSnapshot): string {
@@ -566,4 +679,44 @@ function formatInstructionPatchApplyResult(
     "",
     "Privacy: local-only, no prompt bodies, no raw paths, no external calls.",
   ].join("\n");
+}
+
+function formatLoopMergeDecisionRecord(result: {
+  recorded: true;
+  decision: ReturnType<
+    ReturnType<typeof createSqlitePromptStorage>["recordLoopMergeDecision"]
+  >;
+  next_action: string;
+}): string {
+  return [
+    "Loop merge decision recorded",
+    `id ${result.decision.id}`,
+    `worktree ${result.decision.worktree}`,
+    `decision ${result.decision.decision}`,
+    `reason ${result.decision.reason}`,
+    `decided by ${result.decision.decided_by}`,
+    "",
+    `Next: ${result.next_action}`,
+    "",
+    "Privacy: local-only, no prompt bodies, no raw paths, no git writes.",
+  ].join("\n");
+}
+
+function formatLoopMergeDecisionList(result: {
+  decisions: ReturnType<
+    ReturnType<typeof createSqlitePromptStorage>["listLoopMergeDecisions"]
+  >["items"];
+}): string {
+  return [
+    "Loop merge decisions",
+    ...result.decisions.map(
+      (decision) =>
+        `${decision.created_at} ${decision.worktree} ${decision.decision} ${decision.reason}`,
+    ),
+    result.decisions.length === 0 ? "none" : undefined,
+    "",
+    "Privacy: local-only, no prompt bodies, no raw paths, no git writes.",
+  ]
+    .filter((line): line is string => line !== undefined)
+    .join("\n");
 }

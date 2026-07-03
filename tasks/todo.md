@@ -213,7 +213,11 @@
 - [x] Task 47 RED: review packet에 explicit human checklist가 없어 domain/web/CLI/MCP focused tests 실패 확인
 - [x] Task 47 GREEN: `review_packet.checklist`를 safe aggregate actions에서 생성하고 CLI/MCP/web에 read-only로 노출
 - [x] Task 47 PRIVACY: checklist는 label/status/action만 포함하고 evidence refs, outcome summary, prompt body, raw path를 포함하지 않음
-- [ ] 다음 slice: local merge decision journal 설계 여부 재선정
+- [x] Task 48 DECISION: local merge decision journal은 CLI-only explicit write boundary로 채택하고 MCP/web write는 보류
+- [x] Task 48 RED: `loop decision record/list`가 없어 CLI focused tests 실패 확인
+- [x] Task 48 GREEN: worktree별 merge/continue/defer decision journal을 SQLite에 기록하고 CLI record/list로 노출
+- [x] Task 48 PRIVACY: decision reason은 raw path/secret-looking token을 거부하고 prompt body/evidence refs/git writes/external calls를 포함하지 않음
+- [ ] 다음 slice: recent merge decisions를 status/MCP/web에 read-only로 노출할지 결정
 
 ### 판단 기준
 

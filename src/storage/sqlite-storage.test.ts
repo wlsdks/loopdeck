@@ -363,6 +363,7 @@ describe("SQLite prompt storage", () => {
       { version: 16, name: "016_loop_snapshots" },
       { version: 17, name: "017_compact_boundaries" },
       { version: 18, name: "018_loop_memories" },
+      { version: 19, name: "019_loop_merge_decisions" },
     ]);
     const db = new Database(join(dataDir, "prompt-coach.sqlite"));
     try {
