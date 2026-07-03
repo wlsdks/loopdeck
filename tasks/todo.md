@@ -193,7 +193,9 @@
 - [x] Task 38 GREEN: `prompt-coach` canonical MCP server name 유지와 `loopdeck` server-name alias 보류 조건 문서화
 - [x] Task 39 RED: deprecation readiness artifact가 없어 packaging focused test 실패 확인
 - [x] Task 39 GREEN: alias-only/deprecation/breaking release note template, saved snippet support, rollback/upgrade smoke gate 문서화
-- [ ] 다음 slice: runtime rename line에서 벗어나 Loopdeck product/runtime value slice 재선정
+- [x] Task 40 RED: rename line 이후 다음 runtime value slice artifact/package 계약이 없어 packaging focused test 실패 확인
+- [x] Task 40 GREEN: selected worktree continuation brief parity를 다음 product/runtime slice로 확정하고 spec/package/todo에 연결
+- [ ] 다음 slice: CLI/MCP `loop brief` worktree/session/branch filtered selection TDD 구현
 
 ### 판단 기준
 

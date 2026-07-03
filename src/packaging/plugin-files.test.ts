@@ -475,6 +475,31 @@ describe("plugin packaging files", () => {
     );
   });
 
+  it("ships the next runtime value slice before leaving rename work", () => {
+    const nextSlicePath =
+      "docs/superpowers/plans/2026-07-04-loopdeck-next-runtime-value-slice.md";
+    const packageJson = readJson<{ files: string[] }>("package.json");
+    const nextSlice = readFileSync(join(process.cwd(), nextSlicePath), "utf8");
+
+    expect(packageJson.files).toContain(nextSlicePath);
+    expect(nextSlice).toContain("# Loopdeck Next Runtime Value Slice");
+    expect(nextSlice).toContain(
+      "Decision: Selected Worktree Continuation Brief Parity",
+    );
+    expect(nextSlice).toContain("not a rename slice");
+    expect(nextSlice).toContain("CLI `loop brief`");
+    expect(nextSlice).toContain("MCP `prepare_loop_brief`");
+    expect(nextSlice).toContain("worktree");
+    expect(nextSlice).toContain("session");
+    expect(nextSlice).toContain("branch");
+    expect(nextSlice).toContain("TDD first target");
+    expect(nextSlice).toContain("prompt bodies");
+    expect(nextSlice).toContain("raw paths");
+    expect(nextSlice).not.toContain("Make this better");
+    expect(nextSlice).not.toContain("sk-proj");
+    expect(nextSlice).not.toContain("/Users/");
+  });
+
   it("ships a machine-checkable runtime id inventory before rename work", () => {
     const inventoryPath =
       "docs/superpowers/plans/2026-07-04-loopdeck-runtime-id-inventory.json";

@@ -1219,6 +1219,29 @@ Do not add:
   server names
 - breaking-change language outside the readiness artifact
 
+### Slice 4.37: Selected Worktree Continuation Brief Parity
+
+Add:
+
+- next runtime value artifact selecting worktree/session/branch-scoped
+  continuation briefs as the first post-rename-line product slice
+- CLI `loop brief` plan for optional `--worktree`, `--session`, and `--branch`
+  filters while preserving latest-only default behavior
+- MCP `prepare_loop_brief` plan for equivalent optional `worktree`,
+  `session_id`, and `branch` arguments
+- shared snapshot selector boundary so CLI and MCP do not drift from each other
+- focused TDD target proving selected briefs do not fall back to the global
+  latest snapshot when another worktree has newer activity
+
+Do not add:
+
+- package, plugin, slash command, hook, or MCP server-name renames
+- database schema changes before a filtered-list performance need exists
+- background scanning of uncollected worktrees
+- automatic external model calls or auto-submission
+- prompt body, transcript, compact summary, raw path, API token, or provider
+  credential output
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.
@@ -1251,9 +1274,9 @@ Still open:
 
 - What exact product/package migration date should move from `prompt-coach` to `loopdeck`?
 - Should loop snapshots get a numeric "loop quality" score, or only structured outcome status and evidence?
-- Which web workflow should follow the first list/brief/approval flow:
-  dedicated loop detail, instruction patch review, or cross-worktree command
-  center?
+- After selected CLI/MCP continuation brief parity lands, should Web selected
+  worktree detail expose the same filtered brief action inline or through a
+  broader command center?
 
 ## 12. Decision
 
