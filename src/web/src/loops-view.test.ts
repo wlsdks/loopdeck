@@ -43,6 +43,7 @@ describe("LoopsView", () => {
 
     expect(html).toContain("Worktree detail");
     expect(html).toContain("agent-loop-worktree");
+    expect(html).toContain("Session session-web");
     expect(html).toContain("loop_web");
     expect(html).toContain("passed");
     expect(html).not.toContain("Make this better");
@@ -133,6 +134,7 @@ function loopSummary(): LoopListResponse["items"][number] {
 function loopWorktree(): LoopWorktreeResponse {
   return {
     worktree: "agent-loop-worktree",
+    session_id: "session-web",
     items: [
       {
         ...loopSummary(),

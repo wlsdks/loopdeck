@@ -161,6 +161,7 @@ export type LoopListResponse = {
 
 export type LoopWorktreeResponse = {
   worktree: string;
+  session_id?: string;
   items: LoopSummary[];
   privacy: {
     local_only: true;
@@ -717,10 +718,14 @@ export async function getLoopBrief(id: string): Promise<LoopBrief> {
 
 export async function getLoopWorktree(
   worktree: string,
+  options: { sessionId?: string } = {},
 ): Promise<LoopWorktreeResponse> {
   await ensureSession();
+  const params = new URLSearchParams();
+  if (options.sessionId) params.set("session_id", options.sessionId);
+  const query = params.toString();
   const response = await fetch(
-    `/api/v1/loops/worktrees/${encodeURIComponent(worktree)}`,
+    `/api/v1/loops/worktrees/${encodeURIComponent(worktree)}${query ? `?${query}` : ""}`,
     {
       credentials: "same-origin",
     },

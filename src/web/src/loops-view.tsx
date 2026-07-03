@@ -197,6 +197,11 @@ export function LoopsView({
           <div>
             <span className="panel-eyebrow">Worktree detail</span>
             <h2>{worktreeDetail.worktree}</h2>
+            {worktreeDetail.session_id && (
+              <p className="loops-status-line">
+                Session {worktreeDetail.session_id}
+              </p>
+            )}
           </div>
           <div className="loop-row loop-row-head">
             <span>Loop</span>

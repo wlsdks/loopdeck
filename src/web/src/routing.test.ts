@@ -34,6 +34,13 @@ describe("routing", () => {
       worktree: "agent-loop-worktree",
     });
 
+    stubLocation("/loops", "?worktree=agent-loop-worktree&session=session-web");
+    expect(routeFromLocation()).toEqual({
+      name: "loops",
+      worktree: "agent-loop-worktree",
+      session: "session-web",
+    });
+
     stubLocation("/prompts/prompt%201");
     expect(routeFromLocation()).toEqual({ id: "prompt 1", name: "detail" });
   });
@@ -75,5 +82,12 @@ describe("routing", () => {
     expect(pathForView({ name: "loops", worktree: "agent loop/worktree" })).toBe(
       "/loops?worktree=agent+loop%2Fworktree",
     );
+    expect(
+      pathForView({
+        name: "loops",
+        session: "session/web",
+        worktree: "agent-loop-worktree",
+      }),
+    ).toBe("/loops?worktree=agent-loop-worktree&session=session%2Fweb");
   });
 });

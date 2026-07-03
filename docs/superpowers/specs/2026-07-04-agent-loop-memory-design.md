@@ -1019,6 +1019,30 @@ Do not add:
 - background scanning of uncollected worktrees
 - external LLM summarization
 
+### Slice 4.27: Worktree Drilldown Session Filter
+
+Add:
+
+- optional `session_id` query on `/api/v1/loops/worktrees/:worktree` to narrow
+  the drilldown to one existing safe loop snapshot session id
+- `getLoopWorktree(worktree, { sessionId })` client helper support
+- `/loops?worktree=<safe-label>&session=<safe-session-id>` route parsing and
+  URL generation
+- App deep-link restoration that passes the route session to the worktree
+  drilldown API
+- selected worktree detail panel label showing the active session filter
+- focused tests proving session filtering excludes other sessions without
+  exposing prompt bodies, raw paths, transcripts, compact summaries, secrets,
+  or external LLM results
+
+Do not add:
+
+- reading private Codex or Claude Code session stores
+- transcript, prompt body, compact summary, or evidence drilldown
+- raw cwd/worktree paths in URLs or API responses
+- automatic session merge/rebase/conflict recommendations
+- external LLM summarization
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

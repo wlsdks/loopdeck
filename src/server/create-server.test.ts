@@ -489,6 +489,33 @@ describe("createServer P2 ingest boundary", () => {
       "Keep web, CLI, MCP, and API loop status on the shared model.",
     );
     expect(serialized).not.toContain("/Users/example");
+
+    const sessionResponse = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/worktrees/worktree-web?session_id=session-web-two",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const sessionBody = sessionResponse.json<{
+      data: {
+        session_id?: string;
+        items: Array<{ id: string; worktree?: string }>;
+      };
+    }>();
+
+    expect(sessionResponse.statusCode).toBe(200);
+    expect(sessionBody.data.session_id).toBe("session-web-two");
+    expect(sessionBody.data.items).toEqual([
+      expect.objectContaining({
+        id: "loop_web_second",
+        worktree: "worktree-web",
+      }),
+    ]);
+    expect(JSON.stringify(sessionBody)).not.toContain("loop_web\"");
+    expect(JSON.stringify(sessionBody)).not.toContain("Make this better");
+    expect(JSON.stringify(sessionBody)).not.toContain("/Users/example");
   });
 
   it("returns a copy-ready loop brief without prompt bodies, compact summaries, or raw paths", async () => {

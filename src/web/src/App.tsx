@@ -281,11 +281,14 @@ export function App() {
     if (view.name !== "loops" || !view.worktree) {
       return;
     }
-    if (loopWorktree?.worktree === view.worktree) {
+    if (
+      loopWorktree?.worktree === view.worktree &&
+      loopWorktree.session_id === view.session
+    ) {
       return;
     }
 
-    void openLoopWorktree(view.worktree);
+    void openLoopWorktree(view.worktree, { session: view.session });
   }, [loopWorktree?.worktree, view]);
 
   useEffect(() => {
@@ -421,12 +424,24 @@ export function App() {
     }
   }
 
-  async function openLoopWorktree(worktree: string): Promise<void> {
+  async function openLoopWorktree(
+    worktree: string,
+    options: { session?: string } = {},
+  ): Promise<void> {
     setError(undefined);
     try {
-      setLoopWorktree(await getLoopWorktree(worktree));
-      if (view.name === "loops" && view.worktree !== worktree) {
-        navigate({ name: "loops", worktree });
+      setLoopWorktree(
+        await getLoopWorktree(worktree, { sessionId: options.session }),
+      );
+      if (
+        view.name === "loops" &&
+        (view.worktree !== worktree || view.session !== options.session)
+      ) {
+        navigate({
+          name: "loops",
+          worktree,
+          ...(options.session ? { session: options.session } : {}),
+        });
       }
     } catch {
       setError("Could not load loop worktree detail.");

@@ -6,7 +6,7 @@ export type View =
   | { name: "detail"; id: string }
   | { name: "dashboard" }
   | { name: "coach" }
-  | { name: "loops"; worktree?: string }
+  | { name: "loops"; worktree?: string; session?: string }
   | { name: "scores" }
   | { name: "projects" }
   | { name: "mcp" }
@@ -25,10 +25,13 @@ export function routeFromLocation(): View {
   }
 
   if (window.location.pathname === "/loops") {
-    const worktree = new URLSearchParams(window.location.search).get("worktree");
+    const params = new URLSearchParams(window.location.search);
+    const worktree = params.get("worktree");
+    const session = params.get("session");
     return {
       name: "loops",
       ...(worktree ? { worktree } : {}),
+      ...(session ? { session } : {}),
     };
   }
 
@@ -68,6 +71,7 @@ export function pathForView(view: View): string {
   if (view.name === "loops") {
     if (!view.worktree) return "/loops";
     const params = new URLSearchParams({ worktree: view.worktree });
+    if (view.session) params.set("session", view.session);
     return `/loops?${params.toString()}`;
   }
   if (view.name === "projects") return "/projects";

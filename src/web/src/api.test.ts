@@ -227,7 +227,9 @@ describe("web api export client", () => {
       );
     const { getLoopWorktree } = await import("./api.js");
 
-    const detail = await getLoopWorktree("agent-loop-worktree");
+    const detail = await getLoopWorktree("agent-loop-worktree", {
+      sessionId: "session-web",
+    });
 
     expect(detail).toMatchObject({
       worktree: "agent-loop-worktree",
@@ -240,7 +242,7 @@ describe("web api export client", () => {
       ],
     });
     expect(fetchMock).toHaveBeenLastCalledWith(
-      "/api/v1/loops/worktrees/agent-loop-worktree",
+      "/api/v1/loops/worktrees/agent-loop-worktree?session_id=session-web",
       {
         credentials: "same-origin",
       },
