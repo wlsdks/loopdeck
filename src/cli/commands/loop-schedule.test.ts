@@ -4,7 +4,11 @@ import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { installLoopSchedule } from "./loop-schedule.js";
+import {
+  installLoopSchedule,
+  loopScheduleStatus,
+  uninstallLoopSchedule,
+} from "./loop-schedule.js";
 
 const tempDirs: string[] = [];
 
@@ -86,6 +90,108 @@ describe("installLoopSchedule", () => {
     expect(result.supported).toBe(false);
     expect(result.changed).toBe(false);
     expect(() => readFileSync(plistPath, "utf8")).toThrow();
+  });
+});
+
+describe("loopScheduleStatus", () => {
+  it("reports a missing macOS LaunchAgent as not installed", () => {
+    const dir = createTempDir();
+    const plistPath = join(dir, "LaunchAgents", "com.prompt-coach.loop.plist");
+
+    const result = loopScheduleStatus({
+      platform: "darwin",
+      plistPath,
+    });
+
+    expect(result.supported).toBe(true);
+    expect(result.installed).toBe(false);
+    expect(result.plistPath).toBe(plistPath);
+  });
+
+  it("reports an existing macOS LaunchAgent as installed", () => {
+    const dir = createTempDir();
+    const plistPath = join(dir, "LaunchAgents", "com.prompt-coach.loop.plist");
+    installLoopSchedule({
+      cwdPrefix: "/Users/example/private-project",
+      platform: "darwin",
+      plistPath,
+    });
+
+    const result = loopScheduleStatus({
+      platform: "darwin",
+      plistPath,
+    });
+
+    expect(result.supported).toBe(true);
+    expect(result.installed).toBe(true);
+    expect(result.plistPath).toBe(plistPath);
+  });
+
+  it("reports unsupported status checks without touching files", () => {
+    const dir = createTempDir();
+    const plistPath = join(dir, "loop.plist");
+
+    const result = loopScheduleStatus({
+      platform: "linux",
+      plistPath,
+    });
+
+    expect(result.supported).toBe(false);
+    expect(result.installed).toBe(false);
+    expect(result.plistPath).toBe(plistPath);
+  });
+});
+
+describe("uninstallLoopSchedule", () => {
+  it("removes an explicit macOS LaunchAgent plist", () => {
+    const dir = createTempDir();
+    const plistPath = join(dir, "LaunchAgents", "com.prompt-coach.loop.plist");
+    installLoopSchedule({
+      cwdPrefix: "/Users/example/private-project",
+      platform: "darwin",
+      plistPath,
+    });
+
+    const result = uninstallLoopSchedule({
+      platform: "darwin",
+      plistPath,
+    });
+
+    expect(result.supported).toBe(true);
+    expect(result.changed).toBe(true);
+    expect(result.removed).toBe(true);
+    expect(result.plistPath).toBe(plistPath);
+    expect(() => readFileSync(plistPath, "utf8")).toThrow();
+  });
+
+  it("is idempotent when the macOS LaunchAgent plist is already absent", () => {
+    const dir = createTempDir();
+    const plistPath = join(dir, "LaunchAgents", "com.prompt-coach.loop.plist");
+
+    const result = uninstallLoopSchedule({
+      platform: "darwin",
+      plistPath,
+    });
+
+    expect(result.supported).toBe(true);
+    expect(result.changed).toBe(false);
+    expect(result.removed).toBe(false);
+    expect(result.plistPath).toBe(plistPath);
+  });
+
+  it("reports unsupported uninstalls without deleting files", () => {
+    const dir = createTempDir();
+    const plistPath = join(dir, "loop.plist");
+
+    const result = uninstallLoopSchedule({
+      platform: "linux",
+      plistPath,
+    });
+
+    expect(result.supported).toBe(false);
+    expect(result.changed).toBe(false);
+    expect(result.removed).toBe(false);
+    expect(result.plistPath).toBe(plistPath);
   });
 });
 

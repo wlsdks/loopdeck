@@ -223,7 +223,9 @@ The local CLI mirrors that loop surface with `prompt-coach loop status`,
 `prompt-coach loop collect --source service` as the explicit one-shot command
 for cron or LaunchAgent collection; it does not silently install a scheduler.
 The opt-in macOS schedule is `prompt-coach loop schedule install`; use
-`--dry-run` to inspect the LaunchAgent before writing it. `loop status` prints
+`--dry-run` to inspect the LaunchAgent before writing it. Use
+`prompt-coach loop schedule status` to check whether the plist exists and
+`prompt-coach loop schedule uninstall` to remove it. `loop status` prints
 snapshot readiness, latest safe loop metadata, and compact refresh guidance
 without prompt bodies, compact summaries, custom compact instructions, or raw
 paths.

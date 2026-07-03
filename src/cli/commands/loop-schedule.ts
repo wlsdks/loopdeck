@@ -3,6 +3,7 @@ import {
   existsSync,
   mkdirSync,
   readFileSync,
+  rmSync,
   writeFileSync,
 } from "node:fs";
 import { homedir } from "node:os";
@@ -30,6 +31,19 @@ export type LoopScheduleInstallResult = {
   backupPath?: string;
   nextPlist?: string;
   started: false;
+};
+
+export type LoopScheduleStatusResult = {
+  supported: boolean;
+  installed: boolean;
+  plistPath: string;
+};
+
+export type LoopScheduleUninstallResult = {
+  supported: boolean;
+  changed: boolean;
+  removed: boolean;
+  plistPath: string;
 };
 
 const LOOP_SCHEDULE_LABEL = "com.prompt-coach.loop";
@@ -68,6 +82,52 @@ export function registerLoopScheduleCommand(loop: Command): void {
           options.json
             ? formatLoopScheduleInstallJson(result)
             : formatLoopScheduleInstallPlain(result),
+        );
+        if (!result.supported) {
+          process.exitCode = 1;
+        }
+      },
+    );
+
+  schedule
+    .command("status")
+    .description("Check whether the explicit LaunchAgent is installed.")
+    .option("--plist-path <path>", "Override macOS LaunchAgent plist path.")
+    .option("--json", "Print machine-readable JSON instead of plain text.")
+    .action(
+      (
+        options: LoopScheduleOptions & {
+          json?: boolean;
+        },
+      ) => {
+        const result = loopScheduleStatus(options);
+        console.log(
+          options.json
+            ? formatLoopScheduleStatusJson(result)
+            : formatLoopScheduleStatusPlain(result),
+        );
+        if (!result.supported) {
+          process.exitCode = 1;
+        }
+      },
+    );
+
+  schedule
+    .command("uninstall")
+    .description("Remove the explicit LaunchAgent plist.")
+    .option("--plist-path <path>", "Override macOS LaunchAgent plist path.")
+    .option("--json", "Print machine-readable JSON instead of plain text.")
+    .action(
+      (
+        options: LoopScheduleOptions & {
+          json?: boolean;
+        },
+      ) => {
+        const result = uninstallLoopSchedule(options);
+        console.log(
+          options.json
+            ? formatLoopScheduleUninstallJson(result)
+            : formatLoopScheduleUninstallPlain(result),
         );
         if (!result.supported) {
           process.exitCode = 1;
@@ -124,6 +184,55 @@ export function installLoopSchedule(
     plistPath,
     backupPath,
     started: false,
+  };
+}
+
+export function loopScheduleStatus(
+  options: LoopScheduleOptions = {},
+): LoopScheduleStatusResult {
+  const platform = options.platform ?? process.platform;
+  const plistPath = options.plistPath ?? defaultLaunchAgentPath();
+
+  if (platform !== "darwin") {
+    return {
+      supported: false,
+      installed: false,
+      plistPath,
+    };
+  }
+
+  return {
+    supported: true,
+    installed: existsSync(plistPath),
+    plistPath,
+  };
+}
+
+export function uninstallLoopSchedule(
+  options: LoopScheduleOptions = {},
+): LoopScheduleUninstallResult {
+  const platform = options.platform ?? process.platform;
+  const plistPath = options.plistPath ?? defaultLaunchAgentPath();
+
+  if (platform !== "darwin") {
+    return {
+      supported: false,
+      changed: false,
+      removed: false,
+      plistPath,
+    };
+  }
+
+  const installed = existsSync(plistPath);
+  if (installed) {
+    rmSync(plistPath, { force: true });
+  }
+
+  return {
+    supported: true,
+    changed: installed,
+    removed: installed,
+    plistPath,
   };
 }
 
@@ -185,6 +294,44 @@ function formatLoopScheduleInstallPlain(
 
 function formatLoopScheduleInstallJson(
   result: LoopScheduleInstallResult,
+): string {
+  return JSON.stringify(result, null, 2);
+}
+
+function formatLoopScheduleStatusPlain(
+  result: LoopScheduleStatusResult,
+): string {
+  if (!result.supported) {
+    return "Loop schedule status is supported on macOS only.";
+  }
+  return [
+    `loop schedule ${result.installed ? "installed" : "not installed"}`,
+    `plist ${result.plistPath}`,
+    "command prompt-coach loop collect --source service",
+  ].join("\n");
+}
+
+function formatLoopScheduleStatusJson(
+  result: LoopScheduleStatusResult,
+): string {
+  return JSON.stringify(result, null, 2);
+}
+
+function formatLoopScheduleUninstallPlain(
+  result: LoopScheduleUninstallResult,
+): string {
+  if (!result.supported) {
+    return "Loop schedule uninstall is supported on macOS only.";
+  }
+  return [
+    `loop schedule ${result.removed ? "removed" : "not installed"}`,
+    `plist ${result.plistPath}`,
+    `changed ${result.changed ? "yes" : "no"}`,
+  ].join("\n");
+}
+
+function formatLoopScheduleUninstallJson(
+  result: LoopScheduleUninstallResult,
 ): string {
   return JSON.stringify(result, null, 2);
 }

@@ -734,7 +734,9 @@ The matching local CLI surface is `prompt-coach loop status`,
 accepts `--source service` for explicit cron or LaunchAgent one-shot collection
 without creating hidden background automation. Users who want an opt-in macOS
 schedule can preview or install it with `prompt-coach loop schedule install
---dry-run` or `prompt-coach loop schedule install --cwd-prefix <project>`.
+--dry-run` or `prompt-coach loop schedule install --cwd-prefix <project>`,
+check it with `prompt-coach loop schedule status`, and remove the plist with
+`prompt-coach loop schedule uninstall`.
 `loop status` shows snapshot readiness, latest safe metadata, and compact
 refresh guidance without printing prompt bodies, compact summaries, custom
 compact instructions, or raw paths.

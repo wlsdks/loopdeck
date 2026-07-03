@@ -125,7 +125,9 @@
 - [x] Task 6 GREEN: `prompt-coach loop collect --source service` 명시적 one-shot collector 구현
 - [x] Task 7 RED: `loop schedule install --dry-run` LaunchAgent helper가 missing module로 실패하는지 확인
 - [x] Task 7 GREEN: opt-in macOS LaunchAgent dry-run/install helper와 `loop schedule install` CLI 구현
-- [ ] 다음 slice: scheduler status/uninstall, semantic memory decision gate, brand migration, 또는 CLI/MCP/web status model 공통화
+- [x] Task 8 RED: scheduler status/uninstall helper가 missing export로 실패하는지 확인
+- [x] Task 8 GREEN: `loop schedule status`와 `loop schedule uninstall` plist-only lifecycle 구현
+- [ ] 다음 slice: semantic memory decision gate, brand migration, 또는 CLI/MCP/web status model 공통화
 
 ### 판단 기준
 
@@ -153,13 +155,16 @@
 - 현재 web slice는 list, empty state, compact refresh marker, copy-ready next
   brief action까지 포함한다.
 - prompt body, compact summary, custom instructions, transcript body, raw path는 API/화면/테스트 출력에 포함하지 않는다.
-- raw prompt detail panel, scheduler status/uninstall, semantic memory는 다음 slice로 남긴다.
+- raw prompt detail panel, semantic memory는 다음 slice로 남긴다.
 
 ### Explicit Service Collection 판단 기준
 
 - `prompt-coach loop collect --source service`는 cron/LaunchAgent가 호출할 수 있는 명시적 one-shot 명령이다.
 - `prompt-coach loop schedule install --dry-run`은 macOS LaunchAgent를 쓰기 전에 미리볼 수 있어야 한다.
+- `prompt-coach loop schedule status`는 plist 존재 여부만 확인한다.
+- `prompt-coach loop schedule uninstall`은 명시 호출 시 plist만 제거한다.
 - scheduler 설치는 사용자의 명시적 CLI 명령으로만 동작한다.
+- status/uninstall은 숨은 launchctl load/unload나 외부 서비스 변경을 하지 않는다.
 - service-origin snapshot도 prompt body, compact summary, custom instructions, transcript body, raw path를 출력하지 않는다.
 
 ## 2026-05-04 Habit Coach Panel Extraction

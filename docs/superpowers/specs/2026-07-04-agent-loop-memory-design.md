@@ -538,10 +538,14 @@ Add:
   (**implemented**)
 - opt-in macOS LaunchAgent preview/install via `prompt-coach loop schedule
   install` (**implemented; dry-run supported**)
+- explicit scheduler lifecycle commands via `prompt-coach loop schedule status`
+  and `prompt-coach loop schedule uninstall` (**implemented; plist-only status
+  and removal**)
 
 Do not add:
 
 - hidden background scheduling without explicit user command
+- hidden launchctl load/unload or app service mutation behind status/uninstall
 - automatic prompt resubmission
 - transcript or compact summary ingestion
 
