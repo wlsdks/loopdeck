@@ -156,6 +156,17 @@ describe("LoopsView", () => {
       "each copied brief can represent a new handoff decision even in the same session",
     );
     expect(html).toContain("No re-check writes or external calls");
+    expect(html).toContain("Copy feedback reminder");
+    expect(html).toContain(
+      "copied state only confirms the brief reached the local clipboard",
+    );
+    expect(html).toContain(
+      "return to the safety re-check cue before pasting the copied brief",
+    );
+    expect(html).toContain(
+      "copy feedback is not safety approval or agent submission",
+    );
+    expect(html).toContain("No copy feedback reminder writes or external calls");
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -574,6 +585,16 @@ function loopWorktree(): LoopWorktreeResponse {
         "re-check continuation safety guidance before pasting into Codex or Claude Code",
       reason:
         "each copied brief can represent a new handoff decision even in the same session",
+      writes_files: false,
+      external_calls: false,
+    },
+    continuation_safety_copy_feedback_reminder: {
+      label: "Copy feedback reminder",
+      feedback_scope:
+        "copied state only confirms the brief reached the local clipboard",
+      next_step:
+        "return to the safety re-check cue before pasting the copied brief",
+      reason: "copy feedback is not safety approval or agent submission",
       writes_files: false,
       external_calls: false,
     },

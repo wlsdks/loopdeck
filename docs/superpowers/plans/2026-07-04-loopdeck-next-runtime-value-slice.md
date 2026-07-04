@@ -271,8 +271,11 @@ Implementation checkpoint:
 - Selected worktree detail now includes a raw-free continuation safety re-check
   cue, explaining that after each selected brief copy the operator should
   re-check safety guidance before pasting into Codex or Claude Code.
+- Selected worktree detail now includes a raw-free copy feedback reminder,
+  explaining that copied state only means the brief reached the local clipboard
+  and is not safety approval or agent submission.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free copy-feedback reminder that points back to the safety re-check cue,
-  without adding transcript content, prompt bodies, raw paths, git status reads,
-  command execution, persisted review state, checklist completion state, memory
+  raw-free selected-brief copy feedback accessibility note, without adding
+  transcript content, prompt bodies, raw paths, git status reads, command
+  execution, persisted review state, checklist completion state, memory
   approval writes, merge writes, or external calls.

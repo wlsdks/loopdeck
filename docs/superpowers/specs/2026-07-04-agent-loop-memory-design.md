@@ -2719,6 +2719,45 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.78: Selected Continuation Copy Feedback Reminder
+
+Decision:
+
+- Selected worktree detail should state that copied feedback only means the
+  selected brief reached the local clipboard, and should point the operator back
+  to the safety re-check cue before paste.
+- This is needed because copy feedback can otherwise be mistaken for safety
+  approval or successful agent submission.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_copy_feedback_reminder` with:
+  - label: `Copy feedback reminder`
+  - feedback_scope:
+    `copied state only confirms the brief reached the local clipboard`
+  - next_step:
+    `return to the safety re-check cue before pasting the copied brief`
+  - reason:
+    `copy feedback is not safety approval or agent submission`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after the re-check cue
+- focused server/API/web tests proving the copy feedback reminder is present
+
+Do not add:
+
+- Codex or Claude Code UI automation, hidden prompt submission, command
+  execution, git reads/writes, filesystem reads/writes, transcript import,
+  persisted review state, checklist completion state, background analysis,
+  external model calls, memory approval writes, merge decision writes, or new
+  write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

@@ -195,6 +195,8 @@ export function registerLoopRoutes(
                 continuationSafetyNonPersistenceNoteFor(),
               continuation_safety_recheck_cue:
                 continuationSafetyRecheckCueFor(),
+              continuation_safety_copy_feedback_reminder:
+                continuationSafetyCopyFeedbackReminderFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -737,6 +739,26 @@ function continuationSafetyRecheckCueFor(): {
       "re-check continuation safety guidance before pasting into Codex or Claude Code",
     reason:
       "each copied brief can represent a new handoff decision even in the same session",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyCopyFeedbackReminderFor(): {
+  label: "Copy feedback reminder";
+  feedback_scope: "copied state only confirms the brief reached the local clipboard";
+  next_step: "return to the safety re-check cue before pasting the copied brief";
+  reason: "copy feedback is not safety approval or agent submission";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Copy feedback reminder",
+    feedback_scope:
+      "copied state only confirms the brief reached the local clipboard",
+    next_step:
+      "return to the safety re-check cue before pasting the copied brief",
+    reason: "copy feedback is not safety approval or agent submission",
     writes_files: false,
     external_calls: false,
   };

@@ -334,6 +334,17 @@ describe("web api export client", () => {
               writes_files: false,
               external_calls: false,
             },
+            continuation_safety_copy_feedback_reminder: {
+              label: "Copy feedback reminder",
+              feedback_scope:
+                "copied state only confirms the brief reached the local clipboard",
+              next_step:
+                "return to the safety re-check cue before pasting the copied brief",
+              reason:
+                "copy feedback is not safety approval or agent submission",
+              writes_files: false,
+              external_calls: false,
+            },
             paste_destination: {
               label: "Paste destination",
               targets: ["Codex active request", "Claude Code active request"],
@@ -629,6 +640,16 @@ describe("web api export client", () => {
           "re-check continuation safety guidance before pasting into Codex or Claude Code",
         reason:
           "each copied brief can represent a new handoff decision even in the same session",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_copy_feedback_reminder: {
+        label: "Copy feedback reminder",
+        feedback_scope:
+          "copied state only confirms the brief reached the local clipboard",
+        next_step:
+          "return to the safety re-check cue before pasting the copied brief",
+        reason: "copy feedback is not safety approval or agent submission",
         writes_files: false,
         external_calls: false,
       },
