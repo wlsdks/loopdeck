@@ -20,6 +20,7 @@ import {
   hasLoopSnapshotSelection,
   selectLoopSnapshot,
 } from "../../loop/snapshot-selection.js";
+import type { LoopSnapshot } from "../../loop/types.js";
 import type {
   CompactBoundaryStoragePort,
   LoopMergeDecisionStoragePort,
@@ -169,6 +170,14 @@ export function registerLoopRoutes(
           hasSession: Boolean(query.session_id),
           hasBranch: Boolean(query.branch),
         }),
+        ...(latestSnapshot
+          ? {
+              snapshot_age: snapshotAgeFor({
+                selectedSnapshot: latestSnapshot,
+                snapshots: allSnapshots,
+              }),
+            }
+          : {}),
         ...(latestDecision
           ? {
               latest_decision: {
@@ -458,6 +467,45 @@ function selectionScopeFor(selection: {
     filters: ["worktree"],
     reason: "showing latest snapshots for selected worktree",
     next_action: "copy selected worktree brief",
+  };
+}
+
+function snapshotAgeFor(input: {
+  selectedSnapshot: LoopSnapshot;
+  snapshots: readonly LoopSnapshot[];
+}): {
+  label: "Selected snapshot age";
+  latest_selected_created_at: string;
+  status: "latest" | "older_than_latest";
+  reason:
+    | "selected snapshot is the latest recorded loop snapshot"
+    | "another loop snapshot was recorded after this selection";
+  next_action:
+    | "copy selected worktree brief"
+    | "refresh selected worktree before merging";
+} {
+  const latestRecordedSnapshot =
+    input.snapshots.reduce<LoopSnapshot | undefined>((latest, snapshot) => {
+      if (!latest || snapshot.created_at > latest.created_at) return snapshot;
+      return latest;
+    }, undefined) ?? input.selectedSnapshot;
+
+  if (latestRecordedSnapshot.id === input.selectedSnapshot.id) {
+    return {
+      label: "Selected snapshot age",
+      latest_selected_created_at: input.selectedSnapshot.created_at,
+      status: "latest",
+      reason: "selected snapshot is the latest recorded loop snapshot",
+      next_action: "copy selected worktree brief",
+    };
+  }
+
+  return {
+    label: "Selected snapshot age",
+    latest_selected_created_at: input.selectedSnapshot.created_at,
+    status: "older_than_latest",
+    reason: "another loop snapshot was recorded after this selection",
+    next_action: "refresh selected worktree before merging",
   };
 }
 

@@ -834,6 +834,13 @@ describe("createServer P2 ingest boundary", () => {
           reason: "showing latest snapshots for selected worktree",
           next_action: "copy selected worktree brief",
         },
+        snapshot_age: {
+          label: "Selected snapshot age",
+          latest_selected_created_at: "2026-07-04T01:00:00.000Z",
+          status: "latest",
+          reason: "selected snapshot is the latest recorded loop snapshot",
+          next_action: "copy selected worktree brief",
+        },
         review_packet_summary: {
           title: "Review-before-merge packet",
           status: "needs_review",
@@ -873,6 +880,68 @@ describe("createServer P2 ingest boundary", () => {
     expect(serialized).not.toContain("Ready outcome should stay hidden");
     expect(serialized).not.toContain("commit:review");
     expect(serialized).not.toContain("commit:ready");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-secret");
+  });
+
+  it("explains when the selected worktree snapshot is older than the latest recorded loop", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_global_newer",
+        created_at: "2026-07-04T01:15:00.000Z",
+        worktree_label: "newer-worktree",
+        project_id: "proj_web",
+        outcome: {
+          status: "passed",
+          summary: "Newer unsafe summary should stay hidden.",
+          evidence_refs: ["commit:newer"],
+        },
+      }),
+    );
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_selected_older",
+        created_at: "2026-07-04T01:00:00.000Z",
+        worktree_label: "older-worktree",
+        project_id: "proj_web",
+        outcome: {
+          status: "passed",
+          summary:
+            "Older selected unsafe summary should stay hidden /Users/example/private sk-proj-secret",
+          evidence_refs: ["commit:older"],
+        },
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/worktrees/older-worktree",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const serialized = JSON.stringify(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        worktree: "older-worktree",
+        snapshot_age: {
+          label: "Selected snapshot age",
+          latest_selected_created_at: "2026-07-04T01:00:00.000Z",
+          status: "older_than_latest",
+          reason: "another loop snapshot was recorded after this selection",
+          next_action: "refresh selected worktree before merging",
+        },
+      },
+    });
+    expect(serialized).not.toContain("Newer unsafe summary");
+    expect(serialized).not.toContain("Older selected unsafe summary");
+    expect(serialized).not.toContain("commit:newer");
+    expect(serialized).not.toContain("commit:older");
     expect(serialized).not.toContain("/Users/example");
     expect(serialized).not.toContain("sk-proj-secret");
   });

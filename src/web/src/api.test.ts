@@ -243,6 +243,13 @@ describe("web api export client", () => {
                 "showing snapshots filtered by selected worktree, session, and branch",
               next_action: "copy selected session and branch brief",
             },
+            snapshot_age: {
+              label: "Selected snapshot age",
+              latest_selected_created_at: "2026-07-04T01:00:00.000Z",
+              status: "older_than_latest",
+              reason: "another loop snapshot was recorded after this selection",
+              next_action: "refresh selected worktree before merging",
+            },
             latest_decision: {
               snapshot_id: "loop_web",
               worktree: "agent-loop-worktree",
@@ -330,6 +337,13 @@ describe("web api export client", () => {
         reason:
           "showing snapshots filtered by selected worktree, session, and branch",
         next_action: "copy selected session and branch brief",
+      },
+      snapshot_age: {
+        label: "Selected snapshot age",
+        latest_selected_created_at: "2026-07-04T01:00:00.000Z",
+        status: "older_than_latest",
+        reason: "another loop snapshot was recorded after this selection",
+        next_action: "refresh selected worktree before merging",
       },
       latest_decision: {
         snapshot_id: "loop_web",

@@ -196,7 +196,10 @@ Implementation checkpoint:
   derived only from explicit worktree/session/branch filters, so operators can
   tell whether the selected continuation brief is worktree-wide,
   session-filtered, branch-filtered, or both session-and-branch filtered.
+- Selected worktree detail now includes a raw-free selected snapshot
+  age/staleness explanation derived only from safe snapshot `created_at`
+  metadata, so operators can see when another loop snapshot was recorded after
+  the current selection without reading git state or filesystem state.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free selected snapshot age/staleness explanation, without adding
-  transcript content, prompt bodies, raw paths, git status reads, or write
-  tools.
+  raw-free selected brief action rationale, without adding transcript content,
+  prompt bodies, raw paths, git status reads, command execution, or write tools.

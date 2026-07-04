@@ -249,6 +249,17 @@ export type LoopWorktreeResponse = {
       | "copy selected branch brief"
       | "copy selected session and branch brief";
   };
+  snapshot_age?: {
+    label: "Selected snapshot age";
+    latest_selected_created_at: string;
+    status: "latest" | "older_than_latest";
+    reason:
+      | "selected snapshot is the latest recorded loop snapshot"
+      | "another loop snapshot was recorded after this selection";
+    next_action:
+      | "copy selected worktree brief"
+      | "refresh selected worktree before merging";
+  };
   latest_decision?: {
     snapshot_id: string;
     worktree: string;

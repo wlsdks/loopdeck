@@ -73,6 +73,10 @@ describe("LoopsView", () => {
       "showing snapshots filtered by selected worktree, session, and branch",
     );
     expect(html).toContain("Next copy selected session and branch brief");
+    expect(html).toContain("Selected snapshot age");
+    expect(html).toContain("older_than_latest");
+    expect(html).toContain("another loop snapshot was recorded after this selection");
+    expect(html).toContain("Next refresh selected worktree before merging");
     expect(html).toContain("Session session-web");
     expect(html).toContain("Branch feature/branch-filter");
     expect(html).toContain("Latest decision");
@@ -287,6 +291,13 @@ function loopWorktree(): LoopWorktreeResponse {
       reason:
         "showing snapshots filtered by selected worktree, session, and branch",
       next_action: "copy selected session and branch brief",
+    },
+    snapshot_age: {
+      label: "Selected snapshot age",
+      latest_selected_created_at: "2026-07-04T01:00:00.000Z",
+      status: "older_than_latest",
+      reason: "another loop snapshot was recorded after this selection",
+      next_action: "refresh selected worktree before merging",
     },
     latest_decision: {
       snapshot_id: "loop_web",

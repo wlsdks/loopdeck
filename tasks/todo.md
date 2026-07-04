@@ -257,7 +257,11 @@
 - [x] Task 58 RED: selected detail API/UI에 `selection_scope`가 없어 focused tests 실패 확인
 - [x] Task 58 GREEN: selected worktree detail API/type/UI에 Selection scope label/reason/next action을 read-only로 노출
 - [x] Task 58 PRIVACY: scope 설명은 explicit filter 종류와 safe reason/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
-- [ ] 다음 slice: selected worktree detail에 raw-free selected snapshot age/staleness explanation을 추가할지 결정
+- [x] Task 59 DECISION: selected worktree detail은 selected snapshot이 전체 최신 loop보다 뒤처지는지 raw-free로 설명하고 wall-clock/git/filesystem reads는 보류
+- [x] Task 59 RED: selected detail API/UI에 `snapshot_age`가 없어 focused tests 실패 확인
+- [x] Task 59 GREEN: selected worktree detail API/type/UI에 Selected snapshot age status/reason/next action을 read-only로 노출
+- [x] Task 59 PRIVACY: age 설명은 selected snapshot timestamp와 safe status/reason/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git read/write를 포함하지 않음
+- [ ] 다음 slice: selected worktree detail에 raw-free selected brief action rationale을 추가할지 결정
 
 ### 판단 기준
 

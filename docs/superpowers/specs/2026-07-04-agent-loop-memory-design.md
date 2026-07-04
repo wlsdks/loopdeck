@@ -1866,6 +1866,50 @@ Do not add:
 - hidden external model calls or background agent evaluation
 - package, plugin, slash command, hook, or MCP server-name rename
 
+### Slice 4.56: Selected Snapshot Age/Staleness Explanation
+
+Decision:
+
+- Selected worktree detail should explain whether the selected snapshot is the
+  latest recorded loop snapshot or whether another worktree/session has a newer
+  recorded snapshot.
+- This is necessary for concurrent Codex and Claude Code loops because a
+  selected continuation brief can be valid for its worktree while still being
+  older than newer loop activity elsewhere.
+- The explanation should compare safe snapshot ids and `created_at` metadata
+  only. It should not depend on wall-clock age thresholds, git status reads,
+  filesystem reads, or background polling.
+
+Add:
+
+- top-level selected worktree detail `snapshot_age` when a selected snapshot
+  exists, with:
+  - label: `Selected snapshot age`
+  - latest_selected_created_at: selected latest snapshot timestamp
+  - status:
+    - `latest`
+    - `older_than_latest`
+  - reason:
+    - `selected snapshot is the latest recorded loop snapshot`
+    - `another loop snapshot was recorded after this selection`
+  - next_action:
+    - `copy selected worktree brief`
+    - `refresh selected worktree before merging`
+- web API typing and selected worktree detail rendering near selection scope
+- focused server/API/web tests for latest and older-than-latest states
+
+Do not add:
+
+- wall-clock freshness thresholds, timers, polling, git status reads,
+  filesystem reads, branch checkout, diff/conflict inspection, merge
+  automation, or background scanning
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, diffs, raw paths, provider credentials, or
+  secret-looking tokens
+- web or MCP write tools, command execution, checklist completion,
+  acknowledgements, approvals, or external model calls
+- package, plugin, slash command, hook, or MCP server-name rename
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.
