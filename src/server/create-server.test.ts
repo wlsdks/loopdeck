@@ -901,6 +901,17 @@ describe("createServer P2 ingest boundary", () => {
           writes_files: false,
           external_calls: false,
         },
+        continuation_safety_non_persistence_note: {
+          label: "Safety review state",
+          state:
+            "reviewed guidance state is not stored or synchronized by Loopdeck",
+          reminder:
+            "operator re-checks safety guidance each time before manual agent submission",
+          reason:
+            "keeps continuation review local to the current operator session",
+          stores_state: false,
+          external_calls: false,
+        },
         paste_destination: {
           label: "Paste destination",
           targets: ["Codex active request", "Claude Code active request"],

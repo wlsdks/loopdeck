@@ -2642,6 +2642,45 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.76: Selected Continuation Safety Non-Persistence Note
+
+Decision:
+
+- Selected worktree detail should state that reviewing the continuation safety
+  guidance does not create stored state or synchronize review state elsewhere.
+- This is needed because the ordering note tells the operator to review safety
+  guidance first, but should not imply Loopdeck tracks a completed checklist or
+  persists a reviewed flag.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_non_persistence_note` with:
+  - label: `Safety review state`
+  - state:
+    `reviewed guidance state is not stored or synchronized by Loopdeck`
+  - reminder:
+    `operator re-checks safety guidance each time before manual agent submission`
+  - reason:
+    `keeps continuation review local to the current operator session`
+  - stores_state: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after the ordering note
+- focused server/API/web tests proving the non-persistence note is present
+
+Do not add:
+
+- Codex or Claude Code UI automation, hidden prompt submission, command
+  execution, git reads/writes, filesystem reads/writes, transcript import,
+  persisted review state, checklist completion state, background analysis,
+  external model calls, memory approval writes, merge decision writes, or new
+  write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

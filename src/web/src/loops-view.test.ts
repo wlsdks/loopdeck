@@ -136,6 +136,17 @@ describe("LoopsView", () => {
       "keeps continuation handoff reviewable before any manual agent submission",
     );
     expect(html).toContain("No ordering writes or external calls");
+    expect(html).toContain("Safety review state");
+    expect(html).toContain(
+      "reviewed guidance state is not stored or synchronized by Loopdeck",
+    );
+    expect(html).toContain(
+      "operator re-checks safety guidance each time before manual agent submission",
+    );
+    expect(html).toContain(
+      "keeps continuation review local to the current operator session",
+    );
+    expect(html).toContain("No safety review state storage or external calls");
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -536,6 +547,15 @@ function loopWorktree(): LoopWorktreeResponse {
       reason:
         "keeps continuation handoff reviewable before any manual agent submission",
       writes_files: false,
+      external_calls: false,
+    },
+    continuation_safety_non_persistence_note: {
+      label: "Safety review state",
+      state: "reviewed guidance state is not stored or synchronized by Loopdeck",
+      reminder:
+        "operator re-checks safety guidance each time before manual agent submission",
+      reason: "keeps continuation review local to the current operator session",
+      stores_state: false,
       external_calls: false,
     },
     paste_destination: {

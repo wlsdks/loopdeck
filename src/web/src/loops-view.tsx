@@ -498,6 +498,37 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.continuation_safety_non_persistence_note && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.continuation_safety_non_persistence_note
+                          .label
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.continuation_safety_non_persistence_note
+                          .state
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.continuation_safety_non_persistence_note
+                          .reminder
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.continuation_safety_non_persistence_note
+                          .reason
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      No safety review state storage or external calls
+                    </p>
+                  </div>
+                )}
                 {worktreeDetail.paste_destination && (
                   <div className="loop-review-item">
                     <p className="loops-status-line">
