@@ -732,6 +732,30 @@ describe("plugin packaging files", () => {
     expect(smoke).not.toContain("/Users/");
   });
 
+  it("ships an operator-approved native dialog dogfood harness", () => {
+    const packageJson = readJson<{
+      files: string[];
+      scripts: Record<string, string>;
+    }>("package.json");
+    const smoke = readFileSync(
+      join(process.cwd(), "scripts/mcp-native-dialog-approved.mjs"),
+      "utf8",
+    );
+
+    expect(packageJson.files).toContain(
+      "scripts/mcp-native-dialog-approved.mjs",
+    );
+    expect(packageJson.scripts["dogfood:mcp-native-dialog-approved"]).toBe(
+      "pnpm build && node scripts/mcp-native-dialog-approved.mjs",
+    );
+    expect(smoke).toContain("PROMPT_COACH_NATIVE_DIALOG_APPROVED");
+    expect(smoke).toContain("Refusing to open a native OS dialog");
+    expect(smoke).toContain("allow_native_dialog: true");
+    expect(smoke).toContain("PROMPT_COACH_NATIVE_DIALOG");
+    expect(smoke).toContain("answered");
+    expect(smoke).not.toContain("/Users/");
+  });
+
   it("ships a repeatable MCP coach loop smoke for stored prompt flows", () => {
     const packageJson = readJson<{
       files: string[];

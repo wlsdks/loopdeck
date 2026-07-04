@@ -87,10 +87,17 @@ path. The canonical path remains:
 
 Run a real interactive session only after operator approval:
 
-1. Start Claude Code or Codex with the local `prompt-coach` MCP server.
-2. Call `ask_clarifying_questions` on a weak prompt.
-3. If using Codex without MCP elicitation support, opt into native dialog with
-   `allow_native_dialog: true`.
-4. Answer one or two dialog questions.
-5. Confirm the final response contains the verbatim answers, no raw secret
-   leakage, no external calls, and no auto-submission.
+1. Confirm the operator is present and expects a native OS dialog.
+2. Run:
+
+   ```bash
+   PROMPT_COACH_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved
+   ```
+
+3. Answer one or two dialog questions.
+4. Confirm the final response reports `interaction_status: "answered"`, no raw
+   secret leakage, no external calls, and no auto-submission.
+
+The approved dogfood command refuses to run unless
+`PROMPT_COACH_NATIVE_DIALOG_APPROVED=1` is set. Do not add it to automated CI or
+scheduled checks.

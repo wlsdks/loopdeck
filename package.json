@@ -66,6 +66,7 @@
     "scripts/mcp-elicitation-smoke.mjs",
     "scripts/mcp-coach-loop-smoke.mjs",
     "scripts/mcp-native-dialog-preflight.mjs",
+    "scripts/mcp-native-dialog-approved.mjs",
     "scripts/quality-gate.mjs",
     "scripts/release-smoke.mjs",
     "scripts/ui-patrol.mjs"
@@ -92,6 +93,7 @@
     "smoke:mcp-coach-loop": "pnpm build && node scripts/mcp-coach-loop-smoke.mjs",
     "smoke:mcp-elicitation": "pnpm build && node scripts/mcp-elicitation-smoke.mjs",
     "smoke:mcp-native-dialog": "pnpm build && node scripts/mcp-native-dialog-preflight.mjs",
+    "dogfood:mcp-native-dialog-approved": "pnpm build && node scripts/mcp-native-dialog-approved.mjs",
     "smoke:release": "pnpm build && node scripts/release-smoke.mjs",
     "test": "vitest run",
     "ui-patrol": "node scripts/ui-patrol.mjs"
