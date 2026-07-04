@@ -24,7 +24,7 @@ Verified repository state:
 - Runtime compatibility IDs: package, CLI, hook command, Claude Code slash
   namespace, and canonical MCP server remain `prompt-coach`
 - Latest merged main commit at audit time:
-  `aa3a1b8 test: add approved native dialog dogfood harness (#343)`
+  `2360d93 chore: move pnpm build approvals to workspace settings (#346)`
 - Open PRs at audit time: none
 - Local and remote `main` matched at audit time
 
@@ -39,6 +39,14 @@ Verified CI and operational evidence:
 - PR #343 added an operator-approved native-dialog dogfood harness guarded by
   `PROMPT_COACH_NATIVE_DIALOG_APPROVED=1` and passed `test (22)` and `test
   (24)` before merge.
+- PR #344 refreshed this audit after the native-dialog dogfood harness and
+  passed `test (22)` and `test (24)` before merge.
+- PR #345 resolved open dependency security alerts for `vite`, `esbuild`, and
+  `fast-uri`; `corepack pnpm audit --json` reported zero vulnerabilities after
+  merge and the PR passed `test (22)` and `test (24)`.
+- PR #346 moved pnpm build-script approvals from `package.json#pnpm` to
+  `pnpm-workspace.yaml`, keeping `better-sqlite3` and `esbuild` as the only
+  approved build dependencies; the PR passed `test (22)` and `test (24)`.
 - `ui-patrol` workflow_dispatch run `28717201110` failed before #341 because
   the GitHub runner did not have Chromium installed.
 - `ui-patrol` workflow_dispatch run `28717406758` succeeded after #341.
@@ -56,8 +64,8 @@ Verified CI and operational evidence:
 | Loop data model | Loop snapshot and memory schema contracts exist and runtime slices have landed. | `docs/LOOP-SNAPSHOT-SCHEMA.md`, loop CLI/MCP/web implementation, status and selected worktree slices | Satisfied for MVP loop metadata model |
 | Privacy/local-first boundary | Prompt bodies stay in redacted archive; loop surfaces are raw-free; write paths are explicit. | `docs/LOOPDECK.md`, storage/server/MCP tests, route capability guard cleanup, MCP smoke audits | Satisfied for implemented paths |
 | AGENTS.md/CLAUDE.md/harness docs | Cross-agent and Claude-specific instruction boundaries are separated. | `AGENTS.md`, `CLAUDE.md`, `docs/INSTRUCTION-FILES.md`, `docs/AGENT-HARNESS.md` | Satisfied for current compatibility window |
-| Technical risk handling | Storage capability guard work and CI UI patrol evidence reduced known reliability gaps. | ADR 0002, PR #340, PR #341, `docs/NEXT_BACKLOG.md` | Active and improving |
-| TDD implementation slices | Recent slices used focused RED tests, local gates, PR CI, and squash merges. | PR #340 and #341 tests/CI; `tasks/todo.md` | Satisfied for recent slices |
+| Technical risk handling | Storage capability guard work, CI UI patrol evidence, dependency security cleanup, and pnpm build-approval settings reduced known reliability gaps. | ADR 0002, PR #340, PR #341, PR #345, PR #346, `docs/NEXT_BACKLOG.md` | Active and improving |
+| TDD implementation slices | Recent slices used focused RED tests, local gates, PR CI, and squash merges. | PR #340 through #346 tests/CI; `tasks/todo.md` | Satisfied for recent slices |
 | UI patrol scheduled artifact | Manual workflow dispatch is verified; first scheduled cron artifact has not occurred yet. | Run `28717406758`; `.github/workflows/ui-patrol.yml` cron | Not yet complete as a scheduled-run requirement |
 | Codex native dialog fallback | Safe no-dialog preflight, MCP elicitation smoke, and approval-gated harness refusal are verified; real OS/native ask UI dogfood is not run. | `docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md`, `scripts/mcp-native-dialog-approved.mjs`, `package.json` | Pending explicit operator approval for the answered dialog run |
 | MCP registry follow-up | Decision is documented to wait until a new MCP tool/schema change touches registration. | ADR 0001, `docs/NEXT_BACKLOG.md` | Deferred by design |
@@ -90,5 +98,7 @@ evidence for the pending integration and operational items:
    `PROMPT_COACH_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved`
    and record whether the final MCP response is `interaction_status:
    "answered"` without prompt-body leakage or external calls.
-5. Avoid package/CLI/slash namespace renames until the dedicated migration plan
+5. Continue treating dependency and package-manager warnings as reliability
+   work when they affect local-first installation, build, or CI evidence.
+6. Avoid package/CLI/slash namespace renames until the dedicated migration plan
    is accepted and verified.

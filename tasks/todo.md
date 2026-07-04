@@ -275,7 +275,7 @@
 - [x] Task 2 GREEN: fail-open/privacy-safe stdout/stderr contract 유지
 - [x] Task 3: CLI loop collect와 hook collect가 같은 snapshot builder 경계를 공유하도록 정리
 - [x] Task 4: docs/README/PLUGINS/PR에 Stop hook loop collection 범위와 한계 반영
-- [ ] 다음 slice: PostCompact/PreCompact boundary metadata 설계 및 구현
+- [x] 다음 slice: PostCompact/PreCompact boundary metadata 설계 및 구현
 
 ### 판단 기준
 
