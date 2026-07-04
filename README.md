@@ -735,6 +735,12 @@ The MCP server exposes twenty tools:
   3. Otherwise returns `clarifying_questions` metadata
      (`interaction_status: unsupported|declined|timeout`).
      Never auto-submits a rewrite.
+  In non-interactive Claude Code print runs (`claude -p`), the MCP tool can be
+  routed successfully but still return `interaction_status: declined` when no
+  user answer is provided. Treat that as a safe fallback: ask the returned
+  `clarifying_questions` through the agent's native ask UI, then call
+  `apply_clarifications` or `record_clarifications` with the user's verbatim
+  answers.
 - `record_clarifications`: persist the user's verbatim answers and the
   resulting draft against a stored prompt in the local archive
   (`prompt_improvement_drafts`). Returns metadata only (`draft_id`,
