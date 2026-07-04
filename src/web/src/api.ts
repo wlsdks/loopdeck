@@ -792,6 +792,14 @@ export type LoopWorktreeResponse = {
     writes_files: false;
     external_calls: false;
   };
+  continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_uncertainty_collection_reminder?: {
+    label: "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness uncertainty collection reminder";
+    reminder: "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain";
+    not_automated: "Loopdeck does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically";
+    reason: "keeps post-submit retry renewed-memory-approval post-submit collection freshness uncertainty resolution operator-triggered and local-first";
+    writes_files: false;
+    external_calls: false;
+  };
   paste_destination?: {
     label: "Paste destination";
     targets: ["Codex active request", "Claude Code active request"];
