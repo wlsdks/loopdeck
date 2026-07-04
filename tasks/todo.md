@@ -721,7 +721,11 @@
 - [x] Task 155 RED: raw `loop-review-item` markup count가 19개라 source hygiene test의 16개 이하 기준 실패 확인
 - [x] Task 155 GREEN: renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-submit/post-submit freshness advisory/freshness result non-persistence markup을 `LoopReviewItem`으로 전환해 raw markup count를 16개로 감소
 - [x] Task 155 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
-- [ ] 다음 slice: selected detail panel 후반의 handoff/source/privacy raw `loop-review-item` markup을 `LoopReviewItem`으로 추가 전환할지 결정
+- [x] Task 156 DECISION: selected detail panel 후반의 handoff/source raw `loop-review-item` markup은 같은 read-only line/footer 구조라 `LoopReviewItem`으로 계속 전환
+- [x] Task 156 RED: raw `loop-review-item` markup count가 16개라 source hygiene test의 13개 이하 기준 실패 확인
+- [x] Task 156 GREEN: handoff checklist, post-handoff reminder, source-of-truth note markup을 `LoopReviewItem`으로 전환해 raw markup count를 13개로 감소
+- [x] Task 156 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [ ] 다음 slice: selected detail panel 후반의 privacy/operator/collection responsibility raw `loop-review-item` markup을 `LoopReviewItem`으로 추가 전환할지 결정
 
 ### 판단 기준
 
