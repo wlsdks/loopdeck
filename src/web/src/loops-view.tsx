@@ -369,6 +369,7 @@ export function LoopsView({
             )}
             {worktreeDetail.selected_brief_action && (
               <div>
+                <p className="loops-status-line">Continuation guidance</p>
                 <p className="loops-status-line">
                   {worktreeDetail.selected_brief_action.label}
                 </p>
@@ -392,6 +393,7 @@ export function LoopsView({
             )}
             {worktreeDetail.review_packet_summary && (
               <div>
+                <p className="loops-status-line">Merge review guidance</p>
                 <p className="loops-status-line">Review packet summary</p>
                 <p className="loops-status-line">
                   {worktreeDetail.review_packet_summary.summary}
@@ -444,6 +446,7 @@ export function LoopsView({
                   </p>
                 </div>
                 <div>
+                  <p className="loops-status-line">Evidence guidance</p>
                   <p className="loops-status-line">
                     {
                       worktreeDetail.review_packet_summary

@@ -206,7 +206,10 @@ Implementation checkpoint:
 - Selected worktree detail now includes a raw-free merge-readiness-to-brief
   rationale, so users can see that copying a selected brief continues the loop
   without satisfying the separate merge gate.
+- Selected worktree detail now groups accumulated read-only guidance with
+  compact section labels for continuation guidance, merge review guidance, and
+  evidence guidance, without changing API contracts or adding write behavior.
 - The next runtime slice should decide whether selected worktree detail needs a
-  compact section structure for the growing selected-detail guidance, without
-  adding transcript content, prompt bodies, raw paths, git status reads,
-  command execution, or write tools.
+  tighter visual hierarchy for the review packet detail panel, without adding
+  transcript content, prompt bodies, raw paths, git status reads, command
+  execution, or write tools.

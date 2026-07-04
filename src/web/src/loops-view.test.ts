@@ -86,11 +86,13 @@ describe("LoopsView", () => {
       "prompt-coach loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
     );
     expect(html).toContain("No file writes or external calls");
+    expect(html).toContain("Continuation guidance");
     expect(html).toContain("Session session-web");
     expect(html).toContain("Branch feature/branch-filter");
     expect(html).toContain("Latest decision");
     expect(html).toContain("continue");
     expect(html).toContain("Needs one more verification pass before merge.");
+    expect(html).toContain("Merge review guidance");
     expect(html).toContain("Review packet summary");
     expect(html).toContain("1 ready, 1 needs review, 0 missing evidence");
     expect(html).toContain("review non-passing worktrees before merge");
@@ -106,6 +108,7 @@ describe("LoopsView", () => {
     expect(html).toContain("Evidence count");
     expect(html).toContain("2 selected worktree has evidence refs recorded");
     expect(html).toContain("Reviewer checklist preview");
+    expect(html).toContain("Evidence guidance");
     expect(html).toContain("Review non-passing worktrees before merge");
     expect(html).toContain("required");
     expect(html).toContain("Copy review brief command");

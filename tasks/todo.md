@@ -269,7 +269,11 @@
 - [x] Task 61 RED: selected detail API/UI에 `review_packet_summary.brief_rationale`이 없어 focused tests 실패 확인
 - [x] Task 61 GREEN: selected worktree detail API/type/UI에 Brief rationale reason/next action/merge gate를 read-only로 노출
 - [x] Task 61 PRIVACY: rationale은 readiness status/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
-- [ ] 다음 slice: selected worktree detail guidance를 compact section structure로 정리할지 결정
+- [x] Task 62 DECISION: selected detail guidance가 커졌으므로 API 계약 변경 없이 continuation/merge/evidence section label로 스캔성을 개선
+- [x] Task 62 RED: selected detail UI에 `Continuation guidance`, `Merge review guidance`, `Evidence guidance`가 없어 focused web test 실패 확인
+- [x] Task 62 GREEN: selected worktree detail UI에 compact section labels를 추가해 focused web test 통과
+- [x] Task 62 PRIVACY: section labels만 추가하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
+- [ ] 다음 slice: review packet detail panel의 visual hierarchy를 더 조밀하게 정리할지 결정
 
 ### 판단 기준
 

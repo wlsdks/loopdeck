@@ -1996,6 +1996,36 @@ Do not add:
 - web or MCP write tools, external model calls, package/plugin/slash/hook/MCP
   rename work
 
+### Slice 4.59: Compact Selected-Detail Guidance Sections
+
+Decision:
+
+- Selected worktree detail has accumulated several related read-only guidance
+  blocks. It should group them with compact, explicit section labels so
+  operators can distinguish continuation guidance, merge review guidance, and
+  evidence guidance while scanning.
+- This is a presentation-only slice. It should not add API fields, storage
+  state, command execution, copy behavior, checklist completion state, or merge
+  readiness semantics.
+
+Add:
+
+- `Continuation guidance` label before selected brief action details
+- `Merge review guidance` label before review packet summary details
+- `Evidence guidance` label before evidence-count explanation
+- focused web rendering test proving these labels appear with the existing
+  selected worktree detail content
+
+Do not add:
+
+- new server/API/MCP fields, write buttons, acknowledgements, checklist
+  completion state, merge approval, git reads/writes, filesystem reads,
+  command execution, or background scanning
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.
