@@ -88,7 +88,9 @@
 - [x] GREEN: `ask_clarifying_questions` public input schema에 `allow_native_dialog` boolean opt-in을 추가하고 test 고정
 - [x] Dogfood: dist MCP stdio `tools/list`에서 `allow_native_dialog`가 노출되고 `additionalProperties=false`를 유지함 확인
 - [x] Dogfood: 새 `codex exec` 세션에서 native `mcp__prompt_coach.ask_clarifying_questions`를 `allow_native_dialog=false`로 호출해 schema error 없이 `interaction_status=declined`, `answers_count=0`, `clarifying_questions=yes`로 완료됨 확인
-- [ ] 다음 dogfood slice: interactive Claude Code ask UI 또는 Codex native dialog fallback을 실제 사용자 입력 포함 경로로 확인
+- [x] Dogfood: 실제 dist `prompt-coach mcp` stdio server에 `initialize`로 `capabilities.elicitation`을 광고하는 dogfood client를 붙여 server-initiated `elicitation/create` 요청 발생 확인
+- [x] Dogfood: dogfood client가 `elicitation/create`에 사용자 답변 payload를 반환하자 최종 `interaction_status=answered`, `answers_count=2`, `analyzer=clarifications-v1`, `clarifying_questions=[]`, answer text가 반영된 improved draft, local-only/no-store/no-external privacy contract를 확인
+- [ ] 다음 dogfood slice: Codex native dialog fallback을 실제 OS dialog 또는 명시적 사용자 승인 하에 확인
 
 ### 판단 기준
 
@@ -108,6 +110,7 @@
 - Claude Code의 stored clarification write flow는 MCP 응답에서는 metadata-only를 유지하고, draft body 검토는 local archive/UI/CLI로 넘어가야 한다.
 - Claude Code `ask_clarifying_questions` print-mode dogfood는 MCP routing 성공 여부와 실제 사용자 답변 수집 여부를 분리한다. `interaction_status=declined`는 tool failure가 아니라 답변 미수집 fallback이며, 다음 단계는 agent native ask UI 또는 interactive session에서 답을 받아 `apply_clarifications`/`record_clarifications`로 이어가는 것이다.
 - Codex native dialog fallback을 문서화하려면 `allow_native_dialog`가 public MCP schema에 있어야 한다. internal TypeScript-only argument는 실제 strict MCP client 통합으로 간주하지 않는다.
+- 실제 사용자 답변 포함 경로는 mock 함수 호출만으로 완료 처리하지 않는다. dist MCP stdio server, client `capabilities.elicitation`, server-initiated `elicitation/create`, client answer response, final answered draft까지 한 번에 통과해야 한다.
 
 ## 2026-07-04 Loop Snapshot Domain Slice
 
