@@ -1720,74 +1720,46 @@ export function LoopsView({
                   <LoopReviewItem
                     footer={`${worktreeDetail.review_packet_summary.readiness_summary.status} ${worktreeDetail.review_packet_summary.readiness_summary.reason}`}
                     lines={[
-                        worktreeDetail.review_packet_summary.readiness_summary
-                          .label,
+                      worktreeDetail.review_packet_summary.readiness_summary
+                        .label,
                     ]}
                   />
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail.review_packet_summary.brief_rationale
-                          .label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail.review_packet_summary.brief_rationale
-                          .reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      Next{" "}
-                      {
-                        worktreeDetail.review_packet_summary.brief_rationale
-                          .next_action
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      Merge gate{" "}
-                      {
-                        worktreeDetail.review_packet_summary.brief_rationale
-                          .merge_gate
-                      }
-                    </p>
-                  </div>
-                  <div className="loop-review-item">
-                    <p className="loop-detail-section-title">
-                      Evidence guidance
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail.review_packet_summary
-                          .evidence_count_explanation.label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail.review_packet_summary
-                          .evidence_count_explanation.count
-                      }{" "}
-                      {
-                        worktreeDetail.review_packet_summary
-                          .evidence_count_explanation.reason
-                      }
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer={`Merge gate ${worktreeDetail.review_packet_summary.brief_rationale.merge_gate}`}
+                    lines={[
+                      worktreeDetail.review_packet_summary.brief_rationale
+                        .label,
+                      worktreeDetail.review_packet_summary.brief_rationale
+                        .reason,
+                      `Next ${worktreeDetail.review_packet_summary.brief_rationale.next_action}`,
+                    ]}
+                  />
+                  <LoopReviewItem
+                    footer={`${worktreeDetail.review_packet_summary.evidence_count_explanation.count} ${worktreeDetail.review_packet_summary.evidence_count_explanation.reason}`}
+                    lines={[
+                      "Evidence guidance",
+                      worktreeDetail.review_packet_summary
+                        .evidence_count_explanation.label,
+                    ]}
+                  />
                 </div>
                 {worktreeDetail.review_packet_summary
                   .reviewer_checklist_preview.length > 0 && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      Reviewer checklist preview
-                    </p>
-                    {worktreeDetail.review_packet_summary.reviewer_checklist_preview.map(
-                      (item) => (
-                        <p className="loops-status-line" key={item.action}>
-                          {item.label} {item.status}
-                        </p>
-                      ),
-                    )}
-                  </div>
+                  <LoopReviewItem
+                    footer={
+                      worktreeDetail.review_packet_summary.reviewer_checklist_preview.at(
+                        -1,
+                      )
+                        ? `${worktreeDetail.review_packet_summary.reviewer_checklist_preview.at(-1)?.label} ${worktreeDetail.review_packet_summary.reviewer_checklist_preview.at(-1)?.status}`
+                        : "Reviewer checklist preview"
+                    }
+                    lines={[
+                      "Reviewer checklist preview",
+                      ...worktreeDetail.review_packet_summary.reviewer_checklist_preview
+                        .slice(0, -1)
+                        .map((item) => `${item.label} ${item.status}`),
+                    ]}
+                  />
                 )}
                 <p className="loops-status-line">
                   {worktreeDetail.review_packet_summary.command_hint.label}
