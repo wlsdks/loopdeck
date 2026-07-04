@@ -9,6 +9,7 @@ import {
 } from "../config/config.js";
 import type { RedactionPolicy } from "../shared/schema.js";
 import type {
+  AskEventStoragePort,
   CoachFeedbackStoragePort,
   CompactBoundaryStoragePort,
   ExportJobStoragePort,
@@ -40,6 +41,7 @@ export type CreateServerOptions = {
     Partial<ProjectInstructionStoragePort> &
     Partial<PromptReadStoragePort> &
     Partial<ExportJobStoragePort> &
+    Partial<AskEventStoragePort> &
     Partial<CoachFeedbackStoragePort> &
     Partial<LoopSnapshotStoragePort> &
     Partial<CompactBoundaryStoragePort>;

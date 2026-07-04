@@ -3324,6 +3324,7 @@
 - [x] 결과는 PRD 갱신 또는 후속 PR 후보로.
 - [x] 다음 구현 후보: ADR 0002 기반 storage capability negotiation helper를 route registration 경계에 도입.
 - [x] 다음 구현 후보: storage capability declaration을 explicit MCP storage errors로 확장.
+- [x] 다음 구현 후보: ingest/export/prompt/loop-memory route의 hand-written storage capability guard를 shared helper로 전환.
 - [x] 다음 구현 후보: MCP capability metadata가 `tools/list` filtering까지 필요한지 결정하고, 필요할 때 registry/capability catalogue slice로 진행.
 - [ ] 다음 구현 후보: 새 MCP tool/schema 변경이 생길 때 `tools/list`와 `tools/call` dispatch를 같은 registry에서 파생.
 - [x] MCP coach loop stdio audit 실행: `score_prompt` -> `improve_prompt` -> `record_clarifications` 실제 MCP JSON-RPC 흐름 확인.

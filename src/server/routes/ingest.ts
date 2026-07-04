@@ -15,6 +15,7 @@ import type {
 } from "../../storage/ports.js";
 import { requireBearerToken, type ServerAuthConfig } from "../auth.js";
 import { problem } from "../errors.js";
+import { requireStorageCapabilities } from "../storage-capabilities.js";
 
 export type IngestRouteOptions = {
   auth: ServerAuthConfig;
@@ -25,6 +26,8 @@ export type IngestRouteOptions = {
   excludedProjectRoots: string[];
   maxPromptLength: number;
 };
+
+type AskEventRecordStorage = Pick<AskEventStoragePort, "recordAskEvent">;
 
 const AskEventBodySchema = z.object({
   tool: z.enum(["claude-code", "codex"]),
@@ -58,14 +61,7 @@ export function registerIngestRoutes(
 
   server.post("/api/v1/ingest/ask-event", async (request) => {
     requireBearerToken(request, options.auth.ingestToken);
-    if (!options.storage.recordAskEvent) {
-      throw problem(
-        503,
-        "Service Unavailable",
-        "Storage backend does not support ask events.",
-        request.url,
-      );
-    }
+    const storage = requireAskEventStorage(options.storage, request.url);
 
     let body;
     try {
@@ -82,7 +78,7 @@ export function registerIngestRoutes(
       throw error;
     }
 
-    options.storage.recordAskEvent({
+    storage.recordAskEvent({
       tool: body.tool,
       score: body.score,
       band: body.band,
@@ -93,6 +89,16 @@ export function registerIngestRoutes(
     });
 
     return { data: { recorded: true } };
+  });
+}
+
+function requireAskEventStorage(
+  storage: IngestRouteOptions["storage"],
+  instance: string,
+): AskEventRecordStorage {
+  return requireStorageCapabilities(storage, ["recordAskEvent"], {
+    label: "Ask-event storage",
+    instance,
   });
 }
 

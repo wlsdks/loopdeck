@@ -68,7 +68,9 @@ First route-helper PR:
 
 - Added a small server helper that narrows storage objects by required method
   names and returns one consistent local configuration error.
-- Replaced the hand-written guards in project routes and coach-feedback routes.
+- Replaced the hand-written guards in project routes, coach-feedback routes,
+  export routes, prompt read/improvement/ask-summary routes, loop memory
+  routes, and the ingest ask-event route.
 - Kept behavior equivalent: missing capabilities still fail locally and do not
   expose prompt bodies, raw paths, tokens, or instruction file contents.
 

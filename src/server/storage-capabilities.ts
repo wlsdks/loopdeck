@@ -2,8 +2,12 @@ import { problem } from "./errors.js";
 
 type MethodKey = string;
 
-type RequiredMethods<TKey extends MethodKey> = {
-  [K in TKey]: (...args: never[]) => unknown;
+type RequiredMethods<TStorage, TKey extends keyof TStorage & MethodKey> = {
+  [K in TKey]-?: TStorage[K] extends
+    | ((...args: infer TArgs) => infer TReturn)
+    | undefined
+    ? (...args: TArgs) => TReturn
+    : never;
 };
 
 export function requireStorageCapabilities<
@@ -13,7 +17,7 @@ export function requireStorageCapabilities<
   storage: TStorage,
   requiredMethods: readonly TKey[],
   options: { label: string; instance: string },
-): TStorage & RequiredMethods<TKey> {
+): TStorage & RequiredMethods<TStorage, TKey> {
   const hasAllMethods = requiredMethods.every(
     (method) => typeof storage[method] === "function",
   );
@@ -26,5 +30,5 @@ export function requireStorageCapabilities<
     );
   }
 
-  return storage as TStorage & RequiredMethods<TKey>;
+  return storage as TStorage & RequiredMethods<TStorage, TKey>;
 }
