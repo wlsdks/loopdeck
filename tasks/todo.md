@@ -72,7 +72,10 @@
 - [x] Dogfood: `claude mcp list`와 `prompt-coach doctor claude-code --json`에서 `prompt-coach` MCP 등록/연결/last ingest 200 확인
 - [x] Dogfood: Claude Code 기본 Fable 5 실행은 usage credits 429로 막혔지만 `--model sonnet` 재시도에서 native `mcp__prompt-coach__score_prompt`/`improve_prompt` tool call 성공 확인
 - [x] Dogfood: Claude Code stream JSON에 `server_display_name: "prompt-coach"` tool_use metadata와 최종 "both tool calls succeeded" 보고가 남음 확인
-- [ ] 다음 dogfood slice: Claude Code native `record_clarifications` 또는 saved draft copy의 별도 사용성 telemetry 필요 여부 결정
+- [x] Dogfood: Claude Code native `mcp__prompt-coach__record_clarifications` tool call 성공 확인
+- [x] Dogfood: Claude Code `record_clarifications` 결과가 `draft_id=impdraft_7f47a9c62c0f47cd9f1b663b` metadata만 반환하고 prompt body/draft body/user answer text를 echo하지 않음 확인
+- [x] Dogfood: CLI `show --json`에서 Claude Code가 기록한 draft id와 local draft body가 archive에 저장되어 UI/CLI 검토 대상으로 남음 확인
+- [ ] 다음 dogfood slice: saved draft copy의 별도 사용성 telemetry 필요 여부 결정 또는 Claude Code ask/elicitation 경로 확인
 
 ### 판단 기준
 
@@ -89,6 +92,7 @@
 - Saved draft copy는 현재 local clipboard 성공과 버튼 상태까지만 확인한다. server-side prompt usage telemetry와 별도 draft usage telemetry는 다음 decision slice에서 privacy/value 기준으로 결정한다.
 - Claude Code native MCP routing은 `claude mcp list`의 health check만으로 완료 처리하지 않는다. 실제 `claude -p --output-format stream-json`에서 `mcp__prompt-coach__...` tool_use가 발생하고 성공한 기록이 있어야 한다.
 - Claude Code 모델/크레딧 실패는 integration 실패와 구분한다. 이번 검증에서는 Fable 5 usage credits 429는 별도 외부 상태이고, Sonnet 실행에서 prompt-coach MCP routing 자체는 성공했다.
+- Claude Code의 stored clarification write flow는 MCP 응답에서는 metadata-only를 유지하고, draft body 검토는 local archive/UI/CLI로 넘어가야 한다.
 
 ## 2026-07-04 Loop Snapshot Domain Slice
 
