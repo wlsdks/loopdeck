@@ -285,6 +285,8 @@ export function registerLoopRoutes(
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalCollectionResultNonPersistenceNoteFor(),
               continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_uncertainty_reminder:
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalCollectionUncertaintyReminderFor(),
+              continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_merge_freshness_advisory:
+                continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalPreMergeFreshnessAdvisoryFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1773,6 +1775,28 @@ function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmi
       "Loopdeck does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
     reason:
       "keeps post-submit retry renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalPreMergeFreshnessAdvisoryFor(): {
+  label: "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-merge freshness advisory";
+  advisory: "review post-submit retry renewed-memory-approval freshness uncertainty before merge decisions";
+  not_decision: "Loopdeck does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge";
+  reason: "keeps merge readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label:
+      "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-merge freshness advisory",
+    advisory:
+      "review post-submit retry renewed-memory-approval freshness uncertainty before merge decisions",
+    not_decision:
+      "Loopdeck does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
+    reason:
+      "keeps merge readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
     writes_files: false,
     external_calls: false,
   };
