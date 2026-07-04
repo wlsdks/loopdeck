@@ -1,9 +1,5 @@
 import type { LoopWorktreeResponse } from "./api.js";
-import { LoopReviewItem } from "./loop-review-item.js";
-
-type ReviewItemSource =
-  | Readonly<Record<string, string | boolean>>
-  | undefined;
+import { renderReviewItem } from "./loop-worktree-review-items.js";
 
 export function LoopWorktreeRenewedMemoryApprovalItems({
   worktreeDetail,
@@ -98,20 +94,5 @@ export function LoopWorktreeRenewedMemoryApprovalItems({
         ["label", "reminder", "not_automated", "reason"],
       )}
     </>
-  );
-}
-
-function renderReviewItem(
-  item: ReviewItemSource,
-  footer: string,
-  lineKeys: readonly string[],
-) {
-  if (!item) return null;
-
-  return (
-    <LoopReviewItem
-      footer={footer}
-      lines={lineKeys.map((lineKey) => String(item[lineKey] ?? ""))}
-    />
   );
 }

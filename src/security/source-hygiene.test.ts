@@ -150,7 +150,57 @@ describe("source hygiene", () => {
       ) ?? []
     ).length;
 
-    expect(helper).toContain("function renderReviewItem");
+    expect(helper).toContain("renderReviewItem(");
     expect(longFieldAccessCount).toBeLessThanOrEqual(20);
+  });
+
+  it("keeps post-memory-approval retry renewed-memory-approval detail formatting outside LoopsView", () => {
+    const loopsView = readFileSync("src/web/src/loops-view.tsx", "utf8");
+
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_reminder",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_result_non_persistence_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_uncertainty_reminder",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_merge_freshness_advisory",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_handoff_freshness_advisory",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_paste_freshness_advisory",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_submit_freshness_advisory",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_outcome_non_persistence_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_evidence_freshness_boundary_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_result_non_persistence_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_uncertainty_collection_reminder",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_pre_memory_approval_freshness_advisory",
+    );
   });
 });
