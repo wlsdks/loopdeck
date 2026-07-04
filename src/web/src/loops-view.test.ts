@@ -371,6 +371,19 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "No pre-memory-approval freshness writes or external calls",
     );
+    expect(html).toContain("Post-memory-approval collection reminder");
+    expect(html).toContain(
+      "collect a new explicit loop snapshot after approving loop memory",
+    );
+    expect(html).toContain(
+      "Loopdeck does not start collection from memory approval or approval state changes",
+    );
+    expect(html).toContain(
+      "keeps post-approval collection operator-triggered and local-first",
+    );
+    expect(html).toContain(
+      "No post-memory-approval collection writes or external calls",
+    );
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -980,6 +993,15 @@ function loopWorktree(): LoopWorktreeResponse {
       not_decision:
         "Loopdeck does not approve memory or verify freshness from this note",
       reason: "keeps memory approval separate from freshness uncertainty review",
+      writes_files: false,
+      external_calls: false,
+    },
+    continuation_safety_post_memory_approval_collection_reminder: {
+      label: "Post-memory-approval collection reminder",
+      reminder: "collect a new explicit loop snapshot after approving loop memory",
+      not_automated:
+        "Loopdeck does not start collection from memory approval or approval state changes",
+      reason: "keeps post-approval collection operator-triggered and local-first",
       writes_files: false,
       external_calls: false,
     },

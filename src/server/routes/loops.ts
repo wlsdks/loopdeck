@@ -233,6 +233,8 @@ export function registerLoopRoutes(
                 continuationSafetyPreMergeFreshnessAdvisoryFor(),
               continuation_safety_pre_memory_approval_freshness_advisory:
                 continuationSafetyPreMemoryApprovalFreshnessAdvisoryFor(),
+              continuation_safety_post_memory_approval_collection_reminder:
+                continuationSafetyPostMemoryApprovalCollectionReminderFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1158,6 +1160,26 @@ function continuationSafetyPreMemoryApprovalFreshnessAdvisoryFor(): {
       "Loopdeck does not approve memory or verify freshness from this note",
     reason:
       "keeps memory approval separate from freshness uncertainty review",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPostMemoryApprovalCollectionReminderFor(): {
+  label: "Post-memory-approval collection reminder";
+  reminder: "collect a new explicit loop snapshot after approving loop memory";
+  not_automated: "Loopdeck does not start collection from memory approval or approval state changes";
+  reason: "keeps post-approval collection operator-triggered and local-first";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Post-memory-approval collection reminder",
+    reminder:
+      "collect a new explicit loop snapshot after approving loop memory",
+    not_automated:
+      "Loopdeck does not start collection from memory approval or approval state changes",
+    reason: "keeps post-approval collection operator-triggered and local-first",
     writes_files: false,
     external_calls: false,
   };

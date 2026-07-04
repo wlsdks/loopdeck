@@ -480,6 +480,14 @@ export type LoopWorktreeResponse = {
     writes_files: false;
     external_calls: false;
   };
+  continuation_safety_post_memory_approval_collection_reminder?: {
+    label: "Post-memory-approval collection reminder";
+    reminder: "collect a new explicit loop snapshot after approving loop memory";
+    not_automated: "Loopdeck does not start collection from memory approval or approval state changes";
+    reason: "keeps post-approval collection operator-triggered and local-first";
+    writes_files: false;
+    external_calls: false;
+  };
   paste_destination?: {
     label: "Paste destination";
     targets: ["Codex active request", "Claude Code active request"];
