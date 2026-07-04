@@ -417,9 +417,14 @@ Implementation checkpoint:
   renewed-memory-approval freshness is uncertain, without Loopdeck monitoring
   submitted state, agent responses, or renewed-memory-approval freshness after
   submit.
+- Selected worktree detail now includes a raw-free post-memory-approval retry
+  renewed-memory-approval post-submit collection result non-persistence note,
+  explaining that post-submit collection result state stays outside Loopdeck
+  until the next explicit loop snapshot, without Loopdeck detecting, storing,
+  or syncing that state.
 - The next runtime slice should decide whether selected worktree detail needs a
   raw-free post-memory-approval retry renewed-memory-approval post-submit
-  collection result non-persistence note, without
+  collection retry boundary note, without
   adding transcript content, prompt bodies, raw paths, target contents,
   active-window titles, pasted content, paste result state, submitted state,
   agent response content, collection result state, post-approval collection
