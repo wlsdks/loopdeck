@@ -54,6 +54,55 @@
   margin: 0;
 }
 
+.loop-worktree-detail {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.loop-worktree-detail h2 {
+  margin: 0;
+}
+
+.loop-detail-section {
+  background: var(--color-overlay-1);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 8px;
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+}
+
+.loop-detail-section-title {
+  color: var(--pm-text);
+  font-size: 12px;
+  font-weight: 760;
+  letter-spacing: 0;
+  line-height: 18px;
+  margin: 0;
+}
+
+.loop-review-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.loop-review-item {
+  background: var(--pm-surface);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 6px;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px 10px;
+}
+
+.loop-review-item .loops-status-line,
+.loop-detail-section .loops-status-line {
+  margin: 0;
+}
+
 .privacy-note {
   color: var(--pm-text-subtle);
   font-size: 12px;

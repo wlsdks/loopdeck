@@ -209,7 +209,11 @@ Implementation checkpoint:
 - Selected worktree detail now groups accumulated read-only guidance with
   compact section labels for continuation guidance, merge review guidance, and
   evidence guidance, without changing API contracts or adding write behavior.
+- Selected worktree detail now uses compact presentation structure for the
+  review packet area: a selected-detail wrapper, section cards, section titles,
+  and a responsive review grid for readiness, brief rationale, evidence,
+  checklist, and missing-evidence guidance.
 - The next runtime slice should decide whether selected worktree detail needs a
-  tighter visual hierarchy for the review packet detail panel, without adding
-  transcript content, prompt bodies, raw paths, git status reads, command
-  execution, or write tools.
+  raw-free explanation of command hint provenance, without adding transcript
+  content, prompt bodies, raw paths, git status reads, command execution, or
+  write tools.

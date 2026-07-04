@@ -329,7 +329,7 @@ export function LoopsView({
       )}
       {worktreeDetail && (
         <div className="loop-table panel">
-          <div>
+          <div className="loop-worktree-detail">
             <span className="panel-eyebrow">Worktree detail</span>
             <h2>{worktreeDetail.worktree}</h2>
             {worktreeDetail.session_id && (
@@ -368,8 +368,10 @@ export function LoopsView({
               </div>
             )}
             {worktreeDetail.selected_brief_action && (
-              <div>
-                <p className="loops-status-line">Continuation guidance</p>
+              <div className="loop-detail-section">
+                <p className="loop-detail-section-title">
+                  Continuation guidance
+                </p>
                 <p className="loops-status-line">
                   {worktreeDetail.selected_brief_action.label}
                 </p>
@@ -392,8 +394,10 @@ export function LoopsView({
               </p>
             )}
             {worktreeDetail.review_packet_summary && (
-              <div>
-                <p className="loops-status-line">Merge review guidance</p>
+              <div className="loop-detail-section">
+                <p className="loop-detail-section-title">
+                  Merge review guidance
+                </p>
                 <p className="loops-status-line">Review packet summary</p>
                 <p className="loops-status-line">
                   {worktreeDetail.review_packet_summary.summary}
@@ -405,68 +409,78 @@ export function LoopsView({
                   Worktree action{" "}
                   {worktreeDetail.review_packet_summary.worktree_action}
                 </p>
-                <div>
-                  <p className="loops-status-line">
-                    {worktreeDetail.review_packet_summary.readiness_summary.label}
-                  </p>
-                  <p className="loops-status-line">
-                    {
-                      worktreeDetail.review_packet_summary.readiness_summary
-                        .status
-                    }{" "}
-                    {
-                      worktreeDetail.review_packet_summary.readiness_summary
-                        .reason
-                    }
-                  </p>
-                </div>
-                <div>
-                  <p className="loops-status-line">
-                    {worktreeDetail.review_packet_summary.brief_rationale.label}
-                  </p>
-                  <p className="loops-status-line">
-                    {
-                      worktreeDetail.review_packet_summary.brief_rationale
-                        .reason
-                    }
-                  </p>
-                  <p className="loops-status-line">
-                    Next{" "}
-                    {
-                      worktreeDetail.review_packet_summary.brief_rationale
-                        .next_action
-                    }
-                  </p>
-                  <p className="loops-status-line">
-                    Merge gate{" "}
-                    {
-                      worktreeDetail.review_packet_summary.brief_rationale
-                        .merge_gate
-                    }
-                  </p>
-                </div>
-                <div>
-                  <p className="loops-status-line">Evidence guidance</p>
-                  <p className="loops-status-line">
-                    {
-                      worktreeDetail.review_packet_summary
-                        .evidence_count_explanation.label
-                    }
-                  </p>
-                  <p className="loops-status-line">
-                    {
-                      worktreeDetail.review_packet_summary
-                        .evidence_count_explanation.count
-                    }{" "}
-                    {
-                      worktreeDetail.review_packet_summary
-                        .evidence_count_explanation.reason
-                    }
-                  </p>
+                <div className="loop-review-grid">
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.review_packet_summary.readiness_summary
+                          .label
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.review_packet_summary.readiness_summary
+                          .status
+                      }{" "}
+                      {
+                        worktreeDetail.review_packet_summary.readiness_summary
+                          .reason
+                      }
+                    </p>
+                  </div>
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.review_packet_summary.brief_rationale
+                          .label
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.review_packet_summary.brief_rationale
+                          .reason
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      Next{" "}
+                      {
+                        worktreeDetail.review_packet_summary.brief_rationale
+                          .next_action
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      Merge gate{" "}
+                      {
+                        worktreeDetail.review_packet_summary.brief_rationale
+                          .merge_gate
+                      }
+                    </p>
+                  </div>
+                  <div className="loop-review-item">
+                    <p className="loop-detail-section-title">
+                      Evidence guidance
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.review_packet_summary
+                          .evidence_count_explanation.label
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.review_packet_summary
+                          .evidence_count_explanation.count
+                      }{" "}
+                      {
+                        worktreeDetail.review_packet_summary
+                          .evidence_count_explanation.reason
+                      }
+                    </p>
+                  </div>
                 </div>
                 {worktreeDetail.review_packet_summary
                   .reviewer_checklist_preview.length > 0 && (
-                  <div>
+                  <div className="loop-review-item">
                     <p className="loops-status-line">
                       Reviewer checklist preview
                     </p>
@@ -487,7 +501,7 @@ export function LoopsView({
                 </code>
                 {worktreeDetail.review_packet_summary
                   .missing_evidence_explanation && (
-                  <div>
+                  <div className="loop-review-item">
                     <p className="loops-status-line">
                       {
                         worktreeDetail.review_packet_summary

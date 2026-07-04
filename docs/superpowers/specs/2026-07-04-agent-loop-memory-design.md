@@ -2026,6 +2026,37 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.60: Selected Review Detail Visual Hierarchy
+
+Decision:
+
+- The selected worktree detail panel should use compact visual hierarchy for
+  the review packet area because the panel now contains continuation, merge,
+  evidence, checklist, command, and missing-evidence guidance.
+- The hierarchy should be implemented as presentation structure only: section
+  wrappers, section titles, and a responsive review grid. It must preserve the
+  existing read-only text and selected brief command behavior.
+
+Add:
+
+- `loop-worktree-detail` wrapper for selected detail spacing
+- `loop-detail-section` and `loop-detail-section-title` for compact grouped
+  guidance
+- `loop-review-grid` and `loop-review-item` for readiness, brief rationale,
+  evidence, checklist, and missing-evidence details
+- focused web rendering test proving the structural classes are present with
+  the existing selected detail content
+
+Do not add:
+
+- new API fields, storage state, server behavior, web write actions, checklist
+  completion state, merge approval, command execution, git reads/writes,
+  filesystem reads, or background scanning
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

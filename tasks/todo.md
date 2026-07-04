@@ -273,7 +273,11 @@
 - [x] Task 62 RED: selected detail UI에 `Continuation guidance`, `Merge review guidance`, `Evidence guidance`가 없어 focused web test 실패 확인
 - [x] Task 62 GREEN: selected worktree detail UI에 compact section labels를 추가해 focused web test 통과
 - [x] Task 62 PRIVACY: section labels만 추가하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
-- [ ] 다음 slice: review packet detail panel의 visual hierarchy를 더 조밀하게 정리할지 결정
+- [x] Task 63 DECISION: review packet detail panel이 커졌으므로 API 계약 변경 없이 section wrapper/grid/item 구조로 시각 위계를 개선
+- [x] Task 63 RED: selected detail UI에 `loop-worktree-detail`, `loop-detail-section`, `loop-detail-section-title`, `loop-review-grid`, `loop-review-item` 구조가 없어 focused web test 실패 확인
+- [x] Task 63 GREEN: selected worktree detail UI/CSS에 compact section wrapper와 responsive review grid를 추가해 focused web test 통과
+- [x] Task 63 PRIVACY: presentation classes와 CSS만 추가하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
+- [ ] 다음 slice: selected review command hint의 provenance를 raw-free로 설명할지 결정
 
 ### 판단 기준
 

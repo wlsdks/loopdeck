@@ -68,6 +68,7 @@ describe("LoopsView", () => {
 
     expect(html).toContain("Worktree detail");
     expect(html).toContain("agent-loop-worktree");
+    expect(html).toContain('class="loop-worktree-detail"');
     expect(html).toContain("Selection scope");
     expect(html).toContain(
       "showing snapshots filtered by selected worktree, session, and branch",
@@ -87,12 +88,16 @@ describe("LoopsView", () => {
     );
     expect(html).toContain("No file writes or external calls");
     expect(html).toContain("Continuation guidance");
+    expect(html).toContain('class="loop-detail-section"');
+    expect(html).toContain('class="loop-detail-section-title"');
     expect(html).toContain("Session session-web");
     expect(html).toContain("Branch feature/branch-filter");
     expect(html).toContain("Latest decision");
     expect(html).toContain("continue");
     expect(html).toContain("Needs one more verification pass before merge.");
     expect(html).toContain("Merge review guidance");
+    expect(html).toContain('class="loop-review-grid"');
+    expect(html).toContain('class="loop-review-item"');
     expect(html).toContain("Review packet summary");
     expect(html).toContain("1 ready, 1 needs review, 0 missing evidence");
     expect(html).toContain("review non-passing worktrees before merge");
