@@ -442,18 +442,24 @@ Implementation checkpoint:
   note, explaining that post-submit retry freshness result state stays outside
   Loopdeck until the next explicit loop snapshot, without Loopdeck detecting,
   storing, or syncing that state.
+- Selected worktree detail now includes a raw-free post-memory-approval retry
+  renewed-memory-approval post-submit retry freshness uncertainty collection
+  reminder, explaining that the operator collects a new explicit loop snapshot
+  when post-submit retry freshness is uncertain, without Loopdeck verifying
+  freshness or starting collection automatically.
 - The next runtime slice should decide whether selected worktree detail needs a
   raw-free post-memory-approval retry renewed-memory-approval post-submit
-  retry freshness uncertainty collection reminder, without
+  retry pre-memory-approval freshness advisory, without
   adding transcript content, prompt bodies, raw paths, target contents,
   active-window titles, pasted content, paste result state, submitted state,
   agent response content, collection result state, post-approval collection
   result state, renewed memory approval collection result state, retry result
   state, post-submit retry result state, post-approval retry result state,
   retry outcome state, post-submit retry freshness result state, freshness
-  uncertainty collection result state, freshness result state, retry freshness
-  result state, post-approval retry freshness result state, approval result
-  state, renewed memory approval state, freshness
+  uncertainty collection result state, post-submit retry freshness uncertainty
+  collection result state, freshness result state, retry freshness result state,
+  post-approval retry freshness result state, approval result state, renewed
+  memory approval state, freshness
   verification, automatic collection, collection command execution, retry
   automation, git status reads, command execution, persisted review state,
   checklist completion state, paste target state, handoff approval state,
