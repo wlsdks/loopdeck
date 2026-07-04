@@ -281,6 +281,8 @@ export function registerLoopRoutes(
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryPreMemoryApprovalFreshnessAdvisoryFor(),
               continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_reminder:
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalCollectionReminderFor(),
+              continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_result_non_persistence_note:
+                continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalCollectionResultNonPersistenceNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1725,6 +1727,28 @@ function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmi
       "Loopdeck does not start collection from post-submit retry renewed memory approval or hidden approval signals",
     reason:
       "keeps post-submit retry renewed-memory-approval collection operator-triggered and local-first",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalCollectionResultNonPersistenceNoteFor(): {
+  label: "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence";
+  result_scope: "post-submit retry renewed-memory-approval collection result stays outside Loopdeck until the next explicit loop snapshot";
+  not_stored: "Loopdeck does not detect, store, or sync post-submit retry renewed-memory-approval collection result state";
+  reason: "keeps post-submit retry renewed-memory-approval collection evidence tied to explicit local snapshot recording";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label:
+      "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence",
+    result_scope:
+      "post-submit retry renewed-memory-approval collection result stays outside Loopdeck until the next explicit loop snapshot",
+    not_stored:
+      "Loopdeck does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
+    reason:
+      "keeps post-submit retry renewed-memory-approval collection evidence tied to explicit local snapshot recording",
     writes_files: false,
     external_calls: false,
   };
