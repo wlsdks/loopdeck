@@ -499,6 +499,29 @@ export function LoopsView({
                 <code>
                   {worktreeDetail.review_packet_summary.command_hint.command}
                 </code>
+                <div className="loop-review-item">
+                  <p className="loops-status-line">
+                    {
+                      worktreeDetail.review_packet_summary.command_hint
+                        .provenance.label
+                    }
+                  </p>
+                  <p className="loops-status-line">
+                    {
+                      worktreeDetail.review_packet_summary.command_hint
+                        .provenance.source
+                    }
+                  </p>
+                  <p className="loops-status-line">
+                    {
+                      worktreeDetail.review_packet_summary.command_hint
+                        .provenance.reason
+                    }
+                  </p>
+                  <p className="loops-status-line">
+                    No command writes or external calls
+                  </p>
+                </div>
                 {worktreeDetail.review_packet_summary
                   .missing_evidence_explanation && (
                   <div className="loop-review-item">

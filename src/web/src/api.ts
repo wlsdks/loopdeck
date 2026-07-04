@@ -339,6 +339,13 @@ export type LoopWorktreeResponse = {
     command_hint: {
       label: "Copy review brief command";
       command: string;
+      provenance: {
+        label: "Command provenance";
+        source: "existing command-center continuation command";
+        reason: "reuses safe selected worktree metadata without reading git or executing commands";
+        writes_files: false;
+        external_calls: false;
+      };
     };
     missing_evidence_explanation?: {
       label: "Missing evidence";

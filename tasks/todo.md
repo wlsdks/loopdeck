@@ -277,7 +277,11 @@
 - [x] Task 63 RED: selected detail UI에 `loop-worktree-detail`, `loop-detail-section`, `loop-detail-section-title`, `loop-review-grid`, `loop-review-item` 구조가 없어 focused web test 실패 확인
 - [x] Task 63 GREEN: selected worktree detail UI/CSS에 compact section wrapper와 responsive review grid를 추가해 focused web test 통과
 - [x] Task 63 PRIVACY: presentation classes와 CSS만 추가하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
-- [ ] 다음 slice: selected review command hint의 provenance를 raw-free로 설명할지 결정
+- [x] Task 64 DECISION: review command hint가 여러 command 사이에서 혼동되지 않도록 기존 command-center continuation command에서 온 provenance를 raw-free로 노출
+- [x] Task 64 RED: selected detail API/UI에 `review_packet_summary.command_hint.provenance`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 64 GREEN: selected worktree detail API/type/UI에 command provenance source/reason/no-write flags를 read-only로 노출
+- [x] Task 64 PRIVACY: provenance는 safe selected worktree metadata 출처만 설명하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
+- [ ] 다음 slice: selected continuation command와 review packet command hint의 차이를 raw-free로 설명할지 결정
 
 ### 판단 기준
 

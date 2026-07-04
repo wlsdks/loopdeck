@@ -117,6 +117,12 @@ describe("LoopsView", () => {
     expect(html).toContain("Review non-passing worktrees before merge");
     expect(html).toContain("required");
     expect(html).toContain("Copy review brief command");
+    expect(html).toContain("Command provenance");
+    expect(html).toContain("existing command-center continuation command");
+    expect(html).toContain(
+      "reuses safe selected worktree metadata without reading git or executing commands",
+    );
+    expect(html).toContain("No command writes or external calls");
     expect(html).toContain(
       "prompt-coach loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
     );
@@ -379,6 +385,14 @@ function loopWorktree(): LoopWorktreeResponse {
         label: "Copy review brief command",
         command:
           "prompt-coach loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
+        provenance: {
+          label: "Command provenance",
+          source: "existing command-center continuation command",
+          reason:
+            "reuses safe selected worktree metadata without reading git or executing commands",
+          writes_files: false,
+          external_calls: false,
+        },
       },
       missing_evidence_explanation: {
         label: "Missing evidence",

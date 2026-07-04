@@ -213,7 +213,11 @@ Implementation checkpoint:
   review packet area: a selected-detail wrapper, section cards, section titles,
   and a responsive review grid for readiness, brief rationale, evidence,
   checklist, and missing-evidence guidance.
+- Selected worktree detail now explains selected review command hint provenance,
+  showing that the hint reuses the existing command-center continuation command
+  from safe selected worktree metadata without reading git, executing commands,
+  writing files, or making external calls.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free explanation of command hint provenance, without adding transcript
-  content, prompt bodies, raw paths, git status reads, command execution, or
-  write tools.
+  raw-free distinction between selected continuation command and review packet
+  command hint, without adding transcript content, prompt bodies, raw paths, git
+  status reads, command execution, or write tools.

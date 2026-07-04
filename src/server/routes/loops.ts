@@ -221,6 +221,7 @@ export function registerLoopRoutes(
                 command_hint: {
                   label: "Copy review brief command",
                   command: reviewItem.continuation_command,
+                  provenance: commandHintProvenance(),
                 },
                 ...(reviewItem.merge_readiness.status === "missing_evidence"
                   ? {
@@ -535,6 +536,23 @@ function selectedBriefActionFor(selection: {
     reason:
       "uses the selected worktree/session/branch filters without auto-submitting",
     command: selectedBriefCommand(selection),
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function commandHintProvenance(): {
+  label: "Command provenance";
+  source: "existing command-center continuation command";
+  reason: "reuses safe selected worktree metadata without reading git or executing commands";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Command provenance",
+    source: "existing command-center continuation command",
+    reason:
+      "reuses safe selected worktree metadata without reading git or executing commands",
     writes_files: false,
     external_calls: false,
   };

@@ -889,6 +889,14 @@ describe("createServer P2 ingest boundary", () => {
             label: "Copy review brief command",
             command:
               "prompt-coach loop brief --worktree review-worktree --branch codex/agent-loop-memory-design",
+            provenance: {
+              label: "Command provenance",
+              source: "existing command-center continuation command",
+              reason:
+                "reuses safe selected worktree metadata without reading git or executing commands",
+              writes_files: false,
+              external_calls: false,
+            },
           },
         },
       },

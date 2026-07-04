@@ -2057,6 +2057,40 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.61: Selected Review Command Hint Provenance
+
+Decision:
+
+- Selected worktree detail should explain where the review command hint comes
+  from, because the UI now shows multiple continuation and review commands.
+- The provenance should be raw-free and deterministic: it is derived from the
+  existing command-center continuation command that was already computed from
+  safe selected worktree metadata.
+- The provenance must not imply that Loopdeck read git state, checked branch
+  freshness, executed the command, wrote files, or contacted external services.
+
+Add:
+
+- `review_packet_summary.command_hint.provenance` with:
+  - label: `Command provenance`
+  - source: `existing command-center continuation command`
+  - reason:
+    `reuses safe selected worktree metadata without reading git or executing commands`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering under the command hint
+- focused server/API/web tests proving the provenance is present
+
+Do not add:
+
+- command execution, git reads/writes, filesystem reads, branch freshness
+  checks, merge approval, checklist completion state, external model calls,
+  background scanning, or web write actions
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.
