@@ -243,8 +243,8 @@ Preview setup without writing files:
 pnpm prompt-coach setup --profile coach --register-mcp --dry-run
 ```
 
-Opt in to a Serena-like startup experience when you want the web workspace to
-open automatically beside Claude Code or Codex:
+Opt in to web workspace startup when you want the local workspace to open
+automatically beside Claude Code or Codex:
 
 ```sh
 pnpm prompt-coach setup --profile coach --register-mcp --open-web

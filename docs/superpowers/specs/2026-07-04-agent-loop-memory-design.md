@@ -442,7 +442,7 @@ Implementation can begin only when these are true:
 - The plan does not require package, CLI, GitHub repo, plugin, hook, MCP, or web UI rename.
 - Privacy invariants are testable in focused unit/integration tests.
 - Node 22 pnpm verification command is recorded.
-- `.serena/project.yml` and `.codex/` local changes remain out of unrelated commits.
+- `.codex/` local changes remain out of unrelated commits.
 
 If any item is false, update this spec before coding.
 

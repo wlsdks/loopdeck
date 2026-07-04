@@ -1513,4 +1513,4 @@ Before marking implementation complete:
 - No automatic prompt submission is added.
 - Existing prompt archive behavior remains unchanged.
 - `prompt-coach` command remains the public command.
-- PR does not stage `.serena/project.yml` or `.codex/`.
+- PR does not stage `.codex/`.

@@ -190,7 +190,7 @@ dry-run으로 변경 사항만 preview:
 pnpm prompt-coach setup --profile coach --register-mcp --dry-run
 ```
 
-Serena처럼 agent를 시작할 때 웹 workspace도 같이 열고 싶으면 명시적으로 opt-in합니다.
+agent를 시작할 때 웹 workspace도 같이 열고 싶으면 명시적으로 opt-in합니다.
 
 ```sh
 pnpm prompt-coach setup --profile coach --register-mcp --open-web

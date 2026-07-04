@@ -55,8 +55,8 @@ instead of replacing it and restores it on uninstall where possible. With
 `--register-mcp`, it also runs the detected `claude mcp add` or `codex mcp add`
 command so this active agent can use prompt-coach tools.
 
-If the user wants a Serena-like startup experience where the web workspace opens
-beside Claude Code or Codex, explain that this is opt-in and preview:
+If the user wants the web workspace to open beside Claude Code or Codex at
+agent startup, explain that this is opt-in and preview:
 
 ```bash
 prompt-coach setup --profile coach --register-mcp --open-web --dry-run
