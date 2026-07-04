@@ -25,6 +25,9 @@ The npm package intentionally includes:
 - public product and release docs under `docs/`
   - includes `docs/LEGAL_USAGE_GUIDE.md` so users can inspect the provider
     documentation boundary for agent-judge mode
+  - includes `docs/AGENT-HARNESS.md` and `docs/INSTRUCTION-FILES.md` so
+    installed plugin and CLI users can inspect the Codex/Claude Code harness
+    contract and instruction-file layering rules without cloning the repo
   - includes `docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md`
     so package-local README and plugin docs can link to the compatibility gate
   - includes `docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-issue-slices.md`

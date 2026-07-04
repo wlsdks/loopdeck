@@ -58,6 +58,23 @@
 - Loopdeck은 generic agent runtime이 아니라 Codex/Claude Code loop memory workbench로 좁힌다.
 - 기획서가 승인되기 전 package/CLI/repo/plugin rename과 hook/MCP/web 구현을 섞지 않는다.
 
+## 2026-07-05 Loopdeck Instruction And Harness Docs
+
+- [x] 현재 `AGENTS.md`/`CLAUDE.md`가 Loopdeck runtime 상태와 drift 난 부분 확인
+- [x] 2026년 7월 기준 Codex AGENTS.md/hooks/MCP/plugins/worktrees와 Claude Code plugin component 방향 재확인
+- [x] `AGENTS.md`를 짧은 cross-agent source of truth로 재작성
+- [x] `CLAUDE.md`를 Claude Code-specific adapter 문서로 축소
+- [x] `docs/INSTRUCTION-FILES.md` 추가
+- [x] `docs/AGENT-HARNESS.md` 추가
+- [x] 공개 harness docs를 npm package files와 package contents 문서에 포함
+
+### 판단 기준
+
+- AGENTS.md는 공통 규칙과 문서 라우팅을 담고, 긴 제품/기술 세부사항은 docs로 넘긴다.
+- CLAUDE.md는 AGENTS.md 복제본이 아니라 Claude Code hook/stdout/plugin/slash namespace 차이만 담는다.
+- Codex와 Claude Code 통합 문서는 최신 공식 surface를 기준으로 하되, Loopdeck이 generic runtime으로 확장되지 않도록 local-first harness boundary를 명시한다.
+- 새 문서는 설치 사용자에게도 필요한 공개 계약이므로 `package.json#files`와 packaging test에 포함한다.
+
 ## 2026-07-04 Codex Dogfood Hook Noise Fix
 
 - [x] 실제 user-level Codex hook 설정 확인: `UserPromptSubmit` hook은 하나만 설치되어 있고 project-level hook 중복은 없음
