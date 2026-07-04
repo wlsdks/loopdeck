@@ -3040,6 +3040,51 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.86: Manual Submission Boundary Note
+
+Decision:
+
+- Selected worktree detail should state that the operator submits the pasted
+  brief manually in Codex or Claude Code.
+- This is needed because final submission guidance should not be mistaken for
+  Loopdeck pressing Enter, clicking submit, detecting submission success, or
+  recording submitted state.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_manual_submission_boundary_note` with:
+  - label: `Manual submission boundary`
+  - submission:
+    `operator submits the pasted brief manually in Codex or Claude Code`
+  - not_automated:
+    `Loopdeck does not press enter, click submit, or record submitted state`
+  - reason:
+    `keeps final agent execution under operator control after paste`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after the paste destination boundary note
+- focused server/API/web tests proving the manual submission boundary note is
+  present
+
+Do not add:
+
+- submit automation, Enter key automation, button clicking, submission success
+  detection, submitted state persistence, active window detection, target-agent
+  UI inspection, target content validation, paste success verification,
+  clipboard target validation, paste automation, persisted destination state,
+  persisted target state, safety approval state, Codex or Claude Code UI
+  automation, hidden prompt submission, command execution, git reads/writes,
+  filesystem reads/writes, transcript import, persisted review state,
+  checklist completion state, background analysis, external model calls, memory
+  approval writes, merge decision writes, or new write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, target
+  content, active-window titles, pasted content, paste result state, submitted
+  state, or secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

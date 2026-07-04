@@ -240,6 +240,19 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "No paste destination boundary writes or external calls",
     );
+    expect(html).toContain("Manual submission boundary");
+    expect(html).toContain(
+      "operator submits the pasted brief manually in Codex or Claude Code",
+    );
+    expect(html).toContain(
+      "Loopdeck does not press enter, click submit, or record submitted state",
+    );
+    expect(html).toContain(
+      "keeps final agent execution under operator control after paste",
+    );
+    expect(html).toContain(
+      "No manual submission boundary writes or external calls",
+    );
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -739,6 +752,16 @@ function loopWorktree(): LoopWorktreeResponse {
         "Loopdeck does not verify active windows, target contents, or paste success",
       reason:
         "keeps destination verification outside Loopdeck automation before submission",
+      writes_files: false,
+      external_calls: false,
+    },
+    continuation_safety_manual_submission_boundary_note: {
+      label: "Manual submission boundary",
+      submission:
+        "operator submits the pasted brief manually in Codex or Claude Code",
+      not_automated:
+        "Loopdeck does not press enter, click submit, or record submitted state",
+      reason: "keeps final agent execution under operator control after paste",
       writes_files: false,
       external_calls: false,
     },

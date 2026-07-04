@@ -1006,6 +1006,17 @@ describe("createServer P2 ingest boundary", () => {
           writes_files: false,
           external_calls: false,
         },
+        continuation_safety_manual_submission_boundary_note: {
+          label: "Manual submission boundary",
+          submission:
+            "operator submits the pasted brief manually in Codex or Claude Code",
+          not_automated:
+            "Loopdeck does not press enter, click submit, or record submitted state",
+          reason:
+            "keeps final agent execution under operator control after paste",
+          writes_files: false,
+          external_calls: false,
+        },
         paste_destination: {
           label: "Paste destination",
           targets: ["Codex active request", "Claude Code active request"],

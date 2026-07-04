@@ -211,6 +211,8 @@ export function registerLoopRoutes(
                 continuationSafetyTargetAgentCheckNoteFor(),
               continuation_safety_paste_destination_boundary_note:
                 continuationSafetyPasteDestinationBoundaryNoteFor(),
+              continuation_safety_manual_submission_boundary_note:
+                continuationSafetyManualSubmissionBoundaryNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -914,6 +916,26 @@ function continuationSafetyPasteDestinationBoundaryNoteFor(): {
       "Loopdeck does not verify active windows, target contents, or paste success",
     reason:
       "keeps destination verification outside Loopdeck automation before submission",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyManualSubmissionBoundaryNoteFor(): {
+  label: "Manual submission boundary";
+  submission: "operator submits the pasted brief manually in Codex or Claude Code";
+  not_automated: "Loopdeck does not press enter, click submit, or record submitted state";
+  reason: "keeps final agent execution under operator control after paste";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Manual submission boundary",
+    submission:
+      "operator submits the pasted brief manually in Codex or Claude Code",
+    not_automated:
+      "Loopdeck does not press enter, click submit, or record submitted state",
+    reason: "keeps final agent execution under operator control after paste",
     writes_files: false,
     external_calls: false,
   };

@@ -300,9 +300,13 @@ Implementation checkpoint:
   verification boundary note, explaining that paste destination is a manual
   operator choice in Codex or Claude Code, without Loopdeck verifying active
   windows, target contents, or paste success.
+- Selected worktree detail now includes a raw-free manual submission boundary
+  note, explaining that the operator submits the pasted brief manually in Codex
+  or Claude Code, without Loopdeck pressing Enter, clicking submit, or
+  recording submitted state.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free manual submission boundary note, without adding transcript content,
-  prompt bodies, raw paths, target contents, active-window titles, pasted
-  content, paste result state, git status reads, command execution, persisted
-  review state, checklist completion state, memory approval writes, merge
-  writes, or external calls.
+  raw-free submission result non-persistence note, without adding transcript
+  content, prompt bodies, raw paths, target contents, active-window titles,
+  pasted content, paste result state, submitted state, git status reads,
+  command execution, persisted review state, checklist completion state, memory
+  approval writes, merge writes, or external calls.
