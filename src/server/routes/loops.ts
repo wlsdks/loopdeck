@@ -269,6 +269,8 @@ export function registerLoopRoutes(
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitCollectionResultNonPersistenceNoteFor(),
               continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note:
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitCollectionRetryBoundaryNoteFor(),
+              continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_outcome_non_persistence_note:
+                continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryOutcomeNonPersistenceNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1581,6 +1583,28 @@ function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmi
       "Loopdeck does not automatically retry post-submit collection commands or hidden recovery actions",
     reason:
       "keeps post-submit collection retry control local and operator-triggered",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryOutcomeNonPersistenceNoteFor(): {
+  label: "Post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence";
+  outcome_scope: "post-submit retry attempt and outcome stay outside Loopdeck until the next explicit loop snapshot";
+  not_stored: "Loopdeck does not detect, store, or sync post-submit retry success or failure state";
+  reason: "keeps post-submit retry evidence tied to explicit local snapshot recording";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label:
+      "Post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence",
+    outcome_scope:
+      "post-submit retry attempt and outcome stay outside Loopdeck until the next explicit loop snapshot",
+    not_stored:
+      "Loopdeck does not detect, store, or sync post-submit retry success or failure state",
+    reason:
+      "keeps post-submit retry evidence tied to explicit local snapshot recording",
     writes_files: false,
     external_calls: false,
   };
