@@ -185,6 +185,10 @@ Implementation checkpoint:
   derived from the existing command-center review packet checklist and filtered
   to the selected worktree action, without adding checklist completion state,
   write tools, or merge automation.
+- Selected worktree detail now includes a raw-free readiness summary for ready,
+  needs-review, and missing-evidence states, including single ready worktrees
+  where the top-level command center is not shown, while reusing the existing
+  command-center readiness/checklist/command derivation.
 - The next runtime slice should decide whether selected worktree detail needs a
-  read-only selected-worktree readiness summary for all readiness states,
-  without adding evidence refs, outcome summaries, or write tools.
+  raw-free selected-worktree evidence-count explanation, without adding evidence
+  refs, outcome summaries, or write tools.

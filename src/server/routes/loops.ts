@@ -10,7 +10,9 @@ import {
   proposeInstructionPatchFromMemory,
 } from "../../loop/instruction-patch.js";
 import {
+  createLoopdeckCommandCenter,
   createLoopdeckStatus,
+  type LoopdeckStatusActivityMergeReadiness,
   toLoopdeckStatusSnapshot,
 } from "../../loop/status.js";
 import { decideLoopMemoryCandidate } from "../../loop/memory-candidate.js";
@@ -134,20 +136,27 @@ export function registerLoopRoutes(
           })
           .items.at(0)
       : undefined;
+    const mergeDecisions = latestSnapshot
+      ? (options.storage.listLoopMergeDecisions?.({
+          limit: 3,
+          projectId: latestSnapshot.project_id,
+        }).items ?? [])
+      : [];
     const reviewStatus = latestSnapshot
       ? createLoopdeckStatus({
           snapshots: allSnapshots,
           compactBoundaries: boundaries,
           projectMemoryCount: 0,
-          mergeDecisions:
-            options.storage.listLoopMergeDecisions?.({
-              limit: 3,
-              projectId: latestSnapshot.project_id,
-            }).items ?? [],
+          mergeDecisions,
         })
       : undefined;
-    const reviewPacket = reviewStatus?.activity.command_center?.review_packet;
-    const reviewItem = reviewStatus?.activity.command_center?.review_items.find(
+    const commandCenter =
+      reviewStatus?.activity.command_center ??
+      (reviewStatus
+        ? createLoopdeckCommandCenter(reviewStatus.activity.worktrees, mergeDecisions)
+        : undefined);
+    const reviewPacket = commandCenter?.review_packet;
+    const reviewItem = commandCenter?.review_items.find(
       (item) => item.worktree === params.worktree,
     );
 
@@ -178,6 +187,9 @@ export function registerLoopRoutes(
                 worktree: reviewItem.worktree,
                 merge_readiness: reviewItem.merge_readiness.status,
                 worktree_action: reviewItem.merge_readiness.next_action,
+                readiness_summary: readinessSummaryFor(
+                  reviewItem.merge_readiness,
+                ),
                 reviewer_checklist_preview: reviewPacket.checklist.filter(
                   (item) =>
                     item.action === reviewItem.merge_readiness.next_action,
@@ -383,6 +395,43 @@ export function registerLoopRoutes(
       },
     };
   });
+}
+
+function readinessSummaryFor(
+  mergeReadiness: LoopdeckStatusActivityMergeReadiness,
+): {
+  label: "Readiness summary";
+  status: LoopdeckStatusActivityMergeReadiness["status"];
+  reason:
+    | "selected worktree has recorded evidence and passing outcome"
+    | "latest selected worktree outcome is not passing"
+    | "latest selected worktree outcome has no evidence refs";
+  next_action: LoopdeckStatusActivityMergeReadiness["next_action"];
+} {
+  if (mergeReadiness.status === "missing_evidence") {
+    return {
+      label: "Readiness summary",
+      status: mergeReadiness.status,
+      reason: "latest selected worktree outcome has no evidence refs",
+      next_action: mergeReadiness.next_action,
+    };
+  }
+
+  if (mergeReadiness.status === "needs_review") {
+    return {
+      label: "Readiness summary",
+      status: mergeReadiness.status,
+      reason: "latest selected worktree outcome is not passing",
+      next_action: mergeReadiness.next_action,
+    };
+  }
+
+  return {
+    label: "Readiness summary",
+    status: mergeReadiness.status,
+    reason: "selected worktree has recorded evidence and passing outcome",
+    next_action: mergeReadiness.next_action,
+  };
 }
 
 function requireLoopMemoryReadStorage(

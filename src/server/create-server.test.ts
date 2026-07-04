@@ -812,6 +812,12 @@ describe("createServer P2 ingest boundary", () => {
           worktree: "review-worktree",
           merge_readiness: "needs_review",
           worktree_action: "review outcome before merge",
+          readiness_summary: {
+            label: "Readiness summary",
+            status: "needs_review",
+            reason: "latest selected worktree outcome is not passing",
+            next_action: "review outcome before merge",
+          },
           reviewer_checklist_preview: [
             {
               label: "Review non-passing worktrees before merge",
@@ -884,6 +890,12 @@ describe("createServer P2 ingest boundary", () => {
           next_action: "record missing evidence before merge",
           merge_readiness: "missing_evidence",
           worktree_action: "record loop outcome evidence",
+          readiness_summary: {
+            label: "Readiness summary",
+            status: "missing_evidence",
+            reason: "latest selected worktree outcome has no evidence refs",
+            next_action: "record loop outcome evidence",
+          },
           reviewer_checklist_preview: [
             {
               label: "Record missing evidence before merge",
@@ -901,6 +913,58 @@ describe("createServer P2 ingest boundary", () => {
     });
     expect(serialized).not.toContain("Unsafe missing evidence summary");
     expect(serialized).not.toContain("Ready outcome should stay hidden");
+    expect(serialized).not.toContain("commit:ready");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-secret");
+  });
+
+  it("returns a raw-free readiness summary for ready selected worktrees", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_ready_selected",
+        worktree_label: "ready-worktree",
+        project_id: "proj_web",
+        outcome: {
+          status: "passed",
+          summary:
+            "Unsafe ready summary should stay hidden /Users/example/private sk-proj-secret",
+          evidence_refs: ["commit:ready"],
+        },
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/worktrees/ready-worktree",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const serialized = JSON.stringify(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        worktree: "ready-worktree",
+        review_packet_summary: {
+          status: "ready",
+          summary: "1 ready, 0 needs review, 0 missing evidence",
+          next_action: "compare ready evidence before merge",
+          merge_readiness: "ready",
+          worktree_action: "compare evidence before merge",
+          readiness_summary: {
+            label: "Readiness summary",
+            status: "ready",
+            reason: "selected worktree has recorded evidence and passing outcome",
+            next_action: "compare evidence before merge",
+          },
+        },
+      },
+    });
+    expect(serialized).not.toContain("Unsafe ready summary");
     expect(serialized).not.toContain("commit:ready");
     expect(serialized).not.toContain("/Users/example");
     expect(serialized).not.toContain("sk-proj-secret");

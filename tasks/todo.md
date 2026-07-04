@@ -245,7 +245,11 @@
 - [x] Task 55 RED: selected detail API/UI에 `reviewer_checklist_preview`가 없어 focused tests 실패 확인
 - [x] Task 55 GREEN: selected worktree detail API/type/UI에 required reviewer checklist preview를 read-only로 노출
 - [x] Task 55 PRIVACY: preview는 기존 checklist label/status/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
-- [ ] 다음 slice: selected worktree detail에 모든 readiness state용 read-only readiness summary를 추가할지 결정
+- [x] Task 56 DECISION: selected worktree detail은 ready/needs_review/missing_evidence 모두에 raw-free readiness summary를 노출하고 단일 ready worktree fallback도 허용
+- [x] Task 56 RED: selected detail API/UI에 `readiness_summary`가 없고 단일 ready worktree summary가 없어 focused tests 실패 확인
+- [x] Task 56 GREEN: selected worktree detail API/type/UI에 readiness summary를 추가하고 command-center가 없는 단일 ready worktree도 같은 summary를 노출
+- [x] Task 56 PRIVACY: summary는 safe status/reason/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
+- [ ] 다음 slice: selected worktree detail에 raw-free evidence-count explanation을 추가할지 결정
 
 ### 판단 기준
 

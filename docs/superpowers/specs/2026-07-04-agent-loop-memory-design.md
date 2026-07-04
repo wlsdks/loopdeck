@@ -1738,6 +1738,46 @@ Do not add:
 - hidden external model calls or background agent evaluation
 - package, plugin, slash command, hook, or MCP server-name rename
 
+### Slice 4.53: Selected Worktree Readiness Summary
+
+Decision:
+
+- Selected worktree detail should include a small `readiness_summary` for every
+  selected worktree merge-readiness state: `ready`, `needs_review`, and
+  `missing_evidence`.
+- The summary should be available even when there is only one ready worktree and
+  the top-level command center is not shown, because selected detail still needs
+  to explain why the local continuation/review action is safe.
+- The selected detail fallback should reuse the existing command-center
+  readiness/checklist/continuation-command derivation rather than creating a
+  second readiness rule.
+
+Add:
+
+- `review_packet_summary.readiness_summary` with:
+  - label: `Readiness summary`
+  - status: `ready` | `needs_review` | `missing_evidence`
+  - reason:
+    - `selected worktree has recorded evidence and passing outcome`
+    - `latest selected worktree outcome is not passing`
+    - `latest selected worktree outcome has no evidence refs`
+  - next_action: selected worktree readiness action
+- selected detail fallback that can build the same review packet summary for a
+  single ready worktree without exposing a top-level command center
+- web API typing and selected worktree detail rendering
+- focused server/API/web tests proving all readiness states remain raw-free
+
+Do not add:
+
+- evidence refs, evidence bodies, outcome summaries, prompt bodies, diffs,
+  transcript content, compact summaries, raw paths, or provider credentials
+- web or MCP write tools, command execution, merge actions, git writes,
+  checklist completion, acknowledgements, or approvals
+- a second merge-readiness/checklist/command derivation rule
+- merge/checkout/rebase/diff/conflict inspection
+- hidden external model calls or background agent evaluation
+- package, plugin, slash command, hook, or MCP server-name rename
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

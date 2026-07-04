@@ -224,7 +224,12 @@ export function summarizeLoopActivity(
       : {}),
     worktrees,
     ...(needsReview
-      ? { command_center: createCommandCenter(worktrees, mergeDecisions) }
+      ? {
+          command_center: createLoopdeckCommandCenter(
+            worktrees,
+            mergeDecisions,
+          ),
+        }
       : {}),
   };
 }
@@ -242,7 +247,7 @@ function toRecentDecision(
   };
 }
 
-function createCommandCenter(
+export function createLoopdeckCommandCenter(
   worktrees: LoopdeckStatusActivityWorktree[],
   mergeDecisions: readonly LoopdeckStatusActivityRecentDecision[],
 ): LoopdeckStatusActivityCommandCenter {

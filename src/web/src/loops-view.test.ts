@@ -76,6 +76,8 @@ describe("LoopsView", () => {
     expect(html).toContain("Review packet summary");
     expect(html).toContain("1 ready, 1 needs review, 0 missing evidence");
     expect(html).toContain("review non-passing worktrees before merge");
+    expect(html).toContain("Readiness summary");
+    expect(html).toContain("latest selected worktree outcome is not passing");
     expect(html).toContain("review outcome before merge");
     expect(html).toContain("Reviewer checklist preview");
     expect(html).toContain("Review non-passing worktrees before merge");
@@ -288,6 +290,12 @@ function loopWorktree(): LoopWorktreeResponse {
       worktree: "agent-loop-worktree",
       merge_readiness: "needs_review",
       worktree_action: "review outcome before merge",
+      readiness_summary: {
+        label: "Readiness summary",
+        status: "needs_review",
+        reason: "latest selected worktree outcome is not passing",
+        next_action: "review outcome before merge",
+      },
       reviewer_checklist_preview: [
         {
           label: "Review non-passing worktrees before merge",

@@ -253,6 +253,18 @@ export type LoopWorktreeResponse = {
       | "compare evidence before merge"
       | "review outcome before merge"
       | "record loop outcome evidence";
+    readiness_summary: {
+      label: "Readiness summary";
+      status: "ready" | "needs_review" | "missing_evidence";
+      reason:
+        | "selected worktree has recorded evidence and passing outcome"
+        | "latest selected worktree outcome is not passing"
+        | "latest selected worktree outcome has no evidence refs";
+      next_action:
+        | "compare evidence before merge"
+        | "review outcome before merge"
+        | "record loop outcome evidence";
+    };
     reviewer_checklist_preview: Array<{
       label:
         | "Compare ready evidence before merge"

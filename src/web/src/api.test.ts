@@ -250,6 +250,12 @@ describe("web api export client", () => {
               worktree: "agent-loop-worktree",
               merge_readiness: "needs_review",
               worktree_action: "review outcome before merge",
+              readiness_summary: {
+                label: "Readiness summary",
+                status: "needs_review",
+                reason: "latest selected worktree outcome is not passing",
+                next_action: "review outcome before merge",
+              },
               reviewer_checklist_preview: [
                 {
                   label: "Review non-passing worktrees before merge",
@@ -311,6 +317,12 @@ describe("web api export client", () => {
         status: "needs_review",
         summary: "1 ready, 1 needs review, 0 missing evidence",
         worktree: "agent-loop-worktree",
+        readiness_summary: {
+          label: "Readiness summary",
+          status: "needs_review",
+          reason: "latest selected worktree outcome is not passing",
+          next_action: "review outcome before merge",
+        },
         reviewer_checklist_preview: [
           {
             label: "Review non-passing worktrees before merge",
