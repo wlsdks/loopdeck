@@ -242,4 +242,36 @@ describe("source hygiene", () => {
       "continuation_safety_submission_result_non_persistence_note",
     );
   });
+
+  it("keeps post-submission collection freshness detail formatting outside LoopsView", () => {
+    const loopsView = readFileSync("src/web/src/loops-view.tsx", "utf8");
+
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_submission_collection_reminder_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_collection_result_non_persistence_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_collection_retry_boundary_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_retry_outcome_non_persistence_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_collection_evidence_freshness_boundary_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_freshness_result_non_persistence_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_freshness_uncertainty_collection_reminder",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_pre_merge_freshness_advisory",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_pre_memory_approval_freshness_advisory",
+    );
+  });
 });
