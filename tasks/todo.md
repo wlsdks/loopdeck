@@ -745,7 +745,11 @@
 - [x] Task 161 RED: raw `loop-review-item` markup count가 2개라 source hygiene test의 0개 이하 기준 실패 확인
 - [x] Task 161 GREEN: collection uncertainty reminder, paste destination markup을 `LoopReviewItem`으로 전환해 raw markup count를 0개로 감소
 - [x] Task 161 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
-- [ ] 다음 slice: selected detail panel의 long inline `LoopReviewItem` props를 작은 formatter/helper로 분리할지 결정
+- [x] Task 162 DECISION: selected detail panel의 long inline `LoopReviewItem` props는 view 가독성과 후속 안전 항목 추가 비용을 줄이기 위해 묶음별 helper 컴포넌트로 분리
+- [x] Task 162 RED: renewed-memory-approval post-submit retry renewed-memory-approval collection 3개 field가 `LoopsView`에 직접 남아 있어 source hygiene test 실패 확인
+- [x] Task 162 GREEN: 해당 3개 collection reminder/result/uncertainty item을 `LoopWorktreeRenewedMemoryApprovalItems`로 분리하고 `LoopsView`는 helper 호출만 유지
+- [x] Task 162 PRIVACY: UI helper extraction만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [ ] 다음 slice: post-submit collection pre-boundary long inline `LoopReviewItem` props를 helper로 추가 분리할지 결정
 
 ### 판단 기준
 

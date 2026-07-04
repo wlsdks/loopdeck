@@ -52,4 +52,18 @@ describe("source hygiene", () => {
 
     expect(rawReviewItemCount).toBeLessThanOrEqual(0);
   });
+
+  it("keeps renewed memory approval collection detail formatting outside LoopsView", () => {
+    const loopsView = readFileSync("src/web/src/loops-view.tsx", "utf8");
+
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_reminder",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_result_non_persistence_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_uncertainty_reminder",
+    );
+  });
 });
