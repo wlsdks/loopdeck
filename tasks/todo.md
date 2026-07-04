@@ -244,6 +244,18 @@
 - hook, web, rename 작업은 이 커밋에 섞지 않는다.
 - 다음 slice도 RED-GREEN 단위로 storage integration부터 진행한다.
 
+## 2026-07-05 Dependency Security Alerts
+
+- [x] RED: GitHub Dependabot alerts와 `corepack pnpm audit --json`에서 `vite`, `esbuild`, `fast-uri` 취약점 5건 확인
+- [x] GREEN: `fastify`를 5.9.0으로 올려 transitive `fast-uri`를 3.1.3으로 갱신
+- [x] GREEN: `vite`를 8.1.3으로 올리고 `esbuild` 0.28.1을 명시 devDependency로 고정해 Vite peer가 patched esbuild를 사용하게 함
+- [x] VERIFY: `corepack pnpm audit --json` 결과 vulnerabilities 0건 확인
+
+### 판단 기준
+
+- 이번 slice는 default branch 보안 알림 제거가 목적이며 제품/runtime id rename, UI 변경, hook/MCP 동작 변경을 포함하지 않는다.
+- `vite`/`esbuild` advisory는 dev-server 계열이지만 local-first developer tool 신뢰성에 직접 영향을 주므로 full gate와 CI로 검증한다.
+
 ## 2026-07-04 Hook Loop Snapshot Collection Slice
 
 - [x] Task 1 RED: Claude Code/Codex `Stop` hook이 prompt ingest route로 가지 않고 local loop snapshot을 생성해야 한다는 wrapper 테스트 작성
