@@ -5031,6 +5031,81 @@ Do not add:
   merge decision state, or secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.119: Post-Memory-Approval Retry Renewed-Memory-Approval Post-Submit Retry Pre-Memory-Approval Freshness Advisory
+
+Decision:
+
+- Selected worktree detail should advise the operator to review post-submit
+  retry freshness uncertainty before approving loop memory again.
+- This is needed because renewed memory approval must remain separate from
+  post-submit retry freshness uncertainty review. Loopdeck should not imply that
+  this advisory approves memory or verifies freshness.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_pre_memory_approval_freshness_advisory`
+  with:
+  - label:
+    `Post-memory-approval retry renewed-memory-approval post-submit retry pre-memory-approval freshness advisory`
+  - advisory:
+    `review post-submit retry freshness uncertainty before approving loop memory again`
+  - not_decision:
+    `Loopdeck does not approve memory or verify post-submit retry freshness from this advisory`
+  - reason:
+    `keeps renewed memory approval separate from post-submit retry freshness uncertainty review`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after post-submit retry freshness uncertainty collection
+  reminder and before paste destination guidance
+- focused server/API/web tests proving it is present
+
+Do not add:
+
+- submission approval, submission state persistence, submitted state
+  synchronization, submit automation, Enter key automation, button clicking,
+  agent response monitoring, agent response persistence, automatic collection,
+  collection command execution, automatic renewed approval collection, renewed
+  memory approval state, memory approval writes, memory approval state, approval
+  result persistence, approval state synchronization, hidden verification, git
+  status reads, transcript inspection, agent UI monitoring, retry automation,
+  retry command execution, retry result persistence, post-submit retry result
+  persistence, post-submit retry result state, retry success/failure state
+  persistence, retry outcome detection, post-submit retry freshness result
+  persistence, post-submit retry freshness result state, post-submit retry
+  freshness uncertainty collection result state, post-submit retry renewed
+  memory approval state, post-approval retry result persistence, freshness
+  result persistence, retry freshness result persistence, post-approval retry
+  freshness result persistence, collection result persistence, post-submit
+  collection result persistence, renewed memory approval collection result
+  persistence, paste target approval, paste target state, paste state
+  persistence, paste state synchronization, paste success verification, active
+  window detection, target-agent UI inspection, target content validation,
+  clipboard target validation, paste automation, persisted destination state,
+  persisted target state, handoff approval, handoff approval state, handoff
+  state persistence, handoff state synchronization, merge decision writes, merge
+  approval, merge state persistence, merge state synchronization, merge
+  readiness recalculation, background collection, hidden recovery actions,
+  submission event hooks, safety approval state, Codex or Claude Code UI
+  automation, hidden prompt submission, command execution, filesystem
+  reads/writes, persisted review state, checklist completion state, background
+  analysis, external model calls, or new write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, target
+  content, active-window titles, pasted content, paste result state, submitted
+  state, agent response content, collection result state, post-submit
+  collection result state, post-submit retry result state, retry success/failure
+  state, post-submit retry freshness result state, post-submit retry freshness
+  uncertainty collection result state, post-submit retry renewed memory approval
+  state, post-approval collection result state, renewed memory approval
+  collection result state, retry result state, post-approval retry result state,
+  retry outcome state, freshness result state, retry freshness result state,
+  post-approval retry freshness result state, memory approval state, renewed
+  memory approval state, approval result state, merge decision state, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

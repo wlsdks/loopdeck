@@ -447,9 +447,14 @@ Implementation checkpoint:
   reminder, explaining that the operator collects a new explicit loop snapshot
   when post-submit retry freshness is uncertain, without Loopdeck verifying
   freshness or starting collection automatically.
+- Selected worktree detail now includes a raw-free post-memory-approval retry
+  renewed-memory-approval post-submit retry pre-memory-approval freshness
+  advisory, explaining that the operator reviews post-submit retry freshness
+  uncertainty before approving loop memory again, without Loopdeck approving
+  memory or verifying freshness from the advisory.
 - The next runtime slice should decide whether selected worktree detail needs a
   raw-free post-memory-approval retry renewed-memory-approval post-submit
-  retry pre-memory-approval freshness advisory, without
+  retry renewed-memory-approval collection reminder, without
   adding transcript content, prompt bodies, raw paths, target contents,
   active-window titles, pasted content, paste result state, submitted state,
   agent response content, collection result state, post-approval collection
@@ -457,9 +462,10 @@ Implementation checkpoint:
   state, post-submit retry result state, post-approval retry result state,
   retry outcome state, post-submit retry freshness result state, freshness
   uncertainty collection result state, post-submit retry freshness uncertainty
-  collection result state, freshness result state, retry freshness result state,
-  post-approval retry freshness result state, approval result state, renewed
-  memory approval state, freshness
+  collection result state, post-submit retry renewed memory approval state,
+  freshness result state, retry freshness result state, post-approval retry
+  freshness result state, approval result state, renewed memory approval state,
+  freshness
   verification, automatic collection, collection command execution, retry
   automation, git status reads, command execution, persisted review state,
   checklist completion state, paste target state, handoff approval state,

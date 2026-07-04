@@ -823,6 +823,19 @@ describe("web api export client", () => {
                 writes_files: false,
                 external_calls: false,
               },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_pre_memory_approval_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry pre-memory-approval freshness advisory",
+                advisory:
+                  "review post-submit retry freshness uncertainty before approving loop memory again",
+                not_decision:
+                  "Loopdeck does not approve memory or verify post-submit retry freshness from this advisory",
+                reason:
+                  "keeps renewed memory approval separate from post-submit retry freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
             paste_destination: {
               label: "Paste destination",
               targets: ["Codex active request", "Claude Code active request"],
@@ -1592,6 +1605,19 @@ describe("web api export client", () => {
           "Loopdeck does not verify post-submit retry freshness or start collection automatically",
         reason:
           "keeps post-submit retry freshness uncertainty resolution operator-triggered and local-first",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_pre_memory_approval_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry pre-memory-approval freshness advisory",
+        advisory:
+          "review post-submit retry freshness uncertainty before approving loop memory again",
+        not_decision:
+          "Loopdeck does not approve memory or verify post-submit retry freshness from this advisory",
+        reason:
+          "keeps renewed memory approval separate from post-submit retry freshness uncertainty review",
         writes_files: false,
         external_calls: false,
       },

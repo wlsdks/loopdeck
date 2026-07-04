@@ -277,6 +277,8 @@ export function registerLoopRoutes(
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryFreshnessResultNonPersistenceNoteFor(),
               continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_uncertainty_collection_reminder:
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryFreshnessUncertaintyCollectionReminderFor(),
+              continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_pre_memory_approval_freshness_advisory:
+                continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryPreMemoryApprovalFreshnessAdvisoryFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1677,6 +1679,28 @@ function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmi
       "Loopdeck does not verify post-submit retry freshness or start collection automatically",
     reason:
       "keeps post-submit retry freshness uncertainty resolution operator-triggered and local-first",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryPreMemoryApprovalFreshnessAdvisoryFor(): {
+  label: "Post-memory-approval retry renewed-memory-approval post-submit retry pre-memory-approval freshness advisory";
+  advisory: "review post-submit retry freshness uncertainty before approving loop memory again";
+  not_decision: "Loopdeck does not approve memory or verify post-submit retry freshness from this advisory";
+  reason: "keeps renewed memory approval separate from post-submit retry freshness uncertainty review";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label:
+      "Post-memory-approval retry renewed-memory-approval post-submit retry pre-memory-approval freshness advisory",
+    advisory:
+      "review post-submit retry freshness uncertainty before approving loop memory again",
+    not_decision:
+      "Loopdeck does not approve memory or verify post-submit retry freshness from this advisory",
+    reason:
+      "keeps renewed memory approval separate from post-submit retry freshness uncertainty review",
     writes_files: false,
     external_calls: false,
   };
