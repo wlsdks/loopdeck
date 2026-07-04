@@ -3299,6 +3299,8 @@
 - [x] 다음 구현 후보: MCP instructions/docs에서 `apply_clarifications`를 final draft presentation step으로 명확화.
 - [x] 다음 구현 후보: 반복 가능한 `smoke:mcp-coach-loop` harness 추가.
 - [ ] 다음 검증 후보: 실제 Claude Code 또는 Codex interactive session에서 native ask UI handoff 확인.
+- [x] Reuse loop in-app Browser audit 실행: 검색, 상세, 저장은 통과하고 copy 실패 friction 확인.
+- [ ] 다음 구현 후보: prompt detail copy 실패 시 local-only manual-copy fallback 제공.
 
 ### Track E — UI 패트롤 셋업
 

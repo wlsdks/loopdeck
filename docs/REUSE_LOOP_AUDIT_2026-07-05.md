@@ -1,0 +1,122 @@
+# Reuse Loop Audit - 2026-07-05
+
+## Purpose
+
+Verify whether a user can find a strong stored prompt in the web UI, reuse its
+improved draft, and continue work without leaving the local-first boundary.
+This audit covers the second user-flow pass from `docs/NEXT_BACKLOG.md`.
+
+## Environment
+
+- Repository: `/Users/jinan/side-project/prompt-memory`
+- Branch: `codex/reuse-loop-audit`
+- Browser path: Codex in-app Browser
+- Local server: temporary archive at `http://127.0.0.1:60324`
+- Fixture data:
+  - One high-score Claude Code prompt about the `apply_clarifications` flow.
+  - One weak Codex prompt containing a fake API token and temp path to verify
+    redaction.
+
+The in-app Browser `domSnapshot()` API failed on this page with an unavailable
+snapshot method, so the audit used the Browser runtime's read-only page
+evaluation plus screenshot evidence.
+
+## Path Tested
+
+1. Build and run the local prompt-coach web server with a temporary data dir.
+2. Ingest a high-score stored prompt and a weak redaction fixture.
+3. Open the prompt archive in the Codex in-app Browser.
+4. Search for `apply_clarifications`.
+5. Open the remaining high-score prompt detail page.
+6. Inspect available reuse actions.
+7. Try `Copy draft`.
+8. Try `Save draft`.
+
+## Evidence
+
+Archive/search:
+
+- The archive loaded with two prompts.
+- The weak prompt rendered `[REDACTED:api_key]` and `[REDACTED:path]` instead
+  of the fake secret/path.
+- Searching for `apply_clarifications` narrowed the list to the high-score
+  Claude Code prompt.
+
+Detail/reuse:
+
+- The detail page showed score `90`, band `excellent`, and the improved draft.
+- The page exposed:
+  - `Copy draft`
+  - `Save draft`
+  - `Copy saved draft`
+  - `Copy prompt`
+  - MCP follow-up commands for `score_prompt`, `improve_prompt`, and
+    `prepare_agent_rewrite`
+- `Save draft` succeeded and rendered a saved draft row.
+
+Copy behavior:
+
+```json
+{
+  "copiedDraftLength": 0,
+  "buttonStateChanged": false,
+  "error": "Could not copy the improvement draft."
+}
+```
+
+After increasing the clipboard bridge wait from 250 ms to 1000 ms, the same
+in-app Browser copy path still failed. This suggests the issue is not just a
+slow clipboard promise; the in-app Browser surface may reject page clipboard
+writes or not expose them to the Browser automation clipboard.
+
+## Findings
+
+### P1 - Reuse copy can fail in the Codex in-app Browser
+
+What the user sees: clicking `Copy draft` leaves the clipboard empty and shows
+`Could not copy the improvement draft.`
+
+Why it matters: the core reuse loop depends on copying an approval-ready draft
+back into Claude Code or Codex. Saving still works, but copy failure makes the
+workflow feel broken at the handoff point.
+
+Evidence:
+
+- Browser clipboard text stayed empty after clicking `Copy draft`.
+- Page body contained `Could not copy the improvement draft.`
+- Console warnings/errors were empty, so the failure is silent from the
+  browser console.
+
+Recommended fix:
+
+- Add an in-page manual-copy fallback when clipboard writes fail. For example,
+  keep the draft visibly selected/focused or show a small fallback panel with
+  the draft text and a clear "select and copy manually" action.
+- Preserve privacy/local-first behavior: do not auto-submit, do not externalize
+  draft text, and do not store extra data just to recover from copy failure.
+
+### P2 - Search and saved-draft reuse are usable but not yet a full fork flow
+
+What worked: search found the reusable prompt, detail showed the improved
+draft, and `Save draft` persisted it locally.
+
+What is missing: there is no explicit "fork into draft" action. The current
+mental model is "copy or save the current improved draft." That is acceptable
+for the MVP, but a future Loopdeck-oriented reuse workflow could make
+fork/edit/resubmit more explicit.
+
+## Decisions
+
+- Keep the web UI copy workflow local and manual. Do not auto-submit copied
+  prompts into any agent.
+- Treat `Save draft` as a persistence fallback, not a replacement for copy.
+- Keep the 1000 ms clipboard bridge timeout. It is a safe improvement for slow
+  browser bridges even though it does not fully solve the in-app Browser case.
+
+## Recommended Next Slices
+
+1. Add a TDD UI fallback for copy failure on prompt improvement drafts and
+   saved drafts.
+2. Extend the browser E2E or a focused smoke to cover copy failure fallback
+   without requiring real clipboard permissions.
+3. Re-run this audit after the fallback lands, using the Codex in-app Browser.
