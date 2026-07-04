@@ -221,6 +221,8 @@ export function registerLoopRoutes(
                 continuationSafetyCollectionResultNonPersistenceNoteFor(),
               continuation_safety_collection_retry_boundary_note:
                 continuationSafetyCollectionRetryBoundaryNoteFor(),
+              continuation_safety_retry_outcome_non_persistence_note:
+                continuationSafetyRetryOutcomeNonPersistenceNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1026,6 +1028,26 @@ function continuationSafetyCollectionRetryBoundaryNoteFor(): {
       "Loopdeck does not automatically retry collection commands or hidden recovery actions",
     reason:
       "keeps retry control local and operator-triggered after collection uncertainty",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyRetryOutcomeNonPersistenceNoteFor(): {
+  label: "Retry outcome non-persistence";
+  outcome_scope: "retry attempt and outcome stay outside Loopdeck until the next explicit loop snapshot";
+  not_stored: "Loopdeck does not detect, store, or sync retry success or failure state";
+  reason: "keeps retry evidence tied to explicit local snapshot recording";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Retry outcome non-persistence",
+    outcome_scope:
+      "retry attempt and outcome stay outside Loopdeck until the next explicit loop snapshot",
+    not_stored:
+      "Loopdeck does not detect, store, or sync retry success or failure state",
+    reason: "keeps retry evidence tied to explicit local snapshot recording",
     writes_files: false,
     external_calls: false,
   };

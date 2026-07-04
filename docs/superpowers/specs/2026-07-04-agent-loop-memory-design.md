@@ -3278,6 +3278,57 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.91: Retry Outcome Non-Persistence Note
+
+Decision:
+
+- Selected worktree detail should state that retry attempt and retry outcome
+  state stay outside Loopdeck until the next explicit loop snapshot.
+- This is needed because manual collection retry guidance should not be mistaken
+  for retry success/failure detection, retry outcome persistence, or retry state
+  synchronization.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_retry_outcome_non_persistence_note` with:
+  - label: `Retry outcome non-persistence`
+  - outcome_scope:
+    `retry attempt and outcome stay outside Loopdeck until the next explicit loop snapshot`
+  - not_stored:
+    `Loopdeck does not detect, store, or sync retry success or failure state`
+  - reason:
+    `keeps retry evidence tied to explicit local snapshot recording`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after the collection retry boundary note
+- focused server/API/web tests proving the retry outcome non-persistence note is
+  present
+
+Do not add:
+
+- retry outcome persistence, retry success/failure detection, retry state
+  synchronization, retry automation, automatic collection retry, hidden recovery
+  actions, collection command execution, collection result state persistence,
+  collection result detection, background collection, automatic collection,
+  transcript watching, agent UI monitoring, submission event hooks, submission
+  result detection, submitted state persistence, submit automation, Enter key
+  automation, button clicking, active window detection, target-agent UI
+  inspection, target content validation, paste success verification, clipboard
+  target validation, paste automation, persisted destination state, persisted
+  target state, safety approval state, Codex or Claude Code UI automation,
+  hidden prompt submission, command execution, git reads/writes, filesystem
+  reads/writes, transcript import, persisted review state, checklist completion
+  state, background analysis, external model calls, memory approval writes,
+  merge decision writes, or new write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, target
+  content, active-window titles, pasted content, paste result state, submitted
+  state, agent response content, collection result state, retry result state, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

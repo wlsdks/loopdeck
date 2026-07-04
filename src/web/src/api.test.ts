@@ -475,6 +475,17 @@ describe("web api export client", () => {
               writes_files: false,
               external_calls: false,
             },
+            continuation_safety_retry_outcome_non_persistence_note: {
+              label: "Retry outcome non-persistence",
+              outcome_scope:
+                "retry attempt and outcome stay outside Loopdeck until the next explicit loop snapshot",
+              not_stored:
+                "Loopdeck does not detect, store, or sync retry success or failure state",
+              reason:
+                "keeps retry evidence tied to explicit local snapshot recording",
+              writes_files: false,
+              external_calls: false,
+            },
             paste_destination: {
               label: "Paste destination",
               targets: ["Codex active request", "Claude Code active request"],
@@ -906,6 +917,16 @@ describe("web api export client", () => {
           "Loopdeck does not automatically retry collection commands or hidden recovery actions",
         reason:
           "keeps retry control local and operator-triggered after collection uncertainty",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_retry_outcome_non_persistence_note: {
+        label: "Retry outcome non-persistence",
+        outcome_scope:
+          "retry attempt and outcome stay outside Loopdeck until the next explicit loop snapshot",
+        not_stored:
+          "Loopdeck does not detect, store, or sync retry success or failure state",
+        reason: "keeps retry evidence tied to explicit local snapshot recording",
         writes_files: false,
         external_calls: false,
       },

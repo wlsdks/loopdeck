@@ -432,6 +432,14 @@ export type LoopWorktreeResponse = {
     writes_files: false;
     external_calls: false;
   };
+  continuation_safety_retry_outcome_non_persistence_note?: {
+    label: "Retry outcome non-persistence";
+    outcome_scope: "retry attempt and outcome stay outside Loopdeck until the next explicit loop snapshot";
+    not_stored: "Loopdeck does not detect, store, or sync retry success or failure state";
+    reason: "keeps retry evidence tied to explicit local snapshot recording";
+    writes_files: false;
+    external_calls: false;
+  };
   paste_destination?: {
     label: "Paste destination";
     targets: ["Codex active request", "Claude Code active request"];
