@@ -381,9 +381,14 @@ Implementation checkpoint:
   renewed-memory-approval collection reminder, explaining that the operator
   collects a new explicit loop snapshot after approving loop memory again,
   without Loopdeck starting collection from renewed approval state changes.
+- Selected worktree detail now includes a raw-free post-memory-approval retry
+  renewed-memory-approval collection result non-persistence note, explaining
+  that renewed-memory-approval collection result state stays outside Loopdeck
+  until the next explicit loop snapshot, without Loopdeck detecting, storing,
+  or syncing that result state.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free post-memory-approval retry renewed-memory-approval collection result
-  non-persistence note, without
+  raw-free post-memory-approval retry renewed-memory-approval collection
+  uncertainty reminder, without
   adding transcript content, prompt bodies, raw paths, target contents,
   active-window titles, pasted content, paste result state, submitted state,
   agent response content, collection result state, post-approval collection

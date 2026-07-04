@@ -251,6 +251,8 @@ export function registerLoopRoutes(
                 continuationSafetyPostMemoryApprovalRetryPreMemoryApprovalFreshnessAdvisoryFor(),
               continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_reminder:
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalCollectionReminderFor(),
+              continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_result_non_persistence_note:
+                continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalCollectionResultNonPersistenceNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1365,6 +1367,28 @@ function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalCollectio
       "Loopdeck does not start collection from renewed memory approval or approval state changes",
     reason:
       "keeps renewed-memory-approval collection operator-triggered and local-first",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalCollectionResultNonPersistenceNoteFor(): {
+  label: "Post-memory-approval retry renewed-memory-approval collection result non-persistence";
+  result_scope: "renewed-memory-approval collection result stays outside Loopdeck until the next explicit loop snapshot";
+  not_stored: "Loopdeck does not detect, store, or sync renewed-memory-approval collection result state";
+  reason: "keeps renewed-memory-approval collection evidence tied to explicit local snapshot recording";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label:
+      "Post-memory-approval retry renewed-memory-approval collection result non-persistence",
+    result_scope:
+      "renewed-memory-approval collection result stays outside Loopdeck until the next explicit loop snapshot",
+    not_stored:
+      "Loopdeck does not detect, store, or sync renewed-memory-approval collection result state",
+    reason:
+      "keeps renewed-memory-approval collection evidence tied to explicit local snapshot recording",
     writes_files: false,
     external_calls: false,
   };

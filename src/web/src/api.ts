@@ -552,6 +552,14 @@ export type LoopWorktreeResponse = {
     writes_files: false;
     external_calls: false;
   };
+  continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_result_non_persistence_note?: {
+    label: "Post-memory-approval retry renewed-memory-approval collection result non-persistence";
+    result_scope: "renewed-memory-approval collection result stays outside Loopdeck until the next explicit loop snapshot";
+    not_stored: "Loopdeck does not detect, store, or sync renewed-memory-approval collection result state";
+    reason: "keeps renewed-memory-approval collection evidence tied to explicit local snapshot recording";
+    writes_files: false;
+    external_calls: false;
+  };
   paste_destination?: {
     label: "Paste destination";
     targets: ["Codex active request", "Claude Code active request"];
