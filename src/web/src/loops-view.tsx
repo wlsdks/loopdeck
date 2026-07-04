@@ -1603,69 +1603,37 @@ export function LoopsView({
                   </div>
                 )}
                 {worktreeDetail.handoff_checklist && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {worktreeDetail.handoff_checklist.label}
-                    </p>
-                    {worktreeDetail.handoff_checklist.steps.map((step) => (
-                      <p className="loops-status-line" key={step}>
-                        {step}
-                      </p>
-                    ))}
-                    <p className="loops-status-line">
-                      {worktreeDetail.handoff_checklist.reason}
-                    </p>
-                    <p className="loops-status-line">
-                      No handoff checklist writes or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No handoff checklist writes or external calls"
+                    lines={[
+                      worktreeDetail.handoff_checklist.label,
+                      ...worktreeDetail.handoff_checklist.steps,
+                      worktreeDetail.handoff_checklist.reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.post_handoff_reminder && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {worktreeDetail.post_handoff_reminder.label}
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.post_handoff_reminder.collect_next}
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail.post_handoff_reminder
-                          .not_memory_approval
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.post_handoff_reminder.not_merge}
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.post_handoff_reminder.reason}
-                    </p>
-                    <p className="loops-status-line">
-                      No post-handoff writes or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No post-handoff writes or external calls"
+                    lines={[
+                      worktreeDetail.post_handoff_reminder.label,
+                      worktreeDetail.post_handoff_reminder.collect_next,
+                      worktreeDetail.post_handoff_reminder.not_memory_approval,
+                      worktreeDetail.post_handoff_reminder.not_merge,
+                      worktreeDetail.post_handoff_reminder.reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.source_of_truth_note && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {worktreeDetail.source_of_truth_note.label}
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.source_of_truth_note.local_memory_input}
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail.source_of_truth_note
-                          .not_transcript_import
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.source_of_truth_note.reason}
-                    </p>
-                    <p className="loops-status-line">
-                      No transcript storage, file writes, or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No transcript storage, file writes, or external calls"
+                    lines={[
+                      worktreeDetail.source_of_truth_note.label,
+                      worktreeDetail.source_of_truth_note.local_memory_input,
+                      worktreeDetail.source_of_truth_note.not_transcript_import,
+                      worktreeDetail.source_of_truth_note.reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.privacy_boundary_note && (
                   <div className="loop-review-item">
