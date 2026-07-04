@@ -2091,6 +2091,44 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.62: Selected vs Review Command Distinction
+
+Decision:
+
+- Selected worktree detail should distinguish the selected continuation command
+  from the review packet command hint. Operators may see both commands in the
+  same panel, and they can legitimately differ when session or branch filters
+  are active.
+- The distinction should be raw-free and explanatory only. It should not choose
+  one command, execute either command, check git state, or imply merge
+  readiness.
+
+Add:
+
+- top-level selected worktree detail `command_distinction` with:
+  - label: `Command distinction`
+  - selected_command_role:
+    `continue the selected worktree/session/branch filters`
+  - review_command_role:
+    `copy the review packet command-center hint for merge review`
+  - reason:
+    `selected continuation and review packet commands can differ when session or branch filters are active`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering near selected brief
+  action
+- focused server/API/web tests proving the distinction is present
+
+Do not add:
+
+- command execution, git reads/writes, filesystem reads, branch freshness
+  checks, merge approval, automatic command selection, checklist completion
+  state, external model calls, background scanning, or web write actions
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

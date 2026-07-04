@@ -850,6 +850,17 @@ describe("createServer P2 ingest boundary", () => {
           writes_files: false,
           external_calls: false,
         },
+        command_distinction: {
+          label: "Command distinction",
+          selected_command_role:
+            "continue the selected worktree/session/branch filters",
+          review_command_role:
+            "copy the review packet command-center hint for merge review",
+          reason:
+            "selected continuation and review packet commands can differ when session or branch filters are active",
+          writes_files: false,
+          external_calls: false,
+        },
         review_packet_summary: {
           title: "Review-before-merge packet",
           status: "needs_review",

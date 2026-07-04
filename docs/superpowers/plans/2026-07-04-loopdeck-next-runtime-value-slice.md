@@ -217,7 +217,11 @@ Implementation checkpoint:
   showing that the hint reuses the existing command-center continuation command
   from safe selected worktree metadata without reading git, executing commands,
   writing files, or making external calls.
+- Selected worktree detail now distinguishes the selected continuation command
+  from the review packet command hint, explaining that selected continuation
+  follows selected worktree/session/branch filters while the review hint copies
+  the command-center merge-review command.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free distinction between selected continuation command and review packet
-  command hint, without adding transcript content, prompt bodies, raw paths, git
-  status reads, command execution, or write tools.
+  raw-free explanation of which filters are represented in each visible command,
+  without adding transcript content, prompt bodies, raw paths, git status reads,
+  command execution, or write tools.

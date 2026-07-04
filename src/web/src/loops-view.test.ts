@@ -87,6 +87,15 @@ describe("LoopsView", () => {
       "prompt-coach loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
     );
     expect(html).toContain("No file writes or external calls");
+    expect(html).toContain("Command distinction");
+    expect(html).toContain("continue the selected worktree/session/branch filters");
+    expect(html).toContain(
+      "copy the review packet command-center hint for merge review",
+    );
+    expect(html).toContain(
+      "selected continuation and review packet commands can differ when session or branch filters are active",
+    );
+    expect(html).toContain("No distinction writes or external calls");
     expect(html).toContain("Continuation guidance");
     expect(html).toContain('class="loop-detail-section"');
     expect(html).toContain('class="loop-detail-section-title"');
@@ -335,6 +344,17 @@ function loopWorktree(): LoopWorktreeResponse {
         "uses the selected worktree/session/branch filters without auto-submitting",
       command:
         "prompt-coach loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
+      writes_files: false,
+      external_calls: false,
+    },
+    command_distinction: {
+      label: "Command distinction",
+      selected_command_role:
+        "continue the selected worktree/session/branch filters",
+      review_command_role:
+        "copy the review packet command-center hint for merge review",
+      reason:
+        "selected continuation and review packet commands can differ when session or branch filters are active",
       writes_files: false,
       external_calls: false,
     },

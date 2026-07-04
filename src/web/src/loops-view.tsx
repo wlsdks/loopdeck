@@ -385,6 +385,28 @@ export function LoopsView({
                 <p className="loops-status-line">
                   No file writes or external calls
                 </p>
+                {worktreeDetail.command_distinction && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {worktreeDetail.command_distinction.label}
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.command_distinction
+                          .selected_command_role
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.command_distinction.review_command_role}
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.command_distinction.reason}
+                    </p>
+                    <p className="loops-status-line">
+                      No distinction writes or external calls
+                    </p>
+                  </div>
+                )}
               </div>
             )}
             {worktreeDetail.latest_decision && (

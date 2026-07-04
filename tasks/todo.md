@@ -281,7 +281,11 @@
 - [x] Task 64 RED: selected detail API/UI에 `review_packet_summary.command_hint.provenance`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 64 GREEN: selected worktree detail API/type/UI에 command provenance source/reason/no-write flags를 read-only로 노출
 - [x] Task 64 PRIVACY: provenance는 safe selected worktree metadata 출처만 설명하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
-- [ ] 다음 slice: selected continuation command와 review packet command hint의 차이를 raw-free로 설명할지 결정
+- [x] Task 65 DECISION: selected continuation command와 review packet command hint는 같은 패널에서 다를 수 있으므로 역할 차이를 raw-free로 설명
+- [x] Task 65 RED: selected detail API/UI에 `command_distinction`이 없어 focused server/API/web tests 실패 확인
+- [x] Task 65 GREEN: selected worktree detail API/type/UI에 selected command role, review command role, difference reason, no-write flags를 read-only로 노출
+- [x] Task 65 PRIVACY: distinction은 command role 차이만 설명하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
+- [ ] 다음 slice: 각 visible command에 포함된 filter를 raw-free로 설명할지 결정
 
 ### 판단 기준
 

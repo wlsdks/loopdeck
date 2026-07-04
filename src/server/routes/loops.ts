@@ -181,6 +181,7 @@ export function registerLoopRoutes(
                 sessionId: query.session_id,
                 branch: query.branch,
               }),
+              command_distinction: commandDistinctionFor(),
             }
           : {}),
         ...(latestDecision
@@ -553,6 +554,26 @@ function commandHintProvenance(): {
     source: "existing command-center continuation command",
     reason:
       "reuses safe selected worktree metadata without reading git or executing commands",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function commandDistinctionFor(): {
+  label: "Command distinction";
+  selected_command_role: "continue the selected worktree/session/branch filters";
+  review_command_role: "copy the review packet command-center hint for merge review";
+  reason: "selected continuation and review packet commands can differ when session or branch filters are active";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Command distinction",
+    selected_command_role: "continue the selected worktree/session/branch filters",
+    review_command_role:
+      "copy the review packet command-center hint for merge review",
+    reason:
+      "selected continuation and review packet commands can differ when session or branch filters are active",
     writes_files: false,
     external_calls: false,
   };
