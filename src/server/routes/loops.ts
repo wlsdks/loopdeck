@@ -201,6 +201,8 @@ export function registerLoopRoutes(
                 continuationSafetyCopyFeedbackAccessibilityNoteFor(),
               continuation_safety_copy_feedback_timeout_note:
                 continuationSafetyCopyFeedbackTimeoutNoteFor(),
+              continuation_safety_copy_feedback_failure_note:
+                continuationSafetyCopyFeedbackFailureNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -803,6 +805,25 @@ function continuationSafetyCopyFeedbackTimeoutNoteFor(): {
       "timeout does not record review completion or submission state",
     reason:
       "keeps copied feedback temporary while preserving the manual safety review boundary",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyCopyFeedbackFailureNoteFor(): {
+  label: "Copy feedback failure";
+  failure_scope: "clipboard failure requires a manual retry";
+  not_state: "failure does not submit prompts or store review state";
+  reason: "keeps copy failure handling local to the operator without hidden recovery actions";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Copy feedback failure",
+    failure_scope: "clipboard failure requires a manual retry",
+    not_state: "failure does not submit prompts or store review state",
+    reason:
+      "keeps copy failure handling local to the operator without hidden recovery actions",
     writes_files: false,
     external_calls: false,
   };

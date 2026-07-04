@@ -352,6 +352,14 @@ export type LoopWorktreeResponse = {
     writes_files: false;
     external_calls: false;
   };
+  continuation_safety_copy_feedback_failure_note?: {
+    label: "Copy feedback failure";
+    failure_scope: "clipboard failure requires a manual retry";
+    not_state: "failure does not submit prompts or store review state";
+    reason: "keeps copy failure handling local to the operator without hidden recovery actions";
+    writes_files: false;
+    external_calls: false;
+  };
   paste_destination?: {
     label: "Paste destination";
     targets: ["Codex active request", "Claude Code active request"];

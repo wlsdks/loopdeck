@@ -357,7 +357,11 @@
 - [x] Task 83 RED: selected detail API/UI에 `continuation_safety_copy_feedback_timeout_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 83 GREEN: selected worktree detail API/type/UI에 short local timeout scope, not review/submission state, no-write/no-external flags를 read-only로 노출
 - [x] Task 83 PRIVACY: continuation safety copy feedback timeout note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [ ] 다음 slice: selected detail panel의 selected-brief copy feedback failure note를 raw-free로 별도 제공할지 결정
+- [x] Task 84 DECISION: selected-brief copy feedback failure note는 clipboard failure가 수동 retry를 요구하며 prompt submission/review state 저장이 아님을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 84 RED: selected detail API/UI에 `continuation_safety_copy_feedback_failure_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 84 GREEN: selected worktree detail API/type/UI에 manual retry requirement, not prompt submission/review state, no-write/no-external flags를 read-only로 노출
+- [x] Task 84 PRIVACY: continuation safety copy feedback failure note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [ ] 다음 slice: selected detail panel의 selected-brief copy retry note를 raw-free로 별도 제공할지 결정
 
 ### 판단 기준
 

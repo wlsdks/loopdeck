@@ -185,6 +185,15 @@ describe("LoopsView", () => {
       "keeps copied feedback temporary while preserving the manual safety review boundary",
     );
     expect(html).toContain("No copy feedback timeout writes or external calls");
+    expect(html).toContain("Copy feedback failure");
+    expect(html).toContain("clipboard failure requires a manual retry");
+    expect(html).toContain(
+      "failure does not submit prompts or store review state",
+    );
+    expect(html).toContain(
+      "keeps copy failure handling local to the operator without hidden recovery actions",
+    );
+    expect(html).toContain("No copy feedback failure writes or external calls");
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -633,6 +642,15 @@ function loopWorktree(): LoopWorktreeResponse {
         "timeout does not record review completion or submission state",
       reason:
         "keeps copied feedback temporary while preserving the manual safety review boundary",
+      writes_files: false,
+      external_calls: false,
+    },
+    continuation_safety_copy_feedback_failure_note: {
+      label: "Copy feedback failure",
+      failure_scope: "clipboard failure requires a manual retry",
+      not_state: "failure does not submit prompts or store review state",
+      reason:
+        "keeps copy failure handling local to the operator without hidden recovery actions",
       writes_files: false,
       external_calls: false,
     },

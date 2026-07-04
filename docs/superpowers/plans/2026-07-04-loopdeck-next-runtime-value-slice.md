@@ -281,8 +281,11 @@ Implementation checkpoint:
 - Selected worktree detail now includes a raw-free selected-brief copy feedback
   timeout note, explaining that copied feedback clears after a short local
   timeout and does not record review completion or submission state.
+- Selected worktree detail now includes a raw-free selected-brief copy feedback
+  failure note, explaining that clipboard failure requires a manual retry and
+  does not submit prompts or store review state.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free selected-brief copy failure note, without adding
+  raw-free selected-brief copy retry note, without adding
   transcript content, prompt bodies, raw paths, git status reads, command
   execution, persisted review state, checklist completion state, memory
   approval writes, merge writes, or external calls.

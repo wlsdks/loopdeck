@@ -2837,6 +2837,45 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.81: Selected Brief Copy Feedback Failure Note
+
+Decision:
+
+- Selected worktree detail should state that clipboard failure requires a manual
+  retry and does not submit prompts or store review state.
+- This is needed because a failed copy path should not imply hidden recovery,
+  background agent submission, or persisted safety review state.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_copy_feedback_failure_note` with:
+  - label: `Copy feedback failure`
+  - failure_scope:
+    `clipboard failure requires a manual retry`
+  - not_state:
+    `failure does not submit prompts or store review state`
+  - reason:
+    `keeps copy failure handling local to the operator without hidden recovery actions`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after the copy feedback timeout note
+- focused server/API/web tests proving the failure note is present
+
+Do not add:
+
+- automatic retry, hidden clipboard recovery, button behavior changes,
+  persisted copied/failure state, Codex or Claude Code UI automation, hidden
+  prompt submission, command execution, git reads/writes, filesystem reads/writes,
+  transcript import, persisted review state, checklist completion state,
+  background analysis, external model calls, memory approval writes, merge
+  decision writes, or new write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.
