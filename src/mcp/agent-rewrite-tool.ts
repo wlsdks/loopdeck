@@ -11,6 +11,7 @@ import type {
 } from "./agent-rewrite-tool-types.js";
 import { projectLabel } from "./project-label.js";
 import type { ScorePromptToolOptions } from "./score-tool-types.js";
+import { storageUnavailableMessage } from "./storage-unavailable.js";
 
 const PROVIDERS = ["claude-code", "codex", "gemini-cli", "other"] as const;
 const QUALITY_CRITERIA = [
@@ -294,14 +295,6 @@ function removeOriginalPromptSection(draft: string): string {
 
 function redactMetadataText(value: string): string {
   return redactPrompt(value, "mask").stored_text;
-}
-
-function storageUnavailableMessage(error: unknown): string {
-  const reason =
-    error instanceof Error && "code" in error && typeof error.code === "string"
-      ? ` Reason: ${error.code}.`
-      : "";
-  return `Local prompt-coach archive is not available. Run \`prompt-coach init\` first or pass --data-dir.${reason}`;
 }
 
 function rewriteError(
