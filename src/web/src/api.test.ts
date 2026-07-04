@@ -250,6 +250,16 @@ describe("web api export client", () => {
               reason: "another loop snapshot was recorded after this selection",
               next_action: "refresh selected worktree before merging",
             },
+            selected_brief_action: {
+              label: "Selected brief action",
+              action: "copy selected continuation brief",
+              reason:
+                "uses the selected worktree/session/branch filters without auto-submitting",
+              command:
+                "prompt-coach loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
+              writes_files: false,
+              external_calls: false,
+            },
             latest_decision: {
               snapshot_id: "loop_web",
               worktree: "agent-loop-worktree",
@@ -344,6 +354,16 @@ describe("web api export client", () => {
         status: "older_than_latest",
         reason: "another loop snapshot was recorded after this selection",
         next_action: "refresh selected worktree before merging",
+      },
+      selected_brief_action: {
+        label: "Selected brief action",
+        action: "copy selected continuation brief",
+        reason:
+          "uses the selected worktree/session/branch filters without auto-submitting",
+        command:
+          "prompt-coach loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
+        writes_files: false,
+        external_calls: false,
       },
       latest_decision: {
         snapshot_id: "loop_web",

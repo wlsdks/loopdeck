@@ -77,6 +77,15 @@ describe("LoopsView", () => {
     expect(html).toContain("older_than_latest");
     expect(html).toContain("another loop snapshot was recorded after this selection");
     expect(html).toContain("Next refresh selected worktree before merging");
+    expect(html).toContain("Selected brief action");
+    expect(html).toContain("copy selected continuation brief");
+    expect(html).toContain(
+      "uses the selected worktree/session/branch filters without auto-submitting",
+    );
+    expect(html).toContain(
+      "prompt-coach loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
+    );
+    expect(html).toContain("No file writes or external calls");
     expect(html).toContain("Session session-web");
     expect(html).toContain("Branch feature/branch-filter");
     expect(html).toContain("Latest decision");
@@ -298,6 +307,16 @@ function loopWorktree(): LoopWorktreeResponse {
       status: "older_than_latest",
       reason: "another loop snapshot was recorded after this selection",
       next_action: "refresh selected worktree before merging",
+    },
+    selected_brief_action: {
+      label: "Selected brief action",
+      action: "copy selected continuation brief",
+      reason:
+        "uses the selected worktree/session/branch filters without auto-submitting",
+      command:
+        "prompt-coach loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
+      writes_files: false,
+      external_calls: false,
     },
     latest_decision: {
       snapshot_id: "loop_web",

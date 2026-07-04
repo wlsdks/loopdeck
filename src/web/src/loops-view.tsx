@@ -367,6 +367,23 @@ export function LoopsView({
                 </p>
               </div>
             )}
+            {worktreeDetail.selected_brief_action && (
+              <div>
+                <p className="loops-status-line">
+                  {worktreeDetail.selected_brief_action.label}
+                </p>
+                <p className="loops-status-line">
+                  {worktreeDetail.selected_brief_action.action}
+                </p>
+                <p className="loops-status-line">
+                  {worktreeDetail.selected_brief_action.reason}
+                </p>
+                <code>{worktreeDetail.selected_brief_action.command}</code>
+                <p className="loops-status-line">
+                  No file writes or external calls
+                </p>
+              </div>
+            )}
             {worktreeDetail.latest_decision && (
               <p className="loops-status-line">
                 Latest decision {worktreeDetail.latest_decision.decision}{" "}

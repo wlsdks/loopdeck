@@ -841,6 +841,15 @@ describe("createServer P2 ingest boundary", () => {
           reason: "selected snapshot is the latest recorded loop snapshot",
           next_action: "copy selected worktree brief",
         },
+        selected_brief_action: {
+          label: "Selected brief action",
+          action: "copy selected continuation brief",
+          reason:
+            "uses the selected worktree/session/branch filters without auto-submitting",
+          command: "prompt-coach loop brief --worktree review-worktree",
+          writes_files: false,
+          external_calls: false,
+        },
         review_packet_summary: {
           title: "Review-before-merge packet",
           status: "needs_review",

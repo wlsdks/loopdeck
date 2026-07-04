@@ -261,7 +261,11 @@
 - [x] Task 59 RED: selected detail API/UI에 `snapshot_age`가 없어 focused tests 실패 확인
 - [x] Task 59 GREEN: selected worktree detail API/type/UI에 Selected snapshot age status/reason/next action을 read-only로 노출
 - [x] Task 59 PRIVACY: age 설명은 selected snapshot timestamp와 safe status/reason/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git read/write를 포함하지 않음
-- [ ] 다음 slice: selected worktree detail에 raw-free selected brief action rationale을 추가할지 결정
+- [x] Task 60 DECISION: selected worktree detail은 Copy selected brief가 filtered/read-only/no-auto-submit action임을 설명하고 command execution/write는 보류
+- [x] Task 60 RED: selected detail API/UI에 `selected_brief_action`이 없어 focused tests 실패 확인
+- [x] Task 60 GREEN: selected worktree detail API/type/UI에 Selected brief action reason/command/no-write flags를 read-only로 노출
+- [x] Task 60 PRIVACY: action rationale은 selected filters 기반 CLI command와 safe flags만 포함하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
+- [ ] 다음 slice: selected worktree detail에 raw-free merge-readiness-to-brief rationale을 추가할지 결정
 
 ### 판단 기준
 

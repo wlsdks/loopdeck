@@ -200,6 +200,10 @@ Implementation checkpoint:
   age/staleness explanation derived only from safe snapshot `created_at`
   metadata, so operators can see when another loop snapshot was recorded after
   the current selection without reading git state or filesystem state.
+- Selected worktree detail now includes a raw-free selected brief action
+  rationale, including the CLI-equivalent filtered brief command and explicit
+  no-file-write/no-external-call flags.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free selected brief action rationale, without adding transcript content,
-  prompt bodies, raw paths, git status reads, command execution, or write tools.
+  raw-free merge-readiness-to-brief rationale, without adding transcript
+  content, prompt bodies, raw paths, git status reads, command execution, or
+  write tools.

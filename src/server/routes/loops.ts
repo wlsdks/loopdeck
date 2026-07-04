@@ -176,6 +176,11 @@ export function registerLoopRoutes(
                 selectedSnapshot: latestSnapshot,
                 snapshots: allSnapshots,
               }),
+              selected_brief_action: selectedBriefActionFor({
+                worktree: params.worktree,
+                sessionId: query.session_id,
+                branch: query.branch,
+              }),
             }
           : {}),
         ...(latestDecision
@@ -507,6 +512,46 @@ function snapshotAgeFor(input: {
     reason: "another loop snapshot was recorded after this selection",
     next_action: "refresh selected worktree before merging",
   };
+}
+
+function selectedBriefActionFor(selection: {
+  worktree: string;
+  sessionId?: string;
+  branch?: string;
+}): {
+  label: "Selected brief action";
+  action: "copy selected continuation brief";
+  reason: "uses the selected worktree/session/branch filters without auto-submitting";
+  command: string;
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Selected brief action",
+    action: "copy selected continuation brief",
+    reason:
+      "uses the selected worktree/session/branch filters without auto-submitting",
+    command: selectedBriefCommand(selection),
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function selectedBriefCommand(selection: {
+  worktree: string;
+  sessionId?: string;
+  branch?: string;
+}): string {
+  const parts = [
+    "prompt-coach",
+    "loop",
+    "brief",
+    "--worktree",
+    selection.worktree,
+  ];
+  if (selection.sessionId) parts.push("--session", selection.sessionId);
+  if (selection.branch) parts.push("--branch", selection.branch);
+  return parts.join(" ");
 }
 
 function readinessSummaryFor(

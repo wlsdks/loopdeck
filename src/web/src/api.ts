@@ -260,6 +260,14 @@ export type LoopWorktreeResponse = {
       | "copy selected worktree brief"
       | "refresh selected worktree before merging";
   };
+  selected_brief_action?: {
+    label: "Selected brief action";
+    action: "copy selected continuation brief";
+    reason: "uses the selected worktree/session/branch filters without auto-submitting";
+    command: string;
+    writes_files: false;
+    external_calls: false;
+  };
   latest_decision?: {
     snapshot_id: string;
     worktree: string;

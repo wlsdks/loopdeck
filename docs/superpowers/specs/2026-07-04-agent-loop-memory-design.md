@@ -1910,6 +1910,50 @@ Do not add:
   acknowledgements, approvals, or external model calls
 - package, plugin, slash command, hook, or MCP server-name rename
 
+### Slice 4.57: Selected Brief Action Rationale
+
+Decision:
+
+- Selected worktree detail should explain why the `Copy selected brief` action
+  is the correct handoff action for the current selected worktree/session/branch
+  scope.
+- This is necessary because the page now shows selection scope, snapshot age,
+  review packet summary, and command hints; without a direct action rationale,
+  Codex and Claude Code operators still need to infer whether the copy action
+  is filtered, read-only, and safe to use for continuation.
+- The rationale should reuse the selected worktree/session/branch filters and
+  expose a copyable CLI-equivalent command. It should not execute the command,
+  submit the brief, write files, call external services, or inspect git state.
+
+Add:
+
+- top-level selected worktree detail `selected_brief_action` when a selected
+  snapshot exists, with:
+  - label: `Selected brief action`
+  - action: `copy selected continuation brief`
+  - reason:
+    - `uses the selected worktree/session/branch filters without auto-submitting`
+  - command: `prompt-coach loop brief --worktree ...` plus optional `--session`
+    and `--branch` filters
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering near selection scope and
+  snapshot age
+- focused server/API/web tests proving the command preserves selected filters
+  and the UI states the no-write/no-external-call boundary
+
+Do not add:
+
+- command execution, clipboard mutation beyond the existing copy flow, hidden
+  auto-submit, file writes, git state reads, filesystem reads, branch checkout,
+  diff/conflict inspection, merge automation, or background scanning
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- web or MCP write tools, checklist completion, acknowledgements, approvals, or
+  external model calls
+- package, plugin, slash command, hook, or MCP server-name rename
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.
