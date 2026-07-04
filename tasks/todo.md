@@ -329,7 +329,11 @@
 - [x] Task 76 RED: selected detail API/UI에 `post_collection_review_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 76 GREEN: selected worktree detail API/type/UI에 review collected snapshot quality/evidence before approval, memory approval after review, merge readiness reconsidered after review, no memory/merge write flags를 read-only로 노출
 - [x] Task 76 PRIVACY: post-collection review note는 prompt body/evidence refs/outcome summary/raw path/git read/write/memory approval write/merge decision write/command execution/external call을 포함하지 않음
-- [ ] 다음 slice: selected detail panel의 continuation safety guidance 묶음에 raw-free grouping label을 별도 제공할지 결정
+- [x] Task 77 DECISION: continuation safety grouping label은 copy/paste/review/collect/privacy/merge gate 안내들이 하나의 read-only handoff boundary 묶음임을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 77 RED: selected detail API/UI에 `continuation_safety_group`이 없어 focused server/API/web tests 실패 확인
+- [x] Task 77 GREEN: selected worktree detail API/type/UI에 Codex/Claude Code continuation safety scope, included notes, no automation/no write/no external flags를 read-only로 노출
+- [x] Task 77 PRIVACY: continuation safety group은 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/memory approval write/merge decision write/external call을 포함하지 않음
+- [ ] 다음 slice: selected detail panel의 continuation safety guidance ordering note를 raw-free로 별도 제공할지 결정
 
 ### 판단 기준
 

@@ -2568,6 +2568,43 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.74: Selected Continuation Safety Grouping Label
+
+Decision:
+
+- Selected worktree detail should label the continuation safety guidance as one
+  read-only group for Codex and Claude Code continuation.
+- This is needed because the selected detail panel now has many adjacent safety
+  notes; users need a local-first grouping label before reading the individual
+  copy, paste, review, collect, privacy, and merge gating notes.
+
+Add:
+
+- top-level selected worktree detail `continuation_safety_group` with:
+  - label: `Continuation safety guidance`
+  - scope:
+    `read-only handoff boundaries for Codex and Claude Code continuation`
+  - includes:
+    `copy, paste, review, collect, privacy, and merge gating notes`
+  - reason:
+    `keeps the selected continuation path explicit without automating agents`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance
+- focused server/API/web tests proving the group label is present
+
+Do not add:
+
+- Codex or Claude Code UI automation, hidden prompt submission, command
+  execution, git reads/writes, filesystem reads/writes, transcript import,
+  checklist completion state, background analysis, external model calls, memory
+  approval writes, merge decision writes, or new write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

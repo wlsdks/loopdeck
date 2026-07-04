@@ -114,6 +114,17 @@ describe("LoopsView", () => {
       "does not write files, execute commands, call external services, submit prompts, or change merge state",
     );
     expect(html).toContain("No copy side-effect writes or external calls");
+    expect(html).toContain("Continuation safety guidance");
+    expect(html).toContain(
+      "read-only handoff boundaries for Codex and Claude Code continuation",
+    );
+    expect(html).toContain(
+      "copy, paste, review, collect, privacy, and merge gating notes",
+    );
+    expect(html).toContain(
+      "keeps the selected continuation path explicit without automating agents",
+    );
+    expect(html).toContain("No safety guidance writes or external calls");
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -492,6 +503,16 @@ function loopWorktree(): LoopWorktreeResponse {
       ui_feedback: "temporarily marks the selected brief copy button as copied",
       does_not:
         "does not write files, execute commands, call external services, submit prompts, or change merge state",
+      writes_files: false,
+      external_calls: false,
+    },
+    continuation_safety_group: {
+      label: "Continuation safety guidance",
+      scope:
+        "read-only handoff boundaries for Codex and Claude Code continuation",
+      includes: "copy, paste, review, collect, privacy, and merge gating notes",
+      reason:
+        "keeps the selected continuation path explicit without automating agents",
       writes_files: false,
       external_calls: false,
     },

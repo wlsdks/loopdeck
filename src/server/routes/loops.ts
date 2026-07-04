@@ -188,6 +188,7 @@ export function registerLoopRoutes(
                 reviewHasBranch: Boolean(reviewItem?.branch),
               }),
               copy_side_effects: copySideEffectsFor(),
+              continuation_safety_group: continuationSafetyGroupFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -650,6 +651,26 @@ function copySideEffectsFor(): {
     ui_feedback: "temporarily marks the selected brief copy button as copied",
     does_not:
       "does not write files, execute commands, call external services, submit prompts, or change merge state",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyGroupFor(): {
+  label: "Continuation safety guidance";
+  scope: "read-only handoff boundaries for Codex and Claude Code continuation";
+  includes: "copy, paste, review, collect, privacy, and merge gating notes";
+  reason: "keeps the selected continuation path explicit without automating agents";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Continuation safety guidance",
+    scope:
+      "read-only handoff boundaries for Codex and Claude Code continuation",
+    includes: "copy, paste, review, collect, privacy, and merge gating notes",
+    reason:
+      "keeps the selected continuation path explicit without automating agents",
     writes_files: false,
     external_calls: false,
   };

@@ -258,7 +258,11 @@ Implementation checkpoint:
 - Selected worktree detail now includes a raw-free post-collection review note,
   explaining that collected loop snapshot quality and evidence should be
   reviewed before memory approval or merge readiness is reconsidered.
+- Selected worktree detail now includes a raw-free continuation safety grouping
+  label, explaining that the following copy, paste, review, collect, privacy,
+  and merge gating notes are read-only handoff boundaries for Codex and Claude
+  Code continuation.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free grouping label for the continuation safety guidance,
-  without adding transcript content, prompt bodies, raw paths, git status reads,
-  command execution, memory approval writes, merge writes, or external calls.
+  raw-free ordering note for the continuation safety guidance, without adding
+  transcript content, prompt bodies, raw paths, git status reads, command
+  execution, memory approval writes, merge writes, or external calls.

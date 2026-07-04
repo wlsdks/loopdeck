@@ -451,6 +451,25 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.continuation_safety_group && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {worktreeDetail.continuation_safety_group.label}
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.continuation_safety_group.scope}
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.continuation_safety_group.includes}
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.continuation_safety_group.reason}
+                    </p>
+                    <p className="loops-status-line">
+                      No safety guidance writes or external calls
+                    </p>
+                  </div>
+                )}
                 {worktreeDetail.paste_destination && (
                   <div className="loop-review-item">
                     <p className="loops-status-line">

@@ -296,6 +296,14 @@ export type LoopWorktreeResponse = {
     writes_files: false;
     external_calls: false;
   };
+  continuation_safety_group?: {
+    label: "Continuation safety guidance";
+    scope: "read-only handoff boundaries for Codex and Claude Code continuation";
+    includes: "copy, paste, review, collect, privacy, and merge gating notes";
+    reason: "keeps the selected continuation path explicit without automating agents";
+    writes_files: false;
+    external_calls: false;
+  };
   paste_destination?: {
     label: "Paste destination";
     targets: ["Codex active request", "Claude Code active request"];
