@@ -9,6 +9,7 @@ import type {
 } from "../../storage/ports.js";
 import { requireAppAccess, type ServerAuthConfig } from "../auth.js";
 import { problem } from "../errors.js";
+import { requireStorageCapabilities } from "../storage-capabilities.js";
 
 export type ProjectRouteOptions = {
   auth: ServerAuthConfig;
@@ -99,37 +100,20 @@ function requireProjectStorage(
   storage: ProjectRouteOptions["storage"],
   instance: string,
 ): ProjectPolicyStoragePort {
-  if (
-    !storage.listProjects ||
-    !storage.updateProjectPolicy ||
-    !storage.getProjectPolicyForEvent
-  ) {
-    throw problem(
-      500,
-      "Internal Server Error",
-      "Project policy storage is not configured.",
-      instance,
-    );
-  }
-
-  return storage as ProjectPolicyStoragePort;
+  return requireStorageCapabilities(
+    storage,
+    ["listProjects", "updateProjectPolicy", "getProjectPolicyForEvent"],
+    { label: "Project policy storage", instance },
+  );
 }
 
 function requireProjectInstructionStorage(
   storage: ProjectRouteOptions["storage"],
   instance: string,
 ): ProjectInstructionStoragePort {
-  if (
-    !storage.getProjectInstructionReview ||
-    !storage.analyzeProjectInstructions
-  ) {
-    throw problem(
-      500,
-      "Internal Server Error",
-      "Project instruction storage is not configured.",
-      instance,
-    );
-  }
-
-  return storage as ProjectInstructionStoragePort;
+  return requireStorageCapabilities(
+    storage,
+    ["getProjectInstructionReview", "analyzeProjectInstructions"],
+    { label: "Project instruction storage", instance },
+  );
 }

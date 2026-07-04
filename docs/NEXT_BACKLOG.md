@@ -57,31 +57,28 @@ Rationale:
 
 ## Prioritized Queue
 
-### 1. Storage Capability Negotiation (next implementation PR)
+### 1. Storage Capability Negotiation (route helper landed)
 
 Goal:
 
 - Introduce a shared capability guard so storage-backed Fastify routes and
   future MCP tools declare required storage methods through one path.
 
-Scope for the first PR:
+First route-helper PR:
 
-- Add a small helper under `src/storage/` or `src/server/` that narrows storage
-  objects by required method names and returns one consistent local
-  configuration error.
-- Replace the hand-written guards in project routes and coach-feedback routes.
-- Keep behavior equivalent: missing capabilities still fail locally and do not
+- Added a small server helper that narrows storage objects by required method
+  names and returns one consistent local configuration error.
+- Replaced the hand-written guards in project routes and coach-feedback routes.
+- Kept behavior equivalent: missing capabilities still fail locally and do not
   expose prompt bodies, raw paths, tokens, or instruction file contents.
-- Do not filter MCP `tools/list` in the first PR unless the helper boundary
-  stays small; leave MCP catalogue filtering as the second capability slice.
 
-Acceptance:
+Next capability PR:
 
-- focused route tests prove missing capabilities produce the same safe failure
-  shape;
-- existing project and coach-feedback route tests keep passing;
-- full `corepack pnpm test`, `corepack pnpm lint`, `corepack pnpm build`,
-  `corepack pnpm pack:dry-run`, and `git diff --check` pass.
+- Extend the same declaration idea to MCP. Either filter unavailable tools from
+  `tools/list`, or make storage-backed MCP handlers return one explicit
+  configuration/storage error instead of scattered ad hoc behavior.
+- Avoid a broad MCP registry rewrite unless the tool catalogue must change for
+  the capability work.
 
 ### 2. MCP Registry Follow-Up (only when registration changes)
 
