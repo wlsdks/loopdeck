@@ -4338,6 +4338,72 @@ Do not add:
   approval result state, merge decision state, or secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.109: Post-Memory-Approval Retry Renewed-Memory-Approval Pre-Handoff Freshness Advisory
+
+Decision:
+
+- Selected worktree detail should state that renewed-memory-approval freshness
+  uncertainty should be reviewed before continuation handoff.
+- This is needed because the operator can manually hand off a continuation
+  brief after renewed memory approval; Loopdeck should cue the freshness review
+  without approving handoffs, inspecting agent UI, or verifying freshness before
+  handoff.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_handoff_freshness_advisory`
+  with:
+  - label:
+    `Post-memory-approval retry renewed-memory-approval pre-handoff freshness advisory`
+  - advisory:
+    `review renewed-memory-approval freshness uncertainty before continuation handoff`
+  - not_decision:
+    `Loopdeck does not approve handoffs or verify renewed-memory-approval freshness before handoff`
+  - reason:
+    `keeps continuation handoff separate from renewed-memory-approval freshness uncertainty review`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after the post-memory-approval retry
+  renewed-memory-approval pre-merge freshness advisory and before paste
+  destination guidance
+- focused server/API/web tests proving the post-memory-approval retry
+  renewed-memory-approval pre-handoff freshness advisory is present
+
+Do not add:
+
+- handoff approval, handoff approval state, handoff state persistence, handoff
+  state synchronization, freshness verification, automatic collection,
+  collection command execution, automatic renewed approval collection, renewed
+  memory approval state, memory approval writes, memory approval state, approval
+  result persistence, approval state synchronization, hidden verification, git
+  status reads, transcript inspection, agent UI monitoring, retry automation,
+  retry result persistence, post-approval retry result persistence, retry
+  outcome detection, freshness result persistence, retry freshness result
+  persistence, post-approval retry freshness result persistence, collection
+  result persistence, renewed memory approval collection result persistence,
+  merge decision writes, merge approval, merge state persistence, merge state
+  synchronization, merge readiness recalculation, background collection, hidden
+  recovery actions, submission event hooks, submitted state persistence, submit
+  automation, Enter key automation, button clicking, active window detection,
+  target-agent UI inspection, target content validation, paste success
+  verification, clipboard target validation, paste automation, persisted
+  destination state, persisted target state, safety approval state, Codex or
+  Claude Code UI automation, hidden prompt submission, command execution,
+  filesystem reads/writes, persisted review state, checklist completion state,
+  background analysis, external model calls, or new write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, target
+  content, active-window titles, pasted content, paste result state, submitted
+  state, agent response content, collection result state, post-approval
+  collection result state, renewed memory approval collection result state,
+  retry result state, post-approval retry result state, retry outcome state,
+  freshness result state, retry freshness result state, post-approval retry
+  freshness result state, memory approval state, renewed memory approval state,
+  approval result state, merge decision state, or secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

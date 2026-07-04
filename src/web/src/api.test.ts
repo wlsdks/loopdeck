@@ -693,6 +693,19 @@ describe("web api export client", () => {
                 writes_files: false,
                 external_calls: false,
               },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_handoff_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval pre-handoff freshness advisory",
+                advisory:
+                  "review renewed-memory-approval freshness uncertainty before continuation handoff",
+                not_decision:
+                  "Loopdeck does not approve handoffs or verify renewed-memory-approval freshness before handoff",
+                reason:
+                  "keeps continuation handoff separate from renewed-memory-approval freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
             paste_destination: {
               label: "Paste destination",
               targets: ["Codex active request", "Claude Code active request"],
@@ -1332,6 +1345,19 @@ describe("web api export client", () => {
           "Loopdeck does not approve merges or verify renewed-memory-approval freshness before merge",
         reason:
           "keeps merge readiness separate from renewed-memory-approval freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_handoff_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval pre-handoff freshness advisory",
+        advisory:
+          "review renewed-memory-approval freshness uncertainty before continuation handoff",
+        not_decision:
+          "Loopdeck does not approve handoffs or verify renewed-memory-approval freshness before handoff",
+        reason:
+          "keeps continuation handoff separate from renewed-memory-approval freshness uncertainty review",
         writes_files: false,
         external_calls: false,
       },
