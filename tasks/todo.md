@@ -101,7 +101,11 @@
 - [x] Task 170 RED: 해당 15개 field가 `LoopsView`에 직접 남아 있어 source hygiene test 실패 확인
 - [x] Task 170 GREEN: `LoopWorktreeMemoryApprovalRetryRenewedItems`로 15개 item을 이동하고 `LoopsView` 직접 field 접근을 제거
 - [x] Task 170 PRIVACY: UI helper extraction만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
-- [ ] 다음 slice: post-memory-approval retry freshness/result cluster 또는 baseline continuation safety cluster를 같은 기준으로 helper 분리할지 결정
+- [x] Task 171 DECISION: baseline continuation/copy/paste/submission safety 14개 review item은 같은 selected-detail safety cluster라 별도 helper로 묶고 공용 `renderReviewItem`을 재사용
+- [x] Task 171 RED: 해당 14개 field가 `LoopsView`에 직접 남아 있어 source hygiene test 실패 확인
+- [x] Task 171 GREEN: `LoopWorktreeContinuationSafetyItems`로 14개 item을 이동하고 `LoopsView` 직접 field 접근을 제거
+- [x] Task 171 PRIVACY: UI helper extraction만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [ ] 다음 slice: post-submission collection/retry/freshness cluster 또는 post-memory-approval retry freshness/result cluster를 같은 기준으로 helper 분리할지 결정
 - [ ] 다음 dogfood slice: Codex native dialog fallback을 실제 OS dialog 또는 명시적 사용자 승인 하에 확인
 
 ### 판단 기준
