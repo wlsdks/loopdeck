@@ -463,22 +463,29 @@ Implementation checkpoint:
   renewed-memory-approval collection result state stays outside Loopdeck until
   the next explicit loop snapshot, without Loopdeck detecting, storing, or
   syncing that state.
+- Selected worktree detail now includes a raw-free post-memory-approval retry
+  renewed-memory-approval post-submit retry renewed-memory-approval collection
+  uncertainty reminder, explaining that the operator collects a new explicit
+  loop snapshot when post-submit retry renewed-memory-approval collection
+  result is uncertain, without Loopdeck verifying that result or starting
+  collection automatically.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free post-memory-approval retry renewed-memory-approval post-submit
-  retry renewed-memory-approval collection uncertainty reminder, without
-  adding transcript content, prompt bodies, raw paths, target contents,
-  active-window titles, pasted content, paste result state, submitted state,
-  agent response content, collection result state, post-approval collection
-  result state, renewed memory approval collection result state, retry result
-  state, post-submit retry result state, post-approval retry result state,
-  retry outcome state, post-submit retry freshness result state, freshness
+  raw-free post-memory-approval retry renewed-memory-approval post-submit retry
+  renewed-memory-approval pre-merge freshness advisory, without adding
+  transcript content, prompt bodies, raw paths, target contents, active-window
+  titles, pasted content, paste result state, submitted state, agent response
+  content, collection result state, post-approval collection result state,
+  renewed memory approval collection result state, retry result state,
+  post-submit retry result state, post-approval retry result state, retry
+  outcome state, post-submit retry freshness result state, freshness
   uncertainty collection result state, post-submit retry freshness uncertainty
   collection result state, post-submit retry renewed memory approval state,
-  freshness result state, retry freshness result state, post-approval retry
-  freshness result state, approval result state, renewed memory approval state,
-  freshness
-  verification, automatic collection, collection command execution, retry
-  automation, git status reads, command execution, persisted review state,
-  checklist completion state, paste target state, handoff approval state,
-  submission approval state, memory approval writes, memory approval state,
-  merge writes, merge decision state, or external calls.
+  post-submit retry renewed-memory-approval collection result state,
+  uncertainty result state, freshness result state, retry freshness result
+  state, post-approval retry freshness result state, approval result state,
+  renewed memory approval state, freshness verification, automatic collection,
+  collection command execution, retry automation, git status reads, command
+  execution, persisted review state, checklist completion state, paste target
+  state, handoff approval state, submission approval state, memory approval
+  writes, memory approval state, merge writes, merge decision state, or
+  external calls.
