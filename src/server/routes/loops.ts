@@ -301,6 +301,8 @@ export function registerLoopRoutes(
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalPostSubmitCollectionUncertaintyReminderFor(),
               continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_merge_freshness_advisory:
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalPostSubmitCollectionPreMergeFreshnessAdvisoryFor(),
+              continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_handoff_freshness_advisory:
+                continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalPostSubmitCollectionPreHandoffFreshnessAdvisoryFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1965,6 +1967,28 @@ function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmi
       "Loopdeck does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
     reason:
       "keeps merge readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalPostSubmitCollectionPreHandoffFreshnessAdvisoryFor(): {
+  label: "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-handoff freshness advisory";
+  advisory: "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before continuation handoff";
+  not_decision: "Loopdeck does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff";
+  reason: "keeps continuation handoff separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label:
+      "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-handoff freshness advisory",
+    advisory:
+      "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before continuation handoff",
+    not_decision:
+      "Loopdeck does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
+    reason:
+      "keeps continuation handoff separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
     writes_files: false,
     external_calls: false,
   };
