@@ -3430,16 +3430,22 @@
 
 - [x] RED: Add packaging regression coverage that each bundled Codex plugin hook event uses the matching `PROMPT_COACH_HOOK` lifecycle marker.
 - [x] GREEN: Fix `plugins/prompt-coach/hooks.json` so `UserPromptSubmit`, `Stop`, `PreCompact`, and `PostCompact` no longer point at shifted markers.
-- [ ] VERIFY: Run focused packaging tests, full gates, push a coherent PR, merge, and prune the branch.
+- [x] VERIFY: Run focused packaging tests, full gates, push a coherent PR, merge, and prune the branch.
 
 ## 2026-07-05 Loopdeck Hook And Docs Copy
 
 - [x] RED: Add regression coverage for rewrite-guard hook context headers and docs copy that should describe product surfaces as Loopdeck while preserving `prompt-coach` command/id compatibility.
 - [x] GREEN: Update hook copy plus README/PLUGINS/reuse-audit wording for Loopdeck-facing storage/server surfaces.
-- [ ] VERIFY: Run focused tests, full gates, push a coherent PR, merge, and prune the branch.
+- [x] VERIFY: Run focused tests, full gates, push a coherent PR, merge, and prune the branch.
 
 ## 2026-07-05 Loopdeck CLI Infrastructure Help Copy
 
 - [x] RED: Add regression coverage for CLI infrastructure help and MCP readiness copy that should use Loopdeck as the product surface while preserving `prompt-coach` command compatibility.
 - [x] GREEN: Update CLI/web help copy for server, MCP, hooks, status line, and service setup without renaming runtime IDs or command namespaces.
-- [ ] VERIFY: Run focused tests, full test/lint/build/pack dry-run gates, push a coherent PR, merge, and prune the branch.
+- [x] VERIFY: Run focused tests, full test/lint/build/pack dry-run gates, push a coherent PR, merge, and prune the branch.
+
+## 2026-07-05 Reuse Copy Fallback Audit Refresh
+
+- [x] EVIDENCE: `corepack pnpm e2e:browser` forces clipboard writes to fail and verifies the prompt detail manual-copy fallback appears.
+- [x] DOCS: Refresh reuse audit, next backlog, and goal audit so the copy-failure fallback is no longer tracked as an open implementation gap.
+- [x] VERIFY: Run focused docs/search checks plus full test/lint/build/pack dry-run gates, push a coherent PR, merge, and prune the branch.

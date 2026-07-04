@@ -155,8 +155,10 @@ investing in more refactors:
   real native ask UI handoff.
 - **Reuse loop audit**: first in-app Browser audit completed in
   `docs/REUSE_LOOP_AUDIT_2026-07-05.md`. Search, detail, and save-draft reuse
-  worked; `Copy draft` failed in the Codex in-app Browser and needs a
-  local-only manual-copy fallback.
+  worked; the original `Copy draft` clipboard failure now has a local-only
+  manual-copy fallback for current and saved improvement drafts. The remaining
+  follow-up is a fresh manual Codex in-app Browser pass to judge whether the
+  fallback is clear enough in the real clipboard bridge failure mode.
 
 These are user-perspective tasks rather than refactors. They should run in
 a fresh session with the explicit role of "user trying to do work" rather
@@ -175,6 +177,8 @@ Immediate follow-up from the reuse audit:
 - Prompt-detail copy-failure fallback landed: when draft clipboard writes are
   unavailable, the detail page shows a local manual-copy textarea for the
   improved draft or saved draft.
+- `corepack pnpm e2e:browser` forces clipboard writes to fail and verifies the
+  manual-copy fallback without requiring real clipboard permissions.
 - Keep auto-submit out of scope; copy/fallback must remain local and
   approval-gated.
 

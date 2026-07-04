@@ -95,6 +95,21 @@ Recommended fix:
 - Preserve privacy/local-first behavior: do not auto-submit, do not externalize
   draft text, and do not store extra data just to recover from copy failure.
 
+Resolution:
+
+- The prompt detail page now opens a local manual-copy fallback when clipboard
+  writes fail for either the current improved draft or a saved draft.
+- `PromptDetailView` renders a read-only `Manual copy draft text` textarea so
+  the operator can select and copy the draft manually without auto-submitting
+  it to Codex, Claude Code, or any external service.
+- `corepack pnpm e2e:browser` now forces both `document.execCommand("copy")`
+  and `navigator.clipboard.writeText()` to fail, clicks `Copy saved draft`, and
+  verifies that the manual-copy fallback appears.
+
+Current status: resolved for repeatable automated coverage. A fresh manual pass
+in the Codex in-app Browser is still useful as user-experience evidence, but
+the original missing fallback is no longer an open implementation gap.
+
 ### P2 - Search and saved-draft reuse are usable but not yet a full fork flow
 
 What worked: search found the reusable prompt, detail showed the improved
@@ -115,8 +130,8 @@ fork/edit/resubmit more explicit.
 
 ## Recommended Next Slices
 
-1. Add a TDD UI fallback for copy failure on prompt improvement drafts and
-   saved drafts.
-2. Extend the browser E2E or a focused smoke to cover copy failure fallback
-   without requiring real clipboard permissions.
-3. Re-run this audit after the fallback lands, using the Codex in-app Browser.
+1. Re-run this audit in the Codex in-app Browser as a manual user-flow pass,
+   confirming the fallback feels clear when the real browser bridge rejects
+   clipboard writes.
+2. Consider a later explicit "fork into draft" flow only if user-flow evidence
+   shows that copy/save is not enough for repeated reuse.
