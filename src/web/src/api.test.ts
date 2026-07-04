@@ -758,6 +758,19 @@ describe("web api export client", () => {
                 writes_files: false,
                 external_calls: false,
               },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit collection retry boundary",
+                retry:
+                  "operator reruns the explicit post-submit loop collection flow when retry is needed",
+                not_automated:
+                  "Loopdeck does not automatically retry post-submit collection commands or hidden recovery actions",
+                reason:
+                  "keeps post-submit collection retry control local and operator-triggered",
+                writes_files: false,
+                external_calls: false,
+              },
             paste_destination: {
               label: "Paste destination",
               targets: ["Codex active request", "Claude Code active request"],
@@ -1462,6 +1475,19 @@ describe("web api export client", () => {
           "Loopdeck does not detect, store, or sync post-submit collection result state",
         reason:
           "keeps post-submit collection evidence tied to explicit local snapshot recording",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit collection retry boundary",
+        retry:
+          "operator reruns the explicit post-submit loop collection flow when retry is needed",
+        not_automated:
+          "Loopdeck does not automatically retry post-submit collection commands or hidden recovery actions",
+        reason:
+          "keeps post-submit collection retry control local and operator-triggered",
         writes_files: false,
         external_calls: false,
       },

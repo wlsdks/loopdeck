@@ -422,9 +422,14 @@ Implementation checkpoint:
   explaining that post-submit collection result state stays outside Loopdeck
   until the next explicit loop snapshot, without Loopdeck detecting, storing,
   or syncing that state.
+- Selected worktree detail now includes a raw-free post-memory-approval retry
+  renewed-memory-approval post-submit collection retry boundary note, explaining
+  that the operator reruns the explicit post-submit loop collection flow when
+  retry is needed, without Loopdeck automatically retrying commands or hidden
+  recovery actions.
 - The next runtime slice should decide whether selected worktree detail needs a
   raw-free post-memory-approval retry renewed-memory-approval post-submit
-  collection retry boundary note, without
+  retry outcome non-persistence note, without
   adding transcript content, prompt bodies, raw paths, target contents,
   active-window titles, pasted content, paste result state, submitted state,
   agent response content, collection result state, post-approval collection

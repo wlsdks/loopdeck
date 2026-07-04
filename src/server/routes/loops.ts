@@ -267,6 +267,8 @@ export function registerLoopRoutes(
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitFreshnessAdvisoryFor(),
               continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note:
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitCollectionResultNonPersistenceNoteFor(),
+              continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note:
+                continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitCollectionRetryBoundaryNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1557,6 +1559,28 @@ function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmi
       "Loopdeck does not detect, store, or sync post-submit collection result state",
     reason:
       "keeps post-submit collection evidence tied to explicit local snapshot recording",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitCollectionRetryBoundaryNoteFor(): {
+  label: "Post-memory-approval retry renewed-memory-approval post-submit collection retry boundary";
+  retry: "operator reruns the explicit post-submit loop collection flow when retry is needed";
+  not_automated: "Loopdeck does not automatically retry post-submit collection commands or hidden recovery actions";
+  reason: "keeps post-submit collection retry control local and operator-triggered";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label:
+      "Post-memory-approval retry renewed-memory-approval post-submit collection retry boundary",
+    retry:
+      "operator reruns the explicit post-submit loop collection flow when retry is needed",
+    not_automated:
+      "Loopdeck does not automatically retry post-submit collection commands or hidden recovery actions",
+    reason:
+      "keeps post-submit collection retry control local and operator-triggered",
     writes_files: false,
     external_calls: false,
   };
