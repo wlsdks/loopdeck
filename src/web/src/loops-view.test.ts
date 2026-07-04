@@ -194,6 +194,17 @@ describe("LoopsView", () => {
       "keeps copy failure handling local to the operator without hidden recovery actions",
     );
     expect(html).toContain("No copy feedback failure writes or external calls");
+    expect(html).toContain("Copy retry");
+    expect(html).toContain(
+      "operator manually retries the selected brief copy action",
+    );
+    expect(html).toContain(
+      "Loopdeck does not automatically retry clipboard writes or submit prompts",
+    );
+    expect(html).toContain(
+      "keeps retry control with the operator before any Codex or Claude Code paste",
+    );
+    expect(html).toContain("No copy retry writes or external calls");
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -651,6 +662,16 @@ function loopWorktree(): LoopWorktreeResponse {
       not_state: "failure does not submit prompts or store review state",
       reason:
         "keeps copy failure handling local to the operator without hidden recovery actions",
+      writes_files: false,
+      external_calls: false,
+    },
+    continuation_safety_copy_retry_note: {
+      label: "Copy retry",
+      retry_scope: "operator manually retries the selected brief copy action",
+      not_automatic:
+        "Loopdeck does not automatically retry clipboard writes or submit prompts",
+      reason:
+        "keeps retry control with the operator before any Codex or Claude Code paste",
       writes_files: false,
       external_calls: false,
     },

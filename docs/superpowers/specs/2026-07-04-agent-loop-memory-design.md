@@ -2876,6 +2876,46 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.82: Selected Brief Copy Retry Note
+
+Decision:
+
+- Selected worktree detail should state that retrying the selected brief copy is
+  a manual operator action and that Loopdeck does not automatically retry
+  clipboard writes or submit prompts.
+- This is needed because retry guidance should not be mistaken for background
+  clipboard recovery, hidden prompt submission, or agent UI automation.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_copy_retry_note` with:
+  - label: `Copy retry`
+  - retry_scope:
+    `operator manually retries the selected brief copy action`
+  - not_automatic:
+    `Loopdeck does not automatically retry clipboard writes or submit prompts`
+  - reason:
+    `keeps retry control with the operator before any Codex or Claude Code paste`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after the copy feedback failure note
+- focused server/API/web tests proving the retry note is present
+
+Do not add:
+
+- automatic retry, hidden clipboard recovery, button behavior changes,
+  persisted copied/failure/retry state, Codex or Claude Code UI automation,
+  hidden prompt submission, command execution, git reads/writes, filesystem
+  reads/writes, transcript import, persisted review state, checklist completion
+  state, background analysis, external model calls, memory approval writes,
+  merge decision writes, or new write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

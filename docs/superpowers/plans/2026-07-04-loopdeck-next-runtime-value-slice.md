@@ -284,8 +284,12 @@ Implementation checkpoint:
 - Selected worktree detail now includes a raw-free selected-brief copy feedback
   failure note, explaining that clipboard failure requires a manual retry and
   does not submit prompts or store review state.
+- Selected worktree detail now includes a raw-free selected-brief copy retry
+  note, explaining that retrying the selected brief copy is a manual operator
+  action and Loopdeck does not automatically retry clipboard writes or submit
+  prompts.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free selected-brief copy retry note, without adding
+  raw-free selected-brief pre-paste confirmation note, without adding
   transcript content, prompt bodies, raw paths, git status reads, command
   execution, persisted review state, checklist completion state, memory
   approval writes, merge writes, or external calls.

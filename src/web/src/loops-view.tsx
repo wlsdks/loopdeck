@@ -684,6 +684,37 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.continuation_safety_copy_retry_note && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.continuation_safety_copy_retry_note
+                          .label
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.continuation_safety_copy_retry_note
+                          .retry_scope
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.continuation_safety_copy_retry_note
+                          .not_automatic
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.continuation_safety_copy_retry_note
+                          .reason
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      No copy retry writes or external calls
+                    </p>
+                  </div>
+                )}
                 {worktreeDetail.paste_destination && (
                   <div className="loop-review-item">
                     <p className="loops-status-line">

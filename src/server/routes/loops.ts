@@ -203,6 +203,8 @@ export function registerLoopRoutes(
                 continuationSafetyCopyFeedbackTimeoutNoteFor(),
               continuation_safety_copy_feedback_failure_note:
                 continuationSafetyCopyFeedbackFailureNoteFor(),
+              continuation_safety_copy_retry_note:
+                continuationSafetyCopyRetryNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -824,6 +826,26 @@ function continuationSafetyCopyFeedbackFailureNoteFor(): {
     not_state: "failure does not submit prompts or store review state",
     reason:
       "keeps copy failure handling local to the operator without hidden recovery actions",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyCopyRetryNoteFor(): {
+  label: "Copy retry";
+  retry_scope: "operator manually retries the selected brief copy action";
+  not_automatic: "Loopdeck does not automatically retry clipboard writes or submit prompts";
+  reason: "keeps retry control with the operator before any Codex or Claude Code paste";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Copy retry",
+    retry_scope: "operator manually retries the selected brief copy action",
+    not_automatic:
+      "Loopdeck does not automatically retry clipboard writes or submit prompts",
+    reason:
+      "keeps retry control with the operator before any Codex or Claude Code paste",
     writes_files: false,
     external_calls: false,
   };

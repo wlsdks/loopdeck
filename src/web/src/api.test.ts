@@ -376,6 +376,17 @@ describe("web api export client", () => {
               writes_files: false,
               external_calls: false,
             },
+            continuation_safety_copy_retry_note: {
+              label: "Copy retry",
+              retry_scope:
+                "operator manually retries the selected brief copy action",
+              not_automatic:
+                "Loopdeck does not automatically retry clipboard writes or submit prompts",
+              reason:
+                "keeps retry control with the operator before any Codex or Claude Code paste",
+              writes_files: false,
+              external_calls: false,
+            },
             paste_destination: {
               label: "Paste destination",
               targets: ["Codex active request", "Claude Code active request"],
@@ -710,6 +721,16 @@ describe("web api export client", () => {
         not_state: "failure does not submit prompts or store review state",
         reason:
           "keeps copy failure handling local to the operator without hidden recovery actions",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_copy_retry_note: {
+        label: "Copy retry",
+        retry_scope: "operator manually retries the selected brief copy action",
+        not_automatic:
+          "Loopdeck does not automatically retry clipboard writes or submit prompts",
+        reason:
+          "keeps retry control with the operator before any Codex or Claude Code paste",
         writes_files: false,
         external_calls: false,
       },
