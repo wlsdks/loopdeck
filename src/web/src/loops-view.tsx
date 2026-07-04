@@ -579,175 +579,91 @@ export function LoopsView({
                   />
                 )}
                 {worktreeDetail.continuation_safety_pre_paste_confirmation_note && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_pre_paste_confirmation_note.label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_pre_paste_confirmation_note
-                          .confirmation
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_pre_paste_confirmation_note
-                          .not_submission
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_pre_paste_confirmation_note
-                          .reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      No pre-paste confirmation writes or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No pre-paste confirmation writes or external calls"
+                    lines={[
+                      worktreeDetail.continuation_safety_pre_paste_confirmation_note
+                        .label,
+                      worktreeDetail.continuation_safety_pre_paste_confirmation_note
+                        .confirmation,
+                      worktreeDetail.continuation_safety_pre_paste_confirmation_note
+                        .not_submission,
+                      worktreeDetail.continuation_safety_pre_paste_confirmation_note
+                        .reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_target_agent_check_note && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_target_agent_check_note.label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_target_agent_check_note.check
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_target_agent_check_note
-                          .not_inspection
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_target_agent_check_note.reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      No target-agent check writes or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No target-agent check writes or external calls"
+                    lines={[
+                      worktreeDetail.continuation_safety_target_agent_check_note
+                        .label,
+                      worktreeDetail.continuation_safety_target_agent_check_note
+                        .check,
+                      worktreeDetail.continuation_safety_target_agent_check_note
+                        .not_inspection,
+                      worktreeDetail.continuation_safety_target_agent_check_note
+                        .reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_paste_destination_boundary_note && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_paste_destination_boundary_note
-                          .label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_paste_destination_boundary_note
-                          .boundary
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_paste_destination_boundary_note
-                          .not_verified
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_paste_destination_boundary_note
-                          .reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      No paste destination boundary writes or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No paste destination boundary writes or external calls"
+                    lines={[
+                      worktreeDetail
+                        .continuation_safety_paste_destination_boundary_note
+                        .label,
+                      worktreeDetail
+                        .continuation_safety_paste_destination_boundary_note
+                        .boundary,
+                      worktreeDetail
+                        .continuation_safety_paste_destination_boundary_note
+                        .not_verified,
+                      worktreeDetail
+                        .continuation_safety_paste_destination_boundary_note
+                        .reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_manual_submission_boundary_note && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_manual_submission_boundary_note
-                          .label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_manual_submission_boundary_note
-                          .submission
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_manual_submission_boundary_note
-                          .not_automated
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_manual_submission_boundary_note
-                          .reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      No manual submission boundary writes or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No manual submission boundary writes or external calls"
+                    lines={[
+                      worktreeDetail
+                        .continuation_safety_manual_submission_boundary_note
+                        .label,
+                      worktreeDetail
+                        .continuation_safety_manual_submission_boundary_note
+                        .submission,
+                      worktreeDetail
+                        .continuation_safety_manual_submission_boundary_note
+                        .not_automated,
+                      worktreeDetail
+                        .continuation_safety_manual_submission_boundary_note
+                        .reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_submission_result_non_persistence_note && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_submission_result_non_persistence_note
-                          .label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_submission_result_non_persistence_note
-                          .result_scope
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_submission_result_non_persistence_note
-                          .not_stored
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_submission_result_non_persistence_note
-                          .reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      No submission result persistence writes or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No submission result persistence writes or external calls"
+                    lines={[
+                      worktreeDetail
+                        .continuation_safety_submission_result_non_persistence_note
+                        .label,
+                      worktreeDetail
+                        .continuation_safety_submission_result_non_persistence_note
+                        .result_scope,
+                      worktreeDetail
+                        .continuation_safety_submission_result_non_persistence_note
+                        .not_stored,
+                      worktreeDetail
+                        .continuation_safety_submission_result_non_persistence_note
+                        .reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_post_submission_collection_reminder_note && (
                   <div className="loop-review-item">

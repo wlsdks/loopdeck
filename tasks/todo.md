@@ -95,6 +95,7 @@
 - [x] Source hygiene: selected worktree detail의 snapshot age/readiness/evidence aggregate guidance를 route에서 분리하고 focused 테스트 추가
 - [x] Source hygiene: selected detail safety note markup을 `LoopReviewItem`으로 분리하고 focused 렌더링 테스트 추가
 - [x] Source hygiene: selected detail copy-feedback safety note markup을 `LoopReviewItem`으로 추가 전환하고 focused 렌더링 테스트 확인
+- [x] Source hygiene: selected detail paste/submission safety note markup을 `LoopReviewItem`으로 추가 전환하고 focused 렌더링 테스트 확인
 - [ ] 다음 dogfood slice: Codex native dialog fallback을 실제 OS dialog 또는 명시적 사용자 승인 하에 확인
 
 ### 판단 기준
