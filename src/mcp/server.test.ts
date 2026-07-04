@@ -6,6 +6,21 @@ import { describe, expect, it } from "vitest";
 import { handleMcpMessage } from "./server.js";
 
 describe("MCP stdio server", () => {
+  function collectDescriptionStrings(value: unknown): string[] {
+    if (typeof value === "string") return [];
+    if (Array.isArray(value)) {
+      return value.flatMap((item) => collectDescriptionStrings(item));
+    }
+    if (value && typeof value === "object") {
+      return Object.entries(value).flatMap(([key, item]) =>
+        key === "description" && typeof item === "string"
+          ? [item]
+          : collectDescriptionStrings(item),
+      );
+    }
+    return [];
+  }
+
   it("routes clarification answers through apply before optional record", async () => {
     const response = await handleMcpMessage({
       jsonrpc: "2.0",
@@ -26,6 +41,23 @@ describe("MCP stdio server", () => {
     expect(instructions).toContain(
       "call record_clarifications only if the user also wants to save that draft",
     );
+  });
+
+  it("uses Loopdeck archive copy in agent-facing tool descriptions while preserving prompt-coach commands", async () => {
+    const response = await handleMcpMessage({
+      jsonrpc: "2.0",
+      id: "tool-copy",
+      method: "tools/list",
+    });
+
+    const tools = (response?.result as { tools: Array<unknown> }).tools;
+    const joinedDescriptions = collectDescriptionStrings(tools).join("\n");
+
+    expect(joinedDescriptions).toContain("local Loopdeck archive");
+    expect(joinedDescriptions).not.toContain("local prompt-coach archive");
+    expect(joinedDescriptions).not.toContain("prompt-coach archive");
+    expect(joinedDescriptions).not.toContain("prompt-coach storage");
+    expect(joinedDescriptions).toContain("prompt-coach MCP tool");
   });
 
   it("declares prompt scoring tools through tools/list", async () => {

@@ -36,6 +36,16 @@
 - MCP tool 결과처럼 Codex/Claude Code가 직접 읽는 제품-facing 문구는 Loopdeck 방향을 반영한다.
 - 설치/호환성 command, package id, MCP server id는 `prompt-coach` compatibility window를 유지한다.
 
+## 2026-07-05 Loopdeck MCP Tool Description Copy
+
+- [x] RED: `tools/list`의 agent-facing description이 `prompt-coach archive/storage`를 제품 저장소명처럼 노출하면 실패하도록 고정
+- [x] GREEN: MCP tool/schema description은 `Loopdeck archive/storage`를 사용하고, command/tool/server id 문맥의 `prompt-coach`는 유지
+
+### 판단 기준
+
+- Codex와 Claude Code가 읽는 tool description은 Loopdeck 제품 방향을 보여야 한다.
+- `prompt-coach`는 command, tool, package, MCP server compatibility id로만 남긴다.
+
 ## 2026-07-04 Loop Snapshot CLI Implementation Plan
 
 - [x] 설계 문서의 Slice 1 범위를 CLI/storage/domain으로 제한

@@ -65,7 +65,7 @@ export const RECORD_CLARIFICATIONS_TOOL_DEFINITION: PromptCoachMcpToolDefinition
   {
     name: "record_clarifications",
     description:
-      "Save the user's verbatim answers to clarifying_questions, plus the resulting approval-ready draft, against a stored prompt in the local prompt-coach archive. Each answer must be tagged origin: \"user\" — agents must not guess on the user's behalf. The tool writes a redacted improvement draft to the local SQLite archive (prompt_improvement_drafts) and returns metadata only — never the prompt body or the draft text. Local-only, no external LLM calls.",
+      "Save the user's verbatim answers to clarifying_questions, plus the resulting approval-ready draft, against a stored prompt in the local Loopdeck archive. Each answer must be tagged origin: \"user\" — agents must not guess on the user's behalf. The tool writes a redacted improvement draft to the local SQLite archive (prompt_improvement_drafts) and returns metadata only — never the prompt body or the draft text. Local-only, no external LLM calls.",
     annotations: {
       ...NON_DESTRUCTIVE_WRITE_TOOL_ANNOTATIONS,
       title: "Record clarifying answers and draft",

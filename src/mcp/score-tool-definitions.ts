@@ -93,7 +93,7 @@ export const GET_PROMPT_COACH_STATUS_TOOL_DEFINITION: PromptCoachMcpToolDefiniti
   {
     name: "get_prompt_coach_status",
     description:
-      "Check whether the local prompt-coach archive is initialized and has captured prompts before calling scoring tools. Use this first when the user asks if prompt-coach is working, whether Claude Code/Codex prompts are being captured, or which prompt-coach MCP tool to call next. Returns local readiness, safe counts, latest prompt metadata, available tool names, and next actions. It never returns prompt bodies, raw absolute paths, secrets, or external LLM results.",
+      "Check whether the local Loopdeck archive is initialized and has captured prompts before calling scoring tools. Use this first when the user asks if prompt-coach is working, whether Claude Code/Codex prompts are being captured, or which prompt-coach MCP tool to call next. Returns local readiness, safe counts, latest prompt metadata, available tool names, and next actions. It never returns prompt bodies, raw absolute paths, secrets, or external LLM results.",
     annotations: {
       ...LOCAL_READ_ONLY_TOOL_ANNOTATIONS,
       title: "Prompt-memory status preflight",
@@ -179,7 +179,7 @@ export const SCORE_PROMPT_TOOL_DEFINITION: PromptCoachMcpToolDefinition = {
       prompt_id: {
         type: "string",
         description:
-          "Stored prompt id to score from the local prompt-coach archive.",
+          "Stored prompt id to score from the local Loopdeck archive.",
       },
       latest: {
         type: "boolean",
@@ -266,12 +266,12 @@ export const IMPROVE_PROMPT_TOOL_DEFINITION: PromptCoachMcpToolDefinition = {
       prompt_id: {
         type: "string",
         description:
-          "Stored prompt id to improve from the local prompt-coach archive without returning the original stored body.",
+          "Stored prompt id to improve from the local Loopdeck archive without returning the original stored body.",
       },
       latest: {
         type: "boolean",
         description:
-          "Set true to improve the latest stored prompt in the local prompt-coach archive.",
+          "Set true to improve the latest stored prompt in the local Loopdeck archive.",
       },
       language: {
         type: "string",
@@ -377,7 +377,7 @@ export const SCORE_PROMPT_ARCHIVE_TOOL_DEFINITION: PromptCoachMcpToolDefinition 
   {
     name: "score_prompt_archive",
     description:
-      "Score the local prompt-coach archive across many stored Claude Code or Codex prompts. Use this when the user asks to evaluate accumulated prompt habits, score all recent prompts, find low scoring prompts, summarize recurring prompt quality gaps, or prepare the next better request. The result is a local-only aggregate report with distribution, recurring gaps, a practice plan, a next prompt template, and low-score metadata; it does not return prompt bodies, raw paths, or call external LLMs.",
+      "Score the local Loopdeck archive across many stored Claude Code or Codex prompts. Use this when the user asks to evaluate accumulated prompt habits, score all recent prompts, find low scoring prompts, summarize recurring prompt quality gaps, or prepare the next better request. The result is a local-only aggregate report with distribution, recurring gaps, a practice plan, a next prompt template, and low-score metadata; it does not return prompt bodies, raw paths, or call external LLMs.",
     annotations: {
       ...LOCAL_READ_ONLY_TOOL_ANNOTATIONS,
       title: "Archive prompt habit score",
