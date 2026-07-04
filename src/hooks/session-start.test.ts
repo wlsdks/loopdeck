@@ -33,7 +33,7 @@ describe("runSessionStartHook", () => {
       }),
       dataDir,
       openWeb: true,
-      isServerReachable: async () => true,
+      getServerInstance: async () => "instance-1",
       openUrl: (url) => openedUrls.push(url),
     });
 
@@ -55,7 +55,7 @@ describe("runSessionStartHook", () => {
       }),
       dataDir,
       openWeb: true,
-      isServerReachable: async () => false,
+      getServerInstance: async () => null,
       openUrl: (url) => openedUrls.push(url),
     });
 
@@ -63,7 +63,41 @@ describe("runSessionStartHook", () => {
     expect(openedUrls).toEqual([]);
   });
 
-  it("does not open the browser twice for the same session id", async () => {
+  it("does not re-open the web UI for a new session against the same running server", async () => {
+    const dir = createTempDir();
+    const dataDir = join(dir, "data");
+    initializePromptCoach({ dataDir });
+    const openedUrls: string[] = [];
+
+    // Two distinct sessions (different session ids) talking to the same
+    // running server instance: the tab must open only once.
+    await runSessionStartHook({
+      stdin: JSON.stringify({
+        hook_event_name: "SessionStart",
+        session_id: "session-1",
+        source: "startup",
+      }),
+      dataDir,
+      openWeb: true,
+      getServerInstance: async () => "instance-1",
+      openUrl: (url) => openedUrls.push(url),
+    });
+    await runSessionStartHook({
+      stdin: JSON.stringify({
+        hook_event_name: "SessionStart",
+        session_id: "session-2",
+        source: "startup",
+      }),
+      dataDir,
+      openWeb: true,
+      getServerInstance: async () => "instance-1",
+      openUrl: (url) => openedUrls.push(url),
+    });
+
+    expect(openedUrls).toEqual(["http://127.0.0.1:17373"]);
+  });
+
+  it("re-opens the web UI after the server restarts (new instance id)", async () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     initializePromptCoach({ dataDir });
@@ -78,18 +112,21 @@ describe("runSessionStartHook", () => {
       stdin: payload,
       dataDir,
       openWeb: true,
-      isServerReachable: async () => true,
+      getServerInstance: async () => "instance-1",
       openUrl: (url) => openedUrls.push(url),
     });
     await runSessionStartHook({
       stdin: payload,
       dataDir,
       openWeb: true,
-      isServerReachable: async () => true,
+      getServerInstance: async () => "instance-2",
       openUrl: (url) => openedUrls.push(url),
     });
 
-    expect(openedUrls).toEqual(["http://127.0.0.1:17373"]);
+    expect(openedUrls).toEqual([
+      "http://127.0.0.1:17373",
+      "http://127.0.0.1:17373",
+    ]);
   });
 
   it("is disabled unless setup or install-hook opted into open-web", async () => {
@@ -102,7 +139,7 @@ describe("runSessionStartHook", () => {
       stdin: JSON.stringify({ hook_event_name: "SessionStart" }),
       dataDir,
       openWeb: false,
-      isServerReachable: async () => true,
+      getServerInstance: async () => "instance-1",
       openUrl: (url) => openedUrls.push(url),
     });
 

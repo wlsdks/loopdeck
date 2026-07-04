@@ -15,7 +15,7 @@ export type RunSessionStartHookOptions = {
   stdin: string;
   dataDir?: string;
   openWeb?: boolean;
-  isServerReachable?: (url: string) => Promise<boolean>;
+  getServerInstance?: (healthUrl: string) => Promise<string | null>;
   openUrl?: (url: string) => void;
 };
 
@@ -36,19 +36,26 @@ export async function runSessionStartHook(
     }
 
     const config = loadPromptCoachConfig(options.dataDir);
-    if (!claimSessionOpen(config.data_dir, payload.session_id ?? "unknown")) {
+    const url = `http://${config.server.host}:${config.server.port}`;
+    const healthUrl = `${url}/api/v1/health`;
+
+    // Server lifecycle is owned by `prompt-coach service`. Do not spawn a
+    // server here; spawning from a SessionStart hook risks a detached child
+    // binding 17373 with the wrong data dir and is what produced the
+    // 2026-05-09 401 incident. If the server is not running we simply fail
+    // open with no pop-up, matching the spirit of an opt-in hook.
+    const getInstance = options.getServerInstance ?? defaultGetServerInstance;
+    const instanceId = await getInstance(healthUrl);
+    if (instanceId === null) {
       return emptyResult();
     }
 
-    const url = `http://${config.server.host}:${config.server.port}`;
-    const healthUrl = `${url}/api/v1/health`;
-    const isReachable = options.isServerReachable ?? defaultIsServerReachable;
-    if (!(await isReachable(healthUrl))) {
-      // Do not spawn a server here. Server lifecycle is owned by
-      // `prompt-coach service`; spawning from a SessionStart hook risks a
-      // detached child binding 17373 with the wrong data dir and is what
-      // produced the 2026-05-09 401 incident. Fail-open silently — the user
-      // will see no web pop-up, which matches the spirit of an opt-in hook.
+    // Dedup by running server instance, not by session id. Every Claude/Codex
+    // session has a fresh session id, so a per-session claim would re-open the
+    // web UI on every startup. Keying on the server's boot-time instance id
+    // means we open the tab once while a given server is up, and only re-open
+    // after the server restarts (a new instance id).
+    if (!claimInstanceOpen(config.data_dir, instanceId)) {
       return emptyResult();
     }
 
@@ -72,13 +79,13 @@ function isOpenableSessionStartSource(source: string): boolean {
   return source === "startup" || source === "resume";
 }
 
-function claimSessionOpen(dataDir: string, sessionId: string): boolean {
+function claimInstanceOpen(dataDir: string, instanceId: string): boolean {
   const runtimeDir = join(dataDir, "runtime");
-  const statePath = join(runtimeDir, "web-open-sessions.json");
+  const statePath = join(runtimeDir, "web-open-instances.json");
   mkdirSync(runtimeDir, { recursive: true, mode: 0o700 });
 
-  const state = readSessionState(statePath);
-  const key = sessionId || "unknown";
+  const state = readInstanceState(statePath);
+  const key = instanceId || "unknown";
   if (state.opened.includes(key)) {
     return false;
   }
@@ -90,7 +97,7 @@ function claimSessionOpen(dataDir: string, sessionId: string): boolean {
   return true;
 }
 
-function readSessionState(statePath: string): { opened: string[] } {
+function readInstanceState(statePath: string): { opened: string[] } {
   if (!existsSync(statePath)) {
     return { opened: [] };
   }
@@ -110,12 +117,25 @@ function readSessionState(statePath: string): { opened: string[] } {
   }
 }
 
-async function defaultIsServerReachable(url: string): Promise<boolean> {
+async function defaultGetServerInstance(
+  healthUrl: string,
+): Promise<string | null> {
   try {
-    const response = await fetch(url, { signal: AbortSignal.timeout(500) });
-    return response.ok;
+    const response = await fetch(healthUrl, {
+      signal: AbortSignal.timeout(500),
+    });
+    if (!response.ok) {
+      return null;
+    }
+    const body = (await response.json()) as { instance_id?: unknown };
+    if (typeof body.instance_id === "string" && body.instance_id.length > 0) {
+      return body.instance_id;
+    }
+    // Reachable but no instance id (older server). Fall back to a stable
+    // sentinel so we still open the web UI exactly once per data dir.
+    return "legacy-instance";
   } catch {
-    return false;
+    return null;
   }
 }
 
