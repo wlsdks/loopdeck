@@ -7,6 +7,7 @@ import {
   type ImportDryRunResult,
   type ImportSourceType,
 } from "../../importer/dry-run.js";
+import { isImportInputError } from "../../importer/errors.js";
 import { executeImport } from "../../importer/execute.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import type { ImportJob } from "../../storage/ports.js";
@@ -84,16 +85,19 @@ function importForCliSync(options: ImportCliOptions): string {
       "--file is required for import dry-run. Pass the JSONL transcript path with --file <path>.",
     );
   }
+  const file = options.file;
 
-  const sourceType = parseImportSourceType(
-    options.source ?? "manual-jsonl",
-  ) as ImportSourceType;
-  const result = runImportDryRun({
-    file: options.file,
-    redactionMode: options.dataDir
-      ? loadPromptCoachConfig(options.dataDir).redaction_mode
-      : "mask",
-    sourceType,
+  const result = runImportCliInput(() => {
+    const sourceType = parseImportSourceType(
+      options.source ?? "manual-jsonl",
+    ) as ImportSourceType;
+    return runImportDryRun({
+      file,
+      redactionMode: options.dataDir
+        ? loadPromptCoachConfig(options.dataDir).redaction_mode
+        : "mask",
+      sourceType,
+    });
   });
 
   if (!options.saveJob) {
@@ -124,9 +128,10 @@ async function importExecuteForCli(options: ImportCliOptions): Promise<string> {
     );
   }
 
-  const sourceType = parseImportSourceType(
-    options.source ?? "manual-jsonl",
-  ) as ImportSourceType;
+  const sourceType = runImportCliInput(
+    () =>
+      parseImportSourceType(options.source ?? "manual-jsonl") as ImportSourceType,
+  );
   const config = loadPromptCoachConfig(options.dataDir);
   const hookAuth = loadHookAuth(options.dataDir);
   const storage = createSqlitePromptStorage({
@@ -135,13 +140,15 @@ async function importExecuteForCli(options: ImportCliOptions): Promise<string> {
   });
 
   try {
-    const result = await executeImport(storage, {
-      defaultCwd: process.cwd(),
-      file: options.file!,
-      redactionMode: config.redaction_mode,
-      resumeJobId: options.resume,
-      sourceType,
-    });
+    const result = await runImportCliInputAsync(() =>
+      executeImport(storage, {
+        defaultCwd: process.cwd(),
+        file: options.file!,
+        redactionMode: config.redaction_mode,
+        resumeJobId: options.resume,
+        sourceType,
+      }),
+    );
 
     return options.json
       ? JSON.stringify(result, null, 2)
@@ -155,6 +162,28 @@ async function importExecuteForCli(options: ImportCliOptions): Promise<string> {
         ].join("\n");
   } finally {
     storage.close();
+  }
+}
+
+function runImportCliInput<T>(callback: () => T): T {
+  try {
+    return callback();
+  } catch (error) {
+    if (isImportInputError(error)) {
+      throw new UserError(error.message);
+    }
+    throw error;
+  }
+}
+
+async function runImportCliInputAsync<T>(callback: () => Promise<T>): Promise<T> {
+  try {
+    return await callback();
+  } catch (error) {
+    if (isImportInputError(error)) {
+      throw new UserError(error.message);
+    }
+    throw error;
   }
 }
 

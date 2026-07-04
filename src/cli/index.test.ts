@@ -101,6 +101,28 @@ describe("runCli error handling", () => {
     expect(stderr.text).not.toMatch(/\n\s+at\s/);
   });
 
+  it("renders import input errors as friendly stderr instead of programmer errors", async () => {
+    const stderr = createCaptureStream();
+    const missingFile = join(createTempDir(), "missing.jsonl");
+
+    const exitCode = await runCli(
+      [
+        "node",
+        "prompt-coach",
+        "import",
+        "--dry-run",
+        "--file",
+        missingFile,
+      ],
+      { stderr: stderr.stream },
+    );
+
+    expect(exitCode).toBe(1);
+    expect(stderr.text).toContain("Import source file not found");
+    expect(stderr.text).not.toContain(missingFile);
+    expect(stderr.text).not.toMatch(/\n\s+at\s/);
+  });
+
   it("rethrows non-UserError so programmer bugs keep their stack trace", async () => {
     const stderr = createCaptureStream();
     const program = createProgram();
