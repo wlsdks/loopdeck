@@ -324,6 +324,16 @@ describe("web api export client", () => {
               stores_state: false,
               external_calls: false,
             },
+            continuation_safety_recheck_cue: {
+              label: "Safety re-check cue",
+              trigger: "after each selected brief copy",
+              instruction:
+                "re-check continuation safety guidance before pasting into Codex or Claude Code",
+              reason:
+                "each copied brief can represent a new handoff decision even in the same session",
+              writes_files: false,
+              external_calls: false,
+            },
             paste_destination: {
               label: "Paste destination",
               targets: ["Codex active request", "Claude Code active request"],
@@ -610,6 +620,16 @@ describe("web api export client", () => {
           "operator re-checks safety guidance each time before manual agent submission",
         reason: "keeps continuation review local to the current operator session",
         stores_state: false,
+        external_calls: false,
+      },
+      continuation_safety_recheck_cue: {
+        label: "Safety re-check cue",
+        trigger: "after each selected brief copy",
+        instruction:
+          "re-check continuation safety guidance before pasting into Codex or Claude Code",
+        reason:
+          "each copied brief can represent a new handoff decision even in the same session",
+        writes_files: false,
         external_calls: false,
       },
       paste_destination: {

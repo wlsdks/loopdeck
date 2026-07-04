@@ -193,6 +193,8 @@ export function registerLoopRoutes(
                 continuationSafetyOrderingNoteFor(),
               continuation_safety_non_persistence_note:
                 continuationSafetyNonPersistenceNoteFor(),
+              continuation_safety_recheck_cue:
+                continuationSafetyRecheckCueFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -716,6 +718,26 @@ function continuationSafetyNonPersistenceNoteFor(): {
       "operator re-checks safety guidance each time before manual agent submission",
     reason: "keeps continuation review local to the current operator session",
     stores_state: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyRecheckCueFor(): {
+  label: "Safety re-check cue";
+  trigger: "after each selected brief copy";
+  instruction: "re-check continuation safety guidance before pasting into Codex or Claude Code";
+  reason: "each copied brief can represent a new handoff decision even in the same session";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Safety re-check cue",
+    trigger: "after each selected brief copy",
+    instruction:
+      "re-check continuation safety guidance before pasting into Codex or Claude Code",
+    reason:
+      "each copied brief can represent a new handoff decision even in the same session",
+    writes_files: false,
     external_calls: false,
   };
 }

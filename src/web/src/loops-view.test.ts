@@ -147,6 +147,15 @@ describe("LoopsView", () => {
       "keeps continuation review local to the current operator session",
     );
     expect(html).toContain("No safety review state storage or external calls");
+    expect(html).toContain("Safety re-check cue");
+    expect(html).toContain("after each selected brief copy");
+    expect(html).toContain(
+      "re-check continuation safety guidance before pasting into Codex or Claude Code",
+    );
+    expect(html).toContain(
+      "each copied brief can represent a new handoff decision even in the same session",
+    );
+    expect(html).toContain("No re-check writes or external calls");
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -556,6 +565,16 @@ function loopWorktree(): LoopWorktreeResponse {
         "operator re-checks safety guidance each time before manual agent submission",
       reason: "keeps continuation review local to the current operator session",
       stores_state: false,
+      external_calls: false,
+    },
+    continuation_safety_recheck_cue: {
+      label: "Safety re-check cue",
+      trigger: "after each selected brief copy",
+      instruction:
+        "re-check continuation safety guidance before pasting into Codex or Claude Code",
+      reason:
+        "each copied brief can represent a new handoff decision even in the same session",
+      writes_files: false,
       external_calls: false,
     },
     paste_destination: {

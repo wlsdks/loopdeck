@@ -2681,6 +2681,44 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.77: Selected Continuation Safety Re-Check Cue
+
+Decision:
+
+- Selected worktree detail should state that continuation safety guidance is
+  re-checked after each selected brief copy before pasting into Codex or Claude
+  Code.
+- This is needed because the non-persistence note explains review state is not
+  stored; the operator still needs a concrete cue tied to the repeated copy
+  action.
+
+Add:
+
+- top-level selected worktree detail `continuation_safety_recheck_cue` with:
+  - label: `Safety re-check cue`
+  - trigger: `after each selected brief copy`
+  - instruction:
+    `re-check continuation safety guidance before pasting into Codex or Claude Code`
+  - reason:
+    `each copied brief can represent a new handoff decision even in the same session`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after the non-persistence note
+- focused server/API/web tests proving the re-check cue is present
+
+Do not add:
+
+- Codex or Claude Code UI automation, hidden prompt submission, command
+  execution, git reads/writes, filesystem reads/writes, transcript import,
+  persisted review state, checklist completion state, background analysis,
+  external model calls, memory approval writes, merge decision writes, or new
+  write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

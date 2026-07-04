@@ -341,7 +341,11 @@
 - [x] Task 79 RED: selected detail API/UI에 `continuation_safety_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 79 GREEN: selected worktree detail API/type/UI에 reviewed guidance state not stored/synchronized, re-check before manual submission, no-state/no-external flags를 read-only로 노출
 - [x] Task 79 PRIVACY: continuation safety non-persistence note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [ ] 다음 slice: selected detail panel의 continuation safety guidance를 brief copy 이후마다 다시 확인하라는 re-check cue를 raw-free로 별도 제공할지 결정
+- [x] Task 80 DECISION: continuation safety re-check cue는 selected brief copy 이후마다 paste 전에 safety guidance를 다시 확인하게 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 80 RED: selected detail API/UI에 `continuation_safety_recheck_cue`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 80 GREEN: selected worktree detail API/type/UI에 after each selected brief copy, re-check before Codex/Claude Code paste, no-write/no-external flags를 read-only로 노출
+- [x] Task 80 PRIVACY: continuation safety re-check cue는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [ ] 다음 slice: selected detail panel의 copy feedback이 safety re-check cue를 다시 가리키는 reminder를 raw-free로 별도 제공할지 결정
 
 ### 판단 기준
 

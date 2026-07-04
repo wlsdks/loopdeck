@@ -268,8 +268,11 @@ Implementation checkpoint:
 - Selected worktree detail now includes a raw-free continuation safety
   non-persistence note, explaining that reviewed guidance state is not stored or
   synchronized and must be re-checked by the operator each time.
+- Selected worktree detail now includes a raw-free continuation safety re-check
+  cue, explaining that after each selected brief copy the operator should
+  re-check safety guidance before pasting into Codex or Claude Code.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free re-check cue for continuation safety guidance after each copied
-  brief, without adding transcript content, prompt bodies, raw paths, git status
-  reads, command execution, persisted review state, checklist completion state,
-  memory approval writes, merge writes, or external calls.
+  raw-free copy-feedback reminder that points back to the safety re-check cue,
+  without adding transcript content, prompt bodies, raw paths, git status reads,
+  command execution, persisted review state, checklist completion state, memory
+  approval writes, merge writes, or external calls.

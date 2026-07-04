@@ -529,6 +529,28 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.continuation_safety_recheck_cue && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {worktreeDetail.continuation_safety_recheck_cue.label}
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.continuation_safety_recheck_cue.trigger}
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.continuation_safety_recheck_cue
+                          .instruction
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.continuation_safety_recheck_cue.reason}
+                    </p>
+                    <p className="loops-status-line">
+                      No re-check writes or external calls
+                    </p>
+                  </div>
+                )}
                 {worktreeDetail.paste_destination && (
                   <div className="loop-review-item">
                     <p className="loops-status-line">
