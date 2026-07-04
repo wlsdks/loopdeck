@@ -263,6 +263,8 @@ export function registerLoopRoutes(
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPrePasteFreshnessAdvisoryFor(),
               continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_submit_freshness_advisory:
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPreSubmitFreshnessAdvisoryFor(),
+              continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory:
+                continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitFreshnessAdvisoryFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1509,6 +1511,28 @@ function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPreSubmit
       "Loopdeck does not approve submissions or verify renewed-memory-approval freshness before submit",
     reason:
       "keeps submission readiness separate from renewed-memory-approval freshness uncertainty review",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitFreshnessAdvisoryFor(): {
+  label: "Post-memory-approval retry renewed-memory-approval post-submit freshness advisory";
+  advisory: "collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain";
+  not_automated: "Loopdeck does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit";
+  reason: "keeps post-submit freshness review tied to explicit local snapshot collection";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label:
+      "Post-memory-approval retry renewed-memory-approval post-submit freshness advisory",
+    advisory:
+      "collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain",
+    not_automated:
+      "Loopdeck does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
+    reason:
+      "keeps post-submit freshness review tied to explicit local snapshot collection",
     writes_files: false,
     external_calls: false,
   };
