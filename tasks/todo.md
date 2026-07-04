@@ -381,7 +381,11 @@
 - [x] Task 89 RED: selected detail API/UI에 `continuation_safety_manual_submission_boundary_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 89 GREEN: selected worktree detail API/type/UI에 manual submission boundary, no enter/click submit/submitted-state record, no-write/no-external flags를 read-only로 노출
 - [x] Task 89 PRIVACY: continuation safety manual submission boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [ ] 다음 slice: selected detail panel의 submission result non-persistence note를 raw-free로 별도 제공할지 결정
+- [x] Task 90 DECISION: submission result non-persistence note는 agent response/submission result가 다음 explicit loop snapshot 전까지 Loopdeck 밖에 있고 submitted state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 90 RED: selected detail API/UI에 `continuation_safety_submission_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 90 GREEN: selected worktree detail API/type/UI에 submission result outside Loopdeck until explicit snapshot, no submitted-state detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 90 PRIVACY: continuation safety submission result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [ ] 다음 slice: selected detail panel의 post-submission collection reminder boundary note를 raw-free로 별도 제공할지 결정
 
 ### 판단 기준
 

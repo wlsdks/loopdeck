@@ -213,6 +213,8 @@ export function registerLoopRoutes(
                 continuationSafetyPasteDestinationBoundaryNoteFor(),
               continuation_safety_manual_submission_boundary_note:
                 continuationSafetyManualSubmissionBoundaryNoteFor(),
+              continuation_safety_submission_result_non_persistence_note:
+                continuationSafetySubmissionResultNonPersistenceNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -936,6 +938,27 @@ function continuationSafetyManualSubmissionBoundaryNoteFor(): {
     not_automated:
       "Loopdeck does not press enter, click submit, or record submitted state",
     reason: "keeps final agent execution under operator control after paste",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetySubmissionResultNonPersistenceNoteFor(): {
+  label: "Submission result non-persistence";
+  result_scope: "agent response and submission result stay outside Loopdeck until the next explicit loop snapshot";
+  not_stored: "Loopdeck does not detect, store, or sync submitted state after handoff";
+  reason: "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Submission result non-persistence",
+    result_scope:
+      "agent response and submission result stay outside Loopdeck until the next explicit loop snapshot",
+    not_stored:
+      "Loopdeck does not detect, store, or sync submitted state after handoff",
+    reason:
+      "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring",
     writes_files: false,
     external_calls: false,
   };

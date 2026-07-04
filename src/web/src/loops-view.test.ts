@@ -253,6 +253,19 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "No manual submission boundary writes or external calls",
     );
+    expect(html).toContain("Submission result non-persistence");
+    expect(html).toContain(
+      "agent response and submission result stay outside Loopdeck until the next explicit loop snapshot",
+    );
+    expect(html).toContain(
+      "Loopdeck does not detect, store, or sync submitted state after handoff",
+    );
+    expect(html).toContain(
+      "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring",
+    );
+    expect(html).toContain(
+      "No submission result persistence writes or external calls",
+    );
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -762,6 +775,17 @@ function loopWorktree(): LoopWorktreeResponse {
       not_automated:
         "Loopdeck does not press enter, click submit, or record submitted state",
       reason: "keeps final agent execution under operator control after paste",
+      writes_files: false,
+      external_calls: false,
+    },
+    continuation_safety_submission_result_non_persistence_note: {
+      label: "Submission result non-persistence",
+      result_scope:
+        "agent response and submission result stay outside Loopdeck until the next explicit loop snapshot",
+      not_stored:
+        "Loopdeck does not detect, store, or sync submitted state after handoff",
+      reason:
+        "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring",
       writes_files: false,
       external_calls: false,
     },

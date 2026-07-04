@@ -1017,6 +1017,17 @@ describe("createServer P2 ingest boundary", () => {
           writes_files: false,
           external_calls: false,
         },
+        continuation_safety_submission_result_non_persistence_note: {
+          label: "Submission result non-persistence",
+          result_scope:
+            "agent response and submission result stay outside Loopdeck until the next explicit loop snapshot",
+          not_stored:
+            "Loopdeck does not detect, store, or sync submitted state after handoff",
+          reason:
+            "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring",
+          writes_files: false,
+          external_calls: false,
+        },
         paste_destination: {
           label: "Paste destination",
           targets: ["Codex active request", "Claude Code active request"],

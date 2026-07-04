@@ -3085,6 +3085,52 @@ Do not add:
   state, or secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.87: Submission Result Non-Persistence Note
+
+Decision:
+
+- Selected worktree detail should state that agent response and submission
+  result stay outside Loopdeck until the next explicit loop snapshot.
+- This is needed because post-submission guidance should not be mistaken for
+  submission result detection, submitted state persistence, transcript watching,
+  or agent UI monitoring.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_submission_result_non_persistence_note` with:
+  - label: `Submission result non-persistence`
+  - result_scope:
+    `agent response and submission result stay outside Loopdeck until the next explicit loop snapshot`
+  - not_stored:
+    `Loopdeck does not detect, store, or sync submitted state after handoff`
+  - reason:
+    `keeps post-submission evidence tied to explicit loop collection instead of UI monitoring`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after the manual submission boundary note
+- focused server/API/web tests proving the submission result non-persistence note
+  is present
+
+Do not add:
+
+- submission result detection, submitted state persistence, transcript watching,
+  agent UI monitoring, submit automation, Enter key automation, button clicking,
+  submission success detection, active window detection, target-agent UI
+  inspection, target content validation, paste success verification, clipboard
+  target validation, paste automation, persisted destination state, persisted
+  target state, safety approval state, Codex or Claude Code UI automation,
+  hidden prompt submission, command execution, git reads/writes, filesystem
+  reads/writes, transcript import, persisted review state, checklist completion
+  state, background analysis, external model calls, memory approval writes,
+  merge decision writes, or new write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, target
+  content, active-window titles, pasted content, paste result state, submitted
+  state, agent response content, or secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

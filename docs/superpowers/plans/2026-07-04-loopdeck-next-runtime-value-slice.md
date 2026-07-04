@@ -304,9 +304,14 @@ Implementation checkpoint:
   note, explaining that the operator submits the pasted brief manually in Codex
   or Claude Code, without Loopdeck pressing Enter, clicking submit, or
   recording submitted state.
+- Selected worktree detail now includes a raw-free submission result
+  non-persistence note, explaining that agent response and submission result
+  stay outside Loopdeck until the next explicit loop snapshot, without Loopdeck
+  detecting, storing, or syncing submitted state after handoff.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free submission result non-persistence note, without adding transcript
-  content, prompt bodies, raw paths, target contents, active-window titles,
-  pasted content, paste result state, submitted state, git status reads,
-  command execution, persisted review state, checklist completion state, memory
-  approval writes, merge writes, or external calls.
+  raw-free post-submission collection reminder boundary note, without adding
+  transcript content, prompt bodies, raw paths, target contents, active-window
+  titles, pasted content, paste result state, submitted state, agent response
+  content, git status reads, command execution, persisted review state,
+  checklist completion state, memory approval writes, merge writes, or external
+  calls.
