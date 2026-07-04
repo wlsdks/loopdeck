@@ -1236,6 +1236,42 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.continuation_safety_post_memory_approval_collection_result_non_persistence_note && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_post_memory_approval_collection_result_non_persistence_note
+                          .label
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_post_memory_approval_collection_result_non_persistence_note
+                          .result_scope
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_post_memory_approval_collection_result_non_persistence_note
+                          .not_stored
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_post_memory_approval_collection_result_non_persistence_note
+                          .reason
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      No post-memory-approval collection result persistence
+                      writes or external calls
+                    </p>
+                  </div>
+                )}
                 {worktreeDetail.paste_destination && (
                   <div className="loop-review-item">
                     <p className="loops-status-line">

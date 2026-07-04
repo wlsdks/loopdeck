@@ -348,13 +348,17 @@ Implementation checkpoint:
   collection reminder, explaining that the operator collects a new explicit
   loop snapshot after approving loop memory, without Loopdeck starting
   collection from approval or approval state changes.
+- Selected worktree detail now includes a raw-free post-memory-approval
+  collection result non-persistence note, explaining that post-approval
+  collection result state stays outside Loopdeck until the next explicit loop
+  snapshot, without Loopdeck detecting, storing, or syncing that result state.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free post-memory-approval collection result non-persistence note, without
-  adding transcript content, prompt bodies, raw paths, target contents,
-  active-window titles, pasted content, paste result state, submitted state,
-  agent response content, collection result state, retry result state, freshness
-  result state, approval result state, freshness verification, automatic
-  collection, collection command execution, retry automation, git status reads,
-  command execution, persisted review state, checklist completion state, memory
-  approval writes, memory approval state, merge writes, merge decision state, or
-  external calls.
+  raw-free post-memory-approval collection retry boundary note, without adding
+  transcript content, prompt bodies, raw paths, target contents, active-window
+  titles, pasted content, paste result state, submitted state, agent response
+  content, collection result state, post-approval collection result state, retry
+  result state, freshness result state, approval result state, freshness
+  verification, automatic collection, collection command execution, retry
+  automation, git status reads, command execution, persisted review state,
+  checklist completion state, memory approval writes, memory approval state,
+  merge writes, merge decision state, or external calls.

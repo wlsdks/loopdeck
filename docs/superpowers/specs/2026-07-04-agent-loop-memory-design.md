@@ -3649,6 +3649,63 @@ Do not add:
   result state, or secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.98: Post-Memory-Approval Collection Result Non-Persistence
+
+Decision:
+
+- Selected worktree detail should state that post-memory-approval collection
+  result state stays outside Loopdeck until the next explicit loop snapshot is
+  recorded.
+- This is needed because the operator may collect after memory approval, but
+  Loopdeck should not infer, persist, or synchronize that collection result from
+  approval state, agent UI activity, transcripts, or hidden collection checks.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_post_memory_approval_collection_result_non_persistence_note`
+  with:
+  - label: `Post-memory-approval collection result non-persistence`
+  - result_scope:
+    `post-approval collection result stays outside Loopdeck until the next explicit loop snapshot`
+  - not_stored:
+    `Loopdeck does not detect, store, or sync post-approval collection result state`
+  - reason:
+    `keeps post-approval collection evidence tied to explicit local snapshot recording`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after the post-memory-approval collection reminder
+- focused server/API/web tests proving the post-memory-approval collection
+  result non-persistence note is present
+
+Do not add:
+
+- collection result persistence, post-approval collection result persistence,
+  collection result detection, collection state synchronization, approval result
+  persistence, approval state synchronization, memory approval writes, memory
+  approval state, automatic post-approval collection, background collection,
+  collection command execution, freshness verification, freshness result
+  persistence, git status reads, transcript inspection, agent UI monitoring,
+  hidden collection actions, retry automation, automatic collection retry,
+  hidden recovery actions, submission event hooks, submitted state persistence,
+  submit automation, Enter key automation, button clicking, active window
+  detection, target-agent UI inspection, target content validation, paste
+  success verification, clipboard target validation, paste automation,
+  persisted destination state, persisted target state, safety approval state,
+  Codex or Claude Code UI automation, hidden prompt submission, command
+  execution, filesystem reads/writes, persisted review state, checklist
+  completion state, merge decision writes, background analysis, external model
+  calls, or new write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, target
+  content, active-window titles, pasted content, paste result state, submitted
+  state, agent response content, collection result state, post-approval
+  collection result state, retry result state, freshness result state, merge
+  decision state, memory approval state, approval result state, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.
