@@ -34,6 +34,11 @@ source of truth for product scope; this file is the operational queue.
 The next implementation work should favor reliability and agent-loop
 continuity over more product naming work.
 
+Current goal audit:
+
+- `docs/LOOPDECK_GOAL_AUDIT_2026-07-05.md` maps the long-running Loopdeck goal
+  to current evidence and explicitly keeps the goal open.
+
 Decision:
 
 1. Implement storage capability negotiation first.
@@ -185,6 +190,15 @@ Remaining scope:
 `pnpm ui-patrol` command. It reuses the synthetic browser E2E flow and stores
 desktop/mobile screenshot artifacts through `SCREENSHOT_DIR` so visual
 regressions remain visible across sessions.
+
+Operational checkpoint:
+
+- Initial `workflow_dispatch` run `28717201110` failed because the GitHub
+  runner did not have Playwright Chromium installed.
+- PR #341 added `pnpm exec playwright install chromium` before `pnpm
+  ui-patrol`.
+- Follow-up `workflow_dispatch` run `28717406758` passed and uploaded 9
+  screenshot artifacts.
 
 Remaining scope:
 

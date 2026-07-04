@@ -8,7 +8,10 @@
 
 **Repository target:** `wlsdks/loopdeck`
 
-**Status:** Product planning hardening in progress. Do not start implementation until the feature portfolio and go/no-go gates in this document are accepted.
+**Status:** Active implementation. The product planning gate has been accepted
+for current Loopdeck compatibility-window slices, and implementation is
+proceeding through small TDD PRs. Do not rename packages, remotes, public
+commands, slash namespaces, or MCP server names from this document alone.
 
 ---
 
