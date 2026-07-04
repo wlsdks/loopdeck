@@ -530,6 +530,17 @@ describe("web api export client", () => {
               writes_files: false,
               external_calls: false,
             },
+            continuation_safety_pre_memory_approval_freshness_advisory: {
+              label: "Pre-memory-approval freshness advisory",
+              advisory:
+                "review freshness uncertainty before approving loop memory",
+              not_decision:
+                "Loopdeck does not approve memory or verify freshness from this note",
+              reason:
+                "keeps memory approval separate from freshness uncertainty review",
+              writes_files: false,
+              external_calls: false,
+            },
             paste_destination: {
               label: "Paste destination",
               targets: ["Codex active request", "Claude Code active request"],
@@ -1011,6 +1022,15 @@ describe("web api export client", () => {
         not_decision:
           "Loopdeck does not approve merges or verify freshness before merge",
         reason: "keeps merge readiness separate from freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_pre_memory_approval_freshness_advisory: {
+        label: "Pre-memory-approval freshness advisory",
+        advisory: "review freshness uncertainty before approving loop memory",
+        not_decision:
+          "Loopdeck does not approve memory or verify freshness from this note",
+        reason: "keeps memory approval separate from freshness uncertainty review",
         writes_files: false,
         external_calls: false,
       },

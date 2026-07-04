@@ -358,6 +358,19 @@ describe("LoopsView", () => {
       "keeps merge readiness separate from freshness uncertainty review",
     );
     expect(html).toContain("No pre-merge freshness writes or external calls");
+    expect(html).toContain("Pre-memory-approval freshness advisory");
+    expect(html).toContain(
+      "review freshness uncertainty before approving loop memory",
+    );
+    expect(html).toContain(
+      "Loopdeck does not approve memory or verify freshness from this note",
+    );
+    expect(html).toContain(
+      "keeps memory approval separate from freshness uncertainty review",
+    );
+    expect(html).toContain(
+      "No pre-memory-approval freshness writes or external calls",
+    );
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -958,6 +971,15 @@ function loopWorktree(): LoopWorktreeResponse {
       not_decision:
         "Loopdeck does not approve merges or verify freshness before merge",
       reason: "keeps merge readiness separate from freshness uncertainty review",
+      writes_files: false,
+      external_calls: false,
+    },
+    continuation_safety_pre_memory_approval_freshness_advisory: {
+      label: "Pre-memory-approval freshness advisory",
+      advisory: "review freshness uncertainty before approving loop memory",
+      not_decision:
+        "Loopdeck does not approve memory or verify freshness from this note",
+      reason: "keeps memory approval separate from freshness uncertainty review",
       writes_files: false,
       external_calls: false,
     },

@@ -231,6 +231,8 @@ export function registerLoopRoutes(
                 continuationSafetyFreshnessUncertaintyCollectionReminderFor(),
               continuation_safety_pre_merge_freshness_advisory:
                 continuationSafetyPreMergeFreshnessAdvisoryFor(),
+              continuation_safety_pre_memory_approval_freshness_advisory:
+                continuationSafetyPreMemoryApprovalFreshnessAdvisoryFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1136,6 +1138,26 @@ function continuationSafetyPreMergeFreshnessAdvisoryFor(): {
     not_decision:
       "Loopdeck does not approve merges or verify freshness before merge",
     reason: "keeps merge readiness separate from freshness uncertainty review",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPreMemoryApprovalFreshnessAdvisoryFor(): {
+  label: "Pre-memory-approval freshness advisory";
+  advisory: "review freshness uncertainty before approving loop memory";
+  not_decision: "Loopdeck does not approve memory or verify freshness from this note";
+  reason: "keeps memory approval separate from freshness uncertainty review";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Pre-memory-approval freshness advisory",
+    advisory: "review freshness uncertainty before approving loop memory",
+    not_decision:
+      "Loopdeck does not approve memory or verify freshness from this note",
+    reason:
+      "keeps memory approval separate from freshness uncertainty review",
     writes_files: false,
     external_calls: false,
   };

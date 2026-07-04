@@ -340,12 +340,16 @@ Implementation checkpoint:
   advisory, explaining that the operator reviews freshness uncertainty before
   merge decisions, without Loopdeck approving merges or verifying freshness
   before merge.
+- Selected worktree detail now includes a raw-free pre-memory-approval
+  freshness advisory, explaining that the operator reviews freshness
+  uncertainty before approving loop memory, without Loopdeck approving memory
+  or verifying freshness from this note.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free pre-memory-approval freshness advisory, without adding
-  transcript content, prompt bodies, raw paths, target contents, active-window
-  titles, pasted content, paste result state, submitted state, agent response
-  content, collection result state, retry result state, freshness result state,
-  freshness verification, automatic collection, collection command execution,
-  retry automation, git status reads, command execution, persisted review
-  state, checklist completion state, memory approval writes, merge writes,
-  merge decision state, or external calls.
+  raw-free post-memory-approval collection reminder, without adding transcript
+  content, prompt bodies, raw paths, target contents, active-window titles,
+  pasted content, paste result state, submitted state, agent response content,
+  collection result state, retry result state, freshness result state, freshness
+  verification, automatic collection, collection command execution, retry
+  automation, git status reads, command execution, persisted review state,
+  checklist completion state, memory approval writes, memory approval state,
+  merge writes, merge decision state, or external calls.
