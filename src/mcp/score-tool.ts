@@ -5,6 +5,10 @@ import { loadHookAuth, loadPromptCoachConfig } from "../config/config.js";
 import type { PromptAnalysisPreview } from "../shared/schema.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import type { PromptSummary } from "../storage/ports.js";
+import {
+  improvementNextActionRequiresAsk,
+  shouldAskForImprovement,
+} from "./improvement-next-action.js";
 import { projectLabel } from "./project-label.js";
 export {
   prepareAgentJudgeBatchTool,
@@ -197,6 +201,7 @@ export function improvePromptTool(
 
     return toImprovementToolResult({
       source: "text",
+      decisionPrompt: prompt,
       improvement: improvePrompt({
         prompt,
         createdAt: (options.now ?? new Date()).toISOString(),
@@ -526,12 +531,12 @@ function createAgentCoachBrief(input: {
   const improvementHasQuestions =
     !!input.improvement &&
     !isToolError(input.improvement) &&
-    input.improvement.clarifying_questions.length > 0;
+    improvementNextActionRequiresAsk(input.improvement);
 
   if (input.improvement && !isToolError(input.improvement)) {
     nextActions.push(
       improvementHasQuestions
-        ? "Ask the user the listed clarifying_questions through the agent's native ask UI before producing or submitting any rewrite. Wait for the user's own answers; do not guess on their behalf."
+        ? input.improvement.next_action
         : "Use the approval-ready rewrite only after the user explicitly accepts it.",
     );
     if (improvementHasQuestions) {
@@ -646,6 +651,7 @@ function withStoredPromptImprovement(
       return toImprovementToolResult({
         source: args.latest === true ? "latest" : "prompt_id",
         promptId: id,
+        decisionPrompt: prompt.snippet,
         improvement: improvePrompt({
           prompt: prompt.markdown,
           createdAt: (options.now ?? new Date()).toISOString(),
@@ -677,10 +683,14 @@ function storageUnavailableMessage(error: unknown): string {
 function toImprovementToolResult(input: {
   source: "text" | "prompt_id" | "latest";
   promptId?: string;
+  decisionPrompt?: string;
   improvement: PromptImprovement;
   rewriteSource?: "direct_prompt" | "redacted_stored_prompt";
 }): ImprovePromptToolResult {
-  const hasQuestions = input.improvement.clarifying_questions.length > 0;
+  const hasQuestions = shouldAskForImprovement(input.improvement, {
+    decisionPrompt: input.decisionPrompt,
+    now: new Date(input.improvement.created_at),
+  });
   const nextAction = hasQuestions
     ? "Ask the user the listed clarifying_questions through the agent's native ask UI before producing or submitting any rewrite. Wait for the user's own answers; do not guess on their behalf."
     : "Review the draft, copy it manually, and resubmit it only after user approval.";
