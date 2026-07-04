@@ -432,6 +432,25 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.copy_side_effects && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {worktreeDetail.copy_side_effects.label}
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.copy_side_effects.clipboard}
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.copy_side_effects.ui_feedback}
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.copy_side_effects.does_not}
+                    </p>
+                    <p className="loops-status-line">
+                      No copy side-effect writes or external calls
+                    </p>
+                  </div>
+                )}
               </div>
             )}
             {worktreeDetail.latest_decision && (

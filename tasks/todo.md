@@ -289,7 +289,11 @@
 - [x] Task 66 RED: selected detail API/UI에 `command_filters`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 66 GREEN: selected worktree detail API/type/UI에 selected/review command filter categories와 no-write flags를 read-only로 노출
 - [x] Task 66 PRIVACY: filter explanation은 filter 이름만 포함하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
-- [ ] 다음 slice: selected detail panel의 copy button side effects를 raw-free로 요약할지 결정
+- [x] Task 67 DECISION: selected detail panel의 copy button side effects는 local-first 경계 확인에 필요하므로 raw-free로 요약
+- [x] Task 67 RED: selected detail API/UI에 `copy_side_effects`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 67 GREEN: selected worktree detail API/type/UI에 clipboard/UI feedback과 no-write/no-external-call flags를 read-only로 노출
+- [x] Task 67 PRIVACY: copy side-effect summary는 prompt body/evidence refs/outcome summary/raw path/git read/write/command execution/external call을 포함하지 않음
+- [ ] 다음 slice: selected detail panel의 paste destination hint를 Codex/Claude Code continuation handoff용으로 raw-free 제공할지 결정
 
 ### 판단 기준
 

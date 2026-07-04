@@ -2170,6 +2170,46 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.64: Selected Copy Side-Effect Summary
+
+Decision:
+
+- Selected worktree detail should explain what the selected brief copy button
+  does and does not change. The panel now contains multiple visible commands and
+  review concepts, so Codex and Claude Code operators need a raw-free reminder
+  that copying is clipboard/UI feedback only, not command execution or merge
+  approval.
+- This is needed because the product is a local-first workbench: users should be
+  able to inspect copy actions before running or pasting anything into another
+  agent session.
+
+Add:
+
+- top-level selected worktree detail `copy_side_effects` with:
+  - label: `Copy side effects`
+  - clipboard:
+    `copies the selected continuation brief to the local clipboard`
+  - ui_feedback:
+    `temporarily marks the selected brief copy button as copied`
+  - does_not:
+    `does not write files, execute commands, call external services, submit prompts, or change merge state`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance
+- focused server/API/web tests proving the side-effect summary is present
+
+Do not add:
+
+- extra clipboard writes beyond the existing explicit copy action, command
+  execution, hidden prompt submission, git reads/writes, filesystem reads,
+  merge-state mutation, checklist completion, background analysis, or external
+  model calls
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

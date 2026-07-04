@@ -288,6 +288,14 @@ export type LoopWorktreeResponse = {
     writes_files: false;
     external_calls: false;
   };
+  copy_side_effects?: {
+    label: "Copy side effects";
+    clipboard: "copies the selected continuation brief to the local clipboard";
+    ui_feedback: "temporarily marks the selected brief copy button as copied";
+    does_not: "does not write files, execute commands, call external services, submit prompts, or change merge state";
+    writes_files: false;
+    external_calls: false;
+  };
   latest_decision?: {
     snapshot_id: string;
     worktree: string;

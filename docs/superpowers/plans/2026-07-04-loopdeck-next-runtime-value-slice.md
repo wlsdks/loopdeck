@@ -224,7 +224,11 @@ Implementation checkpoint:
 - Selected worktree detail now explains which filter categories are represented
   in each visible command, using only filter names for selected continuation and
   command-center review scope.
+- Selected worktree detail now explains selected brief copy side effects,
+  showing that the copy action only writes to the local clipboard and temporary
+  UI feedback, not files, commands, external services, prompt submission, or
+  merge state.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free summary of copy-button side effects across the selected detail panel,
+  raw-free "paste destination" hint for Codex/Claude Code continuation handoff,
   without adding transcript content, prompt bodies, raw paths, git status reads,
   command execution, or write tools.

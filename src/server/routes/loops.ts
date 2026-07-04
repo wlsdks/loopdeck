@@ -187,6 +187,7 @@ export function registerLoopRoutes(
                 hasBranch: Boolean(query.branch),
                 reviewHasBranch: Boolean(reviewItem?.branch),
               }),
+              copy_side_effects: copySideEffectsFor(),
             }
           : {}),
         ...(latestDecision
@@ -621,6 +622,25 @@ function commandFiltersFor(input: {
       : ["worktree"],
     reason:
       "selected command reflects the current selection while review command reflects command-center review scope",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function copySideEffectsFor(): {
+  label: "Copy side effects";
+  clipboard: "copies the selected continuation brief to the local clipboard";
+  ui_feedback: "temporarily marks the selected brief copy button as copied";
+  does_not: "does not write files, execute commands, call external services, submit prompts, or change merge state";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Copy side effects",
+    clipboard: "copies the selected continuation brief to the local clipboard",
+    ui_feedback: "temporarily marks the selected brief copy button as copied",
+    does_not:
+      "does not write files, execute commands, call external services, submit prompts, or change merge state",
     writes_files: false,
     external_calls: false,
   };

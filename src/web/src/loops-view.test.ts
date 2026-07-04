@@ -103,6 +103,17 @@ describe("LoopsView", () => {
       "selected command reflects the current selection while review command reflects command-center review scope",
     );
     expect(html).toContain("No filter explanation writes or external calls");
+    expect(html).toContain("Copy side effects");
+    expect(html).toContain(
+      "copies the selected continuation brief to the local clipboard",
+    );
+    expect(html).toContain(
+      "temporarily marks the selected brief copy button as copied",
+    );
+    expect(html).toContain(
+      "does not write files, execute commands, call external services, submit prompts, or change merge state",
+    );
+    expect(html).toContain("No copy side-effect writes or external calls");
     expect(html).toContain("Continuation guidance");
     expect(html).toContain('class="loop-detail-section"');
     expect(html).toContain('class="loop-detail-section-title"');
@@ -371,6 +382,15 @@ function loopWorktree(): LoopWorktreeResponse {
       review_command_filters: ["worktree", "branch"],
       reason:
         "selected command reflects the current selection while review command reflects command-center review scope",
+      writes_files: false,
+      external_calls: false,
+    },
+    copy_side_effects: {
+      label: "Copy side effects",
+      clipboard: "copies the selected continuation brief to the local clipboard",
+      ui_feedback: "temporarily marks the selected brief copy button as copied",
+      does_not:
+        "does not write files, execute commands, call external services, submit prompts, or change merge state",
       writes_files: false,
       external_calls: false,
     },

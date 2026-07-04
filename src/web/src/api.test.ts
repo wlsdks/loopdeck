@@ -280,6 +280,17 @@ describe("web api export client", () => {
               writes_files: false,
               external_calls: false,
             },
+            copy_side_effects: {
+              label: "Copy side effects",
+              clipboard:
+                "copies the selected continuation brief to the local clipboard",
+              ui_feedback:
+                "temporarily marks the selected brief copy button as copied",
+              does_not:
+                "does not write files, execute commands, call external services, submit prompts, or change merge state",
+              writes_files: false,
+              external_calls: false,
+            },
             latest_decision: {
               snapshot_id: "loop_web",
               worktree: "agent-loop-worktree",
@@ -418,6 +429,15 @@ describe("web api export client", () => {
         review_command_filters: ["worktree", "branch"],
         reason:
           "selected command reflects the current selection while review command reflects command-center review scope",
+        writes_files: false,
+        external_calls: false,
+      },
+      copy_side_effects: {
+        label: "Copy side effects",
+        clipboard: "copies the selected continuation brief to the local clipboard",
+        ui_feedback: "temporarily marks the selected brief copy button as copied",
+        does_not:
+          "does not write files, execute commands, call external services, submit prompts, or change merge state",
         writes_files: false,
         external_calls: false,
       },
