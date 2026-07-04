@@ -67,6 +67,9 @@ Verified CI and operational evidence:
 - `corepack pnpm e2e:browser` on `codex/reuse-copy-fallback-audit-refresh`
   forced clipboard writes to fail and verified the prompt detail manual-copy
   fallback for saved improvement drafts.
+- `corepack pnpm e2e:browser` on `codex/reuse-copy-fallback-e2e-coverage`
+  now forces clipboard writes to fail separately for `Copy draft` and
+  `Copy saved draft`, verifying both manual-copy fallback paths.
 
 ## Requirement Audit
 
