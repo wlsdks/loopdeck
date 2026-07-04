@@ -1,12 +1,30 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { parse as parseYaml } from "yaml";
 
 function readJson<T>(path: string): T {
   return JSON.parse(readFileSync(join(process.cwd(), path), "utf8")) as T;
 }
 
 describe("plugin packaging files", () => {
+  it("keeps pnpm build-script approvals in pnpm-workspace.yaml", () => {
+    const packageJson = readJson<{
+      pnpm?: unknown;
+    }>("package.json");
+    const workspace = parseYaml(
+      readFileSync(join(process.cwd(), "pnpm-workspace.yaml"), "utf8"),
+    ) as {
+      onlyBuiltDependencies?: unknown;
+    };
+
+    expect(packageJson.pnpm).toBeUndefined();
+    expect(workspace.onlyBuiltDependencies).toEqual([
+      "better-sqlite3",
+      "esbuild",
+    ]);
+  });
+
   it("brands product-facing package and plugin metadata as Loopdeck while preserving prompt-coach command ids", () => {
     const packageJson = readJson<{
       name: string;

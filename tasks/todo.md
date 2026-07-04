@@ -256,6 +256,17 @@
 - 이번 slice는 default branch 보안 알림 제거가 목적이며 제품/runtime id rename, UI 변경, hook/MCP 동작 변경을 포함하지 않는다.
 - `vite`/`esbuild` advisory는 dev-server 계열이지만 local-first developer tool 신뢰성에 직접 영향을 주므로 full gate와 CI로 검증한다.
 
+## 2026-07-05 pnpm Build Approval Settings
+
+- [x] RED: `package.json#pnpm.onlyBuiltDependencies`가 남아 있고 `pnpm-workspace.yaml`이 없어 packaging focused test가 실패함 확인
+- [x] GREEN: build-script approval 설정을 `pnpm-workspace.yaml`의 `onlyBuiltDependencies`로 이동하고 `package.json#pnpm` 제거
+- [x] VERIFY: `corepack pnpm build`에서 pnpm field ignored warning이 사라짐 확인
+
+### 판단 기준
+
+- 이 변경은 pnpm 11 전환 준비와 현재 build/pack 로그 품질 개선이며 dependency version, runtime id, hook/MCP 동작을 바꾸지 않는다.
+- build-script approval 대상은 기존과 동일하게 `better-sqlite3`, `esbuild`만 유지한다.
+
 ## 2026-07-04 Hook Loop Snapshot Collection Slice
 
 - [x] Task 1 RED: Claude Code/Codex `Stop` hook이 prompt ingest route로 가지 않고 local loop snapshot을 생성해야 한다는 wrapper 테스트 작성
