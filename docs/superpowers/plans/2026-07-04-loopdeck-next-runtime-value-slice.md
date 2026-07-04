@@ -255,7 +255,10 @@ Implementation checkpoint:
   explaining that merge decisions should wait until the next loop snapshot is
   collected and reviewed, and that memory approval remains separate from merge
   readiness.
+- Selected worktree detail now includes a raw-free post-collection review note,
+  explaining that collected loop snapshot quality and evidence should be
+  reviewed before memory approval or merge readiness is reconsidered.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free post-collection review note after continuation handoff,
+  raw-free grouping label for the continuation safety guidance,
   without adding transcript content, prompt bodies, raw paths, git status reads,
   command execution, memory approval writes, merge writes, or external calls.

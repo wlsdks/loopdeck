@@ -972,6 +972,18 @@ describe("createServer P2 ingest boundary", () => {
           writes_files: false,
           external_calls: false,
         },
+        post_collection_review_note: {
+          label: "Post-collection review",
+          review_step:
+            "review the collected loop snapshot quality and evidence before approval",
+          before_memory_approval:
+            "approve memory only after the collected snapshot is reviewed",
+          before_merge:
+            "merge readiness can be reconsidered after post-collection review",
+          writes_memory: false,
+          writes_merge_decision: false,
+          external_calls: false,
+        },
         review_packet_summary: {
           title: "Review-before-merge packet",
           status: "needs_review",

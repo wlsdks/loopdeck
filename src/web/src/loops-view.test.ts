@@ -204,6 +204,17 @@ describe("LoopsView", () => {
       "memory approval remains separate from merge readiness",
     );
     expect(html).toContain("No merge decision writes, file writes, or external calls");
+    expect(html).toContain("Post-collection review");
+    expect(html).toContain(
+      "review the collected loop snapshot quality and evidence before approval",
+    );
+    expect(html).toContain(
+      "approve memory only after the collected snapshot is reviewed",
+    );
+    expect(html).toContain(
+      "merge readiness can be reconsidered after post-collection review",
+    );
+    expect(html).toContain("No memory writes, merge decision writes, or external calls");
     expect(html).toContain("Continuation guidance");
     expect(html).toContain('class="loop-detail-section"');
     expect(html).toContain('class="loop-detail-section-title"');
@@ -574,6 +585,18 @@ function loopWorktree(): LoopWorktreeResponse {
         "memory approval remains separate from merge readiness",
       writes_merge_decision: false,
       writes_files: false,
+      external_calls: false,
+    },
+    post_collection_review_note: {
+      label: "Post-collection review",
+      review_step:
+        "review the collected loop snapshot quality and evidence before approval",
+      before_memory_approval:
+        "approve memory only after the collected snapshot is reviewed",
+      before_merge:
+        "merge readiness can be reconsidered after post-collection review",
+      writes_memory: false,
+      writes_merge_decision: false,
       external_calls: false,
     },
     latest_decision: {

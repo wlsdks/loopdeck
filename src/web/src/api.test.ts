@@ -387,6 +387,18 @@ describe("web api export client", () => {
               writes_files: false,
               external_calls: false,
             },
+            post_collection_review_note: {
+              label: "Post-collection review",
+              review_step:
+                "review the collected loop snapshot quality and evidence before approval",
+              before_memory_approval:
+                "approve memory only after the collected snapshot is reviewed",
+              before_merge:
+                "merge readiness can be reconsidered after post-collection review",
+              writes_memory: false,
+              writes_merge_decision: false,
+              external_calls: false,
+            },
             latest_decision: {
               snapshot_id: "loop_web",
               worktree: "agent-loop-worktree",
@@ -627,6 +639,18 @@ describe("web api export client", () => {
           "memory approval remains separate from merge readiness",
         writes_merge_decision: false,
         writes_files: false,
+        external_calls: false,
+      },
+      post_collection_review_note: {
+        label: "Post-collection review",
+        review_step:
+          "review the collected loop snapshot quality and evidence before approval",
+        before_memory_approval:
+          "approve memory only after the collected snapshot is reviewed",
+        before_merge:
+          "merge readiness can be reconsidered after post-collection review",
+        writes_memory: false,
+        writes_merge_decision: false,
         external_calls: false,
       },
       latest_decision: {

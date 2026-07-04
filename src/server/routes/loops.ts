@@ -196,6 +196,7 @@ export function registerLoopRoutes(
               operator_review_gate: operatorReviewGateFor(),
               collection_responsibility_note: collectionResponsibilityNoteFor(),
               pre_merge_advisory: preMergeAdvisoryFor(),
+              post_collection_review_note: postCollectionReviewNoteFor(),
             }
           : {}),
         ...(latestDecision
@@ -833,6 +834,29 @@ function preMergeAdvisoryFor(): {
       "memory approval remains separate from merge readiness",
     writes_merge_decision: false,
     writes_files: false,
+    external_calls: false,
+  };
+}
+
+function postCollectionReviewNoteFor(): {
+  label: "Post-collection review";
+  review_step: "review the collected loop snapshot quality and evidence before approval";
+  before_memory_approval: "approve memory only after the collected snapshot is reviewed";
+  before_merge: "merge readiness can be reconsidered after post-collection review";
+  writes_memory: false;
+  writes_merge_decision: false;
+  external_calls: false;
+} {
+  return {
+    label: "Post-collection review",
+    review_step:
+      "review the collected loop snapshot quality and evidence before approval",
+    before_memory_approval:
+      "approve memory only after the collected snapshot is reviewed",
+    before_merge:
+      "merge readiness can be reconsidered after post-collection review",
+    writes_memory: false,
+    writes_merge_decision: false,
     external_calls: false,
   };
 }

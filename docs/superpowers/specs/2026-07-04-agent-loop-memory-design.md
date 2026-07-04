@@ -2528,6 +2528,46 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.73: Selected Post-Collection Review Note
+
+Decision:
+
+- Selected worktree detail should show a post-collection review note after
+  continuation handoff. It should state that the collected loop snapshot's
+  quality and evidence are reviewed before memory approval or merge readiness is
+  reconsidered.
+- This is needed because the selected detail panel now explains collection
+  responsibility and pre-merge hold, but does not yet name the review step that
+  happens after collection.
+
+Add:
+
+- top-level selected worktree detail `post_collection_review_note` with:
+  - label: `Post-collection review`
+  - review_step:
+    `review the collected loop snapshot quality and evidence before approval`
+  - before_memory_approval:
+    `approve memory only after the collected snapshot is reviewed`
+  - before_merge:
+    `merge readiness can be reconsidered after post-collection review`
+  - writes_memory: `false`
+  - writes_merge_decision: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance
+- focused server/API/web tests proving the note is present
+
+Do not add:
+
+- memory approval writes, merge decision writes, git reads/writes, command
+  execution, filesystem reads/writes, automatic merge checks, checklist
+  completion state, background analysis, external model calls, or new write
+  tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

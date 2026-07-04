@@ -614,6 +614,28 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.post_collection_review_note && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {worktreeDetail.post_collection_review_note.label}
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.post_collection_review_note.review_step}
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail.post_collection_review_note
+                          .before_memory_approval
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.post_collection_review_note.before_merge}
+                    </p>
+                    <p className="loops-status-line">
+                      No memory writes, merge decision writes, or external calls
+                    </p>
+                  </div>
+                )}
               </div>
             )}
             {worktreeDetail.latest_decision && (
