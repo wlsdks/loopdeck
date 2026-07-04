@@ -2,8 +2,11 @@ import { describe, expect, it } from "vitest";
 
 import {
   commandFiltersFor,
+  evidenceCountExplanationFor,
+  readinessSummaryFor,
   selectedBriefActionFor,
   selectionScopeFor,
+  snapshotAgeFor,
 } from "./loop-detail-guidance.js";
 
 describe("loop detail guidance", () => {
@@ -48,6 +51,47 @@ describe("loop detail guidance", () => {
         "selected command reflects the current selection while review command reflects command-center review scope",
       writes_files: false,
       external_calls: false,
+    });
+  });
+
+  it("summarizes selected snapshot freshness without exposing raw paths", () => {
+    expect(
+      snapshotAgeFor({
+        selectedSnapshot: {
+          id: "older",
+          created_at: "2026-07-04T01:00:00.000Z",
+        },
+        snapshots: [
+          { id: "newer", created_at: "2026-07-04T02:00:00.000Z" },
+          { id: "older", created_at: "2026-07-04T01:00:00.000Z" },
+        ],
+      }),
+    ).toEqual({
+      label: "Selected snapshot age",
+      latest_selected_created_at: "2026-07-04T01:00:00.000Z",
+      status: "older_than_latest",
+      reason: "another loop snapshot was recorded after this selection",
+      next_action: "refresh selected worktree before merging",
+    });
+  });
+
+  it("summarizes merge readiness and evidence counts with safe aggregate metadata", () => {
+    expect(
+      readinessSummaryFor({
+        status: "missing_evidence",
+        next_action: "record loop outcome evidence",
+      }),
+    ).toEqual({
+      label: "Readiness summary",
+      status: "missing_evidence",
+      reason: "latest selected worktree outcome has no evidence refs",
+      next_action: "record loop outcome evidence",
+    });
+    expect(evidenceCountExplanationFor(2)).toEqual({
+      label: "Evidence count",
+      count: 2,
+      reason: "selected worktree has evidence refs recorded",
+      next_action: "compare evidence before merge",
     });
   });
 });

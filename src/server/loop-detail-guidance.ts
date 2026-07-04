@@ -1,3 +1,10 @@
+import type { LoopdeckStatusActivityMergeReadiness } from "../loop/status.js";
+
+type SnapshotAgeCandidate = {
+  id: string;
+  created_at: string;
+};
+
 export function selectionScopeFor(selection: {
   hasSession: boolean;
   hasBranch: boolean;
@@ -173,6 +180,112 @@ export function copySideEffectsFor(): {
       "does not write files, execute commands, call external services, submit prompts, or change merge state",
     writes_files: false,
     external_calls: false,
+  };
+}
+
+export function snapshotAgeFor(input: {
+  selectedSnapshot: SnapshotAgeCandidate;
+  snapshots: readonly SnapshotAgeCandidate[];
+}): {
+  label: "Selected snapshot age";
+  latest_selected_created_at: string;
+  status: "latest" | "older_than_latest";
+  reason:
+    | "selected snapshot is the latest recorded loop snapshot"
+    | "another loop snapshot was recorded after this selection";
+  next_action:
+    | "copy selected worktree brief"
+    | "refresh selected worktree before merging";
+} {
+  const latestRecordedSnapshot =
+    input.snapshots.reduce<SnapshotAgeCandidate | undefined>(
+      (latest, snapshot) => {
+        if (!latest || snapshot.created_at > latest.created_at) return snapshot;
+        return latest;
+      },
+      undefined,
+    ) ?? input.selectedSnapshot;
+
+  if (latestRecordedSnapshot.id === input.selectedSnapshot.id) {
+    return {
+      label: "Selected snapshot age",
+      latest_selected_created_at: input.selectedSnapshot.created_at,
+      status: "latest",
+      reason: "selected snapshot is the latest recorded loop snapshot",
+      next_action: "copy selected worktree brief",
+    };
+  }
+
+  return {
+    label: "Selected snapshot age",
+    latest_selected_created_at: input.selectedSnapshot.created_at,
+    status: "older_than_latest",
+    reason: "another loop snapshot was recorded after this selection",
+    next_action: "refresh selected worktree before merging",
+  };
+}
+
+export function readinessSummaryFor(
+  mergeReadiness: LoopdeckStatusActivityMergeReadiness,
+): {
+  label: "Readiness summary";
+  status: LoopdeckStatusActivityMergeReadiness["status"];
+  reason:
+    | "selected worktree has recorded evidence and passing outcome"
+    | "latest selected worktree outcome is not passing"
+    | "latest selected worktree outcome has no evidence refs";
+  next_action: LoopdeckStatusActivityMergeReadiness["next_action"];
+} {
+  if (mergeReadiness.status === "missing_evidence") {
+    return {
+      label: "Readiness summary",
+      status: mergeReadiness.status,
+      reason: "latest selected worktree outcome has no evidence refs",
+      next_action: mergeReadiness.next_action,
+    };
+  }
+
+  if (mergeReadiness.status === "needs_review") {
+    return {
+      label: "Readiness summary",
+      status: mergeReadiness.status,
+      reason: "latest selected worktree outcome is not passing",
+      next_action: mergeReadiness.next_action,
+    };
+  }
+
+  return {
+    label: "Readiness summary",
+    status: mergeReadiness.status,
+    reason: "selected worktree has recorded evidence and passing outcome",
+    next_action: mergeReadiness.next_action,
+  };
+}
+
+export function evidenceCountExplanationFor(evidenceCount: number): {
+  label: "Evidence count";
+  count: number;
+  reason:
+    | "selected worktree has evidence refs recorded"
+    | "selected worktree has no evidence refs recorded";
+  next_action:
+    | "compare evidence before merge"
+    | "record loop outcome evidence";
+} {
+  if (evidenceCount === 0) {
+    return {
+      label: "Evidence count",
+      count: evidenceCount,
+      reason: "selected worktree has no evidence refs recorded",
+      next_action: "record loop outcome evidence",
+    };
+  }
+
+  return {
+    label: "Evidence count",
+    count: evidenceCount,
+    reason: "selected worktree has evidence refs recorded",
+    next_action: "compare evidence before merge",
   };
 }
 

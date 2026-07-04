@@ -92,6 +92,7 @@
 - [x] Dogfood: dogfood client가 `elicitation/create`에 사용자 답변 payload를 반환하자 최종 `interaction_status=answered`, `answers_count=2`, `analyzer=clarifications-v1`, `clarifying_questions=[]`, answer text가 반영된 improved draft, local-only/no-store/no-external privacy contract를 확인
 - [x] Harness: `scripts/mcp-elicitation-smoke.mjs`와 `pnpm smoke:mcp-elicitation`을 추가해 dist MCP stdio answered path를 반복 검증 가능하게 고정
 - [x] Source hygiene: selected worktree detail의 command/filter/copy guidance helper를 `src/server/loop-detail-guidance.ts`로 분리하고 focused 테스트 추가
+- [x] Source hygiene: selected worktree detail의 snapshot age/readiness/evidence aggregate guidance를 route에서 분리하고 focused 테스트 추가
 - [ ] 다음 dogfood slice: Codex native dialog fallback을 실제 OS dialog 또는 명시적 사용자 승인 하에 확인
 
 ### 판단 기준
