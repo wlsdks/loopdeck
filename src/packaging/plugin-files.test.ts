@@ -754,6 +754,19 @@ describe("plugin packaging files", () => {
     expect(smoke).not.toContain("/Users/");
   });
 
+  it("installs Playwright Chromium before the scheduled UI patrol", () => {
+    const workflow = readFileSync(
+      join(process.cwd(), ".github/workflows/ui-patrol.yml"),
+      "utf8",
+    );
+
+    expect(workflow).toContain("pnpm exec playwright install chromium");
+    expect(workflow.indexOf("pnpm exec playwright install chromium")).toBeLessThan(
+      workflow.indexOf("pnpm ui-patrol"),
+    );
+    expect(workflow).toContain("Upload UI patrol screenshots");
+  });
+
   it("documents Claude Code as a hook integration without embedding secrets", () => {
     const example = readJson<{
       hooks: {
