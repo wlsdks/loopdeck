@@ -17,6 +17,7 @@ import type {
 } from "../../storage/ports.js";
 import { requireAppAccess, type ServerAuthConfig } from "../auth.js";
 import { problem } from "../errors.js";
+import { requireStorageCapabilities } from "../storage-capabilities.js";
 
 export type PromptRouteOptions = {
   auth: ServerAuthConfig;
@@ -25,6 +26,31 @@ export type PromptRouteOptions = {
     Partial<JudgeScoreStoragePort> &
     Partial<AskEventStoragePort>;
 };
+
+type PromptReadRouteStorage = Pick<
+  PromptReadStoragePort,
+  | "listPrompts"
+  | "searchPrompts"
+  | "findSimilarPrompts"
+  | "getPrompt"
+  | "deletePrompt"
+  | "getQualityDashboard"
+  | "recordPromptUsage"
+  | "setPromptBookmark"
+>;
+
+type PromptImprovementRouteStorage = PromptReadRouteStorage &
+  Required<
+    Pick<
+      PromptReadStoragePort,
+      "createPromptImprovementDraft" | "markPromptImprovementDraftCopied"
+    >
+  >;
+
+type AskEventSummaryStorage = Pick<
+  AskEventStoragePort,
+  "getAskEventSummary"
+>;
 
 const ListQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(100).optional(),
@@ -184,16 +210,9 @@ export function registerPromptRoutes(
 
   server.get("/api/v1/ask-events/summary", async (request) => {
     requireAppAccess(request, options.auth);
-    if (!options.storage.getAskEventSummary) {
-      throw problem(
-        503,
-        "Service Unavailable",
-        "Storage backend does not expose ask event metrics.",
-        request.url,
-      );
-    }
+    const storage = requireAskEventSummaryStorage(options.storage, request.url);
     const query = AskEventSummaryQuerySchema.parse(request.query);
-    const summary = options.storage.getAskEventSummary({ days: query.days });
+    const summary = storage.getAskEventSummary({ days: query.days });
     return { data: summary };
   });
 
@@ -276,16 +295,7 @@ export function registerPromptRoutes(
       requireAppAccess(request, options.auth, { csrf: true });
       const storage = requireImprovementStorage(options.storage, request.url);
       const params = PromptImprovementDraftParamsSchema.parse(request.params);
-      const markCopied = storage.markPromptImprovementDraftCopied;
-      if (!markCopied) {
-        throw problem(
-          500,
-          "Internal Server Error",
-          "Prompt improvement storage is not configured.",
-          request.url,
-        );
-      }
-      const result = markCopied(
+      const result = storage.markPromptImprovementDraftCopied(
         params.id,
         params.draft_id,
       );
@@ -423,44 +433,51 @@ function maskBrowserPathText(value: string): string {
 function requireReadStorage(
   storage: PromptRouteOptions["storage"],
   instance: string,
-): PromptReadStoragePort {
-  if (
-    !storage.listPrompts ||
-    !storage.searchPrompts ||
-    !storage.getPrompt ||
-    !storage.deletePrompt ||
-    !storage.getQualityDashboard ||
-    !storage.recordPromptUsage ||
-    !storage.setPromptBookmark
-  ) {
-    throw problem(
-      500,
-      "Internal Server Error",
-      "Prompt read storage is not configured.",
-      instance,
-    );
-  }
-
-  return storage as PromptReadStoragePort;
+): PromptReadRouteStorage {
+  return requireStorageCapabilities(
+    storage,
+    [
+      "listPrompts",
+      "searchPrompts",
+      "findSimilarPrompts",
+      "getPrompt",
+      "deletePrompt",
+      "getQualityDashboard",
+      "recordPromptUsage",
+      "setPromptBookmark",
+    ],
+    { label: "Prompt read storage", instance },
+  );
 }
 
 function requireImprovementStorage(
   storage: PromptRouteOptions["storage"],
   instance: string,
-): PromptReadStoragePort {
-  const readStorage = requireReadStorage(storage, instance);
+): PromptImprovementRouteStorage {
+  return requireStorageCapabilities(
+    storage,
+    [
+      "listPrompts",
+      "searchPrompts",
+      "findSimilarPrompts",
+      "getPrompt",
+      "deletePrompt",
+      "getQualityDashboard",
+      "recordPromptUsage",
+      "setPromptBookmark",
+      "createPromptImprovementDraft",
+      "markPromptImprovementDraftCopied",
+    ],
+    { label: "Prompt improvement storage", instance },
+  );
+}
 
-  if (
-    !readStorage.createPromptImprovementDraft ||
-    !readStorage.markPromptImprovementDraftCopied
-  ) {
-    throw problem(
-      500,
-      "Internal Server Error",
-      "Prompt improvement storage is not configured.",
-      instance,
-    );
-  }
-
-  return readStorage;
+function requireAskEventSummaryStorage(
+  storage: PromptRouteOptions["storage"],
+  instance: string,
+): AskEventSummaryStorage {
+  return requireStorageCapabilities(storage, ["getAskEventSummary"], {
+    label: "Ask-event summary storage",
+    instance,
+  });
 }

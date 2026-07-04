@@ -28,6 +28,7 @@ import type {
 } from "../../storage/ports.js";
 import { requireAppAccess, type ServerAuthConfig } from "../auth.js";
 import { problem } from "../errors.js";
+import { requireStorageCapabilities } from "../storage-capabilities.js";
 import {
   commandDistinctionFor,
   commandFiltersFor,
@@ -49,6 +50,17 @@ export type LoopRouteOptions = {
       LoopMergeDecisionStoragePort
   >;
 };
+
+type LoopMemoryReadRouteStorage = Pick<
+  LoopMemoryStoragePort,
+  "listLoopMemories"
+>;
+
+type LoopMemoryApprovalRouteStorage = Pick<
+  LoopSnapshotStoragePort,
+  "getLatestLoopSnapshot"
+> &
+  Pick<LoopMemoryStoragePort, "recordLoopMemory" | "listLoopMemories">;
 
 const LoopMemoryApprovalBodySchema = z.object({
   approved_by: z.string().trim().min(1).max(80).optional(),
@@ -2158,37 +2170,22 @@ function briefRationaleFor(
 function requireLoopMemoryReadStorage(
   storage: LoopRouteOptions["storage"],
   instance: string,
-): LoopMemoryStoragePort {
-  if (!storage.listLoopMemories) {
-    throw problem(
-      500,
-      "Internal Server Error",
-      "Loop memory storage is not configured.",
-      instance,
-    );
-  }
-
-  return storage as LoopMemoryStoragePort;
+): LoopMemoryReadRouteStorage {
+  return requireStorageCapabilities(storage, ["listLoopMemories"], {
+    label: "Loop memory storage",
+    instance,
+  });
 }
 
 function requireLoopMemoryApprovalStorage(
   storage: LoopRouteOptions["storage"],
   instance: string,
-): LoopSnapshotStoragePort & LoopMemoryStoragePort {
-  if (
-    !storage.getLatestLoopSnapshot ||
-    !storage.recordLoopMemory ||
-    !storage.listLoopMemories
-  ) {
-    throw problem(
-      500,
-      "Internal Server Error",
-      "Loop memory approval storage is not configured.",
-      instance,
-    );
-  }
-
-  return storage as LoopSnapshotStoragePort & LoopMemoryStoragePort;
+): LoopMemoryApprovalRouteStorage {
+  return requireStorageCapabilities(
+    storage,
+    ["getLatestLoopSnapshot", "recordLoopMemory", "listLoopMemories"],
+    { label: "Loop memory approval storage", instance },
+  );
 }
 
 function hasApprovedMemoryForSnapshot(

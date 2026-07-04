@@ -10,6 +10,7 @@ import {
 import type { ServerAuthConfig } from "../auth.js";
 import { requireAppAccess } from "../auth.js";
 import { problem } from "../errors.js";
+import { requireStorageCapabilities } from "../storage-capabilities.js";
 
 export type ExportRouteOptions = {
   auth: ServerAuthConfig;
@@ -78,20 +79,15 @@ function requireExportStorage(
   storage: ExportRouteOptions["storage"],
   instance: string,
 ): AnonymizedExportStorage {
-  if (
-    !storage.listPrompts ||
-    !storage.getPrompt ||
-    !storage.createExportJob ||
-    !storage.getExportJob ||
-    !storage.updateExportJobStatus
-  ) {
-    throw problem(
-      500,
-      "Internal Server Error",
-      "Export storage is not configured.",
-      instance,
-    );
-  }
-
-  return storage as AnonymizedExportStorage;
+  return requireStorageCapabilities(
+    storage,
+    [
+      "listPrompts",
+      "getPrompt",
+      "createExportJob",
+      "getExportJob",
+      "updateExportJobStatus",
+    ],
+    { label: "Export storage", instance },
+  ) as AnonymizedExportStorage;
 }

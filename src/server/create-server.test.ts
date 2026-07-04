@@ -2127,6 +2127,44 @@ describe("createServer P2 ingest boundary", () => {
     expect(serialized).not.toContain("sk-proj-secret");
   });
 
+  it("returns the shared storage capability problem when loop memory approval storage is unavailable", async () => {
+    const storage = createMemoryStorage();
+    delete (storage as Partial<typeof storage>).listLoopMemories;
+    const server = createTestServer({ storage });
+    const session = await server.inject({
+      method: "GET",
+      url: "/api/v1/session",
+      headers: { host: "127.0.0.1:17373" },
+    });
+    const cookie = String(session.headers["set-cookie"]);
+    const csrfToken = session.json<{ data: { csrf_token: string } }>().data
+      .csrf_token;
+
+    const response = await server.inject({
+      method: "POST",
+      url: "/api/v1/loops/memory/approve",
+      headers: {
+        host: "127.0.0.1:17373",
+        cookie,
+        "x-csrf-token": csrfToken,
+      },
+      payload: { approved_by: "web" },
+    });
+
+    expect(response.statusCode).toBe(500);
+    expect(response.headers["content-type"]).toContain(
+      "application/problem+json",
+    );
+    expect(response.json()).toMatchObject({
+      status: 500,
+      title: "Internal Server Error",
+      detail: "Loop memory approval storage is not configured.",
+      instance: "/api/v1/loops/memory/approve",
+    });
+    expect(response.body).not.toContain("listLoopMemories");
+    expect(response.body).not.toContain("/Users/");
+  });
+
   it("hides and rejects already approved latest web memory candidates", async () => {
     const storage = createMemoryStorage();
     storage.loopSnapshots.push(
@@ -2957,6 +2995,67 @@ describe("createServer P2 ingest boundary", () => {
     expect(storage.events).toHaveLength(1);
   });
 
+  it("returns the shared storage capability problem when ask-event storage is unavailable", async () => {
+    const storage = createMemoryStorage();
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "POST",
+      url: "/api/v1/ingest/ask-event",
+      headers: {
+        host: "127.0.0.1:17373",
+        authorization: "Bearer ingest-token",
+      },
+      payload: {
+        tool: "codex",
+        score: 10,
+        band: "weak",
+        missing_axes: ["goal_clarity"],
+        prompt_length: 14,
+      },
+    });
+
+    expect(response.statusCode).toBe(500);
+    expect(response.headers["content-type"]).toContain(
+      "application/problem+json",
+    );
+    expect(response.json()).toMatchObject({
+      status: 500,
+      title: "Internal Server Error",
+      detail: "Ask-event storage is not configured.",
+      instance: "/api/v1/ingest/ask-event",
+    });
+    expect(response.body).not.toContain("recordAskEvent");
+    expect(response.body).not.toContain("/Users/");
+  });
+
+  it("returns the shared storage capability problem when ask-event summary storage is unavailable", async () => {
+    const storage = createMemoryStorage();
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/ask-events/summary",
+      headers: {
+        host: "127.0.0.1:17373",
+        authorization: "Bearer app-token",
+      },
+    });
+
+    expect(response.statusCode).toBe(500);
+    expect(response.headers["content-type"]).toContain(
+      "application/problem+json",
+    );
+    expect(response.json()).toMatchObject({
+      status: 500,
+      title: "Internal Server Error",
+      detail: "Ask-event summary storage is not configured.",
+      instance: "/api/v1/ask-events/summary",
+    });
+    expect(response.body).not.toContain("getAskEventSummary");
+    expect(response.body).not.toContain("/Users/");
+  });
+
   it("normalizes safe control characters and rejected values are not echoed", async () => {
     const storage = createMemoryStorage();
     const server = createTestServer({ storage });
@@ -3342,6 +3441,9 @@ function createMemoryStorage() {
     },
     searchPrompts() {
       return this.listPrompts();
+    },
+    findSimilarPrompts() {
+      return [];
     },
     listLoopSnapshots() {
       return { items: loopSnapshots };
