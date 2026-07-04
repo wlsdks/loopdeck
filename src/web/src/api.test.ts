@@ -667,6 +667,19 @@ describe("web api export client", () => {
                 writes_files: false,
                 external_calls: false,
               },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_uncertainty_reminder:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval collection uncertainty reminder",
+                reminder:
+                  "collect a new explicit loop snapshot when renewed-memory-approval collection result is uncertain",
+                not_automated:
+                  "Loopdeck does not verify renewed-memory-approval collection result or start collection automatically",
+                reason:
+                  "keeps renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
+                writes_files: false,
+                external_calls: false,
+              },
             paste_destination: {
               label: "Paste destination",
               targets: ["Codex active request", "Claude Code active request"],
@@ -1280,6 +1293,19 @@ describe("web api export client", () => {
             "Loopdeck does not detect, store, or sync renewed-memory-approval collection result state",
           reason:
             "keeps renewed-memory-approval collection evidence tied to explicit local snapshot recording",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_uncertainty_reminder:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval collection uncertainty reminder",
+          reminder:
+            "collect a new explicit loop snapshot when renewed-memory-approval collection result is uncertain",
+          not_automated:
+            "Loopdeck does not verify renewed-memory-approval collection result or start collection automatically",
+          reason:
+            "keeps renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
           writes_files: false,
           external_calls: false,
         },
