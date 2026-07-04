@@ -72,11 +72,18 @@ First route-helper PR:
 - Kept behavior equivalent: missing capabilities still fail locally and do not
   expose prompt bodies, raw paths, tokens, or instruction file contents.
 
+MCP storage-error PR:
+
+- Centralized storage-backed MCP handler setup errors behind one raw-free
+  message helper.
+- Kept storage-backed MCP handlers returning explicit `storage_unavailable`
+  results instead of throwing transport-level failures or exposing local paths.
+
 Next capability PR:
 
-- Extend the same declaration idea to MCP. Either filter unavailable tools from
-  `tools/list`, or make storage-backed MCP handlers return one explicit
-  configuration/storage error instead of scattered ad hoc behavior.
+- Decide whether capability metadata should filter unavailable MCP tools from
+  `tools/list`, or whether explicit `storage_unavailable` results are enough
+  for the local-only SQLite runtime.
 - Avoid a broad MCP registry rewrite unless the tool catalogue must change for
   the capability work.
 

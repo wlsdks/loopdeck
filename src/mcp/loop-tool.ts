@@ -32,6 +32,7 @@ import type {
   RecordLoopOutcomeToolArguments,
   RecordLoopOutcomeToolResult,
 } from "./loop-tool-types.js";
+import { storageUnavailableMessage } from "./storage-unavailable.js";
 
 const LOOP_TOOL_NAMES = [
   "get_loopdeck_status",
@@ -516,11 +517,6 @@ function loopToolError<T extends LoopToolErrorCode>(
     error_code: errorCode,
     message,
   };
-}
-
-function storageUnavailableMessage(error: unknown): string {
-  const name = error instanceof Error ? error.name : "Error";
-  return `${name}: local prompt-coach storage is not available. Run prompt-coach init or pass the correct dataDir.`;
 }
 
 function errorMessage(error: unknown): string {

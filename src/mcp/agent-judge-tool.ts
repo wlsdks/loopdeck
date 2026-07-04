@@ -9,6 +9,7 @@ import type {
 } from "./agent-judge-tool-types.js";
 import { projectLabel } from "./project-label.js";
 import type { ScorePromptToolOptions } from "./score-tool-types.js";
+import { storageUnavailableMessage } from "./storage-unavailable.js";
 
 const AGENT_JUDGE_RUBRIC = {
   scale: "0-100",
@@ -282,14 +283,6 @@ function validateAgentJudgmentInput(
   }
 
   return undefined;
-}
-
-function storageUnavailableMessage(error: unknown): string {
-  const reason =
-    error instanceof Error && "code" in error && typeof error.code === "string"
-      ? ` Reason: ${error.code}.`
-      : "";
-  return `Local prompt-coach archive is not available. Run \`prompt-coach init\` first or pass --data-dir.${reason}`;
 }
 
 function batchError(

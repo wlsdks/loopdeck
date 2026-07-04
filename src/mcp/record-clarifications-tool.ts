@@ -8,6 +8,7 @@ import type { PromptQualityCriterion } from "../shared/schema.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import type { PromptCoachMcpToolDefinition } from "./score-tool-definitions.js";
 import type { ScorePromptToolOptions } from "./score-tool-types.js";
+import { storageUnavailableMessage } from "./storage-unavailable.js";
 
 const QUALITY_CRITERIA: readonly PromptQualityCriterion[] = [
   "goal_clarity",
@@ -289,12 +290,4 @@ function invalidInput(message: string): RecordClarificationsToolResult {
     error_code: "invalid_input",
     message,
   };
-}
-
-function storageUnavailableMessage(error: unknown): string {
-  const reason =
-    error instanceof Error && error.message.length > 0
-      ? ` (${error.message.split("\n")[0]})`
-      : "";
-  return `Local prompt-coach archive is not available. Run \`prompt-coach init\` first or pass --data-dir.${reason}`;
 }
