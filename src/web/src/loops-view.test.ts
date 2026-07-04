@@ -167,6 +167,15 @@ describe("LoopsView", () => {
       "copy feedback is not safety approval or agent submission",
     );
     expect(html).toContain("No copy feedback reminder writes or external calls");
+    expect(html).toContain("Copy feedback accessibility");
+    expect(html).toContain("selected brief copy button label remains stable");
+    expect(html).toContain(
+      "copied status belongs in accessible feedback instead of replacing the visible command",
+    );
+    expect(html).toContain(
+      "keeps copy feedback clear without implying safety approval or changing layout",
+    );
+    expect(html).toContain("No accessibility feedback writes or external calls");
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -595,6 +604,16 @@ function loopWorktree(): LoopWorktreeResponse {
       next_step:
         "return to the safety re-check cue before pasting the copied brief",
       reason: "copy feedback is not safety approval or agent submission",
+      writes_files: false,
+      external_calls: false,
+    },
+    continuation_safety_copy_feedback_accessibility_note: {
+      label: "Copy feedback accessibility",
+      visible_label: "selected brief copy button label remains stable",
+      assistive_feedback:
+        "copied status belongs in accessible feedback instead of replacing the visible command",
+      reason:
+        "keeps copy feedback clear without implying safety approval or changing layout",
       writes_files: false,
       external_calls: false,
     },

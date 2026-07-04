@@ -197,6 +197,8 @@ export function registerLoopRoutes(
                 continuationSafetyRecheckCueFor(),
               continuation_safety_copy_feedback_reminder:
                 continuationSafetyCopyFeedbackReminderFor(),
+              continuation_safety_copy_feedback_accessibility_note:
+                continuationSafetyCopyFeedbackAccessibilityNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -759,6 +761,26 @@ function continuationSafetyCopyFeedbackReminderFor(): {
     next_step:
       "return to the safety re-check cue before pasting the copied brief",
     reason: "copy feedback is not safety approval or agent submission",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyCopyFeedbackAccessibilityNoteFor(): {
+  label: "Copy feedback accessibility";
+  visible_label: "selected brief copy button label remains stable";
+  assistive_feedback: "copied status belongs in accessible feedback instead of replacing the visible command";
+  reason: "keeps copy feedback clear without implying safety approval or changing layout";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Copy feedback accessibility",
+    visible_label: "selected brief copy button label remains stable",
+    assistive_feedback:
+      "copied status belongs in accessible feedback instead of replacing the visible command",
+    reason:
+      "keeps copy feedback clear without implying safety approval or changing layout",
     writes_files: false,
     external_calls: false,
   };

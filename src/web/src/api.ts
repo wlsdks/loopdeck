@@ -336,6 +336,14 @@ export type LoopWorktreeResponse = {
     writes_files: false;
     external_calls: false;
   };
+  continuation_safety_copy_feedback_accessibility_note?: {
+    label: "Copy feedback accessibility";
+    visible_label: "selected brief copy button label remains stable";
+    assistive_feedback: "copied status belongs in accessible feedback instead of replacing the visible command";
+    reason: "keeps copy feedback clear without implying safety approval or changing layout";
+    writes_files: false;
+    external_calls: false;
+  };
   paste_destination?: {
     label: "Paste destination";
     targets: ["Codex active request", "Claude Code active request"];

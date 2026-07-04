@@ -583,6 +583,41 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.continuation_safety_copy_feedback_accessibility_note && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_copy_feedback_accessibility_note
+                          .label
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_copy_feedback_accessibility_note
+                          .visible_label
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_copy_feedback_accessibility_note
+                          .assistive_feedback
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_copy_feedback_accessibility_note
+                          .reason
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      No accessibility feedback writes or external calls
+                    </p>
+                  </div>
+                )}
                 {worktreeDetail.paste_destination && (
                   <div className="loop-review-item">
                     <p className="loops-status-line">

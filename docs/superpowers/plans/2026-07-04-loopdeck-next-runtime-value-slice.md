@@ -274,8 +274,12 @@ Implementation checkpoint:
 - Selected worktree detail now includes a raw-free copy feedback reminder,
   explaining that copied state only means the brief reached the local clipboard
   and is not safety approval or agent submission.
+- Selected worktree detail now includes a raw-free selected-brief copy feedback
+  accessibility note, explaining that visible copy button labels stay stable and
+  copied status belongs in accessible feedback rather than replacing the visible
+  command.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free selected-brief copy feedback accessibility note, without adding
+  raw-free selected-brief copy feedback timeout note, without adding
   transcript content, prompt bodies, raw paths, git status reads, command
   execution, persisted review state, checklist completion state, memory
   approval writes, merge writes, or external calls.

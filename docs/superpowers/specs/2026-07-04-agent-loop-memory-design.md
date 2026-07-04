@@ -2758,6 +2758,45 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.79: Selected Brief Copy Feedback Accessibility Note
+
+Decision:
+
+- Selected worktree detail should state that selected brief copy feedback keeps
+  the visible button label stable and exposes copied status through accessible
+  feedback instead of replacing the visible command.
+- This is needed because copy feedback guidance should not introduce layout
+  shift or imply that copying completed safety review or agent submission.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_copy_feedback_accessibility_note` with:
+  - label: `Copy feedback accessibility`
+  - visible_label:
+    `selected brief copy button label remains stable`
+  - assistive_feedback:
+    `copied status belongs in accessible feedback instead of replacing the visible command`
+  - reason:
+    `keeps copy feedback clear without implying safety approval or changing layout`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after the copy feedback reminder
+- focused server/API/web tests proving the accessibility note is present
+
+Do not add:
+
+- button label rewrites, layout changes, Codex or Claude Code UI automation,
+  hidden prompt submission, command execution, git reads/writes, filesystem
+  reads/writes, transcript import, persisted review state, checklist completion
+  state, background analysis, external model calls, memory approval writes,
+  merge decision writes, or new write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.
