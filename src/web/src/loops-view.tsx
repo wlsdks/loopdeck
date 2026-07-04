@@ -844,112 +844,61 @@ export function LoopsView({
                   />
                 )}
                 {worktreeDetail.continuation_safety_post_memory_approval_collection_retry_boundary_note && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_collection_retry_boundary_note
-                          .label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_collection_retry_boundary_note
-                          .retry
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_collection_retry_boundary_note
-                          .not_automated
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_collection_retry_boundary_note
-                          .reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      No post-memory-approval collection retry writes or
-                      external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No post-memory-approval collection retry writes or external calls"
+                    lines={[
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_collection_retry_boundary_note
+                        .label,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_collection_retry_boundary_note
+                        .retry,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_collection_retry_boundary_note
+                        .not_automated,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_collection_retry_boundary_note
+                        .reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_post_memory_approval_retry_outcome_non_persistence_note && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_outcome_non_persistence_note
-                          .label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_outcome_non_persistence_note
-                          .outcome_scope
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_outcome_non_persistence_note
-                          .not_stored
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_outcome_non_persistence_note
-                          .reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      No post-memory-approval retry outcome persistence writes
-                      or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No post-memory-approval retry outcome persistence writes or external calls"
+                    lines={[
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_outcome_non_persistence_note
+                        .label,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_outcome_non_persistence_note
+                        .outcome_scope,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_outcome_non_persistence_note
+                        .not_stored,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_outcome_non_persistence_note
+                        .reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note
-                          .label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note
-                          .review
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note
-                          .not_verified
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note
-                          .reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      No post-memory-approval retry freshness verification
-                      writes or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No post-memory-approval retry freshness verification writes or external calls"
+                    lines={[
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note
+                        .label,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note
+                        .review,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note
+                        .not_verified,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note
+                        .reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note && (
                   <div className="loop-review-item">
