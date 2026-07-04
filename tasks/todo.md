@@ -669,7 +669,11 @@
 - [x] Task 142 RED: raw `loop-review-item` markup count가 58개라 source hygiene test의 55개 이하 기준 실패 확인
 - [x] Task 142 GREEN: freshness result non-persistence, freshness uncertainty collection reminder, pre-merge freshness advisory markup을 `LoopReviewItem`으로 전환해 raw markup count를 55개로 감소
 - [x] Task 142 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
-- [ ] 다음 slice: selected detail panel의 pre/post-memory-approval raw `loop-review-item` markup을 `LoopReviewItem`으로 추가 전환할지 결정
+- [x] Task 143 DECISION: selected detail panel의 pre/post-memory-approval raw `loop-review-item` markup은 같은 read-only line/footer 구조라 `LoopReviewItem`으로 계속 전환
+- [x] Task 143 RED: raw `loop-review-item` markup count가 55개라 source hygiene test의 52개 이하 기준 실패 확인
+- [x] Task 143 GREEN: pre-memory-approval freshness advisory, post-memory-approval collection reminder/result non-persistence markup을 `LoopReviewItem`으로 전환해 raw markup count를 52개로 감소
+- [x] Task 143 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [ ] 다음 slice: selected detail panel의 post-memory-approval retry raw `loop-review-item` markup을 `LoopReviewItem`으로 추가 전환할지 결정
 
 ### 판단 기준
 
