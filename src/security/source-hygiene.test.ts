@@ -138,4 +138,19 @@ describe("source hygiene", () => {
       "continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_submit_freshness_advisory",
     );
   });
+
+  it("keeps renewed memory approval helper from repeating long field access markup", () => {
+    const helper = readFileSync(
+      "src/web/src/loop-worktree-renewed-memory-approval-items.tsx",
+      "utf8",
+    );
+    const longFieldAccessCount = (
+      helper.match(
+        /\.continuation_safety_post_memory_approval_retry_renewed_memory_approval_/g,
+      ) ?? []
+    ).length;
+
+    expect(helper).toContain("function renderReviewItem");
+    expect(longFieldAccessCount).toBeLessThanOrEqual(20);
+  });
 });

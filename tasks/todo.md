@@ -773,7 +773,11 @@
 - [x] Task 168 RED: renewed-memory-approval pre-boundary freshness advisory 4개 field가 `LoopsView`에 직접 남아 있어 source hygiene test 실패 확인
 - [x] Task 168 GREEN: 해당 4개 freshness boundary item을 `LoopWorktreeRenewedMemoryApprovalItems`로 이동하고 `LoopsView` 직접 field 접근을 제거
 - [x] Task 168 PRIVACY: UI helper extraction만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
-- [ ] 다음 slice: 같은 helper에서 repeated `LoopReviewItem` field access를 작은 formatter/helper로 줄일지, 또는 다른 `LoopsView` cluster로 이동할지 결정
+- [x] Task 169 DECISION: 같은 helper의 repeated `LoopReviewItem` field access는 336줄 helper를 계속 키우므로 private `renderReviewItem` helper로 압축
+- [x] Task 169 RED: renewed-memory-approval helper에 `renderReviewItem`이 없고 long field access count가 높아 source hygiene test 실패 확인
+- [x] Task 169 GREEN: private `renderReviewItem`으로 17개 review item 렌더링을 통합하고 helper를 117줄로 축소
+- [x] Task 169 PRIVACY: UI rendering helper extraction만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [ ] 다음 slice: 다른 `LoopsView` safety cluster를 같은 기준으로 helper 분리할지 결정
 
 ### 판단 기준
 
