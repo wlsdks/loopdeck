@@ -38,6 +38,10 @@ Current goal audit:
 
 - `docs/LOOPDECK_GOAL_AUDIT_2026-07-05.md` maps the long-running Loopdeck goal
   to current evidence and explicitly keeps the goal open.
+- PR #343 added an approval-gated native-dialog dogfood command. It proves the
+  command refuses to open a native OS dialog without
+  `PROMPT_COACH_NATIVE_DIALOG_APPROVED=1`, but it does not replace the
+  remaining human-approved answered-dialog dogfood.
 
 Decision:
 
@@ -169,6 +173,8 @@ Scope:
 
 - Existing native dialog preflight/smoke harnesses have passed; use
   `docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md` as the evidence baseline.
+- `corepack pnpm dogfood:mcp-native-dialog-approved` now exists and refuses to
+  run unless `PROMPT_COACH_NATIVE_DIALOG_APPROVED=1` is set.
 - Do not open OS dialogs unexpectedly from automated tests.
 - Treat this as integration evidence; do not block core loop-memory work on it.
 
