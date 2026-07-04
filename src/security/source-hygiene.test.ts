@@ -369,4 +369,14 @@ describe("source hygiene", () => {
     expect(loopsView).not.toContain("recent_decisions");
     expect(loopsView).not.toContain("memory_candidate");
   });
+
+  it("keeps loop row table formatting outside LoopsView", () => {
+    const loopsView = readFileSync("src/web/src/loops-view.tsx", "utf8");
+
+    expect(loopsView).not.toContain("worktreeDetail.items");
+    expect(loopsView).not.toContain("prompt_count");
+    expect(loopsView).not.toContain("top_gaps");
+    expect(loopsView).not.toContain("outcome_status");
+    expect(loopsView).not.toContain("compact_boundary");
+  });
 });

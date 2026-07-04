@@ -133,7 +133,11 @@
 - [x] Task 178 RED: activity summary field가 `LoopsView`에 직접 남아 있어 source hygiene test 실패 확인
 - [x] Task 178 GREEN: `LoopActivitySummary`로 activity summary rendering을 이동하고 `LoopsView` 직접 field 접근을 제거
 - [x] Task 178 PRIVACY: UI helper extraction만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
-- [ ] 다음 slice: selected worktree loop rows table 또는 generic loop rows/list rendering을 하나의 응집된 UI cleanup PR로 묶을지 결정
+- [x] Task 179 DECISION: selected worktree loop rows table과 generic loop rows/list는 같은 loop row presentation 영역이므로 한 helper module로 묶는다
+- [x] Task 179 RED: loop row/table field가 `LoopsView`에 직접 남아 있어 source hygiene test 실패 확인
+- [x] Task 179 GREEN: `LoopWorktreeDetailRows`와 `LoopRows`로 row/table rendering을 이동하고 `LoopsView` 직접 row field 접근을 제거
+- [x] Task 179 PRIVACY: UI helper extraction만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [ ] 다음 slice: selected worktree copy action 또는 patch proposal panel rendering을 하나의 응집된 UI cleanup PR로 묶을지 결정
 - [ ] 다음 dogfood slice: Codex native dialog fallback을 실제 OS dialog 또는 명시적 사용자 승인 하에 확인
 
 ### 판단 기준
