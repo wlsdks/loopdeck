@@ -14,6 +14,7 @@ describe("plugin packaging files", () => {
       repository: { url: string };
       bin: Record<string, string>;
       engines: { node: string };
+      devDependencies: Record<string, string>;
     }>("package.json");
     const claudeManifest = readJson<{
       name: string;
@@ -46,6 +47,9 @@ describe("plugin packaging files", () => {
     );
     expect(readFileSync(join(process.cwd(), "README.ko.md"), "utf8")).toContain(
       "Node.js `>=22.12 <25`",
+    );
+    expect(packageJson.devDependencies.react).toBe(
+      packageJson.devDependencies["react-dom"],
     );
 
     for (const manifest of [claudeManifest, codexManifest]) {
