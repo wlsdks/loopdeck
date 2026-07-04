@@ -341,6 +341,21 @@ describe("improvePromptTool", () => {
     }
   });
 
+  it("does not route acknowledgment-like prompts through the ask-first next_action", () => {
+    const result = improvePromptTool({
+      prompt:
+        "그래! 이 작업을 진행해주고 끝나면 그 다음 단계도 마저 작업해줘",
+      language: "ko",
+    });
+
+    if ("is_error" in result) {
+      throw new Error("improvePromptTool returned an error");
+    }
+
+    expect(result.next_action).toContain("Review the draft");
+    expect(result.next_action).not.toContain("Ask the user");
+  });
+
   it("returns an empty clarifying_questions list and the original next_action for strong prompts", () => {
     const result = improvePromptTool({
       prompt:
@@ -906,6 +921,41 @@ describe("coachPromptTool", () => {
       ]),
     );
     expect(result.agent_brief.next_actions).not.toEqual(
+      expect.arrayContaining([
+        "Use the approval-ready rewrite only after the user explicitly accepts it.",
+      ]),
+    );
+  });
+
+  it("does not route acknowledgment-like latest prompts through ask-first coach actions", async () => {
+    const dataDir = createTempDir();
+    const init = initializePromptCoach({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: init.hookAuth.web_session_secret,
+      now: () => new Date("2026-05-05T11:00:00.000Z"),
+    });
+    await storeClaudePrompt(
+      storage,
+      "그래! 이 작업을 진행해주고 끝나면 그 다음 단계도 마저 작업해줘",
+      "2026-05-05T10:59:00.000Z",
+    );
+    storage.close();
+
+    const result = coachPromptTool(
+      { include_archive: false, include_project_rules: false, language: "ko" },
+      { dataDir },
+    );
+
+    expect(result.improvement).toBeDefined();
+    if (!result.improvement || "is_error" in result.improvement) {
+      throw new Error("coachPromptTool did not produce an improvement");
+    }
+    expect(result.improvement.next_action).toContain("Review the draft");
+    expect(result.agent_brief.next_actions).not.toEqual(
+      expect.arrayContaining([expect.stringContaining("Ask the user")]),
+    );
+    expect(result.agent_brief.next_actions).toEqual(
       expect.arrayContaining([
         "Use the approval-ready rewrite only after the user explicitly accepts it.",
       ]),
