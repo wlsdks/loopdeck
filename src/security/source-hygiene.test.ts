@@ -274,4 +274,33 @@ describe("source hygiene", () => {
       "continuation_safety_pre_memory_approval_freshness_advisory",
     );
   });
+
+  it("keeps post-memory-approval collection freshness detail formatting outside LoopsView", () => {
+    const loopsView = readFileSync("src/web/src/loops-view.tsx", "utf8");
+
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_collection_reminder",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_collection_result_non_persistence_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_collection_retry_boundary_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_outcome_non_persistence_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory",
+    );
+  });
 });
