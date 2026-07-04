@@ -79,13 +79,23 @@ MCP storage-error PR:
 - Kept storage-backed MCP handlers returning explicit `storage_unavailable`
   results instead of throwing transport-level failures or exposing local paths.
 
+MCP catalogue decision PR:
+
+- Decided not to filter storage-backed tools from `tools/list` for the
+  local-only SQLite runtime.
+- Keep the static catalogue discoverable for Claude Code and Codex agents, and
+  rely on explicit `storage_unavailable` results plus status/setup guidance
+  when the archive is not initialized.
+- Defer capability-filtered catalogues until a real multi-backend runtime or
+  per-client capability requirement exists.
+
 Next capability PR:
 
-- Decide whether capability metadata should filter unavailable MCP tools from
-  `tools/list`, or whether explicit `storage_unavailable` results are enough
-  for the local-only SQLite runtime.
-- Avoid a broad MCP registry rewrite unless the tool catalogue must change for
-  the capability work.
+- Avoid a broad MCP registry rewrite unless the next MCP tool or schema change
+  already touches the registration surface.
+- If registration changes become necessary, introduce a small registry that
+  derives `tools/list` and `tools/call` dispatch from one tool list without
+  filtering SQLite setup state.
 
 ### 2. MCP Registry Follow-Up (only when registration changes)
 
