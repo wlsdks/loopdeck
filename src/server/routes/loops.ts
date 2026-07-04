@@ -273,6 +273,8 @@ export function registerLoopRoutes(
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryOutcomeNonPersistenceNoteFor(),
               continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_evidence_freshness_boundary_note:
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryEvidenceFreshnessBoundaryNoteFor(),
+              continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_result_non_persistence_note:
+                continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryFreshnessResultNonPersistenceNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1629,6 +1631,28 @@ function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmi
       "Loopdeck does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
     reason:
       "keeps post-submit retry evidence freshness review tied to local snapshot metadata",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryFreshnessResultNonPersistenceNoteFor(): {
+  label: "Post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence";
+  result_scope: "post-submit retry freshness result stays outside Loopdeck until the next explicit loop snapshot";
+  not_stored: "Loopdeck does not detect, store, or sync post-submit retry freshness result state";
+  reason: "keeps post-submit retry freshness evidence tied to explicit local snapshot recording";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label:
+      "Post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence",
+    result_scope:
+      "post-submit retry freshness result stays outside Loopdeck until the next explicit loop snapshot",
+    not_stored:
+      "Loopdeck does not detect, store, or sync post-submit retry freshness result state",
+    reason:
+      "keeps post-submit retry freshness evidence tied to explicit local snapshot recording",
     writes_files: false,
     external_calls: false,
   };
