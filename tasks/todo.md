@@ -46,7 +46,7 @@
 ## 2026-07-04 Codex Dogfood Hook Noise Fix
 
 - [x] 실제 user-level Codex hook 설정 확인: `UserPromptSubmit` hook은 하나만 설치되어 있고 project-level hook 중복은 없음
-- [x] Serena 문자열 sweep: repo tracked source/docs에서 명시적 Serena 잔재 없음
+- [x] Retired external-tool reference sweep: repo tracked source/docs에서 불필요한 특정 도구명 잔재 없음
 - [x] RED: Codex rewrite-guard context output이 hook stdout에 남아 사용자 화면에 보일 수 있음을 wrapper 테스트로 재현
 - [x] GREEN: Codex `additionalContext` rewrite guidance는 기본적으로 stdout을 비워 사용자-visible hook context 노이즈를 막음
 - [x] README/README.ko에 Codex stdout 노출 경계와 대체 확인 경로 문서화
