@@ -207,6 +207,8 @@ export function registerLoopRoutes(
                 continuationSafetyCopyRetryNoteFor(),
               continuation_safety_pre_paste_confirmation_note:
                 continuationSafetyPrePasteConfirmationNoteFor(),
+              continuation_safety_target_agent_check_note:
+                continuationSafetyTargetAgentCheckNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -869,6 +871,26 @@ function continuationSafetyPrePasteConfirmationNoteFor(): {
       "confirmation does not submit prompts or approve safety review",
     reason:
       "keeps the final handoff check manual before Codex or Claude Code receives the brief",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyTargetAgentCheckNoteFor(): {
+  label: "Target-agent check";
+  check: "operator verifies the active Codex or Claude Code request box before paste";
+  not_inspection: "Loopdeck does not inspect agent UI state or target contents";
+  reason: "keeps target selection manual before any continuation handoff";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Target-agent check",
+    check:
+      "operator verifies the active Codex or Claude Code request box before paste",
+    not_inspection:
+      "Loopdeck does not inspect agent UI state or target contents",
+    reason: "keeps target selection manual before any continuation handoff",
     writes_files: false,
     external_calls: false,
   };

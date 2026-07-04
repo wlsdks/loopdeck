@@ -2955,6 +2955,47 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.84: Selected Brief Target-Agent Check Note
+
+Decision:
+
+- Selected worktree detail should state that the operator verifies the active
+  Codex or Claude Code request box before paste.
+- This is needed because target-agent checking should not be mistaken for
+  Loopdeck inspecting agent UI state, reading target contents, or validating
+  target-agent safety automatically.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_target_agent_check_note` with:
+  - label: `Target-agent check`
+  - check:
+    `operator verifies the active Codex or Claude Code request box before paste`
+  - not_inspection:
+    `Loopdeck does not inspect agent UI state or target contents`
+  - reason:
+    `keeps target selection manual before any continuation handoff`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after the pre-paste confirmation note
+- focused server/API/web tests proving the target-agent check note is present
+
+Do not add:
+
+- target-agent UI inspection, active window detection, clipboard target
+  validation, paste automation, persisted target state, safety approval state,
+  Codex or Claude Code UI automation, hidden prompt submission, command
+  execution, git reads/writes, filesystem reads/writes, transcript import,
+  persisted review state, checklist completion state, background analysis,
+  external model calls, memory approval writes, merge decision writes, or new
+  write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, target
+  content, active-window titles, or secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

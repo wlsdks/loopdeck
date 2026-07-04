@@ -749,6 +749,38 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.continuation_safety_target_agent_check_note && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_target_agent_check_note.label
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_target_agent_check_note.check
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_target_agent_check_note
+                          .not_inspection
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_target_agent_check_note.reason
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      No target-agent check writes or external calls
+                    </p>
+                  </div>
+                )}
                 {worktreeDetail.paste_destination && (
                   <div className="loop-review-item">
                     <p className="loops-status-line">

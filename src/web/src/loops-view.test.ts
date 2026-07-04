@@ -216,6 +216,17 @@ describe("LoopsView", () => {
       "keeps the final handoff check manual before Codex or Claude Code receives the brief",
     );
     expect(html).toContain("No pre-paste confirmation writes or external calls");
+    expect(html).toContain("Target-agent check");
+    expect(html).toContain(
+      "operator verifies the active Codex or Claude Code request box before paste",
+    );
+    expect(html).toContain(
+      "Loopdeck does not inspect agent UI state or target contents",
+    );
+    expect(html).toContain(
+      "keeps target selection manual before any continuation handoff",
+    );
+    expect(html).toContain("No target-agent check writes or external calls");
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -694,6 +705,16 @@ function loopWorktree(): LoopWorktreeResponse {
         "confirmation does not submit prompts or approve safety review",
       reason:
         "keeps the final handoff check manual before Codex or Claude Code receives the brief",
+      writes_files: false,
+      external_calls: false,
+    },
+    continuation_safety_target_agent_check_note: {
+      label: "Target-agent check",
+      check:
+        "operator verifies the active Codex or Claude Code request box before paste",
+      not_inspection:
+        "Loopdeck does not inspect agent UI state or target contents",
+      reason: "keeps target selection manual before any continuation handoff",
       writes_files: false,
       external_calls: false,
     },

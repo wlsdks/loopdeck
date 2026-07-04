@@ -398,6 +398,17 @@ describe("web api export client", () => {
               writes_files: false,
               external_calls: false,
             },
+            continuation_safety_target_agent_check_note: {
+              label: "Target-agent check",
+              check:
+                "operator verifies the active Codex or Claude Code request box before paste",
+              not_inspection:
+                "Loopdeck does not inspect agent UI state or target contents",
+              reason:
+                "keeps target selection manual before any continuation handoff",
+              writes_files: false,
+              external_calls: false,
+            },
             paste_destination: {
               label: "Paste destination",
               targets: ["Codex active request", "Claude Code active request"],
@@ -753,6 +764,17 @@ describe("web api export client", () => {
           "confirmation does not submit prompts or approve safety review",
         reason:
           "keeps the final handoff check manual before Codex or Claude Code receives the brief",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_target_agent_check_note: {
+        label: "Target-agent check",
+        check:
+          "operator verifies the active Codex or Claude Code request box before paste",
+        not_inspection:
+          "Loopdeck does not inspect agent UI state or target contents",
+        reason:
+          "keeps target selection manual before any continuation handoff",
         writes_files: false,
         external_calls: false,
       },

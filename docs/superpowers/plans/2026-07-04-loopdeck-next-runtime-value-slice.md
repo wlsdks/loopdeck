@@ -292,8 +292,13 @@ Implementation checkpoint:
   confirmation note, explaining that the operator confirms the copied brief
   and target agent request before paste, without submitting prompts or
   approving safety review.
+- Selected worktree detail now includes a raw-free selected-brief target-agent
+  check note, explaining that the operator verifies the active Codex or Claude
+  Code request box before paste, without Loopdeck inspecting agent UI state or
+  target contents.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free selected-brief target-agent check note, without adding
-  transcript content, prompt bodies, raw paths, git status reads, command
-  execution, persisted review state, checklist completion state, memory
-  approval writes, merge writes, or external calls.
+  raw-free paste destination verification boundary note, without adding
+  transcript content, prompt bodies, raw paths, target contents, active-window
+  titles, git status reads, command execution, persisted review state,
+  checklist completion state, memory approval writes, merge writes, or
+  external calls.
