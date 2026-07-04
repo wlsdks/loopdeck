@@ -336,12 +336,16 @@ Implementation checkpoint:
   collection reminder, explaining that the operator collects a new explicit
   loop snapshot when evidence freshness is uncertain, without Loopdeck
   verifying freshness or starting collection automatically.
+- Selected worktree detail now includes a raw-free pre-merge freshness
+  advisory, explaining that the operator reviews freshness uncertainty before
+  merge decisions, without Loopdeck approving merges or verifying freshness
+  before merge.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free pre-merge freshness advisory, without adding
+  raw-free pre-memory-approval freshness advisory, without adding
   transcript content, prompt bodies, raw paths, target contents, active-window
   titles, pasted content, paste result state, submitted state, agent response
   content, collection result state, retry result state, freshness result state,
   freshness verification, automatic collection, collection command execution,
   retry automation, git status reads, command execution, persisted review
-  state, checklist completion state, memory approval writes, merge writes, or
-  external calls.
+  state, checklist completion state, memory approval writes, merge writes,
+  merge decision state, or external calls.

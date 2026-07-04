@@ -1131,6 +1131,41 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.continuation_safety_pre_merge_freshness_advisory && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_pre_merge_freshness_advisory
+                          .label
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_pre_merge_freshness_advisory
+                          .advisory
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_pre_merge_freshness_advisory
+                          .not_decision
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_pre_merge_freshness_advisory
+                          .reason
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      No pre-merge freshness writes or external calls
+                    </p>
+                  </div>
+                )}
                 {worktreeDetail.paste_destination && (
                   <div className="loop-review-item">
                     <p className="loops-status-line">

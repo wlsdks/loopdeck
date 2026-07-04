@@ -229,6 +229,8 @@ export function registerLoopRoutes(
                 continuationSafetyFreshnessResultNonPersistenceNoteFor(),
               continuation_safety_freshness_uncertainty_collection_reminder:
                 continuationSafetyFreshnessUncertaintyCollectionReminderFor(),
+              continuation_safety_pre_merge_freshness_advisory:
+                continuationSafetyPreMergeFreshnessAdvisoryFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1115,6 +1117,25 @@ function continuationSafetyFreshnessUncertaintyCollectionReminderFor(): {
       "Loopdeck does not verify freshness or start collection automatically",
     reason:
       "keeps freshness uncertainty resolution operator-triggered and local-first",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPreMergeFreshnessAdvisoryFor(): {
+  label: "Pre-merge freshness advisory";
+  advisory: "review freshness uncertainty before merge decisions";
+  not_decision: "Loopdeck does not approve merges or verify freshness before merge";
+  reason: "keeps merge readiness separate from freshness uncertainty review";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Pre-merge freshness advisory",
+    advisory: "review freshness uncertainty before merge decisions",
+    not_decision:
+      "Loopdeck does not approve merges or verify freshness before merge",
+    reason: "keeps merge readiness separate from freshness uncertainty review",
     writes_files: false,
     external_calls: false,
   };

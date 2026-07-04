@@ -1104,6 +1104,17 @@ describe("createServer P2 ingest boundary", () => {
           writes_files: false,
           external_calls: false,
         },
+        continuation_safety_pre_merge_freshness_advisory: {
+          label: "Pre-merge freshness advisory",
+          advisory:
+            "review freshness uncertainty before merge decisions",
+          not_decision:
+            "Loopdeck does not approve merges or verify freshness before merge",
+          reason:
+            "keeps merge readiness separate from freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
         paste_destination: {
           label: "Paste destination",
           targets: ["Codex active request", "Claude Code active request"],

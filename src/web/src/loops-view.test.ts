@@ -347,6 +347,17 @@ describe("LoopsView", () => {
       "keeps freshness uncertainty resolution operator-triggered and local-first",
     );
     expect(html).toContain("No freshness uncertainty collection writes or external calls");
+    expect(html).toContain("Pre-merge freshness advisory");
+    expect(html).toContain(
+      "review freshness uncertainty before merge decisions",
+    );
+    expect(html).toContain(
+      "Loopdeck does not approve merges or verify freshness before merge",
+    );
+    expect(html).toContain(
+      "keeps merge readiness separate from freshness uncertainty review",
+    );
+    expect(html).toContain("No pre-merge freshness writes or external calls");
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -938,6 +949,15 @@ function loopWorktree(): LoopWorktreeResponse {
         "Loopdeck does not verify freshness or start collection automatically",
       reason:
         "keeps freshness uncertainty resolution operator-triggered and local-first",
+      writes_files: false,
+      external_calls: false,
+    },
+    continuation_safety_pre_merge_freshness_advisory: {
+      label: "Pre-merge freshness advisory",
+      advisory: "review freshness uncertainty before merge decisions",
+      not_decision:
+        "Loopdeck does not approve merges or verify freshness before merge",
+      reason: "keeps merge readiness separate from freshness uncertainty review",
       writes_files: false,
       external_calls: false,
     },

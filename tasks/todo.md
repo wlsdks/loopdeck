@@ -413,7 +413,11 @@
 - [x] Task 97 RED: selected detail API/UI에 `continuation_safety_freshness_uncertainty_collection_reminder`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 97 GREEN: selected worktree detail API/type/UI에 uncertainty 시 new explicit loop snapshot collection reminder, no freshness verification/automatic collection, no-write/no-external flags를 read-only로 노출
 - [x] Task 97 PRIVACY: continuation safety freshness uncertainty collection reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [ ] 다음 slice: selected detail panel의 pre-merge freshness advisory를 raw-free로 별도 제공할지 결정
+- [x] Task 98 DECISION: pre-merge freshness advisory는 merge decision 전에 freshness uncertainty를 review해야 하며 Loopdeck이 merge approve나 freshness verify를 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 98 RED: selected detail API/UI에 `continuation_safety_pre_merge_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 98 GREEN: selected worktree detail API/type/UI에 review freshness uncertainty before merge decisions, no merge approval/freshness verification, no-write/no-external flags를 read-only로 노출
+- [x] Task 98 PRIVACY: continuation safety pre-merge freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/merge decision state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [ ] 다음 slice: selected detail panel의 pre-memory-approval freshness advisory를 raw-free로 별도 제공할지 결정
 
 ### 판단 기준
 
