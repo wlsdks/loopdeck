@@ -13,6 +13,7 @@ import { formatDate } from "./formatters.js";
 import { LoopReviewItem } from "./loop-review-item.js";
 import { LoopWorktreeCollectionFreshnessItems } from "./loop-worktree-collection-freshness-items.js";
 import { LoopWorktreeContinuationSafetyItems } from "./loop-worktree-continuation-safety-items.js";
+import { LoopWorktreeMemoryCollectionItems } from "./loop-worktree-memory-collection-items.js";
 import { LoopWorktreeMemoryApprovalRetryRenewedItems } from "./loop-worktree-memory-approval-retry-renewed-items.js";
 import { LoopWorktreeRenewedMemoryApprovalItems } from "./loop-worktree-renewed-memory-approval-items.js";
 
@@ -433,158 +434,9 @@ export function LoopsView({
                 <LoopWorktreeCollectionFreshnessItems
                   worktreeDetail={worktreeDetail}
                 />
-                {worktreeDetail.continuation_safety_post_memory_approval_collection_reminder && (
-                  <LoopReviewItem
-                    footer="No post-memory-approval collection writes or external calls"
-                    lines={[
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_collection_reminder
-                        .label,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_collection_reminder
-                        .reminder,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_collection_reminder
-                        .not_automated,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_collection_reminder
-                        .reason,
-                    ]}
-                  />
-                )}
-                {worktreeDetail.continuation_safety_post_memory_approval_collection_result_non_persistence_note && (
-                  <LoopReviewItem
-                    footer="No post-memory-approval collection result persistence writes or external calls"
-                    lines={[
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_collection_result_non_persistence_note
-                        .label,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_collection_result_non_persistence_note
-                        .result_scope,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_collection_result_non_persistence_note
-                        .not_stored,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_collection_result_non_persistence_note
-                        .reason,
-                    ]}
-                  />
-                )}
-                {worktreeDetail.continuation_safety_post_memory_approval_collection_retry_boundary_note && (
-                  <LoopReviewItem
-                    footer="No post-memory-approval collection retry writes or external calls"
-                    lines={[
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_collection_retry_boundary_note
-                        .label,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_collection_retry_boundary_note
-                        .retry,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_collection_retry_boundary_note
-                        .not_automated,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_collection_retry_boundary_note
-                        .reason,
-                    ]}
-                  />
-                )}
-                {worktreeDetail.continuation_safety_post_memory_approval_retry_outcome_non_persistence_note && (
-                  <LoopReviewItem
-                    footer="No post-memory-approval retry outcome persistence writes or external calls"
-                    lines={[
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_outcome_non_persistence_note
-                        .label,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_outcome_non_persistence_note
-                        .outcome_scope,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_outcome_non_persistence_note
-                        .not_stored,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_outcome_non_persistence_note
-                        .reason,
-                    ]}
-                  />
-                )}
-                {worktreeDetail.continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note && (
-                  <LoopReviewItem
-                    footer="No post-memory-approval retry freshness verification writes or external calls"
-                    lines={[
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note
-                        .label,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note
-                        .review,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note
-                        .not_verified,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note
-                        .reason,
-                    ]}
-                  />
-                )}
-                {worktreeDetail.continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note && (
-                  <LoopReviewItem
-                    footer="No post-memory-approval retry freshness result persistence writes or external calls"
-                    lines={[
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note
-                        .label,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note
-                        .result_scope,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note
-                        .not_stored,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note
-                        .reason,
-                    ]}
-                  />
-                )}
-                {worktreeDetail.continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder && (
-                  <LoopReviewItem
-                    footer="No post-memory-approval retry freshness uncertainty collection writes or external calls"
-                    lines={[
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder
-                        .label,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder
-                        .reminder,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder
-                        .not_automated,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder
-                        .reason,
-                    ]}
-                  />
-                )}
-                {worktreeDetail.continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory && (
-                  <LoopReviewItem
-                    footer="No post-memory-approval retry pre-memory-approval freshness advisory writes or external calls"
-                    lines={[
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory
-                        .label,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory
-                        .advisory,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory
-                        .not_decision,
-                      worktreeDetail
-                        .continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory
-                        .reason,
-                    ]}
-                  />
-                )}
+                <LoopWorktreeMemoryCollectionItems
+                  worktreeDetail={worktreeDetail}
+                />
                 <LoopWorktreeMemoryApprovalRetryRenewedItems
                   worktreeDetail={worktreeDetail}
                 />
