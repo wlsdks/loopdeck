@@ -9,7 +9,7 @@ export async function copyTextToClipboard(text: string): Promise<boolean> {
         () => false,
       ),
       new Promise<boolean>((resolve) =>
-        window.setTimeout(() => resolve(false), 250),
+        window.setTimeout(() => resolve(false), 1_000),
       ),
     ]);
     if (copied) return true;

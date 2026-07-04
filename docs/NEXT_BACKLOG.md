@@ -124,11 +124,10 @@ investing in more refactors:
   ask user -> `apply_clarifications` -> optional `record_clarifications`.
   Remaining follow-up: one interactive Claude Code or Codex session to verify
   native ask UI handoff.
-- **Reuse loop audit**: pick a stored high-score prompt, find it via the
-  web UI search, and try to reuse it for a new task (copy → edit →
-  resubmit). Note where the path breaks (e.g. is "copy this prompt"
-  visible? is there a "fork into draft"?). Outcome: a punch list of UX
-  fixes, possibly one or two new UI affordances.
+- **Reuse loop audit**: first in-app Browser audit completed in
+  `docs/REUSE_LOOP_AUDIT_2026-07-05.md`. Search, detail, and save-draft reuse
+  worked; `Copy draft` failed in the Codex in-app Browser and needs a
+  local-only manual-copy fallback.
 
 These are user-perspective tasks rather than refactors. They should run in
 a fresh session with the explicit role of "user trying to do work" rather
@@ -141,6 +140,13 @@ Immediate follow-up from the stdio audit:
 - Repeatable `smoke:mcp-coach-loop` harness now seeds a temporary archive and
   verifies `score_prompt` -> `improve_prompt` -> `apply_clarifications` ->
   optional `record_clarifications` over the real stdio MCP server.
+
+Immediate follow-up from the reuse audit:
+
+- Add a prompt-detail copy-failure fallback so users can still manually select
+  and reuse the improved draft when browser clipboard writes are unavailable.
+- Keep auto-submit out of scope; copy/fallback must remain local and
+  approval-gated.
 
 ### 4. Codex Native Dialog Fallback Dogfood
 
