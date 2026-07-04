@@ -245,6 +245,8 @@ export function registerLoopRoutes(
                 continuationSafetyPostMemoryApprovalRetryEvidenceFreshnessBoundaryNoteFor(),
               continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note:
                 continuationSafetyPostMemoryApprovalRetryFreshnessResultNonPersistenceNoteFor(),
+              continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder:
+                continuationSafetyPostMemoryApprovalRetryFreshnessUncertaintyCollectionReminderFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1295,6 +1297,27 @@ function continuationSafetyPostMemoryApprovalRetryFreshnessResultNonPersistenceN
       "Loopdeck does not detect, store, or sync post-approval retry freshness result state",
     reason:
       "keeps post-approval retry freshness evidence tied to explicit local snapshot recording",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPostMemoryApprovalRetryFreshnessUncertaintyCollectionReminderFor(): {
+  label: "Post-memory-approval retry freshness uncertainty collection reminder";
+  reminder: "collect a new explicit loop snapshot when post-approval retry freshness is uncertain";
+  not_automated: "Loopdeck does not verify post-approval retry freshness or start collection automatically";
+  reason: "keeps post-approval retry freshness uncertainty resolution operator-triggered and local-first";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Post-memory-approval retry freshness uncertainty collection reminder",
+    reminder:
+      "collect a new explicit loop snapshot when post-approval retry freshness is uncertain",
+    not_automated:
+      "Loopdeck does not verify post-approval retry freshness or start collection automatically",
+    reason:
+      "keeps post-approval retry freshness uncertainty resolution operator-triggered and local-first",
     writes_files: false,
     external_calls: false,
   };

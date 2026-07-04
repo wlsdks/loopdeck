@@ -368,8 +368,13 @@ Implementation checkpoint:
   freshness result non-persistence note, explaining that retry freshness result
   state stays outside Loopdeck until the next explicit loop snapshot, without
   Loopdeck detecting, storing, or syncing that state.
+- Selected worktree detail now includes a raw-free post-memory-approval retry
+  freshness uncertainty collection reminder, explaining that the operator
+  collects a new explicit loop snapshot when post-approval retry freshness is
+  uncertain, without Loopdeck verifying freshness or starting collection
+  automatically.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free post-memory-approval retry freshness uncertainty collection reminder, without
+  raw-free post-memory-approval retry pre-memory-approval freshness advisory, without
   adding transcript content, prompt bodies, raw paths, target contents,
   active-window titles, pasted content, paste result state, submitted state,
   agent response content, collection result state, post-approval collection
