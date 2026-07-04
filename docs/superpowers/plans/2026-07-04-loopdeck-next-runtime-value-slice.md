@@ -316,10 +316,15 @@ Implementation checkpoint:
   non-persistence note, explaining that collection result state is not persisted
   until the operator records the next explicit loop snapshot, without Loopdeck
   storing, syncing, or inferring collection result state from agent UI activity.
+- Selected worktree detail now includes a raw-free collection retry boundary
+  note, explaining that the operator reruns the explicit loop collection flow
+  when retry is needed, without Loopdeck automatically retrying collection
+  commands or hidden recovery actions.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free collection retry boundary note, without adding transcript content,
-  prompt bodies, raw paths, target contents, active-window titles, pasted
-  content, paste result state, submitted state, agent response content,
-  collection result state, collection command execution, retry automation, git
-  status reads, command execution, persisted review state, checklist completion
-  state, memory approval writes, merge writes, or external calls.
+  raw-free retry outcome non-persistence note, without adding transcript
+  content, prompt bodies, raw paths, target contents, active-window titles,
+  pasted content, paste result state, submitted state, agent response content,
+  collection result state, retry result state, collection command execution,
+  retry automation, git status reads, command execution, persisted review state,
+  checklist completion state, memory approval writes, merge writes, or external
+  calls.

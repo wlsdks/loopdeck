@@ -292,6 +292,17 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "No collection result persistence writes or external calls",
     );
+    expect(html).toContain("Collection retry boundary");
+    expect(html).toContain(
+      "operator reruns the explicit loop collection flow when retry is needed",
+    );
+    expect(html).toContain(
+      "Loopdeck does not automatically retry collection commands or hidden recovery actions",
+    );
+    expect(html).toContain(
+      "keeps retry control local and operator-triggered after collection uncertainty",
+    );
+    expect(html).toContain("No collection retry writes or external calls");
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -832,6 +843,16 @@ function loopWorktree(): LoopWorktreeResponse {
       not_stored:
         "Loopdeck does not store, sync, or infer collection result state from agent UI activity",
       reason: "keeps collection evidence tied to explicit local snapshot recording",
+      writes_files: false,
+      external_calls: false,
+    },
+    continuation_safety_collection_retry_boundary_note: {
+      label: "Collection retry boundary",
+      retry: "operator reruns the explicit loop collection flow when retry is needed",
+      not_automated:
+        "Loopdeck does not automatically retry collection commands or hidden recovery actions",
+      reason:
+        "keeps retry control local and operator-triggered after collection uncertainty",
       writes_files: false,
       external_calls: false,
     },

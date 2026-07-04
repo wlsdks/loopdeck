@@ -219,6 +219,8 @@ export function registerLoopRoutes(
                 continuationSafetyPostSubmissionCollectionReminderNoteFor(),
               continuation_safety_collection_result_non_persistence_note:
                 continuationSafetyCollectionResultNonPersistenceNoteFor(),
+              continuation_safety_collection_retry_boundary_note:
+                continuationSafetyCollectionRetryBoundaryNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1004,6 +1006,26 @@ function continuationSafetyCollectionResultNonPersistenceNoteFor(): {
     not_stored:
       "Loopdeck does not store, sync, or infer collection result state from agent UI activity",
     reason: "keeps collection evidence tied to explicit local snapshot recording",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyCollectionRetryBoundaryNoteFor(): {
+  label: "Collection retry boundary";
+  retry: "operator reruns the explicit loop collection flow when retry is needed";
+  not_automated: "Loopdeck does not automatically retry collection commands or hidden recovery actions";
+  reason: "keeps retry control local and operator-triggered after collection uncertainty";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Collection retry boundary",
+    retry: "operator reruns the explicit loop collection flow when retry is needed",
+    not_automated:
+      "Loopdeck does not automatically retry collection commands or hidden recovery actions",
+    reason:
+      "keeps retry control local and operator-triggered after collection uncertainty",
     writes_files: false,
     external_calls: false,
   };
