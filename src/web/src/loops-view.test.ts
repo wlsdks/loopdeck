@@ -654,6 +654,21 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "No post-memory-approval retry renewed-memory-approval post-submit retry outcome persistence writes or external calls",
     );
+    expect(html).toContain(
+      "Post-memory-approval retry renewed-memory-approval post-submit retry evidence freshness boundary",
+    );
+    expect(html).toContain(
+      "operator checks post-submit retry evidence freshness against the latest explicit loop snapshot",
+    );
+    expect(html).toContain(
+      "Loopdeck does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
+    );
+    expect(html).toContain(
+      "keeps post-submit retry evidence freshness review tied to local snapshot metadata",
+    );
+    expect(html).toContain(
+      "No post-memory-approval retry renewed-memory-approval post-submit retry evidence freshness verification writes or external calls",
+    );
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -1500,6 +1515,19 @@ function loopWorktree(): LoopWorktreeResponse {
           "Loopdeck does not detect, store, or sync post-submit retry success or failure state",
         reason:
           "keeps post-submit retry evidence tied to explicit local snapshot recording",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_evidence_freshness_boundary_note:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry evidence freshness boundary",
+        freshness_scope:
+          "operator checks post-submit retry evidence freshness against the latest explicit loop snapshot",
+        not_verified:
+          "Loopdeck does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
+        reason:
+          "keeps post-submit retry evidence freshness review tied to local snapshot metadata",
         writes_files: false,
         external_calls: false,
       },

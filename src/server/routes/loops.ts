@@ -271,6 +271,8 @@ export function registerLoopRoutes(
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitCollectionRetryBoundaryNoteFor(),
               continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_outcome_non_persistence_note:
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryOutcomeNonPersistenceNoteFor(),
+              continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_evidence_freshness_boundary_note:
+                continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryEvidenceFreshnessBoundaryNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1605,6 +1607,28 @@ function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmi
       "Loopdeck does not detect, store, or sync post-submit retry success or failure state",
     reason:
       "keeps post-submit retry evidence tied to explicit local snapshot recording",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryEvidenceFreshnessBoundaryNoteFor(): {
+  label: "Post-memory-approval retry renewed-memory-approval post-submit retry evidence freshness boundary";
+  freshness_scope: "operator checks post-submit retry evidence freshness against the latest explicit loop snapshot";
+  not_verified: "Loopdeck does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity";
+  reason: "keeps post-submit retry evidence freshness review tied to local snapshot metadata";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label:
+      "Post-memory-approval retry renewed-memory-approval post-submit retry evidence freshness boundary",
+    freshness_scope:
+      "operator checks post-submit retry evidence freshness against the latest explicit loop snapshot",
+    not_verified:
+      "Loopdeck does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
+    reason:
+      "keeps post-submit retry evidence freshness review tied to local snapshot metadata",
     writes_files: false,
     external_calls: false,
   };
