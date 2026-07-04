@@ -103,8 +103,9 @@ Resolution:
   the operator can select and copy the draft manually without auto-submitting
   it to Codex, Claude Code, or any external service.
 - `corepack pnpm e2e:browser` now forces both `document.execCommand("copy")`
-  and `navigator.clipboard.writeText()` to fail, clicks `Copy saved draft`, and
-  verifies that the manual-copy fallback appears.
+  and `navigator.clipboard.writeText()` to fail, clicks `Copy draft` and
+  `Copy saved draft`, and verifies that the manual-copy fallback appears for
+  both paths.
 
 Current status: resolved for repeatable automated coverage. A fresh manual pass
 in the Codex in-app Browser is still useful as user-experience evidence, but

@@ -3449,3 +3449,9 @@
 - [x] EVIDENCE: `corepack pnpm e2e:browser` forces clipboard writes to fail and verifies the prompt detail manual-copy fallback appears.
 - [x] DOCS: Refresh reuse audit, next backlog, and goal audit so the copy-failure fallback is no longer tracked as an open implementation gap.
 - [x] VERIFY: Run focused docs/search checks plus full test/lint/build/pack dry-run gates, push a coherent PR, merge, and prune the branch.
+
+## 2026-07-05 Reuse Copy Fallback E2E Coverage
+
+- [x] DECISION: The audit claims current and saved improvement drafts both have local manual-copy fallback, so browser E2E should force clipboard failure on both actions.
+- [x] GREEN: `scripts/browser-e2e.mjs` now uses shared clipboard failure helpers and verifies `Copy draft` plus `Copy saved draft` fallback paths.
+- [x] VERIFY: Run browser E2E, full test/lint/build/pack dry-run gates, push a coherent PR, merge, and prune the branch.
