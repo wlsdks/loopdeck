@@ -157,7 +157,7 @@ Observed `record_clarifications` result:
    is:
    `improve_prompt` -> ask user -> `apply_clarifications` -> optionally
    `record_clarifications`.
-2. Add a `scripts/mcp-coach-loop-smoke.mjs` harness that seeds a temporary
-   archive and checks the JSON-RPC stdio path without returning prompt bodies.
+2. Done: `scripts/mcp-coach-loop-smoke.mjs` seeds a temporary archive and
+   checks the JSON-RPC stdio path without returning stored prompt bodies.
 3. Run the same flow inside one real Claude Code or Codex session to validate
    the native ask UI handoff.

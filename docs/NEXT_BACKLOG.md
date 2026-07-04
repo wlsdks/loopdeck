@@ -138,8 +138,9 @@ Immediate follow-up from the stdio audit:
 
 - Update MCP instructions/docs so agents call `apply_clarifications` before
   `record_clarifications` when they need to show the final draft in-chat.
-- Consider a repeatable `mcp-coach-loop-smoke` harness only after the doc fix,
-  so future audits do not depend on one-off scripts.
+- Repeatable `smoke:mcp-coach-loop` harness now seeds a temporary archive and
+  verifies `score_prompt` -> `improve_prompt` -> `apply_clarifications` ->
+  optional `record_clarifications` over the real stdio MCP server.
 
 ### 4. Codex Native Dialog Fallback Dogfood
 
