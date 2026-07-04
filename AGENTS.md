@@ -14,7 +14,8 @@
 ## 필수 문서 라우팅
 
 - 구조 판단 전: `docs/ARCHITECTURE.md`
-- 제품/Loopdeck 기획 판단 전: `docs/superpowers/specs/2026-07-04-agent-loop-memory-design.md`
+- 제품/Loopdeck 기획 판단 전: `docs/LOOPDECK.md`, `docs/superpowers/specs/2026-07-04-agent-loop-memory-design.md`
+- loop snapshot/schema/privacy 판단 전: `docs/LOOP-SNAPSHOT-SCHEMA.md`
 - 현재 우선순위 확인: `docs/NEXT_BACKLOG.md`, `tasks/todo.md`
 - Codex/Claude Code harness 판단 전: `docs/AGENT-HARNESS.md`
 - AGENTS.md/CLAUDE.md 수정 전: `docs/INSTRUCTION-FILES.md`

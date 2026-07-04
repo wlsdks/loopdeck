@@ -39,6 +39,8 @@
     "docs/TECH_SPEC.md",
     "docs/IMPLEMENTATION_PLAN.md",
     "docs/ADAPTERS.md",
+    "docs/LOOPDECK.md",
+    "docs/LOOP-SNAPSHOT-SCHEMA.md",
     "docs/AGENT-HARNESS.md",
     "docs/INSTRUCTION-FILES.md",
     "docs/PLUGINS.md",
