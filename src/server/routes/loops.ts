@@ -113,15 +113,15 @@ export function registerLoopRoutes(
     requireAppAccess(request, options.auth);
     const params = request.params as { worktree: string };
     const query = request.query as { branch?: string; session_id?: string };
+    const allSnapshots =
+      options.storage.listLoopSnapshots?.({ limit: 100 }).items ?? [];
     const snapshots =
-      options.storage
-        .listLoopSnapshots?.({ limit: 100 })
-        .items.filter(
-          (snapshot) =>
-            snapshot.worktree_label === params.worktree &&
-            (!query.session_id || snapshot.session_id === query.session_id) &&
-            (!query.branch || snapshot.branch === query.branch),
-        ) ?? [];
+      allSnapshots.filter(
+        (snapshot) =>
+          snapshot.worktree_label === params.worktree &&
+          (!query.session_id || snapshot.session_id === query.session_id) &&
+          (!query.branch || snapshot.branch === query.branch),
+      ) ?? [];
     const boundaries =
       options.storage.listCompactBoundaries?.({ limit: 100 }).items ?? [];
     const latestSnapshot = snapshots.at(0);
@@ -134,6 +134,22 @@ export function registerLoopRoutes(
           })
           .items.at(0)
       : undefined;
+    const reviewStatus = latestSnapshot
+      ? createLoopdeckStatus({
+          snapshots: allSnapshots,
+          compactBoundaries: boundaries,
+          projectMemoryCount: 0,
+          mergeDecisions:
+            options.storage.listLoopMergeDecisions?.({
+              limit: 3,
+              projectId: latestSnapshot.project_id,
+            }).items ?? [],
+        })
+      : undefined;
+    const reviewPacket = reviewStatus?.activity.command_center?.review_packet;
+    const reviewItem = reviewStatus?.activity.command_center?.review_items.find(
+      (item) => item.worktree === params.worktree,
+    );
 
     return {
       data: {
@@ -149,6 +165,19 @@ export function registerLoopRoutes(
                 reason: latestDecision.reason,
                 decided_by: latestDecision.decided_by,
                 created_at: latestDecision.created_at,
+              },
+            }
+          : {}),
+        ...(reviewPacket && reviewItem
+          ? {
+              review_packet_summary: {
+                title: reviewPacket.title,
+                status: reviewPacket.status,
+                summary: reviewPacket.summary,
+                next_action: reviewPacket.next_action,
+                worktree: reviewItem.worktree,
+                merge_readiness: reviewItem.merge_readiness.status,
+                worktree_action: reviewItem.merge_readiness.next_action,
               },
             }
           : {}),

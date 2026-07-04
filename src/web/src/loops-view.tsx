@@ -348,6 +348,21 @@ export function LoopsView({
                 {worktreeDetail.latest_decision.reason}
               </p>
             )}
+            {worktreeDetail.review_packet_summary && (
+              <div>
+                <p className="loops-status-line">Review packet summary</p>
+                <p className="loops-status-line">
+                  {worktreeDetail.review_packet_summary.summary}
+                </p>
+                <p className="loops-status-line">
+                  Next {worktreeDetail.review_packet_summary.next_action}
+                </p>
+                <p className="loops-status-line">
+                  Worktree action{" "}
+                  {worktreeDetail.review_packet_summary.worktree_action}
+                </p>
+              </div>
+            )}
             <div className="loop-memory-action">
               <code>Continue {worktreeDetail.worktree}</code>
               <button

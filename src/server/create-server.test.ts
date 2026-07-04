@@ -761,6 +761,68 @@ describe("createServer P2 ingest boundary", () => {
     expect(serialized).not.toContain("sk-proj-secret");
   });
 
+  it("returns the selected worktree review packet summary read-only", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_review_selected",
+        worktree_label: "review-worktree",
+        project_id: "proj_web",
+        outcome: {
+          status: "failed",
+          summary:
+            "Unsafe selected outcome should stay hidden /Users/example/private sk-proj-secret",
+          evidence_refs: ["commit:review"],
+        },
+      }),
+    );
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_ready_other",
+        worktree_label: "ready-worktree",
+        project_id: "proj_web",
+        outcome: {
+          status: "passed",
+          summary: "Ready outcome should stay hidden.",
+          evidence_refs: ["commit:ready"],
+        },
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/worktrees/review-worktree",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const serialized = JSON.stringify(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        worktree: "review-worktree",
+        review_packet_summary: {
+          title: "Review-before-merge packet",
+          status: "needs_review",
+          summary: "1 ready, 1 needs review, 0 missing evidence",
+          next_action: "review non-passing worktrees before merge",
+          worktree: "review-worktree",
+          merge_readiness: "needs_review",
+          worktree_action: "review outcome before merge",
+        },
+      },
+    });
+    expect(serialized).not.toContain("Unsafe selected outcome");
+    expect(serialized).not.toContain("Ready outcome should stay hidden");
+    expect(serialized).not.toContain("commit:review");
+    expect(serialized).not.toContain("commit:ready");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-secret");
+  });
+
   it("returns approved loop memory in copy-ready loop briefs", async () => {
     const storage = createMemoryStorage();
     storage.loopSnapshots.push(loopSnapshot());

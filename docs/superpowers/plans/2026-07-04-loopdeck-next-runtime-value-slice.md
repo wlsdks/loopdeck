@@ -171,6 +171,10 @@ Implementation checkpoint:
 - Selected worktree detail now shows the matching latest local merge decision
   read-only through `/api/v1/loops/worktrees/:worktree`, API typing, and the web
   detail panel, scoped by selected worktree and selected snapshot project.
+- Selected worktree detail now includes a raw-free review packet summary,
+  packet next action, and selected worktree action through
+  `/api/v1/loops/worktrees/:worktree`, API typing, and the web detail panel.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free review packet summary link, without adding web write buttons,
-  checklist completion state, merge automation, or git writes.
+  CLI-equivalent read-only command hint for the review packet, without adding
+  web write buttons, checklist completion state, merge automation, or git
+  writes.

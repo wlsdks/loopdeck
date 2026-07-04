@@ -239,6 +239,21 @@ export type LoopWorktreeResponse = {
     decided_by: string;
     created_at: string;
   };
+  review_packet_summary?: {
+    title: "Review-before-merge packet";
+    status: "ready" | "needs_review" | "blocked";
+    summary: string;
+    next_action:
+      | "compare ready evidence before merge"
+      | "review non-passing worktrees before merge"
+      | "record missing evidence before merge";
+    worktree: string;
+    merge_readiness: "ready" | "needs_review" | "missing_evidence";
+    worktree_action:
+      | "compare evidence before merge"
+      | "review outcome before merge"
+      | "record loop outcome evidence";
+  };
   items: LoopSummary[];
   privacy: {
     local_only: true;

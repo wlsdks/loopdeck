@@ -73,6 +73,10 @@ describe("LoopsView", () => {
     expect(html).toContain("Latest decision");
     expect(html).toContain("continue");
     expect(html).toContain("Needs one more verification pass before merge.");
+    expect(html).toContain("Review packet summary");
+    expect(html).toContain("1 ready, 1 needs review, 0 missing evidence");
+    expect(html).toContain("review non-passing worktrees before merge");
+    expect(html).toContain("review outcome before merge");
     expect(html).toContain("loop_web");
     expect(html).toContain("passed");
     expect(html).not.toContain("Make this better");
@@ -265,6 +269,15 @@ function loopWorktree(): LoopWorktreeResponse {
       reason: "Needs one more verification pass before merge.",
       decided_by: "user",
       created_at: "2026-07-04T01:30:00.000Z",
+    },
+    review_packet_summary: {
+      title: "Review-before-merge packet",
+      status: "needs_review",
+      summary: "1 ready, 1 needs review, 0 missing evidence",
+      next_action: "review non-passing worktrees before merge",
+      worktree: "agent-loop-worktree",
+      merge_readiness: "needs_review",
+      worktree_action: "review outcome before merge",
     },
     items: [
       {

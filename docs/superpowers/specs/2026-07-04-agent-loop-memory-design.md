@@ -1596,6 +1596,39 @@ Do not add:
 - hidden external model calls or background agent evaluation
 - package, plugin, slash command, hook, or MCP server-name rename
 
+### Slice 4.49: Selected Worktree Review Packet Summary Link
+
+Decision:
+
+- Selected worktree detail should include a raw-free review packet summary so
+  Codex, Claude Code, and the web UI can connect a selected worktree to the
+  current review-before-merge packet without reading prompt bodies, outcome
+  summaries, evidence refs, diffs, or git state.
+- Reuse the existing command-center review packet. The selected detail response
+  should only expose the aggregate packet status/summary/next action and the
+  selected worktree's merge-readiness status/action.
+
+Add:
+
+- optional `/api/v1/loops/worktrees/:worktree` response field
+  `review_packet_summary`
+- web API typing for `review_packet_summary`
+- selected worktree detail rendering for review packet summary, packet next
+  action, and worktree action
+- focused server/API/web tests proving the summary remains read-only and does
+  not reveal prompt bodies, outcome summaries, evidence refs, raw paths,
+  transcripts, compact summaries, API tokens, provider credentials, external
+  calls, or git writes
+
+Do not add:
+
+- web or MCP write tools for decisions, checklist completion, merge actions, or
+  acknowledgements
+- merge/checkout/rebase/diff/conflict inspection
+- changes to command-center readiness or review packet status
+- hidden external model calls or background agent evaluation
+- package, plugin, slash command, hook, or MCP server-name rename
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

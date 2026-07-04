@@ -242,6 +242,15 @@ describe("web api export client", () => {
               decided_by: "user",
               created_at: "2026-07-04T01:30:00.000Z",
             },
+            review_packet_summary: {
+              title: "Review-before-merge packet",
+              status: "needs_review",
+              summary: "1 ready, 1 needs review, 0 missing evidence",
+              next_action: "review non-passing worktrees before merge",
+              worktree: "agent-loop-worktree",
+              merge_readiness: "needs_review",
+              worktree_action: "review outcome before merge",
+            },
             items: [
               {
                 id: "loop_web",
@@ -279,6 +288,12 @@ describe("web api export client", () => {
         snapshot_id: "loop_web",
         worktree: "agent-loop-worktree",
         decision: "continue",
+      },
+      review_packet_summary: {
+        title: "Review-before-merge packet",
+        status: "needs_review",
+        summary: "1 ready, 1 needs review, 0 missing evidence",
+        worktree: "agent-loop-worktree",
       },
       items: [
         {
