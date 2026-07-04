@@ -223,6 +223,8 @@ export function registerLoopRoutes(
                 continuationSafetyCollectionRetryBoundaryNoteFor(),
               continuation_safety_retry_outcome_non_persistence_note:
                 continuationSafetyRetryOutcomeNonPersistenceNoteFor(),
+              continuation_safety_collection_evidence_freshness_boundary_note:
+                continuationSafetyCollectionEvidenceFreshnessBoundaryNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1048,6 +1050,26 @@ function continuationSafetyRetryOutcomeNonPersistenceNoteFor(): {
     not_stored:
       "Loopdeck does not detect, store, or sync retry success or failure state",
     reason: "keeps retry evidence tied to explicit local snapshot recording",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyCollectionEvidenceFreshnessBoundaryNoteFor(): {
+  label: "Collection evidence freshness boundary";
+  freshness_check: "operator checks freshness against the latest explicit loop snapshot evidence";
+  not_verified: "Loopdeck does not verify freshness from git status, transcripts, or agent UI activity";
+  reason: "keeps evidence freshness review tied to local snapshot metadata";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Collection evidence freshness boundary",
+    freshness_check:
+      "operator checks freshness against the latest explicit loop snapshot evidence",
+    not_verified:
+      "Loopdeck does not verify freshness from git status, transcripts, or agent UI activity",
+    reason: "keeps evidence freshness review tied to local snapshot metadata",
     writes_files: false,
     external_calls: false,
   };

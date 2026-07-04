@@ -314,6 +314,17 @@ describe("LoopsView", () => {
       "keeps retry evidence tied to explicit local snapshot recording",
     );
     expect(html).toContain("No retry outcome persistence writes or external calls");
+    expect(html).toContain("Collection evidence freshness boundary");
+    expect(html).toContain(
+      "operator checks freshness against the latest explicit loop snapshot evidence",
+    );
+    expect(html).toContain(
+      "Loopdeck does not verify freshness from git status, transcripts, or agent UI activity",
+    );
+    expect(html).toContain(
+      "keeps evidence freshness review tied to local snapshot metadata",
+    );
+    expect(html).toContain("No freshness verification writes or external calls");
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -874,6 +885,16 @@ function loopWorktree(): LoopWorktreeResponse {
       not_stored:
         "Loopdeck does not detect, store, or sync retry success or failure state",
       reason: "keeps retry evidence tied to explicit local snapshot recording",
+      writes_files: false,
+      external_calls: false,
+    },
+    continuation_safety_collection_evidence_freshness_boundary_note: {
+      label: "Collection evidence freshness boundary",
+      freshness_check:
+        "operator checks freshness against the latest explicit loop snapshot evidence",
+      not_verified:
+        "Loopdeck does not verify freshness from git status, transcripts, or agent UI activity",
+      reason: "keeps evidence freshness review tied to local snapshot metadata",
       writes_files: false,
       external_calls: false,
     },

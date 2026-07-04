@@ -401,7 +401,11 @@
 - [x] Task 94 RED: selected detail API/UI에 `continuation_safety_retry_outcome_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 94 GREEN: selected worktree detail API/type/UI에 retry attempt/outcome outside Loopdeck until explicit snapshot, no retry success/failure detect/store/sync, no-write/no-external flags를 read-only로 노출
 - [x] Task 94 PRIVACY: continuation safety retry outcome non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [ ] 다음 slice: selected detail panel의 collection evidence freshness boundary note를 raw-free로 별도 제공할지 결정
+- [x] Task 95 DECISION: collection evidence freshness boundary note는 evidence freshness를 latest explicit loop snapshot evidence 기준으로 operator가 확인해야 하며 Loopdeck이 git status/transcript/agent UI activity에서 freshness를 verify하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 95 RED: selected detail API/UI에 `continuation_safety_collection_evidence_freshness_boundary_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 95 GREEN: selected worktree detail API/type/UI에 latest explicit loop snapshot evidence freshness check, no git status/transcript/agent UI freshness verification, no-write/no-external flags를 read-only로 노출
+- [x] Task 95 PRIVACY: continuation safety collection evidence freshness boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [ ] 다음 slice: selected detail panel의 freshness result non-persistence note를 raw-free로 별도 제공할지 결정
 
 ### 판단 기준
 

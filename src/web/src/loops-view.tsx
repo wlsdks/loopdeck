@@ -1026,6 +1026,41 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.continuation_safety_collection_evidence_freshness_boundary_note && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_collection_evidence_freshness_boundary_note
+                          .label
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_collection_evidence_freshness_boundary_note
+                          .freshness_check
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_collection_evidence_freshness_boundary_note
+                          .not_verified
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_collection_evidence_freshness_boundary_note
+                          .reason
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      No freshness verification writes or external calls
+                    </p>
+                  </div>
+                )}
                 {worktreeDetail.paste_destination && (
                   <div className="loop-review-item">
                     <p className="loops-status-line">

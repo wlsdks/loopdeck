@@ -324,11 +324,15 @@ Implementation checkpoint:
   non-persistence note, explaining that retry attempt and outcome stay outside
   Loopdeck until the next explicit loop snapshot, without Loopdeck detecting,
   storing, or syncing retry success or failure state.
+- Selected worktree detail now includes a raw-free collection evidence
+  freshness boundary note, explaining that the operator checks freshness
+  against the latest explicit loop snapshot evidence, without Loopdeck
+  verifying freshness from git status, transcripts, or agent UI activity.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free collection evidence freshness boundary note, without adding
+  raw-free freshness result non-persistence note, without adding
   transcript content, prompt bodies, raw paths, target contents, active-window
   titles, pasted content, paste result state, submitted state, agent response
-  content, collection result state, retry result state, collection command
-  execution, retry automation, git status reads, command execution, persisted
-  review state, checklist completion state, memory approval writes, merge
-  writes, or external calls.
+  content, collection result state, retry result state, freshness result state,
+  collection command execution, retry automation, git status reads, command
+  execution, persisted review state, checklist completion state, memory
+  approval writes, merge writes, or external calls.
