@@ -223,6 +223,115 @@ describe("Codex hook install/uninstall", () => {
     expect(config).not.toContain("codex_hooks");
   });
 
+  it("replaces legacy prompt-memory Codex hook during install", () => {
+    const dir = createTempDir();
+    const dataDir = join(dir, "data");
+    const hooksPath = join(dir, ".codex", "hooks.json");
+    const configPath = join(dir, ".codex", "config.toml");
+    initializePromptCoach({ dataDir });
+    mkdirSync(join(dir, ".codex"), { recursive: true });
+    writeFileSync(
+      hooksPath,
+      `${JSON.stringify(
+        {
+          hooks: {
+            UserPromptSubmit: [
+              {
+                hooks: [
+                  {
+                    type: "command",
+                    command:
+                      'PROMPT_MEMORY_HOOK="prompt-memory hook codex" /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard "context"',
+                    timeout: 2,
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    const result = installCodexHook({
+      dataDir,
+      hooksPath,
+      configPath,
+      rewriteGuard: "context",
+      rewriteMinScore: "80",
+    });
+    const hooks = JSON.parse(readFileSync(hooksPath, "utf8"));
+
+    expect(result.changed).toBe(true);
+    expect(hooks.hooks.UserPromptSubmit).toHaveLength(1);
+    expect(hooks.hooks.UserPromptSubmit[0].hooks).toHaveLength(1);
+    expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
+      'PROMPT_COACH_HOOK="prompt-coach hook codex"',
+    );
+    expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).not.toContain(
+      "PROMPT_MEMORY_HOOK",
+    );
+  });
+
+  it("deduplicates legacy and current Codex hooks during install", () => {
+    const dir = createTempDir();
+    const dataDir = join(dir, "data");
+    const hooksPath = join(dir, ".codex", "hooks.json");
+    const configPath = join(dir, ".codex", "config.toml");
+    initializePromptCoach({ dataDir });
+    mkdirSync(join(dir, ".codex"), { recursive: true });
+    writeFileSync(
+      hooksPath,
+      `${JSON.stringify(
+        {
+          hooks: {
+            UserPromptSubmit: [
+              {
+                hooks: [
+                  {
+                    type: "command",
+                    command:
+                      'PROMPT_MEMORY_HOOK="prompt-memory hook codex" /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard "context"',
+                    timeout: 2,
+                  },
+                ],
+              },
+              {
+                hooks: [
+                  {
+                    type: "command",
+                    command:
+                      'PROMPT_COACH_HOOK="prompt-coach hook codex" /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard "context"',
+                    timeout: 2,
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    installCodexHook({
+      dataDir,
+      hooksPath,
+      configPath,
+      rewriteGuard: "context",
+      rewriteMinScore: "80",
+    });
+    const hooks = JSON.parse(readFileSync(hooksPath, "utf8"));
+
+    expect(hooks.hooks.UserPromptSubmit).toHaveLength(1);
+    expect(hooks.hooks.UserPromptSubmit[0].hooks).toHaveLength(1);
+    expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
+      'PROMPT_COACH_HOOK="prompt-coach hook codex"',
+    );
+    expect(JSON.stringify(hooks)).not.toContain("PROMPT_MEMORY_HOOK");
+  });
+
   it("can install Codex hook with opt-in rewrite guard flags", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");

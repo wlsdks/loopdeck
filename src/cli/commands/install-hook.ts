@@ -71,6 +71,7 @@ export type CodexHookInstallResult = {
 
 const PROMPT_COACH_MARKER = "prompt-coach hook claude-code";
 const CODEX_PROMPT_COACH_MARKER = "prompt-coach hook codex";
+const LEGACY_CODEX_PROMPT_MEMORY_MARKER = "prompt-memory hook codex";
 const PROMPT_COACH_SESSION_MARKER =
   "prompt-coach hook session-start claude-code";
 const CODEX_PROMPT_COACH_SESSION_MARKER =
@@ -380,9 +381,7 @@ export function hasPromptCoachSessionStartHook(
 export function hasPromptCoachCodexHook(settings: CodexHooksSettings): boolean {
   return Boolean(
     settings.hooks?.UserPromptSubmit?.some((group) =>
-      group.hooks?.some((hook) =>
-        hook.command.includes(CODEX_PROMPT_COACH_MARKER),
-      ),
+      group.hooks?.some((hook) => isCodexPromptCoachHook(hook.command)),
     ),
   );
 }
@@ -566,17 +565,23 @@ function ensurePromptCoachHookGroups(
   isPromptCoachHook: (command: string) => boolean,
 ): ClaudeHookGroup[] {
   let found = false;
-  const next = [...groups].map((group) => ({
-    ...group,
-    hooks: group.hooks.map((hook) => {
-      if (!isPromptCoachHook(hook.command)) {
-        return hook;
-      }
+  const next = [...groups]
+    .map((group) => ({
+      ...group,
+      hooks: group.hooks.flatMap((hook) => {
+        if (!isPromptCoachHook(hook.command)) {
+          return [hook];
+        }
 
-      found = true;
-      return { ...hook, command };
-    }),
-  }));
+        if (found) {
+          return [];
+        }
+
+        found = true;
+        return [{ ...hook, command }];
+      }),
+    }))
+    .filter((group) => group.hooks.length > 0);
 
   if (!found) {
     next.push({
@@ -791,7 +796,10 @@ function isClaudePromptCoachHook(command: string): boolean {
 }
 
 function isCodexPromptCoachHook(command: string): boolean {
-  return command.includes(CODEX_PROMPT_COACH_MARKER);
+  return (
+    command.includes(CODEX_PROMPT_COACH_MARKER) ||
+    command.includes(LEGACY_CODEX_PROMPT_MEMORY_MARKER)
+  );
 }
 
 function markerAssignment(marker: string): string {
