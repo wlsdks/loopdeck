@@ -875,6 +875,19 @@ describe("web api export client", () => {
                 writes_files: false,
                 external_calls: false,
               },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence",
+                result_scope:
+                  "post-submit retry renewed-memory-approval post-submit collection result stays outside Loopdeck until the next explicit loop snapshot",
+                not_stored:
+                  "Loopdeck does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
+                reason:
+                  "keeps post-submit retry renewed-memory-approval post-submit collection evidence tied to explicit local snapshot recording",
+                writes_files: false,
+                external_calls: false,
+              },
             continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_merge_freshness_advisory:
               {
                 label:
@@ -1761,6 +1774,19 @@ describe("web api export client", () => {
           "Loopdeck does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
         reason:
           "keeps post-submit retry renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence",
+        result_scope:
+          "post-submit retry renewed-memory-approval post-submit collection result stays outside Loopdeck until the next explicit loop snapshot",
+        not_stored:
+          "Loopdeck does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
+        reason:
+          "keeps post-submit retry renewed-memory-approval post-submit collection evidence tied to explicit local snapshot recording",
         writes_files: false,
         external_calls: false,
       },

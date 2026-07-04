@@ -5720,6 +5720,70 @@ Do not add:
   state, or secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.128: Post-Memory-Approval Retry Renewed-Memory-Approval Post-Submit Retry Renewed-Memory-Approval Post-Submit Collection Result Non-Persistence
+
+Decision:
+
+- Selected worktree detail should state that post-submit collection result after
+  post-submit retry renewed-memory-approval stays outside Loopdeck until the
+  next explicit loop snapshot.
+- This is needed because the post-submit freshness advisory could otherwise be
+  misread as completion tracking. Loopdeck should not detect, store, or sync
+  the collection result state from Codex, Claude Code, transcripts, or agent UI
+  activity.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note`
+  with:
+  - label:
+    `Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence`
+  - result_scope:
+    `post-submit retry renewed-memory-approval post-submit collection result stays outside Loopdeck until the next explicit loop snapshot`
+  - not_stored:
+    `Loopdeck does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state`
+  - reason:
+    `keeps post-submit retry renewed-memory-approval post-submit collection evidence tied to explicit local snapshot recording`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after post-submit retry renewed-memory-approval
+  post-submit freshness advisory and before paste destination guidance
+- focused server/API/web tests proving it is present
+
+Do not add:
+
+- collection result persistence, collection result synchronization,
+  post-submit collection result persistence, post-submit retry renewed-memory
+  approval post-submit collection result persistence, submitted state
+  persistence, submitted state synchronization, agent response monitoring,
+  agent response persistence, freshness monitoring state, automatic
+  collection, collection command execution, retry automation, retry command
+  execution, git status reads, transcript inspection, agent UI monitoring,
+  active window detection, target-agent UI inspection, submit automation, Enter
+  key automation, button clicking, hidden prompt submission, safety approval
+  state, submission approval, submission approval state, memory approval
+  writes, memory approval state, renewed memory approval state, approval result
+  persistence, approval state synchronization, merge decision writes, paste
+  target state, paste result state, persisted review state, checklist
+  completion state, external model calls, filesystem reads/writes, or new
+  write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, target
+  content, active-window titles, pasted content, paste result state, submitted
+  state, agent response content, collection result state, post-submit
+  collection result state, post-submit retry result state, retry success/failure
+  state, post-submit retry freshness result state, post-submit retry freshness
+  uncertainty collection result state, post-submit retry renewed memory approval
+  state, post-submit retry renewed-memory-approval collection result state,
+  post-submit retry renewed-memory-approval post-submit collection result
+  state, uncertainty result state, freshness result state, retry freshness
+  result state, approval result state, memory approval state, renewed memory
+  approval state, merge decision state, handoff approval state, submission
+  approval state, or secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.
