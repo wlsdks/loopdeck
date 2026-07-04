@@ -1508,118 +1508,61 @@ export function LoopsView({
                   />
                 )}
                 {worktreeDetail.continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_submit_freshness_advisory && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
+                  <LoopReviewItem
+                    footer="No post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-submit freshness advisory writes or external calls"
+                    lines={[
                         worktreeDetail
                           .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_submit_freshness_advisory
-                          .label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
+                          .label,
                         worktreeDetail
                           .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_submit_freshness_advisory
-                          .advisory
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
+                          .advisory,
                         worktreeDetail
                           .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_submit_freshness_advisory
-                          .not_decision
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
+                          .not_decision,
                         worktreeDetail
                           .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_submit_freshness_advisory
-                          .reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      No post-memory-approval retry renewed-memory-approval
-                      post-submit retry renewed-memory-approval post-submit
-                      collection pre-submit freshness advisory writes or
-                      external calls
-                    </p>
-                  </div>
+                          .reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_post_submit_freshness_advisory && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
+                  <LoopReviewItem
+                    footer="No post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection post-submit freshness advisory writes or external calls"
+                    lines={[
                         worktreeDetail
                           .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_post_submit_freshness_advisory
-                          .label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
+                          .label,
                         worktreeDetail
                           .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_post_submit_freshness_advisory
-                          .advisory
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
+                          .advisory,
                         worktreeDetail
                           .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_post_submit_freshness_advisory
-                          .not_monitored
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
+                          .not_monitored,
                         worktreeDetail
                           .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_post_submit_freshness_advisory
-                          .reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      No post-memory-approval retry renewed-memory-approval
-                      post-submit retry renewed-memory-approval post-submit
-                      collection post-submit freshness advisory writes or
-                      external calls
-                    </p>
-                  </div>
+                          .reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_result_non_persistence_note && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
+                  <LoopReviewItem
+                    footer="No post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result persistence writes or external calls"
+                    lines={[
                         worktreeDetail
                           .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_result_non_persistence_note
-                          .label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
+                          .label,
                         worktreeDetail
                           .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_result_non_persistence_note
-                          .not_stored
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
+                          .not_stored,
                         worktreeDetail
                           .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_result_non_persistence_note
-                          .not_detected
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
+                          .not_detected,
                         worktreeDetail
                           .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_result_non_persistence_note
-                          .reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      No post-memory-approval retry renewed-memory-approval
-                      post-submit retry renewed-memory-approval post-submit
-                      collection freshness result persistence writes or external
-                      calls
-                    </p>
-                  </div>
+                          .reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_uncertainty_collection_reminder && (
                   <LoopReviewItem
