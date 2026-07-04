@@ -1,4 +1,5 @@
 import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
@@ -30,5 +31,16 @@ describe("source hygiene", () => {
     }
 
     expect(matches).toBe("");
+  });
+
+  it("does not leave duplicate selected-detail boundary decisions unresolved", () => {
+    const todo = readFileSync("tasks/todo.md", "utf8");
+
+    expect(todo).not.toContain(
+      "- [ ] 다음 slice: selected detail panel의 post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness uncertainty pre-merge/pre-handoff/pre-paste/pre-submit boundary를 별도 제공할지 결정",
+    );
+    expect(todo).toContain(
+      "Task 140 DECISION: post-submit collection freshness uncertainty pre-merge/pre-handoff/pre-paste/pre-submit boundary는 Task 133-136의 기존 runtime field가 이미 담당하므로 중복 field를 추가하지 않음",
+    );
   });
 });
