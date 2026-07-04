@@ -228,7 +228,11 @@ Implementation checkpoint:
   showing that the copy action only writes to the local clipboard and temporary
   UI feedback, not files, commands, external services, prompt submission, or
   merge state.
+- Selected worktree detail now explains paste destination for Codex/Claude Code
+  continuation handoff, showing that the copied brief belongs in the active
+  agent request box and remains user-submitted.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free "paste destination" hint for Codex/Claude Code continuation handoff,
+  raw-free continuation handoff checklist for "copy, paste, submit, then collect
+  next loop snapshot",
   without adding transcript content, prompt bodies, raw paths, git status reads,
   command execution, or write tools.

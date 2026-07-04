@@ -451,6 +451,25 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.paste_destination && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {worktreeDetail.paste_destination.label}
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.paste_destination.targets.join(" or ")}
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.paste_destination.instruction}
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.paste_destination.reason}
+                    </p>
+                    <p className="loops-status-line">
+                      No automatic submission, file writes, or external calls
+                    </p>
+                  </div>
+                )}
               </div>
             )}
             {worktreeDetail.latest_decision && (

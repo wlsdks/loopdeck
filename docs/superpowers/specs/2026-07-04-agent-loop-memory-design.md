@@ -2210,6 +2210,46 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.65: Selected Paste Destination Hint
+
+Decision:
+
+- Selected worktree detail should show where the copied selected continuation
+  brief is meant to go: the active Codex or Claude Code request box. This makes
+  the Codex/Claude Code handoff explicit without trying to control either tool's
+  UI or submit prompts on the user's behalf.
+- This is necessary because Codex and Claude Code are primary runtime surfaces
+  for Loopdeck, and the web detail panel should connect copy-ready loop memory
+  to the next human-controlled agent request.
+
+Add:
+
+- top-level selected worktree detail `paste_destination` with:
+  - label: `Paste destination`
+  - targets:
+    - `Codex active request`
+    - `Claude Code active request`
+  - instruction:
+    `paste the copied continuation brief into the active agent request box`
+  - reason:
+    `keeps Loopdeck as the local handoff source while the user controls submission`
+  - auto_submit: `false`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance
+- focused server/API/web tests proving the paste destination hint is present
+
+Do not add:
+
+- Codex or Claude Code UI automation, hidden prompt submission, command
+  execution, git reads/writes, filesystem reads, merge-state mutation, checklist
+  completion, background analysis, external model calls, or new write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

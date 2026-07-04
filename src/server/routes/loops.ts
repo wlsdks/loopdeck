@@ -188,6 +188,7 @@ export function registerLoopRoutes(
                 reviewHasBranch: Boolean(reviewItem?.branch),
               }),
               copy_side_effects: copySideEffectsFor(),
+              paste_destination: pasteDestinationFor(),
             }
           : {}),
         ...(latestDecision
@@ -641,6 +642,28 @@ function copySideEffectsFor(): {
     ui_feedback: "temporarily marks the selected brief copy button as copied",
     does_not:
       "does not write files, execute commands, call external services, submit prompts, or change merge state",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function pasteDestinationFor(): {
+  label: "Paste destination";
+  targets: ["Codex active request", "Claude Code active request"];
+  instruction: "paste the copied continuation brief into the active agent request box";
+  reason: "keeps Loopdeck as the local handoff source while the user controls submission";
+  auto_submit: false;
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Paste destination",
+    targets: ["Codex active request", "Claude Code active request"],
+    instruction:
+      "paste the copied continuation brief into the active agent request box",
+    reason:
+      "keeps Loopdeck as the local handoff source while the user controls submission",
+    auto_submit: false,
     writes_files: false,
     external_calls: false,
   };

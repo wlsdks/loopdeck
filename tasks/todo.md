@@ -293,7 +293,11 @@
 - [x] Task 67 RED: selected detail API/UI에 `copy_side_effects`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 67 GREEN: selected worktree detail API/type/UI에 clipboard/UI feedback과 no-write/no-external-call flags를 read-only로 노출
 - [x] Task 67 PRIVACY: copy side-effect summary는 prompt body/evidence refs/outcome summary/raw path/git read/write/command execution/external call을 포함하지 않음
-- [ ] 다음 slice: selected detail panel의 paste destination hint를 Codex/Claude Code continuation handoff용으로 raw-free 제공할지 결정
+- [x] Task 68 DECISION: selected detail panel의 paste destination hint는 Codex/Claude Code continuation handoff 연결에 필요하므로 raw-free로 제공
+- [x] Task 68 RED: selected detail API/UI에 `paste_destination`이 없어 focused server/API/web tests 실패 확인
+- [x] Task 68 GREEN: selected worktree detail API/type/UI에 Codex/Claude Code active request destination과 no-auto-submit/no-write flags를 read-only로 노출
+- [x] Task 68 PRIVACY: paste destination hint는 prompt body/evidence refs/outcome summary/raw path/git read/write/command execution/external call을 포함하지 않음
+- [ ] 다음 slice: selected detail panel의 continuation handoff checklist를 "copy, paste, submit, collect next loop snapshot" 흐름으로 raw-free 제공할지 결정
 
 ### 판단 기준
 

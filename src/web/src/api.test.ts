@@ -291,6 +291,17 @@ describe("web api export client", () => {
               writes_files: false,
               external_calls: false,
             },
+            paste_destination: {
+              label: "Paste destination",
+              targets: ["Codex active request", "Claude Code active request"],
+              instruction:
+                "paste the copied continuation brief into the active agent request box",
+              reason:
+                "keeps Loopdeck as the local handoff source while the user controls submission",
+              auto_submit: false,
+              writes_files: false,
+              external_calls: false,
+            },
             latest_decision: {
               snapshot_id: "loop_web",
               worktree: "agent-loop-worktree",
@@ -438,6 +449,17 @@ describe("web api export client", () => {
         ui_feedback: "temporarily marks the selected brief copy button as copied",
         does_not:
           "does not write files, execute commands, call external services, submit prompts, or change merge state",
+        writes_files: false,
+        external_calls: false,
+      },
+      paste_destination: {
+        label: "Paste destination",
+        targets: ["Codex active request", "Claude Code active request"],
+        instruction:
+          "paste the copied continuation brief into the active agent request box",
+        reason:
+          "keeps Loopdeck as the local handoff source while the user controls submission",
+        auto_submit: false,
         writes_files: false,
         external_calls: false,
       },

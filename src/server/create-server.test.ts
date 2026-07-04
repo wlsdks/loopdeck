@@ -879,6 +879,17 @@ describe("createServer P2 ingest boundary", () => {
           writes_files: false,
           external_calls: false,
         },
+        paste_destination: {
+          label: "Paste destination",
+          targets: ["Codex active request", "Claude Code active request"],
+          instruction:
+            "paste the copied continuation brief into the active agent request box",
+          reason:
+            "keeps Loopdeck as the local handoff source while the user controls submission",
+          auto_submit: false,
+          writes_files: false,
+          external_calls: false,
+        },
         review_packet_summary: {
           title: "Review-before-merge packet",
           status: "needs_review",
