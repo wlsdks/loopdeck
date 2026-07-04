@@ -13,6 +13,7 @@ tmp/
 .temp/
 
 # Runtime data
+.codegraph/
 .prompt-coach/
 .prompt-coach-*/
 prompt-coach-data/
@@ -49,6 +50,9 @@ prompt-memory-*.png
 
 # Claude Code session-only state (cron lock, scratch)
 .claude/scheduled_tasks*
+
+# Codex project-local runtime config can contain absolute local MCP paths.
+.codex/
 
 # Audit screenshots (the markdown reports under .improvements/ stay tracked,
 # but per-run screenshots are binary scratch and should not bloat history)

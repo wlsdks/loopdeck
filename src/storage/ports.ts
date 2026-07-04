@@ -5,6 +5,22 @@ import type {
   PromptQualityScoreBand,
   RedactionResult,
 } from "../shared/schema.js";
+import type { LoopSnapshot } from "../loop/types.js";
+import type {
+  CompactBoundary,
+  CompactBoundaryListResult,
+  RecordCompactBoundaryInput,
+} from "./compact-boundaries.js";
+import type {
+  LoopMemory,
+  LoopMemoryListResult,
+  RecordLoopMemoryInput,
+} from "./loop-memories.js";
+import type {
+  LoopMergeDecision,
+  LoopMergeDecisionListResult,
+  RecordLoopMergeDecisionInput,
+} from "./loop-decisions.js";
 import type {
   CoachFeedbackEntry,
   CoachFeedbackRating,
@@ -102,6 +118,46 @@ export type PromptFocusFilter =
 export type PromptListResult = {
   items: PromptSummary[];
   nextCursor?: string;
+};
+
+export type LoopSnapshotListResult = {
+  items: LoopSnapshot[];
+};
+
+export type LoopOutcomeUpdate = LoopSnapshot["outcome"];
+
+export type LoopSnapshotStoragePort = {
+  createLoopSnapshot(input: LoopSnapshot): LoopSnapshot;
+  getLatestLoopSnapshot(): LoopSnapshot | undefined;
+  listLoopSnapshots(options?: { limit?: number }): LoopSnapshotListResult;
+  recordLoopOutcome(
+    snapshotId: string,
+    outcome: LoopOutcomeUpdate,
+  ): LoopSnapshot | undefined;
+};
+
+export type CompactBoundaryStoragePort = {
+  recordCompactBoundary(input: RecordCompactBoundaryInput): CompactBoundary;
+  listCompactBoundaries(options?: { limit?: number }): CompactBoundaryListResult;
+};
+
+export type LoopMemoryStoragePort = {
+  recordLoopMemory(input: RecordLoopMemoryInput): LoopMemory;
+  listLoopMemories(options?: {
+    limit?: number;
+    projectId?: string;
+  }): LoopMemoryListResult;
+};
+
+export type LoopMergeDecisionStoragePort = {
+  recordLoopMergeDecision(
+    input: RecordLoopMergeDecisionInput,
+  ): LoopMergeDecision;
+  listLoopMergeDecisions(options?: {
+    limit?: number;
+    projectId?: string;
+    worktree?: string;
+  }): LoopMergeDecisionListResult;
 };
 
 export type DeletePromptResult = {
@@ -419,6 +475,11 @@ export type CreatePromptImprovementDraftInput = {
   accepted?: boolean;
 };
 
+export type MarkPromptImprovementDraftCopiedResult = {
+  updated: boolean;
+  draft?: PromptImprovementDraft;
+};
+
 export type AgentJudgeProvider =
   | "claude-code"
   | "codex"
@@ -493,6 +554,10 @@ export type PromptReadStoragePort = {
     promptId: string,
     input: CreatePromptImprovementDraftInput,
   ): PromptImprovementDraft | undefined;
+  markPromptImprovementDraftCopied?(
+    promptId: string,
+    draftId: string,
+  ): MarkPromptImprovementDraftCopiedResult;
   countImprovementDraftsByPromptIds(
     promptIds: readonly string[],
   ): Map<string, number>;

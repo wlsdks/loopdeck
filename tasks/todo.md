@@ -1,5 +1,801 @@
 # 작업 계획
 
+## 2026-07-04 Agent Loop Memory Design
+
+- [x] 2026년 7월 기준 Codex, Claude Code, OpenAI Agents, Anthropic context engineering, Google ADK, AGENTS.md 자료 확인
+- [x] 현재 prompt-coach의 MCP, hook, storage, adapter, web/CLI 표면과 확장 가능 지점 확인
+- [x] 프로젝트명 후보와 GitHub/npm rename 리스크 확인
+- [x] `docs/superpowers/specs/2026-07-04-agent-loop-memory-design.md` 설계 문서 작성
+- [x] 설계 문서 셀프리뷰와 기본 검증 실행
+
+### 판단 기준
+
+- Codex와 Claude Code는 부가 통합이 아니라 제품의 1급 실행 표면이어야 한다.
+- 제품명/저장소명 변경은 CLI/package/plugin/remote/docs migration을 포함해야 하며, 사용자가 원한 방향을 좁히지 않는다.
+- `prompt-coach`의 기존 privacy/local-first 원칙은 유지하되 제품 포지션은 prompt 단위에서 agent loop/worktree/session 단위로 확장한다.
+- 설계 문서는 실제 TDD 구현 계획으로 내려갈 수 있는 첫 slice를 포함해야 한다.
+
+## 2026-07-04 Loop Snapshot CLI Implementation Plan
+
+- [x] 설계 문서의 Slice 1 범위를 CLI/storage/domain으로 제한
+- [x] CLI, SQLite storage, migration, prompt summary 패턴 확인
+- [x] `docs/superpowers/plans/2026-07-04-loop-snapshot-cli-implementation.md` 작성
+- [x] placeholder scan과 `git diff --check` 검증
+
+### 판단 기준
+
+- 구현 계획은 `prompt-coach` CLI/package 이름을 유지하고 Loopdeck rename은 별도 slice로 남긴다.
+- 각 단계는 실패 테스트, 최소 구현, focused test, commit 단위로 쪼갠다.
+- 계획은 prompt body/raw path/privacy 경계를 첫 slice의 검증 조건으로 포함해야 한다.
+
+## 2026-07-04 Product Planning Hardening
+
+- [x] 기존 기획서가 개발 착수 기준으로 부족한 항목 감사
+- [x] Codex/Claude Code/Google ADK/AGENTS.md 최신 공식 자료 보강 확인
+- [x] 기존 기능 유지/개선/폐기/신규 개발 결정표 추가
+- [x] Codex/Claude Code acceptance criteria 추가
+- [x] AGENTS.md/CLAUDE.md/harness 문서 개편 원칙 추가
+- [x] 기술 리스크, 완화책, 개발 전 go/no-go gate 추가
+
+### 판단 기준
+
+- 개발 착수 전 제품 포트폴리오 결정이 명시되어야 한다.
+- Loopdeck은 generic agent runtime이 아니라 Codex/Claude Code loop memory workbench로 좁힌다.
+- 기획서가 승인되기 전 package/CLI/repo/plugin rename과 hook/MCP/web 구현을 섞지 않는다.
+
+## 2026-07-04 Codex Dogfood Hook Noise Fix
+
+- [x] 실제 user-level Codex hook 설정 확인: `UserPromptSubmit` hook은 하나만 설치되어 있고 project-level hook 중복은 없음
+- [x] Retired external-tool reference sweep: repo tracked source/docs에서 불필요한 특정 도구명 잔재 없음
+- [x] RED: Codex rewrite-guard context output이 hook stdout에 남아 사용자 화면에 보일 수 있음을 wrapper 테스트로 재현
+- [x] GREEN: Codex `additionalContext` rewrite guidance는 기본적으로 stdout을 비워 사용자-visible hook context 노이즈를 막음
+- [x] README/README.ko에 Codex stdout 노출 경계와 대체 확인 경로 문서화
+- [x] Dogfood: Codex/Claude Code MCP를 `prompt-coach` absolute dist command로 재등록하고 doctor `mcp.registered=true` 확인
+- [x] Dogfood: legacy `prompt-memory` MCP 실패/disabled 항목 제거 및 project-local `.codex/config.toml` rename 잔재 정리
+- [x] Source hygiene: absolute path가 들어가는 `.codex/` project-local runtime config를 git ignore 처리
+- [x] Dogfood: Codex `UserPromptSubmit` capture `prmt_20260704_101950_a5aa324a10c7`를 list/show/score/open으로 확인
+- [x] Dogfood: MCP stdio `tools/list`, `get_prompt_coach_status`, `score_prompt_archive` 호출이 통과하고 dogfood prompt id가 low-score list에 포함됨 확인
+- [x] Dogfood: Playwright로 detail UI를 열어 codex, 10/100 weak, 원문, 개선안, MCP/CLI action 렌더링 확인
+- [x] RED: UI selected action이 안내하는 `score_prompt include_suggestions=true`가 MCP schema에 없어 strict client에서 깨질 수 있음을 server test로 재현
+- [x] GREEN: `score_prompt` MCP input schema에 `include_suggestions`를 추가해 UI action command와 tool schema를 일치시킴
+- [x] Dogfood: MCP stdio로 selected prompt `score_prompt prompt_id=... include_suggestions=true`와 `improve_prompt prompt_id=...` 호출 성공 확인
+- [x] Dogfood: 새 `codex exec` 세션에서 native `prompt-coach` MCP `score_prompt`/`improve_prompt` tool call 완료 확인
+- [x] Dogfood: native `improve_prompt` 결과가 `clarifying_questions`와 ask-first `next_action`을 반환하고 자동 제출하지 않음 확인
+- [x] Dogfood: MCP stdio `apply_clarifications`로 사용자 답변을 적용하면 copy/manual approval draft가 생성되고 local-only/no-external 경계를 유지함 확인
+- [x] Dogfood: MCP stdio `record_clarifications`는 stored prompt id에 답변 기반 draft를 저장하되 응답에는 prompt body, draft body, user answer text를 반환하지 않음 확인
+- [x] Dogfood: 새 `codex exec` 세션에서 native `prompt-coach` MCP `improve_prompt` -> `record_clarifications` tool call이 완료되고 manual review/copy 흐름을 유지함 확인
+- [x] Dogfood: CLI `show --explain`은 saved draft metadata를 보여주고 `show --json`은 local-only 검토용 draft body를 반환함 확인
+- [x] RED: stored clarification draft가 web detail UI에서 metadata만 보이고 draft body/copy action이 없어 MCP `record_clarifications`의 local review/copy 안내가 약함을 컴포넌트 테스트로 고정
+- [x] GREEN: web detail UI의 saved drafts 섹션에 draft body preview와 `Copy saved draft` 액션을 추가해 local review/copy 흐름을 완성
+- [x] Dogfood: Playwright로 dogfood prompt detail에서 저장된 `clarifications-v1` draft 본문과 `Copy saved draft` 버튼이 실제 렌더링됨 확인
+- [x] Dogfood: Playwright click으로 `Copy saved draft`를 눌렀을 때 버튼 상태가 `Copied`로 바뀌고 clipboard에 답변 반영 draft 본문이 들어감 확인
+- [x] Dogfood: `claude mcp list`와 `prompt-coach doctor claude-code --json`에서 `prompt-coach` MCP 등록/연결/last ingest 200 확인
+- [x] Dogfood: Claude Code 기본 Fable 5 실행은 usage credits 429로 막혔지만 `--model sonnet` 재시도에서 native `mcp__prompt-coach__score_prompt`/`improve_prompt` tool call 성공 확인
+- [x] Dogfood: Claude Code stream JSON에 `server_display_name: "prompt-coach"` tool_use metadata와 최종 "both tool calls succeeded" 보고가 남음 확인
+- [x] Dogfood: Claude Code native `mcp__prompt-coach__record_clarifications` tool call 성공 확인
+- [x] Dogfood: Claude Code `record_clarifications` 결과가 `draft_id=impdraft_7f47a9c62c0f47cd9f1b663b` metadata만 반환하고 prompt body/draft body/user answer text를 echo하지 않음 확인
+- [x] Dogfood: CLI `show --json`에서 Claude Code가 기록한 draft id와 local draft body가 archive에 저장되어 UI/CLI 검토 대상으로 남음 확인
+- [x] DECISION: saved draft copy telemetry는 새 prompt usage event/body 저장을 만들지 않고 기존 draft row의 `copied_at`만 갱신한다
+- [x] RED: saved draft copy marker route가 없어 focused server test가 404로 실패함 확인
+- [x] RED: 초기 copy route 응답이 draft body를 echo하면 metadata-only privacy 경계를 깨는 것을 focused server test로 확인
+- [x] GREEN: saved draft copy route/storage/web API/UI handler가 `id`, `prompt_id`, `copied_at` metadata만 반환하고 draft row의 `copied_at`을 갱신
+- [x] Dogfood: Playwright로 실제 dogfood prompt detail에서 `Copy saved draft` 버튼 클릭 후 CLI `show --json`에 `impdraft_7f47a9c62c0f47cd9f1b663b.copied_at=2026-07-04T11:06:36.809Z` 기록 확인
+- [x] Dogfood: 실제 서버 session+CSRF POST `/api/v1/prompts/:id/improvements/:draft_id/copy`가 200을 반환하고 응답에 draft body가 포함되지 않음 확인
+- [x] Dogfood: Claude Code 2.1.199 `claude -p --model sonnet --output-format stream-json`에서 native `mcp__prompt-coach__ask_clarifying_questions` tool call 성공 확인
+- [x] Dogfood: Claude Code ask/elicitation print-mode 실행은 사용자가 1000ms 안에 답하지 않아 `interaction_status=declined`, `answers_count=0`, `clarifying_questions=2`, `requires_user_approval=true` metadata fallback으로 종료됨 확인
+- [x] Docs: 비대화형 Claude Code print-mode에서는 MCP routing 성공과 사용자 답변 수집 성공을 분리해서 보고하고, `declined` fallback 시 native ask UI로 다시 묻도록 README/README.ko에 명시
+- [x] RED: `ask_clarifying_questions` 타입/문서는 `allow_native_dialog`를 지원하지만 공개 MCP `tools/list` input schema에 없어 strict Codex/Claude client가 native dialog opt-in을 보낼 수 없음을 server test로 재현
+- [x] GREEN: `ask_clarifying_questions` public input schema에 `allow_native_dialog` boolean opt-in을 추가하고 test 고정
+- [x] Dogfood: dist MCP stdio `tools/list`에서 `allow_native_dialog`가 노출되고 `additionalProperties=false`를 유지함 확인
+- [x] Dogfood: 새 `codex exec` 세션에서 native `mcp__prompt_coach.ask_clarifying_questions`를 `allow_native_dialog=false`로 호출해 schema error 없이 `interaction_status=declined`, `answers_count=0`, `clarifying_questions=yes`로 완료됨 확인
+- [x] Dogfood: 실제 dist `prompt-coach mcp` stdio server에 `initialize`로 `capabilities.elicitation`을 광고하는 dogfood client를 붙여 server-initiated `elicitation/create` 요청 발생 확인
+- [x] Dogfood: dogfood client가 `elicitation/create`에 사용자 답변 payload를 반환하자 최종 `interaction_status=answered`, `answers_count=2`, `analyzer=clarifications-v1`, `clarifying_questions=[]`, answer text가 반영된 improved draft, local-only/no-store/no-external privacy contract를 확인
+- [x] Harness: `scripts/mcp-elicitation-smoke.mjs`와 `pnpm smoke:mcp-elicitation`을 추가해 dist MCP stdio answered path를 반복 검증 가능하게 고정
+- [x] Source hygiene: selected worktree detail의 command/filter/copy guidance helper를 `src/server/loop-detail-guidance.ts`로 분리하고 focused 테스트 추가
+- [x] Source hygiene: selected worktree detail의 snapshot age/readiness/evidence aggregate guidance를 route에서 분리하고 focused 테스트 추가
+- [x] Source hygiene: selected detail safety note markup을 `LoopReviewItem`으로 분리하고 focused 렌더링 테스트 추가
+- [x] Source hygiene: selected detail copy-feedback safety note markup을 `LoopReviewItem`으로 추가 전환하고 focused 렌더링 테스트 확인
+- [x] Source hygiene: selected detail paste/submission safety note markup을 `LoopReviewItem`으로 추가 전환하고 focused 렌더링 테스트 확인
+- [x] Source hygiene: selected detail post-submission collection/retry/freshness safety note markup을 `LoopReviewItem`으로 추가 전환하고 focused 렌더링 테스트 확인
+- [ ] 다음 dogfood slice: Codex native dialog fallback을 실제 OS dialog 또는 명시적 사용자 승인 하에 확인
+
+### 판단 기준
+
+- 이번 수정은 Codex의 화면 노이즈를 줄이는 실사용 결함 수정이며, Claude Code의 기존 `UserPromptSubmit` context 출력 동작은 유지한다.
+- Codex `Stop`/compact lifecycle hook의 local-only 수집과 prompt ingest 경계는 변경하지 않는다.
+- `block-and-copy`처럼 decision이 필요한 hook 출력은 이번 수정에서 제거하지 않는다.
+- Codex/Claude Code MCP는 낡은 `prompt-memory` command가 아니라 `prompt-coach` 이름과 현재 dist entrypoint로 연결되어야 한다.
+- Archive, UI, MCP 검증은 prompt body/raw path를 외부로 보내지 않고 local-only 경로에서 수행한다.
+- Selected prompt MCP action은 UI에 표시되는 command, MCP tool schema, 실제 tool-call 동작이 서로 일치해야 한다.
+- Native tool routing 검증은 현재 실행 중인 thread tool exposure가 아니라 새 agent session에서 실제 `mcp_tool_call` 이벤트가 발생했는지로 판단한다.
+- Direct `apply_clarifications`는 현재 입력받은 prompt text로 copy draft를 반환하는 즉석 도구이고, stored prompt 기반 raw-free MCP 응답은 `record_clarifications`로 검증한다.
+- Stored clarification 기록은 local archive write를 허용하지만 MCP 응답은 metadata-only여야 하며, 실제 draft body 검토와 복사는 local UI/CLI에서 사용자가 수행해야 한다.
+- Stored draft UI는 metadata만 보여주면 불충분하다. `record_clarifications`가 반환한 `draft_id` 이후 사용자는 local detail UI에서 draft body를 검토하고 복사할 수 있어야 한다.
+- Saved draft copy telemetry는 copy success 여부를 회고/사용성 신호로 남길 가치가 있지만, 새 event stream이나 prompt body 복제는 privacy/value 대비 과하다. 기존 `prompt_improvement_drafts.copied_at`만 갱신하고 응답은 metadata-only로 유지한다.
+- Claude Code native MCP routing은 `claude mcp list`의 health check만으로 완료 처리하지 않는다. 실제 `claude -p --output-format stream-json`에서 `mcp__prompt-coach__...` tool_use가 발생하고 성공한 기록이 있어야 한다.
+- Claude Code 모델/크레딧 실패는 integration 실패와 구분한다. 이번 검증에서는 Fable 5 usage credits 429는 별도 외부 상태이고, Sonnet 실행에서 prompt-coach MCP routing 자체는 성공했다.
+- Claude Code의 stored clarification write flow는 MCP 응답에서는 metadata-only를 유지하고, draft body 검토는 local archive/UI/CLI로 넘어가야 한다.
+- Claude Code `ask_clarifying_questions` print-mode dogfood는 MCP routing 성공 여부와 실제 사용자 답변 수집 여부를 분리한다. `interaction_status=declined`는 tool failure가 아니라 답변 미수집 fallback이며, 다음 단계는 agent native ask UI 또는 interactive session에서 답을 받아 `apply_clarifications`/`record_clarifications`로 이어가는 것이다.
+- Codex native dialog fallback을 문서화하려면 `allow_native_dialog`가 public MCP schema에 있어야 한다. internal TypeScript-only argument는 실제 strict MCP client 통합으로 간주하지 않는다.
+- 실제 사용자 답변 포함 경로는 mock 함수 호출만으로 완료 처리하지 않는다. dist MCP stdio server, client `capabilities.elicitation`, server-initiated `elicitation/create`, client answer response, final answered draft까지 한 번에 통과해야 한다.
+
+## 2026-07-04 Loop Snapshot Domain Slice
+
+- [x] Task 1 RED: loop snapshot builder 테스트가 missing module로 실패하는지 확인
+- [x] Task 1 GREEN: `src/loop/types.ts`와 `src/loop/snapshot.ts` 최소 구현
+- [x] Task 2 RED: continuation brief formatter 테스트가 missing module로 실패하는지 확인
+- [x] Task 2 GREEN: `src/loop/brief.ts` 최소 구현
+- [x] Task 3 RED: SQLite loop snapshot storage 테스트가 missing method로 실패하는지 확인
+- [x] Task 3 GREEN: migration 16과 loop snapshot persistence port 구현
+- [x] Task 4 RED: loop CLI 테스트가 missing module로 실패하는지 확인
+- [x] Task 4 GREEN: `prompt-coach loop collect` / `prompt-coach loop brief` CLI 등록
+- [x] Task 5: architecture 문서에 `src/loop/` 경계 추가
+- [x] Task 6 RED: Loopdeck MCP tool 테스트가 missing module/tool list로 실패하는지 확인
+- [x] Task 6 GREEN: `get_loopdeck_status` / `prepare_loop_brief` MCP tool 구현
+- [x] Task 7 RED: loop outcome storage/MCP 테스트가 missing method/tool로 실패하는지 확인
+- [x] Task 7 GREEN: `record_loop_outcome` MCP write tool과 SQLite outcome update 구현
+- [x] 다음 slice: Codex/Claude Code hook 기반 loop snapshot 수집 설계 및 구현
+
+### 판단 기준
+
+- 이번 slice는 prompt body와 raw path를 저장하거나 출력하지 않는 domain/storage/CLI/MCP read contract와 user-approved outcome metadata write contract만 증명한다.
+- hook, web, rename 작업은 이 커밋에 섞지 않는다.
+- 다음 slice도 RED-GREEN 단위로 storage integration부터 진행한다.
+
+## 2026-07-04 Hook Loop Snapshot Collection Slice
+
+- [x] Task 1 RED: Claude Code/Codex `Stop` hook이 prompt ingest route로 가지 않고 local loop snapshot을 생성해야 한다는 wrapper 테스트 작성
+- [x] Task 1 GREEN: Stop hook용 local-only loop snapshot collector 구현
+- [x] Task 2 RED: Stop hook 출력과 저장 snapshot이 prompt body/raw path를 노출하지 않는 회귀 테스트 작성
+- [x] Task 2 GREEN: fail-open/privacy-safe stdout/stderr contract 유지
+- [x] Task 3: CLI loop collect와 hook collect가 같은 snapshot builder 경계를 공유하도록 정리
+- [x] Task 4: docs/README/PLUGINS/PR에 Stop hook loop collection 범위와 한계 반영
+- [ ] 다음 slice: PostCompact/PreCompact boundary metadata 설계 및 구현
+
+### 판단 기준
+
+- Stop hook은 `UserPromptSubmit` ingest 흐름을 깨지 않고, prompt body가 없는 lifecycle event를 별도 local collector로 처리한다.
+- Hook 실패는 기존처럼 fail-open이며 stdout/stderr에 prompt body, raw path, token을 노출하지 않는다.
+- 이번 slice는 hook 기반 수집까지만 포함하고 cron, web loops view, repo/package rename은 섞지 않는다.
+- Codex/Claude Code acceptance criteria 중 "Hook `Stop`: collect loop snapshot"을 현재 `prompt-coach` CLI/package 이름 아래에서 먼저 증명한다.
+
+## 2026-07-04 Compact Boundary Metadata Slice
+
+- [x] Task 1 RED: SQLite compact boundary storage 테스트가 missing method/migration으로 실패하는지 확인
+- [x] Task 1 GREEN: `compact_boundaries` migration과 storage port 구현
+- [x] Task 2 RED: Claude Code/Codex `PreCompact`/`PostCompact` hook wrapper 테스트가 prompt ingest 미사용 및 raw-free metadata 저장을 요구하는지 확인
+- [x] Task 2 GREEN: compact hook local-only boundary recorder 구현
+- [x] Task 3 RED: installer dry-run이 `PreCompact`/`PostCompact` hook 등록을 요구하는지 확인
+- [x] Task 3 GREEN: Claude/Codex installer, plugin hook, example settings에 compact hooks 추가
+- [x] Task 4: README/PLUGINS/spec/todo에 compact boundary 범위와 공식 hook 근거 반영
+- [x] 다음 slice: loop status/brief에 compact boundary awareness 반영
+
+## 2026-07-04 Compact Boundary Awareness Slice
+
+- [x] Task 1 RED: `prompt-coach loop brief`가 최신 snapshot 이후 compact boundary section을 요구하도록 CLI 테스트 작성
+- [x] Task 1 GREEN: `createLoopBrief`와 CLI가 최신 snapshot 이후 compact boundary metadata를 표시
+- [x] Task 2 RED: `get_loopdeck_status` / `prepare_loop_brief`가 compact boundary awareness를 요구하도록 MCP 테스트 작성
+- [x] Task 2 GREEN: MCP status/brief result에 raw-free compact boundary metadata 추가
+- [x] Task 3: spec/README/PLUGINS에 compact boundary awareness 범위와 한계 반영
+- [x] 다음 slice: compact-aware loop status CLI 또는 web Loops view 설계
+
+## 2026-07-04 Loop Status CLI Slice
+
+- [x] Task 1 RED: `prompt-coach loop status`가 missing export로 실패하는지 확인
+- [x] Task 1 GREEN: local loop snapshot readiness와 latest snapshot metadata를 표시하는 CLI status 구현
+- [x] Task 2 GREEN: 최신 snapshot 이후 compact boundary가 있으면 `prompt-coach loop collect` refresh action 표시
+- [x] Task 3: README/PLUGINS/spec/todo에 `loop status` 범위와 privacy contract 반영
+- [x] 다음 slice: web Loops view 또는 CLI/MCP status 모델 공통화
+
+## 2026-07-04 Web Loops View First Slice
+
+- [x] Task 1 RED: `/api/v1/loops`가 404로 실패하는지 확인
+- [x] Task 1 GREEN: loop snapshot list API가 safe metadata와 compact boundary marker를 반환
+- [x] Task 2 RED: `/loops` routing과 `listLoops()` client가 missing route/function으로 실패하는지 확인
+- [x] Task 2 GREEN: sidebar Loops navigation과 dense loop list/empty state 구현
+- [x] Task 3: component-owned `loops-view.css`로 CSS line budget 유지
+- [x] Task 4: README/PLUGINS/spec/todo에 Web Loops first slice 범위와 한계 반영
+- [x] Task 5 RED: `/api/v1/loops/:id/brief`와 `getLoopBrief()`가 missing route/function으로 실패하는지 확인
+- [x] Task 5 GREEN: row-level `Copy brief` action이 privacy-safe continuation brief를 가져와 복사
+- [x] Task 6 RED: `loop collect`가 `source: "service"` snapshot을 만들지 못하는 실패 확인
+- [x] Task 6 GREEN: `prompt-coach loop collect --source service` 명시적 one-shot collector 구현
+- [x] Task 7 RED: `loop schedule install --dry-run` LaunchAgent helper가 missing module로 실패하는지 확인
+- [x] Task 7 GREEN: opt-in macOS LaunchAgent dry-run/install helper와 `loop schedule install` CLI 구현
+- [x] Task 8 RED: scheduler status/uninstall helper가 missing export로 실패하는지 확인
+- [x] Task 8 GREEN: `loop schedule status`와 `loop schedule uninstall` plist-only lifecycle 구현
+- [x] Task 9 RED: semantic memory decision gate와 CLI/MCP surface가 missing module/export/tool로 실패하는지 확인
+- [x] Task 9 GREEN: `decideLoopMemoryCandidate`, `loop memory-candidate`, `propose_loop_memory_candidate` 구현
+- [x] Task 10 RED: approved memory storage/CLI/MCP가 missing method/export/tool로 실패하는지 확인
+- [x] Task 10 GREEN: `loop_memories`, `loop memory-approve`, `record_loop_memory` local-only 승인 저장 구현
+- [x] Task 11 RED: instruction-file patch proposal generator/CLI/MCP가 missing module/export/tool로 실패하는지 확인
+- [x] Task 11 GREEN: `loop instruction-patch`, `propose_instruction_patch`, review-only unified diff proposal 구현
+- [x] Task 12 RED: explicit instruction patch apply 함수/CLI/MCP/tool list가 missing export/tool로 실패하는지 확인
+- [x] Task 12 GREEN: `loop instruction-apply`, `apply_instruction_patch`, confirm-required/idempotent file write 구현
+- [x] Task 13 RED: package/plugin product-facing metadata가 Loopdeck이 아니라는 manifest 테스트 실패 확인
+- [x] Task 13 GREEN: package/plugin/README/docs product-facing metadata를 Loopdeck으로 갱신하고 CLI/package id는 `prompt-coach` 유지
+- [x] Task 13 META: GitHub repo를 `wlsdks/loopdeck`으로 rename, origin URL과 repo description/topics 갱신
+- [x] Task 14 PLAN: CLI/MCP/web status model 공통화 구현 계획을 `docs/superpowers/plans/2026-07-04-loop-status-model-commonization.md`로 작성
+- [x] Task 14.1 RED: `src/loop/status.test.ts`가 missing `src/loop/status.ts`로 실패하는지 확인
+- [x] Task 14.1 GREEN: `createLoopdeckStatus` 공유 모델과 privacy-safe snapshot mapper 구현
+- [x] Task 14.2 RED: CLI/MCP/API/web loop status surfaces가 공유 status shape 없이 drift할 수 있음을 focused test로 고정
+- [x] Task 14.2 GREEN: CLI `loop status`, MCP `get_loopdeck_status`, `/api/v1/loops`, web Loops status header를 `src/loop/status.ts`로 연결
+- [x] Task 15 RED: approved loop memory가 continuation brief에 포함되지 않는 CLI/MCP/API focused test 실패 확인
+- [x] Task 15 GREEN: `createLoopBrief`와 CLI `loop brief`, MCP `prepare_loop_brief`, `/api/v1/loops/:id/brief`가 최신 approved memory를 privacy-safe section으로 포함
+- [x] Task 16 RED: approved loop memory가 다른 project continuation brief에 섞이는 storage/CLI/MCP/API focused test 실패 확인
+- [x] Task 16 GREEN: `listLoopMemories({ projectId })`와 brief 호출부 project scoping으로 현재 snapshot project memory만 포함
+- [x] Task 17 RED: CLI/MCP/API/web status가 project-scoped approved memory count를 노출하지 않는 focused test 실패 확인
+- [x] Task 17 GREEN: `LoopdeckStatus.project_memory` count를 CLI `loop status`, MCP `get_loopdeck_status`, `/api/v1/loops`, web Loops summary에 raw-free로 연결
+- [x] Task 18 RED: `package.json#bin.loopdeck`와 alias 문서가 누락된 packaging focused test 실패 확인
+- [x] Task 18 GREEN: `loopdeck` bin alias를 기존 CLI entrypoint에 연결하고 README/PACKAGE_CONTENTS에 compatibility 설명 추가
+- [x] Task 19 RED: status surfaces가 latest loop memory candidate eligibility를 raw-free로 노출하지 않는 focused test 실패 확인
+- [x] Task 19 GREEN: `LoopdeckStatus.memory_candidate`를 CLI/MCP/API/web status에 statement/evidence 없이 연결
+- [x] Task 20 RED: plugin command docs/default prompts가 `loopdeck` CLI alias와 `/prompt-coach:*` namespace compatibility를 설명하지 않는 packaging focused test 실패 확인
+- [x] Task 20 GREEN: Claude command docs, Codex default prompt, README/PLUGINS에 `loopdeck` CLI alias guidance를 추가하고 slash namespace는 유지
+- [x] Task 21 RED: memory approval result가 다음 실행 명령을 structured `next_actions`로 안내하지 않는 CLI/MCP focused test 실패 확인
+- [x] Task 21 GREEN: CLI `loop memory-approve`와 MCP `record_loop_memory`에 brief/patch proposal 후속 명령을 추가하되 instruction file write는 하지 않음
+- [x] Task 22 RED: web Loops approval API/client/CTA가 없어 latest memory candidate를 승인할 수 없는 focused test 실패 확인
+- [x] Task 22 GREEN: CSRF-protected `/api/v1/loops/memory/approve`, `approveLoopMemory()`, Loops summary approval CTA, App refresh 연결, same-snapshot 중복 승인 방지
+- [x] Task 23 RED: web에서 latest approved memory의 instruction patch proposal을 review-only로 볼 수 없는 focused test 실패 확인
+- [x] Task 23 GREEN: `/api/v1/loops/instruction-patch`, `getLoopInstructionPatch()`, Loops summary review CTA/diff preview 구현
+- [x] Task 24 RED: dedicated plugin rename plan이 없어 slash command/plugin id rename compatibility gate를 증명하지 못하는 packaging focused test 실패 확인
+- [x] Task 24 GREEN: `2026-07-04-loopdeck-plugin-rename-plan.md`로 package/CLI/plugin/slash namespace/hook/MCP rename phases와 acceptance gates 고정
+- [x] Task 25 RED: instruction patch proposal에 web no-apply gate/CLI confirm command/MCP apply tool 계약이 없어 focused tests 실패 확인
+- [x] Task 25 GREEN: core proposal, MCP schema/result, API client type, web review panel에 explicit apply gate 연결
+- [x] Task 26 RED: shared Loopdeck status에 worktree/session activity summary가 없어 CLI/API/web/MCP focused tests 실패 확인
+- [x] Task 26 GREEN: `LoopdeckStatus.activity`를 active worktree/session counts, review-needed signal, CLI/MCP/API/web summary로 연결
+- [x] Task 27 RED: shared Loopdeck status에 worktree별 activity detail이 없어 CLI/API/web/MCP focused tests 실패 확인
+- [x] Task 27 GREEN: `LoopdeckStatus.activity.worktrees`를 safe worktree label, sessions, snapshots, latest outcome으로 CLI/MCP/API/web summary에 연결
+- [x] Task 28 RED: dedicated worktree drilldown API/client/UI가 없어 focused tests 실패 확인
+- [x] Task 28 GREEN: `/api/v1/loops/worktrees/:worktree`, `getLoopWorktree()`, Loops summary open action, selected worktree detail panel 구현
+- [x] Task 29 RED: `/loops?worktree=...` query-state deep link가 복원되지 않는 routing focused test 실패 확인
+- [x] Task 29 GREEN: `View`/`pathForView`/`routeFromLocation`과 App 초기/클릭 흐름을 worktree query-state에 연결
+- [x] Task 30 RED: worktree drilldown을 session 단위로 좁히는 API/client/routing/UI focused tests 실패 확인
+- [x] Task 30 GREEN: `session_id` API query, `getLoopWorktree(..., { sessionId })`, `/loops?worktree=...&session=...`, active session label 연결
+- [x] Task 31 RED: worktree drilldown을 branch 단위로 좁히는 API/client/routing/UI focused tests 실패 확인
+- [x] Task 31 GREEN: `branch` API query, `getLoopWorktree(..., { branch })`, `/loops?worktree=...&session=...&branch=...`, active branch label 연결
+- [x] Task 32 RED: Loopdeck rename issue-slice plan과 package files 계약이 없어 packaging focused test 실패 확인
+- [x] Task 32 GREEN: rename issue-slice plan을 R1-R7로 분해하고 package files/spec/todo에 연결
+- [x] Task 33 RED: runtime id inventory artifact가 없어 packaging focused test 실패 확인
+- [x] Task 33 GREEN: package/bin/plugin/command/hook/MCP runtime id inventory JSON을 추가하고 live manifest 비교 테스트로 잠금
+- [x] Task 34 RED: `/loopdeck:*` alias-only slash namespace docs 계약이 없어 packaging focused test 실패 확인
+- [x] Task 34 GREEN: README/README.ko/PLUGINS가 `/loopdeck:*`를 future alias-only namespace로 설명하고 command files/runtime ids는 유지
+- [x] Task 35 RED: R3 Claude Code dual namespace decision artifact가 없어 packaging focused test 실패 확인
+- [x] Task 35 GREEN: 공식 plugin namespace 모델 근거로 `/loopdeck:*` command file 추가를 보류하고 safe future path를 문서화
+- [x] Task 36 RED: Codex plugin display/default prompt가 아직 prompt-coach 중심이라 packaging focused test 실패 확인
+- [x] Task 36 GREEN: Codex plugin 사용자-facing copy를 Loopdeck으로 정리하고 plugin id/path/hook command는 유지
+- [x] Task 37 RED: hook binary compatibility smoke script/package 계약이 없어 packaging focused test 실패 확인
+- [x] Task 37 GREEN: built `prompt-coach`/`loopdeck` entrypoint hook status/claude-code/codex fail-open smoke 추가
+- [x] Task 38 RED: MCP server name compatibility decision artifact가 없어 packaging focused test 실패 확인
+- [x] Task 38 GREEN: `prompt-coach` canonical MCP server name 유지와 `loopdeck` server-name alias 보류 조건 문서화
+- [x] Task 39 RED: deprecation readiness artifact가 없어 packaging focused test 실패 확인
+- [x] Task 39 GREEN: alias-only/deprecation/breaking release note template, saved snippet support, rollback/upgrade smoke gate 문서화
+- [x] Task 40 RED: rename line 이후 다음 runtime value slice artifact/package 계약이 없어 packaging focused test 실패 확인
+- [x] Task 40 GREEN: selected worktree continuation brief parity를 다음 product/runtime slice로 확정하고 spec/package/todo에 연결
+- [x] Task 41 RED: CLI/MCP `loop brief`가 worktree/session/branch filter를 무시하고 global latest snapshot을 쓰는 실패 확인
+- [x] Task 41 GREEN: 공유 snapshot selector와 CLI/MCP filtered continuation brief selection 구현
+- [x] Task 42 RED: Web selected worktree detail filtered brief endpoint/client/action이 없어 focused tests 실패 확인
+- [x] Task 42 GREEN: `/api/v1/loops/brief`, `getSelectedLoopBrief`, selected detail copy action 구현
+- [x] Task 43 RED: multi-worktree command center summary가 shared status/CLI/MCP schema/web summary에 없어 focused tests 실패 확인
+- [x] Task 43 GREEN: `LoopdeckStatus.activity.command_center`, CLI status, MCP schema, web Loops summary 구현
+- [x] Task 44 RED: command-center review item별 selected brief shortcut/command metadata가 없어 focused tests 실패 확인
+- [x] Task 44 GREEN: `continuation_command`, CLI/MCP schema, web `Copy review brief` action, App filtered brief copy 연결
+- [x] Task 44 PRIVACY: continuation brief outcome summary가 unsafe raw path/secret-looking text를 포함하면 출력하지 않도록 회귀 테스트와 필터 추가
+- [x] Task 45 RED: command-center review item에 merge-readiness/evidence grouping metadata가 없어 domain/web/CLI/MCP focused tests 실패 확인
+- [x] Task 45 GREEN: `evidence_count`와 `merge_readiness`를 shared status, CLI status, MCP schema, web Loops summary에 연결
+- [x] Task 45 PRIVACY: evidence refs 원문, unsafe raw path, outcome summary, prompt body가 status/summary surface에 노출되지 않는 회귀 테스트 유지
+- [x] Task 46 RED: command-center에 aggregate review-before-merge packet이 없어 domain/web/CLI/MCP focused tests 실패 확인
+- [x] Task 46 GREEN: `review_packet` status/summary/counts/actions를 shared status, CLI status, MCP schema, web Loops summary에 연결
+- [x] Task 46 PRIVACY: packet은 evidence refs 원문, outcome summary, prompt body, raw path를 포함하지 않는 safe aggregate metadata로 제한
+- [x] Task 47 RED: review packet에 explicit human checklist가 없어 domain/web/CLI/MCP focused tests 실패 확인
+- [x] Task 47 GREEN: `review_packet.checklist`를 safe aggregate actions에서 생성하고 CLI/MCP/web에 read-only로 노출
+- [x] Task 47 PRIVACY: checklist는 label/status/action만 포함하고 evidence refs, outcome summary, prompt body, raw path를 포함하지 않음
+- [x] Task 48 DECISION: local merge decision journal은 CLI-only explicit write boundary로 채택하고 MCP/web write는 보류
+- [x] Task 48 RED: `loop decision record/list`가 없어 CLI focused tests 실패 확인
+- [x] Task 48 GREEN: worktree별 merge/continue/defer decision journal을 SQLite에 기록하고 CLI record/list로 노출
+- [x] Task 48 PRIVACY: decision reason은 raw path/secret-looking token을 거부하고 prompt body/evidence refs/git writes/external calls를 포함하지 않음
+- [x] Task 49 DECISION: recent merge decisions는 status/MCP/web에 read-only로 노출하고 write boundary는 CLI-only 유지
+- [x] Task 49 RED: `activity.recent_decisions`가 없어 domain/CLI/MCP/web focused tests 실패 확인
+- [x] Task 49 GREEN: 최근 decision 3개를 `LoopdeckStatus.activity`, CLI status, MCP schema/runtime, API type, web Loops summary에 노출
+- [x] Task 49 PRIVACY: recent decision은 snapshot_id/worktree/decision/reason/decided_by/created_at만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
+- [x] Task 50 DECISION: recent decisions는 `review_packet.decision_advisory`로만 반영하고 readiness status/next_action/git state는 변경하지 않음
+- [x] Task 50 RED: `review_packet.decision_advisory`가 없어 domain/CLI/MCP/web focused tests 실패 확인
+- [x] Task 50 GREEN: continue/defer/merge decision advisory next-action을 review packet에 optional read-only로 노출
+- [x] Task 50 PRIVACY: advisory는 summary/next_action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
+- [x] Task 51 DECISION: selected worktree detail은 matching latest decision을 read-only로 노출하고 web/MCP write는 보류
+- [x] Task 51 RED: `/api/v1/loops/worktrees/:worktree`와 selected detail UI에 `latest_decision`이 없어 focused tests 실패 확인
+- [x] Task 51 GREEN: selected worktree detail API/type/UI에 latest decision value/reason을 read-only로 노출
+- [x] Task 51 PRIVACY: detail decision은 snapshot_id/worktree/decision/reason/decided_by/created_at만 포함하고 recent decisions는 latest project로 scope해 prompt body/evidence refs/outcome summary/raw path/git write/cross-project decision reason을 포함하지 않음
+- [x] Task 52 DECISION: selected worktree detail은 raw-free review packet summary/action을 read-only로 노출하고 write/merge/checklist state는 보류
+- [x] Task 52 RED: selected detail API/UI에 `review_packet_summary`가 없어 focused tests 실패 확인
+- [x] Task 52 GREEN: selected worktree detail API/type/UI에 review packet summary, packet next action, worktree action을 노출
+- [x] Task 52 PRIVACY: review packet summary는 aggregate status/summary/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
+- [x] Task 53 DECISION: selected worktree detail은 기존 command-center continuation command를 read-only command hint로 노출하고 실행 버튼은 보류
+- [x] Task 53 RED: selected detail API/UI에 `review_packet_summary.command_hint`가 없어 focused tests 실패 확인
+- [x] Task 53 GREEN: selected worktree detail API/type/UI에 command hint label/command를 read-only로 노출
+- [x] Task 53 PRIVACY: command hint는 기존 safe continuation command만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
+- [x] Task 54 DECISION: selected worktree detail은 blocked/missing_evidence 상태에서 raw-free explanation을 노출하고 evidence refs/outcome summary는 보류
+- [x] Task 54 RED: blocked selected detail API/UI에 `missing_evidence_explanation`이 없어 focused tests 실패 확인
+- [x] Task 54 GREEN: selected worktree detail API/type/UI에 Missing evidence label/reason/next_action을 optional read-only로 노출
+- [x] Task 54 PRIVACY: explanation은 safe reason/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
+- [x] Task 55 DECISION: selected worktree detail은 command-center checklist에서 selected worktree action과 일치하는 raw-free reviewer checklist preview만 노출
+- [x] Task 55 RED: selected detail API/UI에 `reviewer_checklist_preview`가 없어 focused tests 실패 확인
+- [x] Task 55 GREEN: selected worktree detail API/type/UI에 required reviewer checklist preview를 read-only로 노출
+- [x] Task 55 PRIVACY: preview는 기존 checklist label/status/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
+- [x] Task 56 DECISION: selected worktree detail은 ready/needs_review/missing_evidence 모두에 raw-free readiness summary를 노출하고 단일 ready worktree fallback도 허용
+- [x] Task 56 RED: selected detail API/UI에 `readiness_summary`가 없고 단일 ready worktree summary가 없어 focused tests 실패 확인
+- [x] Task 56 GREEN: selected worktree detail API/type/UI에 readiness summary를 추가하고 command-center가 없는 단일 ready worktree도 같은 summary를 노출
+- [x] Task 56 PRIVACY: summary는 safe status/reason/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
+- [x] Task 57 DECISION: selected worktree detail은 aggregate evidence_count만 설명하고 evidence ref 문자열/본문은 노출하지 않음
+- [x] Task 57 RED: selected detail API/UI에 `evidence_count_explanation`이 없어 focused tests 실패 확인
+- [x] Task 57 GREEN: selected worktree detail API/type/UI에 Evidence count label/count/reason을 read-only로 노출
+- [x] Task 57 PRIVACY: explanation은 count와 safe reason/action만 포함하고 evidence refs/outcome summary/raw path/git write를 포함하지 않음
+- [x] Task 58 DECISION: selected worktree detail은 worktree/session/branch 필터 scope를 raw-free로 설명하고 새 selector/write 기능은 보류
+- [x] Task 58 RED: selected detail API/UI에 `selection_scope`가 없어 focused tests 실패 확인
+- [x] Task 58 GREEN: selected worktree detail API/type/UI에 Selection scope label/reason/next action을 read-only로 노출
+- [x] Task 58 PRIVACY: scope 설명은 explicit filter 종류와 safe reason/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
+- [x] Task 59 DECISION: selected worktree detail은 selected snapshot이 전체 최신 loop보다 뒤처지는지 raw-free로 설명하고 wall-clock/git/filesystem reads는 보류
+- [x] Task 59 RED: selected detail API/UI에 `snapshot_age`가 없어 focused tests 실패 확인
+- [x] Task 59 GREEN: selected worktree detail API/type/UI에 Selected snapshot age status/reason/next action을 read-only로 노출
+- [x] Task 59 PRIVACY: age 설명은 selected snapshot timestamp와 safe status/reason/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git read/write를 포함하지 않음
+- [x] Task 60 DECISION: selected worktree detail은 Copy selected brief가 filtered/read-only/no-auto-submit action임을 설명하고 command execution/write는 보류
+- [x] Task 60 RED: selected detail API/UI에 `selected_brief_action`이 없어 focused tests 실패 확인
+- [x] Task 60 GREEN: selected worktree detail API/type/UI에 Selected brief action reason/command/no-write flags를 read-only로 노출
+- [x] Task 60 PRIVACY: action rationale은 selected filters 기반 CLI command와 safe flags만 포함하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
+- [x] Task 61 DECISION: selected brief는 continuation handoff이고 merge approval이 아니므로 readiness별 merge gate를 별도 rationale로 노출
+- [x] Task 61 RED: selected detail API/UI에 `review_packet_summary.brief_rationale`이 없어 focused tests 실패 확인
+- [x] Task 61 GREEN: selected worktree detail API/type/UI에 Brief rationale reason/next action/merge gate를 read-only로 노출
+- [x] Task 61 PRIVACY: rationale은 readiness status/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
+- [x] Task 62 DECISION: selected detail guidance가 커졌으므로 API 계약 변경 없이 continuation/merge/evidence section label로 스캔성을 개선
+- [x] Task 62 RED: selected detail UI에 `Continuation guidance`, `Merge review guidance`, `Evidence guidance`가 없어 focused web test 실패 확인
+- [x] Task 62 GREEN: selected worktree detail UI에 compact section labels를 추가해 focused web test 통과
+- [x] Task 62 PRIVACY: section labels만 추가하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
+- [x] Task 63 DECISION: review packet detail panel이 커졌으므로 API 계약 변경 없이 section wrapper/grid/item 구조로 시각 위계를 개선
+- [x] Task 63 RED: selected detail UI에 `loop-worktree-detail`, `loop-detail-section`, `loop-detail-section-title`, `loop-review-grid`, `loop-review-item` 구조가 없어 focused web test 실패 확인
+- [x] Task 63 GREEN: selected worktree detail UI/CSS에 compact section wrapper와 responsive review grid를 추가해 focused web test 통과
+- [x] Task 63 PRIVACY: presentation classes와 CSS만 추가하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
+- [x] Task 64 DECISION: review command hint가 여러 command 사이에서 혼동되지 않도록 기존 command-center continuation command에서 온 provenance를 raw-free로 노출
+- [x] Task 64 RED: selected detail API/UI에 `review_packet_summary.command_hint.provenance`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 64 GREEN: selected worktree detail API/type/UI에 command provenance source/reason/no-write flags를 read-only로 노출
+- [x] Task 64 PRIVACY: provenance는 safe selected worktree metadata 출처만 설명하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
+- [x] Task 65 DECISION: selected continuation command와 review packet command hint는 같은 패널에서 다를 수 있으므로 역할 차이를 raw-free로 설명
+- [x] Task 65 RED: selected detail API/UI에 `command_distinction`이 없어 focused server/API/web tests 실패 확인
+- [x] Task 65 GREEN: selected worktree detail API/type/UI에 selected command role, review command role, difference reason, no-write flags를 read-only로 노출
+- [x] Task 65 PRIVACY: distinction은 command role 차이만 설명하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
+- [x] Task 66 DECISION: selected detail의 visible command들이 어떤 filter category를 반영하는지 raw-free로 설명
+- [x] Task 66 RED: selected detail API/UI에 `command_filters`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 66 GREEN: selected worktree detail API/type/UI에 selected/review command filter categories와 no-write flags를 read-only로 노출
+- [x] Task 66 PRIVACY: filter explanation은 filter 이름만 포함하고 prompt body/evidence refs/outcome summary/raw path/git read/write/external call을 포함하지 않음
+- [x] Task 67 DECISION: selected detail panel의 copy button side effects는 local-first 경계 확인에 필요하므로 raw-free로 요약
+- [x] Task 67 RED: selected detail API/UI에 `copy_side_effects`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 67 GREEN: selected worktree detail API/type/UI에 clipboard/UI feedback과 no-write/no-external-call flags를 read-only로 노출
+- [x] Task 67 PRIVACY: copy side-effect summary는 prompt body/evidence refs/outcome summary/raw path/git read/write/command execution/external call을 포함하지 않음
+- [x] Task 68 DECISION: selected detail panel의 paste destination hint는 Codex/Claude Code continuation handoff 연결에 필요하므로 raw-free로 제공
+- [x] Task 68 RED: selected detail API/UI에 `paste_destination`이 없어 focused server/API/web tests 실패 확인
+- [x] Task 68 GREEN: selected worktree detail API/type/UI에 Codex/Claude Code active request destination과 no-auto-submit/no-write flags를 read-only로 노출
+- [x] Task 68 PRIVACY: paste destination hint는 prompt body/evidence refs/outcome summary/raw path/git read/write/command execution/external call을 포함하지 않음
+- [x] Task 69 DECISION: selected detail panel의 continuation handoff checklist는 loop memory 작업을 닫기 위해 필요하므로 raw-free로 제공
+- [x] Task 69 RED: selected detail API/UI에 `handoff_checklist`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 69 GREEN: selected worktree detail API/type/UI에 copy/paste/manual submit/next loop collect steps와 no-write flags를 read-only로 노출
+- [x] Task 69 PRIVACY: handoff checklist는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript read/command execution/external call을 포함하지 않음
+- [x] Task 70 DECISION: post-handoff reminder는 next loop collect와 memory approval/merge를 구분하기 위해 필요하므로 raw-free로 제공
+- [x] Task 70 RED: selected detail API/UI에 `post_handoff_reminder`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 70 GREEN: selected worktree detail API/type/UI에 next loop collect, memory approval separate review, merge separate decision을 read-only로 노출
+- [x] Task 70 PRIVACY: post-handoff reminder는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript read/command execution/external call을 포함하지 않음
+- [x] Task 71 DECISION: source-of-truth note는 next loop snapshot을 transcript import가 아닌 local memory input으로 설명하기 위해 필요하므로 raw-free로 제공
+- [x] Task 71 RED: selected detail API/UI에 `source_of_truth_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 71 GREEN: selected worktree detail API/type/UI에 next loop snapshot source-of-truth, no transcript import, no transcript storage flags를 read-only로 노출
+- [x] Task 71 PRIVACY: source-of-truth note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript storage/transcript import/command execution/external call을 포함하지 않음
+- [x] Task 72 DECISION: privacy boundary note는 source-of-truth model의 local DB/Markdown archive 범위와 저장 금지 데이터를 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 72 RED: selected detail API/UI에 `privacy_boundary_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 72 GREEN: selected worktree detail API/type/UI에 local DB/Markdown archive storage scope, no prompt bodies/transcripts/raw paths/provider credentials, local-only flags를 read-only로 노출
+- [x] Task 72 PRIVACY: privacy boundary note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript storage/transcript import/credential handling/command execution/external call을 포함하지 않음
+- [x] Task 73 DECISION: operator review gate는 continuation handoff가 자동 제출이 아니라 사용자 검토 후 수동 제출임을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 73 RED: selected detail API/UI에 `operator_review_gate`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 73 GREEN: selected worktree detail API/type/UI에 operator review before submit, manual Codex/Claude Code submit, no auto-submit/no command/no write/no merge mutation flags를 read-only로 노출
+- [x] Task 73 PRIVACY: operator review gate는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript read/command execution/automatic submission/external call을 포함하지 않음
+- [x] Task 74 DECISION: collection responsibility note는 continuation handoff 이후 next loop snapshot 수집 책임과 트리거를 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 74 RED: selected detail API/UI에 `collection_responsibility_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 74 GREEN: selected worktree detail API/type/UI에 operator collects next snapshot, collection starts only through operator-run loop collection flow, no transcript watch/no agent UI scrape/no background collect flags를 read-only로 노출
+- [x] Task 74 PRIVACY: collection responsibility note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript watching/agent UI scraping/background collection/command execution/external call을 포함하지 않음
+- [x] Task 75 DECISION: pre-merge advisory는 next loop snapshot 수집/검토 전 merge 판단 보류와 memory approval 분리를 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 75 RED: selected detail API/UI에 `pre_merge_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 75 GREEN: selected worktree detail API/type/UI에 hold merge until next snapshot collected/reviewed, continuation can change readiness, memory approval separate, no merge decision write flags를 read-only로 노출
+- [x] Task 75 PRIVACY: pre-merge advisory는 prompt body/evidence refs/outcome summary/raw path/git read/write/memory approval write/merge decision write/command execution/external call을 포함하지 않음
+- [x] Task 76 DECISION: post-collection review note는 수집된 loop snapshot quality/evidence 검토가 memory approval/merge readiness보다 먼저임을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 76 RED: selected detail API/UI에 `post_collection_review_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 76 GREEN: selected worktree detail API/type/UI에 review collected snapshot quality/evidence before approval, memory approval after review, merge readiness reconsidered after review, no memory/merge write flags를 read-only로 노출
+- [x] Task 76 PRIVACY: post-collection review note는 prompt body/evidence refs/outcome summary/raw path/git read/write/memory approval write/merge decision write/command execution/external call을 포함하지 않음
+- [x] Task 77 DECISION: continuation safety grouping label은 copy/paste/review/collect/privacy/merge gate 안내들이 하나의 read-only handoff boundary 묶음임을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 77 RED: selected detail API/UI에 `continuation_safety_group`이 없어 focused server/API/web tests 실패 확인
+- [x] Task 77 GREEN: selected worktree detail API/type/UI에 Codex/Claude Code continuation safety scope, included notes, no automation/no write/no external flags를 read-only로 노출
+- [x] Task 77 PRIVACY: continuation safety group은 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 78 DECISION: continuation safety guidance ordering note는 copy/paste 전에 safety guidance를 먼저 검토해야 함을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 78 RED: selected detail API/UI에 `continuation_safety_ordering_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 78 GREEN: selected worktree detail API/type/UI에 review safety before copy/paste, follow notes in order, no-write/no-external flags를 read-only로 노출
+- [x] Task 78 PRIVACY: continuation safety ordering note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 79 DECISION: continuation safety non-persistence note는 safety guidance 검토가 저장/동기화된 completed state가 아님을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 79 RED: selected detail API/UI에 `continuation_safety_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 79 GREEN: selected worktree detail API/type/UI에 reviewed guidance state not stored/synchronized, re-check before manual submission, no-state/no-external flags를 read-only로 노출
+- [x] Task 79 PRIVACY: continuation safety non-persistence note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 80 DECISION: continuation safety re-check cue는 selected brief copy 이후마다 paste 전에 safety guidance를 다시 확인하게 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 80 RED: selected detail API/UI에 `continuation_safety_recheck_cue`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 80 GREEN: selected worktree detail API/type/UI에 after each selected brief copy, re-check before Codex/Claude Code paste, no-write/no-external flags를 read-only로 노출
+- [x] Task 80 PRIVACY: continuation safety re-check cue는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 81 DECISION: copy feedback reminder는 copied 상태가 clipboard 도달만 의미하고 safety approval/submission이 아님을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 81 RED: selected detail API/UI에 `continuation_safety_copy_feedback_reminder`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 81 GREEN: selected worktree detail API/type/UI에 copied state scope, return to safety re-check cue, no-write/no-external flags를 read-only로 노출
+- [x] Task 81 PRIVACY: continuation safety copy feedback reminder는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 82 DECISION: selected-brief copy feedback accessibility note는 copy 상태가 visible command label을 바꾸거나 layout shift를 만들지 않고 accessible feedback으로 전달되어야 함을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 82 RED: selected detail API/UI에 `continuation_safety_copy_feedback_accessibility_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 82 GREEN: selected worktree detail API/type/UI에 stable visible label, accessible copied status feedback, no-write/no-external flags를 read-only로 노출
+- [x] Task 82 PRIVACY: continuation safety copy feedback accessibility note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 83 DECISION: selected-brief copy feedback timeout note는 copied feedback이 짧은 local timeout 뒤 사라지는 임시 표시이며 review completion/submission state가 아님을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 83 RED: selected detail API/UI에 `continuation_safety_copy_feedback_timeout_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 83 GREEN: selected worktree detail API/type/UI에 short local timeout scope, not review/submission state, no-write/no-external flags를 read-only로 노출
+- [x] Task 83 PRIVACY: continuation safety copy feedback timeout note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 84 DECISION: selected-brief copy feedback failure note는 clipboard failure가 수동 retry를 요구하며 prompt submission/review state 저장이 아님을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 84 RED: selected detail API/UI에 `continuation_safety_copy_feedback_failure_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 84 GREEN: selected worktree detail API/type/UI에 manual retry requirement, not prompt submission/review state, no-write/no-external flags를 read-only로 노출
+- [x] Task 84 PRIVACY: continuation safety copy feedback failure note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 85 DECISION: selected-brief copy retry note는 retry가 operator manual action이고 Loopdeck이 clipboard write/prompt submission을 자동 retry하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 85 RED: selected detail API/UI에 `continuation_safety_copy_retry_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 85 GREEN: selected worktree detail API/type/UI에 manual retry scope, no automatic clipboard retry/prompt submission, no-write/no-external flags를 read-only로 노출
+- [x] Task 85 PRIVACY: continuation safety copy retry note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 86 DECISION: selected-brief pre-paste confirmation note는 paste 전에 copied brief와 target agent request를 operator가 확인해야 하며 prompt submission/safety approval이 아님을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 86 RED: selected detail API/UI에 `continuation_safety_pre_paste_confirmation_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 86 GREEN: selected worktree detail API/type/UI에 copied brief/target agent request confirmation, not submission/safety approval, no-write/no-external flags를 read-only로 노출
+- [x] Task 86 PRIVACY: continuation safety pre-paste confirmation note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 87 DECISION: selected-brief target-agent check note는 paste 전에 active Codex/Claude Code request box를 operator가 직접 확인해야 하며 Loopdeck이 agent UI state/target contents를 inspect하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 87 RED: selected detail API/UI에 `continuation_safety_target_agent_check_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 87 GREEN: selected worktree detail API/type/UI에 active request box check, no agent UI/target content inspection, no-write/no-external flags를 read-only로 노출
+- [x] Task 87 PRIVACY: continuation safety target-agent check note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 88 DECISION: paste destination verification boundary note는 paste destination이 Codex/Claude Code 안에서 operator가 수동 선택하는 경계이며 Loopdeck이 active window/target content/paste success를 verify하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 88 RED: selected detail API/UI에 `continuation_safety_paste_destination_boundary_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 88 GREEN: selected worktree detail API/type/UI에 manual paste destination boundary, no active-window/target-content/paste-success verification, no-write/no-external flags를 read-only로 노출
+- [x] Task 88 PRIVACY: continuation safety paste destination boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 89 DECISION: manual submission boundary note는 pasted brief submit이 Codex/Claude Code 안에서 operator가 수동 수행하는 경계이며 Loopdeck이 press enter/click submit/submitted state record를 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 89 RED: selected detail API/UI에 `continuation_safety_manual_submission_boundary_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 89 GREEN: selected worktree detail API/type/UI에 manual submission boundary, no enter/click submit/submitted-state record, no-write/no-external flags를 read-only로 노출
+- [x] Task 89 PRIVACY: continuation safety manual submission boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 90 DECISION: submission result non-persistence note는 agent response/submission result가 다음 explicit loop snapshot 전까지 Loopdeck 밖에 있고 submitted state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 90 RED: selected detail API/UI에 `continuation_safety_submission_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 90 GREEN: selected worktree detail API/type/UI에 submission result outside Loopdeck until explicit snapshot, no submitted-state detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 90 PRIVACY: continuation safety submission result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 91 DECISION: post-submission collection reminder boundary note는 agent response 준비 후 operator가 다음 loop snapshot을 명시적으로 수집해야 하며 Loopdeck이 submission/transcript/agent UI activity에서 collection을 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 91 RED: selected detail API/UI에 `continuation_safety_post_submission_collection_reminder_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 91 GREEN: selected worktree detail API/type/UI에 explicit next loop snapshot collection reminder, no submission/transcript/agent UI activity background collection, no-write/no-external flags를 read-only로 노출
+- [x] Task 91 PRIVACY: continuation safety post-submission collection reminder note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 92 DECISION: collection result non-persistence note는 collection result state가 다음 explicit loop snapshot 기록 전까지 persist되지 않고 Loopdeck이 agent UI activity에서 collection result state를 store/sync/infer하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 92 RED: selected detail API/UI에 `continuation_safety_collection_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 92 GREEN: selected worktree detail API/type/UI에 collection result not persisted until explicit snapshot, no store/sync/infer from agent UI activity, no-write/no-external flags를 read-only로 노출
+- [x] Task 92 PRIVACY: continuation safety collection result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 93 DECISION: collection retry boundary note는 retry가 operator가 explicit loop collection flow를 다시 실행하는 수동 경계이며 Loopdeck이 collection command나 hidden recovery action을 자동 retry하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 93 RED: selected detail API/UI에 `continuation_safety_collection_retry_boundary_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 93 GREEN: selected worktree detail API/type/UI에 manual explicit collection retry, no automatic collection command retry/hidden recovery, no-write/no-external flags를 read-only로 노출
+- [x] Task 93 PRIVACY: continuation safety collection retry boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 94 DECISION: retry outcome non-persistence note는 retry attempt/outcome이 다음 explicit loop snapshot 전까지 Loopdeck 밖에 있고 retry success/failure state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 94 RED: selected detail API/UI에 `continuation_safety_retry_outcome_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 94 GREEN: selected worktree detail API/type/UI에 retry attempt/outcome outside Loopdeck until explicit snapshot, no retry success/failure detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 94 PRIVACY: continuation safety retry outcome non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 95 DECISION: collection evidence freshness boundary note는 evidence freshness를 latest explicit loop snapshot evidence 기준으로 operator가 확인해야 하며 Loopdeck이 git status/transcript/agent UI activity에서 freshness를 verify하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 95 RED: selected detail API/UI에 `continuation_safety_collection_evidence_freshness_boundary_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 95 GREEN: selected worktree detail API/type/UI에 latest explicit loop snapshot evidence freshness check, no git status/transcript/agent UI freshness verification, no-write/no-external flags를 read-only로 노출
+- [x] Task 95 PRIVACY: continuation safety collection evidence freshness boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 96 DECISION: freshness result non-persistence note는 freshness result state가 다음 explicit loop snapshot 전까지 Loopdeck 밖에 있고 Loopdeck이 freshness result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 96 RED: selected detail API/UI에 `continuation_safety_freshness_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 96 GREEN: selected worktree detail API/type/UI에 freshness result outside Loopdeck until explicit snapshot, no freshness result detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 96 PRIVACY: continuation safety freshness result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 97 DECISION: freshness uncertainty collection reminder는 evidence freshness가 uncertain할 때 operator가 새 explicit loop snapshot을 collect해야 하며 Loopdeck이 freshness verify나 automatic collection을 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 97 RED: selected detail API/UI에 `continuation_safety_freshness_uncertainty_collection_reminder`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 97 GREEN: selected worktree detail API/type/UI에 uncertainty 시 new explicit loop snapshot collection reminder, no freshness verification/automatic collection, no-write/no-external flags를 read-only로 노출
+- [x] Task 97 PRIVACY: continuation safety freshness uncertainty collection reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 98 DECISION: pre-merge freshness advisory는 merge decision 전에 freshness uncertainty를 review해야 하며 Loopdeck이 merge approve나 freshness verify를 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 98 RED: selected detail API/UI에 `continuation_safety_pre_merge_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 98 GREEN: selected worktree detail API/type/UI에 review freshness uncertainty before merge decisions, no merge approval/freshness verification, no-write/no-external flags를 read-only로 노출
+- [x] Task 98 PRIVACY: continuation safety pre-merge freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/merge decision state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 99 DECISION: pre-memory-approval freshness advisory는 loop memory approval 전에 freshness uncertainty를 review해야 하며 Loopdeck이 memory approve나 freshness verify를 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 99 RED: selected detail API/UI에 `continuation_safety_pre_memory_approval_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 99 GREEN: selected worktree detail API/type/UI에 review freshness uncertainty before approving loop memory, no memory approval/freshness verification, no-write/no-external flags를 read-only로 노출
+- [x] Task 99 PRIVACY: continuation safety pre-memory-approval freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/merge decision state/memory approval state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 100 DECISION: post-memory-approval collection reminder는 loop memory approval 후 새 explicit loop snapshot을 collect해야 하며 Loopdeck이 memory approval이나 approval state change에서 collection을 자동 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 100 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_collection_reminder`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 100 GREEN: selected worktree detail API/type/UI에 collect a new explicit loop snapshot after approving loop memory, no collection from approval/state changes, no-write/no-external flags를 read-only로 노출
+- [x] Task 100 PRIVACY: continuation safety post-memory-approval collection reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/merge decision state/memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 101 DECISION: post-memory-approval collection result non-persistence note는 approval 후 collection result state가 다음 explicit loop snapshot 전까지 Loopdeck 밖에 있고 Loopdeck이 이를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 101 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_collection_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 101 GREEN: selected worktree detail API/type/UI에 post-approval collection result outside Loopdeck until explicit snapshot, no detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 101 PRIVACY: continuation safety post-memory-approval collection result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/retry result state/freshness result state/merge decision state/memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 102 DECISION: post-memory-approval collection retry boundary note는 retry가 operator가 explicit post-approval loop collection flow를 다시 실행하는 수동 경계이며 Loopdeck이 collection command나 hidden recovery action을 자동 retry하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 102 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_collection_retry_boundary_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 102 GREEN: selected worktree detail API/type/UI에 manual explicit post-approval collection retry, no automatic collection command retry/hidden recovery, no-write/no-external flags를 read-only로 노출
+- [x] Task 102 PRIVACY: continuation safety post-memory-approval collection retry boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/retry result state/post-approval retry result state/freshness result state/merge decision state/memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 103 DECISION: post-memory-approval retry outcome non-persistence note는 retry outcome이 다음 explicit loop snapshot 전까지 Loopdeck 밖에 있고 Loopdeck이 post-approval retry success/failure state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 103 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_outcome_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 103 GREEN: selected worktree detail API/type/UI에 post-approval retry outcome outside Loopdeck until explicit snapshot, no detect/store/sync retry success/failure, no-write/no-external flags를 read-only로 노출
+- [x] Task 103 PRIVACY: continuation safety post-memory-approval retry outcome non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/merge decision state/memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 104 DECISION: post-memory-approval retry evidence freshness boundary note는 operator가 retry evidence freshness를 latest explicit loop snapshot 기준으로 확인해야 하고 Loopdeck이 git status/transcript/agent UI activity에서 freshness를 verify하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 104 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 104 GREEN: selected worktree detail API/type/UI에 manual post-approval retry freshness review against latest explicit loop snapshot, no git/transcript/UI freshness verification, no-write/no-external flags를 read-only로 노출
+- [x] Task 104 PRIVACY: continuation safety post-memory-approval retry evidence freshness boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/merge decision state/memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 105 DECISION: post-memory-approval retry freshness result non-persistence note는 freshness review result가 다음 explicit loop snapshot 전까지 Loopdeck 밖에 있고 Loopdeck이 post-approval retry freshness result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 105 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 105 GREEN: selected worktree detail API/type/UI에 post-approval retry freshness result outside Loopdeck until explicit snapshot, no detect/store/sync freshness result state, no-write/no-external flags를 read-only로 노출
+- [x] Task 105 PRIVACY: continuation safety post-memory-approval retry freshness result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 106 DECISION: post-memory-approval retry freshness uncertainty collection reminder는 freshness가 uncertain할 때 operator가 새 explicit loop snapshot을 collect해야 하며 Loopdeck이 freshness verify나 automatic collection을 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 106 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 106 GREEN: selected worktree detail API/type/UI에 collect a new explicit loop snapshot when post-approval retry freshness is uncertain, no freshness verification/automatic collection, no-write/no-external flags를 read-only로 노출
+- [x] Task 106 PRIVACY: continuation safety post-memory-approval retry freshness uncertainty collection reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 107 DECISION: post-memory-approval retry pre-memory-approval freshness advisory는 retry 후 loop memory를 다시 승인하기 전에 freshness uncertainty를 검토해야 하며 Loopdeck이 memory approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 107 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 107 GREEN: selected worktree detail API/type/UI에 review post-approval retry freshness uncertainty before approving loop memory again, no memory approval/freshness verification, no-write/no-external flags를 read-only로 노출
+- [x] Task 107 PRIVACY: continuation safety post-memory-approval retry pre-memory-approval freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 108 DECISION: post-memory-approval retry renewed-memory-approval collection reminder는 retry 후 loop memory를 다시 승인한 뒤에도 새 explicit loop snapshot collection은 operator가 명시적으로 수행해야 하며 Loopdeck이 approval state 변화로 자동 collection을 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 108 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_reminder`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 108 GREEN: selected worktree detail API/type/UI에 collect a new explicit loop snapshot after approving loop memory again, no automatic collection from renewed memory approval or approval state changes, no-write/no-external flags를 read-only로 노출
+- [x] Task 108 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval collection reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 109 DECISION: post-memory-approval retry renewed-memory-approval collection result non-persistence note는 renewed approval 이후 collection 결과가 다음 explicit loop snapshot 전까지 Loopdeck 밖에 있으며 Loopdeck이 결과 state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 109 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 109 GREEN: selected worktree detail API/type/UI에 renewed-memory-approval collection result outside Loopdeck until explicit snapshot, no detect/store/sync result state, no-write/no-external flags를 read-only로 노출
+- [x] Task 109 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval collection result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 110 DECISION: post-memory-approval retry renewed-memory-approval collection uncertainty reminder는 renewed approval 이후 collection 결과가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 Loopdeck이 hidden verification이나 automatic collection을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 110 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_uncertainty_reminder`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 110 GREEN: selected worktree detail API/type/UI에 collect a new explicit loop snapshot when renewed-memory-approval collection result is uncertain, no verification/automatic collection, no-write/no-external flags를 read-only로 노출
+- [x] Task 110 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval collection uncertainty reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 111 DECISION: post-memory-approval retry renewed-memory-approval pre-merge freshness advisory는 renewed approval 이후에도 merge decision 전에 freshness uncertainty를 재검토해야 하며 Loopdeck이 merge approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 111 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_merge_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 111 GREEN: selected worktree detail API/type/UI에 review renewed-memory-approval freshness uncertainty before merge decisions, no merge approval/freshness verification before merge, no-write/no-external flags를 read-only로 노출
+- [x] Task 111 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval pre-merge freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 112 DECISION: post-memory-approval retry renewed-memory-approval pre-handoff freshness advisory는 renewed approval 이후 continuation handoff 전에 freshness uncertainty를 재검토해야 하며 Loopdeck이 handoff approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 112 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_handoff_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 112 GREEN: selected worktree detail API/type/UI에 review renewed-memory-approval freshness uncertainty before continuation handoff, no handoff approval/freshness verification before handoff, no-write/no-external flags를 read-only로 노출
+- [x] Task 112 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval pre-handoff freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/handoff approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 113 DECISION: post-memory-approval retry renewed-memory-approval pre-paste freshness advisory는 renewed approval 이후 Codex/Claude Code로 paste하기 전에 freshness uncertainty를 재검토해야 하며 Loopdeck이 paste target approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 113 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_paste_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 113 GREEN: selected worktree detail API/type/UI에 review renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code, no paste target approval/freshness verification before paste, no-write/no-external flags를 read-only로 노출
+- [x] Task 113 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval pre-paste freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 114 DECISION: post-memory-approval retry renewed-memory-approval pre-submit freshness advisory는 renewed approval 이후 Codex/Claude Code에서 submit하기 전에 freshness uncertainty를 재검토해야 하며 Loopdeck이 submission approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 114 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_submit_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 114 GREEN: selected worktree detail API/type/UI에 review renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code, no submission approval/freshness verification before submit, no-write/no-external flags를 read-only로 노출
+- [x] Task 114 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval pre-submit freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 115 DECISION: post-memory-approval retry renewed-memory-approval post-submit freshness advisory는 renewed approval 이후 submit 후 freshness가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 Loopdeck이 submitted state/agent response/freshness monitoring을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 115 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 115 GREEN: selected detail API/type/UI에 collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain, no submitted-state/agent-response/freshness monitoring, no-write/no-external flags를 read-only로 노출
+- [x] Task 115 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 116 DECISION: post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence note는 post-submit collection 결과가 다음 explicit loop snapshot 전까지 Loopdeck 밖에 있고 Loopdeck이 post-submit collection result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 116 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 116 GREEN: selected detail API/type/UI에 post-submit collection result outside Loopdeck until explicit snapshot, no detect/store/sync post-submit collection result state, no-write/no-external flags를 read-only로 노출
+- [x] Task 116 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 117 DECISION: post-memory-approval retry renewed-memory-approval post-submit collection retry boundary note는 post-submit collection retry가 operator가 explicit flow를 다시 실행하는 수동 경계이며 Loopdeck이 post-submit collection command나 hidden recovery action을 자동 retry하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 117 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 117 GREEN: selected detail API/type/UI에 operator reruns explicit post-submit loop collection flow when retry is needed, no automatic retry/hidden recovery, no-write/no-external flags를 read-only로 노출
+- [x] Task 117 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit collection retry boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 118 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence note는 retry attempt/outcome이 다음 explicit loop snapshot 전까지 Loopdeck 밖에 있고 retry success/failure state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 118 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_outcome_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 118 GREEN: selected detail API/type/UI에 post-submit retry attempt/outcome outside Loopdeck until explicit snapshot, no retry success/failure detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 118 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 119 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry evidence freshness boundary note는 operator가 post-submit retry evidence freshness를 latest explicit loop snapshot 기준으로 확인하며 Loopdeck이 git status/transcript/agent UI activity로 freshness를 verify하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 119 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_evidence_freshness_boundary_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 119 GREEN: selected detail API/type/UI에 operator checks post-submit retry evidence freshness against latest explicit loop snapshot, no git/transcript/agent UI freshness verification, no-write/no-external flags를 read-only로 노출
+- [x] Task 119 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry evidence freshness boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 120 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence note는 post-submit retry freshness result가 다음 explicit loop snapshot 전까지 Loopdeck 밖에 있고 Loopdeck이 freshness result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 120 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 120 GREEN: selected detail API/type/UI에 post-submit retry freshness result outside Loopdeck until explicit snapshot, no detect/store/sync freshness result state, no-write/no-external flags를 read-only로 노출
+- [x] Task 120 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 121 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry freshness uncertainty collection reminder는 post-submit retry freshness가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 Loopdeck이 freshness verification이나 collection을 자동 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 121 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_uncertainty_collection_reminder`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 121 GREEN: selected detail API/type/UI에 collect new explicit loop snapshot when post-submit retry freshness is uncertain, no automatic freshness verification/collection start, no-write/no-external flags를 read-only로 노출
+- [x] Task 121 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry freshness uncertainty collection reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 122 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry pre-memory-approval freshness advisory는 renewed memory approval 전에 post-submit retry freshness uncertainty를 재검토해야 하며 Loopdeck이 memory approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 122 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_pre_memory_approval_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 122 GREEN: selected detail API/type/UI에 review post-submit retry freshness uncertainty before approving loop memory again, no memory approval/freshness verification from advisory, no-write/no-external flags를 read-only로 노출
+- [x] Task 122 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry pre-memory-approval freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 123 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection reminder는 post-submit retry 이후 renewed memory approval 다음 explicit loop snapshot 수집 책임을 사용자에게 되돌려야 하므로 raw-free로 제공
+- [x] Task 123 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_reminder`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 123 GREEN: selected detail API/type/UI에 collect a new explicit loop snapshot after approving loop memory again after post-submit retry, no hidden approval signal collection, no-write/no-external flags를 read-only로 노출
+- [x] Task 123 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 124 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence note는 collection reminder가 collection completion tracking을 암시하지 않도록 결과 state가 다음 explicit loop snapshot 전까지 Loopdeck 밖에 있음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 124 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 124 GREEN: selected detail API/type/UI에 post-submit retry renewed-memory-approval collection result stays outside Loopdeck until the next explicit loop snapshot, no detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 124 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 125 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection uncertainty reminder는 해당 collection result가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 Loopdeck이 result verification이나 automatic collection을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 125 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_uncertainty_reminder`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 125 GREEN: selected detail API/type/UI에 collect a new explicit loop snapshot when post-submit retry renewed-memory-approval collection result is uncertain, no result verification/automatic collection start, no-write/no-external flags를 read-only로 노출
+- [x] Task 125 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection uncertainty reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/uncertainty result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 126 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-merge freshness advisory는 merge decision 전에 post-submit retry renewed-memory-approval freshness uncertainty를 재검토해야 하며 Loopdeck이 merge approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 126 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_merge_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 126 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval freshness uncertainty before merge decisions, no merge approval/freshness verification before merge, no-write/no-external flags를 read-only로 노출
+- [x] Task 126 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-merge freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/uncertainty result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 127 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-handoff freshness advisory는 continuation handoff 전에 post-submit retry renewed-memory-approval freshness uncertainty를 재검토해야 하며 Loopdeck이 handoff approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 127 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_handoff_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 127 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval freshness uncertainty before continuation handoff, no handoff approval/freshness verification before handoff, no-write/no-external flags를 read-only로 노출
+- [x] Task 127 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-handoff freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/uncertainty result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 128 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-paste freshness advisory는 Codex/Claude Code로 paste하기 전에 post-submit retry renewed-memory-approval freshness uncertainty를 재검토해야 하며 Loopdeck이 paste target approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 128 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_paste_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 128 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code, no paste target approval/freshness verification before paste, no-write/no-external flags를 read-only로 노출
+- [x] Task 128 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-paste freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/uncertainty result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 129 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-submit freshness advisory는 Codex/Claude Code에서 submit하기 전에 post-submit retry renewed-memory-approval freshness uncertainty를 재검토해야 하며 Loopdeck이 submission approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 129 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_submit_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 129 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code, no submission approval/freshness verification before submit, no-write/no-external flags를 read-only로 노출
+- [x] Task 129 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-submit freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/uncertainty result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 130 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit freshness advisory는 submit 후 post-submit retry renewed-memory-approval freshness가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 Loopdeck이 submitted state/agent response/freshness monitoring을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 130 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 130 GREEN: selected detail API/type/UI에 collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain, no submitted-state/agent-response/freshness monitoring, no-write/no-external flags를 read-only로 노출
+- [x] Task 130 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 131 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence note는 submit 후 collection 결과가 다음 explicit loop snapshot 전까지 Loopdeck 밖에 있고 Loopdeck이 결과 state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 131 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 131 GREEN: selected detail API/type/UI에 post-submit retry renewed-memory-approval post-submit collection result outside Loopdeck until explicit snapshot, no detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 131 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 132 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection uncertainty reminder는 post-submit collection result가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 Loopdeck이 result verification이나 automatic collection을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 132 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 132 GREEN: selected detail API/type/UI에 collect new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection result is uncertain, no result verification/automatic collection start, no-write/no-external flags를 read-only로 노출
+- [x] Task 132 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection uncertainty reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/post-submit retry renewed-memory-approval post-submit collection uncertainty result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 133 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-merge freshness advisory는 merge decision 전에 post-submit collection freshness uncertainty를 재검토해야 하며 Loopdeck이 merge approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 133 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_merge_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 133 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before merge decisions, no merge approval/freshness verification before merge, no-write/no-external flags를 read-only로 노출
+- [x] Task 133 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-merge freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/post-submit retry renewed-memory-approval post-submit collection uncertainty result state/post-submit retry renewed-memory-approval post-submit collection freshness result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 134 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-handoff freshness advisory는 continuation handoff 전에 post-submit collection freshness uncertainty를 재검토해야 하며 Loopdeck이 handoff approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 134 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_handoff_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 134 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before continuation handoff, no handoff approval/freshness verification before handoff, no-write/no-external flags를 read-only로 노출
+- [x] Task 134 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-handoff freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/post-submit retry renewed-memory-approval post-submit collection uncertainty result state/post-submit retry renewed-memory-approval post-submit collection freshness result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 135 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-paste freshness advisory는 Codex/Claude Code로 paste하기 전에 post-submit collection freshness uncertainty를 재검토해야 하며 Loopdeck이 paste target approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 135 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_paste_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 135 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before pasting into Codex or Claude Code, no paste target approval/freshness verification before paste, no-write/no-external flags를 read-only로 노출
+- [x] Task 135 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-paste freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/post-submit retry renewed-memory-approval post-submit collection uncertainty result state/post-submit retry renewed-memory-approval post-submit collection freshness result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 136 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-submit freshness advisory는 Codex/Claude Code에서 submit하기 전에 post-submit collection freshness uncertainty를 재검토해야 하며 Loopdeck이 submission approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 136 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_submit_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 136 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before submitting in Codex or Claude Code, no submission approval/freshness verification before submit, no-write/no-external flags를 read-only로 노출
+- [x] Task 136 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-submit freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/post-submit retry renewed-memory-approval post-submit collection uncertainty result state/post-submit retry renewed-memory-approval post-submit collection freshness result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 137 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection post-submit freshness advisory는 submit 후 post-submit collection freshness가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 Loopdeck이 submitted state/agent response/freshness monitoring을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 137 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_post_submit_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 137 GREEN: selected detail API/type/UI에 collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain, no submitted state/agent response/freshness monitoring, no-write/no-external flags를 read-only로 노출
+- [x] Task 137 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection post-submit freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/post-submit retry renewed-memory-approval post-submit collection uncertainty result state/post-submit retry renewed-memory-approval post-submit collection freshness result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 138 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence note는 freshness result가 다음 explicit loop snapshot 전까지 Loopdeck 밖에 있고 Loopdeck이 freshness result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 138 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 138 GREEN: selected detail API/type/UI에 post-submit retry renewed-memory-approval post-submit collection freshness result stays outside Loopdeck until next explicit loop snapshot, no detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 138 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/post-submit retry renewed-memory-approval post-submit collection uncertainty result state/post-submit retry renewed-memory-approval post-submit collection freshness result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 139 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness uncertainty collection reminder는 freshness uncertainty가 남은 상태에서 operator가 다음 explicit loop snapshot을 collect해야 함을 pre/post handoff 흐름과 별도로 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 139 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_uncertainty_collection_reminder`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 139 GREEN: selected detail API/type/UI에 collect new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain, no freshness verification/automatic collection start, no-write/no-external flags를 read-only로 노출
+- [x] Task 139 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness uncertainty collection reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/post-submit retry renewed-memory-approval post-submit collection uncertainty result state/post-submit retry renewed-memory-approval post-submit collection freshness result state/post-submit retry renewed-memory-approval post-submit collection freshness uncertainty result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [x] Task 140 DECISION: post-submit collection freshness uncertainty pre-merge/pre-handoff/pre-paste/pre-submit boundary는 Task 133-136의 기존 runtime field가 이미 담당하므로 중복 field를 추가하지 않음
+- [x] Task 140 RED: `tasks/todo.md`에 selected detail duplicate boundary 미결정 TODO가 남아 source hygiene test 실패 확인
+- [x] Task 140 GREEN: 중복 runtime field를 만들지 않고 기존 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_*_freshness_advisory` 4개를 canonical boundary로 유지
+- [x] Task 140 PRIVACY: 새 API/UI field, 저장 state, prompt body/evidence refs/outcome summary/raw path/target content/active-window title/paste/submission/result state/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [x] Task 141 DECISION: selected detail panel의 remaining raw `loop-review-item` markup은 유지보수 비용을 줄이기 위해 안전한 묶음부터 계속 `LoopReviewItem`으로 전환
+- [x] Task 141 RED: raw `loop-review-item` markup count가 61개라 source hygiene test의 58개 이하 기준 실패 확인
+- [x] Task 141 GREEN: command distinction/filter/copy side-effect markup을 `LoopReviewItem`으로 전환해 rendered text를 유지하고 raw markup count를 58개로 감소
+- [x] Task 141 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [x] Task 142 DECISION: selected detail panel의 freshness raw `loop-review-item` markup은 같은 read-only line/footer 구조라 `LoopReviewItem`으로 계속 전환
+- [x] Task 142 RED: raw `loop-review-item` markup count가 58개라 source hygiene test의 55개 이하 기준 실패 확인
+- [x] Task 142 GREEN: freshness result non-persistence, freshness uncertainty collection reminder, pre-merge freshness advisory markup을 `LoopReviewItem`으로 전환해 raw markup count를 55개로 감소
+- [x] Task 142 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [x] Task 143 DECISION: selected detail panel의 pre/post-memory-approval raw `loop-review-item` markup은 같은 read-only line/footer 구조라 `LoopReviewItem`으로 계속 전환
+- [x] Task 143 RED: raw `loop-review-item` markup count가 55개라 source hygiene test의 52개 이하 기준 실패 확인
+- [x] Task 143 GREEN: pre-memory-approval freshness advisory, post-memory-approval collection reminder/result non-persistence markup을 `LoopReviewItem`으로 전환해 raw markup count를 52개로 감소
+- [x] Task 143 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [x] Task 144 DECISION: selected detail panel의 post-memory-approval retry raw `loop-review-item` markup은 같은 read-only line/footer 구조라 `LoopReviewItem`으로 계속 전환
+- [x] Task 144 RED: raw `loop-review-item` markup count가 52개라 source hygiene test의 49개 이하 기준 실패 확인
+- [x] Task 144 GREEN: post-memory-approval collection retry boundary, retry outcome non-persistence, retry evidence freshness boundary markup을 `LoopReviewItem`으로 전환해 raw markup count를 49개로 감소
+- [x] Task 144 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [x] Task 145 DECISION: selected detail panel의 post-memory-approval retry freshness raw `loop-review-item` markup은 같은 read-only line/footer 구조라 `LoopReviewItem`으로 계속 전환
+- [x] Task 145 RED: raw `loop-review-item` markup count가 49개라 source hygiene test의 46개 이하 기준 실패 확인
+- [x] Task 145 GREEN: post-memory-approval retry freshness result non-persistence, freshness uncertainty collection reminder, pre-memory-approval freshness advisory markup을 `LoopReviewItem`으로 전환해 raw markup count를 46개로 감소
+- [x] Task 145 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [x] Task 146 DECISION: selected detail panel의 renewed-memory-approval collection raw `loop-review-item` markup은 같은 read-only line/footer 구조라 `LoopReviewItem`으로 계속 전환
+- [x] Task 146 RED: raw `loop-review-item` markup count가 46개라 source hygiene test의 43개 이하 기준 실패 확인
+- [x] Task 146 GREEN: renewed-memory-approval collection reminder/result non-persistence/uncertainty reminder markup을 `LoopReviewItem`으로 전환해 raw markup count를 43개로 감소
+- [x] Task 146 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [x] Task 147 DECISION: selected detail panel의 renewed-memory-approval pre-boundary raw `loop-review-item` markup은 같은 read-only line/footer 구조라 `LoopReviewItem`으로 계속 전환
+- [x] Task 147 RED: raw `loop-review-item` markup count가 43개라 source hygiene test의 40개 이하 기준 실패 확인
+- [x] Task 147 GREEN: renewed-memory-approval pre-merge/pre-handoff/pre-paste freshness advisory markup을 `LoopReviewItem`으로 전환해 raw markup count를 40개로 감소
+- [x] Task 147 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [x] Task 148 DECISION: selected detail panel의 renewed-memory-approval submit/post-submit raw `loop-review-item` markup은 같은 read-only line/footer 구조라 `LoopReviewItem`으로 계속 전환
+- [x] Task 148 RED: raw `loop-review-item` markup count가 40개라 source hygiene test의 37개 이하 기준 실패 확인
+- [x] Task 148 GREEN: renewed-memory-approval pre-submit/post-submit freshness advisory/post-submit collection result non-persistence markup을 `LoopReviewItem`으로 전환해 raw markup count를 37개로 감소
+- [x] Task 148 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [x] Task 149 DECISION: selected detail panel의 renewed-memory-approval post-submit retry raw `loop-review-item` markup은 같은 read-only line/footer 구조라 `LoopReviewItem`으로 계속 전환
+- [x] Task 149 RED: raw `loop-review-item` markup count가 37개라 source hygiene test의 34개 이하 기준 실패 확인
+- [x] Task 149 GREEN: renewed-memory-approval post-submit collection retry boundary, retry outcome non-persistence, retry evidence freshness boundary markup을 `LoopReviewItem`으로 전환해 raw markup count를 34개로 감소
+- [x] Task 149 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [ ] 다음 slice: selected detail panel의 renewed-memory-approval post-submit retry freshness raw `loop-review-item` markup을 `LoopReviewItem`으로 추가 전환할지 결정
+
+### 판단 기준
+
+- Compact hooks는 `custom_instructions`, `compact_summary`, transcript body, raw path를 저장하지 않고 safe metadata와 optional hash만 저장한다.
+- `PreCompact`/`PostCompact` lifecycle payload는 prompt ingest route로 보내지 않는다.
+- Hook output은 기존처럼 fail-open이며 stdout/stderr에 원문을 노출하지 않는다.
+- 이번 slice는 boundary metadata만 포함하고 compact summary 재주입, semantic memory, web UI는 다음 slice로 남긴다.
+
+### Compact Boundary Awareness 판단 기준
+
+- `loop brief`, `prepare_loop_brief`, `get_loopdeck_status`는 최신 loop snapshot 이후 발생한 compact boundary만 표시한다.
+- 표시되는 boundary 정보는 event name, trigger, time, tool, id, optional hash 같은 safe metadata로 제한한다.
+- compact summary, custom instructions, transcript body, raw path는 CLI/MCP 출력과 테스트 결과에 노출하지 않는다.
+- 이번 slice는 "다시 collect할 필요가 있음"을 알려주는 awareness까지만 포함하고 summary 재주입, semantic memory, web UI는 다음 slice로 남긴다.
+
+### Loop Status CLI 판단 기준
+
+- `prompt-coach loop status`는 사람용 터미널 readiness surface이며 MCP `get_loopdeck_status`와 같은 local-first privacy 경계를 따른다.
+- 출력은 snapshot count, latest loop safe metadata, compact refresh action, next command만 포함한다.
+- prompt body, compact summary, custom instructions, transcript body, raw path는 text/JSON 출력에 포함하지 않는다.
+
+### Web Loops View 판단 기준
+
+- `/api/v1/loops`와 `/loops` view는 loop snapshot safe metadata만 표시한다.
+- 현재 web slice는 list, empty state, compact refresh marker, copy-ready next
+  brief action까지 포함한다.
+- prompt body, compact summary, custom instructions, transcript body, raw path는 API/화면/테스트 출력에 포함하지 않는다.
+- raw prompt detail panel과 instruction-file patch proposal workflow는 다음 slice로 남긴다.
+
+### Explicit Service Collection 판단 기준
+
+- `prompt-coach loop collect --source service`는 cron/LaunchAgent가 호출할 수 있는 명시적 one-shot 명령이다.
+- `prompt-coach loop schedule install --dry-run`은 macOS LaunchAgent를 쓰기 전에 미리볼 수 있어야 한다.
+- `prompt-coach loop schedule status`는 plist 존재 여부만 확인한다.
+- `prompt-coach loop schedule uninstall`은 명시 호출 시 plist만 제거한다.
+- scheduler 설치는 사용자의 명시적 CLI 명령으로만 동작한다.
+- status/uninstall은 숨은 launchctl load/unload나 외부 서비스 변경을 하지 않는다.
+- service-origin snapshot도 prompt body, compact summary, custom instructions, transcript body, raw path를 출력하지 않는다.
+
+### Semantic Memory Decision Gate 판단 기준
+
+- semantic memory는 자동 저장이 아니라 후보 판정부터 시작한다.
+- `passed` outcome, non-empty summary, non-empty evidence refs가 있어야 candidate eligible이다.
+- unsafe summary(raw path, secret-looking token)는 candidate로 반환하지 않는다.
+- `prompt-coach loop memory-candidate`와 MCP `propose_loop_memory_candidate`는 같은 결정 함수를 사용한다.
+- 결과는 prompt body, compact summary, custom instructions, transcript body, raw path를 출력하지 않는다.
+- AGENTS.md, CLAUDE.md, memory files, project docs에는 자동으로 쓰지 않는다.
+
+### Approved Memory Record 판단 기준
+
+- approved memory write는 local SQLite `loop_memories` 저장까지만 수행한다.
+- `prompt-coach loop memory-approve`와 MCP `record_loop_memory`는 latest eligible candidate를 재검증한 뒤 저장한다.
+- stored memory는 statement, safe evidence refs, approval actor, created_at, privacy metadata만 포함한다.
+- unsafe statement(raw path, secret-looking token)는 저장하지 않는다.
+- AGENTS.md, CLAUDE.md, project docs, vector store에는 쓰지 않는다.
+
+### Instruction File Patch Proposal 판단 기준
+
+- instruction patch는 승인된 최신 `loop_memories` record에서만 생성한다.
+- `prompt-coach loop instruction-patch`와 MCP `propose_instruction_patch`는 같은 pure proposal generator를 사용한다.
+- 결과는 `AGENTS.md` 또는 `CLAUDE.md` 대상 unified diff 문자열과 approval-required metadata만 반환한다.
+- 명령과 MCP tool은 instruction file, project docs, memory files를 직접 쓰지 않는다.
+- prompt body, compact summary, transcript body, raw path, secret-looking token은 출력하지 않는다.
+
+### Explicit Instruction Patch Apply 판단 기준
+
+- instruction apply는 승인된 최신 `loop_memories` record에서만 동작한다.
+- CLI는 `--confirm-apply`, MCP는 `confirm_apply=true` 없이는 파일을 쓰지 않는다.
+- 적용 대상은 `AGENTS.md` 또는 `CLAUDE.md`로 제한한다.
+- 같은 `source_memory` marker가 이미 있으면 중복 append하지 않는다.
+- 결과는 target file name, applied/already_present, source_memory id, privacy metadata만 반환하고 raw path를 반환하지 않는다.
+- prompt body, compact summary, transcript body, raw path, secret-looking token은 출력하지 않는다.
+
+### Brand Migration 판단 기준
+
+- GitHub repository는 `wlsdks/loopdeck`이고 local `origin`도 새 URL을 사용한다.
+- GitHub description/topics는 local-first agent loop memory/meta-prompting 포지션을 반영한다.
+- package/plugin product-facing description, homepage, repository, display name은 Loopdeck을 사용한다.
+- npm package name, CLI binary, plugin command id는 compatibility window 동안 `prompt-coach`를 유지한다.
+- README/docs는 `Loopdeck`을 제품명으로 소개하고 `prompt-coach`를 현재 CLI/package 이름으로 설명한다.
+
+### Shared Loop Status Model 판단 기준
+
+- CLI `prompt-coach loop status`, MCP `get_loopdeck_status`, `/api/v1/loops`, web Loops status header는 같은 `src/loop/status.ts` 모델에서 나온 readiness, latest snapshot, compact refresh, next action 값을 사용한다.
+- 공유 모델은 prompt body, compact summary, custom instructions, transcript body, raw path, secret-looking token을 입력으로 받거나 출력하지 않는다.
+- MCP surface는 `available_tools`만 추가하고 readiness 판단 자체는 shared model을 따른다.
+- Web API는 list item metadata와 별개로 `status` object를 반환해 web client가 list length로 상태를 재추론하지 않게 한다.
+- package/CLI alias migration은 이 slice에서 하지 않는다.
+
+### Approved Memory In Continuation Brief 판단 기준
+
+- CLI `prompt-coach loop brief`, MCP `prepare_loop_brief`, `/api/v1/loops/:id/brief`는 최신 approved `loop_memories`를 continuation prompt의 `Approved Loop Memories` 섹션에 포함한다.
+- memory section은 statement와 safe evidence refs만 포함한다.
+- continuation brief는 현재 snapshot의 `project_id`와 같은 source snapshot에서 승인된 memory만 포함한다.
+- prompt body, compact summary, custom instructions, transcript body, raw path, secret-looking token은 brief 출력에 포함하지 않는다.
+- memory inclusion은 read-only이며 AGENTS.md, CLAUDE.md, project docs, vector store를 쓰지 않는다.
+- package/CLI alias migration은 이 slice에서 하지 않는다.
+
 ## 2026-05-04 Habit Coach Panel Extraction
 
 - [x] 기능/코드/UI 관점에서 다음 고효과 개선 후보 재점검
@@ -1209,8 +2005,8 @@
 
 - README 상단에 Quick Start를 추가해 `prompt-coach` CLI 설치와 Claude Code/Codex marketplace 추가를 분리했다.
 - marketplace plugin은 CLI binary를 설치하지 않으므로, 권장 순서를 CLI 설치 후 marketplace 추가로 명시했다.
-- Claude Code는 `/plugin marketplace add wlsdks/prompt-coach`, `/plugin install prompt-coach`, `/reload-plugins`, `/prompt-coach:setup` 순서로 정리했다.
-- Codex는 `codex plugin marketplace add wlsdks/prompt-coach` 후 `prompt-coach setup`으로 hook을 설치하고 Codex hooks를 활성화한다고 정리했다.
+- Claude Code는 `/plugin marketplace add wlsdks/loopdeck`, `/plugin install prompt-coach`, `/reload-plugins`, `/prompt-coach:setup` 순서로 정리했다.
+- Codex는 `codex plugin marketplace add wlsdks/loopdeck` 후 `prompt-coach setup`으로 hook을 설치하고 Codex hooks를 활성화한다고 정리했다.
 - 검증 명령: `git diff --check`, `pnpm pack:dry-run` 통과. Node 20.20.0에서 실행되어 `engines.node >=22 <25` 경고는 계속 발생한다.
 
 ## 2026-05-02 Claude HUD-style Plugin
@@ -1225,7 +2021,7 @@
 
 ### 점검 결과
 
-- Claude Code repo-local marketplace 파일을 `.claude-plugin/marketplace.json`에 추가했다. 사용 흐름은 `/plugin marketplace add wlsdks/prompt-coach`, `/plugin install prompt-coach`, `/reload-plugins`다.
+- Claude Code repo-local marketplace 파일을 `.claude-plugin/marketplace.json`에 추가했다. 사용 흐름은 `/plugin marketplace add wlsdks/loopdeck`, `/plugin install prompt-coach`, `/reload-plugins`다.
 - Claude Code plugin manifest `.claude-plugin/plugin.json`에 `/prompt-coach:setup`, `/prompt-coach:status`, `/prompt-coach:open` command 문서를 연결했다.
 - `/prompt-coach:setup`은 CLI 존재 여부를 먼저 확인하고, `prompt-coach setup --dry-run`을 보여준 뒤 승인 시 실제 setup을 실행하도록 작성했다. statusLine은 기존 Claude `statusLine`을 대체할 수 있어서 별도 승인 후 `install-statusline`을 실행하게 했다.
 - `prompt-coach statusline claude-code`, `install-statusline claude-code`, `uninstall-statusline claude-code`를 추가했다. statusLine은 capture on/paused/setup needed, server 상태, last ingest 상태를 한 줄로 출력한다.

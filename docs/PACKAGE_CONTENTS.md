@@ -13,8 +13,9 @@ npm pack --dry-run --json
 
 The npm package intentionally includes:
 
-- `dist/cli`: the compiled `prompt-coach` CLI entrypoint plus experimental
-  `pc-claude` and `pc-codex` wrapper entrypoints
+- `dist/cli`: the compiled `prompt-coach` CLI entrypoint, the loopdeck alias
+  that points at the same binary, plus experimental `pc-claude` and
+  `pc-codex` wrapper entrypoints
 - `dist/server`: the compiled local Fastify server and web API
 - `dist/web`: the compiled React web UI assets
 - `dist/storage`, `dist/analysis`, `dist/hooks`, `dist/importer`,
@@ -24,12 +25,27 @@ The npm package intentionally includes:
 - public product and release docs under `docs/`
   - includes `docs/LEGAL_USAGE_GUIDE.md` so users can inspect the provider
     documentation boundary for agent-judge mode
+  - includes `docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md`
+    so package-local README and plugin docs can link to the compatibility gate
+  - includes `docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-issue-slices.md`
+    and `docs/superpowers/plans/2026-07-04-loopdeck-runtime-id-inventory.json`
+    so rename work starts from shippable slices and a machine-checkable runtime
+    id inventory
+  - includes `docs/superpowers/plans/2026-07-04-loopdeck-claude-dual-namespace-decision.md`
+    so the package records why `/loopdeck:*` command files are deferred until a
+    real Claude Code namespace alias path is proven
+  - includes `docs/superpowers/plans/2026-07-04-loopdeck-mcp-server-name-decision.md`
+    so the package records why `prompt-coach` remains the canonical MCP server
+    name during the Loopdeck migration
+  - includes `docs/superpowers/plans/2026-07-04-loopdeck-deprecation-readiness.md`
+    so future rename work has release-note, support, rollback, and upgrade-smoke
+    gates before any old id is deprecated
 - Claude Code plugin artifacts under `.claude-plugin`, `commands`, and
   `integrations/claude-code`
 - Codex plugin artifacts under `plugins/prompt-coach`
 - local verification scripts: `scripts/benchmark.mjs`,
-  `scripts/browser-e2e.mjs`, `scripts/quality-gate.mjs`, and
-  `scripts/release-smoke.mjs`
+  `scripts/browser-e2e.mjs`, `scripts/hook-binary-smoke.mjs`,
+  `scripts/quality-gate.mjs`, and `scripts/release-smoke.mjs`
 
 ## Excluded
 

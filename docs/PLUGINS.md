@@ -59,7 +59,8 @@ plugins/prompt-coach
 It includes:
 
 - `.codex-plugin/plugin.json` for plugin metadata
-- `hooks.json` for a fail-open Codex `UserPromptSubmit` hook
+- `hooks.json` for fail-open Codex `UserPromptSubmit`, `Stop`,
+  `PreCompact`, and `PostCompact` hooks
 - `skills/prompt-coach/SKILL.md` so Codex can help install, diagnose, and use
   the archive
 
@@ -73,7 +74,7 @@ local service.
 Claude Code can consume this repository as a plugin marketplace:
 
 ```text
-/plugin marketplace add wlsdks/prompt-coach
+/plugin marketplace add wlsdks/loopdeck
 /plugin install prompt-coach
 /reload-plugins
 /prompt-coach:setup
@@ -102,6 +103,15 @@ The plugin exposes:
   latest captured request, in either deterministic or active-agent mode
 - `/prompt-coach:habits` to summarize recurring prompt habit gaps
 - `/prompt-coach:open` to open the local archive
+
+Claude Code slash commands remain under `/prompt-coach:*` during the Loopdeck
+migration. The npm package also installs a `loopdeck` CLI alias for manual
+terminal fallbacks, but plugin command ids stay stable until a dedicated plugin
+rename plan is implemented. That gate is documented in
+`docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md`.
+`/loopdeck:*` is a planned alias-only slash namespace for a later compatibility
+slice. Do not ship it as the only namespace; this package does not include
+`/loopdeck:*` command files yet, and `/prompt-coach:*` remains required.
 
 Prompt capture still uses Claude Code hook configuration in settings files. The
 supported install paths are:
@@ -183,12 +193,22 @@ uses the exact CLI path from the current installation.
 prompt-coach mcp
 ```
 
-This server exposes ten model-controlled tools:
+This server exposes twenty model-controlled tools:
 
 - `get_prompt_coach_status`
 - `coach_prompt`
 - `score_prompt`
 - `improve_prompt`
+- `apply_clarifications`
+- `ask_clarifying_questions`
+- `record_clarifications`
+- `get_loopdeck_status`
+- `prepare_loop_brief`
+- `record_loop_outcome`
+- `propose_loop_memory_candidate`
+- `record_loop_memory`
+- `propose_instruction_patch`
+- `apply_instruction_patch`
 - `prepare_agent_rewrite`
 - `record_agent_rewrite`
 - `score_prompt_archive`
@@ -201,6 +221,68 @@ status, latest prompt score, approval-required rewrite, recent habit review,
 project instruction review, and next request guidance in one read-only call.
 `get_prompt_coach_status` checks local archive readiness and returns safe
 counts, latest prompt metadata, available tool names, and next actions.
+`get_loopdeck_status` checks whether local loop snapshots exist and returns
+safe latest-loop metadata. It also reports safe compact-boundary metadata when
+a compact happened after the latest snapshot. `prepare_loop_brief` returns a
+copy-ready continuation prompt from the latest Loopdeck snapshot, or from the
+newest snapshot matching optional `worktree`, `session_id`, and `branch`
+filters, without prompt bodies, raw paths, or auto-submission; when the
+selected snapshot is pre-compact, it asks the user to refresh the snapshot
+instead of replaying compact summaries or custom compact instructions.
+`record_loop_outcome` writes only user-approved status, summary, and evidence
+references for a Loopdeck snapshot; it does not store prompt bodies, raw paths,
+or external LLM results.
+`propose_loop_memory_candidate` is the semantic-memory decision gate: it checks
+the latest passed loop outcome and safe evidence refs, then returns a
+user-reviewable candidate without writing memory or instruction files.
+`record_loop_memory` records a user-approved candidate into local
+prompt-coach storage only; instruction-file patches remain a separate explicit
+workflow. Its structured `next_actions` point agents to `prepare_loop_brief`
+and `propose_instruction_patch target_file=AGENTS.md`.
+`propose_instruction_patch` returns a reviewable unified diff for
+adding the latest approved memory to `AGENTS.md` or `CLAUDE.md`, plus an
+explicit apply gate. The web review panel does not write those files.
+`apply_instruction_patch` writes the latest approved memory only when
+`confirm_apply` is true, is idempotent by source memory id, and does not return
+raw paths.
+
+The local CLI mirrors that loop surface with `prompt-coach loop status`,
+`prompt-coach loop collect`, `prompt-coach loop brief`, and
+`prompt-coach loop memory-candidate`; approved memories are recorded with
+`prompt-coach loop memory-approve`. `prompt-coach loop brief` accepts optional
+`--worktree`, `--session`, and `--branch` filters so Codex or Claude Code can
+continue the same selected worktree/session/branch even when another worktree
+has a newer snapshot. Use
+`prompt-coach loop instruction-patch --target-file AGENTS.md` to generate the
+review-only instruction patch. Use
+`prompt-coach loop instruction-apply --target-file AGENTS.md --confirm-apply`
+only after reviewing the proposal and intending to write the file; the web
+review panel intentionally has no apply button. `get_loopdeck_status`,
+`/api/v1/loops`, and `prompt-coach loop status` include raw-free worktree and
+session activity counts plus per-worktree safe labels, snapshot counts, and
+latest outcome status so active agents can notice parallel work before merging
+or handing off. The web Loops view can open and deep-link a selected worktree
+detail panel through `/api/v1/loops/worktrees/:worktree`, still limited to safe
+loop metadata. The drilldown can also be narrowed with
+`/loops?worktree=<safe-label>&session=<safe-session-id>&branch=<safe-branch>`,
+backed by the API `session_id` and `branch` filters and still raw-free. Use
+`prompt-coach loop collect --source service` as the explicit one-shot command
+for cron or LaunchAgent collection; it does not silently install a scheduler.
+The opt-in macOS schedule is `prompt-coach loop schedule install`; use
+`--dry-run` to inspect the LaunchAgent before writing it. Use
+`prompt-coach loop schedule status` to check whether the plist exists and
+`prompt-coach loop schedule uninstall` to remove it. `loop status` prints
+snapshot readiness, latest safe loop metadata, and compact refresh guidance
+without prompt bodies, compact summaries, custom compact instructions, or raw
+paths.
+The web Loops view uses the same privacy boundary for recent loop snapshots,
+empty state guidance, compact refresh markers, and copy-ready next loop briefs;
+it can also record an eligible latest memory candidate through the local web
+session. That web approval only writes the local Loopdeck memory record;
+after approval, the same view can fetch a review-only AGENTS.md patch preview.
+Instruction-file writes still require the separate explicit apply workflow. It
+does not render prompt bodies, compact summaries, custom compact instructions,
+transcript bodies, or raw paths.
 `score_prompt` scores direct prompt text, a stored prompt id, or the latest
 stored prompt with the same local deterministic `0-100` Prompt Quality Score
 used by the web UI. The response also includes a per-criterion `breakdown`
@@ -271,6 +353,13 @@ improved draft, and tries to copy the draft to the clipboard. The user still
 pastes and submits the draft manually. It does not simulate keyboard input,
 rewrite the interactive composer, or auto-submit prompts. If local ingest is
 unavailable or fails, the hook fails open and does not block.
+
+The installed hook set also includes `Stop`, `PreCompact`, and `PostCompact`.
+Stop events are handled locally: prompt-coach collects a Loopdeck snapshot from
+recent prompt metadata without posting the lifecycle event to the prompt ingest
+route. Compact events record only safe boundary metadata and an optional HMAC
+content hash; prompt-coach does not store prompt bodies, raw paths, transcript
+contents, custom compact instructions, or compact summaries.
 
 `--rewrite-guard context` is less disruptive: it allows the original prompt to
 continue and adds model-visible rewrite guidance. That mode is not a true

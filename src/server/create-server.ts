@@ -10,7 +10,9 @@ import {
 import type { RedactionPolicy } from "../shared/schema.js";
 import type {
   CoachFeedbackStoragePort,
+  CompactBoundaryStoragePort,
   ExportJobStoragePort,
+  LoopSnapshotStoragePort,
   ProjectInstructionStoragePort,
   ProjectPolicyStoragePort,
   PromptReadStoragePort,
@@ -23,6 +25,7 @@ import { registerExportRoutes } from "./routes/exports.js";
 import { registerImportRoutes } from "./routes/import.js";
 import { registerHealthRoutes } from "./routes/health.js";
 import { registerIngestRoutes } from "./routes/ingest.js";
+import { registerLoopRoutes } from "./routes/loops.js";
 import { registerPromptRoutes } from "./routes/prompts.js";
 import { registerProjectRoutes } from "./routes/projects.js";
 import { registerSessionRoutes } from "./routes/session.js";
@@ -37,7 +40,9 @@ export type CreateServerOptions = {
     Partial<ProjectInstructionStoragePort> &
     Partial<PromptReadStoragePort> &
     Partial<ExportJobStoragePort> &
-    Partial<CoachFeedbackStoragePort>;
+    Partial<CoachFeedbackStoragePort> &
+    Partial<LoopSnapshotStoragePort> &
+    Partial<CompactBoundaryStoragePort>;
   redactionMode: RedactionPolicy;
   excludedProjectRoots?: string[];
   maxBodyBytes?: number;
@@ -181,6 +186,10 @@ export function createServer(options: CreateServerOptions): FastifyInstance {
     redactionMode: options.redactionMode,
   });
   registerCoachFeedbackRoutes(server, {
+    auth: options.auth,
+    storage: options.storage,
+  });
+  registerLoopRoutes(server, {
     auth: options.auth,
     storage: options.storage,
   });

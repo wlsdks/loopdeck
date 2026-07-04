@@ -1,12 +1,12 @@
 {
   "name": "prompt-coach",
   "version": "0.1.0-beta.0",
-  "description": "Local-first prompt archive for AI coding tools.",
+  "description": "Local-first agent loop memory and meta-prompting workbench for Codex, Claude Code, and coding-agent workflows.",
   "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wlsdks/prompt-coach.git"
+    "url": "https://github.com/wlsdks/loopdeck.git"
   },
   "packageManager": "pnpm@10.18.0",
   "engines": {
@@ -14,6 +14,7 @@
   },
   "bin": {
     "prompt-coach": "./dist/cli/index.js",
+    "loopdeck": "./dist/cli/index.js",
     "pc-claude": "./dist/cli/pc-claude.js",
     "pc-codex": "./dist/cli/pc-codex.js"
   },
@@ -39,6 +40,13 @@
     "docs/IMPLEMENTATION_PLAN.md",
     "docs/ADAPTERS.md",
     "docs/PLUGINS.md",
+    "docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md",
+    "docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-issue-slices.md",
+    "docs/superpowers/plans/2026-07-04-loopdeck-claude-dual-namespace-decision.md",
+    "docs/superpowers/plans/2026-07-04-loopdeck-mcp-server-name-decision.md",
+    "docs/superpowers/plans/2026-07-04-loopdeck-deprecation-readiness.md",
+    "docs/superpowers/plans/2026-07-04-loopdeck-next-runtime-value-slice.md",
+    "docs/superpowers/plans/2026-07-04-loopdeck-runtime-id-inventory.json",
     "docs/BENCHMARK_V1.md",
     "docs/FEATURE_AUDIT_2026-05-02.md",
     "docs/PRD2_COMPLETION_AUDIT.md",
@@ -50,6 +58,8 @@
     "integrations",
     "scripts/benchmark.mjs",
     "scripts/browser-e2e.mjs",
+    "scripts/hook-binary-smoke.mjs",
+    "scripts/mcp-elicitation-smoke.mjs",
     "scripts/quality-gate.mjs",
     "scripts/release-smoke.mjs"
   ],
@@ -71,6 +81,8 @@
     "prepare": "pnpm build",
     "prompt-coach": "node dist/cli/index.js",
     "setup": "pnpm prompt-coach setup --profile coach --register-mcp --open-web",
+    "smoke:hooks": "pnpm build && node scripts/hook-binary-smoke.mjs",
+    "smoke:mcp-elicitation": "pnpm build && node scripts/mcp-elicitation-smoke.mjs",
     "smoke:release": "pnpm build && node scripts/release-smoke.mjs",
     "test": "vitest run"
   },

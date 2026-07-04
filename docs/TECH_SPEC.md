@@ -1,4 +1,4 @@
-# prompt-coach Technical Spec
+# Loopdeck Technical Spec
 
 Date: 2026-05-01
 
@@ -12,7 +12,7 @@ Related docs:
 
 ## 1. Purpose
 
-This document defines the technical design for `prompt-coach`, an AI coding prompt memory and improvement workspace, local-first.
+This document defines the technical design for Loopdeck, a local-first agent loop memory and meta-prompting workbench for Codex, Claude Code, and coding-agent workflows. The current npm package and CLI command remain `prompt-coach` during the compatibility window.
 
 The implementation records prompts from supported AI coding tools, redacts sensitive values, stores a Markdown archive, indexes prompts in SQLite/FTS, serves a local web UI, and provides CLI workflows for setup, search, review, import, export, and prompt improvement.
 

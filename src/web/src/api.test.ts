@@ -11,6 +11,2357 @@ beforeEach(() => {
 });
 
 describe("web api export client", () => {
+  it("lists Loopdeck snapshots without raw prompt or compact content", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            status: {
+              status: "ready",
+              snapshot_count: 1,
+              activity: {
+                active_worktrees: 2,
+                active_sessions: 2,
+                latest_branch: "codex/agent-loop-memory-design",
+                latest_worktree: "agent-loop-worktree",
+                needs_review: true,
+                next_action:
+                  "compare loop snapshots by worktree before merging agent output",
+                worktrees: [
+                  {
+                    worktree: "agent-loop-worktree",
+                    branch: "codex/agent-loop-memory-design",
+                    sessions: 1,
+                    snapshots: 1,
+                    latest_snapshot_id: "loop_web",
+                    latest_created_at: "2026-07-04T01:00:00.000Z",
+                    latest_outcome_status: "unknown",
+                  },
+                ],
+              },
+              project_memory: {
+                approved_count: 1,
+                included_in_brief: true,
+              },
+              memory_candidate: {
+                eligible: true,
+                reason: "passed_with_evidence",
+                next_action: "prompt-coach loop memory-approve",
+              },
+              latest_snapshot: {
+                id: "loop_web",
+                created_at: "2026-07-04T01:00:00.000Z",
+                tool: "codex",
+                source: "cli",
+                project: "private-project",
+                prompt_count: 2,
+                average_prompt_score: 58,
+                top_gaps: ["Goal clarity"],
+                outcome_status: "unknown",
+              },
+              next_action: "prompt-coach loop collect",
+              next_actions: ["Run prompt-coach loop collect again"],
+              privacy: {
+                local_only: true,
+                external_calls: false,
+                returns_prompt_bodies: false,
+                returns_raw_paths: false,
+                returns_compact_content: false,
+              },
+            },
+            items: [
+              {
+                id: "loop_web",
+                created_at: "2026-07-04T01:00:00.000Z",
+                tool: "codex",
+                source: "cli",
+                project: "private-project",
+                prompt_count: 2,
+                average_prompt_score: 58,
+                top_gaps: ["Goal clarity"],
+                outcome_status: "unknown",
+                compact_boundary: {
+                  id: "cmp_web",
+                  created_at: "2026-07-04T01:05:00.000Z",
+                  tool: "claude-code",
+                  event_name: "PostCompact",
+                  trigger: "auto",
+                  after_latest_snapshot: true,
+                },
+              },
+            ],
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+              returns_compact_content: false,
+            },
+          },
+        }),
+      );
+    const { listLoops } = await import("./api.js");
+
+    const loops = await listLoops();
+
+    expect(loops.items).toHaveLength(1);
+    expect(loops.status.status).toBe("ready");
+    expect(loops.status.next_action).toBe("prompt-coach loop collect");
+    expect(loops.status.activity).toMatchObject({
+      active_worktrees: 2,
+      active_sessions: 2,
+      needs_review: true,
+      worktrees: [
+        {
+          worktree: "agent-loop-worktree",
+          snapshots: 1,
+          sessions: 1,
+          latest_outcome_status: "unknown",
+        },
+      ],
+    });
+    expect(loops.status.project_memory).toEqual({
+      approved_count: 1,
+      included_in_brief: true,
+    });
+    expect(loops.status.memory_candidate).toEqual({
+      eligible: true,
+      reason: "passed_with_evidence",
+      next_action: "prompt-coach loop memory-approve",
+    });
+    expect(loops.items[0]).toMatchObject({
+      id: "loop_web",
+      project: "private-project",
+      compact_boundary: {
+        event_name: "PostCompact",
+        after_latest_snapshot: true,
+      },
+    });
+    expect(fetchMock).toHaveBeenLastCalledWith("/api/v1/loops", {
+      credentials: "same-origin",
+    });
+    expect(JSON.stringify(loops)).not.toContain("Make this better");
+    expect(JSON.stringify(loops)).not.toContain("Compact summary");
+    expect(JSON.stringify(loops)).not.toContain("/Users/example");
+  });
+
+  it("gets a copy-ready Loopdeck brief without raw prompt or compact content", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            title: "Continue agent loop loop_web",
+            source_snapshot_id: "loop_web",
+            prompt:
+              "## Goal\nContinue the current coding-agent loop.\n\n## Compaction Boundary\nPostCompact at 2026-07-04T01:05:00.000Z.",
+            compact_boundary: {
+              id: "cmp_web",
+              created_at: "2026-07-04T01:05:00.000Z",
+              tool: "claude-code",
+              event_name: "PostCompact",
+              trigger: "auto",
+              after_latest_snapshot: true,
+            },
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+            },
+          },
+        }),
+      );
+    const { getLoopBrief } = await import("./api.js");
+
+    const brief = await getLoopBrief("loop_web");
+
+    expect(brief).toMatchObject({
+      title: "Continue agent loop loop_web",
+      source_snapshot_id: "loop_web",
+      compact_boundary: {
+        event_name: "PostCompact",
+        after_latest_snapshot: true,
+      },
+    });
+    expect(fetchMock).toHaveBeenLastCalledWith("/api/v1/loops/loop_web/brief", {
+      credentials: "same-origin",
+    });
+    expect(JSON.stringify(brief)).not.toContain("Make this better");
+    expect(JSON.stringify(brief)).not.toContain("Compact summary");
+    expect(JSON.stringify(brief)).not.toContain("/Users/example");
+  });
+
+  it("gets a selected worktree loop brief with session and branch filters", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            title: "Continue agent loop loop_web",
+            source_snapshot_id: "loop_web",
+            prompt:
+              "worktree: agent-loop-worktree\nsession: session-web\nbranch: feature/branch-filter",
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+            },
+          },
+        }),
+      );
+    const { getSelectedLoopBrief } = await import("./api.js");
+
+    const brief = await getSelectedLoopBrief({
+      worktree: "agent-loop-worktree",
+      sessionId: "session-web",
+      branch: "feature/branch-filter",
+    });
+
+    expect(brief.source_snapshot_id).toBe("loop_web");
+    expect(brief.prompt).toContain("worktree: agent-loop-worktree");
+    expect(fetchMock).toHaveBeenLastCalledWith(
+      "/api/v1/loops/brief?worktree=agent-loop-worktree&session_id=session-web&branch=feature%2Fbranch-filter",
+      {
+        credentials: "same-origin",
+      },
+    );
+  });
+
+  it("gets a worktree drilldown without raw prompt or compact content", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            worktree: "agent-loop-worktree",
+            session_id: "session-web",
+            branch: "feature/branch-filter",
+            selection_scope: {
+              label: "Selection scope",
+              filters: ["worktree", "session", "branch"],
+              reason:
+                "showing snapshots filtered by selected worktree, session, and branch",
+              next_action: "copy selected session and branch brief",
+            },
+            snapshot_age: {
+              label: "Selected snapshot age",
+              latest_selected_created_at: "2026-07-04T01:00:00.000Z",
+              status: "older_than_latest",
+              reason: "another loop snapshot was recorded after this selection",
+              next_action: "refresh selected worktree before merging",
+            },
+            selected_brief_action: {
+              label: "Selected brief action",
+              action: "copy selected continuation brief",
+              reason:
+                "uses the selected worktree/session/branch filters without auto-submitting",
+              command:
+                "prompt-coach loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
+              writes_files: false,
+              external_calls: false,
+            },
+            command_distinction: {
+              label: "Command distinction",
+              selected_command_role:
+                "continue the selected worktree/session/branch filters",
+              review_command_role:
+                "copy the review packet command-center hint for merge review",
+              reason:
+                "selected continuation and review packet commands can differ when session or branch filters are active",
+              writes_files: false,
+              external_calls: false,
+            },
+            command_filters: {
+              label: "Command filters",
+              selected_command_filters: ["worktree", "session", "branch"],
+              review_command_filters: ["worktree", "branch"],
+              reason:
+                "selected command reflects the current selection while review command reflects command-center review scope",
+              writes_files: false,
+              external_calls: false,
+            },
+            copy_side_effects: {
+              label: "Copy side effects",
+              clipboard:
+                "copies the selected continuation brief to the local clipboard",
+              ui_feedback:
+                "temporarily marks the selected brief copy button as copied",
+              does_not:
+                "does not write files, execute commands, call external services, submit prompts, or change merge state",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_group: {
+              label: "Continuation safety guidance",
+              scope:
+                "read-only handoff boundaries for Codex and Claude Code continuation",
+              includes:
+                "copy, paste, review, collect, privacy, and merge gating notes",
+              reason:
+                "keeps the selected continuation path explicit without automating agents",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_ordering_note: {
+              label: "Safety guidance order",
+              first:
+                "review the continuation safety guidance before copying or pasting briefs",
+              then:
+                "follow copy, paste, review, collect, privacy, and merge gating notes in order",
+              reason:
+                "keeps continuation handoff reviewable before any manual agent submission",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_non_persistence_note: {
+              label: "Safety review state",
+              state:
+                "reviewed guidance state is not stored or synchronized by Loopdeck",
+              reminder:
+                "operator re-checks safety guidance each time before manual agent submission",
+              reason:
+                "keeps continuation review local to the current operator session",
+              stores_state: false,
+              external_calls: false,
+            },
+            continuation_safety_recheck_cue: {
+              label: "Safety re-check cue",
+              trigger: "after each selected brief copy",
+              instruction:
+                "re-check continuation safety guidance before pasting into Codex or Claude Code",
+              reason:
+                "each copied brief can represent a new handoff decision even in the same session",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_copy_feedback_reminder: {
+              label: "Copy feedback reminder",
+              feedback_scope:
+                "copied state only confirms the brief reached the local clipboard",
+              next_step:
+                "return to the safety re-check cue before pasting the copied brief",
+              reason:
+                "copy feedback is not safety approval or agent submission",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_copy_feedback_accessibility_note: {
+              label: "Copy feedback accessibility",
+              visible_label: "selected brief copy button label remains stable",
+              assistive_feedback:
+                "copied status belongs in accessible feedback instead of replacing the visible command",
+              reason:
+                "keeps copy feedback clear without implying safety approval or changing layout",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_copy_feedback_timeout_note: {
+              label: "Copy feedback timeout",
+              timeout_scope:
+                "copied feedback clears after a short local timeout",
+              not_state:
+                "timeout does not record review completion or submission state",
+              reason:
+                "keeps copied feedback temporary while preserving the manual safety review boundary",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_copy_feedback_failure_note: {
+              label: "Copy feedback failure",
+              failure_scope: "clipboard failure requires a manual retry",
+              not_state:
+                "failure does not submit prompts or store review state",
+              reason:
+                "keeps copy failure handling local to the operator without hidden recovery actions",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_copy_retry_note: {
+              label: "Copy retry",
+              retry_scope:
+                "operator manually retries the selected brief copy action",
+              not_automatic:
+                "Loopdeck does not automatically retry clipboard writes or submit prompts",
+              reason:
+                "keeps retry control with the operator before any Codex or Claude Code paste",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_pre_paste_confirmation_note: {
+              label: "Pre-paste confirmation",
+              confirmation:
+                "operator confirms the copied brief and target agent request before paste",
+              not_submission:
+                "confirmation does not submit prompts or approve safety review",
+              reason:
+                "keeps the final handoff check manual before Codex or Claude Code receives the brief",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_target_agent_check_note: {
+              label: "Target-agent check",
+              check:
+                "operator verifies the active Codex or Claude Code request box before paste",
+              not_inspection:
+                "Loopdeck does not inspect agent UI state or target contents",
+              reason:
+                "keeps target selection manual before any continuation handoff",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_paste_destination_boundary_note: {
+              label: "Paste destination boundary",
+              boundary:
+                "paste destination is a manual operator choice in Codex or Claude Code",
+              not_verified:
+                "Loopdeck does not verify active windows, target contents, or paste success",
+              reason:
+                "keeps destination verification outside Loopdeck automation before submission",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_manual_submission_boundary_note: {
+              label: "Manual submission boundary",
+              submission:
+                "operator submits the pasted brief manually in Codex or Claude Code",
+              not_automated:
+                "Loopdeck does not press enter, click submit, or record submitted state",
+              reason:
+                "keeps final agent execution under operator control after paste",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_submission_result_non_persistence_note: {
+              label: "Submission result non-persistence",
+              result_scope:
+                "agent response and submission result stay outside Loopdeck until the next explicit loop snapshot",
+              not_stored:
+                "Loopdeck does not detect, store, or sync submitted state after handoff",
+              reason:
+                "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_post_submission_collection_reminder_note: {
+              label: "Post-submission collection reminder",
+              reminder:
+                "collect the next loop snapshot explicitly after the agent response is ready",
+              not_background:
+                "Loopdeck does not start collection from submission, transcript changes, or agent UI activity",
+              reason:
+                "keeps post-submission collection operator-triggered and local-first",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_collection_result_non_persistence_note: {
+              label: "Collection result non-persistence",
+              result_scope:
+                "collection result is not persisted until the operator records the next explicit loop snapshot",
+              not_stored:
+                "Loopdeck does not store, sync, or infer collection result state from agent UI activity",
+              reason:
+                "keeps collection evidence tied to explicit local snapshot recording",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_collection_retry_boundary_note: {
+              label: "Collection retry boundary",
+              retry:
+                "operator reruns the explicit loop collection flow when retry is needed",
+              not_automated:
+                "Loopdeck does not automatically retry collection commands or hidden recovery actions",
+              reason:
+                "keeps retry control local and operator-triggered after collection uncertainty",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_retry_outcome_non_persistence_note: {
+              label: "Retry outcome non-persistence",
+              outcome_scope:
+                "retry attempt and outcome stay outside Loopdeck until the next explicit loop snapshot",
+              not_stored:
+                "Loopdeck does not detect, store, or sync retry success or failure state",
+              reason:
+                "keeps retry evidence tied to explicit local snapshot recording",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_collection_evidence_freshness_boundary_note: {
+              label: "Collection evidence freshness boundary",
+              freshness_check:
+                "operator checks freshness against the latest explicit loop snapshot evidence",
+              not_verified:
+                "Loopdeck does not verify freshness from git status, transcripts, or agent UI activity",
+              reason:
+                "keeps evidence freshness review tied to local snapshot metadata",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_freshness_result_non_persistence_note: {
+              label: "Freshness result non-persistence",
+              result_scope:
+                "freshness result stays outside Loopdeck until the next explicit loop snapshot",
+              not_stored:
+                "Loopdeck does not detect, store, or sync freshness result state",
+              reason:
+                "keeps freshness evidence tied to explicit local snapshot recording",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_freshness_uncertainty_collection_reminder: {
+              label: "Freshness uncertainty collection reminder",
+              reminder:
+                "collect a new explicit loop snapshot when evidence freshness is uncertain",
+              not_automated:
+                "Loopdeck does not verify freshness or start collection automatically",
+              reason:
+                "keeps freshness uncertainty resolution operator-triggered and local-first",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_pre_merge_freshness_advisory: {
+              label: "Pre-merge freshness advisory",
+              advisory:
+                "review freshness uncertainty before merge decisions",
+              not_decision:
+                "Loopdeck does not approve merges or verify freshness before merge",
+              reason:
+                "keeps merge readiness separate from freshness uncertainty review",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_pre_memory_approval_freshness_advisory: {
+              label: "Pre-memory-approval freshness advisory",
+              advisory:
+                "review freshness uncertainty before approving loop memory",
+              not_decision:
+                "Loopdeck does not approve memory or verify freshness from this note",
+              reason:
+                "keeps memory approval separate from freshness uncertainty review",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_post_memory_approval_collection_reminder: {
+              label: "Post-memory-approval collection reminder",
+              reminder:
+                "collect a new explicit loop snapshot after approving loop memory",
+              not_automated:
+                "Loopdeck does not start collection from memory approval or approval state changes",
+              reason:
+                "keeps post-approval collection operator-triggered and local-first",
+              writes_files: false,
+              external_calls: false,
+            },
+            continuation_safety_post_memory_approval_collection_result_non_persistence_note:
+              {
+                label:
+                  "Post-memory-approval collection result non-persistence",
+                result_scope:
+                  "post-approval collection result stays outside Loopdeck until the next explicit loop snapshot",
+                not_stored:
+                  "Loopdeck does not detect, store, or sync post-approval collection result state",
+                reason:
+                  "keeps post-approval collection evidence tied to explicit local snapshot recording",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_collection_retry_boundary_note:
+              {
+                label: "Post-memory-approval collection retry boundary",
+                retry:
+                  "operator reruns the explicit post-approval loop collection flow when retry is needed",
+                not_automated:
+                  "Loopdeck does not automatically retry post-approval collection commands or hidden recovery actions",
+                reason:
+                  "keeps post-approval collection retry control local and operator-triggered",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_outcome_non_persistence_note:
+              {
+                label: "Post-memory-approval retry outcome non-persistence",
+                outcome_scope:
+                  "post-approval retry outcome stays outside Loopdeck until the next explicit loop snapshot",
+                not_stored:
+                  "Loopdeck does not detect, store, or sync post-approval retry success or failure state",
+                reason:
+                  "keeps post-approval retry evidence tied to explicit local snapshot recording",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note:
+              {
+                label:
+                  "Post-memory-approval retry evidence freshness boundary",
+                review:
+                  "operator checks retry evidence freshness against the latest explicit loop snapshot",
+                not_verified:
+                  "Loopdeck does not verify post-approval retry freshness from git status, transcripts, or agent UI activity",
+                reason:
+                  "keeps post-approval retry freshness review tied to local snapshot metadata",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note:
+              {
+                label:
+                  "Post-memory-approval retry freshness result non-persistence",
+                result_scope:
+                  "post-approval retry freshness result stays outside Loopdeck until the next explicit loop snapshot",
+                not_stored:
+                  "Loopdeck does not detect, store, or sync post-approval retry freshness result state",
+                reason:
+                  "keeps post-approval retry freshness evidence tied to explicit local snapshot recording",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder:
+              {
+                label:
+                  "Post-memory-approval retry freshness uncertainty collection reminder",
+                reminder:
+                  "collect a new explicit loop snapshot when post-approval retry freshness is uncertain",
+                not_automated:
+                  "Loopdeck does not verify post-approval retry freshness or start collection automatically",
+                reason:
+                  "keeps post-approval retry freshness uncertainty resolution operator-triggered and local-first",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry pre-memory-approval freshness advisory",
+                advisory:
+                  "review post-approval retry freshness uncertainty before approving loop memory again",
+                not_decision:
+                  "Loopdeck does not approve memory or verify post-approval retry freshness from this advisory",
+                reason:
+                  "keeps renewed memory approval separate from retry freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_reminder:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval collection reminder",
+                reminder:
+                  "collect a new explicit loop snapshot after approving loop memory again",
+                not_automated:
+                  "Loopdeck does not start collection from renewed memory approval or approval state changes",
+                reason:
+                  "keeps renewed-memory-approval collection operator-triggered and local-first",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_result_non_persistence_note:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval collection result non-persistence",
+                result_scope:
+                  "renewed-memory-approval collection result stays outside Loopdeck until the next explicit loop snapshot",
+                not_stored:
+                  "Loopdeck does not detect, store, or sync renewed-memory-approval collection result state",
+                reason:
+                  "keeps renewed-memory-approval collection evidence tied to explicit local snapshot recording",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_uncertainty_reminder:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval collection uncertainty reminder",
+                reminder:
+                  "collect a new explicit loop snapshot when renewed-memory-approval collection result is uncertain",
+                not_automated:
+                  "Loopdeck does not verify renewed-memory-approval collection result or start collection automatically",
+                reason:
+                  "keeps renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_merge_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval pre-merge freshness advisory",
+                advisory:
+                  "review renewed-memory-approval freshness uncertainty before merge decisions",
+                not_decision:
+                  "Loopdeck does not approve merges or verify renewed-memory-approval freshness before merge",
+                reason:
+                  "keeps merge readiness separate from renewed-memory-approval freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_handoff_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval pre-handoff freshness advisory",
+                advisory:
+                  "review renewed-memory-approval freshness uncertainty before continuation handoff",
+                not_decision:
+                  "Loopdeck does not approve handoffs or verify renewed-memory-approval freshness before handoff",
+                reason:
+                  "keeps continuation handoff separate from renewed-memory-approval freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_paste_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval pre-paste freshness advisory",
+                advisory:
+                  "review renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
+                not_decision:
+                  "Loopdeck does not approve paste targets or verify renewed-memory-approval freshness before paste",
+                reason:
+                  "keeps paste readiness separate from renewed-memory-approval freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_submit_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval pre-submit freshness advisory",
+                advisory:
+                  "review renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
+                not_decision:
+                  "Loopdeck does not approve submissions or verify renewed-memory-approval freshness before submit",
+                reason:
+                  "keeps submission readiness separate from renewed-memory-approval freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit freshness advisory",
+                advisory:
+                  "collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain",
+                not_automated:
+                  "Loopdeck does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
+                reason:
+                  "keeps post-submit freshness review tied to explicit local snapshot collection",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence",
+                result_scope:
+                  "post-submit collection result stays outside Loopdeck until the next explicit loop snapshot",
+                not_stored:
+                  "Loopdeck does not detect, store, or sync post-submit collection result state",
+                reason:
+                  "keeps post-submit collection evidence tied to explicit local snapshot recording",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit collection retry boundary",
+                retry:
+                  "operator reruns the explicit post-submit loop collection flow when retry is needed",
+                not_automated:
+                  "Loopdeck does not automatically retry post-submit collection commands or hidden recovery actions",
+                reason:
+                  "keeps post-submit collection retry control local and operator-triggered",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_outcome_non_persistence_note:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence",
+                outcome_scope:
+                  "post-submit retry attempt and outcome stay outside Loopdeck until the next explicit loop snapshot",
+                not_stored:
+                  "Loopdeck does not detect, store, or sync post-submit retry success or failure state",
+                reason:
+                  "keeps post-submit retry evidence tied to explicit local snapshot recording",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_evidence_freshness_boundary_note:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry evidence freshness boundary",
+                freshness_scope:
+                  "operator checks post-submit retry evidence freshness against the latest explicit loop snapshot",
+                not_verified:
+                  "Loopdeck does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
+                reason:
+                  "keeps post-submit retry evidence freshness review tied to local snapshot metadata",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_result_non_persistence_note:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence",
+                result_scope:
+                  "post-submit retry freshness result stays outside Loopdeck until the next explicit loop snapshot",
+                not_stored:
+                  "Loopdeck does not detect, store, or sync post-submit retry freshness result state",
+                reason:
+                  "keeps post-submit retry freshness evidence tied to explicit local snapshot recording",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_uncertainty_collection_reminder:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry freshness uncertainty collection reminder",
+                collection_trigger:
+                  "collect a new explicit loop snapshot when post-submit retry freshness is uncertain",
+                not_automated:
+                  "Loopdeck does not verify post-submit retry freshness or start collection automatically",
+                reason:
+                  "keeps post-submit retry freshness uncertainty resolution operator-triggered and local-first",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_pre_memory_approval_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry pre-memory-approval freshness advisory",
+                advisory:
+                  "review post-submit retry freshness uncertainty before approving loop memory again",
+                not_decision:
+                  "Loopdeck does not approve memory or verify post-submit retry freshness from this advisory",
+                reason:
+                  "keeps renewed memory approval separate from post-submit retry freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_reminder:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection reminder",
+                reminder:
+                  "collect a new explicit loop snapshot after approving loop memory again after post-submit retry",
+                not_automated:
+                  "Loopdeck does not start collection from post-submit retry renewed memory approval or hidden approval signals",
+                reason:
+                  "keeps post-submit retry renewed-memory-approval collection operator-triggered and local-first",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_result_non_persistence_note:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence",
+                result_scope:
+                  "post-submit retry renewed-memory-approval collection result stays outside Loopdeck until the next explicit loop snapshot",
+                not_stored:
+                  "Loopdeck does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
+                reason:
+                  "keeps post-submit retry renewed-memory-approval collection evidence tied to explicit local snapshot recording",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_uncertainty_reminder:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection uncertainty reminder",
+                reminder:
+                  "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval collection result is uncertain",
+                not_automated:
+                  "Loopdeck does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
+                reason:
+                  "keeps post-submit retry renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence",
+                result_scope:
+                  "post-submit retry renewed-memory-approval post-submit collection result stays outside Loopdeck until the next explicit loop snapshot",
+                not_stored:
+                  "Loopdeck does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
+                reason:
+                  "keeps post-submit retry renewed-memory-approval post-submit collection evidence tied to explicit local snapshot recording",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection uncertainty reminder",
+                reminder:
+                  "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection result is uncertain",
+                not_automated:
+                  "Loopdeck does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
+                reason:
+                  "keeps post-submit retry renewed-memory-approval post-submit collection uncertainty resolution operator-triggered and local-first",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_merge_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-merge freshness advisory",
+                advisory:
+                  "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before merge decisions",
+                not_decision:
+                  "Loopdeck does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
+                reason:
+                  "keeps merge readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_handoff_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-handoff freshness advisory",
+                advisory:
+                  "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before continuation handoff",
+                not_decision:
+                  "Loopdeck does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
+                reason:
+                  "keeps continuation handoff separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_paste_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-paste freshness advisory",
+                advisory:
+                  "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before pasting into Codex or Claude Code",
+                not_decision:
+                  "Loopdeck does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
+                reason:
+                  "keeps paste readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_submit_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-submit freshness advisory",
+                advisory:
+                  "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before submitting in Codex or Claude Code",
+                not_decision:
+                  "Loopdeck does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
+                reason:
+                  "keeps submission readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_post_submit_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection post-submit freshness advisory",
+                advisory:
+                  "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
+                not_monitored:
+                  "Loopdeck does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval post-submit collection freshness after submit",
+                reason:
+                  "keeps post-submit retry renewed-memory-approval post-submit collection freshness review tied to explicit local snapshot collection",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_result_non_persistence_note:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence",
+                not_stored:
+                  "post-submit retry renewed-memory-approval post-submit collection freshness result stays outside Loopdeck until the next explicit loop snapshot",
+                not_detected:
+                  "Loopdeck does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
+                reason:
+                  "keeps post-submit retry renewed-memory-approval post-submit collection freshness evidence tied to explicit local snapshot recording",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_uncertainty_collection_reminder:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness uncertainty collection reminder",
+                reminder:
+                  "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
+                not_automated:
+                  "Loopdeck does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically",
+                reason:
+                  "keeps post-submit retry renewed-memory-approval post-submit collection freshness uncertainty resolution operator-triggered and local-first",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_merge_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-merge freshness advisory",
+                advisory:
+                  "review post-submit retry renewed-memory-approval freshness uncertainty before merge decisions",
+                not_decision:
+                  "Loopdeck does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
+                reason:
+                  "keeps merge readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_handoff_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-handoff freshness advisory",
+                advisory:
+                  "review post-submit retry renewed-memory-approval freshness uncertainty before continuation handoff",
+                not_decision:
+                  "Loopdeck does not approve handoffs or verify post-submit retry renewed-memory-approval freshness before handoff",
+                reason:
+                  "keeps continuation handoff separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_paste_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-paste freshness advisory",
+                advisory:
+                  "review post-submit retry renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
+                not_decision:
+                  "Loopdeck does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
+                reason:
+                  "keeps paste readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_submit_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-submit freshness advisory",
+                advisory:
+                  "review post-submit retry renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
+                not_decision:
+                  "Loopdeck does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
+                reason:
+                  "keeps submission readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+                writes_files: false,
+                external_calls: false,
+              },
+            continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_freshness_advisory:
+              {
+                label:
+                  "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit freshness advisory",
+                advisory:
+                  "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain",
+                not_automated:
+                  "Loopdeck does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
+                reason:
+                  "keeps post-submit retry renewed-memory-approval freshness review tied to explicit local snapshot collection",
+                writes_files: false,
+                external_calls: false,
+              },
+            paste_destination: {
+              label: "Paste destination",
+              targets: ["Codex active request", "Claude Code active request"],
+              instruction:
+                "paste the copied continuation brief into the active agent request box",
+              reason:
+                "keeps Loopdeck as the local handoff source while the user controls submission",
+              auto_submit: false,
+              writes_files: false,
+              external_calls: false,
+            },
+            handoff_checklist: {
+              label: "Continuation handoff checklist",
+              steps: [
+                "copy selected continuation brief",
+                "paste into Codex or Claude Code active request",
+                "submit manually after review",
+                "collect the next loop snapshot after the agent turn",
+              ],
+              reason:
+                "keeps continuation handoff explicit without automating agent UI or reading transcripts",
+              writes_files: false,
+              external_calls: false,
+            },
+            post_handoff_reminder: {
+              label: "Post-handoff reminder",
+              collect_next:
+                "collect a new loop snapshot after the next agent turn",
+              not_memory_approval:
+                "memory approval remains a separate explicit review",
+              not_merge: "merge remains a separate review-before-merge decision",
+              reason:
+                "continuation handoff records the next loop before any memory approval or merge decision",
+              writes_files: false,
+              external_calls: false,
+            },
+            source_of_truth_note: {
+              label: "Source-of-truth note",
+              local_memory_input:
+                "next loop snapshot is the source of truth for local loop memory",
+              not_transcript_import:
+                "transcript import is not used as the source of truth",
+              reason:
+                "Loopdeck records explicit loop snapshots instead of importing agent transcripts",
+              stores_transcripts: false,
+              writes_files: false,
+              external_calls: false,
+            },
+            privacy_boundary_note: {
+              label: "Privacy boundary",
+              storage_scope:
+                "stores loop metadata in the local database and Markdown archive only",
+              does_not_store:
+                "does not store prompt bodies, transcripts, raw paths, or provider credentials",
+              reason:
+                "keeps source-of-truth loop memory local-first and reviewable",
+              local_only: true,
+              writes_files: false,
+              external_calls: false,
+            },
+            operator_review_gate: {
+              label: "Operator review gate",
+              review_step:
+                "operator reviews the copied continuation brief before submitting",
+              manual_submit:
+                "submission remains manual in Codex or Claude Code",
+              does_not:
+                "does not auto-submit prompts, execute commands, write files, or change merge state",
+              auto_submit: false,
+              writes_files: false,
+              external_calls: false,
+            },
+            collection_responsibility_note: {
+              label: "Collection responsibility",
+              responsible_party:
+                "operator collects the next loop snapshot after the agent turn",
+              trigger:
+                "collection starts only when the operator runs the loop collection flow",
+              does_not:
+                "does not watch transcripts, scrape agent UI, or collect in the background",
+              automatic_collection: false,
+              writes_files: false,
+              external_calls: false,
+            },
+            pre_merge_advisory: {
+              label: "Pre-merge advisory",
+              hold_merge:
+                "hold merge decisions until the next loop snapshot is collected and reviewed",
+              reason:
+                "continuation handoff can change readiness after the next agent turn",
+              not_memory_approval:
+                "memory approval remains separate from merge readiness",
+              writes_merge_decision: false,
+              writes_files: false,
+              external_calls: false,
+            },
+            post_collection_review_note: {
+              label: "Post-collection review",
+              review_step:
+                "review the collected loop snapshot quality and evidence before approval",
+              before_memory_approval:
+                "approve memory only after the collected snapshot is reviewed",
+              before_merge:
+                "merge readiness can be reconsidered after post-collection review",
+              writes_memory: false,
+              writes_merge_decision: false,
+              external_calls: false,
+            },
+            latest_decision: {
+              snapshot_id: "loop_web",
+              worktree: "agent-loop-worktree",
+              decision: "continue",
+              reason: "Needs one more verification pass before merge.",
+              decided_by: "user",
+              created_at: "2026-07-04T01:30:00.000Z",
+            },
+            review_packet_summary: {
+              title: "Review-before-merge packet",
+              status: "needs_review",
+              summary: "1 ready, 1 needs review, 0 missing evidence",
+              next_action: "review non-passing worktrees before merge",
+              worktree: "agent-loop-worktree",
+              merge_readiness: "needs_review",
+              worktree_action: "review outcome before merge",
+              readiness_summary: {
+                label: "Readiness summary",
+                status: "needs_review",
+                reason: "latest selected worktree outcome is not passing",
+                next_action: "review outcome before merge",
+              },
+              brief_rationale: {
+                label: "Brief rationale",
+                merge_readiness: "needs_review",
+                reason:
+                  "selected brief continues review work without marking it merge-ready",
+                next_action: "copy selected continuation brief",
+                merge_gate: "review outcome before merge",
+              },
+              evidence_count_explanation: {
+                label: "Evidence count",
+                count: 2,
+                reason: "selected worktree has evidence refs recorded",
+                next_action: "compare evidence before merge",
+              },
+              reviewer_checklist_preview: [
+                {
+                  label: "Review non-passing worktrees before merge",
+                  status: "required",
+                  action: "review outcome before merge",
+                },
+              ],
+              command_hint: {
+                label: "Copy review brief command",
+                command:
+                  "prompt-coach loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
+                provenance: {
+                  label: "Command provenance",
+                  source: "existing command-center continuation command",
+                  reason:
+                    "reuses safe selected worktree metadata without reading git or executing commands",
+                  writes_files: false,
+                  external_calls: false,
+                },
+              },
+              missing_evidence_explanation: {
+                label: "Missing evidence",
+                reason: "latest selected worktree outcome has no evidence refs",
+                next_action: "record loop outcome evidence",
+              },
+            },
+            items: [
+              {
+                id: "loop_web",
+                created_at: "2026-07-04T01:00:00.000Z",
+                tool: "codex",
+                source: "cli",
+                project: "private-project",
+                branch: "codex/agent-loop-memory-design",
+                worktree: "agent-loop-worktree",
+                prompt_count: 2,
+                average_prompt_score: 58,
+                top_gaps: ["Goal clarity"],
+                outcome_status: "passed",
+              },
+            ],
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+              returns_compact_content: false,
+            },
+          },
+        }),
+      );
+    const { getLoopWorktree } = await import("./api.js");
+
+    const detail = await getLoopWorktree("agent-loop-worktree", {
+      branch: "feature/branch-filter",
+      sessionId: "session-web",
+    });
+
+    expect(detail).toMatchObject({
+      worktree: "agent-loop-worktree",
+      session_id: "session-web",
+      branch: "feature/branch-filter",
+      selection_scope: {
+        label: "Selection scope",
+        filters: ["worktree", "session", "branch"],
+        reason:
+          "showing snapshots filtered by selected worktree, session, and branch",
+        next_action: "copy selected session and branch brief",
+      },
+      snapshot_age: {
+        label: "Selected snapshot age",
+        latest_selected_created_at: "2026-07-04T01:00:00.000Z",
+        status: "older_than_latest",
+        reason: "another loop snapshot was recorded after this selection",
+        next_action: "refresh selected worktree before merging",
+      },
+      selected_brief_action: {
+        label: "Selected brief action",
+        action: "copy selected continuation brief",
+        reason:
+          "uses the selected worktree/session/branch filters without auto-submitting",
+        command:
+          "prompt-coach loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
+        writes_files: false,
+        external_calls: false,
+      },
+      command_distinction: {
+        label: "Command distinction",
+        selected_command_role:
+          "continue the selected worktree/session/branch filters",
+        review_command_role:
+          "copy the review packet command-center hint for merge review",
+        reason:
+          "selected continuation and review packet commands can differ when session or branch filters are active",
+        writes_files: false,
+        external_calls: false,
+      },
+      command_filters: {
+        label: "Command filters",
+        selected_command_filters: ["worktree", "session", "branch"],
+        review_command_filters: ["worktree", "branch"],
+        reason:
+          "selected command reflects the current selection while review command reflects command-center review scope",
+        writes_files: false,
+        external_calls: false,
+      },
+      copy_side_effects: {
+        label: "Copy side effects",
+        clipboard: "copies the selected continuation brief to the local clipboard",
+        ui_feedback: "temporarily marks the selected brief copy button as copied",
+        does_not:
+          "does not write files, execute commands, call external services, submit prompts, or change merge state",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_group: {
+        label: "Continuation safety guidance",
+        scope:
+          "read-only handoff boundaries for Codex and Claude Code continuation",
+        includes: "copy, paste, review, collect, privacy, and merge gating notes",
+        reason:
+          "keeps the selected continuation path explicit without automating agents",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_ordering_note: {
+        label: "Safety guidance order",
+        first:
+          "review the continuation safety guidance before copying or pasting briefs",
+        then:
+          "follow copy, paste, review, collect, privacy, and merge gating notes in order",
+        reason:
+          "keeps continuation handoff reviewable before any manual agent submission",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_non_persistence_note: {
+        label: "Safety review state",
+        state: "reviewed guidance state is not stored or synchronized by Loopdeck",
+        reminder:
+          "operator re-checks safety guidance each time before manual agent submission",
+        reason: "keeps continuation review local to the current operator session",
+        stores_state: false,
+        external_calls: false,
+      },
+      continuation_safety_recheck_cue: {
+        label: "Safety re-check cue",
+        trigger: "after each selected brief copy",
+        instruction:
+          "re-check continuation safety guidance before pasting into Codex or Claude Code",
+        reason:
+          "each copied brief can represent a new handoff decision even in the same session",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_copy_feedback_reminder: {
+        label: "Copy feedback reminder",
+        feedback_scope:
+          "copied state only confirms the brief reached the local clipboard",
+        next_step:
+          "return to the safety re-check cue before pasting the copied brief",
+        reason: "copy feedback is not safety approval or agent submission",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_copy_feedback_accessibility_note: {
+        label: "Copy feedback accessibility",
+        visible_label: "selected brief copy button label remains stable",
+        assistive_feedback:
+          "copied status belongs in accessible feedback instead of replacing the visible command",
+        reason:
+          "keeps copy feedback clear without implying safety approval or changing layout",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_copy_feedback_timeout_note: {
+        label: "Copy feedback timeout",
+        timeout_scope: "copied feedback clears after a short local timeout",
+        not_state:
+          "timeout does not record review completion or submission state",
+        reason:
+          "keeps copied feedback temporary while preserving the manual safety review boundary",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_copy_feedback_failure_note: {
+        label: "Copy feedback failure",
+        failure_scope: "clipboard failure requires a manual retry",
+        not_state: "failure does not submit prompts or store review state",
+        reason:
+          "keeps copy failure handling local to the operator without hidden recovery actions",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_copy_retry_note: {
+        label: "Copy retry",
+        retry_scope: "operator manually retries the selected brief copy action",
+        not_automatic:
+          "Loopdeck does not automatically retry clipboard writes or submit prompts",
+        reason:
+          "keeps retry control with the operator before any Codex or Claude Code paste",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_pre_paste_confirmation_note: {
+        label: "Pre-paste confirmation",
+        confirmation:
+          "operator confirms the copied brief and target agent request before paste",
+        not_submission:
+          "confirmation does not submit prompts or approve safety review",
+        reason:
+          "keeps the final handoff check manual before Codex or Claude Code receives the brief",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_target_agent_check_note: {
+        label: "Target-agent check",
+        check:
+          "operator verifies the active Codex or Claude Code request box before paste",
+        not_inspection:
+          "Loopdeck does not inspect agent UI state or target contents",
+        reason:
+          "keeps target selection manual before any continuation handoff",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_paste_destination_boundary_note: {
+        label: "Paste destination boundary",
+        boundary:
+          "paste destination is a manual operator choice in Codex or Claude Code",
+        not_verified:
+          "Loopdeck does not verify active windows, target contents, or paste success",
+        reason:
+          "keeps destination verification outside Loopdeck automation before submission",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_manual_submission_boundary_note: {
+        label: "Manual submission boundary",
+        submission:
+          "operator submits the pasted brief manually in Codex or Claude Code",
+        not_automated:
+          "Loopdeck does not press enter, click submit, or record submitted state",
+        reason: "keeps final agent execution under operator control after paste",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_submission_result_non_persistence_note: {
+        label: "Submission result non-persistence",
+        result_scope:
+          "agent response and submission result stay outside Loopdeck until the next explicit loop snapshot",
+        not_stored:
+          "Loopdeck does not detect, store, or sync submitted state after handoff",
+        reason:
+          "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_post_submission_collection_reminder_note: {
+        label: "Post-submission collection reminder",
+        reminder:
+          "collect the next loop snapshot explicitly after the agent response is ready",
+        not_background:
+          "Loopdeck does not start collection from submission, transcript changes, or agent UI activity",
+        reason:
+          "keeps post-submission collection operator-triggered and local-first",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_collection_result_non_persistence_note: {
+        label: "Collection result non-persistence",
+        result_scope:
+          "collection result is not persisted until the operator records the next explicit loop snapshot",
+        not_stored:
+          "Loopdeck does not store, sync, or infer collection result state from agent UI activity",
+        reason:
+          "keeps collection evidence tied to explicit local snapshot recording",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_collection_retry_boundary_note: {
+        label: "Collection retry boundary",
+        retry:
+          "operator reruns the explicit loop collection flow when retry is needed",
+        not_automated:
+          "Loopdeck does not automatically retry collection commands or hidden recovery actions",
+        reason:
+          "keeps retry control local and operator-triggered after collection uncertainty",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_retry_outcome_non_persistence_note: {
+        label: "Retry outcome non-persistence",
+        outcome_scope:
+          "retry attempt and outcome stay outside Loopdeck until the next explicit loop snapshot",
+        not_stored:
+          "Loopdeck does not detect, store, or sync retry success or failure state",
+        reason: "keeps retry evidence tied to explicit local snapshot recording",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_collection_evidence_freshness_boundary_note: {
+        label: "Collection evidence freshness boundary",
+        freshness_check:
+          "operator checks freshness against the latest explicit loop snapshot evidence",
+        not_verified:
+          "Loopdeck does not verify freshness from git status, transcripts, or agent UI activity",
+        reason: "keeps evidence freshness review tied to local snapshot metadata",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_freshness_result_non_persistence_note: {
+        label: "Freshness result non-persistence",
+        result_scope:
+          "freshness result stays outside Loopdeck until the next explicit loop snapshot",
+        not_stored:
+          "Loopdeck does not detect, store, or sync freshness result state",
+        reason: "keeps freshness evidence tied to explicit local snapshot recording",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_freshness_uncertainty_collection_reminder: {
+        label: "Freshness uncertainty collection reminder",
+        reminder:
+          "collect a new explicit loop snapshot when evidence freshness is uncertain",
+        not_automated:
+          "Loopdeck does not verify freshness or start collection automatically",
+        reason:
+          "keeps freshness uncertainty resolution operator-triggered and local-first",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_pre_merge_freshness_advisory: {
+        label: "Pre-merge freshness advisory",
+        advisory: "review freshness uncertainty before merge decisions",
+        not_decision:
+          "Loopdeck does not approve merges or verify freshness before merge",
+        reason: "keeps merge readiness separate from freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_pre_memory_approval_freshness_advisory: {
+        label: "Pre-memory-approval freshness advisory",
+        advisory: "review freshness uncertainty before approving loop memory",
+        not_decision:
+          "Loopdeck does not approve memory or verify freshness from this note",
+        reason: "keeps memory approval separate from freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_post_memory_approval_collection_reminder: {
+        label: "Post-memory-approval collection reminder",
+        reminder:
+          "collect a new explicit loop snapshot after approving loop memory",
+        not_automated:
+          "Loopdeck does not start collection from memory approval or approval state changes",
+        reason: "keeps post-approval collection operator-triggered and local-first",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_post_memory_approval_collection_result_non_persistence_note:
+        {
+          label: "Post-memory-approval collection result non-persistence",
+          result_scope:
+            "post-approval collection result stays outside Loopdeck until the next explicit loop snapshot",
+          not_stored:
+            "Loopdeck does not detect, store, or sync post-approval collection result state",
+          reason:
+            "keeps post-approval collection evidence tied to explicit local snapshot recording",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_collection_retry_boundary_note:
+        {
+          label: "Post-memory-approval collection retry boundary",
+          retry:
+            "operator reruns the explicit post-approval loop collection flow when retry is needed",
+          not_automated:
+            "Loopdeck does not automatically retry post-approval collection commands or hidden recovery actions",
+          reason:
+            "keeps post-approval collection retry control local and operator-triggered",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_outcome_non_persistence_note:
+        {
+          label: "Post-memory-approval retry outcome non-persistence",
+          outcome_scope:
+            "post-approval retry outcome stays outside Loopdeck until the next explicit loop snapshot",
+          not_stored:
+            "Loopdeck does not detect, store, or sync post-approval retry success or failure state",
+          reason:
+            "keeps post-approval retry evidence tied to explicit local snapshot recording",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note:
+        {
+          label: "Post-memory-approval retry evidence freshness boundary",
+          review:
+            "operator checks retry evidence freshness against the latest explicit loop snapshot",
+          not_verified:
+            "Loopdeck does not verify post-approval retry freshness from git status, transcripts, or agent UI activity",
+          reason:
+            "keeps post-approval retry freshness review tied to local snapshot metadata",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note:
+        {
+          label:
+            "Post-memory-approval retry freshness result non-persistence",
+          result_scope:
+            "post-approval retry freshness result stays outside Loopdeck until the next explicit loop snapshot",
+          not_stored:
+            "Loopdeck does not detect, store, or sync post-approval retry freshness result state",
+          reason:
+            "keeps post-approval retry freshness evidence tied to explicit local snapshot recording",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder:
+        {
+          label:
+            "Post-memory-approval retry freshness uncertainty collection reminder",
+          reminder:
+            "collect a new explicit loop snapshot when post-approval retry freshness is uncertain",
+          not_automated:
+            "Loopdeck does not verify post-approval retry freshness or start collection automatically",
+          reason:
+            "keeps post-approval retry freshness uncertainty resolution operator-triggered and local-first",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry pre-memory-approval freshness advisory",
+          advisory:
+            "review post-approval retry freshness uncertainty before approving loop memory again",
+          not_decision:
+            "Loopdeck does not approve memory or verify post-approval retry freshness from this advisory",
+          reason:
+            "keeps renewed memory approval separate from retry freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_reminder:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval collection reminder",
+          reminder:
+            "collect a new explicit loop snapshot after approving loop memory again",
+          not_automated:
+            "Loopdeck does not start collection from renewed memory approval or approval state changes",
+          reason:
+            "keeps renewed-memory-approval collection operator-triggered and local-first",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_result_non_persistence_note:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval collection result non-persistence",
+          result_scope:
+            "renewed-memory-approval collection result stays outside Loopdeck until the next explicit loop snapshot",
+          not_stored:
+            "Loopdeck does not detect, store, or sync renewed-memory-approval collection result state",
+          reason:
+            "keeps renewed-memory-approval collection evidence tied to explicit local snapshot recording",
+          writes_files: false,
+          external_calls: false,
+        },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_uncertainty_reminder:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval collection uncertainty reminder",
+          reminder:
+            "collect a new explicit loop snapshot when renewed-memory-approval collection result is uncertain",
+          not_automated:
+            "Loopdeck does not verify renewed-memory-approval collection result or start collection automatically",
+          reason:
+            "keeps renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_merge_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval pre-merge freshness advisory",
+        advisory:
+          "review renewed-memory-approval freshness uncertainty before merge decisions",
+        not_decision:
+          "Loopdeck does not approve merges or verify renewed-memory-approval freshness before merge",
+        reason:
+          "keeps merge readiness separate from renewed-memory-approval freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_handoff_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval pre-handoff freshness advisory",
+        advisory:
+          "review renewed-memory-approval freshness uncertainty before continuation handoff",
+        not_decision:
+          "Loopdeck does not approve handoffs or verify renewed-memory-approval freshness before handoff",
+        reason:
+          "keeps continuation handoff separate from renewed-memory-approval freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_paste_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval pre-paste freshness advisory",
+        advisory:
+          "review renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
+        not_decision:
+          "Loopdeck does not approve paste targets or verify renewed-memory-approval freshness before paste",
+        reason:
+          "keeps paste readiness separate from renewed-memory-approval freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_submit_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval pre-submit freshness advisory",
+        advisory:
+          "review renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
+        not_decision:
+          "Loopdeck does not approve submissions or verify renewed-memory-approval freshness before submit",
+        reason:
+          "keeps submission readiness separate from renewed-memory-approval freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit freshness advisory",
+        advisory:
+          "collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain",
+        not_automated:
+          "Loopdeck does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
+        reason:
+          "keeps post-submit freshness review tied to explicit local snapshot collection",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence",
+        result_scope:
+          "post-submit collection result stays outside Loopdeck until the next explicit loop snapshot",
+        not_stored:
+          "Loopdeck does not detect, store, or sync post-submit collection result state",
+        reason:
+          "keeps post-submit collection evidence tied to explicit local snapshot recording",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit collection retry boundary",
+        retry:
+          "operator reruns the explicit post-submit loop collection flow when retry is needed",
+        not_automated:
+          "Loopdeck does not automatically retry post-submit collection commands or hidden recovery actions",
+        reason:
+          "keeps post-submit collection retry control local and operator-triggered",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_outcome_non_persistence_note:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence",
+        outcome_scope:
+          "post-submit retry attempt and outcome stay outside Loopdeck until the next explicit loop snapshot",
+        not_stored:
+          "Loopdeck does not detect, store, or sync post-submit retry success or failure state",
+        reason:
+          "keeps post-submit retry evidence tied to explicit local snapshot recording",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_evidence_freshness_boundary_note:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry evidence freshness boundary",
+        freshness_scope:
+          "operator checks post-submit retry evidence freshness against the latest explicit loop snapshot",
+        not_verified:
+          "Loopdeck does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
+        reason:
+          "keeps post-submit retry evidence freshness review tied to local snapshot metadata",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_result_non_persistence_note:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence",
+        result_scope:
+          "post-submit retry freshness result stays outside Loopdeck until the next explicit loop snapshot",
+        not_stored:
+          "Loopdeck does not detect, store, or sync post-submit retry freshness result state",
+        reason:
+          "keeps post-submit retry freshness evidence tied to explicit local snapshot recording",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_uncertainty_collection_reminder:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry freshness uncertainty collection reminder",
+        collection_trigger:
+          "collect a new explicit loop snapshot when post-submit retry freshness is uncertain",
+        not_automated:
+          "Loopdeck does not verify post-submit retry freshness or start collection automatically",
+        reason:
+          "keeps post-submit retry freshness uncertainty resolution operator-triggered and local-first",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_pre_memory_approval_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry pre-memory-approval freshness advisory",
+        advisory:
+          "review post-submit retry freshness uncertainty before approving loop memory again",
+        not_decision:
+          "Loopdeck does not approve memory or verify post-submit retry freshness from this advisory",
+        reason:
+          "keeps renewed memory approval separate from post-submit retry freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_reminder:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection reminder",
+        reminder:
+          "collect a new explicit loop snapshot after approving loop memory again after post-submit retry",
+        not_automated:
+          "Loopdeck does not start collection from post-submit retry renewed memory approval or hidden approval signals",
+        reason:
+          "keeps post-submit retry renewed-memory-approval collection operator-triggered and local-first",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_result_non_persistence_note:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence",
+        result_scope:
+          "post-submit retry renewed-memory-approval collection result stays outside Loopdeck until the next explicit loop snapshot",
+        not_stored:
+          "Loopdeck does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
+        reason:
+          "keeps post-submit retry renewed-memory-approval collection evidence tied to explicit local snapshot recording",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_uncertainty_reminder:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection uncertainty reminder",
+        reminder:
+          "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval collection result is uncertain",
+        not_automated:
+          "Loopdeck does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
+        reason:
+          "keeps post-submit retry renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence",
+        result_scope:
+          "post-submit retry renewed-memory-approval post-submit collection result stays outside Loopdeck until the next explicit loop snapshot",
+        not_stored:
+          "Loopdeck does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
+        reason:
+          "keeps post-submit retry renewed-memory-approval post-submit collection evidence tied to explicit local snapshot recording",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection uncertainty reminder",
+        reminder:
+          "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection result is uncertain",
+        not_automated:
+          "Loopdeck does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
+        reason:
+          "keeps post-submit retry renewed-memory-approval post-submit collection uncertainty resolution operator-triggered and local-first",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_merge_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-merge freshness advisory",
+        advisory:
+          "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before merge decisions",
+        not_decision:
+          "Loopdeck does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
+        reason:
+          "keeps merge readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_handoff_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-handoff freshness advisory",
+        advisory:
+          "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before continuation handoff",
+        not_decision:
+          "Loopdeck does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
+        reason:
+          "keeps continuation handoff separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_paste_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-paste freshness advisory",
+        advisory:
+          "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before pasting into Codex or Claude Code",
+        not_decision:
+          "Loopdeck does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
+        reason:
+          "keeps paste readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_submit_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-submit freshness advisory",
+        advisory:
+          "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before submitting in Codex or Claude Code",
+        not_decision:
+          "Loopdeck does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
+        reason:
+          "keeps submission readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_post_submit_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection post-submit freshness advisory",
+        advisory:
+          "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
+        not_monitored:
+          "Loopdeck does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval post-submit collection freshness after submit",
+        reason:
+          "keeps post-submit retry renewed-memory-approval post-submit collection freshness review tied to explicit local snapshot collection",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_result_non_persistence_note:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence",
+        not_stored:
+          "post-submit retry renewed-memory-approval post-submit collection freshness result stays outside Loopdeck until the next explicit loop snapshot",
+        not_detected:
+          "Loopdeck does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
+        reason:
+          "keeps post-submit retry renewed-memory-approval post-submit collection freshness evidence tied to explicit local snapshot recording",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_uncertainty_collection_reminder:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness uncertainty collection reminder",
+        reminder:
+          "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
+        not_automated:
+          "Loopdeck does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically",
+        reason:
+          "keeps post-submit retry renewed-memory-approval post-submit collection freshness uncertainty resolution operator-triggered and local-first",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_merge_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-merge freshness advisory",
+        advisory:
+          "review post-submit retry renewed-memory-approval freshness uncertainty before merge decisions",
+        not_decision:
+          "Loopdeck does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
+        reason:
+          "keeps merge readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_handoff_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-handoff freshness advisory",
+        advisory:
+          "review post-submit retry renewed-memory-approval freshness uncertainty before continuation handoff",
+        not_decision:
+          "Loopdeck does not approve handoffs or verify post-submit retry renewed-memory-approval freshness before handoff",
+        reason:
+          "keeps continuation handoff separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_paste_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-paste freshness advisory",
+        advisory:
+          "review post-submit retry renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
+        not_decision:
+          "Loopdeck does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
+        reason:
+          "keeps paste readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_submit_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-submit freshness advisory",
+        advisory:
+          "review post-submit retry renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
+        not_decision:
+          "Loopdeck does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
+        reason:
+          "keeps submission readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit freshness advisory",
+        advisory:
+          "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain",
+        not_automated:
+          "Loopdeck does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
+        reason:
+          "keeps post-submit retry renewed-memory-approval freshness review tied to explicit local snapshot collection",
+        writes_files: false,
+        external_calls: false,
+      },
+    paste_destination: {
+        label: "Paste destination",
+        targets: ["Codex active request", "Claude Code active request"],
+        instruction:
+          "paste the copied continuation brief into the active agent request box",
+        reason:
+          "keeps Loopdeck as the local handoff source while the user controls submission",
+        auto_submit: false,
+        writes_files: false,
+        external_calls: false,
+      },
+      handoff_checklist: {
+        label: "Continuation handoff checklist",
+        steps: [
+          "copy selected continuation brief",
+          "paste into Codex or Claude Code active request",
+          "submit manually after review",
+          "collect the next loop snapshot after the agent turn",
+        ],
+        reason:
+          "keeps continuation handoff explicit without automating agent UI or reading transcripts",
+        writes_files: false,
+        external_calls: false,
+      },
+      post_handoff_reminder: {
+        label: "Post-handoff reminder",
+        collect_next: "collect a new loop snapshot after the next agent turn",
+        not_memory_approval: "memory approval remains a separate explicit review",
+        not_merge: "merge remains a separate review-before-merge decision",
+        reason:
+          "continuation handoff records the next loop before any memory approval or merge decision",
+        writes_files: false,
+        external_calls: false,
+      },
+      source_of_truth_note: {
+        label: "Source-of-truth note",
+        local_memory_input:
+          "next loop snapshot is the source of truth for local loop memory",
+        not_transcript_import:
+          "transcript import is not used as the source of truth",
+        reason:
+          "Loopdeck records explicit loop snapshots instead of importing agent transcripts",
+        stores_transcripts: false,
+        writes_files: false,
+        external_calls: false,
+      },
+      privacy_boundary_note: {
+        label: "Privacy boundary",
+        storage_scope:
+          "stores loop metadata in the local database and Markdown archive only",
+        does_not_store:
+          "does not store prompt bodies, transcripts, raw paths, or provider credentials",
+        reason: "keeps source-of-truth loop memory local-first and reviewable",
+        local_only: true,
+        writes_files: false,
+        external_calls: false,
+      },
+      operator_review_gate: {
+        label: "Operator review gate",
+        review_step:
+          "operator reviews the copied continuation brief before submitting",
+        manual_submit: "submission remains manual in Codex or Claude Code",
+        does_not:
+          "does not auto-submit prompts, execute commands, write files, or change merge state",
+        auto_submit: false,
+        writes_files: false,
+        external_calls: false,
+      },
+      collection_responsibility_note: {
+        label: "Collection responsibility",
+        responsible_party:
+          "operator collects the next loop snapshot after the agent turn",
+        trigger:
+          "collection starts only when the operator runs the loop collection flow",
+        does_not:
+          "does not watch transcripts, scrape agent UI, or collect in the background",
+        automatic_collection: false,
+        writes_files: false,
+        external_calls: false,
+      },
+      pre_merge_advisory: {
+        label: "Pre-merge advisory",
+        hold_merge:
+          "hold merge decisions until the next loop snapshot is collected and reviewed",
+        reason:
+          "continuation handoff can change readiness after the next agent turn",
+        not_memory_approval:
+          "memory approval remains separate from merge readiness",
+        writes_merge_decision: false,
+        writes_files: false,
+        external_calls: false,
+      },
+      post_collection_review_note: {
+        label: "Post-collection review",
+        review_step:
+          "review the collected loop snapshot quality and evidence before approval",
+        before_memory_approval:
+          "approve memory only after the collected snapshot is reviewed",
+        before_merge:
+          "merge readiness can be reconsidered after post-collection review",
+        writes_memory: false,
+        writes_merge_decision: false,
+        external_calls: false,
+      },
+      latest_decision: {
+        snapshot_id: "loop_web",
+        worktree: "agent-loop-worktree",
+        decision: "continue",
+      },
+      review_packet_summary: {
+        title: "Review-before-merge packet",
+        status: "needs_review",
+        summary: "1 ready, 1 needs review, 0 missing evidence",
+        worktree: "agent-loop-worktree",
+        readiness_summary: {
+          label: "Readiness summary",
+          status: "needs_review",
+          reason: "latest selected worktree outcome is not passing",
+          next_action: "review outcome before merge",
+        },
+        brief_rationale: {
+          label: "Brief rationale",
+          merge_readiness: "needs_review",
+          reason:
+            "selected brief continues review work without marking it merge-ready",
+          next_action: "copy selected continuation brief",
+          merge_gate: "review outcome before merge",
+        },
+        evidence_count_explanation: {
+          label: "Evidence count",
+          count: 2,
+          reason: "selected worktree has evidence refs recorded",
+          next_action: "compare evidence before merge",
+        },
+        reviewer_checklist_preview: [
+          {
+            label: "Review non-passing worktrees before merge",
+            status: "required",
+            action: "review outcome before merge",
+          },
+        ],
+        command_hint: {
+          label: "Copy review brief command",
+          command:
+            "prompt-coach loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
+          provenance: {
+            label: "Command provenance",
+            source: "existing command-center continuation command",
+            reason:
+              "reuses safe selected worktree metadata without reading git or executing commands",
+            writes_files: false,
+            external_calls: false,
+          },
+        },
+        missing_evidence_explanation: {
+          label: "Missing evidence",
+          reason: "latest selected worktree outcome has no evidence refs",
+          next_action: "record loop outcome evidence",
+        },
+      },
+      items: [
+        {
+          id: "loop_web",
+          worktree: "agent-loop-worktree",
+          outcome_status: "passed",
+        },
+      ],
+    });
+    expect(fetchMock).toHaveBeenLastCalledWith(
+      "/api/v1/loops/worktrees/agent-loop-worktree?session_id=session-web&branch=feature%2Fbranch-filter",
+      {
+        credentials: "same-origin",
+      },
+    );
+    expect(JSON.stringify(detail)).not.toContain("Make this better");
+    expect(JSON.stringify(detail)).not.toContain("Compact summary");
+    expect(JSON.stringify(detail)).not.toContain("/Users/example");
+  });
+
+  it("approves the latest eligible loop memory candidate with csrf", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            recorded: true,
+            memory: {
+              id: "mem_web",
+              snapshot_id: "loop_web",
+              title: "Remember loop outcome for private-project",
+              evidence_refs: ["test:web loops"],
+              approved_by: "web",
+              created_at: "2026-07-04T01:10:00.000Z",
+              privacy: {
+                local_only: true,
+                stores_prompt_bodies: false,
+                stores_raw_paths: false,
+                writes_instruction_files: false,
+                external_calls: false,
+              },
+            },
+            next_action:
+              "use recorded memory as local context in future loop briefs",
+            next_actions: [
+              "prompt-coach loop brief",
+              "prompt-coach loop instruction-patch --target-file AGENTS.md",
+            ],
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+              writes_instruction_files: false,
+              external_calls: false,
+            },
+          },
+        }),
+      );
+    const { approveLoopMemory } = await import("./api.js");
+
+    const result = await approveLoopMemory({ approvedBy: "web" });
+
+    expect(result.recorded).toBe(true);
+    expect(result.next_actions).toEqual([
+      "prompt-coach loop brief",
+      "prompt-coach loop instruction-patch --target-file AGENTS.md",
+    ]);
+    expect(fetchMock).toHaveBeenLastCalledWith("/api/v1/loops/memory/approve", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "content-type": "application/json",
+        "x-csrf-token": "csrf-1",
+      },
+      body: JSON.stringify({ approved_by: "web" }),
+    });
+    expect(JSON.stringify(result)).not.toContain("Make this better");
+    expect(JSON.stringify(result)).not.toContain("/Users/example");
+    expect(JSON.stringify(result)).not.toContain("sk-proj-secret");
+  });
+
+  it("gets a review-only instruction patch proposal for the latest approved loop memory", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            target_file: "AGENTS.md",
+            patch_kind: "append_section",
+            title: "Append approved Loopdeck memory to AGENTS.md",
+            diff: "--- a/AGENTS.md\n+++ b/AGENTS.md\n@@\n+## Loopdeck Memories\n+  source_memory: mem_web\n",
+            writes_files: false,
+            requires_user_approval: true,
+            source_memory_id: "mem_web",
+            apply_gate: {
+              web_apply_available: false,
+              confirm_command:
+                "prompt-coach loop instruction-apply --target-file AGENTS.md --confirm-apply",
+              mcp_tool: "apply_instruction_patch",
+              reason:
+                "web review does not write files; apply through CLI or MCP with explicit confirmation",
+            },
+            next_action:
+              "review this patch proposal, then apply it manually only if the instruction belongs in the project",
+            privacy: {
+              local_only: true,
+              external_calls: false,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+              writes_instruction_files: false,
+            },
+          },
+        }),
+      );
+    const { getLoopInstructionPatch } = await import("./api.js");
+
+    const proposal = await getLoopInstructionPatch({ targetFile: "AGENTS.md" });
+
+    expect(proposal.writes_files).toBe(false);
+    expect(proposal.requires_user_approval).toBe(true);
+    expect(proposal.apply_gate).toEqual({
+      web_apply_available: false,
+      confirm_command:
+        "prompt-coach loop instruction-apply --target-file AGENTS.md --confirm-apply",
+      mcp_tool: "apply_instruction_patch",
+      reason:
+        "web review does not write files; apply through CLI or MCP with explicit confirmation",
+    });
+    expect(proposal.diff).toContain("+++ b/AGENTS.md");
+    expect(fetchMock).toHaveBeenLastCalledWith(
+      "/api/v1/loops/instruction-patch?target_file=AGENTS.md",
+      {
+        credentials: "same-origin",
+      },
+    );
+    expect(JSON.stringify(proposal)).not.toContain("Make this better");
+    expect(JSON.stringify(proposal)).not.toContain("/Users/example");
+    expect(JSON.stringify(proposal)).not.toContain("sk-proj-secret");
+  });
+
   it("shares an in-flight csrf session request across parallel API calls", async () => {
     fetchMock.mockImplementation(async (url: string) => {
       if (url === "/api/v1/session") {

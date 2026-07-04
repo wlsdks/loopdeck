@@ -74,6 +74,10 @@ const PromptParamsSchema = z.object({
   id: z.string().regex(/^prmt_[A-Za-z0-9_]+$/),
 });
 
+const PromptImprovementDraftParamsSchema = PromptParamsSchema.extend({
+  draft_id: z.string().regex(/^impdraft_[A-Za-z0-9_]+$/),
+});
+
 const PromptUsageEventSchema = z.object({
   type: z.literal("prompt_copied"),
 });
@@ -266,6 +270,45 @@ export function registerPromptRoutes(
     return { data: draft };
   });
 
+  server.post(
+    "/api/v1/prompts/:id/improvements/:draft_id/copy",
+    async (request) => {
+      requireAppAccess(request, options.auth, { csrf: true });
+      const storage = requireImprovementStorage(options.storage, request.url);
+      const params = PromptImprovementDraftParamsSchema.parse(request.params);
+      const markCopied = storage.markPromptImprovementDraftCopied;
+      if (!markCopied) {
+        throw problem(
+          500,
+          "Internal Server Error",
+          "Prompt improvement storage is not configured.",
+          request.url,
+        );
+      }
+      const result = markCopied(
+        params.id,
+        params.draft_id,
+      );
+
+      if (!result.updated || !result.draft) {
+        throw problem(
+          404,
+          "Not Found",
+          "Improvement draft not found.",
+          request.url,
+        );
+      }
+
+      return {
+        data: {
+          id: result.draft.id,
+          prompt_id: result.draft.prompt_id,
+          copied_at: result.draft.copied_at,
+        },
+      };
+    },
+  );
+
   server.delete("/api/v1/prompts/:id", async (request) => {
     requireAppAccess(request, options.auth, { csrf: true });
     const storage = requireReadStorage(options.storage, request.url);
@@ -407,7 +450,10 @@ function requireImprovementStorage(
 ): PromptReadStoragePort {
   const readStorage = requireReadStorage(storage, instance);
 
-  if (!readStorage.createPromptImprovementDraft) {
+  if (
+    !readStorage.createPromptImprovementDraft ||
+    !readStorage.markPromptImprovementDraftCopied
+  ) {
     throw problem(
       500,
       "Internal Server Error",

@@ -6,7 +6,11 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { initializePromptCoach } from "../config/config.js";
+import type { LoopSnapshot } from "../loop/types.js";
 import { createServer } from "./create-server.js";
+import type { CompactBoundary } from "../storage/compact-boundaries.js";
+import type { LoopMergeDecision } from "../storage/loop-decisions.js";
+import type { LoopMemory } from "../storage/loop-memories.js";
 import type {
   ExportJob,
   ProjectInstructionReview,
@@ -302,6 +306,1925 @@ describe("createServer P2 ingest boundary", () => {
     expect(response.body).not.toContain("web-session-secret");
   });
 
+  it("returns loop snapshots without prompt bodies, compact summaries, or raw paths", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({ worktree_label: "worktree-web" }),
+    );
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_other",
+        project_id: "proj_other",
+        cwd_label: "other-project",
+        worktree_label: "other-worktree",
+      }),
+    );
+    storage.loopMemories.push(loopMemory());
+    storage.loopMemories.push(
+      loopMemory({
+        id: "mem_other",
+        snapshot_id: "loop_other",
+        statement: "This unrelated project memory should not appear.",
+      }),
+    );
+    storage.loopMergeDecisions.push(
+      loopMergeDecision({
+        snapshot_id: "loop_web",
+        project_id: "proj_web",
+        worktree: "worktree-web",
+        decision: "continue",
+        reason: "Needs one more verification pass before merge.",
+        created_at: "2026-07-04T01:30:00.000Z",
+      }),
+    );
+    storage.loopMergeDecisions.push(
+      loopMergeDecision({
+        id: "mdec_other_project",
+        snapshot_id: "loop_other",
+        project_id: "proj_other",
+        worktree: "other-worktree",
+        decision: "merge",
+        reason: "Other project decision should not appear.",
+        created_at: "2026-07-04T01:40:00.000Z",
+      }),
+    );
+    storage.compactBoundaries.push({
+      id: "cmp_web",
+      created_at: "2026-07-04T01:05:00.000Z",
+      tool: "claude-code",
+      event_name: "PostCompact",
+      trigger: "auto",
+      session_id: "session-web",
+      cwd_label: "private-project",
+      project_id: "proj_web",
+      content_hash: "compact_abcdef1234567890",
+      privacy: {
+        local_only: true,
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        stores_compact_content: false,
+      },
+    });
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const serialized = JSON.stringify(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        status: {
+          status: "ready",
+          snapshot_count: 2,
+          activity: {
+            active_worktrees: 2,
+            active_sessions: 1,
+            latest_worktree: "worktree-web",
+            needs_review: true,
+            next_action:
+              "compare loop snapshots by worktree before merging agent output",
+            recent_decisions: [
+              {
+                snapshot_id: "loop_web",
+                worktree: "worktree-web",
+                decision: "continue",
+                reason: "Needs one more verification pass before merge.",
+                decided_by: "user",
+                created_at: "2026-07-04T01:30:00.000Z",
+              },
+            ],
+            worktrees: [
+              {
+                worktree: "worktree-web",
+                sessions: 1,
+                snapshots: 1,
+                latest_snapshot_id: "loop_web",
+                latest_outcome_status: "unknown",
+              },
+              {
+                worktree: "other-worktree",
+                sessions: 1,
+                snapshots: 1,
+                latest_snapshot_id: "loop_other",
+                latest_outcome_status: "unknown",
+              },
+            ],
+          },
+          project_memory: {
+            approved_count: 1,
+            included_in_brief: true,
+          },
+          latest_snapshot: {
+            id: "loop_web",
+            outcome_status: "unknown",
+          },
+          privacy: {
+            local_only: true,
+            returns_prompt_bodies: false,
+            returns_raw_paths: false,
+            returns_compact_content: false,
+          },
+        },
+        privacy: {
+          local_only: true,
+          returns_prompt_bodies: false,
+          returns_raw_paths: false,
+          returns_compact_content: false,
+        },
+      },
+    });
+    expect(
+      response.json<{ data: { items: Array<Record<string, unknown>> } }>().data
+        .items,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "loop_web",
+          project: "private-project",
+          prompt_count: 2,
+          compact_boundary: expect.objectContaining({
+            event_name: "PostCompact",
+            after_latest_snapshot: true,
+          }),
+        }),
+      ]),
+    );
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("Compact summary with sk-proj-secret");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain(
+      "Keep web, CLI, MCP, and API loop status on the shared model.",
+    );
+    expect(serialized).not.toContain(
+      "This unrelated project memory should not appear",
+    );
+    expect(serialized).not.toContain("Other project decision should not appear");
+  });
+
+  it("returns a worktree drilldown without prompt bodies or raw paths", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({ worktree_label: "worktree-web" }),
+    );
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        branch: "feature/branch-filter",
+        id: "loop_web_second",
+        created_at: "2026-07-04T01:10:00.000Z",
+        session_id: "session-web-two",
+        worktree_label: "worktree-web",
+        outcome: {
+          status: "passed",
+          summary:
+            "Keep web, CLI, MCP, and API loop status on the shared model.",
+          evidence_refs: ["commit:web"],
+        },
+      }),
+    );
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_other",
+        project_id: "proj_other",
+        cwd_label: "other-project",
+        worktree_label: "other-worktree",
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/worktrees/worktree-web",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const body = response.json<{
+      data: {
+        worktree: string;
+        items: Array<{ id: string; worktree?: string }>;
+      };
+    }>();
+    const serialized = JSON.stringify(body);
+
+    expect(response.statusCode).toBe(200);
+    expect(body.data.worktree).toBe("worktree-web");
+    expect(body.data.items).toEqual([
+      expect.objectContaining({
+        id: "loop_web",
+        worktree: "worktree-web",
+      }),
+      expect.objectContaining({
+        id: "loop_web_second",
+        worktree: "worktree-web",
+      }),
+    ]);
+    expect(serialized).not.toContain("loop_other");
+    expect(serialized).not.toContain("other-project");
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain(
+      "Keep web, CLI, MCP, and API loop status on the shared model.",
+    );
+    expect(serialized).not.toContain("/Users/example");
+
+    const sessionResponse = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/worktrees/worktree-web?session_id=session-web-two",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const sessionBody = sessionResponse.json<{
+      data: {
+        session_id?: string;
+        selection_scope?: {
+          label: string;
+          filters: string[];
+          reason: string;
+          next_action: string;
+        };
+        items: Array<{ id: string; worktree?: string }>;
+      };
+    }>();
+
+    expect(sessionResponse.statusCode).toBe(200);
+    expect(sessionBody.data.session_id).toBe("session-web-two");
+    expect(sessionBody.data.selection_scope).toEqual({
+      label: "Selection scope",
+      filters: ["worktree", "session"],
+      reason: "showing snapshots filtered by selected worktree and session",
+      next_action: "copy selected session brief",
+    });
+    expect(sessionBody.data.items).toEqual([
+      expect.objectContaining({
+        id: "loop_web_second",
+        worktree: "worktree-web",
+      }),
+    ]);
+    expect(JSON.stringify(sessionBody)).not.toContain('loop_web"');
+    expect(JSON.stringify(sessionBody)).not.toContain("Make this better");
+    expect(JSON.stringify(sessionBody)).not.toContain("/Users/example");
+
+    const branchResponse = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/worktrees/worktree-web?branch=feature%2Fbranch-filter",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const branchBody = branchResponse.json<{
+      data: {
+        branch?: string;
+        selection_scope?: {
+          label: string;
+          filters: string[];
+          reason: string;
+          next_action: string;
+        };
+        items: Array<{ id: string; branch?: string; worktree?: string }>;
+      };
+    }>();
+
+    expect(branchResponse.statusCode).toBe(200);
+    expect(branchBody.data.branch).toBe("feature/branch-filter");
+    expect(branchBody.data.selection_scope).toEqual({
+      label: "Selection scope",
+      filters: ["worktree", "branch"],
+      reason: "showing snapshots filtered by selected worktree and branch",
+      next_action: "copy selected branch brief",
+    });
+    expect(branchBody.data.items).toEqual([
+      expect.objectContaining({
+        branch: "feature/branch-filter",
+        id: "loop_web_second",
+        worktree: "worktree-web",
+      }),
+    ]);
+    expect(JSON.stringify(branchBody)).not.toContain('loop_web"');
+    expect(JSON.stringify(branchBody)).not.toContain("Make this better");
+    expect(JSON.stringify(branchBody)).not.toContain("/Users/example");
+  });
+
+  it("returns a copy-ready loop brief without prompt bodies, compact summaries, or raw paths", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(loopSnapshot());
+    storage.compactBoundaries.push({
+      id: "cmp_web",
+      created_at: "2026-07-04T01:05:00.000Z",
+      tool: "claude-code",
+      event_name: "PostCompact",
+      trigger: "auto",
+      session_id: "session-web",
+      cwd_label: "private-project",
+      project_id: "proj_web",
+      content_hash: "compact_abcdef1234567890",
+      privacy: {
+        local_only: true,
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        stores_compact_content: false,
+      },
+    });
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/loop_web/brief",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const serialized = JSON.stringify(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        title: "Continue agent loop loop_web",
+        source_snapshot_id: "loop_web",
+        compact_boundary: {
+          event_name: "PostCompact",
+          after_latest_snapshot: true,
+        },
+        privacy: {
+          local_only: true,
+          returns_prompt_bodies: false,
+          returns_raw_paths: false,
+        },
+      },
+    });
+    expect(response.json<{ data: { prompt: string } }>().data.prompt).toContain(
+      "prompt-coach loop collect again",
+    );
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("Compact summary with sk-proj-secret");
+    expect(serialized).not.toContain("/Users/example");
+  });
+
+  it("returns a selected worktree loop brief without falling back to global latest", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_selected_web",
+        worktree_label: "worktree-web",
+        session_id: "session-web",
+        branch: "feature/branch-filter",
+        outcome: {
+          status: "passed",
+          summary: "Selected web worktree should continue from this branch.",
+          evidence_refs: ["commit:selected"],
+        },
+      }),
+    );
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_newer_other_web",
+        created_at: "2026-07-04T01:10:00.000Z",
+        worktree_label: "other-worktree",
+        session_id: "session-other",
+        branch: "feature/other",
+        outcome: {
+          status: "passed",
+          summary: "Other worktree has a newer web snapshot.",
+          evidence_refs: ["commit:other"],
+        },
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/brief?worktree=worktree-web&session_id=session-web&branch=feature%2Fbranch-filter",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const serialized = JSON.stringify(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        title: "Continue agent loop loop_selected_web",
+        source_snapshot_id: "loop_selected_web",
+      },
+    });
+    expect(serialized).toContain("Selected web worktree should continue");
+    expect(serialized).not.toContain("Other worktree has a newer web snapshot");
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("/Users/example");
+  });
+
+  it("returns the selected worktree latest merge decision read-only", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_selected_decision",
+        worktree_label: "worktree-web",
+        project_id: "proj_web",
+      }),
+    );
+    storage.loopMergeDecisions.push(
+      loopMergeDecision({
+        snapshot_id: "loop_selected_decision",
+        project_id: "proj_web",
+        worktree: "worktree-web",
+        decision: "continue",
+        reason: "Needs one more verification pass before merge.",
+        created_at: "2026-07-04T01:30:00.000Z",
+      }),
+    );
+    storage.loopMergeDecisions.push(
+      loopMergeDecision({
+        id: "mdec_other",
+        snapshot_id: "loop_other",
+        project_id: "proj_other",
+        worktree: "other-worktree",
+        decision: "merge",
+        reason: "Other project decision should stay scoped out.",
+        created_at: "2026-07-04T01:40:00.000Z",
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/worktrees/worktree-web",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const serialized = JSON.stringify(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        worktree: "worktree-web",
+        latest_decision: {
+          snapshot_id: "loop_selected_decision",
+          worktree: "worktree-web",
+          decision: "continue",
+          reason: "Needs one more verification pass before merge.",
+          decided_by: "user",
+          created_at: "2026-07-04T01:30:00.000Z",
+        },
+      },
+    });
+    expect(serialized).not.toContain("Other project decision");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-secret");
+  });
+
+  it("returns the selected worktree review packet summary read-only", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_review_selected",
+        worktree_label: "review-worktree",
+        project_id: "proj_web",
+        outcome: {
+          status: "failed",
+          summary:
+            "Unsafe selected outcome should stay hidden /Users/example/private sk-proj-secret",
+          evidence_refs: ["commit:review"],
+        },
+      }),
+    );
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_ready_other",
+        worktree_label: "ready-worktree",
+        project_id: "proj_web",
+        outcome: {
+          status: "passed",
+          summary: "Ready outcome should stay hidden.",
+          evidence_refs: ["commit:ready"],
+        },
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/worktrees/review-worktree",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const serialized = JSON.stringify(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        worktree: "review-worktree",
+        selection_scope: {
+          label: "Selection scope",
+          filters: ["worktree"],
+          reason: "showing latest snapshots for selected worktree",
+          next_action: "copy selected worktree brief",
+        },
+        snapshot_age: {
+          label: "Selected snapshot age",
+          latest_selected_created_at: "2026-07-04T01:00:00.000Z",
+          status: "latest",
+          reason: "selected snapshot is the latest recorded loop snapshot",
+          next_action: "copy selected worktree brief",
+        },
+        selected_brief_action: {
+          label: "Selected brief action",
+          action: "copy selected continuation brief",
+          reason:
+            "uses the selected worktree/session/branch filters without auto-submitting",
+          command: "prompt-coach loop brief --worktree review-worktree",
+          writes_files: false,
+          external_calls: false,
+        },
+        command_distinction: {
+          label: "Command distinction",
+          selected_command_role:
+            "continue the selected worktree/session/branch filters",
+          review_command_role:
+            "copy the review packet command-center hint for merge review",
+          reason:
+            "selected continuation and review packet commands can differ when session or branch filters are active",
+          writes_files: false,
+          external_calls: false,
+        },
+        command_filters: {
+          label: "Command filters",
+          selected_command_filters: ["worktree"],
+          review_command_filters: ["worktree", "branch"],
+          reason:
+            "selected command reflects the current selection while review command reflects command-center review scope",
+          writes_files: false,
+          external_calls: false,
+        },
+        copy_side_effects: {
+          label: "Copy side effects",
+          clipboard: "copies the selected continuation brief to the local clipboard",
+          ui_feedback: "temporarily marks the selected brief copy button as copied",
+          does_not:
+            "does not write files, execute commands, call external services, submit prompts, or change merge state",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_group: {
+          label: "Continuation safety guidance",
+          scope:
+            "read-only handoff boundaries for Codex and Claude Code continuation",
+          includes:
+            "copy, paste, review, collect, privacy, and merge gating notes",
+          reason:
+            "keeps the selected continuation path explicit without automating agents",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_ordering_note: {
+          label: "Safety guidance order",
+          first:
+            "review the continuation safety guidance before copying or pasting briefs",
+          then:
+            "follow copy, paste, review, collect, privacy, and merge gating notes in order",
+          reason:
+            "keeps continuation handoff reviewable before any manual agent submission",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_non_persistence_note: {
+          label: "Safety review state",
+          state:
+            "reviewed guidance state is not stored or synchronized by Loopdeck",
+          reminder:
+            "operator re-checks safety guidance each time before manual agent submission",
+          reason:
+            "keeps continuation review local to the current operator session",
+          stores_state: false,
+          external_calls: false,
+        },
+        continuation_safety_recheck_cue: {
+          label: "Safety re-check cue",
+          trigger: "after each selected brief copy",
+          instruction:
+            "re-check continuation safety guidance before pasting into Codex or Claude Code",
+          reason:
+            "each copied brief can represent a new handoff decision even in the same session",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_copy_feedback_reminder: {
+          label: "Copy feedback reminder",
+          feedback_scope:
+            "copied state only confirms the brief reached the local clipboard",
+          next_step:
+            "return to the safety re-check cue before pasting the copied brief",
+          reason:
+            "copy feedback is not safety approval or agent submission",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_copy_feedback_accessibility_note: {
+          label: "Copy feedback accessibility",
+          visible_label: "selected brief copy button label remains stable",
+          assistive_feedback:
+            "copied status belongs in accessible feedback instead of replacing the visible command",
+          reason:
+            "keeps copy feedback clear without implying safety approval or changing layout",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_copy_feedback_timeout_note: {
+          label: "Copy feedback timeout",
+          timeout_scope: "copied feedback clears after a short local timeout",
+          not_state:
+            "timeout does not record review completion or submission state",
+          reason:
+            "keeps copied feedback temporary while preserving the manual safety review boundary",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_copy_feedback_failure_note: {
+          label: "Copy feedback failure",
+          failure_scope: "clipboard failure requires a manual retry",
+          not_state:
+            "failure does not submit prompts or store review state",
+          reason:
+            "keeps copy failure handling local to the operator without hidden recovery actions",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_copy_retry_note: {
+          label: "Copy retry",
+          retry_scope: "operator manually retries the selected brief copy action",
+          not_automatic:
+            "Loopdeck does not automatically retry clipboard writes or submit prompts",
+          reason:
+            "keeps retry control with the operator before any Codex or Claude Code paste",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_pre_paste_confirmation_note: {
+          label: "Pre-paste confirmation",
+          confirmation:
+            "operator confirms the copied brief and target agent request before paste",
+          not_submission:
+            "confirmation does not submit prompts or approve safety review",
+          reason:
+            "keeps the final handoff check manual before Codex or Claude Code receives the brief",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_target_agent_check_note: {
+          label: "Target-agent check",
+          check:
+            "operator verifies the active Codex or Claude Code request box before paste",
+          not_inspection:
+            "Loopdeck does not inspect agent UI state or target contents",
+          reason:
+            "keeps target selection manual before any continuation handoff",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_paste_destination_boundary_note: {
+          label: "Paste destination boundary",
+          boundary:
+            "paste destination is a manual operator choice in Codex or Claude Code",
+          not_verified:
+            "Loopdeck does not verify active windows, target contents, or paste success",
+          reason:
+            "keeps destination verification outside Loopdeck automation before submission",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_manual_submission_boundary_note: {
+          label: "Manual submission boundary",
+          submission:
+            "operator submits the pasted brief manually in Codex or Claude Code",
+          not_automated:
+            "Loopdeck does not press enter, click submit, or record submitted state",
+          reason:
+            "keeps final agent execution under operator control after paste",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_submission_result_non_persistence_note: {
+          label: "Submission result non-persistence",
+          result_scope:
+            "agent response and submission result stay outside Loopdeck until the next explicit loop snapshot",
+          not_stored:
+            "Loopdeck does not detect, store, or sync submitted state after handoff",
+          reason:
+            "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_post_submission_collection_reminder_note: {
+          label: "Post-submission collection reminder",
+          reminder:
+            "collect the next loop snapshot explicitly after the agent response is ready",
+          not_background:
+            "Loopdeck does not start collection from submission, transcript changes, or agent UI activity",
+          reason:
+            "keeps post-submission collection operator-triggered and local-first",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_collection_result_non_persistence_note: {
+          label: "Collection result non-persistence",
+          result_scope:
+            "collection result is not persisted until the operator records the next explicit loop snapshot",
+          not_stored:
+            "Loopdeck does not store, sync, or infer collection result state from agent UI activity",
+          reason:
+            "keeps collection evidence tied to explicit local snapshot recording",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_collection_retry_boundary_note: {
+          label: "Collection retry boundary",
+          retry: "operator reruns the explicit loop collection flow when retry is needed",
+          not_automated:
+            "Loopdeck does not automatically retry collection commands or hidden recovery actions",
+          reason:
+            "keeps retry control local and operator-triggered after collection uncertainty",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_retry_outcome_non_persistence_note: {
+          label: "Retry outcome non-persistence",
+          outcome_scope:
+            "retry attempt and outcome stay outside Loopdeck until the next explicit loop snapshot",
+          not_stored:
+            "Loopdeck does not detect, store, or sync retry success or failure state",
+          reason:
+            "keeps retry evidence tied to explicit local snapshot recording",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_collection_evidence_freshness_boundary_note: {
+          label: "Collection evidence freshness boundary",
+          freshness_check:
+            "operator checks freshness against the latest explicit loop snapshot evidence",
+          not_verified:
+            "Loopdeck does not verify freshness from git status, transcripts, or agent UI activity",
+          reason:
+            "keeps evidence freshness review tied to local snapshot metadata",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_freshness_result_non_persistence_note: {
+          label: "Freshness result non-persistence",
+          result_scope:
+            "freshness result stays outside Loopdeck until the next explicit loop snapshot",
+          not_stored:
+            "Loopdeck does not detect, store, or sync freshness result state",
+          reason:
+            "keeps freshness evidence tied to explicit local snapshot recording",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_freshness_uncertainty_collection_reminder: {
+          label: "Freshness uncertainty collection reminder",
+          reminder:
+            "collect a new explicit loop snapshot when evidence freshness is uncertain",
+          not_automated:
+            "Loopdeck does not verify freshness or start collection automatically",
+          reason:
+            "keeps freshness uncertainty resolution operator-triggered and local-first",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_pre_merge_freshness_advisory: {
+          label: "Pre-merge freshness advisory",
+          advisory:
+            "review freshness uncertainty before merge decisions",
+          not_decision:
+            "Loopdeck does not approve merges or verify freshness before merge",
+          reason:
+            "keeps merge readiness separate from freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_pre_memory_approval_freshness_advisory: {
+          label: "Pre-memory-approval freshness advisory",
+          advisory:
+            "review freshness uncertainty before approving loop memory",
+          not_decision:
+            "Loopdeck does not approve memory or verify freshness from this note",
+          reason:
+            "keeps memory approval separate from freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_post_memory_approval_collection_reminder: {
+          label: "Post-memory-approval collection reminder",
+          reminder:
+            "collect a new explicit loop snapshot after approving loop memory",
+          not_automated:
+            "Loopdeck does not start collection from memory approval or approval state changes",
+          reason:
+            "keeps post-approval collection operator-triggered and local-first",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_post_memory_approval_collection_result_non_persistence_note:
+          {
+            label: "Post-memory-approval collection result non-persistence",
+            result_scope:
+              "post-approval collection result stays outside Loopdeck until the next explicit loop snapshot",
+            not_stored:
+              "Loopdeck does not detect, store, or sync post-approval collection result state",
+            reason:
+              "keeps post-approval collection evidence tied to explicit local snapshot recording",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_collection_retry_boundary_note:
+          {
+            label: "Post-memory-approval collection retry boundary",
+            retry:
+              "operator reruns the explicit post-approval loop collection flow when retry is needed",
+            not_automated:
+              "Loopdeck does not automatically retry post-approval collection commands or hidden recovery actions",
+            reason:
+              "keeps post-approval collection retry control local and operator-triggered",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_outcome_non_persistence_note:
+          {
+            label: "Post-memory-approval retry outcome non-persistence",
+            outcome_scope:
+              "post-approval retry outcome stays outside Loopdeck until the next explicit loop snapshot",
+            not_stored:
+              "Loopdeck does not detect, store, or sync post-approval retry success or failure state",
+            reason:
+              "keeps post-approval retry evidence tied to explicit local snapshot recording",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note:
+          {
+            label: "Post-memory-approval retry evidence freshness boundary",
+            review:
+              "operator checks retry evidence freshness against the latest explicit loop snapshot",
+            not_verified:
+              "Loopdeck does not verify post-approval retry freshness from git status, transcripts, or agent UI activity",
+            reason:
+              "keeps post-approval retry freshness review tied to local snapshot metadata",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note:
+          {
+            label:
+              "Post-memory-approval retry freshness result non-persistence",
+            result_scope:
+              "post-approval retry freshness result stays outside Loopdeck until the next explicit loop snapshot",
+            not_stored:
+              "Loopdeck does not detect, store, or sync post-approval retry freshness result state",
+            reason:
+              "keeps post-approval retry freshness evidence tied to explicit local snapshot recording",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder:
+          {
+            label:
+              "Post-memory-approval retry freshness uncertainty collection reminder",
+            reminder:
+              "collect a new explicit loop snapshot when post-approval retry freshness is uncertain",
+            not_automated:
+              "Loopdeck does not verify post-approval retry freshness or start collection automatically",
+            reason:
+              "keeps post-approval retry freshness uncertainty resolution operator-triggered and local-first",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry pre-memory-approval freshness advisory",
+            advisory:
+              "review post-approval retry freshness uncertainty before approving loop memory again",
+            not_decision:
+              "Loopdeck does not approve memory or verify post-approval retry freshness from this advisory",
+            reason:
+              "keeps renewed memory approval separate from retry freshness uncertainty review",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_reminder:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval collection reminder",
+            reminder:
+              "collect a new explicit loop snapshot after approving loop memory again",
+            not_automated:
+              "Loopdeck does not start collection from renewed memory approval or approval state changes",
+            reason:
+              "keeps renewed-memory-approval collection operator-triggered and local-first",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_result_non_persistence_note:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval collection result non-persistence",
+            result_scope:
+              "renewed-memory-approval collection result stays outside Loopdeck until the next explicit loop snapshot",
+            not_stored:
+              "Loopdeck does not detect, store, or sync renewed-memory-approval collection result state",
+            reason:
+              "keeps renewed-memory-approval collection evidence tied to explicit local snapshot recording",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_uncertainty_reminder:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval collection uncertainty reminder",
+            reminder:
+              "collect a new explicit loop snapshot when renewed-memory-approval collection result is uncertain",
+            not_automated:
+              "Loopdeck does not verify renewed-memory-approval collection result or start collection automatically",
+            reason:
+              "keeps renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_merge_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval pre-merge freshness advisory",
+            advisory:
+              "review renewed-memory-approval freshness uncertainty before merge decisions",
+            not_decision:
+              "Loopdeck does not approve merges or verify renewed-memory-approval freshness before merge",
+            reason:
+              "keeps merge readiness separate from renewed-memory-approval freshness uncertainty review",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_handoff_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval pre-handoff freshness advisory",
+            advisory:
+              "review renewed-memory-approval freshness uncertainty before continuation handoff",
+            not_decision:
+              "Loopdeck does not approve handoffs or verify renewed-memory-approval freshness before handoff",
+            reason:
+              "keeps continuation handoff separate from renewed-memory-approval freshness uncertainty review",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_paste_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval pre-paste freshness advisory",
+            advisory:
+              "review renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
+            not_decision:
+              "Loopdeck does not approve paste targets or verify renewed-memory-approval freshness before paste",
+            reason:
+              "keeps paste readiness separate from renewed-memory-approval freshness uncertainty review",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_submit_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval pre-submit freshness advisory",
+            advisory:
+              "review renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
+            not_decision:
+              "Loopdeck does not approve submissions or verify renewed-memory-approval freshness before submit",
+            reason:
+              "keeps submission readiness separate from renewed-memory-approval freshness uncertainty review",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit freshness advisory",
+            advisory:
+              "collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain",
+            not_automated:
+              "Loopdeck does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
+            reason:
+              "keeps post-submit freshness review tied to explicit local snapshot collection",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence",
+            result_scope:
+              "post-submit collection result stays outside Loopdeck until the next explicit loop snapshot",
+            not_stored:
+              "Loopdeck does not detect, store, or sync post-submit collection result state",
+            reason:
+              "keeps post-submit collection evidence tied to explicit local snapshot recording",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit collection retry boundary",
+            retry:
+              "operator reruns the explicit post-submit loop collection flow when retry is needed",
+            not_automated:
+              "Loopdeck does not automatically retry post-submit collection commands or hidden recovery actions",
+            reason:
+              "keeps post-submit collection retry control local and operator-triggered",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_outcome_non_persistence_note:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence",
+            outcome_scope:
+              "post-submit retry attempt and outcome stay outside Loopdeck until the next explicit loop snapshot",
+            not_stored:
+              "Loopdeck does not detect, store, or sync post-submit retry success or failure state",
+            reason:
+              "keeps post-submit retry evidence tied to explicit local snapshot recording",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_evidence_freshness_boundary_note:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry evidence freshness boundary",
+            freshness_scope:
+              "operator checks post-submit retry evidence freshness against the latest explicit loop snapshot",
+            not_verified:
+              "Loopdeck does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
+            reason:
+              "keeps post-submit retry evidence freshness review tied to local snapshot metadata",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_result_non_persistence_note:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence",
+            result_scope:
+              "post-submit retry freshness result stays outside Loopdeck until the next explicit loop snapshot",
+            not_stored:
+              "Loopdeck does not detect, store, or sync post-submit retry freshness result state",
+            reason:
+              "keeps post-submit retry freshness evidence tied to explicit local snapshot recording",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_uncertainty_collection_reminder:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry freshness uncertainty collection reminder",
+            collection_trigger:
+              "collect a new explicit loop snapshot when post-submit retry freshness is uncertain",
+            not_automated:
+              "Loopdeck does not verify post-submit retry freshness or start collection automatically",
+            reason:
+              "keeps post-submit retry freshness uncertainty resolution operator-triggered and local-first",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_pre_memory_approval_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry pre-memory-approval freshness advisory",
+            advisory:
+              "review post-submit retry freshness uncertainty before approving loop memory again",
+            not_decision:
+              "Loopdeck does not approve memory or verify post-submit retry freshness from this advisory",
+            reason:
+              "keeps renewed memory approval separate from post-submit retry freshness uncertainty review",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_reminder:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection reminder",
+            reminder:
+              "collect a new explicit loop snapshot after approving loop memory again after post-submit retry",
+            not_automated:
+              "Loopdeck does not start collection from post-submit retry renewed memory approval or hidden approval signals",
+            reason:
+              "keeps post-submit retry renewed-memory-approval collection operator-triggered and local-first",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_result_non_persistence_note:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence",
+            result_scope:
+              "post-submit retry renewed-memory-approval collection result stays outside Loopdeck until the next explicit loop snapshot",
+            not_stored:
+              "Loopdeck does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
+            reason:
+              "keeps post-submit retry renewed-memory-approval collection evidence tied to explicit local snapshot recording",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_uncertainty_reminder:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection uncertainty reminder",
+            reminder:
+              "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval collection result is uncertain",
+            not_automated:
+              "Loopdeck does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
+            reason:
+              "keeps post-submit retry renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_merge_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-merge freshness advisory",
+            advisory:
+              "review post-submit retry renewed-memory-approval freshness uncertainty before merge decisions",
+            not_decision:
+              "Loopdeck does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
+            reason:
+              "keeps merge readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_handoff_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-handoff freshness advisory",
+            advisory:
+              "review post-submit retry renewed-memory-approval freshness uncertainty before continuation handoff",
+            not_decision:
+              "Loopdeck does not approve handoffs or verify post-submit retry renewed-memory-approval freshness before handoff",
+            reason:
+              "keeps continuation handoff separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_paste_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-paste freshness advisory",
+            advisory:
+              "review post-submit retry renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
+            not_decision:
+              "Loopdeck does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
+            reason:
+              "keeps paste readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_submit_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-submit freshness advisory",
+            advisory:
+              "review post-submit retry renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
+            not_decision:
+              "Loopdeck does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
+            reason:
+              "keeps submission readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit freshness advisory",
+            advisory:
+              "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain",
+            not_automated:
+              "Loopdeck does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
+            reason:
+              "keeps post-submit retry renewed-memory-approval freshness review tied to explicit local snapshot collection",
+            writes_files: false,
+            external_calls: false,
+          },
+        paste_destination: {
+          label: "Paste destination",
+          targets: ["Codex active request", "Claude Code active request"],
+          instruction:
+            "paste the copied continuation brief into the active agent request box",
+          reason:
+            "keeps Loopdeck as the local handoff source while the user controls submission",
+          auto_submit: false,
+          writes_files: false,
+          external_calls: false,
+        },
+        handoff_checklist: {
+          label: "Continuation handoff checklist",
+          steps: [
+            "copy selected continuation brief",
+            "paste into Codex or Claude Code active request",
+            "submit manually after review",
+            "collect the next loop snapshot after the agent turn",
+          ],
+          reason:
+            "keeps continuation handoff explicit without automating agent UI or reading transcripts",
+          writes_files: false,
+          external_calls: false,
+        },
+        post_handoff_reminder: {
+          label: "Post-handoff reminder",
+          collect_next: "collect a new loop snapshot after the next agent turn",
+          not_memory_approval: "memory approval remains a separate explicit review",
+          not_merge: "merge remains a separate review-before-merge decision",
+          reason:
+            "continuation handoff records the next loop before any memory approval or merge decision",
+          writes_files: false,
+          external_calls: false,
+        },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence",
+            result_scope:
+              "post-submit retry renewed-memory-approval post-submit collection result stays outside Loopdeck until the next explicit loop snapshot",
+            not_stored:
+              "Loopdeck does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
+            reason:
+              "keeps post-submit retry renewed-memory-approval post-submit collection evidence tied to explicit local snapshot recording",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection uncertainty reminder",
+            reminder:
+              "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection result is uncertain",
+            not_automated:
+              "Loopdeck does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
+            reason:
+              "keeps post-submit retry renewed-memory-approval post-submit collection uncertainty resolution operator-triggered and local-first",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_merge_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-merge freshness advisory",
+            advisory:
+              "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before merge decisions",
+            not_decision:
+              "Loopdeck does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
+            reason:
+              "keeps merge readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_handoff_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-handoff freshness advisory",
+            advisory:
+              "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before continuation handoff",
+            not_decision:
+              "Loopdeck does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
+            reason:
+              "keeps continuation handoff separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_paste_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-paste freshness advisory",
+            advisory:
+              "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before pasting into Codex or Claude Code",
+            not_decision:
+              "Loopdeck does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
+            reason:
+              "keeps paste readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_submit_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-submit freshness advisory",
+            advisory:
+              "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before submitting in Codex or Claude Code",
+            not_decision:
+              "Loopdeck does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
+            reason:
+              "keeps submission readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_post_submit_freshness_advisory:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection post-submit freshness advisory",
+            advisory:
+              "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
+            not_monitored:
+              "Loopdeck does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval post-submit collection freshness after submit",
+            reason:
+              "keeps post-submit retry renewed-memory-approval post-submit collection freshness review tied to explicit local snapshot collection",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_result_non_persistence_note:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence",
+            not_stored:
+              "post-submit retry renewed-memory-approval post-submit collection freshness result stays outside Loopdeck until the next explicit loop snapshot",
+            not_detected:
+              "Loopdeck does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
+            reason:
+              "keeps post-submit retry renewed-memory-approval post-submit collection freshness evidence tied to explicit local snapshot recording",
+            writes_files: false,
+            external_calls: false,
+          },
+        continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_uncertainty_collection_reminder:
+          {
+            label:
+              "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness uncertainty collection reminder",
+            reminder:
+              "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
+            not_automated:
+              "Loopdeck does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically",
+            reason:
+              "keeps post-submit retry renewed-memory-approval post-submit collection freshness uncertainty resolution operator-triggered and local-first",
+            writes_files: false,
+            external_calls: false,
+          },
+        source_of_truth_note: {
+          label: "Source-of-truth note",
+          local_memory_input:
+            "next loop snapshot is the source of truth for local loop memory",
+          not_transcript_import:
+            "transcript import is not used as the source of truth",
+          reason:
+            "Loopdeck records explicit loop snapshots instead of importing agent transcripts",
+          stores_transcripts: false,
+          writes_files: false,
+          external_calls: false,
+        },
+        privacy_boundary_note: {
+          label: "Privacy boundary",
+          storage_scope:
+            "stores loop metadata in the local database and Markdown archive only",
+          does_not_store:
+            "does not store prompt bodies, transcripts, raw paths, or provider credentials",
+          reason:
+            "keeps source-of-truth loop memory local-first and reviewable",
+          local_only: true,
+          writes_files: false,
+          external_calls: false,
+        },
+        operator_review_gate: {
+          label: "Operator review gate",
+          review_step:
+            "operator reviews the copied continuation brief before submitting",
+          manual_submit: "submission remains manual in Codex or Claude Code",
+          does_not:
+            "does not auto-submit prompts, execute commands, write files, or change merge state",
+          auto_submit: false,
+          writes_files: false,
+          external_calls: false,
+        },
+        collection_responsibility_note: {
+          label: "Collection responsibility",
+          responsible_party:
+            "operator collects the next loop snapshot after the agent turn",
+          trigger:
+            "collection starts only when the operator runs the loop collection flow",
+          does_not:
+            "does not watch transcripts, scrape agent UI, or collect in the background",
+          automatic_collection: false,
+          writes_files: false,
+          external_calls: false,
+        },
+        pre_merge_advisory: {
+          label: "Pre-merge advisory",
+          hold_merge:
+            "hold merge decisions until the next loop snapshot is collected and reviewed",
+          reason:
+            "continuation handoff can change readiness after the next agent turn",
+          not_memory_approval:
+            "memory approval remains separate from merge readiness",
+          writes_merge_decision: false,
+          writes_files: false,
+          external_calls: false,
+        },
+        post_collection_review_note: {
+          label: "Post-collection review",
+          review_step:
+            "review the collected loop snapshot quality and evidence before approval",
+          before_memory_approval:
+            "approve memory only after the collected snapshot is reviewed",
+          before_merge:
+            "merge readiness can be reconsidered after post-collection review",
+          writes_memory: false,
+          writes_merge_decision: false,
+          external_calls: false,
+        },
+        review_packet_summary: {
+          title: "Review-before-merge packet",
+          status: "needs_review",
+          summary: "1 ready, 1 needs review, 0 missing evidence",
+          next_action: "review non-passing worktrees before merge",
+          worktree: "review-worktree",
+          merge_readiness: "needs_review",
+          worktree_action: "review outcome before merge",
+          readiness_summary: {
+            label: "Readiness summary",
+            status: "needs_review",
+            reason: "latest selected worktree outcome is not passing",
+            next_action: "review outcome before merge",
+          },
+          brief_rationale: {
+            label: "Brief rationale",
+            merge_readiness: "needs_review",
+            reason:
+              "selected brief continues review work without marking it merge-ready",
+            next_action: "copy selected continuation brief",
+            merge_gate: "review outcome before merge",
+          },
+          evidence_count_explanation: {
+            label: "Evidence count",
+            count: 1,
+            reason: "selected worktree has evidence refs recorded",
+            next_action: "compare evidence before merge",
+          },
+          reviewer_checklist_preview: [
+            {
+              label: "Review non-passing worktrees before merge",
+              status: "required",
+              action: "review outcome before merge",
+            },
+          ],
+          command_hint: {
+            label: "Copy review brief command",
+            command:
+              "prompt-coach loop brief --worktree review-worktree --branch codex/agent-loop-memory-design",
+            provenance: {
+              label: "Command provenance",
+              source: "existing command-center continuation command",
+              reason:
+                "reuses safe selected worktree metadata without reading git or executing commands",
+              writes_files: false,
+              external_calls: false,
+            },
+          },
+        },
+      },
+    });
+    expect(serialized).not.toContain("Unsafe selected outcome");
+    expect(serialized).not.toContain("Ready outcome should stay hidden");
+    expect(serialized).not.toContain("commit:review");
+    expect(serialized).not.toContain("commit:ready");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-secret");
+  });
+
+  it("explains when the selected worktree snapshot is older than the latest recorded loop", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_global_newer",
+        created_at: "2026-07-04T01:15:00.000Z",
+        worktree_label: "newer-worktree",
+        project_id: "proj_web",
+        outcome: {
+          status: "passed",
+          summary: "Newer unsafe summary should stay hidden.",
+          evidence_refs: ["commit:newer"],
+        },
+      }),
+    );
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_selected_older",
+        created_at: "2026-07-04T01:00:00.000Z",
+        worktree_label: "older-worktree",
+        project_id: "proj_web",
+        outcome: {
+          status: "passed",
+          summary:
+            "Older selected unsafe summary should stay hidden /Users/example/private sk-proj-secret",
+          evidence_refs: ["commit:older"],
+        },
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/worktrees/older-worktree",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const serialized = JSON.stringify(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        worktree: "older-worktree",
+        snapshot_age: {
+          label: "Selected snapshot age",
+          latest_selected_created_at: "2026-07-04T01:00:00.000Z",
+          status: "older_than_latest",
+          reason: "another loop snapshot was recorded after this selection",
+          next_action: "refresh selected worktree before merging",
+        },
+      },
+    });
+    expect(serialized).not.toContain("Newer unsafe summary");
+    expect(serialized).not.toContain("Older selected unsafe summary");
+    expect(serialized).not.toContain("commit:newer");
+    expect(serialized).not.toContain("commit:older");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-secret");
+  });
+
+  it("returns a raw-free missing-evidence explanation for blocked selected worktrees", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_missing_selected",
+        worktree_label: "blocked-worktree",
+        project_id: "proj_web",
+        outcome: {
+          status: "unknown",
+          summary:
+            "Unsafe missing evidence summary should stay hidden /Users/example/private sk-proj-secret",
+          evidence_refs: [],
+        },
+      }),
+    );
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_ready_other",
+        worktree_label: "ready-worktree",
+        project_id: "proj_web",
+        outcome: {
+          status: "passed",
+          summary: "Ready outcome should stay hidden.",
+          evidence_refs: ["commit:ready"],
+        },
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/worktrees/blocked-worktree",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const serialized = JSON.stringify(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        worktree: "blocked-worktree",
+        selection_scope: {
+          label: "Selection scope",
+          filters: ["worktree"],
+          reason: "showing latest snapshots for selected worktree",
+          next_action: "copy selected worktree brief",
+        },
+        review_packet_summary: {
+          status: "blocked",
+          summary: "1 ready, 0 needs review, 1 missing evidence",
+          next_action: "record missing evidence before merge",
+          merge_readiness: "missing_evidence",
+          worktree_action: "record loop outcome evidence",
+          readiness_summary: {
+            label: "Readiness summary",
+            status: "missing_evidence",
+            reason: "latest selected worktree outcome has no evidence refs",
+            next_action: "record loop outcome evidence",
+          },
+          evidence_count_explanation: {
+            label: "Evidence count",
+            count: 0,
+            reason: "selected worktree has no evidence refs recorded",
+            next_action: "record loop outcome evidence",
+          },
+          reviewer_checklist_preview: [
+            {
+              label: "Record missing evidence before merge",
+              status: "required",
+              action: "record loop outcome evidence",
+            },
+          ],
+          missing_evidence_explanation: {
+            label: "Missing evidence",
+            reason: "latest selected worktree outcome has no evidence refs",
+            next_action: "record loop outcome evidence",
+          },
+        },
+      },
+    });
+    expect(serialized).not.toContain("Unsafe missing evidence summary");
+    expect(serialized).not.toContain("Ready outcome should stay hidden");
+    expect(serialized).not.toContain("commit:ready");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-secret");
+  });
+
+  it("returns a raw-free readiness summary for ready selected worktrees", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_ready_selected",
+        worktree_label: "ready-worktree",
+        project_id: "proj_web",
+        outcome: {
+          status: "passed",
+          summary:
+            "Unsafe ready summary should stay hidden /Users/example/private sk-proj-secret",
+          evidence_refs: ["commit:ready"],
+        },
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/worktrees/ready-worktree",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const serialized = JSON.stringify(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        worktree: "ready-worktree",
+        review_packet_summary: {
+          status: "ready",
+          summary: "1 ready, 0 needs review, 0 missing evidence",
+          next_action: "compare ready evidence before merge",
+          merge_readiness: "ready",
+          worktree_action: "compare evidence before merge",
+          readiness_summary: {
+            label: "Readiness summary",
+            status: "ready",
+            reason: "selected worktree has recorded evidence and passing outcome",
+            next_action: "compare evidence before merge",
+          },
+          evidence_count_explanation: {
+            label: "Evidence count",
+            count: 1,
+            reason: "selected worktree has evidence refs recorded",
+            next_action: "compare evidence before merge",
+          },
+        },
+      },
+    });
+    expect(serialized).not.toContain("Unsafe ready summary");
+    expect(serialized).not.toContain("commit:ready");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-secret");
+  });
+
+  it("returns approved loop memory in copy-ready loop briefs", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(loopSnapshot());
+    storage.loopMemories.push(loopMemory());
+    storage.loopMemories.push(
+      loopMemory({
+        id: "mem_other",
+        snapshot_id: "loop_other",
+        statement: "This unrelated project memory should not appear.",
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/loop_web/brief",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const prompt = response.json<{ data: { prompt: string } }>().data.prompt;
+
+    expect(response.statusCode).toBe(200);
+    expect(prompt).toContain("## Approved Loop Memories");
+    expect(prompt).toContain(
+      "Keep web, CLI, MCP, and API loop status on the shared model.",
+    );
+    expect(prompt).not.toContain("This unrelated project memory");
+    expect(prompt).not.toContain("/Users/example");
+    expect(prompt).not.toContain("sk-proj-secret");
+  });
+
+  it("records latest eligible loop memory from the web behind csrf without writing instruction files", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        outcome: {
+          status: "passed",
+          summary:
+            "Use focused tests before full verification for loop memory changes.",
+          evidence_refs: ["test:web loops", "commit:abc1234"],
+        },
+      }),
+    );
+    const server = createTestServer({ storage });
+    const session = await server.inject({
+      method: "GET",
+      url: "/api/v1/session",
+      headers: { host: "127.0.0.1:17373" },
+    });
+    const cookie = String(session.headers["set-cookie"]);
+    const csrfToken = session.json<{ data: { csrf_token: string } }>().data
+      .csrf_token;
+
+    const noCsrf = await server.inject({
+      method: "POST",
+      url: "/api/v1/loops/memory/approve",
+      headers: {
+        host: "127.0.0.1:17373",
+        cookie,
+      },
+      payload: { approved_by: "web" },
+    });
+    expect(noCsrf.statusCode).toBe(403);
+
+    const approved = await server.inject({
+      method: "POST",
+      url: "/api/v1/loops/memory/approve",
+      headers: {
+        host: "127.0.0.1:17373",
+        cookie,
+        "x-csrf-token": csrfToken,
+      },
+      payload: { approved_by: "web" },
+    });
+    const serialized = JSON.stringify(approved.json());
+
+    expect(approved.statusCode).toBe(200);
+    expect(approved.json()).toMatchObject({
+      data: {
+        recorded: true,
+        memory: {
+          snapshot_id: "loop_web",
+          title: "Remember loop outcome for private-project",
+          evidence_refs: ["test:web loops", "commit:abc1234"],
+          approved_by: "web",
+          privacy: {
+            local_only: true,
+            stores_prompt_bodies: false,
+            stores_raw_paths: false,
+            writes_instruction_files: false,
+            external_calls: false,
+          },
+        },
+        next_actions: [
+          "prompt-coach loop brief",
+          "prompt-coach loop instruction-patch --target-file AGENTS.md",
+        ],
+        privacy: {
+          local_only: true,
+          returns_prompt_bodies: false,
+          returns_raw_paths: false,
+          writes_instruction_files: false,
+          external_calls: false,
+        },
+      },
+    });
+    expect(storage.loopMemories).toHaveLength(1);
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-secret");
+  });
+
+  it("hides and rejects already approved latest web memory candidates", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        outcome: {
+          status: "passed",
+          summary:
+            "Use focused tests before full verification for loop memory changes.",
+          evidence_refs: ["test:web loops"],
+        },
+      }),
+    );
+    storage.loopMemories.push(loopMemory({ snapshot_id: "loop_web" }));
+    const server = createTestServer({ storage });
+
+    const list = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+
+    expect(list.statusCode).toBe(200);
+    expect(
+      list.json<{ data: { status: { memory_candidate?: unknown } } }>().data
+        .status.memory_candidate,
+    ).toBeUndefined();
+
+    const duplicate = await server.inject({
+      method: "POST",
+      url: "/api/v1/loops/memory/approve",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+      payload: { approved_by: "web" },
+    });
+
+    expect(duplicate.statusCode).toBe(409);
+    expect(storage.loopMemories).toHaveLength(1);
+    expect(duplicate.body).not.toContain("/Users/example");
+    expect(duplicate.body).not.toContain("sk-proj-secret");
+  });
+
+  it("returns a review-only instruction patch proposal for the latest approved web memory", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(loopSnapshot());
+    storage.loopMemories.push(loopMemory({ snapshot_id: "loop_web" }));
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/instruction-patch?target_file=AGENTS.md",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const serialized = JSON.stringify(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        target_file: "AGENTS.md",
+        patch_kind: "append_section",
+        writes_files: false,
+        requires_user_approval: true,
+        source_memory_id: "mem_web",
+        apply_gate: {
+          web_apply_available: false,
+          confirm_command:
+            "prompt-coach loop instruction-apply --target-file AGENTS.md --confirm-apply",
+          mcp_tool: "apply_instruction_patch",
+          reason:
+            "web review does not write files; apply through CLI or MCP with explicit confirmation",
+        },
+        privacy: {
+          local_only: true,
+          external_calls: false,
+          returns_prompt_bodies: false,
+          returns_raw_paths: false,
+          writes_instruction_files: false,
+        },
+      },
+    });
+    expect(response.json<{ data: { diff: string } }>().data.diff).toContain(
+      "+++ b/AGENTS.md",
+    );
+    expect(response.json<{ data: { diff: string } }>().data.diff).toContain(
+      "source_memory: mem_web",
+    );
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-secret");
+  });
+
   it("requires app access and csrf before updating project policy", async () => {
     const storage = createMemoryStorage();
     const server = createTestServer({ storage });
@@ -553,6 +2476,7 @@ describe("createServer P2 ingest boundary", () => {
       "/scores",
       "/benchmark",
       "/insights",
+      "/loops",
       "/projects",
       "/mcp",
       "/exports",
@@ -1283,6 +3207,10 @@ function createMemoryStorage() {
   }> = [];
   const exportJobs = new Map<string, ExportJob>();
   const instructionReviews = new Map<string, ProjectInstructionReview>();
+  const loopSnapshots: LoopSnapshot[] = [];
+  const compactBoundaries: CompactBoundary[] = [];
+  const loopMemories: LoopMemory[] = [];
+  const loopMergeDecisions: LoopMergeDecision[] = [];
   const coachFeedback: Array<{
     id: string;
     prompt_id: string;
@@ -1294,6 +3222,10 @@ function createMemoryStorage() {
     events,
     policyUpdates,
     promptDetails: [] as PromptDetail[],
+    loopSnapshots,
+    compactBoundaries,
+    loopMemories,
+    loopMergeDecisions,
     exportJobs,
     instructionReviews,
     policyForIngest: undefined as
@@ -1410,6 +3342,54 @@ function createMemoryStorage() {
     },
     searchPrompts() {
       return this.listPrompts();
+    },
+    listLoopSnapshots() {
+      return { items: loopSnapshots };
+    },
+    getLatestLoopSnapshot() {
+      return loopSnapshots.at(0);
+    },
+    listCompactBoundaries() {
+      return { items: compactBoundaries };
+    },
+    recordLoopMemory(input: {
+      snapshot_id: string;
+      title: string;
+      statement: string;
+      evidence_refs: string[];
+      approved_by: string;
+    }) {
+      const memory = loopMemory({
+        id: `mem_${loopMemories.length + 1}`,
+        snapshot_id: input.snapshot_id,
+        title: input.title,
+        statement: input.statement,
+        evidence_refs: input.evidence_refs,
+        approved_by: input.approved_by,
+      });
+      loopMemories.unshift(memory);
+      return memory;
+    },
+    listLoopMemories(options: { limit?: number; projectId?: string } = {}) {
+      const scoped = options.projectId
+        ? loopMemories.filter((memory) => {
+            const snapshot = loopSnapshots.find(
+              (item) => item.id === memory.snapshot_id,
+            );
+            return snapshot?.project_id === options.projectId;
+          })
+        : loopMemories;
+      return { items: scoped.slice(0, options.limit ?? scoped.length) };
+    },
+    listLoopMergeDecisions(
+      options: { limit?: number; projectId?: string; worktree?: string } = {},
+    ) {
+      const scoped = loopMergeDecisions.filter(
+        (decision) =>
+          (!options.projectId || decision.project_id === options.projectId) &&
+          (!options.worktree || decision.worktree === options.worktree),
+      );
+      return { items: scoped.slice(0, options.limit ?? scoped.length) };
     },
     getPrompt(id: string) {
       return this.promptDetails.find((prompt) => prompt.id === id);
@@ -1528,5 +3508,85 @@ function createMemoryStorage() {
         }
       | undefined;
     failPolicyLookup: boolean;
+  };
+}
+
+function loopSnapshot(patch: Partial<LoopSnapshot> = {}): LoopSnapshot {
+  return {
+    id: "loop_web",
+    created_at: "2026-07-04T01:00:00.000Z",
+    tool: "codex",
+    source: "cli",
+    session_id: "session-web",
+    cwd_label: "private-project",
+    project_id: "proj_web",
+    branch: "codex/agent-loop-memory-design",
+    prompt_ids: ["prmt_one", "prmt_two"],
+    event_counts: {
+      prompts: 2,
+    },
+    quality: {
+      average_prompt_score: 58,
+      top_gaps: ["Goal clarity", "Verification criteria"],
+      unresolved_questions: [],
+    },
+    outcome: {
+      status: "unknown",
+      summary: "Loop snapshot collected from 2 prompts.",
+      evidence_refs: ["prompt:prmt_one", "prompt:prmt_two"],
+    },
+    next_brief: {
+      generated: false,
+      summary: "Run prompt-coach loop brief to generate the next request.",
+    },
+    privacy: {
+      local_only: true,
+      stores_prompt_bodies: false,
+      stores_raw_paths: false,
+    },
+    ...patch,
+  };
+}
+
+function loopMemory(patch: Partial<LoopMemory> = {}): LoopMemory {
+  return {
+    id: "mem_web",
+    snapshot_id: "loop_web",
+    title: "Shared loop status",
+    statement: "Keep web, CLI, MCP, and API loop status on the shared model.",
+    evidence_refs: ["commit:11d8426", "test:pnpm test"],
+    approved_by: "user",
+    created_at: "2026-07-04T01:10:00.000Z",
+    privacy: {
+      local_only: true,
+      stores_prompt_bodies: false,
+      stores_raw_paths: false,
+      writes_instruction_files: false,
+      external_calls: false,
+    },
+    ...patch,
+  };
+}
+
+function loopMergeDecision(
+  patch: Partial<LoopMergeDecision> = {},
+): LoopMergeDecision {
+  return {
+    id: "mdec_web",
+    snapshot_id: "loop_web",
+    project_id: "proj_web",
+    worktree: "agent-loop-worktree",
+    decision: "continue",
+    reason: "Needs one more verification pass before merge.",
+    decided_by: "user",
+    created_at: "2026-07-04T01:30:00.000Z",
+    privacy: {
+      local_only: true,
+      stores_prompt_bodies: false,
+      stores_raw_paths: false,
+      writes_git_state: false,
+      external_calls: false,
+    },
+    ...patch,
   };
 }

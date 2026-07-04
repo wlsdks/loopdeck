@@ -32,6 +32,15 @@ import {
   SCORE_PROMPT_TOOL_DEFINITION,
 } from "./score-tool-definitions.js";
 import {
+  APPLY_INSTRUCTION_PATCH_TOOL_DEFINITION,
+  GET_LOOPDECK_STATUS_TOOL_DEFINITION,
+  PREPARE_LOOP_BRIEF_TOOL_DEFINITION,
+  PROPOSE_INSTRUCTION_PATCH_TOOL_DEFINITION,
+  PROPOSE_LOOP_MEMORY_CANDIDATE_TOOL_DEFINITION,
+  RECORD_LOOP_MEMORY_TOOL_DEFINITION,
+  RECORD_LOOP_OUTCOME_TOOL_DEFINITION,
+} from "./loop-tool-definitions.js";
+import {
   coachPromptTool,
   getPromptCoachStatusTool,
   improvePromptTool,
@@ -43,6 +52,22 @@ import {
   scorePromptArchiveTool,
   scorePromptTool,
 } from "./score-tool.js";
+import {
+  applyInstructionPatchTool,
+  getLoopdeckStatusTool,
+  prepareLoopBriefTool,
+  proposeInstructionPatchTool,
+  proposeLoopMemoryCandidateTool,
+  recordLoopMemoryTool,
+  recordLoopOutcomeTool,
+} from "./loop-tool.js";
+import type {
+  ApplyInstructionPatchToolArguments,
+  ProposeInstructionPatchToolArguments,
+  ProposeLoopMemoryCandidateToolArguments,
+  RecordLoopMemoryToolArguments,
+  RecordLoopOutcomeToolArguments,
+} from "./loop-tool-types.js";
 import type {
   PrepareAgentJudgeBatchToolArguments,
   RecordAgentJudgmentsToolArguments,
@@ -102,6 +127,13 @@ type PromptCoachToolResult =
   | ReturnType<typeof applyClarificationsTool>
   | Awaited<ReturnType<typeof askClarifyingQuestionsTool>>
   | ReturnType<typeof recordClarificationsTool>
+  | ReturnType<typeof getLoopdeckStatusTool>
+  | ReturnType<typeof prepareLoopBriefTool>
+  | ReturnType<typeof recordLoopOutcomeTool>
+  | ReturnType<typeof proposeLoopMemoryCandidateTool>
+  | ReturnType<typeof recordLoopMemoryTool>
+  | ReturnType<typeof proposeInstructionPatchTool>
+  | ReturnType<typeof applyInstructionPatchTool>
   | ReturnType<typeof scorePromptArchiveTool>
   | ReturnType<typeof reviewProjectInstructionsTool>
   | ReturnType<typeof prepareAgentRewriteTool>
@@ -136,6 +168,29 @@ const PROMPT_COACH_MCP_TOOL_HANDLERS: Record<string, PromptCoachToolHandler> = {
   [RECORD_CLARIFICATIONS_TOOL_DEFINITION.name]: (args, options) =>
     recordClarificationsTool(
       args as RecordClarificationsToolArguments,
+      options,
+    ),
+  [GET_LOOPDECK_STATUS_TOOL_DEFINITION.name]: (args, options) =>
+    getLoopdeckStatusTool(args, options),
+  [PREPARE_LOOP_BRIEF_TOOL_DEFINITION.name]: (args, options) =>
+    prepareLoopBriefTool(args, options),
+  [RECORD_LOOP_OUTCOME_TOOL_DEFINITION.name]: (args, options) =>
+    recordLoopOutcomeTool(args as RecordLoopOutcomeToolArguments, options),
+  [PROPOSE_LOOP_MEMORY_CANDIDATE_TOOL_DEFINITION.name]: (args, options) =>
+    proposeLoopMemoryCandidateTool(
+      args as ProposeLoopMemoryCandidateToolArguments,
+      options,
+    ),
+  [RECORD_LOOP_MEMORY_TOOL_DEFINITION.name]: (args, options) =>
+    recordLoopMemoryTool(args as RecordLoopMemoryToolArguments, options),
+  [PROPOSE_INSTRUCTION_PATCH_TOOL_DEFINITION.name]: (args, options) =>
+    proposeInstructionPatchTool(
+      args as ProposeInstructionPatchToolArguments,
+      options,
+    ),
+  [APPLY_INSTRUCTION_PATCH_TOOL_DEFINITION.name]: (args, options) =>
+    applyInstructionPatchTool(
+      args as ApplyInstructionPatchToolArguments,
       options,
     ),
   [SCORE_PROMPT_ARCHIVE_TOOL_DEFINITION.name]: (args, options) =>

@@ -1,8 +1,8 @@
-# prompt-coach
+# Loopdeck
 
 [English](README.md) | [한국어](README.ko.md)
 
-**Claude Code · Codex용 로컬 prompt 기억 및 코치 도구.**
+**Claude Code · Codex용 local-first agent loop memory 및 meta-prompting workbench.**
 
 - 🗂️ Claude Code / Codex에 보낸 모든 prompt를 로컬 Markdown + SQLite에
   보관합니다 — 외부로 나가지 않습니다.
@@ -18,7 +18,11 @@ prompt-coach setup --profile coach --register-mcp --open-web
 prompt-coach coach
 ```
 
-`prompt-coach`는 Claude Code, Codex 같은 AI 코딩 도구에 입력한 프롬프트를 안전하게 로컬에 기록하고, 나중에 다시 찾고, 반복되는 약한 프롬프트 패턴을 분석하고, 다음 요청을 더 잘 쓰도록 돕는 developer tool입니다.
+Loopdeck은 Claude Code, Codex 같은 AI 코딩 도구에 입력한 프롬프트와 loop metadata를 안전하게 로컬에 기록하고, 나중에 다시 찾고, 반복되는 약한 프롬프트 패턴을 분석하고, 다음 요청을 더 잘 쓰도록 돕는 developer tool입니다. 현재 npm package와 CLI 명령은 호환성 기간 동안 계속 `prompt-coach` 이름을 사용합니다.
+
+npm package는 같은 binary를 가리키는 `loopdeck`도 함께 설치합니다. loopdeck는 CLI alias입니다.
+기존 script와 plugin command에는 `prompt-coach`를 계속 쓰고, 새 terminal
+workflow에서는 제품명 command가 필요할 때 `loopdeck`를 사용할 수 있습니다.
 
 지원되는 도구의 프롬프트를 로컬에서 수집하고, 민감값을 저장 전에 마스킹하고, 사람이 읽을 수 있는 Markdown을 원본으로 남기며, SQLite/FTS 인덱스와 로컬 웹 UI를 통해 검색, 상세 보기, 누적 점수 측정, 프롬프트 연습, 분석, 삭제, 승인형 Prompt Coach 개선안을 제공합니다.
 
@@ -106,8 +110,8 @@ npm install -g prompt-coach
 이 저장소에서 로컬 개발로 실행:
 
 ```sh
-git clone https://github.com/wlsdks/prompt-coach.git
-cd prompt-coach
+git clone https://github.com/wlsdks/loopdeck.git
+cd loopdeck
 pnpm install
 pnpm build
 ```
@@ -117,7 +121,7 @@ pnpm build
 Claude Code 안에서:
 
 ```text
-/plugin marketplace add wlsdks/prompt-coach
+/plugin marketplace add wlsdks/loopdeck
 /plugin install prompt-coach
 /reload-plugins
 /prompt-coach:setup
@@ -130,7 +134,7 @@ Claude Code 안에서:
 쉘에서:
 
 ```sh
-codex plugin marketplace add wlsdks/prompt-coach
+codex plugin marketplace add wlsdks/loopdeck
 ```
 
 그 다음 로컬 coach setup을 실행합니다.
@@ -186,7 +190,7 @@ dry-run으로 변경 사항만 preview:
 pnpm prompt-coach setup --profile coach --register-mcp --dry-run
 ```
 
-Serena처럼 agent를 시작할 때 웹 workspace도 같이 열고 싶으면 명시적으로 opt-in합니다.
+agent를 시작할 때 웹 workspace도 같이 열고 싶으면 명시적으로 opt-in합니다.
 
 ```sh
 pnpm prompt-coach setup --profile coach --register-mcp --open-web
@@ -340,6 +344,16 @@ Codex도 같은 안전한 hook command 경로를 사용합니다. Codex plugin-l
 server가 꺼져 있거나 ingest가 실패하면 hook은 fail-open으로 prompt를 막지
 않습니다.
 
+Codex는 `UserPromptSubmit` hook stdout을 채팅 화면에 직접 보여줄 수
+있습니다. 화면을 어지럽히지 않기 위해 Codex의 `context` / `ask` rewrite
+guidance는 기본적으로 로컬에 capture만 하고 hook stdout으로 출력하지
+않습니다. 개선안을 보고 복사하려면 `prompt-coach coach`,
+`prompt-coach score`, 웹 UI, MCP tool을 사용합니다.
+
+Codex 설치는 fail-open `Stop`, `PreCompact`, `PostCompact` hook도 등록합니다.
+Stop/compact lifecycle 처리는 local-only이며 해당 payload를 prompt ingest
+route로 보내지 않습니다.
+
 `hooks.json`과 `config.toml` 변경 preview:
 
 ```sh
@@ -436,6 +450,12 @@ Claude Code plugin slash commands:
 /prompt-coach:habits
 /prompt-coach:open
 ```
+
+Loopdeck migration 중 Claude Code slash command는 `/prompt-coach:*`에
+남아 있습니다. `/loopdeck:*`는 다음 compatibility slice에서 검토할
+planned alias-only namespace이며, 현재 package는 `/loopdeck:*` command
+file을 ship하지 않습니다. 기존 `/prompt-coach:*` command는 계속 유지해야
+합니다.
 
 `/prompt-coach:guard`는 `off / context / ask / block-and-copy` 네 가지
 `UserPromptSubmit` rewrite-guard 모드를 인터랙티브 picker로 전환합니다.
@@ -564,7 +584,7 @@ MCP server는 열세 개의 tool을 제공합니다.
 - `score_prompt`: 직접 전달한 prompt text, 저장된 `prompt_id`, 또는 최신 저장 prompt를 점수화합니다.
 - `improve_prompt`: 직접 전달한 prompt text, 저장된 `prompt_id`, 또는 최신 저장 prompt를 승인 가능한 개선 prompt 초안으로 재작성합니다. 결과에는 사용자에게 native ask UI로 물어야 할 `clarifying_questions` 배열(JSON-Schema 형태의 `answer_schema.examples` 포함)이 포함됩니다.
 - `apply_clarifications`: 사용자가 직접 답한 답변(각 항목은 `origin: "user"` 필수)을 받아 최종 승인용 draft를 합성합니다. agent가 자기 ask UI로 답을 모은 뒤 호출합니다.
-- `ask_clarifying_questions`: prompt-coach가 ask-then-apply 흐름 자체를 주도합니다. 클라이언트가 elicitation capability를 광고하면(Claude Code 2.1.76+) MCP `elicitation/create`로 직접 사용자에게 묻고 final draft를 합성하며, 미지원 / 거부 / 타임아웃 시 clarifying_questions metadata로 fallback합니다. rewrite를 자동 제출하지 않습니다.
+- `ask_clarifying_questions`: prompt-coach가 ask-then-apply 흐름 자체를 주도합니다. 클라이언트가 elicitation capability를 광고하면(Claude Code 2.1.76+) MCP `elicitation/create`로 직접 사용자에게 묻고 final draft를 합성하며, 미지원 / 거부 / 타임아웃 시 clarifying_questions metadata로 fallback합니다. rewrite를 자동 제출하지 않습니다. 비대화형 Claude Code print 실행(`claude -p`)에서는 MCP tool routing이 성공해도 사용자가 답하지 않으면 `interaction_status: declined`가 반환될 수 있습니다. 이 경우 실패로 보지 말고 반환된 `clarifying_questions`를 agent의 native ask UI로 다시 물은 뒤, 사용자의 verbatim 답변으로 `apply_clarifications` 또는 `record_clarifications`를 호출합니다.
 - `record_clarifications`: 사용자가 답한 verbatim 답변과 합성된 최종 draft를 prompt id에 묶어 로컬 archive(`prompt_improvement_drafts`)에 영구 저장합니다. 응답에는 metadata(`draft_id`, `answers_count`, `changed_sections` 등)만 들어가고 prompt body나 draft 본문은 echo하지 않습니다.
 - `prepare_agent_rewrite`: 현재 Claude Code/Codex/Gemini CLI 세션이 의미론적으로 더 좋은 prompt를 만들 수 있도록, 하나의 redacted prompt packet, 로컬 점수 metadata, 로컬 baseline draft, rewrite contract를 준비합니다.
 - `record_agent_rewrite`: 사용자가 승인한 agent rewrite를 redacted improvement draft로 저장하고, rewrite 본문은 반환하지 않습니다.

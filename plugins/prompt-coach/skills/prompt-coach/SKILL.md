@@ -1,18 +1,19 @@
 ---
 name: prompt-coach
-description: Use when the user wants to install, verify, search, or troubleshoot the local prompt-coach archive for Codex or Claude Code prompts.
+description: Use when the user wants to install, verify, search, or troubleshoot Loopdeck, the local loop memory workspace for Codex or Claude Code.
 ---
 
-# Prompt Memory
+# Loopdeck
 
-Use this skill when the user wants Codex to work with the local `prompt-coach`
-archive.
+Use this skill when the user wants Codex to work with Loopdeck through the local
+CLI/archive. The compatibility CLI command remains `prompt-coach` during the
+Loopdeck migration.
 
 ## What This Plugin Does
 
-`prompt-coach` stores coding-agent prompts locally. It redacts sensitive values
-before writing Markdown files, indexes the archive in SQLite, and exposes a
-local web UI at `http://127.0.0.1:17373`.
+Loopdeck stores coding-agent prompts and loop metadata locally. It redacts
+sensitive values before writing Markdown files, indexes the archive in SQLite,
+and exposes a local web UI at `http://127.0.0.1:17373`.
 
 The plugin hook is fail-open and expects the `prompt-coach` CLI to be available
 on `PATH`. For the most useful local setup, run the coach profile from the
@@ -29,6 +30,13 @@ is detected. `--register-mcp` also registers the MCP server with detected Claude
 Code/Codex CLIs so the active agent can call coach/rewrite/judge tools. Use
 plain `prompt-coach setup` only when the user wants passive capture without
 coaching.
+
+Installed hooks use `UserPromptSubmit` for prompt capture/rewrite guidance,
+`Stop` for local Loopdeck snapshot collection, and `PreCompact`/`PostCompact`
+for compact boundary metadata. Stop snapshots and compact boundaries are
+metadata-only: prompt ids, safe project labels, quality gaps, trigger values,
+and optional HMAC content hashes, not prompt bodies, raw paths, custom compact
+instructions, compact summaries, or transcript contents.
 
 After setup, ask the user to send one real coding prompt in Claude Code or
 Codex, then run `prompt-coach coach`. Use `doctor` and manual MCP registration

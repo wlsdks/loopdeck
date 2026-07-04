@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   filtersFromLocation,
+  pathForView,
   routeFromLocation,
   writeFiltersToLocation,
 } from "./routing.js";
@@ -23,6 +24,33 @@ describe("routing", () => {
   it("parses stable top-level routes", () => {
     stubLocation("/mcp");
     expect(routeFromLocation()).toEqual({ name: "mcp" });
+
+    stubLocation("/loops");
+    expect(routeFromLocation()).toEqual({ name: "loops" });
+
+    stubLocation("/loops", "?worktree=agent-loop-worktree");
+    expect(routeFromLocation()).toEqual({
+      name: "loops",
+      worktree: "agent-loop-worktree",
+    });
+
+    stubLocation("/loops", "?worktree=agent-loop-worktree&session=session-web");
+    expect(routeFromLocation()).toEqual({
+      name: "loops",
+      worktree: "agent-loop-worktree",
+      session: "session-web",
+    });
+
+    stubLocation(
+      "/loops",
+      "?worktree=agent-loop-worktree&session=session-web&branch=feature%2Fbranch-filter",
+    );
+    expect(routeFromLocation()).toEqual({
+      branch: "feature/branch-filter",
+      name: "loops",
+      session: "session-web",
+      worktree: "agent-loop-worktree",
+    });
 
     stubLocation("/prompts/prompt%201");
     expect(routeFromLocation()).toEqual({ id: "prompt 1", name: "detail" });
@@ -57,6 +85,23 @@ describe("routing", () => {
       {},
       "",
       "/?q=tests&tool=claude-code&gap=verification_criteria",
+    );
+  });
+
+  it("writes stable loop worktree URLs", () => {
+    expect(pathForView({ name: "loops" })).toBe("/loops");
+    expect(pathForView({ name: "loops", worktree: "agent loop/worktree" })).toBe(
+      "/loops?worktree=agent+loop%2Fworktree",
+    );
+    expect(
+      pathForView({
+        branch: "feature/branch-filter",
+        name: "loops",
+        session: "session/web",
+        worktree: "agent-loop-worktree",
+      }),
+    ).toBe(
+      "/loops?worktree=agent-loop-worktree&session=session%2Fweb&branch=feature%2Fbranch-filter",
     );
   });
 });

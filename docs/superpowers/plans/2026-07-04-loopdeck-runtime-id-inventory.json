@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "date": "2026-07-04",
+  "purpose": "Compatibility inventory before Loopdeck runtime id rename work.",
+  "package": {
+    "name": "prompt-coach",
+    "bins": {
+      "prompt-coach": "./dist/cli/index.js",
+      "loopdeck": "./dist/cli/index.js",
+      "pc-claude": "./dist/cli/pc-claude.js",
+      "pc-codex": "./dist/cli/pc-codex.js"
+    },
+    "repository": "https://github.com/wlsdks/loopdeck.git"
+  },
+  "claude_code_plugin": {
+    "manifest": ".claude-plugin/plugin.json",
+    "manifest_name": "prompt-coach",
+    "slash_namespace": "/prompt-coach:*",
+    "command_files": [
+      "./commands/buddy.md",
+      "./commands/coach.md",
+      "./commands/guard.md",
+      "./commands/habits.md",
+      "./commands/improve-last.md",
+      "./commands/judge.md",
+      "./commands/open.md",
+      "./commands/score.md",
+      "./commands/setup.md",
+      "./commands/status.md"
+    ]
+  },
+  "codex_plugin": {
+    "manifest": "plugins/prompt-coach/.codex-plugin/plugin.json",
+    "manifest_name": "prompt-coach",
+    "display_name": "Loopdeck",
+    "install_path": "plugins/prompt-coach",
+    "hooks_file": "plugins/prompt-coach/hooks.json"
+  },
+  "hooks": {
+    "file": "plugins/prompt-coach/hooks.json",
+    "events": [
+      "PostCompact",
+      "PreCompact",
+      "Stop",
+      "UserPromptSubmit"
+    ],
+    "required_command_substring": "hook codex",
+    "fail_open_required": true
+  },
+  "mcp": {
+    "canonical_server_name": "prompt-coach",
+    "command": "prompt-coach mcp",
+    "docs": [
+      "README.md",
+      "README.ko.md",
+      "docs/PLUGINS.md"
+    ]
+  },
+  "invariants": [
+    "Do not remove /prompt-coach:*.",
+    "Do not rename package.json#name.",
+    "Do not rename plugin ids.",
+    "Do not remove the prompt-coach binary.",
+    "Do not rename hook commands without hook binary compatibility smoke.",
+    "Do not rename MCP server examples without an MCP compatibility decision."
+  ],
+  "privacy_exclusions": [
+    "prompt bodies",
+    "transcript text",
+    "compact summaries",
+    "raw paths",
+    "API tokens",
+    "provider credentials"
+  ],
+  "next_slice": "Rename compatibility issue slices complete; next implementation slice should return to product/runtime value."
+}

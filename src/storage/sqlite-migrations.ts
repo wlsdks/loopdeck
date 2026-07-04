@@ -2,7 +2,10 @@ import type Database from "better-sqlite3";
 
 import { applyAgentPromptJudgmentMigration } from "./agent-judgments.js";
 import { applyCoachFeedbackMigration } from "./coach-feedback.js";
+import { applyCompactBoundaryMigration } from "./compact-boundaries.js";
 import { applyJudgeScoreMigration } from "./judge-score.js";
+import { applyLoopMergeDecisionMigration } from "./loop-decisions.js";
+import { applyLoopMemoryMigration } from "./loop-memories.js";
 
 export function applyMigrations(db: Database.Database): void {
   db.exec(INITIAL_DDL);
@@ -31,6 +34,49 @@ export function applyMigrations(db: Database.Database): void {
   applyJudgeScoreMigration(db);
   applyDropDeadAnalysisColumnsMigration(db);
   applyAskEventMigration(db);
+  applyLoopSnapshotMigration(db);
+  applyCompactBoundaryMigration(db);
+  applyLoopMemoryMigration(db);
+  applyLoopMergeDecisionMigration(db);
+}
+
+function applyLoopSnapshotMigration(db: Database.Database): void {
+  const applied = db
+    .prepare("SELECT 1 FROM schema_migrations WHERE version = ?")
+    .get(16);
+  if (applied) return;
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS loop_snapshots (
+      id TEXT PRIMARY KEY,
+      created_at TEXT NOT NULL,
+      tool TEXT NOT NULL,
+      source TEXT NOT NULL,
+      session_id TEXT,
+      thread_id TEXT,
+      cwd_label TEXT NOT NULL,
+      project_id TEXT NOT NULL,
+      git_root_hash TEXT,
+      branch TEXT,
+      worktree_label TEXT,
+      prompt_ids_json TEXT NOT NULL,
+      event_counts_json TEXT NOT NULL,
+      quality_json TEXT NOT NULL,
+      outcome_json TEXT NOT NULL,
+      next_brief_json TEXT NOT NULL,
+      privacy_json TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_loop_snapshots_created_at
+      ON loop_snapshots(created_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_loop_snapshots_project_created
+      ON loop_snapshots(project_id, created_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_loop_snapshots_session_created
+      ON loop_snapshots(session_id, created_at DESC);
+  `);
+
+  db.prepare(
+    "INSERT INTO schema_migrations(version, name, applied_at) VALUES (?, ?, ?)",
+  ).run(16, "016_loop_snapshots", new Date().toISOString());
 }
 
 function applyAskEventMigration(db: Database.Database): void {

@@ -21,6 +21,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { PromptImprovement } from "../../analysis/improve.js";
 import {
   analyzeProjectInstructions,
+  approveLoopMemory,
   createExportPreview,
   deletePrompt,
   executeExportJob,
@@ -28,11 +29,15 @@ import {
   getAskEventSummary,
   getCoachFeedbackSummary,
   getHealth,
+  getSelectedLoopBrief,
+  getLoopWorktree,
   getPrompt,
   getQualityDashboard,
   getSettings,
+  listLoops,
   listProjects,
   listPrompts,
+  markPromptImprovementDraftCopied,
   recordPromptCopied,
   savePromptImprovementDraft,
   setPromptBookmark,
@@ -43,10 +48,13 @@ import {
   type CoachFeedbackSummary,
   type ExportJob,
   type ExportPreset,
+  type LoopListResponse,
+  type LoopWorktreeResponse,
   type ProjectSummary,
   type QualityDashboard,
   type PromptFilters,
   type PromptDetail,
+  type PromptImprovementDraft,
   type PromptQualityGap,
   type PromptSummary,
   type SettingsResponse,
@@ -60,6 +68,10 @@ import {
 import { CoachFeedbackPanel } from "./coach-feedback-panel.js";
 import { createPromptHabitCoach } from "./habit-coach.js";
 import { HabitCoachPanel } from "./habit-coach-panel.js";
+import {
+  LoopsView,
+  type CommandCenterBriefSelection,
+} from "./loops-view.js";
 import {
   createArchiveMeasurement,
   type ArchiveMeasurement,
@@ -93,6 +105,7 @@ import {
   filtersFromLocation,
   needsArchiveScoreData,
   needsDashboardData,
+  pathForView,
   routeFromLocation,
   writeFiltersToLocation,
   type View,
@@ -131,6 +144,10 @@ export function App() {
   >();
   const [measurementBusy, setMeasurementBusy] = useState(false);
   const [projects, setProjects] = useState<ProjectSummary[]>([]);
+  const [loops, setLoops] = useState<LoopListResponse | undefined>();
+  const [loopWorktree, setLoopWorktree] = useState<
+    LoopWorktreeResponse | undefined
+  >();
   const [projectInstructionBusy, setProjectInstructionBusy] = useState<
     Record<string, boolean>
   >({});
@@ -257,6 +274,34 @@ export function App() {
   }, [projects.length, view.name]);
 
   useEffect(() => {
+    if (view.name !== "loops" || loops) {
+      return;
+    }
+
+    void listLoops()
+      .then(setLoops)
+      .catch(() => undefined);
+  }, [loops, view.name]);
+
+  useEffect(() => {
+    if (view.name !== "loops" || !view.worktree) {
+      return;
+    }
+    if (
+      loopWorktree?.worktree === view.worktree &&
+      loopWorktree.session_id === view.session &&
+      loopWorktree.branch === view.branch
+    ) {
+      return;
+    }
+
+    void openLoopWorktree(view.worktree, {
+      branch: view.branch,
+      session: view.session,
+    });
+  }, [loopWorktree?.worktree, view]);
+
+  useEffect(() => {
     if (view.name !== "detail") {
       setSelected(undefined);
       return;
@@ -272,6 +317,7 @@ export function App() {
     if (view.name === "exports") return "Anonymized export";
     if (view.name === "mcp") return "MCP tools";
     if (view.name === "projects") return "Projects";
+    if (view.name === "loops") return "Loops";
     if (view.name === "scores") return "Prompt scores";
     if (view.name === "coach") return "Prompt coach";
     if (view.name === "detail") return "Prompt detail";
@@ -284,6 +330,9 @@ export function App() {
     }
     if (view.name === "mcp") {
       return "Agent-native coach tools";
+    }
+    if (view.name === "loops") {
+      return "Agent loop memory";
     }
     if (view.name === "scores") {
       return "Prompt habit analysis";
@@ -374,6 +423,88 @@ export function App() {
     }
   }
 
+  async function approveLatestLoopMemory(): Promise<void> {
+    setError(undefined);
+    try {
+      await approveLoopMemory({ approvedBy: "web" });
+      const nextLoops = await listLoops();
+      setLoops(nextLoops);
+    } catch {
+      setError("Could not approve loop memory.");
+    }
+  }
+
+  async function openLoopWorktree(
+    worktree: string,
+    options: { branch?: string; session?: string } = {},
+  ): Promise<void> {
+    setError(undefined);
+    try {
+      setLoopWorktree(
+        await getLoopWorktree(worktree, {
+          branch: options.branch,
+          sessionId: options.session,
+        }),
+      );
+      if (
+        view.name === "loops" &&
+        (view.worktree !== worktree ||
+          view.session !== options.session ||
+          view.branch !== options.branch)
+      ) {
+        navigate({
+          name: "loops",
+          worktree,
+          ...(options.session ? { session: options.session } : {}),
+          ...(options.branch ? { branch: options.branch } : {}),
+        });
+      }
+    } catch {
+      setError("Could not load loop worktree detail.");
+    }
+  }
+
+  async function copySelectedLoopBrief(
+    detail: LoopWorktreeResponse,
+  ): Promise<void> {
+    setError(undefined);
+    try {
+      const brief = await getSelectedLoopBrief({
+        worktree: detail.worktree,
+        ...(detail.session_id ? { sessionId: detail.session_id } : {}),
+        ...(detail.branch ? { branch: detail.branch } : {}),
+      });
+      const copied = await copyTextToClipboard(brief.prompt);
+      if (!copied) {
+        setError("Could not copy selected loop brief.");
+        throw new Error("clipboard copy failed");
+      }
+    } catch {
+      setError("Could not copy selected loop brief.");
+      throw new Error("selected loop brief copy failed");
+    }
+  }
+
+  async function copyCommandCenterLoopBrief(
+    selection: CommandCenterBriefSelection,
+  ): Promise<void> {
+    setError(undefined);
+    try {
+      const brief = await getSelectedLoopBrief({
+        worktree: selection.worktree,
+        ...(selection.branch ? { branch: selection.branch } : {}),
+      });
+      const copied = await copyTextToClipboard(brief.prompt);
+      if (!copied) {
+        setError("Could not copy command center loop brief.");
+        throw new Error("clipboard copy failed");
+      }
+    } catch {
+      setError("Could not copy command center loop brief.");
+      throw new Error("command center loop brief copy failed");
+    }
+  }
+
   async function confirmDelete(): Promise<void> {
     if (!pendingDelete) {
       return;
@@ -427,6 +558,40 @@ export function App() {
     }
 
     setError("Could not copy the improvement draft.");
+  }
+
+  async function copySavedImprovementDraft(
+    prompt: PromptDetail,
+    draft: PromptImprovementDraft,
+  ): Promise<void> {
+    const copied = await copyTextToClipboard(draft.draft_text);
+    if (!copied) {
+      setError("Could not copy the improvement draft.");
+      return;
+    }
+
+    setCopiedImprovementId(prompt.id);
+    window.setTimeout(() => setCopiedImprovementId(undefined), 3000);
+    try {
+      const updatedDraft = await markPromptImprovementDraftCopied(
+        prompt.id,
+        draft.id,
+      );
+      setSelected((current) =>
+        current?.id === prompt.id
+          ? {
+              ...current,
+              improvement_drafts: current.improvement_drafts.map((item) =>
+                item.id === updatedDraft.id
+                  ? { ...item, copied_at: updatedDraft.copied_at }
+                  : item,
+              ),
+            }
+          : current,
+      );
+    } catch {
+      setError("Copied the draft, but could not save the copy marker.");
+    }
   }
 
   async function saveImprovementDraft(
@@ -623,24 +788,7 @@ export function App() {
   }
 
   function navigate(next: View): void {
-    const path =
-      next.name === "detail"
-        ? `/prompts/${next.id}`
-        : next.name === "dashboard"
-          ? "/dashboard"
-          : next.name === "coach"
-            ? "/coach"
-            : next.name === "scores"
-              ? "/scores"
-              : next.name === "projects"
-                ? "/projects"
-                : next.name === "mcp"
-                  ? "/mcp"
-                  : next.name === "exports"
-                    ? "/exports"
-                    : next.name === "settings"
-                      ? "/settings"
-                      : "/";
+    const path = pathForView(next);
     window.history.pushState({}, "", path);
     setView(next);
   }
@@ -706,6 +854,14 @@ export function App() {
         >
           <Target size={16} />
           <span className="sidebar-label">Coach</span>
+        </button>
+        <button
+          aria-label="Loops"
+          className={`nav-button ${view.name === "loops" ? "active" : ""}`}
+          onClick={() => navigate({ name: "loops" })}
+        >
+          <ListChecks size={16} />
+          <span className="sidebar-label">Loops</span>
         </button>
         <button
           aria-label="Projects"
@@ -932,6 +1088,7 @@ export function App() {
             onBack={() => navigate({ name: "list" })}
             onCopy={copyPrompt}
             onCopyImprovement={copyImprovedPrompt}
+            onCopySavedDraft={copySavedImprovementDraft}
             onDelete={setPendingDelete}
             onOpenQualityGap={(qualityGap) => {
               setFilters({
@@ -979,6 +1136,19 @@ export function App() {
               navigate({ name: "list" });
             }}
             onSelect={(id) => navigate({ name: "detail", id })}
+          />
+        )}
+        {view.name === "loops" && (
+          <LoopsView
+            loops={loops}
+            loading={!loops}
+            onApproveMemoryCandidate={() => approveLatestLoopMemory()}
+            onCopyCommandCenterBrief={(selection) =>
+              copyCommandCenterLoopBrief(selection)
+            }
+            onCopySelectedBrief={(detail) => copySelectedLoopBrief(detail)}
+            onSelectWorktree={(worktree) => openLoopWorktree(worktree)}
+            worktreeDetail={loopWorktree}
           />
         )}
         {view.name === "projects" && (

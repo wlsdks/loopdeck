@@ -1,7 +1,9 @@
-# prompt-coach Architecture
+# Loopdeck Architecture
 
-`prompt-coach` is an AI coding prompt memory and improvement workspace,
-local-first. The architecture is intentionally modular without copying a
+Loopdeck is a local-first agent loop memory and meta-prompting workbench for
+Claude Code, Codex, and coding-agent workflows. The current npm package and CLI
+command remain `prompt-coach` during the compatibility window. The architecture
+is intentionally modular without copying a
 Spring-style class hierarchy into Node.js. The project uses TypeScript modules,
 plain functions, explicit ports, and small runtime entrypoints.
 
@@ -40,6 +42,7 @@ src/
   exporter/    anonymized export preview and execution
   hooks/       fail-open hook wrapper and delivery status
   importer/    markdown/source import and dry-run planning
+  loop/        loop snapshots, continuation briefs, and local agent-loop summaries
   mcp/         MCP tool definitions, typed contracts, handlers, and stdio server
   redaction/   secret detection and redacted prompt representations
   server/      Fastify routes, auth, browser/API boundary
@@ -58,6 +61,12 @@ Entry points are `cli`, `server`, `hooks`, `mcp`, and `web`. They may orchestrat
 work but should not own domain rules that need to be reused elsewhere. Shared
 rules such as scoring, redaction, project instruction review, and archive
 analysis belong in `analysis`, `redaction`, or `storage`.
+
+`src/loop/` owns privacy-safe loop snapshot collection, snapshot domain rules,
+and continuation brief formatting. It may consume prompt summaries and storage
+ports, but it must not read raw transcripts, provider credentials, or private
+agent state databases. CLI, MCP, hook, and web surfaces should call into
+`src/loop/` instead of formatting loop state independently.
 
 ## Spring-To-Node Translation
 

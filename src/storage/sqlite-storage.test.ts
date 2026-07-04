@@ -13,6 +13,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { normalizeClaudeCodePayload } from "../adapters/claude-code.js";
 import { normalizeCodexPayload } from "../adapters/codex.js";
+import type { LoopSnapshot } from "../loop/types.js";
 import { redactPrompt } from "../redaction/redact.js";
 import { createServer } from "../server/create-server.js";
 import { initializePromptCoach } from "../config/config.js";
@@ -31,6 +32,291 @@ afterEach(() => {
 });
 
 describe("SQLite prompt storage", () => {
+  it("records compact boundaries without compact summaries, instructions, or raw paths", () => {
+    const dataDir = createTempDir();
+    initializePromptCoach({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+      now: () => new Date("2026-07-04T01:00:00.000Z"),
+    });
+
+    const boundary = storage.recordCompactBoundary({
+      tool: "claude-code",
+      event_name: "PostCompact",
+      trigger: "manual",
+      session_id: "session-compact",
+      turn_id: "turn-compact",
+      cwd: "/Users/example/private-project",
+      content: "Summary of the compacted conversation with sk-proj-secret.",
+    });
+
+    expect(boundary).toMatchObject({
+      tool: "claude-code",
+      event_name: "PostCompact",
+      trigger: "manual",
+      session_id: "session-compact",
+      turn_id: "turn-compact",
+      cwd_label: "private-project",
+      privacy: {
+        local_only: true,
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        stores_compact_content: false,
+      },
+    });
+    expect(boundary.content_hash).toMatch(/^compact_[a-f0-9]{16}$/);
+    expect(storage.listCompactBoundaries({ limit: 10 }).items).toHaveLength(1);
+    expect(storage.getAppliedMigrations()).toContainEqual({
+      version: 17,
+      name: "017_compact_boundaries",
+    });
+    expect(JSON.stringify(boundary)).not.toContain("Summary of the compacted");
+    expect(JSON.stringify(boundary)).not.toContain("sk-proj-secret");
+    expect(JSON.stringify(boundary)).not.toContain("/Users/example");
+
+    storage.close();
+  });
+
+  it("stores and reads privacy-safe loop snapshots", () => {
+    const dataDir = createTempDir();
+    initializePromptCoach({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+      now: () => new Date("2026-07-04T01:00:00.000Z"),
+    });
+
+    const snapshot = storage.createLoopSnapshot({
+      id: "loop_storage",
+      created_at: "2026-07-04T01:00:00.000Z",
+      tool: "codex",
+      source: "cli",
+      session_id: "session-storage",
+      cwd_label: "private-project",
+      project_id: "proj_storage",
+      git_root_hash: "git_storage",
+      branch: "codex/agent-loop-memory-design",
+      worktree_label: "worktree-storage",
+      prompt_ids: ["prmt_one", "prmt_two"],
+      event_counts: {
+        prompts: 2,
+      },
+      quality: {
+        average_prompt_score: 58,
+        top_gaps: ["Goal clarity"],
+        unresolved_questions: [],
+      },
+      outcome: {
+        status: "unknown",
+        summary: "Loop snapshot collected from 2 prompts.",
+        evidence_refs: ["prompt:prmt_one", "prompt:prmt_two"],
+      },
+      next_brief: {
+        generated: false,
+        summary: "Run prompt-coach loop brief to generate the next request.",
+      },
+      privacy: {
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        local_only: true,
+      },
+    });
+
+    expect(snapshot.id).toBe("loop_storage");
+    expect(storage.getLatestLoopSnapshot()?.id).toBe("loop_storage");
+    expect(storage.listLoopSnapshots({ limit: 10 }).items).toHaveLength(1);
+    expect(JSON.stringify(snapshot)).not.toContain("/Users/example");
+    expect(JSON.stringify(snapshot)).not.toContain("Make this better");
+    expect(storage.getAppliedMigrations()).toContainEqual({
+      version: 16,
+      name: "016_loop_snapshots",
+    });
+
+    storage.close();
+  });
+
+  it("records loop snapshot outcomes without prompt bodies or raw paths", () => {
+    const dataDir = createTempDir();
+    initializePromptCoach({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+      now: () => new Date("2026-07-04T01:00:00.000Z"),
+    });
+
+    storage.createLoopSnapshot({
+      id: "loop_outcome",
+      created_at: "2026-07-04T01:00:00.000Z",
+      tool: "codex",
+      source: "cli",
+      cwd_label: "private-project",
+      project_id: "proj_outcome",
+      prompt_ids: ["prmt_one"],
+      event_counts: {
+        prompts: 1,
+      },
+      quality: {
+        average_prompt_score: 72,
+        top_gaps: [],
+        unresolved_questions: [],
+      },
+      outcome: {
+        status: "unknown",
+        summary: "Loop snapshot collected from 1 prompts.",
+        evidence_refs: ["prompt:prmt_one"],
+      },
+      next_brief: {
+        generated: false,
+        summary: "Run prompt-coach loop brief to generate the next request.",
+      },
+      privacy: {
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        local_only: true,
+      },
+    });
+
+    const updated = storage.recordLoopOutcome("loop_outcome", {
+      status: "passed",
+      summary: "Focused tests and build passed.",
+      evidence_refs: ["test:src/mcp/loop-tool.test.ts", "build:pnpm-build"],
+    });
+
+    expect(updated?.outcome).toEqual({
+      status: "passed",
+      summary: "Focused tests and build passed.",
+      evidence_refs: ["test:src/mcp/loop-tool.test.ts", "build:pnpm-build"],
+    });
+    expect(storage.getLatestLoopSnapshot()?.outcome.status).toBe("passed");
+    expect(JSON.stringify(updated)).not.toContain("Make this better");
+    expect(JSON.stringify(updated)).not.toContain("/Users/example");
+
+    storage.close();
+  });
+
+  it("records approved loop memories without prompt bodies or raw paths", () => {
+    const dataDir = createTempDir();
+    initializePromptCoach({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+      now: () => new Date("2026-07-04T02:00:00.000Z"),
+    });
+
+    const memory = storage.recordLoopMemory({
+      snapshot_id: "loop_memory",
+      title: "Remember loop outcome for private-project",
+      statement:
+        "Scheduler lifecycle should stay plist-only unless the user explicitly asks for launchctl mutation.",
+      evidence_refs: ["commit:79cb39d", "test:pnpm test"],
+      approved_by: "user",
+    });
+
+    expect(memory).toMatchObject({
+      snapshot_id: "loop_memory",
+      title: "Remember loop outcome for private-project",
+      statement:
+        "Scheduler lifecycle should stay plist-only unless the user explicitly asks for launchctl mutation.",
+      evidence_refs: ["commit:79cb39d", "test:pnpm test"],
+      approved_by: "user",
+      privacy: {
+        local_only: true,
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        writes_instruction_files: false,
+        external_calls: false,
+      },
+    });
+    expect(storage.listLoopMemories({ limit: 10 }).items).toHaveLength(1);
+    expect(storage.getAppliedMigrations()).toContainEqual({
+      version: 18,
+      name: "018_loop_memories",
+    });
+    expect(JSON.stringify(memory)).not.toContain("/Users/example");
+    expect(JSON.stringify(memory)).not.toContain("Make this better");
+
+    storage.close();
+  });
+
+  it("filters approved loop memories by source snapshot project", () => {
+    const dataDir = createTempDir();
+    initializePromptCoach({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+      now: nextDate([
+        "2026-07-04T02:00:00.000Z",
+        "2026-07-04T02:01:00.000Z",
+      ]),
+    });
+    storage.createLoopSnapshot(
+      loopSnapshot({
+        id: "loop_project_a",
+        project_id: "proj_a",
+        cwd_label: "project-a",
+      }),
+    );
+    storage.createLoopSnapshot(
+      loopSnapshot({
+        id: "loop_project_b",
+        project_id: "proj_b",
+        cwd_label: "project-b",
+      }),
+    );
+    storage.recordLoopMemory({
+      snapshot_id: "loop_project_a",
+      title: "Project A memory",
+      statement: "Use the shared Loopdeck status model for project A.",
+      evidence_refs: ["commit:a"],
+      approved_by: "user",
+    });
+    storage.recordLoopMemory({
+      snapshot_id: "loop_project_b",
+      title: "Project B memory",
+      statement: "Use a different retry policy for project B.",
+      evidence_refs: ["commit:b"],
+      approved_by: "user",
+    });
+
+    const projectMemories = storage.listLoopMemories({
+      projectId: "proj_a",
+      limit: 10,
+    }).items;
+
+    expect(projectMemories).toHaveLength(1);
+    expect(projectMemories[0]?.statement).toBe(
+      "Use the shared Loopdeck status model for project A.",
+    );
+    expect(JSON.stringify(projectMemories)).not.toContain("project B");
+
+    storage.close();
+  });
+
+  it("rejects unsafe approved loop memory statements", () => {
+    const dataDir = createTempDir();
+    initializePromptCoach({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+      now: () => new Date("2026-07-04T02:00:00.000Z"),
+    });
+
+    expect(() =>
+      storage.recordLoopMemory({
+        snapshot_id: "loop_memory",
+        title: "Unsafe memory",
+        statement:
+          "Use /Users/example/private-project with sk-proj-secret in every loop.",
+        evidence_refs: ["commit:79cb39d"],
+        approved_by: "user",
+      }),
+    ).toThrow("Loop memory statement must not include raw paths or secrets.");
+    expect(storage.listLoopMemories({ limit: 10 }).items).toHaveLength(0);
+
+    storage.close();
+  });
+
   it("initializes directories, applies migration, stores Markdown, indexes FTS, and deduplicates", async () => {
     const dataDir = createTempDir();
     initializePromptCoach({ dataDir });
@@ -74,6 +360,10 @@ describe("SQLite prompt storage", () => {
       { version: 13, name: "013_prompt_judge_scores" },
       { version: 14, name: "014_drop_dead_analysis_columns" },
       { version: 15, name: "015_prompt_ask_events" },
+      { version: 16, name: "016_loop_snapshots" },
+      { version: 17, name: "017_compact_boundaries" },
+      { version: 18, name: "018_loop_memories" },
+      { version: 19, name: "019_loop_merge_decisions" },
     ]);
     const db = new Database(join(dataDir, "prompt-coach.sqlite"));
     try {
@@ -1809,6 +2099,45 @@ function nextDate(values: string[]): () => Date {
   let index = 0;
 
   return () => new Date(values[index++] ?? values.at(-1)!);
+}
+
+function loopSnapshot(patch: Partial<LoopSnapshot> = {}): LoopSnapshot {
+  return {
+    id: "loop_storage",
+    created_at: "2026-07-04T01:00:00.000Z",
+    tool: "codex",
+    source: "cli",
+    session_id: "session-storage",
+    cwd_label: "private-project",
+    project_id: "proj_storage",
+    git_root_hash: "git_storage",
+    branch: "codex/agent-loop-memory-design",
+    worktree_label: "worktree-storage",
+    prompt_ids: ["prmt_one", "prmt_two"],
+    event_counts: {
+      prompts: 2,
+    },
+    quality: {
+      average_prompt_score: 58,
+      top_gaps: ["Goal clarity"],
+      unresolved_questions: [],
+    },
+    outcome: {
+      status: "unknown",
+      summary: "Loop snapshot collected from 2 prompts.",
+      evidence_refs: ["prompt:prmt_one", "prompt:prmt_two"],
+    },
+    next_brief: {
+      generated: false,
+      summary: "Run prompt-coach loop brief to generate the next request.",
+    },
+    privacy: {
+      stores_prompt_bodies: false,
+      stores_raw_paths: false,
+      local_only: true,
+    },
+    ...patch,
+  };
 }
 
 function createTempDir(): string {

@@ -25,6 +25,7 @@ import {
   sendCoachFeedback,
   type CoachFeedbackRating,
   type PromptDetail,
+  type PromptImprovementDraft,
   type PromptQualityGap,
   type PromptSummary,
 } from "./api.js";
@@ -45,6 +46,7 @@ export function PromptDetailView({
   onBookmark,
   onCopy,
   onCopyImprovement,
+  onCopySavedDraft,
   onDelete,
   onNavigate,
   onOpenQualityGap,
@@ -60,6 +62,7 @@ export function PromptDetailView({
   onBookmark(prompt: PromptDetail): void;
   onCopy(prompt: PromptDetail): void;
   onCopyImprovement(prompt: PromptDetail, improvement: PromptImprovement): void;
+  onCopySavedDraft(prompt: PromptDetail, draft: PromptImprovementDraft): void;
   onDelete(prompt: PromptDetail): void;
   onNavigate(id: string): void;
   onOpenQualityGap(gap: PromptQualityGap): void;
@@ -154,6 +157,7 @@ export function PromptDetailView({
             setAnswersByAxis((current) => ({ ...current, [axis]: value }))
           }
           onCopy={() => onCopyImprovement(prompt, improvement)}
+          onCopySavedDraft={(draft) => onCopySavedDraft(prompt, draft)}
           onSave={() => onSaveImprovement(prompt, improvement)}
           originalPrompt={prompt.markdown}
           promptId={prompt.id}
@@ -217,6 +221,7 @@ function PromptCoachPanel({
   improvement,
   onAnswerChange,
   onCopy,
+  onCopySavedDraft,
   onSave,
   originalPrompt,
   promptId,
@@ -228,6 +233,7 @@ function PromptCoachPanel({
   improvement: PromptImprovement;
   onAnswerChange(axis: PromptQualityCriterion, value: string): void;
   onCopy(): void;
+  onCopySavedDraft(draft: PromptImprovementDraft): void;
   onSave(): void;
   originalPrompt: string;
   promptId: string;
@@ -349,22 +355,32 @@ function PromptCoachPanel({
           <h3>Saved drafts</h3>
           {savedDrafts.slice(0, 3).map((draft) => (
             <article className="saved-draft-row" key={draft.id}>
-              <div>
-                <strong>{formatDate(draft.created_at)}</strong>
-                <span
-                  className={`saved-draft-source saved-draft-source-${analyzerSourceClass(draft.analyzer)}`}
-                  title={draft.analyzer}
-                >
-                  {draftAnalyzerLabel(draft.analyzer)}
-                </span>
+              <div className="saved-draft-header">
+                <div>
+                  <strong>{formatDate(draft.created_at)}</strong>
+                  <span
+                    className={`saved-draft-source saved-draft-source-${analyzerSourceClass(draft.analyzer)}`}
+                    title={draft.analyzer}
+                  >
+                    {draftAnalyzerLabel(draft.analyzer)}
+                  </span>
+                </div>
+                <p>
+                  {draft.changed_sections.length > 0
+                    ? draft.changed_sections
+                        .map((section) => qualityGapLabel(section) ?? section)
+                        .join(", ")
+                    : "Original structure cleanup"}
+                </p>
               </div>
-              <p>
-                {draft.changed_sections.length > 0
-                  ? draft.changed_sections
-                      .map((section) => qualityGapLabel(section) ?? section)
-                      .join(", ")
-                  : "Original structure cleanup"}
-              </p>
+              <pre className="saved-draft-preview">{draft.draft_text}</pre>
+              <button
+                className="saved-draft-copy-button"
+                onClick={() => onCopySavedDraft(draft)}
+                type="button"
+              >
+                <Copy size={14} /> {copied ? "Copied" : "Copy saved draft"}
+              </button>
             </article>
           ))}
         </div>

@@ -39,6 +39,9 @@ describe("Claude Code hook install/uninstall", () => {
     expect(result.changed).toBe(true);
     expect(result.dryRun).toBe(true);
     expect(result.nextSettings.hooks.UserPromptSubmit).toHaveLength(1);
+    expect(result.nextSettings.hooks.Stop).toHaveLength(1);
+    expect(result.nextSettings.hooks.PreCompact).toHaveLength(1);
+    expect(result.nextSettings.hooks.PostCompact).toHaveLength(1);
     expect(() => readFileSync(settingsPath, "utf8")).toThrow();
   });
 
@@ -60,12 +63,17 @@ describe("Claude Code hook install/uninstall", () => {
     expect(second.changed).toBe(false);
     expect(first.backupPath).toBeTruthy();
     expect(settings.theme).toBe("dark");
-    expect(settings.hooks.Stop).toEqual([]);
     expect(settings.hooks.UserPromptSubmit).toHaveLength(1);
     expect(settings.hooks.UserPromptSubmit[0].hooks).toHaveLength(1);
     expect(settings.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
       "prompt-coach hook claude-code",
     );
+    expect(settings.hooks.Stop).toHaveLength(1);
+    expect(settings.hooks.Stop[0].hooks[0].command).toContain(
+      "prompt-coach hook claude-code",
+    );
+    expect(settings.hooks.PreCompact).toHaveLength(1);
+    expect(settings.hooks.PostCompact).toHaveLength(1);
     expect(settings.hooks.UserPromptSubmit[0].hooks[0].command).not.toContain(
       loadHookAuth(dataDir).ingest_token,
     );
@@ -154,6 +162,9 @@ describe("Codex hook install/uninstall", () => {
     expect(result.changed).toBe(true);
     expect(result.dryRun).toBe(true);
     expect(result.nextHooks.hooks.UserPromptSubmit).toHaveLength(1);
+    expect(result.nextHooks.hooks.Stop).toHaveLength(1);
+    expect(result.nextHooks.hooks.PreCompact).toHaveLength(1);
+    expect(result.nextHooks.hooks.PostCompact).toHaveLength(1);
     expect(result.nextConfig).toContain("[features]");
     expect(result.nextConfig).toContain("hooks = true");
     expect(() => readFileSync(hooksPath, "utf8")).toThrow();
@@ -193,7 +204,13 @@ describe("Codex hook install/uninstall", () => {
     expect(second.changed).toBe(false);
     expect(first.hooksBackupPath).toBeTruthy();
     expect(first.configBackupPath).toBeTruthy();
-    expect(hooks.hooks.Stop).toHaveLength(1);
+    expect(hooks.hooks.Stop).toHaveLength(2);
+    expect(hooks.hooks.Stop[0].hooks[0].command).toBe("echo stop");
+    expect(hooks.hooks.Stop[1].hooks[0].command).toContain(
+      "prompt-coach hook stop codex",
+    );
+    expect(hooks.hooks.PreCompact).toHaveLength(1);
+    expect(hooks.hooks.PostCompact).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
       "prompt-coach hook codex",
@@ -204,6 +221,115 @@ describe("Codex hook install/uninstall", () => {
     expect(config).toContain('model = "gpt-5.5"');
     expect(config).toContain("hooks = true");
     expect(config).not.toContain("codex_hooks");
+  });
+
+  it("replaces legacy prompt-memory Codex hook during install", () => {
+    const dir = createTempDir();
+    const dataDir = join(dir, "data");
+    const hooksPath = join(dir, ".codex", "hooks.json");
+    const configPath = join(dir, ".codex", "config.toml");
+    initializePromptCoach({ dataDir });
+    mkdirSync(join(dir, ".codex"), { recursive: true });
+    writeFileSync(
+      hooksPath,
+      `${JSON.stringify(
+        {
+          hooks: {
+            UserPromptSubmit: [
+              {
+                hooks: [
+                  {
+                    type: "command",
+                    command:
+                      'PROMPT_MEMORY_HOOK="prompt-memory hook codex" /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard "context"',
+                    timeout: 2,
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    const result = installCodexHook({
+      dataDir,
+      hooksPath,
+      configPath,
+      rewriteGuard: "context",
+      rewriteMinScore: "80",
+    });
+    const hooks = JSON.parse(readFileSync(hooksPath, "utf8"));
+
+    expect(result.changed).toBe(true);
+    expect(hooks.hooks.UserPromptSubmit).toHaveLength(1);
+    expect(hooks.hooks.UserPromptSubmit[0].hooks).toHaveLength(1);
+    expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
+      'PROMPT_COACH_HOOK="prompt-coach hook codex"',
+    );
+    expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).not.toContain(
+      "PROMPT_MEMORY_HOOK",
+    );
+  });
+
+  it("deduplicates legacy and current Codex hooks during install", () => {
+    const dir = createTempDir();
+    const dataDir = join(dir, "data");
+    const hooksPath = join(dir, ".codex", "hooks.json");
+    const configPath = join(dir, ".codex", "config.toml");
+    initializePromptCoach({ dataDir });
+    mkdirSync(join(dir, ".codex"), { recursive: true });
+    writeFileSync(
+      hooksPath,
+      `${JSON.stringify(
+        {
+          hooks: {
+            UserPromptSubmit: [
+              {
+                hooks: [
+                  {
+                    type: "command",
+                    command:
+                      'PROMPT_MEMORY_HOOK="prompt-memory hook codex" /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard "context"',
+                    timeout: 2,
+                  },
+                ],
+              },
+              {
+                hooks: [
+                  {
+                    type: "command",
+                    command:
+                      'PROMPT_COACH_HOOK="prompt-coach hook codex" /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard "context"',
+                    timeout: 2,
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    installCodexHook({
+      dataDir,
+      hooksPath,
+      configPath,
+      rewriteGuard: "context",
+      rewriteMinScore: "80",
+    });
+    const hooks = JSON.parse(readFileSync(hooksPath, "utf8"));
+
+    expect(hooks.hooks.UserPromptSubmit).toHaveLength(1);
+    expect(hooks.hooks.UserPromptSubmit[0].hooks).toHaveLength(1);
+    expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
+      'PROMPT_COACH_HOOK="prompt-coach hook codex"',
+    );
+    expect(JSON.stringify(hooks)).not.toContain("PROMPT_MEMORY_HOOK");
   });
 
   it("can install Codex hook with opt-in rewrite guard flags", () => {
@@ -230,6 +356,42 @@ describe("Codex hook install/uninstall", () => {
     expect(command).toContain("70");
   });
 
+  it("keeps Codex lifecycle hooks separate from prompt rewrite guard output", () => {
+    const dir = createTempDir();
+    const dataDir = join(dir, "data");
+    const hooksPath = join(dir, ".codex", "hooks.json");
+    const configPath = join(dir, ".codex", "config.toml");
+    initializePromptCoach({ dataDir });
+
+    const result = installCodexHook({
+      dataDir,
+      hooksPath,
+      configPath,
+      dryRun: true,
+      rewriteGuard: "context",
+      rewriteMinScore: "70",
+    });
+
+    const stopCommand = result.nextHooks.hooks.Stop[0].hooks[0].command;
+    const preCompactCommand =
+      result.nextHooks.hooks.PreCompact[0].hooks[0].command;
+    const postCompactCommand =
+      result.nextHooks.hooks.PostCompact[0].hooks[0].command;
+
+    expect(stopCommand).toContain("prompt-coach hook stop codex");
+    expect(preCompactCommand).toContain("prompt-coach hook pre-compact codex");
+    expect(postCompactCommand).toContain("prompt-coach hook post-compact codex");
+    for (const command of [
+      stopCommand,
+      preCompactCommand,
+      postCompactCommand,
+    ]) {
+      expect(command).toContain("hook codex");
+      expect(command).not.toContain("--rewrite-guard");
+      expect(command).not.toContain("--rewrite-min-score");
+    }
+  });
+
   it("can install an opt-in Codex SessionStart web opener", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
@@ -251,6 +413,53 @@ describe("Codex hook install/uninstall", () => {
     expect(command).toContain("prompt-coach hook session-start codex");
     expect(command).toContain("--open-web");
     expect(command).not.toContain(loadHookAuth(dataDir).ingest_token);
+  });
+
+  it("replaces legacy prompt-memory Codex SessionStart hook during open-web install", () => {
+    const dir = createTempDir();
+    const dataDir = join(dir, "data");
+    const hooksPath = join(dir, ".codex", "hooks.json");
+    const configPath = join(dir, ".codex", "config.toml");
+    initializePromptCoach({ dataDir });
+    mkdirSync(join(dir, ".codex"), { recursive: true });
+    writeFileSync(
+      hooksPath,
+      `${JSON.stringify(
+        {
+          hooks: {
+            SessionStart: [
+              {
+                hooks: [
+                  {
+                    type: "command",
+                    command:
+                      'PROMPT_MEMORY_HOOK="prompt-memory hook session-start codex" /usr/bin/node /repo/dist/cli/index.js hook session-start codex --open-web',
+                    timeout: 5,
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    installCodexHook({
+      dataDir,
+      hooksPath,
+      configPath,
+      openWeb: true,
+    });
+    const hooks = JSON.parse(readFileSync(hooksPath, "utf8"));
+
+    expect(hooks.hooks.SessionStart).toHaveLength(1);
+    expect(hooks.hooks.SessionStart[0].hooks).toHaveLength(1);
+    expect(hooks.hooks.SessionStart[0].hooks[0].command).toContain(
+      'PROMPT_COACH_HOOK="prompt-coach hook session-start codex"',
+    );
+    expect(JSON.stringify(hooks)).not.toContain("PROMPT_MEMORY_HOOK");
   });
 
   it("uninstalls hook and revokes the previous ingest token", () => {

@@ -71,10 +71,18 @@ export type CodexHookInstallResult = {
 
 const PROMPT_COACH_MARKER = "prompt-coach hook claude-code";
 const CODEX_PROMPT_COACH_MARKER = "prompt-coach hook codex";
+const LEGACY_CODEX_PROMPT_MEMORY_MARKER = "prompt-memory hook codex";
+const CODEX_PROMPT_COACH_STOP_MARKER = "prompt-coach hook stop codex";
+const CODEX_PROMPT_COACH_PRE_COMPACT_MARKER =
+  "prompt-coach hook pre-compact codex";
+const CODEX_PROMPT_COACH_POST_COMPACT_MARKER =
+  "prompt-coach hook post-compact codex";
 const PROMPT_COACH_SESSION_MARKER =
   "prompt-coach hook session-start claude-code";
 const CODEX_PROMPT_COACH_SESSION_MARKER =
   "prompt-coach hook session-start codex";
+const LEGACY_CODEX_PROMPT_MEMORY_SESSION_MARKER =
+  "prompt-memory hook session-start codex";
 const CODEX_HOOKS_FEATURE_KEY = "hooks";
 
 export function registerInstallHookCommands(program: Command): void {
@@ -287,6 +295,18 @@ export function installCodexHook(
     currentHooks,
     buildCodexHookCommand(options.dataDir, options),
     {
+      stopCommand: buildCodexLifecycleHookCommand(
+        CODEX_PROMPT_COACH_STOP_MARKER,
+        options.dataDir,
+      ),
+      preCompactCommand: buildCodexLifecycleHookCommand(
+        CODEX_PROMPT_COACH_PRE_COMPACT_MARKER,
+        options.dataDir,
+      ),
+      postCompactCommand: buildCodexLifecycleHookCommand(
+        CODEX_PROMPT_COACH_POST_COMPACT_MARKER,
+        options.dataDir,
+      ),
       sessionStartCommand: options.openWeb
         ? buildSessionStartHookCommand("codex", options.dataDir)
         : undefined,
@@ -380,9 +400,7 @@ export function hasPromptCoachSessionStartHook(
 export function hasPromptCoachCodexHook(settings: CodexHooksSettings): boolean {
   return Boolean(
     settings.hooks?.UserPromptSubmit?.some((group) =>
-      group.hooks?.some((hook) =>
-        hook.command.includes(CODEX_PROMPT_COACH_MARKER),
-      ),
+      group.hooks?.some((hook) => isCodexPromptCoachHook(hook.command)),
     ),
   );
 }
@@ -424,32 +442,26 @@ function ensureHook(
   options: { sessionStartCommand?: string } = {},
 ): ClaudeSettings & { hooks: Record<string, ClaudeHookGroup[]> } {
   const hooks = { ...(settings.hooks ?? {}) };
-  let found = false;
-  const userPromptSubmit = [...(hooks.UserPromptSubmit ?? [])].map((group) => ({
-    ...group,
-    hooks: group.hooks.map((hook) => {
-      if (!isClaudePromptCoachHook(hook.command)) {
-        return hook;
-      }
-
-      found = true;
-      return { ...hook, command };
-    }),
-  }));
-
-  if (!found) {
-    userPromptSubmit.push({
-      hooks: [
-        {
-          type: "command",
-          command,
-          timeout: 2,
-        },
-      ],
-    });
-  }
-
-  hooks.UserPromptSubmit = userPromptSubmit;
+  hooks.UserPromptSubmit = ensurePromptCoachHookGroups(
+    hooks.UserPromptSubmit ?? [],
+    command,
+    isClaudePromptCoachHook,
+  );
+  hooks.Stop = ensurePromptCoachHookGroups(
+    hooks.Stop ?? [],
+    command,
+    isClaudePromptCoachHook,
+  );
+  hooks.PreCompact = ensurePromptCoachHookGroups(
+    hooks.PreCompact ?? [],
+    command,
+    isClaudePromptCoachHook,
+  );
+  hooks.PostCompact = ensurePromptCoachHookGroups(
+    hooks.PostCompact ?? [],
+    command,
+    isClaudePromptCoachHook,
+  );
   if (options.sessionStartCommand) {
     hooks.SessionStart = ensureSessionStartHook(
       hooks.SessionStart ?? [],
@@ -468,16 +480,22 @@ function removeHook(
   settings: ClaudeSettings,
 ): ClaudeSettings & { hooks: Record<string, ClaudeHookGroup[]> } {
   const hooks = { ...(settings.hooks ?? {}) };
-  const userPromptSubmit = [...(hooks.UserPromptSubmit ?? [])]
-    .map((group) => ({
-      ...group,
-      hooks: group.hooks.filter(
-        (hook) => !isClaudePromptCoachHook(hook.command),
-      ),
-    }))
-    .filter((group) => group.hooks.length > 0);
-
-  hooks.UserPromptSubmit = userPromptSubmit;
+  hooks.UserPromptSubmit = removePromptCoachHookGroups(
+    hooks.UserPromptSubmit ?? [],
+    isClaudePromptCoachHook,
+  );
+  hooks.Stop = removePromptCoachHookGroups(
+    hooks.Stop ?? [],
+    isClaudePromptCoachHook,
+  );
+  hooks.PreCompact = removePromptCoachHookGroups(
+    hooks.PreCompact ?? [],
+    isClaudePromptCoachHook,
+  );
+  hooks.PostCompact = removePromptCoachHookGroups(
+    hooks.PostCompact ?? [],
+    isClaudePromptCoachHook,
+  );
   hooks.SessionStart = removeSessionStartHook(
     hooks.SessionStart ?? [],
     PROMPT_COACH_SESSION_MARKER,
@@ -492,40 +510,38 @@ function removeHook(
 function ensureCodexHook(
   settings: CodexHooksSettings,
   command: string,
-  options: { sessionStartCommand?: string } = {},
+  options: {
+    stopCommand: string;
+    preCompactCommand: string;
+    postCompactCommand: string;
+    sessionStartCommand?: string;
+  },
 ): CodexHooksSettings & { hooks: Record<string, ClaudeHookGroup[]> } {
   const hooks = { ...(settings.hooks ?? {}) };
-  let found = false;
-  const userPromptSubmit = [...(hooks.UserPromptSubmit ?? [])].map((group) => ({
-    ...group,
-    hooks: group.hooks.map((hook) => {
-      if (!isCodexPromptCoachHook(hook.command)) {
-        return hook;
-      }
-
-      found = true;
-      return { ...hook, command };
-    }),
-  }));
-
-  if (!found) {
-    userPromptSubmit.push({
-      hooks: [
-        {
-          type: "command",
-          command,
-          timeout: 2,
-        },
-      ],
-    });
-  }
-
-  hooks.UserPromptSubmit = userPromptSubmit;
+  hooks.UserPromptSubmit = ensurePromptCoachHookGroups(
+    hooks.UserPromptSubmit ?? [],
+    command,
+    isCodexPromptCoachHook,
+  );
+  hooks.Stop = ensurePromptCoachHookGroups(
+    hooks.Stop ?? [],
+    options.stopCommand,
+    isCodexStopHook,
+  );
+  hooks.PreCompact = ensurePromptCoachHookGroups(
+    hooks.PreCompact ?? [],
+    options.preCompactCommand,
+    isCodexPreCompactHook,
+  );
+  hooks.PostCompact = ensurePromptCoachHookGroups(
+    hooks.PostCompact ?? [],
+    options.postCompactCommand,
+    isCodexPostCompactHook,
+  );
   if (options.sessionStartCommand) {
-    hooks.SessionStart = ensureSessionStartHook(
+    hooks.SessionStart = ensureCodexSessionStartHook(
       hooks.SessionStart ?? [],
       options.sessionStartCommand,
-      CODEX_PROMPT_COACH_SESSION_MARKER,
     );
   }
 
@@ -539,25 +555,82 @@ function removeCodexHook(
   settings: CodexHooksSettings,
 ): CodexHooksSettings & { hooks: Record<string, ClaudeHookGroup[]> } {
   const hooks = { ...(settings.hooks ?? {}) };
-  const userPromptSubmit = [...(hooks.UserPromptSubmit ?? [])]
-    .map((group) => ({
-      ...group,
-      hooks: group.hooks.filter(
-        (hook) => !isCodexPromptCoachHook(hook.command),
-      ),
-    }))
-    .filter((group) => group.hooks.length > 0);
-
-  hooks.UserPromptSubmit = userPromptSubmit;
-  hooks.SessionStart = removeSessionStartHook(
+  hooks.UserPromptSubmit = removePromptCoachHookGroups(
+    hooks.UserPromptSubmit ?? [],
+    isCodexPromptCoachHook,
+  );
+  hooks.Stop = removePromptCoachHookGroups(
+    hooks.Stop ?? [],
+    isCodexStopHook,
+  );
+  hooks.PreCompact = removePromptCoachHookGroups(
+    hooks.PreCompact ?? [],
+    isCodexPreCompactHook,
+  );
+  hooks.PostCompact = removePromptCoachHookGroups(
+    hooks.PostCompact ?? [],
+    isCodexPostCompactHook,
+  );
+  hooks.SessionStart = removePromptCoachHookGroups(
     hooks.SessionStart ?? [],
-    CODEX_PROMPT_COACH_SESSION_MARKER,
+    isCodexSessionStartHook,
   );
 
   return {
     ...settings,
     hooks,
   };
+}
+
+function ensurePromptCoachHookGroups(
+  groups: ClaudeHookGroup[],
+  command: string,
+  isPromptCoachHook: (command: string) => boolean,
+): ClaudeHookGroup[] {
+  let found = false;
+  const next = [...groups]
+    .map((group) => ({
+      ...group,
+      hooks: group.hooks.flatMap((hook) => {
+        if (!isPromptCoachHook(hook.command)) {
+          return [hook];
+        }
+
+        if (found) {
+          return [];
+        }
+
+        found = true;
+        return [{ ...hook, command }];
+      }),
+    }))
+    .filter((group) => group.hooks.length > 0);
+
+  if (!found) {
+    next.push({
+      hooks: [
+        {
+          type: "command",
+          command,
+          timeout: 2,
+        },
+      ],
+    });
+  }
+
+  return next;
+}
+
+function removePromptCoachHookGroups(
+  groups: ClaudeHookGroup[],
+  isPromptCoachHook: (command: string) => boolean,
+): ClaudeHookGroup[] {
+  return [...groups]
+    .map((group) => ({
+      ...group,
+      hooks: group.hooks.filter((hook) => !isPromptCoachHook(hook.command)),
+    }))
+    .filter((group) => group.hooks.length > 0);
 }
 
 function ensureSessionStartHook(
@@ -577,6 +650,44 @@ function ensureSessionStartHook(
       return { ...hook, command, timeout: 5 };
     }),
   }));
+
+  if (!found) {
+    next.push({
+      hooks: [
+        {
+          type: "command",
+          command,
+          timeout: 5,
+        },
+      ],
+    });
+  }
+
+  return next;
+}
+
+function ensureCodexSessionStartHook(
+  groups: ClaudeHookGroup[],
+  command: string,
+): ClaudeHookGroup[] {
+  let found = false;
+  const next = [...groups]
+    .map((group) => ({
+      ...group,
+      hooks: group.hooks.flatMap((hook) => {
+        if (!isCodexSessionStartHook(hook.command)) {
+          return [hook];
+        }
+
+        if (found) {
+          return [];
+        }
+
+        found = true;
+        return [{ ...hook, command, timeout: 5 }];
+      }),
+    }))
+    .filter((group) => group.hooks.length > 0);
 
   if (!found) {
     next.push({
@@ -709,6 +820,13 @@ function buildSessionStartHookCommand(
   )} ${shellQuote(cliEntryPath())} hook session-start ${tool}${dataDirArg} --open-web`;
 }
 
+function buildCodexLifecycleHookCommand(marker: string, dataDir?: string): string {
+  const dataDirArg = dataDir ? ` --data-dir ${JSON.stringify(dataDir)}` : "";
+  return `${markerAssignment(marker)} ${shellQuote(
+    process.execPath,
+  )} ${shellQuote(cliEntryPath())} hook codex${dataDirArg}`;
+}
+
 function buildRewriteGuardArgs(
   options: Pick<
     HookInstallOptions,
@@ -746,7 +864,38 @@ function isClaudePromptCoachHook(command: string): boolean {
 }
 
 function isCodexPromptCoachHook(command: string): boolean {
-  return command.includes(CODEX_PROMPT_COACH_MARKER);
+  return (
+    command.includes(CODEX_PROMPT_COACH_MARKER) ||
+    command.includes(LEGACY_CODEX_PROMPT_MEMORY_MARKER)
+  );
+}
+
+function isCodexStopHook(command: string): boolean {
+  return (
+    command.includes(CODEX_PROMPT_COACH_STOP_MARKER) ||
+    isCodexPromptCoachHook(command)
+  );
+}
+
+function isCodexPreCompactHook(command: string): boolean {
+  return (
+    command.includes(CODEX_PROMPT_COACH_PRE_COMPACT_MARKER) ||
+    isCodexPromptCoachHook(command)
+  );
+}
+
+function isCodexPostCompactHook(command: string): boolean {
+  return (
+    command.includes(CODEX_PROMPT_COACH_POST_COMPACT_MARKER) ||
+    isCodexPromptCoachHook(command)
+  );
+}
+
+function isCodexSessionStartHook(command: string): boolean {
+  return (
+    command.includes(CODEX_PROMPT_COACH_SESSION_MARKER) ||
+    command.includes(LEGACY_CODEX_PROMPT_MEMORY_SESSION_MARKER)
+  );
 }
 
 function markerAssignment(marker: string): string {

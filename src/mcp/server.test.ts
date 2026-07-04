@@ -35,9 +35,146 @@ describe("MCP stdio server", () => {
           }),
           expect.objectContaining({
             name: "ask_clarifying_questions",
+            inputSchema: expect.objectContaining({
+              properties: expect.objectContaining({
+                allow_native_dialog: expect.objectContaining({
+                  type: "boolean",
+                }),
+              }),
+            }),
           }),
           expect.objectContaining({
             name: "record_clarifications",
+          }),
+          expect.objectContaining({
+            name: "get_loopdeck_status",
+            outputSchema: expect.objectContaining({
+              properties: expect.objectContaining({
+                activity: expect.objectContaining({
+                  properties: expect.objectContaining({
+                    recent_decisions: expect.objectContaining({
+                      items: expect.objectContaining({
+                        required: expect.arrayContaining([
+                          "snapshot_id",
+                          "worktree",
+                          "decision",
+                          "reason",
+                          "decided_by",
+                          "created_at",
+                        ]),
+                        properties: expect.objectContaining({
+                          decision: expect.objectContaining({
+                            enum: ["merge", "continue", "defer"],
+                          }),
+                        }),
+                      }),
+                    }),
+                    command_center: expect.objectContaining({
+                      properties: expect.objectContaining({
+                        title: expect.any(Object),
+                        primary_action: expect.any(Object),
+                        review_packet: expect.objectContaining({
+                          required: expect.arrayContaining([
+                            "title",
+                            "status",
+                            "summary",
+                            "next_action",
+                            "ready_count",
+                            "needs_review_count",
+                            "missing_evidence_count",
+                            "actions",
+                            "checklist",
+                          ]),
+                          properties: expect.objectContaining({
+                            status: expect.objectContaining({
+                              enum: ["ready", "needs_review", "blocked"],
+                            }),
+                            next_action: expect.objectContaining({
+                              enum: [
+                                "compare ready evidence before merge",
+                                "review non-passing worktrees before merge",
+                                "record missing evidence before merge",
+                              ],
+                            }),
+                            checklist: expect.objectContaining({
+                              items: expect.objectContaining({
+                                required: expect.arrayContaining([
+                                  "label",
+                                  "status",
+                                  "action",
+                                ]),
+                              }),
+                            }),
+                            decision_advisory: expect.objectContaining({
+                              required: expect.arrayContaining([
+                                "summary",
+                                "next_action",
+                              ]),
+                              properties: expect.objectContaining({
+                                next_action: expect.objectContaining({
+                                  enum: [
+                                    "honor recent continue decision before merge",
+                                    "honor recent defer decision before merge",
+                                    "confirm recent merge decision before merge",
+                                  ],
+                                }),
+                              }),
+                            }),
+                          }),
+                        }),
+                        review_items: expect.objectContaining({
+                          items: expect.objectContaining({
+                            required: expect.arrayContaining([
+                              "evidence_count",
+                              "merge_readiness",
+                            ]),
+                            properties: expect.objectContaining({
+                              evidence_count: expect.any(Object),
+                              merge_readiness: expect.objectContaining({
+                                properties: expect.objectContaining({
+                                  status: expect.objectContaining({
+                                    enum: [
+                                      "ready",
+                                      "needs_review",
+                                      "missing_evidence",
+                                    ],
+                                  }),
+                                  evidence: expect.objectContaining({
+                                    enum: [
+                                      "evidence present",
+                                      "missing evidence",
+                                    ],
+                                  }),
+                                  next_action: expect.any(Object),
+                                }),
+                              }),
+                            }),
+                          }),
+                        }),
+                      }),
+                    }),
+                  }),
+                }),
+              }),
+            }),
+          }),
+          expect.objectContaining({
+            name: "prepare_loop_brief",
+          }),
+          expect.objectContaining({
+            name: "record_loop_outcome",
+          }),
+          expect.objectContaining({
+            name: "propose_loop_memory_candidate",
+          }),
+          expect.objectContaining({
+            name: "record_loop_memory",
+          }),
+          expect.objectContaining({
+            name: "propose_instruction_patch",
+          }),
+          expect.objectContaining({
+            name: "apply_instruction_patch",
           }),
           expect.objectContaining({
             name: "score_prompt_archive",
@@ -71,13 +208,16 @@ describe("MCP stdio server", () => {
 
     const tools = (response?.result as { tools: Array<unknown> }).tools;
 
-    expect(tools).toHaveLength(13);
+    expect(tools).toHaveLength(20);
     for (const tool of tools.filter(
       (tool) =>
         ![
           "record_agent_rewrite",
           "record_agent_judgments",
           "record_clarifications",
+          "record_loop_outcome",
+          "record_loop_memory",
+          "apply_instruction_patch",
         ].includes((tool as { name?: string }).name ?? ""),
     )) {
       expect(tool).toEqual(
@@ -109,6 +249,55 @@ describe("MCP stdio server", () => {
             idempotentHint: false,
             openWorldHint: false,
             readOnlyHint: false,
+          }),
+        }),
+        expect.objectContaining({
+          name: "record_loop_outcome",
+          annotations: expect.objectContaining({
+            destructiveHint: false,
+            idempotentHint: false,
+            openWorldHint: false,
+            readOnlyHint: false,
+          }),
+        }),
+        expect.objectContaining({
+          name: "record_loop_memory",
+          annotations: expect.objectContaining({
+            destructiveHint: false,
+            idempotentHint: false,
+            openWorldHint: false,
+            readOnlyHint: false,
+          }),
+        }),
+        expect.objectContaining({
+          name: "propose_instruction_patch",
+          outputSchema: expect.objectContaining({
+            properties: expect.objectContaining({
+              target_file: expect.any(Object),
+              diff: expect.any(Object),
+              writes_files: expect.any(Object),
+              privacy: expect.any(Object),
+            }),
+          }),
+        }),
+        expect.objectContaining({
+          name: "apply_instruction_patch",
+          annotations: expect.objectContaining({
+            destructiveHint: false,
+            idempotentHint: true,
+            openWorldHint: false,
+            readOnlyHint: false,
+          }),
+        }),
+        expect.objectContaining({
+          name: "apply_instruction_patch",
+          outputSchema: expect.objectContaining({
+            properties: expect.objectContaining({
+              target_file: expect.any(Object),
+              applied: expect.any(Object),
+              writes_files: expect.any(Object),
+              privacy: expect.any(Object),
+            }),
           }),
         }),
         expect.objectContaining({
@@ -193,6 +382,46 @@ describe("MCP stdio server", () => {
               next_prompt_template: expect.any(Object),
               practice_plan: expect.any(Object),
               top_gaps: expect.any(Object),
+              privacy: expect.any(Object),
+            }),
+          }),
+        }),
+        expect.objectContaining({
+          name: "prepare_loop_brief",
+          outputSchema: expect.objectContaining({
+            properties: expect.objectContaining({
+              prompt: expect.any(Object),
+              privacy: expect.any(Object),
+            }),
+          }),
+        }),
+        expect.objectContaining({
+          name: "record_loop_outcome",
+          outputSchema: expect.objectContaining({
+            properties: expect.objectContaining({
+              recorded: expect.any(Object),
+              outcome: expect.any(Object),
+              privacy: expect.any(Object),
+            }),
+          }),
+        }),
+        expect.objectContaining({
+          name: "propose_loop_memory_candidate",
+          outputSchema: expect.objectContaining({
+            properties: expect.objectContaining({
+              eligible: expect.any(Object),
+              reason: expect.any(Object),
+              candidate: expect.any(Object),
+              privacy: expect.any(Object),
+            }),
+          }),
+        }),
+        expect.objectContaining({
+          name: "record_loop_memory",
+          outputSchema: expect.objectContaining({
+            properties: expect.objectContaining({
+              recorded: expect.any(Object),
+              memory: expect.any(Object),
               privacy: expect.any(Object),
             }),
           }),
@@ -312,6 +541,33 @@ describe("MCP stdio server", () => {
         isError: false,
       },
     });
+  });
+
+  it("declares include_suggestions for score_prompt selected prompt action compatibility", async () => {
+    const response = await handleMcpMessage({
+      jsonrpc: "2.0",
+      id: "tools-include-suggestions",
+      method: "tools/list",
+      params: {},
+    });
+
+    const tools = (
+      response as {
+        result: {
+          tools: Array<{
+            name: string;
+            inputSchema: {
+              properties: Record<string, unknown>;
+            };
+          }>;
+        };
+      }
+    ).result.tools;
+    const scorePrompt = tools.find((tool) => tool.name === "score_prompt");
+
+    expect(scorePrompt?.inputSchema.properties).toHaveProperty(
+      "include_suggestions",
+    );
   });
 
   it("returns structured MCP content for improve_prompt calls", async () => {
