@@ -49,7 +49,7 @@ export const GET_LOOPDECK_STATUS_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
   {
     name: "get_loopdeck_status",
     description:
-      "Check whether local Loopdeck loop snapshots are available for the current prompt-coach archive. Use this when Codex or Claude Code needs to know if a previous loop can be continued or whether the user should run `prompt-coach loop collect` first. Returns safe loop metadata, available loop tools, next actions, and privacy flags. It never returns prompt bodies, raw absolute paths, secrets, transcripts, or external LLM results.",
+      "Check whether local Loopdeck loop snapshots are available for the current Loopdeck archive. Use this when Codex or Claude Code needs to know if a previous loop can be continued or whether the user should run `prompt-coach loop collect` first. Returns safe loop metadata, available loop tools, next actions, and privacy flags. It never returns prompt bodies, raw absolute paths, secrets, transcripts, or external LLM results.",
     annotations: {
       ...LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS,
       title: "Loopdeck loop status",
@@ -614,7 +614,7 @@ export const RECORD_LOOP_MEMORY_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
   {
     name: "record_loop_memory",
     description:
-      "Record a user-approved Loopdeck memory from the latest eligible loop outcome. This writes only the approved candidate statement and safe evidence refs into local prompt-coach storage; it never writes AGENTS.md, CLAUDE.md, project docs, prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
+      "Record a user-approved Loopdeck memory from the latest eligible loop outcome. This writes only the approved candidate statement and safe evidence refs into local Loopdeck storage; it never writes AGENTS.md, CLAUDE.md, project docs, prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
     annotations: {
       ...LOCAL_LOOP_WRITE_TOOL_ANNOTATIONS,
       title: "Record approved Loopdeck memory",
