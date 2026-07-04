@@ -194,7 +194,11 @@
 - [x] Task 182 RED: Commander unknown-command 오류가 테스트 중 `process.exit`를 호출해 raw stack path로 실패하는 것을 확인
 - [x] Task 182 GREEN: `runCli`가 Commander input error를 `exitOverride`로 받아 friendly stderr와 exit code 1을 반환하고 programmer error는 계속 rethrow
 - [x] Task 182 PRIVACY: CLI error handling만 변경하며 prompt body 저장/external call/raw path 출력/git read/write/transcript import를 추가하지 않음
-- [ ] 다음 dogfood slice: Codex native dialog fallback을 실제 OS dialog 또는 명시적 사용자 승인 하에 확인
+- [x] Task 183 DECISION: 실제 OS dialog를 자동 테스트나 scheduled check에서 열지 않기 위해 operator approval env로 보호되는 dogfood harness를 별도 slice로 둔다
+- [x] Task 183 RED: approval-gated native dialog dogfood harness가 package files와 scripts에 없어 focused packaging test가 실패함 확인
+- [x] Task 183 GREEN: `scripts/mcp-native-dialog-approved.mjs`와 `dogfood:mcp-native-dialog-approved`를 추가하고 승인 env가 없으면 OS dialog를 열지 않고 실패하도록 고정
+- [x] Task 183 PRIVACY: 승인 없는 경로는 prompt body 저장/external call/raw path/git read/write/transcript import/OS dialog 실행을 추가하지 않음
+- [ ] 다음 dogfood slice: 명시적 사용자 승인 후 `PROMPT_COACH_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved`로 실제 answered OS dialog 결과 확인
 
 ### 판단 기준
 
@@ -215,6 +219,7 @@
 - Claude Code `ask_clarifying_questions` print-mode dogfood는 MCP routing 성공 여부와 실제 사용자 답변 수집 여부를 분리한다. `interaction_status=declined`는 tool failure가 아니라 답변 미수집 fallback이며, 다음 단계는 agent native ask UI 또는 interactive session에서 답을 받아 `apply_clarifications`/`record_clarifications`로 이어가는 것이다.
 - Codex native dialog fallback을 문서화하려면 `allow_native_dialog`가 public MCP schema에 있어야 한다. internal TypeScript-only argument는 실제 strict MCP client 통합으로 간주하지 않는다.
 - 실제 사용자 답변 포함 경로는 mock 함수 호출만으로 완료 처리하지 않는다. dist MCP stdio server, client `capabilities.elicitation`, server-initiated `elicitation/create`, client answer response, final answered draft까지 한 번에 통과해야 한다.
+- 승인형 native dialog dogfood harness가 존재하더라도 실제 OS dialog에 operator가 답한 증거와는 구분한다. 목표 완료 증거로 쓰려면 승인 env를 명시적으로 켜고 최종 `interaction_status=answered`, no external calls, no auto-submit, no raw secret leakage를 확인해야 한다.
 
 ## 2026-07-04 Loop Snapshot Domain Slice
 
