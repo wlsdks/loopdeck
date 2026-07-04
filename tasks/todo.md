@@ -75,6 +75,20 @@
 - Codex와 Claude Code 통합 문서는 최신 공식 surface를 기준으로 하되, Loopdeck이 generic runtime으로 확장되지 않도록 local-first harness boundary를 명시한다.
 - 새 문서는 설치 사용자에게도 필요한 공개 계약이므로 `package.json#files`와 packaging test에 포함한다.
 
+## 2026-07-05 Loopdeck Product And Snapshot Schema Docs
+
+- [x] 설계서의 필수 harness document set에서 아직 비어 있는 `docs/LOOPDECK.md`와 `docs/LOOP-SNAPSHOT-SCHEMA.md` 확인
+- [x] `docs/LOOPDECK.md`에 제품 thesis, runtime id compatibility, core workflows, feature portfolio, autonomy model, non-goals 정리
+- [x] `docs/LOOP-SNAPSHOT-SCHEMA.md`에 현재 `src/loop/types.ts`와 SQLite `loop_snapshots` 저장 형태, privacy invariants, CLI/MCP/web/hook surface rules 정리
+- [x] 두 문서를 `package.json#files`, package contents 문서, packaging test에 포함
+- [x] 설계서의 필수 문서 상태를 implemented로 갱신
+
+### 판단 기준
+
+- 제품 계약은 Loopdeck 방향을 넓히되 `prompt-coach` runtime compatibility window를 깨지 않는다.
+- Snapshot schema 문서는 raw transcript store나 generic tracing backend가 아니라 privacy-safe local loop record임을 명시한다.
+- 문서가 runtime type과 drift 나지 않도록 변경 절차에 `src/loop/types.ts`, storage tests, CLI/MCP/web tests 갱신 규칙을 포함한다.
+
 ## 2026-07-04 Codex Dogfood Hook Noise Fix
 
 - [x] 실제 user-level Codex hook 설정 확인: `UserPromptSubmit` hook은 하나만 설치되어 있고 project-level hook 중복은 없음

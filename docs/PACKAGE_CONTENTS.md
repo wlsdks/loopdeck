@@ -25,6 +25,9 @@ The npm package intentionally includes:
 - public product and release docs under `docs/`
   - includes `docs/LEGAL_USAGE_GUIDE.md` so users can inspect the provider
     documentation boundary for agent-judge mode
+  - includes `docs/LOOPDECK.md` and `docs/LOOP-SNAPSHOT-SCHEMA.md` so
+    installed users can inspect the product contract and loop snapshot privacy
+    schema that back the Loopdeck direction
   - includes `docs/AGENT-HARNESS.md` and `docs/INSTRUCTION-FILES.md` so
     installed plugin and CLI users can inspect the Codex/Claude Code harness
     contract and instruction-file layering rules without cloning the repo
