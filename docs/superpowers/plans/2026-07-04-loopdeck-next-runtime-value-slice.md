@@ -251,7 +251,11 @@ Implementation checkpoint:
   note, explaining that the operator explicitly collects the next loop snapshot
   after the agent turn and that Loopdeck does not watch transcripts or scrape
   agent UI in the background.
+- Selected worktree detail now includes a raw-free pre-merge advisory,
+  explaining that merge decisions should wait until the next loop snapshot is
+  collected and reviewed, and that memory approval remains separate from merge
+  readiness.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free pre-merge advisory after continuation handoff,
+  raw-free post-collection review note after continuation handoff,
   without adding transcript content, prompt bodies, raw paths, git status reads,
   command execution, memory approval writes, merge writes, or external calls.

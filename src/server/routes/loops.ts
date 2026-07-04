@@ -195,6 +195,7 @@ export function registerLoopRoutes(
               privacy_boundary_note: privacyBoundaryNoteFor(),
               operator_review_gate: operatorReviewGateFor(),
               collection_responsibility_note: collectionResponsibilityNoteFor(),
+              pre_merge_advisory: preMergeAdvisoryFor(),
             }
           : {}),
         ...(latestDecision
@@ -808,6 +809,29 @@ function collectionResponsibilityNoteFor(): {
     does_not:
       "does not watch transcripts, scrape agent UI, or collect in the background",
     automatic_collection: false,
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function preMergeAdvisoryFor(): {
+  label: "Pre-merge advisory";
+  hold_merge: "hold merge decisions until the next loop snapshot is collected and reviewed";
+  reason: "continuation handoff can change readiness after the next agent turn";
+  not_memory_approval: "memory approval remains separate from merge readiness";
+  writes_merge_decision: false;
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Pre-merge advisory",
+    hold_merge:
+      "hold merge decisions until the next loop snapshot is collected and reviewed",
+    reason:
+      "continuation handoff can change readiness after the next agent turn",
+    not_memory_approval:
+      "memory approval remains separate from merge readiness",
+    writes_merge_decision: false,
     writes_files: false,
     external_calls: false,
   };

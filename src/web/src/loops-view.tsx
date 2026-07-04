@@ -595,6 +595,25 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.pre_merge_advisory && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {worktreeDetail.pre_merge_advisory.label}
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.pre_merge_advisory.hold_merge}
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.pre_merge_advisory.reason}
+                    </p>
+                    <p className="loops-status-line">
+                      {worktreeDetail.pre_merge_advisory.not_memory_approval}
+                    </p>
+                    <p className="loops-status-line">
+                      No merge decision writes, file writes, or external calls
+                    </p>
+                  </div>
+                )}
               </div>
             )}
             {worktreeDetail.latest_decision && (

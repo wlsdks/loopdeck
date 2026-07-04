@@ -193,6 +193,17 @@ describe("LoopsView", () => {
       "does not watch transcripts, scrape agent UI, or collect in the background",
     );
     expect(html).toContain("No automatic collection, file writes, or external calls");
+    expect(html).toContain("Pre-merge advisory");
+    expect(html).toContain(
+      "hold merge decisions until the next loop snapshot is collected and reviewed",
+    );
+    expect(html).toContain(
+      "continuation handoff can change readiness after the next agent turn",
+    );
+    expect(html).toContain(
+      "memory approval remains separate from merge readiness",
+    );
+    expect(html).toContain("No merge decision writes, file writes, or external calls");
     expect(html).toContain("Continuation guidance");
     expect(html).toContain('class="loop-detail-section"');
     expect(html).toContain('class="loop-detail-section-title"');
@@ -550,6 +561,18 @@ function loopWorktree(): LoopWorktreeResponse {
       does_not:
         "does not watch transcripts, scrape agent UI, or collect in the background",
       automatic_collection: false,
+      writes_files: false,
+      external_calls: false,
+    },
+    pre_merge_advisory: {
+      label: "Pre-merge advisory",
+      hold_merge:
+        "hold merge decisions until the next loop snapshot is collected and reviewed",
+      reason:
+        "continuation handoff can change readiness after the next agent turn",
+      not_memory_approval:
+        "memory approval remains separate from merge readiness",
+      writes_merge_decision: false,
       writes_files: false,
       external_calls: false,
     },

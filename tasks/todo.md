@@ -321,7 +321,11 @@
 - [x] Task 74 RED: selected detail API/UI에 `collection_responsibility_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 74 GREEN: selected worktree detail API/type/UI에 operator collects next snapshot, collection starts only through operator-run loop collection flow, no transcript watch/no agent UI scrape/no background collect flags를 read-only로 노출
 - [x] Task 74 PRIVACY: collection responsibility note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript watching/agent UI scraping/background collection/command execution/external call을 포함하지 않음
-- [ ] 다음 slice: selected detail panel의 continuation handoff 이후 pre-merge advisory를 raw-free로 별도 제공할지 결정
+- [x] Task 75 DECISION: pre-merge advisory는 next loop snapshot 수집/검토 전 merge 판단 보류와 memory approval 분리를 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 75 RED: selected detail API/UI에 `pre_merge_advisory`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 75 GREEN: selected worktree detail API/type/UI에 hold merge until next snapshot collected/reviewed, continuation can change readiness, memory approval separate, no merge decision write flags를 read-only로 노출
+- [x] Task 75 PRIVACY: pre-merge advisory는 prompt body/evidence refs/outcome summary/raw path/git read/write/memory approval write/merge decision write/command execution/external call을 포함하지 않음
+- [ ] 다음 slice: selected detail panel의 continuation handoff 이후 post-collection review note를 raw-free로 별도 제공할지 결정
 
 ### 판단 기준
 

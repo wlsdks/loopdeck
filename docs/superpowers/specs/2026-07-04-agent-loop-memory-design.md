@@ -2489,6 +2489,45 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.72: Selected Pre-Merge Advisory
+
+Decision:
+
+- Selected worktree detail should show a pre-merge advisory after continuation
+  handoff. It should tell the operator to hold merge decisions until the next
+  loop snapshot has been collected and reviewed.
+- This is needed because continuation handoff can change the selected
+  worktree's readiness after the next agent turn, and memory approval remains a
+  separate review from merge readiness.
+
+Add:
+
+- top-level selected worktree detail `pre_merge_advisory` with:
+  - label: `Pre-merge advisory`
+  - hold_merge:
+    `hold merge decisions until the next loop snapshot is collected and reviewed`
+  - reason:
+    `continuation handoff can change readiness after the next agent turn`
+  - not_memory_approval:
+    `memory approval remains separate from merge readiness`
+  - writes_merge_decision: `false`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance
+- focused server/API/web tests proving the advisory is present
+
+Do not add:
+
+- merge decision writes, memory approval writes, git reads/writes, command
+  execution, filesystem reads/writes, automatic merge checks, checklist
+  completion state, background analysis, external model calls, or new write
+  tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

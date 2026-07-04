@@ -362,6 +362,15 @@ export type LoopWorktreeResponse = {
     writes_files: false;
     external_calls: false;
   };
+  pre_merge_advisory?: {
+    label: "Pre-merge advisory";
+    hold_merge: "hold merge decisions until the next loop snapshot is collected and reviewed";
+    reason: "continuation handoff can change readiness after the next agent turn";
+    not_memory_approval: "memory approval remains separate from merge readiness";
+    writes_merge_decision: false;
+    writes_files: false;
+    external_calls: false;
+  };
   latest_decision?: {
     snapshot_id: string;
     worktree: string;
