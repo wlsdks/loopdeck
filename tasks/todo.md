@@ -405,7 +405,11 @@
 - [x] Task 95 RED: selected detail API/UI에 `continuation_safety_collection_evidence_freshness_boundary_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 95 GREEN: selected worktree detail API/type/UI에 latest explicit loop snapshot evidence freshness check, no git status/transcript/agent UI freshness verification, no-write/no-external flags를 read-only로 노출
 - [x] Task 95 PRIVACY: continuation safety collection evidence freshness boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [ ] 다음 slice: selected detail panel의 freshness result non-persistence note를 raw-free로 별도 제공할지 결정
+- [x] Task 96 DECISION: freshness result non-persistence note는 freshness result state가 다음 explicit loop snapshot 전까지 Loopdeck 밖에 있고 Loopdeck이 freshness result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 96 RED: selected detail API/UI에 `continuation_safety_freshness_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 96 GREEN: selected worktree detail API/type/UI에 freshness result outside Loopdeck until explicit snapshot, no freshness result detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 96 PRIVACY: continuation safety freshness result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [ ] 다음 slice: selected detail panel의 freshness uncertainty collection reminder를 raw-free로 별도 제공할지 결정
 
 ### 판단 기준
 

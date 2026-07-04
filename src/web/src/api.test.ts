@@ -497,6 +497,17 @@ describe("web api export client", () => {
               writes_files: false,
               external_calls: false,
             },
+            continuation_safety_freshness_result_non_persistence_note: {
+              label: "Freshness result non-persistence",
+              result_scope:
+                "freshness result stays outside Loopdeck until the next explicit loop snapshot",
+              not_stored:
+                "Loopdeck does not detect, store, or sync freshness result state",
+              reason:
+                "keeps freshness evidence tied to explicit local snapshot recording",
+              writes_files: false,
+              external_calls: false,
+            },
             paste_destination: {
               label: "Paste destination",
               targets: ["Codex active request", "Claude Code active request"],
@@ -948,6 +959,16 @@ describe("web api export client", () => {
         not_verified:
           "Loopdeck does not verify freshness from git status, transcripts, or agent UI activity",
         reason: "keeps evidence freshness review tied to local snapshot metadata",
+        writes_files: false,
+        external_calls: false,
+      },
+      continuation_safety_freshness_result_non_persistence_note: {
+        label: "Freshness result non-persistence",
+        result_scope:
+          "freshness result stays outside Loopdeck until the next explicit loop snapshot",
+        not_stored:
+          "Loopdeck does not detect, store, or sync freshness result state",
+        reason: "keeps freshness evidence tied to explicit local snapshot recording",
         writes_files: false,
         external_calls: false,
       },

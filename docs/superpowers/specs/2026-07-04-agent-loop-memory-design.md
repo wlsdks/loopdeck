@@ -3381,6 +3381,59 @@ Do not add:
   freshness result state, or secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.93: Freshness Result Non-Persistence Note
+
+Decision:
+
+- Selected worktree detail should state that freshness result state stays
+  outside Loopdeck until the next explicit loop snapshot.
+- This is needed because the collection evidence freshness boundary should not
+  be mistaken for freshness result detection, persistence, or state
+  synchronization.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_freshness_result_non_persistence_note` with:
+  - label: `Freshness result non-persistence`
+  - result_scope:
+    `freshness result stays outside Loopdeck until the next explicit loop snapshot`
+  - not_stored:
+    `Loopdeck does not detect, store, or sync freshness result state`
+  - reason:
+    `keeps freshness evidence tied to explicit local snapshot recording`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after the collection evidence freshness boundary note
+- focused server/API/web tests proving the freshness result non-persistence
+  note is present
+
+Do not add:
+
+- freshness result persistence, freshness result detection, freshness state
+  synchronization, evidence freshness verification, git status reads,
+  transcript inspection, agent UI monitoring, hidden freshness checks, retry
+  outcome persistence, retry success/failure detection, retry state
+  synchronization, retry automation, automatic collection retry, hidden recovery
+  actions, collection command execution, collection result state persistence,
+  collection result detection, background collection, automatic collection,
+  submission event hooks, submission result detection, submitted state
+  persistence, submit automation, Enter key automation, button clicking, active
+  window detection, target-agent UI inspection, target content validation, paste
+  success verification, clipboard target validation, paste automation,
+  persisted destination state, persisted target state, safety approval state,
+  Codex or Claude Code UI automation, hidden prompt submission, command
+  execution, filesystem reads/writes, persisted review state, checklist
+  completion state, background analysis, external model calls, memory approval
+  writes, merge decision writes, or new write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, target
+  content, active-window titles, pasted content, paste result state, submitted
+  state, agent response content, collection result state, retry result state,
+  freshness result state, or secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

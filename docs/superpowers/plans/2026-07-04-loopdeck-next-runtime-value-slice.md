@@ -328,11 +328,15 @@ Implementation checkpoint:
   freshness boundary note, explaining that the operator checks freshness
   against the latest explicit loop snapshot evidence, without Loopdeck
   verifying freshness from git status, transcripts, or agent UI activity.
+- Selected worktree detail now includes a raw-free freshness result
+  non-persistence note, explaining that freshness result state stays outside
+  Loopdeck until the next explicit loop snapshot, without Loopdeck detecting,
+  storing, or syncing freshness result state.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free freshness result non-persistence note, without adding
+  raw-free freshness uncertainty collection reminder, without adding
   transcript content, prompt bodies, raw paths, target contents, active-window
   titles, pasted content, paste result state, submitted state, agent response
   content, collection result state, retry result state, freshness result state,
-  collection command execution, retry automation, git status reads, command
-  execution, persisted review state, checklist completion state, memory
-  approval writes, merge writes, or external calls.
+  freshness verification, collection command execution, retry automation, git
+  status reads, command execution, persisted review state, checklist completion
+  state, memory approval writes, merge writes, or external calls.
