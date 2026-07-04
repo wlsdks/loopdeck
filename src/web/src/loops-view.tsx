@@ -361,6 +361,21 @@ export function LoopsView({
                   Worktree action{" "}
                   {worktreeDetail.review_packet_summary.worktree_action}
                 </p>
+                {worktreeDetail.review_packet_summary
+                  .reviewer_checklist_preview.length > 0 && (
+                  <div>
+                    <p className="loops-status-line">
+                      Reviewer checklist preview
+                    </p>
+                    {worktreeDetail.review_packet_summary.reviewer_checklist_preview.map(
+                      (item) => (
+                        <p className="loops-status-line" key={item.action}>
+                          {item.label} {item.status}
+                        </p>
+                      ),
+                    )}
+                  </div>
+                )}
                 <p className="loops-status-line">
                   {worktreeDetail.review_packet_summary.command_hint.label}
                 </p>

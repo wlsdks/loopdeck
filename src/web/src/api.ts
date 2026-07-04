@@ -253,6 +253,17 @@ export type LoopWorktreeResponse = {
       | "compare evidence before merge"
       | "review outcome before merge"
       | "record loop outcome evidence";
+    reviewer_checklist_preview: Array<{
+      label:
+        | "Compare ready evidence before merge"
+        | "Review non-passing worktrees before merge"
+        | "Record missing evidence before merge";
+      status: "required";
+      action:
+        | "compare evidence before merge"
+        | "review outcome before merge"
+        | "record loop outcome evidence";
+    }>;
     command_hint: {
       label: "Copy review brief command";
       command: string;

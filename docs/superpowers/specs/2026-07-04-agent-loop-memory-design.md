@@ -1698,6 +1698,46 @@ Do not add:
 - hidden external model calls or background agent evaluation
 - package, plugin, slash command, hook, or MCP server-name rename
 
+### Slice 4.52: Selected Worktree Reviewer Checklist Preview
+
+Decision:
+
+- Selected worktree detail should show the reviewer checklist item that matches
+  the selected worktree merge-readiness action. This gives a human operator the
+  local review step in context without introducing checklist completion state,
+  acknowledgements, merge automation, command execution, or web writes.
+- The preview should be derived from the existing command-center
+  `review_packet.checklist` and filtered by the selected worktree action, not
+  rebuilt with a second checklist rule.
+
+Add:
+
+- `review_packet_summary.reviewer_checklist_preview` in selected worktree detail
+  with the matching existing checklist item:
+  - label
+  - status: `required`
+  - action
+- web API typing for the preview
+- selected worktree detail rendering for the preview label/status
+- focused server/API/web tests proving the preview remains read-only and does
+  not reveal prompt bodies, outcome summaries, evidence refs, raw paths,
+  transcripts, compact summaries, API tokens, provider credentials, external
+  calls, or git writes
+
+Do not add:
+
+- checklist completion state, acknowledgements, approvals, or persistent
+  operator state
+- web or MCP write tools, command execution, merge actions, or git writes
+- raw evidence refs, outcome summaries, prompt bodies, diffs, transcript
+  content, compact summaries, raw paths, or provider credentials
+- a second checklist derivation rule separate from the command-center review
+  packet
+- merge/checkout/rebase/diff/conflict inspection
+- changes to command-center readiness or review packet status
+- hidden external model calls or background agent evaluation
+- package, plugin, slash command, hook, or MCP server-name rename
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

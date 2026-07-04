@@ -241,7 +241,11 @@
 - [x] Task 54 RED: blocked selected detail API/UI에 `missing_evidence_explanation`이 없어 focused tests 실패 확인
 - [x] Task 54 GREEN: selected worktree detail API/type/UI에 Missing evidence label/reason/next_action을 optional read-only로 노출
 - [x] Task 54 PRIVACY: explanation은 safe reason/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
-- [ ] 다음 slice: selected worktree detail에 raw-free reviewer checklist preview를 추가할지 결정
+- [x] Task 55 DECISION: selected worktree detail은 command-center checklist에서 selected worktree action과 일치하는 raw-free reviewer checklist preview만 노출
+- [x] Task 55 RED: selected detail API/UI에 `reviewer_checklist_preview`가 없어 focused tests 실패 확인
+- [x] Task 55 GREEN: selected worktree detail API/type/UI에 required reviewer checklist preview를 read-only로 노출
+- [x] Task 55 PRIVACY: preview는 기존 checklist label/status/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
+- [ ] 다음 slice: selected worktree detail에 모든 readiness state용 read-only readiness summary를 추가할지 결정
 
 ### 판단 기준
 

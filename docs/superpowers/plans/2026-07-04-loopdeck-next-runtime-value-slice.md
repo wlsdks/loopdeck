@@ -181,6 +181,10 @@ Implementation checkpoint:
 - Selected worktree detail now includes a raw-free missing-evidence explanation
   when the selected worktree is blocked, without returning evidence refs,
   outcome summaries, prompt bodies, diffs, or git state.
+- Selected worktree detail now includes a raw-free reviewer checklist preview
+  derived from the existing command-center review packet checklist and filtered
+  to the selected worktree action, without adding checklist completion state,
+  write tools, or merge automation.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free reviewer checklist preview scoped to the selected worktree, without
-  adding checklist completion state or write tools.
+  read-only selected-worktree readiness summary for all readiness states,
+  without adding evidence refs, outcome summaries, or write tools.

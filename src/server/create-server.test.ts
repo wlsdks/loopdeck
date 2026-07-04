@@ -812,6 +812,13 @@ describe("createServer P2 ingest boundary", () => {
           worktree: "review-worktree",
           merge_readiness: "needs_review",
           worktree_action: "review outcome before merge",
+          reviewer_checklist_preview: [
+            {
+              label: "Review non-passing worktrees before merge",
+              status: "required",
+              action: "review outcome before merge",
+            },
+          ],
           command_hint: {
             label: "Copy review brief command",
             command:
@@ -877,6 +884,13 @@ describe("createServer P2 ingest boundary", () => {
           next_action: "record missing evidence before merge",
           merge_readiness: "missing_evidence",
           worktree_action: "record loop outcome evidence",
+          reviewer_checklist_preview: [
+            {
+              label: "Record missing evidence before merge",
+              status: "required",
+              action: "record loop outcome evidence",
+            },
+          ],
           missing_evidence_explanation: {
             label: "Missing evidence",
             reason: "latest selected worktree outcome has no evidence refs",

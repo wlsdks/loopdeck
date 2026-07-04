@@ -77,6 +77,9 @@ describe("LoopsView", () => {
     expect(html).toContain("1 ready, 1 needs review, 0 missing evidence");
     expect(html).toContain("review non-passing worktrees before merge");
     expect(html).toContain("review outcome before merge");
+    expect(html).toContain("Reviewer checklist preview");
+    expect(html).toContain("Review non-passing worktrees before merge");
+    expect(html).toContain("required");
     expect(html).toContain("Copy review brief command");
     expect(html).toContain(
       "prompt-coach loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
@@ -285,6 +288,13 @@ function loopWorktree(): LoopWorktreeResponse {
       worktree: "agent-loop-worktree",
       merge_readiness: "needs_review",
       worktree_action: "review outcome before merge",
+      reviewer_checklist_preview: [
+        {
+          label: "Review non-passing worktrees before merge",
+          status: "required",
+          action: "review outcome before merge",
+        },
+      ],
       command_hint: {
         label: "Copy review brief command",
         command:
