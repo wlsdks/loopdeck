@@ -2,7 +2,7 @@
 import { realpathSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { Command } from "commander";
+import { Command, CommanderError } from "commander";
 
 import { registerBuddyCommand } from "./commands/buddy.js";
 import { registerCoachCommand } from "./commands/coach.js";
@@ -62,6 +62,7 @@ export function createProgram(): Command {
 }
 
 export type RunCliOptions = {
+  stdout?: NodeJS.WritableStream;
   stderr?: NodeJS.WritableStream;
   program?: Command;
 };
@@ -71,10 +72,20 @@ export async function runCli(
   options: RunCliOptions = {},
 ): Promise<number> {
   const program = options.program ?? createProgram();
+  const stdout = options.stdout ?? process.stdout;
   const stderr = options.stderr ?? process.stderr;
+  program.exitOverride();
+  program.configureOutput({
+    writeOut: (value) => {
+      stdout.write(value);
+    },
+    writeErr: (value) => {
+      stderr.write(value);
+    },
+  });
 
   if (argv.length <= 2) {
-    program.help();
+    program.outputHelp();
     return 0;
   }
 
@@ -85,6 +96,9 @@ export async function runCli(
     if (isUserError(error)) {
       stderr.write(`Error: ${error.message}\n`);
       return 1;
+    }
+    if (error instanceof CommanderError) {
+      return error.exitCode;
     }
     throw error;
   }
