@@ -248,9 +248,15 @@ describe("plugin packaging files", () => {
         expect.stringContaining("prompt coach"),
       ]),
     );
-    expect(skill).toContain("description: Use when the user wants to install, verify, search, or troubleshoot Loopdeck");
-    expect(skill).toContain("Use this skill when the user wants Codex to work with Loopdeck");
-    expect(skill).toContain("The compatibility CLI command remains `prompt-coach`");
+    expect(skill).toContain(
+      "description: Use when the user wants to install, verify, search, or troubleshoot Loopdeck",
+    );
+    expect(skill).toContain(
+      "Use this skill when the user wants Codex to work with Loopdeck",
+    );
+    expect(skill).toContain(
+      "The compatibility CLI command remains `prompt-coach`",
+    );
     for (const command of hookCommands) {
       expect(command).toContain("PROMPT_COACH_HOOK");
       expect(command).toContain("prompt-coach hook");
@@ -262,7 +268,10 @@ describe("plugin packaging files", () => {
 
   it("documents plugin command namespace compatibility during the Loopdeck migration", () => {
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
-    const plugins = readFileSync(join(process.cwd(), "docs/PLUGINS.md"), "utf8");
+    const plugins = readFileSync(
+      join(process.cwd(), "docs/PLUGINS.md"),
+      "utf8",
+    );
 
     expect(readme).toContain(
       "Claude Code slash commands remain under /prompt-coach:*",
@@ -277,7 +286,10 @@ describe("plugin packaging files", () => {
   it("documents /loopdeck:* as a future alias-only slash namespace without shipping command files yet", () => {
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
-    const plugins = readFileSync(join(process.cwd(), "docs/PLUGINS.md"), "utf8");
+    const plugins = readFileSync(
+      join(process.cwd(), "docs/PLUGINS.md"),
+      "utf8",
+    );
     const packageJson = readJson<{ name: string }>("package.json");
     const claudeManifest = readJson<{ name: string; commands: string[] }>(
       ".claude-plugin/plugin.json",
@@ -295,14 +307,10 @@ describe("plugin packaging files", () => {
       expect(content).toContain("alias-only");
     }
     expect(commandFiles).not.toEqual(
-      expect.arrayContaining([
-        expect.stringMatching(/^loopdeck(?:-|:|\.|$)/),
-      ]),
+      expect.arrayContaining([expect.stringMatching(/^loopdeck(?:-|:|\.|$)/)]),
     );
     expect(claudeManifest.commands).not.toEqual(
-      expect.arrayContaining([
-        expect.stringContaining("loopdeck"),
-      ]),
+      expect.arrayContaining([expect.stringContaining("loopdeck")]),
     );
     expect(packageJson.name).toBe("prompt-coach");
     expect(claudeManifest.name).toBe("prompt-coach");
@@ -320,13 +328,19 @@ describe("plugin packaging files", () => {
 
     expect(plan).toContain("current package name remains `prompt-coach`");
     expect(plan).toContain("current primary CLI remains `prompt-coach`");
-    expect(plan).toContain("`loopdeck` is a compatibility-preserving CLI alias");
-    expect(plan).toContain("Claude Code slash commands remain `/prompt-coach:*`");
+    expect(plan).toContain(
+      "`loopdeck` is a compatibility-preserving CLI alias",
+    );
+    expect(plan).toContain(
+      "Claude Code slash commands remain `/prompt-coach:*`",
+    );
     expect(plan).toContain("Do not ship `/loopdeck:*` as the only namespace");
     expect(plan).toContain("Phase 1: Observe compatibility");
     expect(plan).toContain("Phase 2: Add dual namespace aliases");
     expect(plan).toContain("Phase 3: Deprecate old namespace");
-    expect(plan).toContain("Phase 4: Remove only after a major/versioned window");
+    expect(plan).toContain(
+      "Phase 4: Remove only after a major/versioned window",
+    );
     expect(plan).toContain("fresh install smoke");
     expect(plan).toContain("Codex plugin smoke");
     expect(plan).toContain("Claude Code plugin smoke");
@@ -350,10 +364,16 @@ describe("plugin packaging files", () => {
     expect(issuePlan).toContain("# Loopdeck Plugin Rename Issue Slices");
     expect(issuePlan).toContain("Slice R1: Compatibility Inventory Gate");
     expect(issuePlan).toContain("Slice R2: Alias-Only Command Docs");
-    expect(issuePlan).toContain("Slice R3: Claude Code Dual Namespace Packaging");
-    expect(issuePlan).toContain("Slice R4: Codex Plugin Display Rename Without ID Rename");
+    expect(issuePlan).toContain(
+      "Slice R3: Claude Code Dual Namespace Packaging",
+    );
+    expect(issuePlan).toContain(
+      "Slice R4: Codex Plugin Display Rename Without ID Rename",
+    );
     expect(issuePlan).toContain("Slice R5: Hook Binary Compatibility Smoke");
-    expect(issuePlan).toContain("Slice R6: MCP Server Name Compatibility Decision");
+    expect(issuePlan).toContain(
+      "Slice R6: MCP Server Name Compatibility Decision",
+    );
     expect(issuePlan).toContain("Slice R7: Deprecation Window Readiness");
     expect(issuePlan).toContain("Do not remove `/prompt-coach:*`");
     expect(issuePlan).toContain("Do not rename `package.json#name`");
@@ -377,7 +397,9 @@ describe("plugin packaging files", () => {
     );
 
     expect(packageJson.files).toContain(decisionPath);
-    expect(decision).toContain("# Loopdeck Claude Code Dual Namespace Decision");
+    expect(decision).toContain(
+      "# Loopdeck Claude Code Dual Namespace Decision",
+    );
     expect(decision).toContain("Decision: defer");
     expect(decision).toContain("Claude Code plugin `name` is the namespace");
     expect(decision).toContain("commands/loopdeck-*.md");
@@ -386,15 +408,15 @@ describe("plugin packaging files", () => {
     expect(decision).toContain("dual plugin package");
     expect(decision).toContain("official namespace alias support");
     expect(decision).toContain("/prompt-coach:* remains required");
-    expect(decision).toContain("https://code.claude.com/docs/en/plugins-reference");
+    expect(decision).toContain(
+      "https://code.claude.com/docs/en/plugins-reference",
+    );
     expect(decision).not.toContain("Make this better");
     expect(decision).not.toContain("sk-proj");
     expect(decision).not.toContain("/Users/");
     expect(claudeManifest.name).toBe("prompt-coach");
     expect(claudeManifest.commands).not.toEqual(
-      expect.arrayContaining([
-        expect.stringContaining("loopdeck"),
-      ]),
+      expect.arrayContaining([expect.stringContaining("loopdeck")]),
     );
   });
 
@@ -405,7 +427,10 @@ describe("plugin packaging files", () => {
     const decision = readFileSync(join(process.cwd(), decisionPath), "utf8");
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
-    const plugins = readFileSync(join(process.cwd(), "docs/PLUGINS.md"), "utf8");
+    const plugins = readFileSync(
+      join(process.cwd(), "docs/PLUGINS.md"),
+      "utf8",
+    );
     const setupCommand = readFileSync(
       join(process.cwd(), "commands/setup.md"),
       "utf8",
@@ -418,19 +443,29 @@ describe("plugin packaging files", () => {
     expect(packageJson.files).toContain(decisionPath);
     expect(decision).toContain("# Loopdeck MCP Server Name Decision");
     expect(decision).toContain("Decision: keep `prompt-coach` canonical");
-    expect(decision).toContain("Do not add `loopdeck` MCP server-name examples yet");
+    expect(decision).toContain(
+      "Do not add `loopdeck` MCP server-name examples yet",
+    );
     expect(decision).toContain("codex mcp add <server-name> --");
     expect(decision).toContain("claude mcp add");
     expect(decision).toContain("prompt-coach mcp");
     expect(decision).toContain("loopdeck mcp");
     expect(decision).toContain("alias behavior");
     expect(decision).toContain("https://developers.openai.com/codex/mcp");
-    expect(decision).toContain("https://docs.anthropic.com/en/docs/claude-code/mcp");
+    expect(decision).toContain(
+      "https://docs.anthropic.com/en/docs/claude-code/mcp",
+    );
     expect(decision).not.toContain("Make this better");
     expect(decision).not.toContain("sk-proj");
     expect(decision).not.toContain("/Users/");
 
-    for (const content of [readme, readmeKo, plugins, setupCommand, webMcpView]) {
+    for (const content of [
+      readme,
+      readmeKo,
+      plugins,
+      setupCommand,
+      webMcpView,
+    ]) {
       expect(content).toContain("prompt-coach mcp");
       expect(content).toContain("mcp add");
       expect(content).not.toContain("mcp add loopdeck");
@@ -443,7 +478,10 @@ describe("plugin packaging files", () => {
     const packageJson = readJson<{ files: string[] }>("package.json");
     const readiness = readFileSync(join(process.cwd(), readinessPath), "utf8");
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
-    const plugins = readFileSync(join(process.cwd(), "docs/PLUGINS.md"), "utf8");
+    const plugins = readFileSync(
+      join(process.cwd(), "docs/PLUGINS.md"),
+      "utf8",
+    );
     const claudeManifest = readJson<{ name: string; commands: string[] }>(
       ".claude-plugin/plugin.json",
     );
@@ -737,6 +775,8 @@ describe("plugin packaging files", () => {
     expect(packageJson.files).toContain("integrations");
     expect(packageJson.files).toContain("docs/ARCHITECTURE.md");
     expect(packageJson.files).toContain("docs/PLUGINS.md");
+    expect(packageJson.files).toContain("docs/AGENT-HARNESS.md");
+    expect(packageJson.files).toContain("docs/INSTRUCTION-FILES.md");
     expect(packageJson.files).toContain(
       "docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md",
     );

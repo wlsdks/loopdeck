@@ -39,6 +39,8 @@
     "docs/TECH_SPEC.md",
     "docs/IMPLEMENTATION_PLAN.md",
     "docs/ADAPTERS.md",
+    "docs/AGENT-HARNESS.md",
+    "docs/INSTRUCTION-FILES.md",
     "docs/PLUGINS.md",
     "docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md",
     "docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-issue-slices.md",

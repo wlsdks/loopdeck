@@ -287,8 +287,8 @@ Do not duplicate the whole AGENTS.md content. Duplication causes drift.
 Add or revise:
 
 - `docs/LOOPDECK.md`: product thesis, loop model, user workflows.
-- `docs/AGENT-HARNESS.md`: Codex and Claude Code integration contract, hooks, MCP tools, plugin commands, setup verification.
-- `docs/INSTRUCTION-FILES.md`: AGENTS.md/CLAUDE.md structure, max-size guidance, nested override policy, examples.
+- `docs/AGENT-HARNESS.md`: Codex and Claude Code integration contract, hooks, MCP tools, plugin commands, setup verification. (**implemented as the public harness contract**)
+- `docs/INSTRUCTION-FILES.md`: AGENTS.md/CLAUDE.md structure, max-size guidance, nested override policy, examples. (**implemented as the instruction layering contract**)
 - `docs/LOOP-SNAPSHOT-SCHEMA.md`: loop snapshot schema and privacy rules.
 
 Existing `docs/PLUGINS.md` and `docs/ADAPTERS.md` should be updated after the design is approved.
@@ -303,12 +303,12 @@ Instruction-file rules:
 
 Required harness document set before large implementation:
 
-| Document                       | Purpose                                                            | Required before                 |
-| ------------------------------ | ------------------------------------------------------------------ | ------------------------------- |
-| `docs/LOOPDECK.md`             | Product thesis, loop model, user workflows, feature portfolio      | Brand migration or web Loops UI |
-| `docs/AGENT-HARNESS.md`        | Codex/Claude Code hooks, MCP, plugin commands, setup verification  | Hook/MCP loop integration       |
-| `docs/INSTRUCTION-FILES.md`    | AGENTS.md/CLAUDE.md layering, size limits, examples, anti-patterns | AGENTS/CLAUDE rewrite           |
-| `docs/LOOP-SNAPSHOT-SCHEMA.md` | Storage schema, privacy fields, raw-data exclusions                | SQLite loop snapshot migration  |
+| Document                       | Purpose                                                            | Required before                 | Status          |
+| ------------------------------ | ------------------------------------------------------------------ | ------------------------------- | --------------- |
+| `docs/LOOPDECK.md`             | Product thesis, loop model, user workflows, feature portfolio      | Brand migration or web Loops UI | not created yet |
+| `docs/AGENT-HARNESS.md`        | Codex/Claude Code hooks, MCP, plugin commands, setup verification  | Hook/MCP loop integration       | implemented     |
+| `docs/INSTRUCTION-FILES.md`    | AGENTS.md/CLAUDE.md layering, size limits, examples, anti-patterns | AGENTS/CLAUDE rewrite           | implemented     |
+| `docs/LOOP-SNAPSHOT-SCHEMA.md` | Storage schema, privacy fields, raw-data exclusions                | SQLite loop snapshot migration  | not created yet |
 
 ## 6. Data Model
 
