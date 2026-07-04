@@ -256,6 +256,12 @@ describe("web api export client", () => {
                 reason: "latest selected worktree outcome is not passing",
                 next_action: "review outcome before merge",
               },
+              evidence_count_explanation: {
+                label: "Evidence count",
+                count: 2,
+                reason: "selected worktree has evidence refs recorded",
+                next_action: "compare evidence before merge",
+              },
               reviewer_checklist_preview: [
                 {
                   label: "Review non-passing worktrees before merge",
@@ -322,6 +328,12 @@ describe("web api export client", () => {
           status: "needs_review",
           reason: "latest selected worktree outcome is not passing",
           next_action: "review outcome before merge",
+        },
+        evidence_count_explanation: {
+          label: "Evidence count",
+          count: 2,
+          reason: "selected worktree has evidence refs recorded",
+          next_action: "compare evidence before merge",
         },
         reviewer_checklist_preview: [
           {

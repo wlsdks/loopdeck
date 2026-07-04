@@ -190,6 +190,9 @@ export function registerLoopRoutes(
                 readiness_summary: readinessSummaryFor(
                   reviewItem.merge_readiness,
                 ),
+                evidence_count_explanation: evidenceCountExplanationFor(
+                  reviewItem.evidence_count,
+                ),
                 reviewer_checklist_preview: reviewPacket.checklist.filter(
                   (item) =>
                     item.action === reviewItem.merge_readiness.next_action,
@@ -431,6 +434,33 @@ function readinessSummaryFor(
     status: mergeReadiness.status,
     reason: "selected worktree has recorded evidence and passing outcome",
     next_action: mergeReadiness.next_action,
+  };
+}
+
+function evidenceCountExplanationFor(evidenceCount: number): {
+  label: "Evidence count";
+  count: number;
+  reason:
+    | "selected worktree has evidence refs recorded"
+    | "selected worktree has no evidence refs recorded";
+  next_action:
+    | "compare evidence before merge"
+    | "record loop outcome evidence";
+} {
+  if (evidenceCount === 0) {
+    return {
+      label: "Evidence count",
+      count: evidenceCount,
+      reason: "selected worktree has no evidence refs recorded",
+      next_action: "record loop outcome evidence",
+    };
+  }
+
+  return {
+    label: "Evidence count",
+    count: evidenceCount,
+    reason: "selected worktree has evidence refs recorded",
+    next_action: "compare evidence before merge",
   };
 }
 

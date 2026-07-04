@@ -1778,6 +1778,45 @@ Do not add:
 - hidden external model calls or background agent evaluation
 - package, plugin, slash command, hook, or MCP server-name rename
 
+### Slice 4.54: Selected Worktree Evidence-Count Explanation
+
+Decision:
+
+- Selected worktree detail should explain the selected worktree evidence count
+  without exposing evidence ref strings, evidence bodies, output summaries,
+  diffs, or raw paths.
+- A zero count should tell the operator to record evidence. A positive count
+  should tell the operator evidence exists and can be compared before merge.
+- This is a display-only explanation derived from existing safe aggregate
+  `evidence_count`; it does not inspect evidence content or add write actions.
+
+Add:
+
+- `review_packet_summary.evidence_count_explanation` with:
+  - label: `Evidence count`
+  - count: selected worktree evidence count
+  - reason:
+    - `selected worktree has evidence refs recorded`
+    - `selected worktree has no evidence refs recorded`
+  - next_action:
+    - `compare evidence before merge`
+    - `record loop outcome evidence`
+- web API typing and selected worktree detail rendering
+- focused server/API/web tests proving only the count and safe reason/action are
+  returned
+
+Do not add:
+
+- evidence ref strings, evidence bodies, outcome summaries, prompt bodies,
+  diffs, transcript content, compact summaries, raw paths, or provider
+  credentials
+- evidence previews, filesystem reads, diff inspection, test log inspection, or
+  merge/conflict inspection
+- web or MCP write tools, command execution, merge actions, git writes,
+  checklist completion, acknowledgements, or approvals
+- hidden external model calls or background agent evaluation
+- package, plugin, slash command, hook, or MCP server-name rename
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

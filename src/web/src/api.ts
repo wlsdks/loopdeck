@@ -265,6 +265,16 @@ export type LoopWorktreeResponse = {
         | "review outcome before merge"
         | "record loop outcome evidence";
     };
+    evidence_count_explanation: {
+      label: "Evidence count";
+      count: number;
+      reason:
+        | "selected worktree has evidence refs recorded"
+        | "selected worktree has no evidence refs recorded";
+      next_action:
+        | "compare evidence before merge"
+        | "record loop outcome evidence";
+    };
     reviewer_checklist_preview: Array<{
       label:
         | "Compare ready evidence before merge"

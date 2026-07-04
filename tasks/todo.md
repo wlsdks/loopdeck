@@ -249,7 +249,11 @@
 - [x] Task 56 RED: selected detail API/UI에 `readiness_summary`가 없고 단일 ready worktree summary가 없어 focused tests 실패 확인
 - [x] Task 56 GREEN: selected worktree detail API/type/UI에 readiness summary를 추가하고 command-center가 없는 단일 ready worktree도 같은 summary를 노출
 - [x] Task 56 PRIVACY: summary는 safe status/reason/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
-- [ ] 다음 slice: selected worktree detail에 raw-free evidence-count explanation을 추가할지 결정
+- [x] Task 57 DECISION: selected worktree detail은 aggregate evidence_count만 설명하고 evidence ref 문자열/본문은 노출하지 않음
+- [x] Task 57 RED: selected detail API/UI에 `evidence_count_explanation`이 없어 focused tests 실패 확인
+- [x] Task 57 GREEN: selected worktree detail API/type/UI에 Evidence count label/count/reason을 read-only로 노출
+- [x] Task 57 PRIVACY: explanation은 count와 safe reason/action만 포함하고 evidence refs/outcome summary/raw path/git write를 포함하지 않음
+- [ ] 다음 slice: selected worktree detail에 raw-free session/branch scope explanation을 추가할지 결정
 
 ### 판단 기준
 

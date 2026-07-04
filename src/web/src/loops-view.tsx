@@ -376,6 +376,24 @@ export function LoopsView({
                     }
                   </p>
                 </div>
+                <div>
+                  <p className="loops-status-line">
+                    {
+                      worktreeDetail.review_packet_summary
+                        .evidence_count_explanation.label
+                    }
+                  </p>
+                  <p className="loops-status-line">
+                    {
+                      worktreeDetail.review_packet_summary
+                        .evidence_count_explanation.count
+                    }{" "}
+                    {
+                      worktreeDetail.review_packet_summary
+                        .evidence_count_explanation.reason
+                    }
+                  </p>
+                </div>
                 {worktreeDetail.review_packet_summary
                   .reviewer_checklist_preview.length > 0 && (
                   <div>

@@ -818,6 +818,12 @@ describe("createServer P2 ingest boundary", () => {
             reason: "latest selected worktree outcome is not passing",
             next_action: "review outcome before merge",
           },
+          evidence_count_explanation: {
+            label: "Evidence count",
+            count: 1,
+            reason: "selected worktree has evidence refs recorded",
+            next_action: "compare evidence before merge",
+          },
           reviewer_checklist_preview: [
             {
               label: "Review non-passing worktrees before merge",
@@ -896,6 +902,12 @@ describe("createServer P2 ingest boundary", () => {
             reason: "latest selected worktree outcome has no evidence refs",
             next_action: "record loop outcome evidence",
           },
+          evidence_count_explanation: {
+            label: "Evidence count",
+            count: 0,
+            reason: "selected worktree has no evidence refs recorded",
+            next_action: "record loop outcome evidence",
+          },
           reviewer_checklist_preview: [
             {
               label: "Record missing evidence before merge",
@@ -959,6 +971,12 @@ describe("createServer P2 ingest boundary", () => {
             label: "Readiness summary",
             status: "ready",
             reason: "selected worktree has recorded evidence and passing outcome",
+            next_action: "compare evidence before merge",
+          },
+          evidence_count_explanation: {
+            label: "Evidence count",
+            count: 1,
+            reason: "selected worktree has evidence refs recorded",
             next_action: "compare evidence before merge",
           },
         },

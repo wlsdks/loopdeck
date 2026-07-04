@@ -189,6 +189,9 @@ Implementation checkpoint:
   needs-review, and missing-evidence states, including single ready worktrees
   where the top-level command center is not shown, while reusing the existing
   command-center readiness/checklist/command derivation.
+- Selected worktree detail now includes a raw-free evidence-count explanation
+  derived only from selected worktree aggregate evidence count, without exposing
+  evidence ref strings, evidence bodies, output summaries, diffs, or raw paths.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free selected-worktree evidence-count explanation, without adding evidence
-  refs, outcome summaries, or write tools.
+  raw-free selected-worktree session/branch scope explanation, without adding
+  transcript content, prompt bodies, raw paths, or write tools.
