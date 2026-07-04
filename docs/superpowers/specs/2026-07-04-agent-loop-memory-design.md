@@ -2797,6 +2797,46 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.80: Selected Brief Copy Feedback Timeout Note
+
+Decision:
+
+- Selected worktree detail should state that copied feedback clears after a
+  short local timeout and that timeout expiry is not review completion or agent
+  submission state.
+- This is needed because transient copy feedback can otherwise be mistaken for
+  durable safety review, successful handoff, or hidden state synchronization.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_copy_feedback_timeout_note` with:
+  - label: `Copy feedback timeout`
+  - timeout_scope:
+    `copied feedback clears after a short local timeout`
+  - not_state:
+    `timeout does not record review completion or submission state`
+  - reason:
+    `keeps copied feedback temporary while preserving the manual safety review boundary`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after the copy feedback accessibility note
+- focused server/API/web tests proving the timeout note is present
+
+Do not add:
+
+- timeout duration changes, button behavior changes, persisted copied state,
+  Codex or Claude Code UI automation, hidden prompt submission, command
+  execution, git reads/writes, filesystem reads/writes, transcript import,
+  persisted review state, checklist completion state, background analysis,
+  external model calls, memory approval writes, merge decision writes, or new
+  write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

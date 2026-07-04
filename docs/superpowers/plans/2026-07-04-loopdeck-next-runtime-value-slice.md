@@ -278,8 +278,11 @@ Implementation checkpoint:
   accessibility note, explaining that visible copy button labels stay stable and
   copied status belongs in accessible feedback rather than replacing the visible
   command.
+- Selected worktree detail now includes a raw-free selected-brief copy feedback
+  timeout note, explaining that copied feedback clears after a short local
+  timeout and does not record review completion or submission state.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free selected-brief copy feedback timeout note, without adding
+  raw-free selected-brief copy failure note, without adding
   transcript content, prompt bodies, raw paths, git status reads, command
   execution, persisted review state, checklist completion state, memory
   approval writes, merge writes, or external calls.

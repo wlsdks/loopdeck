@@ -176,6 +176,15 @@ describe("LoopsView", () => {
       "keeps copy feedback clear without implying safety approval or changing layout",
     );
     expect(html).toContain("No accessibility feedback writes or external calls");
+    expect(html).toContain("Copy feedback timeout");
+    expect(html).toContain("copied feedback clears after a short local timeout");
+    expect(html).toContain(
+      "timeout does not record review completion or submission state",
+    );
+    expect(html).toContain(
+      "keeps copied feedback temporary while preserving the manual safety review boundary",
+    );
+    expect(html).toContain("No copy feedback timeout writes or external calls");
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -614,6 +623,16 @@ function loopWorktree(): LoopWorktreeResponse {
         "copied status belongs in accessible feedback instead of replacing the visible command",
       reason:
         "keeps copy feedback clear without implying safety approval or changing layout",
+      writes_files: false,
+      external_calls: false,
+    },
+    continuation_safety_copy_feedback_timeout_note: {
+      label: "Copy feedback timeout",
+      timeout_scope: "copied feedback clears after a short local timeout",
+      not_state:
+        "timeout does not record review completion or submission state",
+      reason:
+        "keeps copied feedback temporary while preserving the manual safety review boundary",
       writes_files: false,
       external_calls: false,
     },

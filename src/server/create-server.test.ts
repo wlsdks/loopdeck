@@ -943,6 +943,16 @@ describe("createServer P2 ingest boundary", () => {
           writes_files: false,
           external_calls: false,
         },
+        continuation_safety_copy_feedback_timeout_note: {
+          label: "Copy feedback timeout",
+          timeout_scope: "copied feedback clears after a short local timeout",
+          not_state:
+            "timeout does not record review completion or submission state",
+          reason:
+            "keeps copied feedback temporary while preserving the manual safety review boundary",
+          writes_files: false,
+          external_calls: false,
+        },
         paste_destination: {
           label: "Paste destination",
           targets: ["Codex active request", "Claude Code active request"],
