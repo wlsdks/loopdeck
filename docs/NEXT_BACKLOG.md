@@ -28,6 +28,12 @@ source of truth for product scope; this file is the operational queue.
 - ADR 0001 and ADR 0002 are now accepted. New MCP tools default to per-tool
   modules, and storage capability negotiation is the target architecture for
   future storage-backed routes/tools.
+- Dependency security alerts reported on the default branch were cleared by
+  updating `fastify`, `vite`, and patched `esbuild`; local `corepack pnpm audit
+  --json` now reports zero vulnerabilities.
+- pnpm build-script approvals now live in `pnpm-workspace.yaml`, matching the
+  forward-compatible settings location while keeping the approved build list to
+  `better-sqlite3` and `esbuild`.
 
 ## Current Priority Decision
 
@@ -42,6 +48,10 @@ Current goal audit:
   command refuses to open a native OS dialog without
   `PROMPT_COACH_NATIVE_DIALOG_APPROVED=1`, but it does not replace the
   remaining human-approved answered-dialog dogfood.
+- PR #345 cleared dependency security alerts for `vite`, `esbuild`, and
+  `fast-uri`.
+- PR #346 removed the pnpm package-field warning by moving build approvals to
+  `pnpm-workspace.yaml`.
 
 Decision:
 
@@ -51,6 +61,9 @@ Decision:
 3. Keep Codex native dialog fallback as dogfood/integration evidence, not a
    blocking core feature.
 4. Keep UI patrol as an operational follow-up after the next functional slice.
+5. Treat future dependency/security/package-manager warnings as reliability
+   work only when they affect local-first install, build, test, pack, or CI
+   evidence.
 
 Rationale:
 
@@ -63,6 +76,9 @@ Rationale:
   rewrite until a tool-list change creates real pressure.
 - More rename or plugin alias work has lower product value than making the
   current `prompt-coach` compatibility runtime safer and easier to extend.
+- Security and package-manager hygiene should remain tightly scoped: update the
+  smallest dependency/config surface that removes the alert or warning, then
+  prove it with audit, install/build/pack, and CI.
 
 ## Prioritized Queue
 
