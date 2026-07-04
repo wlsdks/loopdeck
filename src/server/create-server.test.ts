@@ -1173,6 +1173,18 @@ describe("createServer P2 ingest boundary", () => {
             writes_files: false,
             external_calls: false,
           },
+        continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note:
+          {
+            label: "Post-memory-approval retry evidence freshness boundary",
+            review:
+              "operator checks retry evidence freshness against the latest explicit loop snapshot",
+            not_verified:
+              "Loopdeck does not verify post-approval retry freshness from git status, transcripts, or agent UI activity",
+            reason:
+              "keeps post-approval retry freshness review tied to local snapshot metadata",
+            writes_files: false,
+            external_calls: false,
+          },
         paste_destination: {
           label: "Paste destination",
           targets: ["Codex active request", "Claude Code active request"],
