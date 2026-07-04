@@ -31,9 +31,11 @@ typing prevents NULL crashes, but the policy ("server returns 503 if the
 storage backend lacks this capability") is duplicated and easy to forget when
 a new optional method is added.
 
-`MCP` calls into the same storage and tends to use optional chaining
-(`storage.recordAskEvent?.(...)`) to silently no-op. The two surfaces have
-inconsistent reactions to a missing capability.
+`MCP` calls into the same storage. Earlier handlers tended to either use
+optional chaining (`storage.recordAskEvent?.(...)`) or format their own setup
+errors. The two surfaces had inconsistent reactions to a missing capability.
+The current MCP storage-backed handlers now return explicit
+`storage_unavailable` results through one raw-free setup message helper.
 
 ## Friction signals
 
@@ -127,9 +129,16 @@ for local-first reliability and harder for agent-facing MCP tools to explain.
   limitation explicit.
 - Server routes should return one coherent local configuration failure when a
   required capability is missing.
-- MCP should not silently no-op writes when a capability is missing. Either
-  the tool should be absent from `tools/list`, or the handler should return a
-  structured `storage_unavailable`/configuration error.
+- MCP should not silently no-op writes when a capability is missing. The
+  compatibility-window catalogue should keep tools visible in `tools/list` and
+  make storage/setup failure explicit through structured
+  `storage_unavailable` results. This preserves discoverability for Claude
+  Code and Codex agents: they can still see `get_prompt_coach_status`,
+  `coach_prompt`, and the relevant setup guidance even before the local
+  archive exists.
+- Hiding storage-backed tools from `tools/list` is deferred until there is a
+  real multi-backend runtime or per-client capability requirement. It should
+  not be introduced only to model SQLite setup state.
 - Optional storage methods are still allowed in `src/storage/ports.ts`, but
   optionality must represent backend capability, not an excuse for scattered
   call-site policy.
@@ -150,6 +159,7 @@ const storage = requireStorageCapabilities(options.storage, [
 ```
 
 For Fastify routes, missing capabilities should fail during route
-registration or server creation with a clear message. For MCP, the same
-capability declaration should feed the tool catalogue so unavailable write
-tools are not advertised as usable.
+registration or server creation with a clear message. For MCP during the
+`prompt-coach` to Loopdeck compatibility window, the capability declaration
+should feed handler setup errors and status guidance rather than filtering
+`tools/list`.
