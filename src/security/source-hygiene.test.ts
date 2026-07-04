@@ -203,4 +203,43 @@ describe("source hygiene", () => {
       "continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_pre_memory_approval_freshness_advisory",
     );
   });
+
+  it("keeps baseline continuation safety detail formatting outside LoopsView", () => {
+    const loopsView = readFileSync("src/web/src/loops-view.tsx", "utf8");
+
+    expect(loopsView).not.toContain("continuation_safety_group");
+    expect(loopsView).not.toContain("continuation_safety_ordering_note");
+    expect(loopsView).not.toContain(
+      "continuation_safety_non_persistence_note",
+    );
+    expect(loopsView).not.toContain("continuation_safety_recheck_cue");
+    expect(loopsView).not.toContain(
+      "continuation_safety_copy_feedback_reminder",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_copy_feedback_accessibility_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_copy_feedback_timeout_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_copy_feedback_failure_note",
+    );
+    expect(loopsView).not.toContain("continuation_safety_copy_retry_note");
+    expect(loopsView).not.toContain(
+      "continuation_safety_pre_paste_confirmation_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_target_agent_check_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_paste_destination_boundary_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_manual_submission_boundary_note",
+    );
+    expect(loopsView).not.toContain(
+      "continuation_safety_submission_result_non_persistence_note",
+    );
+  });
 });
