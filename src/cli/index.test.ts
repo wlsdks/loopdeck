@@ -62,6 +62,32 @@ describe("CLI command surface", () => {
 });
 
 describe("runCli error handling", () => {
+  it("prints help for no command without treating it as an error", async () => {
+    const stdout = createCaptureStream();
+    const stderr = createCaptureStream();
+
+    const exitCode = await runCli(["node", "prompt-coach"], {
+      stdout: stdout.stream,
+      stderr: stderr.stream,
+    });
+
+    expect(exitCode).toBe(0);
+    expect(stdout.text).toContain("Usage: prompt-coach");
+    expect(stderr.text).toBe("");
+  });
+
+  it("renders Commander input errors without throwing a stack trace", async () => {
+    const stderr = createCaptureStream();
+
+    const exitCode = await runCli(["node", "prompt-coach", "missing-command"], {
+      stderr: stderr.stream,
+    });
+
+    expect(exitCode).toBe(1);
+    expect(stderr.text).toContain("unknown command 'missing-command'");
+    expect(stderr.text).not.toMatch(/\n\s+at\s/);
+  });
+
   it("renders UserError as a friendly stderr message and exits with code 1", async () => {
     const stderr = createCaptureStream();
 

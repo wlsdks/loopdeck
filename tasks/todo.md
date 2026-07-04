@@ -145,6 +145,9 @@
 - [x] Task 181 RED: dist MCP native dialog opt-in preflight harness/package script가 없어 packaging focused test 실패 확인
 - [x] Task 181 GREEN: `scripts/mcp-native-dialog-preflight.mjs`와 `smoke:mcp-native-dialog`를 추가해 `allow_native_dialog` public schema와 no-dialog metadata fallback을 dist MCP stdio에서 반복 검증
 - [x] Task 181 PRIVACY: preflight는 `allow_native_dialog=false`와 `PROMPT_COACH_NATIVE_DIALOG=0`으로 OS dialog를 열지 않고, prompt body 저장/external call/raw path/git read/write/transcript import를 추가하지 않음
+- [x] Task 182 RED: Commander unknown-command 오류가 테스트 중 `process.exit`를 호출해 raw stack path로 실패하는 것을 확인
+- [x] Task 182 GREEN: `runCli`가 Commander input error를 `exitOverride`로 받아 friendly stderr와 exit code 1을 반환하고 programmer error는 계속 rethrow
+- [x] Task 182 PRIVACY: CLI error handling만 변경하며 prompt body 저장/external call/raw path 출력/git read/write/transcript import를 추가하지 않음
 - [ ] 다음 dogfood slice: Codex native dialog fallback을 실제 OS dialog 또는 명시적 사용자 승인 하에 확인
 
 ### 판단 기준
@@ -3229,11 +3232,11 @@
 
 ### Track B — CLI UserError + program-level catch (PR 후보)
 
-- [ ] 실패 테스트: 잘못된 옵션/입력 시 raw stack trace가 stderr에 노출되지 않는다 + non-zero exit.
-- [ ] `src/shared/errors.ts` (또는 `src/cli/user-error.ts`) — `UserError` 클래스 + 표준 메시지 포맷.
-- [ ] CLI commands에서 invalid 입력은 `throw new UserError(...)`로 통일.
-- [ ] `src/cli/index.ts`에 program-level catch — UserError는 friendly + exit 1, 그 외는 기존 동작.
-- [ ] 영향받는 명령 회귀 테스트.
+- [x] 실패 테스트: 잘못된 옵션/입력 시 raw stack trace가 stderr에 노출되지 않는다 + non-zero exit.
+- [x] `src/shared/errors.ts` (또는 `src/cli/user-error.ts`) — `UserError` 클래스 + 표준 메시지 포맷.
+- [ ] CLI commands에서 invalid 입력은 `throw new UserError(...)`로 통일. 현재 주요 command는 적용되어 있으나 command-wide audit은 별도 slice로 남김.
+- [x] `src/cli/index.ts`에 program-level catch — UserError는 friendly + exit 1, 그 외는 기존 동작.
+- [x] 영향받는 명령 회귀 테스트.
 - [ ] 검증 게이트(`pnpm test/lint/format/build/pack:dry-run`).
 - [ ] 별도 브랜치 + PR.
 
