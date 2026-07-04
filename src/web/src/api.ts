@@ -231,6 +231,24 @@ export type LoopWorktreeResponse = {
   worktree: string;
   session_id?: string;
   branch?: string;
+  selection_scope: {
+    label: "Selection scope";
+    filters:
+      | ["worktree"]
+      | ["worktree", "session"]
+      | ["worktree", "branch"]
+      | ["worktree", "session", "branch"];
+    reason:
+      | "showing latest snapshots for selected worktree"
+      | "showing snapshots filtered by selected worktree and session"
+      | "showing snapshots filtered by selected worktree and branch"
+      | "showing snapshots filtered by selected worktree, session, and branch";
+    next_action:
+      | "copy selected worktree brief"
+      | "copy selected session brief"
+      | "copy selected branch brief"
+      | "copy selected session and branch brief";
+  };
   latest_decision?: {
     snapshot_id: string;
     worktree: string;

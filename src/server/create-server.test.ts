@@ -545,12 +545,24 @@ describe("createServer P2 ingest boundary", () => {
     const sessionBody = sessionResponse.json<{
       data: {
         session_id?: string;
+        selection_scope?: {
+          label: string;
+          filters: string[];
+          reason: string;
+          next_action: string;
+        };
         items: Array<{ id: string; worktree?: string }>;
       };
     }>();
 
     expect(sessionResponse.statusCode).toBe(200);
     expect(sessionBody.data.session_id).toBe("session-web-two");
+    expect(sessionBody.data.selection_scope).toEqual({
+      label: "Selection scope",
+      filters: ["worktree", "session"],
+      reason: "showing snapshots filtered by selected worktree and session",
+      next_action: "copy selected session brief",
+    });
     expect(sessionBody.data.items).toEqual([
       expect.objectContaining({
         id: "loop_web_second",
@@ -572,12 +584,24 @@ describe("createServer P2 ingest boundary", () => {
     const branchBody = branchResponse.json<{
       data: {
         branch?: string;
+        selection_scope?: {
+          label: string;
+          filters: string[];
+          reason: string;
+          next_action: string;
+        };
         items: Array<{ id: string; branch?: string; worktree?: string }>;
       };
     }>();
 
     expect(branchResponse.statusCode).toBe(200);
     expect(branchBody.data.branch).toBe("feature/branch-filter");
+    expect(branchBody.data.selection_scope).toEqual({
+      label: "Selection scope",
+      filters: ["worktree", "branch"],
+      reason: "showing snapshots filtered by selected worktree and branch",
+      next_action: "copy selected branch brief",
+    });
     expect(branchBody.data.items).toEqual([
       expect.objectContaining({
         branch: "feature/branch-filter",
@@ -804,6 +828,12 @@ describe("createServer P2 ingest boundary", () => {
     expect(response.json()).toMatchObject({
       data: {
         worktree: "review-worktree",
+        selection_scope: {
+          label: "Selection scope",
+          filters: ["worktree"],
+          reason: "showing latest snapshots for selected worktree",
+          next_action: "copy selected worktree brief",
+        },
         review_packet_summary: {
           title: "Review-before-merge packet",
           status: "needs_review",
@@ -890,6 +920,12 @@ describe("createServer P2 ingest boundary", () => {
     expect(response.json()).toMatchObject({
       data: {
         worktree: "blocked-worktree",
+        selection_scope: {
+          label: "Selection scope",
+          filters: ["worktree"],
+          reason: "showing latest snapshots for selected worktree",
+          next_action: "copy selected worktree brief",
+        },
         review_packet_summary: {
           status: "blocked",
           summary: "1 ready, 0 needs review, 1 missing evidence",

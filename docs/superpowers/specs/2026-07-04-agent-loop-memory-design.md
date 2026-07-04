@@ -1817,6 +1817,55 @@ Do not add:
 - hidden external model calls or background agent evaluation
 - package, plugin, slash command, hook, or MCP server-name rename
 
+### Slice 4.55: Selected Worktree Selection Scope Explanation
+
+Decision:
+
+- Selected worktree detail should explain which safe selection scope produced
+  the current detail response: worktree only, worktree plus session, worktree
+  plus branch, or worktree plus session and branch.
+- This is necessary for concurrent Codex and Claude Code worktrees because the
+  selected continuation brief action can otherwise look equivalent across
+  global, session-filtered, and branch-filtered views.
+- The explanation should be derived only from explicit request filters and safe
+  labels already shown in the UI. It should not inspect prompt bodies,
+  transcripts, evidence, diffs, filesystem paths, or git state.
+
+Add:
+
+- top-level selected worktree detail `selection_scope` with:
+  - label: `Selection scope`
+  - filters:
+    - `worktree`
+    - optional `session`
+    - optional `branch`
+  - reason:
+    - `showing latest snapshots for selected worktree`
+    - `showing snapshots filtered by selected worktree and session`
+    - `showing snapshots filtered by selected worktree and branch`
+    - `showing snapshots filtered by selected worktree, session, and branch`
+  - next_action:
+    - `copy selected worktree brief`
+    - `copy selected session brief`
+    - `copy selected branch brief`
+    - `copy selected session and branch brief`
+- web API typing and selected worktree detail rendering near the selected
+  session/branch labels
+- focused server/API/web tests for worktree-only, session-filtered,
+  branch-filtered, and session-plus-branch scope preservation
+
+Do not add:
+
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, diffs, raw paths, provider credentials, or
+  secret-looking tokens
+- new selector semantics, database schema changes, filesystem reads, branch
+  checkout, diff/conflict inspection, or merge automation
+- web or MCP write tools, command execution, checklist completion,
+  acknowledgements, or approvals
+- hidden external model calls or background agent evaluation
+- package, plugin, slash command, hook, or MCP server-name rename
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

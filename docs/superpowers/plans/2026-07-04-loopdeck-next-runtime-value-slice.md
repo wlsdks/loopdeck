@@ -192,6 +192,11 @@ Implementation checkpoint:
 - Selected worktree detail now includes a raw-free evidence-count explanation
   derived only from selected worktree aggregate evidence count, without exposing
   evidence ref strings, evidence bodies, output summaries, diffs, or raw paths.
+- Selected worktree detail now includes a raw-free selection-scope explanation
+  derived only from explicit worktree/session/branch filters, so operators can
+  tell whether the selected continuation brief is worktree-wide,
+  session-filtered, branch-filtered, or both session-and-branch filtered.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free selected-worktree session/branch scope explanation, without adding
-  transcript content, prompt bodies, raw paths, or write tools.
+  raw-free selected snapshot age/staleness explanation, without adding
+  transcript content, prompt bodies, raw paths, git status reads, or write
+  tools.

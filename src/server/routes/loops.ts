@@ -165,6 +165,10 @@ export function registerLoopRoutes(
         worktree: params.worktree,
         ...(query.session_id ? { session_id: query.session_id } : {}),
         ...(query.branch ? { branch: query.branch } : {}),
+        selection_scope: selectionScopeFor({
+          hasSession: Boolean(query.session_id),
+          hasBranch: Boolean(query.branch),
+        }),
         ...(latestDecision
           ? {
               latest_decision: {
@@ -398,6 +402,63 @@ export function registerLoopRoutes(
       },
     };
   });
+}
+
+function selectionScopeFor(selection: {
+  hasSession: boolean;
+  hasBranch: boolean;
+}): {
+  label: "Selection scope";
+  filters:
+    | ["worktree"]
+    | ["worktree", "session"]
+    | ["worktree", "branch"]
+    | ["worktree", "session", "branch"];
+  reason:
+    | "showing latest snapshots for selected worktree"
+    | "showing snapshots filtered by selected worktree and session"
+    | "showing snapshots filtered by selected worktree and branch"
+    | "showing snapshots filtered by selected worktree, session, and branch";
+  next_action:
+    | "copy selected worktree brief"
+    | "copy selected session brief"
+    | "copy selected branch brief"
+    | "copy selected session and branch brief";
+} {
+  if (selection.hasSession && selection.hasBranch) {
+    return {
+      label: "Selection scope",
+      filters: ["worktree", "session", "branch"],
+      reason:
+        "showing snapshots filtered by selected worktree, session, and branch",
+      next_action: "copy selected session and branch brief",
+    };
+  }
+
+  if (selection.hasSession) {
+    return {
+      label: "Selection scope",
+      filters: ["worktree", "session"],
+      reason: "showing snapshots filtered by selected worktree and session",
+      next_action: "copy selected session brief",
+    };
+  }
+
+  if (selection.hasBranch) {
+    return {
+      label: "Selection scope",
+      filters: ["worktree", "branch"],
+      reason: "showing snapshots filtered by selected worktree and branch",
+      next_action: "copy selected branch brief",
+    };
+  }
+
+  return {
+    label: "Selection scope",
+    filters: ["worktree"],
+    reason: "showing latest snapshots for selected worktree",
+    next_action: "copy selected worktree brief",
+  };
 }
 
 function readinessSummaryFor(

@@ -253,7 +253,11 @@
 - [x] Task 57 RED: selected detail API/UI에 `evidence_count_explanation`이 없어 focused tests 실패 확인
 - [x] Task 57 GREEN: selected worktree detail API/type/UI에 Evidence count label/count/reason을 read-only로 노출
 - [x] Task 57 PRIVACY: explanation은 count와 safe reason/action만 포함하고 evidence refs/outcome summary/raw path/git write를 포함하지 않음
-- [ ] 다음 slice: selected worktree detail에 raw-free session/branch scope explanation을 추가할지 결정
+- [x] Task 58 DECISION: selected worktree detail은 worktree/session/branch 필터 scope를 raw-free로 설명하고 새 selector/write 기능은 보류
+- [x] Task 58 RED: selected detail API/UI에 `selection_scope`가 없어 focused tests 실패 확인
+- [x] Task 58 GREEN: selected worktree detail API/type/UI에 Selection scope label/reason/next action을 read-only로 노출
+- [x] Task 58 PRIVACY: scope 설명은 explicit filter 종류와 safe reason/action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
+- [ ] 다음 slice: selected worktree detail에 raw-free selected snapshot age/staleness explanation을 추가할지 결정
 
 ### 판단 기준
 

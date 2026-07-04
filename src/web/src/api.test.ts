@@ -234,6 +234,15 @@ describe("web api export client", () => {
         jsonResponse({
           data: {
             worktree: "agent-loop-worktree",
+            session_id: "session-web",
+            branch: "feature/branch-filter",
+            selection_scope: {
+              label: "Selection scope",
+              filters: ["worktree", "session", "branch"],
+              reason:
+                "showing snapshots filtered by selected worktree, session, and branch",
+              next_action: "copy selected session and branch brief",
+            },
             latest_decision: {
               snapshot_id: "loop_web",
               worktree: "agent-loop-worktree",
@@ -313,6 +322,15 @@ describe("web api export client", () => {
 
     expect(detail).toMatchObject({
       worktree: "agent-loop-worktree",
+      session_id: "session-web",
+      branch: "feature/branch-filter",
+      selection_scope: {
+        label: "Selection scope",
+        filters: ["worktree", "session", "branch"],
+        reason:
+          "showing snapshots filtered by selected worktree, session, and branch",
+        next_action: "copy selected session and branch brief",
+      },
       latest_decision: {
         snapshot_id: "loop_web",
         worktree: "agent-loop-worktree",

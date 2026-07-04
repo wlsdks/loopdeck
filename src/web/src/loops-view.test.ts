@@ -68,6 +68,11 @@ describe("LoopsView", () => {
 
     expect(html).toContain("Worktree detail");
     expect(html).toContain("agent-loop-worktree");
+    expect(html).toContain("Selection scope");
+    expect(html).toContain(
+      "showing snapshots filtered by selected worktree, session, and branch",
+    );
+    expect(html).toContain("Next copy selected session and branch brief");
     expect(html).toContain("Session session-web");
     expect(html).toContain("Branch feature/branch-filter");
     expect(html).toContain("Latest decision");
@@ -276,6 +281,13 @@ function loopWorktree(): LoopWorktreeResponse {
     branch: "feature/branch-filter",
     worktree: "agent-loop-worktree",
     session_id: "session-web",
+    selection_scope: {
+      label: "Selection scope",
+      filters: ["worktree", "session", "branch"],
+      reason:
+        "showing snapshots filtered by selected worktree, session, and branch",
+      next_action: "copy selected session and branch brief",
+    },
     latest_decision: {
       snapshot_id: "loop_web",
       worktree: "agent-loop-worktree",

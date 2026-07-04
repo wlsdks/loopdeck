@@ -342,6 +342,17 @@ export function LoopsView({
                 Branch {worktreeDetail.branch}
               </p>
             )}
+            <div>
+              <p className="loops-status-line">
+                {worktreeDetail.selection_scope.label}
+              </p>
+              <p className="loops-status-line">
+                {worktreeDetail.selection_scope.reason}
+              </p>
+              <p className="loops-status-line">
+                Next {worktreeDetail.selection_scope.next_action}
+              </p>
+            </div>
             {worktreeDetail.latest_decision && (
               <p className="loops-status-line">
                 Latest decision {worktreeDetail.latest_decision.decision}{" "}
