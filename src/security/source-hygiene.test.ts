@@ -347,4 +347,14 @@ describe("source hygiene", () => {
     expect(loopsView).not.toContain("snapshot_age");
     expect(loopsView).not.toContain("latest_decision");
   });
+
+  it("keeps command-center summary formatting outside LoopsView", () => {
+    const loopsView = readFileSync("src/web/src/loops-view.tsx", "utf8");
+
+    expect(loopsView).not.toContain("command_center");
+    expect(loopsView).not.toContain("review_packet");
+    expect(loopsView).not.toContain("review_items");
+    expect(loopsView).not.toContain("decision_advisory");
+    expect(loopsView).not.toContain("continuation_command");
+  });
 });

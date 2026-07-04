@@ -10,6 +10,7 @@ import type {
 import { getLoopBrief, getLoopInstructionPatch } from "./api.js";
 import { copyTextToClipboard } from "./clipboard.js";
 import { formatDate } from "./formatters.js";
+import { LoopCommandCenterSummary } from "./loop-command-center-summary.js";
 import { LoopWorktreeBoundaryReviewItems } from "./loop-worktree-boundary-review-items.js";
 import { LoopWorktreeCollectionFreshnessItems } from "./loop-worktree-collection-freshness-items.js";
 import { LoopWorktreeContinuationSafetyItems } from "./loop-worktree-continuation-safety-items.js";
@@ -153,85 +154,12 @@ export function LoopsView({
           {loops.status.activity.needs_review && (
             <p className="loops-status-line">Worktree review needed</p>
           )}
-          {loops.status.activity.command_center && (
-            <div className="loop-memory-action">
-              <span>Command center</span>
-              <code>{loops.status.activity.command_center.title}</code>
-              <p className="loops-status-line">
-                {loops.status.activity.command_center.primary_action}
-              </p>
-              <p className="loops-status-line">
-                Review packet{" "}
-                {loops.status.activity.command_center.review_packet.status}
-              </p>
-              <p className="loops-status-line">
-                {loops.status.activity.command_center.review_packet.summary}
-              </p>
-              <p className="loops-status-line">
-                Next{" "}
-                {loops.status.activity.command_center.review_packet.next_action}
-              </p>
-              {loops.status.activity.command_center.review_packet
-                .decision_advisory && (
-                <p className="loops-status-line">
-                  Decision advisory{" "}
-                  {
-                    loops.status.activity.command_center.review_packet
-                      .decision_advisory.next_action
-                  }
-                </p>
-              )}
-              <div>
-                <p className="loops-status-line">Human checklist</p>
-                {loops.status.activity.command_center.review_packet.checklist.map(
-                  (item) => (
-                    <p className="loops-status-line" key={item.action}>
-                      {item.label} {item.status}
-                    </p>
-                  ),
-                )}
-              </div>
-              {loops.status.activity.command_center.review_items
-                .slice(0, 3)
-                .map((item) => (
-                  <div className="loop-worktree-line" key={item.worktree}>
-                    <div>
-                      <p className="loops-status-line">
-                        {item.worktree}: {item.recommendation}
-                      </p>
-                      <p className="loops-status-line">
-                        Merge readiness {item.merge_readiness.status}
-                      </p>
-                      <p className="loops-status-line">
-                        Evidence {item.merge_readiness.evidence} / Evidence
-                        refs {item.evidence_count}
-                      </p>
-                      <code>{item.continuation_command}</code>
-                    </div>
-                    <button
-                      className="loop-copy-button"
-                      disabled={
-                        !onCopyCommandCenterBrief ||
-                        commandCenterBriefBusy === item.worktree
-                      }
-                      onClick={() =>
-                        void copyCommandCenterBrief({
-                          worktree: item.worktree,
-                          ...(item.branch ? { branch: item.branch } : {}),
-                        })
-                      }
-                      title={`Copy review brief for ${item.worktree}`}
-                      type="button"
-                    >
-                      <Copy aria-hidden size={15} />
-                      {commandCenterBriefCopied === item.worktree
-                        ? "Copied review brief"
-                        : "Copy review brief"}
-                    </button>
-                  </div>
-                ))}
-            </div>
-          )}
+          <LoopCommandCenterSummary
+            activity={loops.status.activity}
+            busyWorktree={commandCenterBriefBusy}
+            copiedWorktree={commandCenterBriefCopied}
+            onCopyCommandCenterBrief={copyCommandCenterBrief}
+          />
           {loops.status.activity.recent_decisions &&
             loops.status.activity.recent_decisions.length > 0 && (
               <div>
