@@ -849,6 +849,21 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "No post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result persistence writes or external calls",
     );
+    expect(html).toContain(
+      "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection uncertainty reminder",
+    );
+    expect(html).toContain(
+      "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection result is uncertain",
+    );
+    expect(html).toContain(
+      "Loopdeck does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
+    );
+    expect(html).toContain(
+      "keeps post-submit retry renewed-memory-approval post-submit collection uncertainty resolution operator-triggered and local-first",
+    );
+    expect(html).toContain(
+      "No post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection uncertainty writes or external calls",
+    );
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -1864,6 +1879,19 @@ function loopWorktree(): LoopWorktreeResponse {
           "Loopdeck does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
         reason:
           "keeps post-submit retry renewed-memory-approval post-submit collection evidence tied to explicit local snapshot recording",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection uncertainty reminder",
+        reminder:
+          "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection result is uncertain",
+        not_automated:
+          "Loopdeck does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
+        reason:
+          "keeps post-submit retry renewed-memory-approval post-submit collection uncertainty resolution operator-triggered and local-first",
         writes_files: false,
         external_calls: false,
       },

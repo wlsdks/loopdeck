@@ -503,9 +503,15 @@ Implementation checkpoint:
   collection result state after renewed-memory-approval stays outside Loopdeck
   until the next explicit loop snapshot, without Loopdeck detecting, storing,
   or syncing that state.
+- Selected worktree detail now includes a raw-free post-memory-approval retry
+  renewed-memory-approval post-submit retry renewed-memory-approval post-submit
+  collection uncertainty reminder, explaining that the operator collects a new
+  explicit loop snapshot when post-submit collection result after
+  renewed-memory-approval is uncertain, without Loopdeck verifying that result
+  or starting collection automatically.
 - The next runtime slice should decide whether selected worktree detail needs a
   raw-free post-memory-approval retry renewed-memory-approval post-submit retry
-  renewed-memory-approval post-submit collection uncertainty reminder,
+  renewed-memory-approval post-submit collection pre-merge freshness advisory,
   without adding
   transcript content, prompt bodies, raw paths, target contents, active-window
   titles, pasted content, paste result state, submitted state, agent response
@@ -518,6 +524,8 @@ Implementation checkpoint:
   post-submit retry renewed-memory-approval collection result state,
   post-submit retry renewed-memory-approval post-submit collection result
   state,
+  post-submit retry renewed-memory-approval post-submit collection uncertainty
+  result state,
   uncertainty result state, freshness result state, retry freshness result
   state, post-approval retry freshness result state, approval result state,
   renewed memory approval state, freshness verification, automatic collection,

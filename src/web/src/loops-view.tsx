@@ -2367,6 +2367,43 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder
+                          .label
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder
+                          .reminder
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder
+                          .not_automated
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder
+                          .reason
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      No post-memory-approval retry renewed-memory-approval
+                      post-submit retry renewed-memory-approval post-submit
+                      collection uncertainty writes or external calls
+                    </p>
+                  </div>
+                )}
                 {worktreeDetail.paste_destination && (
                   <div className="loop-review-item">
                     <p className="loops-status-line">
