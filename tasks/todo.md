@@ -661,7 +661,11 @@
 - [x] Task 140 RED: `tasks/todo.md`에 selected detail duplicate boundary 미결정 TODO가 남아 source hygiene test 실패 확인
 - [x] Task 140 GREEN: 중복 runtime field를 만들지 않고 기존 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_*_freshness_advisory` 4개를 canonical boundary로 유지
 - [x] Task 140 PRIVACY: 새 API/UI field, 저장 state, prompt body/evidence refs/outcome summary/raw path/target content/active-window title/paste/submission/result state/git read/write/transcript import/command execution/external call을 추가하지 않음
-- [ ] 다음 slice: selected detail panel의 remaining raw `loop-review-item` markup을 `LoopReviewItem`으로 계속 줄일지 결정
+- [x] Task 141 DECISION: selected detail panel의 remaining raw `loop-review-item` markup은 유지보수 비용을 줄이기 위해 안전한 묶음부터 계속 `LoopReviewItem`으로 전환
+- [x] Task 141 RED: raw `loop-review-item` markup count가 61개라 source hygiene test의 58개 이하 기준 실패 확인
+- [x] Task 141 GREEN: command distinction/filter/copy side-effect markup을 `LoopReviewItem`으로 전환해 rendered text를 유지하고 raw markup count를 58개로 감소
+- [x] Task 141 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [ ] 다음 slice: selected detail panel의 freshness/post-approval raw `loop-review-item` markup을 `LoopReviewItem`으로 추가 전환할지 결정
 
 ### 판단 기준
 

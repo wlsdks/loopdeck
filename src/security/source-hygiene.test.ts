@@ -43,4 +43,13 @@ describe("source hygiene", () => {
       "Task 140 DECISION: post-submit collection freshness uncertainty pre-merge/pre-handoff/pre-paste/pre-submit boundary는 Task 133-136의 기존 runtime field가 이미 담당하므로 중복 field를 추가하지 않음",
     );
   });
+
+  it("keeps reducing raw loop review item markup in LoopsView", () => {
+    const loopsView = readFileSync("src/web/src/loops-view.tsx", "utf8");
+    const rawReviewItemCount = (
+      loopsView.match(/<div className="loop-review-item">/g) ?? []
+    ).length;
+
+    expect(rawReviewItemCount).toBeLessThanOrEqual(58);
+  });
 });

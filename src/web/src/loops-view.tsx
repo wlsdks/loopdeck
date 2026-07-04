@@ -387,70 +387,41 @@ export function LoopsView({
                   No file writes or external calls
                 </p>
                 {worktreeDetail.command_distinction && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {worktreeDetail.command_distinction.label}
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail.command_distinction
-                          .selected_command_role
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.command_distinction.review_command_role}
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.command_distinction.reason}
-                    </p>
-                    <p className="loops-status-line">
-                      No distinction writes or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No distinction writes or external calls"
+                    lines={[
+                      worktreeDetail.command_distinction.label,
+                      worktreeDetail.command_distinction.selected_command_role,
+                      worktreeDetail.command_distinction.review_command_role,
+                      worktreeDetail.command_distinction.reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.command_filters && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {worktreeDetail.command_filters.label}
-                    </p>
-                    <p className="loops-status-line">
-                      Selected filters{" "}
-                      {worktreeDetail.command_filters.selected_command_filters.join(
+                  <LoopReviewItem
+                    footer="No filter explanation writes or external calls"
+                    lines={[
+                      worktreeDetail.command_filters.label,
+                      `Selected filters ${worktreeDetail.command_filters.selected_command_filters.join(
                         ", ",
-                      )}
-                    </p>
-                    <p className="loops-status-line">
-                      Review filters{" "}
-                      {worktreeDetail.command_filters.review_command_filters.join(
+                      )}`,
+                      `Review filters ${worktreeDetail.command_filters.review_command_filters.join(
                         ", ",
-                      )}
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.command_filters.reason}
-                    </p>
-                    <p className="loops-status-line">
-                      No filter explanation writes or external calls
-                    </p>
-                  </div>
+                      )}`,
+                      worktreeDetail.command_filters.reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.copy_side_effects && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {worktreeDetail.copy_side_effects.label}
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.copy_side_effects.clipboard}
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.copy_side_effects.ui_feedback}
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.copy_side_effects.does_not}
-                    </p>
-                    <p className="loops-status-line">
-                      No copy side-effect writes or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No copy side-effect writes or external calls"
+                    lines={[
+                      worktreeDetail.copy_side_effects.label,
+                      worktreeDetail.copy_side_effects.clipboard,
+                      worktreeDetail.copy_side_effects.ui_feedback,
+                      worktreeDetail.copy_side_effects.does_not,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_group && (
                   <LoopReviewItem
