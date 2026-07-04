@@ -3,6 +3,7 @@ import { realpathSync, readFileSync, statSync } from "node:fs";
 import { redactPrompt } from "../redaction/redact.js";
 import type { RedactionPolicy } from "../shared/schema.js";
 import { projectLabel } from "../storage/project-label.js";
+import { ImportInputError } from "./errors.js";
 
 export const IMPORT_SOURCE_TYPES = [
   "official-hook",
@@ -94,19 +95,19 @@ export function scanImportSource(
   try {
     sourcePath = realpathSync(options.file);
   } catch {
-    throw new Error(
+    throw new ImportInputError(
       "Import source file not found. Pass an existing JSONL transcript path with --file <path>.",
     );
   }
   const stat = statSync(sourcePath);
 
   if (!stat.isFile()) {
-    throw new Error(
+    throw new ImportInputError(
       "Import source must be a file. Pass a single .jsonl transcript path with --file <path>.",
     );
   }
   if (stat.size > maxFileBytes) {
-    throw new Error(
+    throw new ImportInputError(
       `Import source exceeds file size limit. Got ${formatMb(stat.size)} MB, limit is ${formatMb(maxFileBytes)} MB. Split the transcript or raise the limit.`,
     );
   }
@@ -190,7 +191,7 @@ export function parseImportSourceType(value: string): ImportSourceType {
     return value as ImportSourceType;
   }
 
-  throw new Error(
+  throw new ImportInputError(
     `Unsupported import source: ${value}. Valid sources: ${IMPORT_SOURCE_TYPES.join(", ")}.`,
   );
 }

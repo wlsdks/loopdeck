@@ -28,6 +28,21 @@
 - 각 단계는 실패 테스트, 최소 구현, focused test, commit 단위로 쪼갠다.
 - 계획은 prompt body/raw path/privacy 경계를 첫 slice의 검증 조건으로 포함해야 한다.
 
+## 2026-07-05 CLI Input Error Boundary Audit
+
+- [x] RED: `prompt-coach import --dry-run --file <missing>`가 importer의 plain `Error`를 통해 stack trace로 실패할 수 있음을 `runCli` 테스트로 재현
+- [x] GREEN: importer 입력/일치성 오류를 `ImportInputError`로 분리하고 CLI import 경계에서 `UserError`로 변환
+- [x] 회귀: import dry-run, resume, source parsing 입력 오류는 friendly stderr를 유지하고 prompt path 원문을 출력하지 않음
+- [x] Track C audit: `service install/start/stop/status`는 기본 plain text, `--json` opt-in, launchctl friendly mapping, 회귀 테스트를 이미 충족함
+- [x] 검증 게이트(`pnpm test`, `pnpm lint`, `pnpm build`, `pnpm pack:dry-run`, `git diff --check`)
+- [x] 별도 브랜치 + PR
+
+### 판단 기준
+
+- CLI entrypoint는 사용자 입력/환경 오류를 stack trace로 보여주지 않는다.
+- 도메인/importer 계층은 CLI 전용 `UserError`에 직접 의존하지 않고, CLI command 경계에서만 사용자 메시지로 변환한다.
+- programmer bug는 기존처럼 재throw되어 개발 중 stack trace를 보존한다.
+
 ## 2026-07-04 Product Planning Hardening
 
 - [x] 기존 기획서가 개발 착수 기준으로 부족한 항목 감사
@@ -3234,18 +3249,18 @@
 
 - [x] 실패 테스트: 잘못된 옵션/입력 시 raw stack trace가 stderr에 노출되지 않는다 + non-zero exit.
 - [x] `src/shared/errors.ts` (또는 `src/cli/user-error.ts`) — `UserError` 클래스 + 표준 메시지 포맷.
-- [ ] CLI commands에서 invalid 입력은 `throw new UserError(...)`로 통일. 현재 주요 command는 적용되어 있으나 command-wide audit은 별도 slice로 남김.
+- [x] CLI commands에서 invalid 입력은 `throw new UserError(...)` 또는 command-boundary 변환으로 통일. `importer` 입력 오류는 `ImportInputError`로 분리 후 CLI에서 `UserError`로 변환.
 - [x] `src/cli/index.ts`에 program-level catch — UserError는 friendly + exit 1, 그 외는 기존 동작.
 - [x] 영향받는 명령 회귀 테스트.
-- [ ] 검증 게이트(`pnpm test/lint/format/build/pack:dry-run`).
-- [ ] 별도 브랜치 + PR.
+- [x] 검증 게이트(`pnpm test/lint/format/build/pack:dry-run`).
+- [x] 별도 브랜치 + PR.
 
 ### Track C — service CLI UX 개선 (PR 후보)
 
-- [ ] launchctl 실패 시 raw stderr 노출 → friendly mapping (no permission, already loaded, no plist).
-- [ ] JSON-only 출력 → plain text formatter + `--json` 플래그로 자동화 옵션 보존.
-- [ ] 회귀 테스트.
-- [ ] 검증 게이트, 별도 브랜치 + PR.
+- [x] launchctl 실패 시 raw stderr 노출 → friendly mapping (no permission, already loaded, no plist).
+- [x] JSON-only 출력 → plain text formatter + `--json` 플래그로 자동화 옵션 보존.
+- [x] 회귀 테스트.
+- [x] 검증 게이트, 별도 브랜치 + PR.
 
 ### Track A2 — Ingest pipeline 순수 함수 추출 (PR 후보)
 
