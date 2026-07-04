@@ -1670,45 +1670,27 @@ export function LoopsView({
                   />
                 )}
                 {worktreeDetail.pre_merge_advisory && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {worktreeDetail.pre_merge_advisory.label}
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.pre_merge_advisory.hold_merge}
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.pre_merge_advisory.reason}
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.pre_merge_advisory.not_memory_approval}
-                    </p>
-                    <p className="loops-status-line">
-                      No merge decision writes, file writes, or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No merge decision writes, file writes, or external calls"
+                    lines={[
+                      worktreeDetail.pre_merge_advisory.label,
+                      worktreeDetail.pre_merge_advisory.hold_merge,
+                      worktreeDetail.pre_merge_advisory.reason,
+                      worktreeDetail.pre_merge_advisory.not_memory_approval,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.post_collection_review_note && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {worktreeDetail.post_collection_review_note.label}
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.post_collection_review_note.review_step}
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail.post_collection_review_note
-                          .before_memory_approval
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.post_collection_review_note.before_merge}
-                    </p>
-                    <p className="loops-status-line">
-                      No memory writes, merge decision writes, or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No memory writes, merge decision writes, or external calls"
+                    lines={[
+                      worktreeDetail.post_collection_review_note.label,
+                      worktreeDetail.post_collection_review_note.review_step,
+                      worktreeDetail.post_collection_review_note
+                        .before_memory_approval,
+                      worktreeDetail.post_collection_review_note.before_merge,
+                    ]}
+                  />
                 )}
               </div>
             )}
@@ -1735,24 +1717,13 @@ export function LoopsView({
                   {worktreeDetail.review_packet_summary.worktree_action}
                 </p>
                 <div className="loop-review-grid">
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
+                  <LoopReviewItem
+                    footer={`${worktreeDetail.review_packet_summary.readiness_summary.status} ${worktreeDetail.review_packet_summary.readiness_summary.reason}`}
+                    lines={[
                         worktreeDetail.review_packet_summary.readiness_summary
-                          .label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail.review_packet_summary.readiness_summary
-                          .status
-                      }{" "}
-                      {
-                        worktreeDetail.review_packet_summary.readiness_summary
-                          .reason
-                      }
-                    </p>
-                  </div>
+                          .label,
+                    ]}
+                  />
                   <div className="loop-review-item">
                     <p className="loops-status-line">
                       {
