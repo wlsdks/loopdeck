@@ -901,112 +901,61 @@ export function LoopsView({
                   />
                 )}
                 {worktreeDetail.continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note
-                          .label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note
-                          .result_scope
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note
-                          .not_stored
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note
-                          .reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      No post-memory-approval retry freshness result
-                      persistence writes or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No post-memory-approval retry freshness result persistence writes or external calls"
+                    lines={[
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note
+                        .label,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note
+                        .result_scope,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note
+                        .not_stored,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note
+                        .reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder
-                          .label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder
-                          .reminder
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder
-                          .not_automated
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder
-                          .reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      No post-memory-approval retry freshness uncertainty
-                      collection writes or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No post-memory-approval retry freshness uncertainty collection writes or external calls"
+                    lines={[
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder
+                        .label,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder
+                        .reminder,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder
+                        .not_automated,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder
+                        .reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory
-                          .label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory
-                          .advisory
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory
-                          .not_decision
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory
-                          .reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      No post-memory-approval retry pre-memory-approval
-                      freshness advisory writes or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No post-memory-approval retry pre-memory-approval freshness advisory writes or external calls"
+                    lines={[
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory
+                        .label,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory
+                        .advisory,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory
+                        .not_decision,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory
+                        .reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_reminder && (
                   <div className="loop-review-item">
