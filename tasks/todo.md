@@ -53,7 +53,10 @@
 - [x] Dogfood: Codex/Claude Code MCP를 `prompt-coach` absolute dist command로 재등록하고 doctor `mcp.registered=true` 확인
 - [x] Dogfood: legacy `prompt-memory` MCP 실패/disabled 항목 제거 및 project-local `.codex/config.toml` rename 잔재 정리
 - [x] Source hygiene: absolute path가 들어가는 `.codex/` project-local runtime config를 git ignore 처리
-- [ ] 다음 dogfood slice: 실제 Codex prompt 1회 전송 후 archive/UI/doctor/MCP tool call까지 end-to-end 확인
+- [x] Dogfood: Codex `UserPromptSubmit` capture `prmt_20260704_101950_a5aa324a10c7`를 list/show/score/open으로 확인
+- [x] Dogfood: MCP stdio `tools/list`, `get_prompt_coach_status`, `score_prompt_archive` 호출이 통과하고 dogfood prompt id가 low-score list에 포함됨 확인
+- [x] Dogfood: Playwright로 detail UI를 열어 codex, 10/100 weak, 원문, 개선안, MCP/CLI action 렌더링 확인
+- [ ] 다음 dogfood slice: 실제 Codex/Claude Code 안에서 MCP action command를 호출해 selected prompt score/improve 흐름 확인
 
 ### 판단 기준
 
@@ -61,6 +64,7 @@
 - Codex `Stop`/compact lifecycle hook의 local-only 수집과 prompt ingest 경계는 변경하지 않는다.
 - `block-and-copy`처럼 decision이 필요한 hook 출력은 이번 수정에서 제거하지 않는다.
 - Codex/Claude Code MCP는 낡은 `prompt-memory` command가 아니라 `prompt-coach` 이름과 현재 dist entrypoint로 연결되어야 한다.
+- Archive, UI, MCP 검증은 prompt body/raw path를 외부로 보내지 않고 local-only 경로에서 수행한다.
 
 ## 2026-07-04 Loop Snapshot Domain Slice
 
