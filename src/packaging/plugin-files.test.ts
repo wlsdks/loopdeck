@@ -682,6 +682,28 @@ describe("plugin packaging files", () => {
     expect(smoke).not.toContain("/Users/");
   });
 
+  it("ships a repeatable MCP coach loop smoke for stored prompt flows", () => {
+    const packageJson = readJson<{
+      files: string[];
+      scripts: Record<string, string>;
+    }>("package.json");
+    const smoke = readFileSync(
+      join(process.cwd(), "scripts/mcp-coach-loop-smoke.mjs"),
+      "utf8",
+    );
+
+    expect(packageJson.files).toContain("scripts/mcp-coach-loop-smoke.mjs");
+    expect(packageJson.scripts["smoke:mcp-coach-loop"]).toBe(
+      "pnpm build && node scripts/mcp-coach-loop-smoke.mjs",
+    );
+    expect(smoke).toContain("score_prompt");
+    expect(smoke).toContain("improve_prompt");
+    expect(smoke).toContain("apply_clarifications");
+    expect(smoke).toContain("record_clarifications");
+    expect(smoke).toContain("returns_stored_prompt_body");
+    expect(smoke).not.toContain("/Users/");
+  });
+
   it("documents Claude Code as a hook integration without embedding secrets", () => {
     const example = readJson<{
       hooks: {
