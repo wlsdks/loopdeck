@@ -305,6 +305,8 @@ export function registerLoopRoutes(
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalPostSubmitCollectionPreHandoffFreshnessAdvisoryFor(),
               continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_paste_freshness_advisory:
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalPostSubmitCollectionPrePasteFreshnessAdvisoryFor(),
+              continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_submit_freshness_advisory:
+                continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalPostSubmitCollectionPreSubmitFreshnessAdvisoryFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -2013,6 +2015,28 @@ function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmi
       "Loopdeck does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
     reason:
       "keeps paste readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalPostSubmitCollectionPreSubmitFreshnessAdvisoryFor(): {
+  label: "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-submit freshness advisory";
+  advisory: "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before submitting in Codex or Claude Code";
+  not_decision: "Loopdeck does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit";
+  reason: "keeps submission readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label:
+      "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-submit freshness advisory",
+    advisory:
+      "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before submitting in Codex or Claude Code",
+    not_decision:
+      "Loopdeck does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
+    reason:
+      "keeps submission readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
     writes_files: false,
     external_calls: false,
   };

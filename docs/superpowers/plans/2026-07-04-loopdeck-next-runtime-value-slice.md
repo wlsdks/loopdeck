@@ -526,9 +526,15 @@ Implementation checkpoint:
   post-submit collection freshness uncertainty before pasting into Codex or
   Claude Code, without Loopdeck approving paste targets or verifying freshness
   before paste.
+- Selected worktree detail now includes a raw-free post-memory-approval retry
+  renewed-memory-approval post-submit retry renewed-memory-approval post-submit
+  collection pre-submit freshness advisory, explaining that the operator
+  reviews post-submit collection freshness uncertainty before submitting in
+  Codex or Claude Code, without Loopdeck approving submissions or verifying
+  freshness before submit.
 - The next runtime slice should decide whether selected worktree detail needs a
   raw-free post-memory-approval retry renewed-memory-approval post-submit retry
-  renewed-memory-approval post-submit collection pre-submit freshness advisory,
+  renewed-memory-approval post-submit collection post-submit freshness advisory,
   without adding
   transcript content, prompt bodies, raw paths, target contents, active-window
   titles, pasted content, paste result state, submitted state, agent response
