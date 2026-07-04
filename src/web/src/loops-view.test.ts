@@ -819,6 +819,21 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "No post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-submit freshness advisory writes or external calls",
     );
+    expect(html).toContain(
+      "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit freshness advisory",
+    );
+    expect(html).toContain(
+      "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain",
+    );
+    expect(html).toContain(
+      "Loopdeck does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
+    );
+    expect(html).toContain(
+      "keeps post-submit retry renewed-memory-approval freshness review tied to explicit local snapshot collection",
+    );
+    expect(html).toContain(
+      "No post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit freshness advisory writes or external calls",
+    );
     expect(html).toContain("Paste destination");
     expect(html).toContain("Codex active request");
     expect(html).toContain("Claude Code active request");
@@ -1808,6 +1823,19 @@ function loopWorktree(): LoopWorktreeResponse {
           "Loopdeck does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
         reason:
           "keeps submission readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+        writes_files: false,
+        external_calls: false,
+      },
+    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_freshness_advisory:
+      {
+        label:
+          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit freshness advisory",
+        advisory:
+          "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain",
+        not_automated:
+          "Loopdeck does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
+        reason:
+          "keeps post-submit retry renewed-memory-approval freshness review tied to explicit local snapshot collection",
         writes_files: false,
         external_calls: false,
       },

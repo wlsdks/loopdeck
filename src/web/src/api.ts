@@ -720,6 +720,14 @@ export type LoopWorktreeResponse = {
     writes_files: false;
     external_calls: false;
   };
+  continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_freshness_advisory?: {
+    label: "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit freshness advisory";
+    advisory: "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain";
+    not_automated: "Loopdeck does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit";
+    reason: "keeps post-submit retry renewed-memory-approval freshness review tied to explicit local snapshot collection";
+    writes_files: false;
+    external_calls: false;
+  };
   paste_destination?: {
     label: "Paste destination";
     targets: ["Codex active request", "Claude Code active request"];

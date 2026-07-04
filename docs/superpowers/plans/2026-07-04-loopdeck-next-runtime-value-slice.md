@@ -491,9 +491,16 @@ Implementation checkpoint:
   renewed-memory-approval freshness uncertainty before submitting in Codex or
   Claude Code, without Loopdeck approving submissions or verifying freshness
   before submit.
+- Selected worktree detail now includes a raw-free post-memory-approval retry
+  renewed-memory-approval post-submit retry renewed-memory-approval post-submit
+  freshness advisory, explaining that the operator collects a new explicit loop
+  snapshot after submission when post-submit retry renewed-memory-approval
+  freshness is uncertain, without Loopdeck monitoring submitted state, agent
+  responses, or freshness after submit.
 - The next runtime slice should decide whether selected worktree detail needs a
   raw-free post-memory-approval retry renewed-memory-approval post-submit retry
-  renewed-memory-approval post-submit freshness advisory, without adding
+  renewed-memory-approval post-submit collection result non-persistence note,
+  without adding
   transcript content, prompt bodies, raw paths, target contents, active-window
   titles, pasted content, paste result state, submitted state, agent response
   content, collection result state, post-approval collection result state,
