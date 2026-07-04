@@ -1414,41 +1414,23 @@ export function LoopsView({
                   />
                 )}
                 {worktreeDetail.continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder
-                          .label
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder
-                          .reminder
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder
-                          .not_automated
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      {
-                        worktreeDetail
-                          .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder
-                          .reason
-                      }
-                    </p>
-                    <p className="loops-status-line">
-                      No post-memory-approval retry renewed-memory-approval
-                      post-submit retry renewed-memory-approval post-submit
-                      collection uncertainty writes or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection uncertainty writes or external calls"
+                    lines={[
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder
+                        .label,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder
+                        .reminder,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder
+                        .not_automated,
+                      worktreeDetail
+                        .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder
+                        .reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_merge_freshness_advisory && (
                   <LoopReviewItem
@@ -1584,23 +1566,15 @@ export function LoopsView({
                   />
                 )}
                 {worktreeDetail.paste_destination && (
-                  <div className="loop-review-item">
-                    <p className="loops-status-line">
-                      {worktreeDetail.paste_destination.label}
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.paste_destination.targets.join(" or ")}
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.paste_destination.instruction}
-                    </p>
-                    <p className="loops-status-line">
-                      {worktreeDetail.paste_destination.reason}
-                    </p>
-                    <p className="loops-status-line">
-                      No automatic submission, file writes, or external calls
-                    </p>
-                  </div>
+                  <LoopReviewItem
+                    footer="No automatic submission, file writes, or external calls"
+                    lines={[
+                      worktreeDetail.paste_destination.label,
+                      worktreeDetail.paste_destination.targets.join(" or "),
+                      worktreeDetail.paste_destination.instruction,
+                      worktreeDetail.paste_destination.reason,
+                    ]}
+                  />
                 )}
                 {worktreeDetail.handoff_checklist && (
                   <LoopReviewItem

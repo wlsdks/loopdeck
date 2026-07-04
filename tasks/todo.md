@@ -741,7 +741,11 @@
 - [x] Task 160 RED: raw `loop-review-item` markup count가 4개라 source hygiene test의 2개 이하 기준 실패 확인
 - [x] Task 160 GREEN: review packet command provenance, missing evidence explanation markup을 `LoopReviewItem`으로 전환해 raw markup count를 2개로 감소
 - [x] Task 160 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
-- [ ] 다음 slice: collection uncertainty reminder/paste destination raw `loop-review-item` markup을 `LoopReviewItem`으로 추가 전환할지 결정
+- [x] Task 161 DECISION: collection uncertainty reminder/paste destination raw `loop-review-item` markup은 같은 read-only line/footer 구조라 `LoopReviewItem`으로 계속 전환
+- [x] Task 161 RED: raw `loop-review-item` markup count가 2개라 source hygiene test의 0개 이하 기준 실패 확인
+- [x] Task 161 GREEN: collection uncertainty reminder, paste destination markup을 `LoopReviewItem`으로 전환해 raw markup count를 0개로 감소
+- [x] Task 161 PRIVACY: UI markup refactor만 수행하며 API field, 저장 state, prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/external call을 추가하지 않음
+- [ ] 다음 slice: selected detail panel의 long inline `LoopReviewItem` props를 작은 formatter/helper로 분리할지 결정
 
 ### 판단 기준
 
