@@ -291,6 +291,8 @@ export function registerLoopRoutes(
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalPreHandoffFreshnessAdvisoryFor(),
               continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_paste_freshness_advisory:
                 continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalPrePasteFreshnessAdvisoryFor(),
+              continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_submit_freshness_advisory:
+                continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalPreSubmitFreshnessAdvisoryFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -1845,6 +1847,28 @@ function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmi
       "Loopdeck does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
     reason:
       "keeps paste readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitRetryRenewedMemoryApprovalPreSubmitFreshnessAdvisoryFor(): {
+  label: "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-submit freshness advisory";
+  advisory: "review post-submit retry renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code";
+  not_decision: "Loopdeck does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit";
+  reason: "keeps submission readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label:
+      "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-submit freshness advisory",
+    advisory:
+      "review post-submit retry renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
+    not_decision:
+      "Loopdeck does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
+    reason:
+      "keeps submission readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
     writes_files: false,
     external_calls: false,
   };
