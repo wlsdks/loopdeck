@@ -50,13 +50,17 @@
 - [x] RED: Codex rewrite-guard context output이 hook stdout에 남아 사용자 화면에 보일 수 있음을 wrapper 테스트로 재현
 - [x] GREEN: Codex `additionalContext` rewrite guidance는 기본적으로 stdout을 비워 사용자-visible hook context 노이즈를 막음
 - [x] README/README.ko에 Codex stdout 노출 경계와 대체 확인 경로 문서화
-- [ ] 다음 dogfood slice: 실제 Codex prompt 1회 전송 후 archive/UI/doctor로 capture, duplicate display, MCP registration 상태를 end-to-end 확인
+- [x] Dogfood: Codex/Claude Code MCP를 `prompt-coach` absolute dist command로 재등록하고 doctor `mcp.registered=true` 확인
+- [x] Dogfood: legacy `prompt-memory` MCP 실패/disabled 항목 제거 및 project-local `.codex/config.toml` rename 잔재 정리
+- [x] Source hygiene: absolute path가 들어가는 `.codex/` project-local runtime config를 git ignore 처리
+- [ ] 다음 dogfood slice: 실제 Codex prompt 1회 전송 후 archive/UI/doctor/MCP tool call까지 end-to-end 확인
 
 ### 판단 기준
 
 - 이번 수정은 Codex의 화면 노이즈를 줄이는 실사용 결함 수정이며, Claude Code의 기존 `UserPromptSubmit` context 출력 동작은 유지한다.
 - Codex `Stop`/compact lifecycle hook의 local-only 수집과 prompt ingest 경계는 변경하지 않는다.
 - `block-and-copy`처럼 decision이 필요한 hook 출력은 이번 수정에서 제거하지 않는다.
+- Codex/Claude Code MCP는 낡은 `prompt-memory` command가 아니라 `prompt-coach` 이름과 현재 dist entrypoint로 연결되어야 한다.
 
 ## 2026-07-04 Loop Snapshot Domain Slice
 
