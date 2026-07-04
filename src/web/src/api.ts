@@ -408,6 +408,14 @@ export type LoopWorktreeResponse = {
     writes_files: false;
     external_calls: false;
   };
+  continuation_safety_post_submission_collection_reminder_note?: {
+    label: "Post-submission collection reminder";
+    reminder: "collect the next loop snapshot explicitly after the agent response is ready";
+    not_background: "Loopdeck does not start collection from submission, transcript changes, or agent UI activity";
+    reason: "keeps post-submission collection operator-triggered and local-first";
+    writes_files: false;
+    external_calls: false;
+  };
   paste_destination?: {
     label: "Paste destination";
     targets: ["Codex active request", "Claude Code active request"];

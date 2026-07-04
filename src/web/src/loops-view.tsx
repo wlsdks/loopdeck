@@ -886,6 +886,41 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.continuation_safety_post_submission_collection_reminder_note && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_post_submission_collection_reminder_note
+                          .label
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_post_submission_collection_reminder_note
+                          .reminder
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_post_submission_collection_reminder_note
+                          .not_background
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      {
+                        worktreeDetail
+                          .continuation_safety_post_submission_collection_reminder_note
+                          .reason
+                      }
+                    </p>
+                    <p className="loops-status-line">
+                      No post-submission collection writes or external calls
+                    </p>
+                  </div>
+                )}
                 {worktreeDetail.paste_destination && (
                   <div className="loop-review-item">
                     <p className="loops-status-line">

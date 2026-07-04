@@ -3131,6 +3131,54 @@ Do not add:
   state, agent response content, or secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.88: Post-Submission Collection Reminder Boundary Note
+
+Decision:
+
+- Selected worktree detail should state that the operator collects the next
+  loop snapshot explicitly after the agent response is ready.
+- This is needed because post-submission collection should not be mistaken for
+  automatic collection from submission events, transcript changes, agent UI
+  activity, or background monitoring.
+
+Add:
+
+- top-level selected worktree detail
+  `continuation_safety_post_submission_collection_reminder_note` with:
+  - label: `Post-submission collection reminder`
+  - reminder:
+    `collect the next loop snapshot explicitly after the agent response is ready`
+  - not_background:
+    `Loopdeck does not start collection from submission, transcript changes, or agent UI activity`
+  - reason:
+    `keeps post-submission collection operator-triggered and local-first`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance, immediately after the submission result non-persistence note
+- focused server/API/web tests proving the post-submission collection reminder
+  note is present
+
+Do not add:
+
+- automatic collection, transcript watching, agent UI monitoring, submission
+  event hooks, submission result detection, submitted state persistence, submit
+  automation, Enter key automation, button clicking, submission success
+  detection, active window detection, target-agent UI inspection, target
+  content validation, paste success verification, clipboard target validation,
+  paste automation, persisted destination state, persisted target state, safety
+  approval state, Codex or Claude Code UI automation, hidden prompt submission,
+  command execution, git reads/writes, filesystem reads/writes, transcript
+  import, persisted review state, checklist completion state, background
+  analysis, external model calls, memory approval writes, merge decision writes,
+  or new write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, target
+  content, active-window titles, pasted content, paste result state, submitted
+  state, agent response content, collection result state, or secret-looking
+  tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

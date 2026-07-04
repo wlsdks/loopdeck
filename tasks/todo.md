@@ -385,7 +385,11 @@
 - [x] Task 90 RED: selected detail API/UI에 `continuation_safety_submission_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 90 GREEN: selected worktree detail API/type/UI에 submission result outside Loopdeck until explicit snapshot, no submitted-state detect/store/sync, no-write/no-external flags를 read-only로 노출
 - [x] Task 90 PRIVACY: continuation safety submission result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [ ] 다음 slice: selected detail panel의 post-submission collection reminder boundary note를 raw-free로 별도 제공할지 결정
+- [x] Task 91 DECISION: post-submission collection reminder boundary note는 agent response 준비 후 operator가 다음 loop snapshot을 명시적으로 수집해야 하며 Loopdeck이 submission/transcript/agent UI activity에서 collection을 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 91 RED: selected detail API/UI에 `continuation_safety_post_submission_collection_reminder_note`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 91 GREEN: selected worktree detail API/type/UI에 explicit next loop snapshot collection reminder, no submission/transcript/agent UI activity background collection, no-write/no-external flags를 read-only로 노출
+- [x] Task 91 PRIVACY: continuation safety post-submission collection reminder note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
+- [ ] 다음 slice: selected detail panel의 collection result non-persistence note를 raw-free로 별도 제공할지 결정
 
 ### 판단 기준
 

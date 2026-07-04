@@ -308,10 +308,14 @@ Implementation checkpoint:
   non-persistence note, explaining that agent response and submission result
   stay outside Loopdeck until the next explicit loop snapshot, without Loopdeck
   detecting, storing, or syncing submitted state after handoff.
+- Selected worktree detail now includes a raw-free post-submission collection
+  reminder boundary note, explaining that the operator collects the next loop
+  snapshot explicitly after the agent response is ready, without Loopdeck
+  starting collection from submission, transcript changes, or agent UI activity.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free post-submission collection reminder boundary note, without adding
-  transcript content, prompt bodies, raw paths, target contents, active-window
-  titles, pasted content, paste result state, submitted state, agent response
-  content, git status reads, command execution, persisted review state,
-  checklist completion state, memory approval writes, merge writes, or external
-  calls.
+  raw-free collection result non-persistence note, without adding transcript
+  content, prompt bodies, raw paths, target contents, active-window titles,
+  pasted content, paste result state, submitted state, agent response content,
+  collection result state, git status reads, command execution, persisted review
+  state, checklist completion state, memory approval writes, merge writes, or
+  external calls.

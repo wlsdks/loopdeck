@@ -215,6 +215,8 @@ export function registerLoopRoutes(
                 continuationSafetyManualSubmissionBoundaryNoteFor(),
               continuation_safety_submission_result_non_persistence_note:
                 continuationSafetySubmissionResultNonPersistenceNoteFor(),
+              continuation_safety_post_submission_collection_reminder_note:
+                continuationSafetyPostSubmissionCollectionReminderNoteFor(),
               paste_destination: pasteDestinationFor(),
               handoff_checklist: handoffChecklistFor(),
               post_handoff_reminder: postHandoffReminderFor(),
@@ -959,6 +961,27 @@ function continuationSafetySubmissionResultNonPersistenceNoteFor(): {
       "Loopdeck does not detect, store, or sync submitted state after handoff",
     reason:
       "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring",
+    writes_files: false,
+    external_calls: false,
+  };
+}
+
+function continuationSafetyPostSubmissionCollectionReminderNoteFor(): {
+  label: "Post-submission collection reminder";
+  reminder: "collect the next loop snapshot explicitly after the agent response is ready";
+  not_background: "Loopdeck does not start collection from submission, transcript changes, or agent UI activity";
+  reason: "keeps post-submission collection operator-triggered and local-first";
+  writes_files: false;
+  external_calls: false;
+} {
+  return {
+    label: "Post-submission collection reminder",
+    reminder:
+      "collect the next loop snapshot explicitly after the agent response is ready",
+    not_background:
+      "Loopdeck does not start collection from submission, transcript changes, or agent UI activity",
+    reason:
+      "keeps post-submission collection operator-triggered and local-first",
     writes_files: false,
     external_calls: false,
   };
