@@ -475,6 +475,11 @@ export type CreatePromptImprovementDraftInput = {
   accepted?: boolean;
 };
 
+export type MarkPromptImprovementDraftCopiedResult = {
+  updated: boolean;
+  draft?: PromptImprovementDraft;
+};
+
 export type AgentJudgeProvider =
   | "claude-code"
   | "codex"
@@ -549,6 +554,10 @@ export type PromptReadStoragePort = {
     promptId: string,
     input: CreatePromptImprovementDraftInput,
   ): PromptImprovementDraft | undefined;
+  markPromptImprovementDraftCopied?(
+    promptId: string,
+    draftId: string,
+  ): MarkPromptImprovementDraftCopiedResult;
   countImprovementDraftsByPromptIds(
     promptIds: readonly string[],
   ): Map<string, number>;

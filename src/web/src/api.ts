@@ -1928,6 +1928,30 @@ export async function savePromptImprovementDraft(
   return body.data;
 }
 
+export async function markPromptImprovementDraftCopied(
+  id: string,
+  draftId: string,
+): Promise<Pick<PromptImprovementDraft, "id" | "prompt_id" | "copied_at">> {
+  await ensureSession();
+  const response = await fetch(
+    `/api/v1/prompts/${encodeURIComponent(id)}/improvements/${encodeURIComponent(draftId)}/copy`,
+    {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "x-csrf-token": csrfToken ?? "",
+      },
+    },
+  );
+  if (!response.ok) {
+    await failApi(response, "Improvement draft copy event failed");
+  }
+  const body = (await response.json()) as {
+    data: Pick<PromptImprovementDraft, "id" | "prompt_id" | "copied_at">;
+  };
+  return body.data;
+}
+
 export async function setPromptBookmark(
   id: string,
   bookmarked: boolean,

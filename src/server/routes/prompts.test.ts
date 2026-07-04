@@ -285,6 +285,71 @@ describe("prompt read/delete API", () => {
     ]);
   });
 
+  it("marks saved improvement drafts as copied without returning another draft body", async () => {
+    const { server, ids } = await createPromptApiFixture();
+
+    const session = await server.inject({
+      method: "GET",
+      url: "/api/v1/session",
+      headers: { host: "127.0.0.1:17373" },
+    });
+    const csrfToken = session.json<{ data: { csrf_token: string } }>().data
+      .csrf_token;
+    const cookie = session.headers["set-cookie"];
+
+    const saved = await server.inject({
+      method: "POST",
+      url: `/api/v1/prompts/${ids.beta}/improvements`,
+      headers: {
+        host: "127.0.0.1:17373",
+        cookie,
+        "x-csrf-token": csrfToken,
+      },
+      payload: {
+        draft_text: "## Goal\nFix the beta prompt.",
+        analyzer: "clarifications-v1",
+        changed_sections: ["goal_clarity"],
+      },
+    });
+    const draftId = saved.json<{ data: { id: string } }>().data.id;
+
+    const copied = await server.inject({
+      method: "POST",
+      url: `/api/v1/prompts/${ids.beta}/improvements/${draftId}/copy`,
+      headers: {
+        host: "127.0.0.1:17373",
+        cookie,
+        "x-csrf-token": csrfToken,
+      },
+    });
+
+    expect(copied.statusCode).toBe(200);
+    expect(copied.json()).toMatchObject({
+      data: {
+        id: draftId,
+        prompt_id: ids.beta,
+        copied_at: expect.any(String),
+      },
+    });
+    expect(JSON.stringify(copied.json())).not.toContain(
+      "Fix the beta prompt",
+    );
+
+    const detail = await server.inject({
+      method: "GET",
+      url: `/api/v1/prompts/${ids.beta}`,
+      headers: {
+        host: "127.0.0.1:17373",
+        authorization: "Bearer app-token",
+      },
+    });
+    expect(
+      detail
+        .json<{ data: { improvement_drafts: Array<{ copied_at?: string }> } }>()
+        .data.improvement_drafts[0]?.copied_at,
+    ).toEqual(expect.any(String));
+  });
+
   it("returns the prompt quality dashboard and supports tag filters", async () => {
     const { server, ids } = await createPromptApiFixture();
 

@@ -75,7 +75,13 @@
 - [x] Dogfood: Claude Code native `mcp__prompt-coach__record_clarifications` tool call 성공 확인
 - [x] Dogfood: Claude Code `record_clarifications` 결과가 `draft_id=impdraft_7f47a9c62c0f47cd9f1b663b` metadata만 반환하고 prompt body/draft body/user answer text를 echo하지 않음 확인
 - [x] Dogfood: CLI `show --json`에서 Claude Code가 기록한 draft id와 local draft body가 archive에 저장되어 UI/CLI 검토 대상으로 남음 확인
-- [ ] 다음 dogfood slice: saved draft copy의 별도 사용성 telemetry 필요 여부 결정 또는 Claude Code ask/elicitation 경로 확인
+- [x] DECISION: saved draft copy telemetry는 새 prompt usage event/body 저장을 만들지 않고 기존 draft row의 `copied_at`만 갱신한다
+- [x] RED: saved draft copy marker route가 없어 focused server test가 404로 실패함 확인
+- [x] RED: 초기 copy route 응답이 draft body를 echo하면 metadata-only privacy 경계를 깨는 것을 focused server test로 확인
+- [x] GREEN: saved draft copy route/storage/web API/UI handler가 `id`, `prompt_id`, `copied_at` metadata만 반환하고 draft row의 `copied_at`을 갱신
+- [x] Dogfood: Playwright로 실제 dogfood prompt detail에서 `Copy saved draft` 버튼 클릭 후 CLI `show --json`에 `impdraft_7f47a9c62c0f47cd9f1b663b.copied_at=2026-07-04T11:06:36.809Z` 기록 확인
+- [x] Dogfood: 실제 서버 session+CSRF POST `/api/v1/prompts/:id/improvements/:draft_id/copy`가 200을 반환하고 응답에 draft body가 포함되지 않음 확인
+- [ ] 다음 dogfood slice: Claude Code ask/elicitation 경로 확인
 
 ### 판단 기준
 
@@ -89,7 +95,7 @@
 - Direct `apply_clarifications`는 현재 입력받은 prompt text로 copy draft를 반환하는 즉석 도구이고, stored prompt 기반 raw-free MCP 응답은 `record_clarifications`로 검증한다.
 - Stored clarification 기록은 local archive write를 허용하지만 MCP 응답은 metadata-only여야 하며, 실제 draft body 검토와 복사는 local UI/CLI에서 사용자가 수행해야 한다.
 - Stored draft UI는 metadata만 보여주면 불충분하다. `record_clarifications`가 반환한 `draft_id` 이후 사용자는 local detail UI에서 draft body를 검토하고 복사할 수 있어야 한다.
-- Saved draft copy는 현재 local clipboard 성공과 버튼 상태까지만 확인한다. server-side prompt usage telemetry와 별도 draft usage telemetry는 다음 decision slice에서 privacy/value 기준으로 결정한다.
+- Saved draft copy telemetry는 copy success 여부를 회고/사용성 신호로 남길 가치가 있지만, 새 event stream이나 prompt body 복제는 privacy/value 대비 과하다. 기존 `prompt_improvement_drafts.copied_at`만 갱신하고 응답은 metadata-only로 유지한다.
 - Claude Code native MCP routing은 `claude mcp list`의 health check만으로 완료 처리하지 않는다. 실제 `claude -p --output-format stream-json`에서 `mcp__prompt-coach__...` tool_use가 발생하고 성공한 기록이 있어야 한다.
 - Claude Code 모델/크레딧 실패는 integration 실패와 구분한다. 이번 검증에서는 Fable 5 usage credits 429는 별도 외부 상태이고, Sonnet 실행에서 prompt-coach MCP routing 자체는 성공했다.
 - Claude Code의 stored clarification write flow는 MCP 응답에서는 metadata-only를 유지하고, draft body 검토는 local archive/UI/CLI로 넘어가야 한다.

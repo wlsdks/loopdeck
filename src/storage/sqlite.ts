@@ -32,6 +32,10 @@ import type {
 } from "../shared/schema.js";
 import { DAY_MS } from "../shared/time.js";
 import { getPromptCoachPaths, supportsPosixMode } from "./paths.js";
+import {
+  markPromptImprovementDraftCopied,
+  readPromptImprovementDrafts,
+} from "./prompt-improvement-drafts.js";
 import type { AskEventStoragePort, CompactBoundaryStoragePort,
   CreateImportJobInput,
   CreateImportRecordInput,
@@ -94,7 +98,6 @@ import type {
   ProjectPolicyRow,
   ProjectPromptRow,
   PromptAnalysisRow,
-  PromptImprovementDraftRow,
   PromptQualityRow,
   PromptRow,
   PromptSignalRow,
@@ -238,6 +241,14 @@ export function createSqlitePromptStorage(
         db,
         promptId,
         input,
+        options.now?.() ?? new Date(),
+      );
+    },
+    markPromptImprovementDraftCopied(promptId, draftId) {
+      return markPromptImprovementDraftCopied(
+        db,
+        promptId,
+        draftId,
         options.now?.() ?? new Date(),
       );
     },
@@ -1281,37 +1292,6 @@ function createPromptImprovementDraft(
   );
 
   return draft;
-}
-
-function readPromptImprovementDrafts(
-  db: Database.Database,
-  promptId: string,
-): PromptImprovementDraft[] {
-  const rows = db
-    .prepare(
-      `
-      SELECT *
-      FROM prompt_improvement_drafts
-      WHERE prompt_id = ?
-      ORDER BY created_at DESC, id DESC
-      LIMIT 20
-      `,
-    )
-    .all(promptId) as PromptImprovementDraftRow[];
-
-  return rows.map((row) => ({
-    id: row.id,
-    prompt_id: row.prompt_id,
-    draft_text: row.draft_text,
-    analyzer: row.analyzer,
-    changed_sections: readQualityCriteria(row.changed_sections_json),
-    safety_notes: readStringArray(row.safety_notes_json),
-    is_sensitive: row.is_sensitive === 1,
-    redaction_policy: "mask",
-    created_at: row.created_at,
-    copied_at: row.copied_at ?? undefined,
-    accepted_at: row.accepted_at ?? undefined,
-  }));
 }
 
 function getImportJob(

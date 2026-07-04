@@ -46,6 +46,7 @@ export function PromptDetailView({
   onBookmark,
   onCopy,
   onCopyImprovement,
+  onCopySavedDraft,
   onDelete,
   onNavigate,
   onOpenQualityGap,
@@ -61,6 +62,7 @@ export function PromptDetailView({
   onBookmark(prompt: PromptDetail): void;
   onCopy(prompt: PromptDetail): void;
   onCopyImprovement(prompt: PromptDetail, improvement: PromptImprovement): void;
+  onCopySavedDraft(prompt: PromptDetail, draft: PromptImprovementDraft): void;
   onDelete(prompt: PromptDetail): void;
   onNavigate(id: string): void;
   onOpenQualityGap(gap: PromptQualityGap): void;
@@ -155,9 +157,7 @@ export function PromptDetailView({
             setAnswersByAxis((current) => ({ ...current, [axis]: value }))
           }
           onCopy={() => onCopyImprovement(prompt, improvement)}
-          onCopySavedDraft={(draft) =>
-            onCopyImprovement(prompt, improvementFromSavedDraft(draft))
-          }
+          onCopySavedDraft={(draft) => onCopySavedDraft(prompt, draft)}
           onSave={() => onSaveImprovement(prompt, improvement)}
           originalPrompt={prompt.markdown}
           promptId={prompt.id}
@@ -483,25 +483,6 @@ function analyzerSourceClass(analyzer: string): string {
   if (analyzer === "clarifications-v1") return "clarifications";
   if (analyzer === "local-rules-v1") return "auto";
   return "other";
-}
-
-function improvementFromSavedDraft(
-  draft: PromptImprovementDraft,
-): PromptImprovement {
-  return {
-    mode: "copy",
-    requires_user_approval: true,
-    summary: "Saved improvement draft for manual resubmission.",
-    improved_prompt: draft.draft_text,
-    changed_sections: draft.changed_sections,
-    clarifying_questions: [],
-    safety_notes: draft.safety_notes,
-    created_at: draft.created_at,
-    analyzer:
-      draft.analyzer === "clarifications-v1"
-        ? "clarifications-v1"
-        : "local-rules-v1",
-  };
 }
 
 function ClarifyingQuestionsCard({

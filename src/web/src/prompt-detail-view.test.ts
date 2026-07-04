@@ -17,6 +17,7 @@ describe("PromptDetailView", () => {
         onBookmark: vi.fn(),
         onCopy: vi.fn(),
         onCopyImprovement: vi.fn(),
+        onCopySavedDraft: vi.fn(),
         onDelete: vi.fn(),
         onNavigate: vi.fn(),
         onOpenQualityGap: vi.fn(),

@@ -37,6 +37,7 @@ import {
   listLoops,
   listProjects,
   listPrompts,
+  markPromptImprovementDraftCopied,
   recordPromptCopied,
   savePromptImprovementDraft,
   setPromptBookmark,
@@ -53,6 +54,7 @@ import {
   type QualityDashboard,
   type PromptFilters,
   type PromptDetail,
+  type PromptImprovementDraft,
   type PromptQualityGap,
   type PromptSummary,
   type SettingsResponse,
@@ -558,6 +560,40 @@ export function App() {
     setError("Could not copy the improvement draft.");
   }
 
+  async function copySavedImprovementDraft(
+    prompt: PromptDetail,
+    draft: PromptImprovementDraft,
+  ): Promise<void> {
+    const copied = await copyTextToClipboard(draft.draft_text);
+    if (!copied) {
+      setError("Could not copy the improvement draft.");
+      return;
+    }
+
+    setCopiedImprovementId(prompt.id);
+    window.setTimeout(() => setCopiedImprovementId(undefined), 3000);
+    try {
+      const updatedDraft = await markPromptImprovementDraftCopied(
+        prompt.id,
+        draft.id,
+      );
+      setSelected((current) =>
+        current?.id === prompt.id
+          ? {
+              ...current,
+              improvement_drafts: current.improvement_drafts.map((item) =>
+                item.id === updatedDraft.id
+                  ? { ...item, copied_at: updatedDraft.copied_at }
+                  : item,
+              ),
+            }
+          : current,
+      );
+    } catch {
+      setError("Copied the draft, but could not save the copy marker.");
+    }
+  }
+
   async function saveImprovementDraft(
     prompt: PromptDetail,
     improvement: PromptImprovement,
@@ -1052,6 +1088,7 @@ export function App() {
             onBack={() => navigate({ name: "list" })}
             onCopy={copyPrompt}
             onCopyImprovement={copyImprovedPrompt}
+            onCopySavedDraft={copySavedImprovementDraft}
             onDelete={setPendingDelete}
             onOpenQualityGap={(qualityGap) => {
               setFilters({
