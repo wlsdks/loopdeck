@@ -5,6 +5,7 @@ import type { CoachFeedbackStoragePort } from "../../storage/ports.js";
 import type { ServerAuthConfig } from "../auth.js";
 import { requireAppAccess } from "../auth.js";
 import { problem } from "../errors.js";
+import { requireStorageCapabilities } from "../storage-capabilities.js";
 
 export type CoachFeedbackRouteOptions = {
   auth: ServerAuthConfig;
@@ -48,14 +49,9 @@ function requireCoachFeedbackStorage(
   storage: CoachFeedbackRouteOptions["storage"],
   instance: string,
 ): CoachFeedbackStoragePort {
-  if (!storage.recordCoachFeedback || !storage.getCoachFeedbackSummary) {
-    throw problem(
-      500,
-      "Internal Server Error",
-      "Coach feedback storage is not configured.",
-      instance,
-    );
-  }
-
-  return storage as CoachFeedbackStoragePort;
+  return requireStorageCapabilities(
+    storage,
+    ["recordCoachFeedback", "getCoachFeedbackSummary"],
+    { label: "Coach feedback storage", instance },
+  );
 }

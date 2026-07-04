@@ -3291,7 +3291,8 @@
 
 - [x] PRD_PHASE2 + Track A 결과 + Phase 2 backlog를 input으로 다음 우선순위 토론.
 - [x] 결과는 PRD 갱신 또는 후속 PR 후보로.
-- [ ] 다음 구현 후보: ADR 0002 기반 storage capability negotiation helper를 route registration 경계에 도입.
+- [x] 다음 구현 후보: ADR 0002 기반 storage capability negotiation helper를 route registration 경계에 도입.
+- [ ] 다음 구현 후보: storage capability declaration을 MCP tool catalogue filtering 또는 explicit MCP storage errors로 확장.
 
 ### Track E — UI 패트롤 셋업
 
