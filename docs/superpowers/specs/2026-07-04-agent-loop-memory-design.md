@@ -2250,6 +2250,47 @@ Do not add:
   secret-looking tokens
 - package/plugin/slash/hook/MCP rename work
 
+### Slice 4.66: Selected Continuation Handoff Checklist
+
+Decision:
+
+- Selected worktree detail should expose a short continuation handoff checklist:
+  copy the selected brief, paste it into Codex or Claude Code, submit manually,
+  then collect the next loop snapshot after the agent turn. This closes the
+  operator loop without automating either agent UI.
+- This is needed because Loopdeck is not just a prompt archive; it is a
+  local-first loop memory workbench. The selected detail panel should tell a
+  human or active agent how to continue and how to return the result to local
+  loop memory.
+
+Add:
+
+- top-level selected worktree detail `handoff_checklist` with:
+  - label: `Continuation handoff checklist`
+  - steps:
+    - `copy selected continuation brief`
+    - `paste into Codex or Claude Code active request`
+    - `submit manually after review`
+    - `collect the next loop snapshot after the agent turn`
+  - reason:
+    `keeps continuation handoff explicit without automating agent UI or reading transcripts`
+  - writes_files: `false`
+  - external_calls: `false`
+- web API typing and selected worktree detail rendering inside continuation
+  guidance
+- focused server/API/web tests proving the checklist is present
+
+Do not add:
+
+- Codex or Claude Code UI automation, hidden prompt submission, command
+  execution, git reads/writes, filesystem reads, transcript reads, merge-state
+  mutation, checklist completion state, background analysis, external model
+  calls, or new write tools
+- prompt bodies, transcript content, compact summaries, outcome summaries,
+  evidence refs, evidence bodies, raw paths, provider credentials, or
+  secret-looking tokens
+- package/plugin/slash/hook/MCP rename work
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

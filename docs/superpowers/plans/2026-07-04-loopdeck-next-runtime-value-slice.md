@@ -231,8 +231,11 @@ Implementation checkpoint:
 - Selected worktree detail now explains paste destination for Codex/Claude Code
   continuation handoff, showing that the copied brief belongs in the active
   agent request box and remains user-submitted.
+- Selected worktree detail now exposes a raw-free continuation handoff checklist:
+  copy selected brief, paste into Codex or Claude Code, submit manually, then
+  collect the next loop snapshot after the agent turn.
 - The next runtime slice should decide whether selected worktree detail needs a
-  raw-free continuation handoff checklist for "copy, paste, submit, then collect
-  next loop snapshot",
+  raw-free post-handoff reminder that distinguishes collecting a new loop
+  snapshot from approving memory or merging,
   without adding transcript content, prompt bodies, raw paths, git status reads,
   command execution, or write tools.

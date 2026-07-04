@@ -470,6 +470,24 @@ export function LoopsView({
                     </p>
                   </div>
                 )}
+                {worktreeDetail.handoff_checklist && (
+                  <div className="loop-review-item">
+                    <p className="loops-status-line">
+                      {worktreeDetail.handoff_checklist.label}
+                    </p>
+                    {worktreeDetail.handoff_checklist.steps.map((step) => (
+                      <p className="loops-status-line" key={step}>
+                        {step}
+                      </p>
+                    ))}
+                    <p className="loops-status-line">
+                      {worktreeDetail.handoff_checklist.reason}
+                    </p>
+                    <p className="loops-status-line">
+                      No handoff checklist writes or external calls
+                    </p>
+                  </div>
+                )}
               </div>
             )}
             {worktreeDetail.latest_decision && (

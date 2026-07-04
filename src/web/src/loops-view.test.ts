@@ -124,6 +124,17 @@ describe("LoopsView", () => {
       "keeps Loopdeck as the local handoff source while the user controls submission",
     );
     expect(html).toContain("No automatic submission, file writes, or external calls");
+    expect(html).toContain("Continuation handoff checklist");
+    expect(html).toContain("copy selected continuation brief");
+    expect(html).toContain("paste into Codex or Claude Code active request");
+    expect(html).toContain("submit manually after review");
+    expect(html).toContain(
+      "collect the next loop snapshot after the agent turn",
+    );
+    expect(html).toContain(
+      "keeps continuation handoff explicit without automating agent UI or reading transcripts",
+    );
+    expect(html).toContain("No handoff checklist writes or external calls");
     expect(html).toContain("Continuation guidance");
     expect(html).toContain('class="loop-detail-section"');
     expect(html).toContain('class="loop-detail-section-title"');
@@ -412,6 +423,19 @@ function loopWorktree(): LoopWorktreeResponse {
       reason:
         "keeps Loopdeck as the local handoff source while the user controls submission",
       auto_submit: false,
+      writes_files: false,
+      external_calls: false,
+    },
+    handoff_checklist: {
+      label: "Continuation handoff checklist",
+      steps: [
+        "copy selected continuation brief",
+        "paste into Codex or Claude Code active request",
+        "submit manually after review",
+        "collect the next loop snapshot after the agent turn",
+      ],
+      reason:
+        "keeps continuation handoff explicit without automating agent UI or reading transcripts",
       writes_files: false,
       external_calls: false,
     },

@@ -302,6 +302,19 @@ describe("web api export client", () => {
               writes_files: false,
               external_calls: false,
             },
+            handoff_checklist: {
+              label: "Continuation handoff checklist",
+              steps: [
+                "copy selected continuation brief",
+                "paste into Codex or Claude Code active request",
+                "submit manually after review",
+                "collect the next loop snapshot after the agent turn",
+              ],
+              reason:
+                "keeps continuation handoff explicit without automating agent UI or reading transcripts",
+              writes_files: false,
+              external_calls: false,
+            },
             latest_decision: {
               snapshot_id: "loop_web",
               worktree: "agent-loop-worktree",
@@ -460,6 +473,19 @@ describe("web api export client", () => {
         reason:
           "keeps Loopdeck as the local handoff source while the user controls submission",
         auto_submit: false,
+        writes_files: false,
+        external_calls: false,
+      },
+      handoff_checklist: {
+        label: "Continuation handoff checklist",
+        steps: [
+          "copy selected continuation brief",
+          "paste into Codex or Claude Code active request",
+          "submit manually after review",
+          "collect the next loop snapshot after the agent turn",
+        ],
+        reason:
+          "keeps continuation handoff explicit without automating agent UI or reading transcripts",
         writes_files: false,
         external_calls: false,
       },

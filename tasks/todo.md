@@ -297,7 +297,11 @@
 - [x] Task 68 RED: selected detail API/UI에 `paste_destination`이 없어 focused server/API/web tests 실패 확인
 - [x] Task 68 GREEN: selected worktree detail API/type/UI에 Codex/Claude Code active request destination과 no-auto-submit/no-write flags를 read-only로 노출
 - [x] Task 68 PRIVACY: paste destination hint는 prompt body/evidence refs/outcome summary/raw path/git read/write/command execution/external call을 포함하지 않음
-- [ ] 다음 slice: selected detail panel의 continuation handoff checklist를 "copy, paste, submit, collect next loop snapshot" 흐름으로 raw-free 제공할지 결정
+- [x] Task 69 DECISION: selected detail panel의 continuation handoff checklist는 loop memory 작업을 닫기 위해 필요하므로 raw-free로 제공
+- [x] Task 69 RED: selected detail API/UI에 `handoff_checklist`가 없어 focused server/API/web tests 실패 확인
+- [x] Task 69 GREEN: selected worktree detail API/type/UI에 copy/paste/manual submit/next loop collect steps와 no-write flags를 read-only로 노출
+- [x] Task 69 PRIVACY: handoff checklist는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript read/command execution/external call을 포함하지 않음
+- [ ] 다음 slice: selected detail panel의 post-handoff reminder가 next loop collect와 memory approval/merge를 구분하도록 raw-free 제공할지 결정
 
 ### 판단 기준
 

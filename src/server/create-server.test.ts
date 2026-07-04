@@ -890,6 +890,19 @@ describe("createServer P2 ingest boundary", () => {
           writes_files: false,
           external_calls: false,
         },
+        handoff_checklist: {
+          label: "Continuation handoff checklist",
+          steps: [
+            "copy selected continuation brief",
+            "paste into Codex or Claude Code active request",
+            "submit manually after review",
+            "collect the next loop snapshot after the agent turn",
+          ],
+          reason:
+            "keeps continuation handoff explicit without automating agent UI or reading transcripts",
+          writes_files: false,
+          external_calls: false,
+        },
         review_packet_summary: {
           title: "Review-before-merge packet",
           status: "needs_review",
