@@ -342,6 +342,12 @@ export function LoopsView({
                 Branch {worktreeDetail.branch}
               </p>
             )}
+            {worktreeDetail.latest_decision && (
+              <p className="loops-status-line">
+                Latest decision {worktreeDetail.latest_decision.decision}{" "}
+                {worktreeDetail.latest_decision.reason}
+              </p>
+            )}
             <div className="loop-memory-action">
               <code>Continue {worktreeDetail.worktree}</code>
               <button

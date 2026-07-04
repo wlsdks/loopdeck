@@ -9,6 +9,7 @@ import { initializePromptCoach } from "../config/config.js";
 import type { LoopSnapshot } from "../loop/types.js";
 import { createServer } from "./create-server.js";
 import type { CompactBoundary } from "../storage/compact-boundaries.js";
+import type { LoopMergeDecision } from "../storage/loop-decisions.js";
 import type { LoopMemory } from "../storage/loop-memories.js";
 import type {
   ExportJob,
@@ -326,6 +327,27 @@ describe("createServer P2 ingest boundary", () => {
         statement: "This unrelated project memory should not appear.",
       }),
     );
+    storage.loopMergeDecisions.push(
+      loopMergeDecision({
+        snapshot_id: "loop_web",
+        project_id: "proj_web",
+        worktree: "worktree-web",
+        decision: "continue",
+        reason: "Needs one more verification pass before merge.",
+        created_at: "2026-07-04T01:30:00.000Z",
+      }),
+    );
+    storage.loopMergeDecisions.push(
+      loopMergeDecision({
+        id: "mdec_other_project",
+        snapshot_id: "loop_other",
+        project_id: "proj_other",
+        worktree: "other-worktree",
+        decision: "merge",
+        reason: "Other project decision should not appear.",
+        created_at: "2026-07-04T01:40:00.000Z",
+      }),
+    );
     storage.compactBoundaries.push({
       id: "cmp_web",
       created_at: "2026-07-04T01:05:00.000Z",
@@ -368,6 +390,16 @@ describe("createServer P2 ingest boundary", () => {
             needs_review: true,
             next_action:
               "compare loop snapshots by worktree before merging agent output",
+            recent_decisions: [
+              {
+                snapshot_id: "loop_web",
+                worktree: "worktree-web",
+                decision: "continue",
+                reason: "Needs one more verification pass before merge.",
+                decided_by: "user",
+                created_at: "2026-07-04T01:30:00.000Z",
+              },
+            ],
             worktrees: [
               {
                 worktree: "worktree-web",
@@ -433,6 +465,7 @@ describe("createServer P2 ingest boundary", () => {
     expect(serialized).not.toContain(
       "This unrelated project memory should not appear",
     );
+    expect(serialized).not.toContain("Other project decision should not appear");
   });
 
   it("returns a worktree drilldown without prompt bodies or raw paths", async () => {
@@ -665,6 +698,67 @@ describe("createServer P2 ingest boundary", () => {
     expect(serialized).not.toContain("Other worktree has a newer web snapshot");
     expect(serialized).not.toContain("Make this better");
     expect(serialized).not.toContain("/Users/example");
+  });
+
+  it("returns the selected worktree latest merge decision read-only", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_selected_decision",
+        worktree_label: "worktree-web",
+        project_id: "proj_web",
+      }),
+    );
+    storage.loopMergeDecisions.push(
+      loopMergeDecision({
+        snapshot_id: "loop_selected_decision",
+        project_id: "proj_web",
+        worktree: "worktree-web",
+        decision: "continue",
+        reason: "Needs one more verification pass before merge.",
+        created_at: "2026-07-04T01:30:00.000Z",
+      }),
+    );
+    storage.loopMergeDecisions.push(
+      loopMergeDecision({
+        id: "mdec_other",
+        snapshot_id: "loop_other",
+        project_id: "proj_other",
+        worktree: "other-worktree",
+        decision: "merge",
+        reason: "Other project decision should stay scoped out.",
+        created_at: "2026-07-04T01:40:00.000Z",
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/worktrees/worktree-web",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+    const serialized = JSON.stringify(response.json());
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        worktree: "worktree-web",
+        latest_decision: {
+          snapshot_id: "loop_selected_decision",
+          worktree: "worktree-web",
+          decision: "continue",
+          reason: "Needs one more verification pass before merge.",
+          decided_by: "user",
+          created_at: "2026-07-04T01:30:00.000Z",
+        },
+      },
+    });
+    expect(serialized).not.toContain("Other project decision");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-secret");
   });
 
   it("returns approved loop memory in copy-ready loop briefs", async () => {
@@ -1864,6 +1958,7 @@ function createMemoryStorage() {
   const loopSnapshots: LoopSnapshot[] = [];
   const compactBoundaries: CompactBoundary[] = [];
   const loopMemories: LoopMemory[] = [];
+  const loopMergeDecisions: LoopMergeDecision[] = [];
   const coachFeedback: Array<{
     id: string;
     prompt_id: string;
@@ -1878,6 +1973,7 @@ function createMemoryStorage() {
     loopSnapshots,
     compactBoundaries,
     loopMemories,
+    loopMergeDecisions,
     exportJobs,
     instructionReviews,
     policyForIngest: undefined as
@@ -2031,6 +2127,16 @@ function createMemoryStorage() {
             return snapshot?.project_id === options.projectId;
           })
         : loopMemories;
+      return { items: scoped.slice(0, options.limit ?? scoped.length) };
+    },
+    listLoopMergeDecisions(
+      options: { limit?: number; projectId?: string; worktree?: string } = {},
+    ) {
+      const scoped = loopMergeDecisions.filter(
+        (decision) =>
+          (!options.projectId || decision.project_id === options.projectId) &&
+          (!options.worktree || decision.worktree === options.worktree),
+      );
       return { items: scoped.slice(0, options.limit ?? scoped.length) };
     },
     getPrompt(id: string) {
@@ -2204,6 +2310,29 @@ function loopMemory(patch: Partial<LoopMemory> = {}): LoopMemory {
       stores_prompt_bodies: false,
       stores_raw_paths: false,
       writes_instruction_files: false,
+      external_calls: false,
+    },
+    ...patch,
+  };
+}
+
+function loopMergeDecision(
+  patch: Partial<LoopMergeDecision> = {},
+): LoopMergeDecision {
+  return {
+    id: "mdec_web",
+    snapshot_id: "loop_web",
+    project_id: "proj_web",
+    worktree: "agent-loop-worktree",
+    decision: "continue",
+    reason: "Needs one more verification pass before merge.",
+    decided_by: "user",
+    created_at: "2026-07-04T01:30:00.000Z",
+    privacy: {
+      local_only: true,
+      stores_prompt_bodies: false,
+      stores_raw_paths: false,
+      writes_git_state: false,
       external_calls: false,
     },
     ...patch,

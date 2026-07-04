@@ -1561,6 +1561,41 @@ Do not add:
 - hidden external model calls or background agent evaluation
 - package, plugin, slash command, hook, or MCP server-name rename
 
+### Slice 4.48: Selected Worktree Latest Decision Detail
+
+Decision:
+
+- Selected worktree detail should show the matching latest local merge decision
+  read-only. This closes the gap where the Loops summary can show recent
+  decisions, but a user reviewing one worktree cannot see the latest relevant
+  decision in that worktree's drilldown.
+- Scope the latest decision by selected worktree and the selected snapshot
+  project. Do not infer merge readiness, checklist completion, branch state, or
+  git state from the decision.
+
+Add:
+
+- optional `/api/v1/loops/worktrees/:worktree` response field
+  `latest_decision`
+- project-scoped recent decision loading for `/api/v1/loops`, so the Loops
+  summary does not show decisions from unrelated projects while a selected
+  worktree detail is open
+- web API typing for `latest_decision`
+- selected worktree detail rendering for latest decision value and reason
+- focused server/API/web tests proving the detail remains read-only and does
+  not reveal prompt bodies, outcome summaries, evidence refs, raw paths,
+  transcripts, compact summaries, API tokens, provider credentials, external
+  calls, or git writes
+
+Do not add:
+
+- web or MCP decision write tools
+- merge/checkout/rebase/diff/conflict inspection
+- checklist completion state, approval toggles, or persistent acknowledgement
+- changes to command-center readiness or review packet status
+- hidden external model calls or background agent evaluation
+- package, plugin, slash command, hook, or MCP server-name rename
+
 ## 10. First Implementation Plan Boundary
 
 The first implementation plan should cover only Slice 1.

@@ -77,7 +77,12 @@ export function registerLoopRoutes(
           ? decideLoopMemoryCandidate(latest)
           : undefined,
       mergeDecisions:
-        options.storage.listLoopMergeDecisions?.({ limit: 3 }).items ?? [],
+        latest
+          ? (options.storage.listLoopMergeDecisions?.({
+              limit: 3,
+              projectId: latest.project_id,
+            }).items ?? [])
+          : [],
     });
 
     return {
@@ -119,12 +124,34 @@ export function registerLoopRoutes(
         ) ?? [];
     const boundaries =
       options.storage.listCompactBoundaries?.({ limit: 100 }).items ?? [];
+    const latestSnapshot = snapshots.at(0);
+    const latestDecision = latestSnapshot
+      ? options.storage
+          .listLoopMergeDecisions?.({
+            limit: 1,
+            projectId: latestSnapshot.project_id,
+            worktree: params.worktree,
+          })
+          .items.at(0)
+      : undefined;
 
     return {
       data: {
         worktree: params.worktree,
         ...(query.session_id ? { session_id: query.session_id } : {}),
         ...(query.branch ? { branch: query.branch } : {}),
+        ...(latestDecision
+          ? {
+              latest_decision: {
+                snapshot_id: latestDecision.snapshot_id,
+                worktree: latestDecision.worktree,
+                decision: latestDecision.decision,
+                reason: latestDecision.reason,
+                decided_by: latestDecision.decided_by,
+                created_at: latestDecision.created_at,
+              },
+            }
+          : {}),
         items: snapshots.map((snapshot) => ({
           ...toLoopdeckStatusSnapshot(snapshot),
           compact_boundary: latestCompactBoundaryAfterSnapshot(

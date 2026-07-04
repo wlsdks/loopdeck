@@ -234,6 +234,14 @@ describe("web api export client", () => {
         jsonResponse({
           data: {
             worktree: "agent-loop-worktree",
+            latest_decision: {
+              snapshot_id: "loop_web",
+              worktree: "agent-loop-worktree",
+              decision: "continue",
+              reason: "Needs one more verification pass before merge.",
+              decided_by: "user",
+              created_at: "2026-07-04T01:30:00.000Z",
+            },
             items: [
               {
                 id: "loop_web",
@@ -267,6 +275,11 @@ describe("web api export client", () => {
 
     expect(detail).toMatchObject({
       worktree: "agent-loop-worktree",
+      latest_decision: {
+        snapshot_id: "loop_web",
+        worktree: "agent-loop-worktree",
+        decision: "continue",
+      },
       items: [
         {
           id: "loop_web",

@@ -231,6 +231,14 @@ export type LoopWorktreeResponse = {
   worktree: string;
   session_id?: string;
   branch?: string;
+  latest_decision?: {
+    snapshot_id: string;
+    worktree: string;
+    decision: "merge" | "continue" | "defer";
+    reason: string;
+    decided_by: string;
+    created_at: string;
+  };
   items: LoopSummary[];
   privacy: {
     local_only: true;

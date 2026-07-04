@@ -168,6 +168,9 @@ Implementation checkpoint:
   optional `review_packet.decision_advisory`; `review_packet.status`,
   `review_packet.next_action`, readiness counts, checklist status, and git state
   remain unchanged by decision records.
-- The next runtime slice should decide whether selected worktree detail should
-  show the matching latest decision read-only, without adding web write buttons
-  or checklist completion state.
+- Selected worktree detail now shows the matching latest local merge decision
+  read-only through `/api/v1/loops/worktrees/:worktree`, API typing, and the web
+  detail panel, scoped by selected worktree and selected snapshot project.
+- The next runtime slice should decide whether selected worktree detail needs a
+  raw-free review packet summary link, without adding web write buttons,
+  checklist completion state, merge automation, or git writes.

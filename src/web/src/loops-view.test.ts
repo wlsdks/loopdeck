@@ -70,6 +70,9 @@ describe("LoopsView", () => {
     expect(html).toContain("agent-loop-worktree");
     expect(html).toContain("Session session-web");
     expect(html).toContain("Branch feature/branch-filter");
+    expect(html).toContain("Latest decision");
+    expect(html).toContain("continue");
+    expect(html).toContain("Needs one more verification pass before merge.");
     expect(html).toContain("loop_web");
     expect(html).toContain("passed");
     expect(html).not.toContain("Make this better");
@@ -255,6 +258,14 @@ function loopWorktree(): LoopWorktreeResponse {
     branch: "feature/branch-filter",
     worktree: "agent-loop-worktree",
     session_id: "session-web",
+    latest_decision: {
+      snapshot_id: "loop_web",
+      worktree: "agent-loop-worktree",
+      decision: "continue",
+      reason: "Needs one more verification pass before merge.",
+      decided_by: "user",
+      created_at: "2026-07-04T01:30:00.000Z",
+    },
     items: [
       {
         ...loopSummary(),

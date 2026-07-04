@@ -225,7 +225,11 @@
 - [x] Task 50 RED: `review_packet.decision_advisory`가 없어 domain/CLI/MCP/web focused tests 실패 확인
 - [x] Task 50 GREEN: continue/defer/merge decision advisory next-action을 review packet에 optional read-only로 노출
 - [x] Task 50 PRIVACY: advisory는 summary/next_action만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
-- [ ] 다음 slice: selected worktree detail에 matching latest decision을 read-only로 노출할지 결정
+- [x] Task 51 DECISION: selected worktree detail은 matching latest decision을 read-only로 노출하고 web/MCP write는 보류
+- [x] Task 51 RED: `/api/v1/loops/worktrees/:worktree`와 selected detail UI에 `latest_decision`이 없어 focused tests 실패 확인
+- [x] Task 51 GREEN: selected worktree detail API/type/UI에 latest decision value/reason을 read-only로 노출
+- [x] Task 51 PRIVACY: detail decision은 snapshot_id/worktree/decision/reason/decided_by/created_at만 포함하고 recent decisions는 latest project로 scope해 prompt body/evidence refs/outcome summary/raw path/git write/cross-project decision reason을 포함하지 않음
+- [ ] 다음 slice: selected worktree detail에 raw-free review packet summary link를 추가할지 결정
 
 ### 판단 기준
 
