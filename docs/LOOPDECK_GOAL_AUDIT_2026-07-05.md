@@ -20,7 +20,7 @@ Goal under audit:
 
 Verified repository state:
 
-- GitHub repository: `wlsdks/loopdeck`
+- GitHub repository: `wlsdks/promptlane`
 - Runtime compatibility IDs: package, CLI, hook command, Claude Code slash
   namespace, and canonical MCP server remain `prompt-coach`
 - Latest merged main commit at audit time:
@@ -118,7 +118,7 @@ Verified CI and operational evidence:
 
 | Requirement | Current state | Evidence | Status |
 | --- | --- | --- | --- |
-| Product name and positioning | PromptLane is the product direction while `prompt-coach` remains the compatibility runtime ID. Loopdeck is legacy terminology and a compatibility CLI alias. | `docs/PROMPTLANE.md`, `docs/LOOPDECK.md`, `docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md`, repo `wlsdks/loopdeck` | Satisfied for current compatibility window |
+| Product name and positioning | PromptLane is the product direction while `prompt-coach` remains the compatibility runtime ID. Loopdeck is legacy terminology and a compatibility CLI alias. | `docs/PROMPTLANE.md`, `docs/LOOPDECK.md`, `docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md`, repo `wlsdks/promptlane` | Satisfied for current compatibility window |
 | Existing feature portfolio decision | Keep/improve/defer/reject decisions are documented. | Feature portfolio matrix in `docs/PROMPTLANE.md` and the PromptLane repositioning spec | Satisfied for current slices |
 | Codex and Claude Code first-class integration | Hook, MCP, instruction, plugin, smoke, and dogfood paths are documented and partially verified. The native-dialog dogfood command now refuses to open OS dialogs unless the operator approval env is set. | `docs/AGENT-HARNESS.md`, `AGENTS.md`, `CLAUDE.md`, MCP smoke scripts, native dogfood audits, `scripts/mcp-native-dialog-approved.mjs` | Mostly satisfied; real answered OS-dialog run still needs operator approval |
 | Loop data model | Loop snapshot and memory schema contracts exist and runtime slices have landed. | `docs/LOOP-SNAPSHOT-SCHEMA.md`, loop CLI/MCP/web implementation, status and selected worktree slices | Satisfied for MVP loop metadata model |

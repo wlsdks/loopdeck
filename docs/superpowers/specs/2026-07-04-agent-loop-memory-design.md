@@ -4,14 +4,21 @@
 
 **Goal:** Reposition `prompt-coach` into a local-first agent loop memory and meta-prompting workbench that is tightly integrated with Codex and Claude Code.
 
-**Recommended service name:** Loopdeck
+**Current product name:** PromptLane
 
-**Repository target:** `wlsdks/loopdeck`
+**Superseded naming note:** This spec originally recommended `Loopdeck`.
+That name is now rejected as the primary product name because it makes the
+product sound loop-engineering-first. Use `PromptLane` for product-facing copy;
+keep `prompt-coach` as the runtime compatibility ID; keep `loopdeck` only as a
+legacy CLI alias or historical planning term.
 
-**Status:** Active implementation. The product planning gate has been accepted
-for current Loopdeck compatibility-window slices, and implementation is
-proceeding through small TDD PRs. Do not rename packages, remotes, public
-commands, slash namespaces, or MCP server names from this document alone.
+**Repository target:** `wlsdks/promptlane`
+
+**Status:** Historical architecture baseline with active implementation notes.
+Use `docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md` and
+`docs/PROMPTLANE.md` as the current naming contract. Do not rename packages,
+remotes, public commands, slash namespaces, or MCP server names from this
+document alone.
 
 ---
 
@@ -42,8 +49,8 @@ The current name `prompt-coach` is accurate for the old scope but too narrow for
 Verified locally:
 
 - package name: `prompt-coach`
-- current GitHub repo metadata via `gh repo view`: `wlsdks/loopdeck`
-- local git remote points at `https://github.com/wlsdks/loopdeck.git`
+- current GitHub repo metadata via `gh repo view`: `wlsdks/promptlane`
+- local git remote points at `https://github.com/wlsdks/promptlane.git`
 - Node 22 baseline: `PATH=/Users/jinan/.nvm/versions/node/v22.15.0/bin:$PATH corepack pnpm test`
 - test result: 83 files, 589 tests passed
 - default shell currently uses Node 24 and pnpm 11; existing `better-sqlite3` native module was built for Node 22 ABI, so Node 24 tests require rebuild or fresh install before they are meaningful
@@ -136,7 +143,7 @@ Alternatives considered:
 Target GitHub repository:
 
 ```text
-wlsdks/loopdeck
+wlsdks/promptlane
 ```
 
 Target short description:
@@ -163,9 +170,9 @@ worktrees
 
 Rename sequencing:
 
-1. Rename GitHub repository from `wlsdks/prompt-coach` to `wlsdks/loopdeck`. (**implemented**)
+1. Rename GitHub repository from `wlsdks/prompt-coach` to `wlsdks/promptlane`. (**implemented**)
 2. Update local `origin` from stale prompt-coach/prompt-memory URLs to the new repo URL. (**implemented**)
-3. Update README and docs to say `Loopdeck` as product name while preserving `prompt-coach` as the current CLI/package during a deprecation window. (**implemented**)
+3. Update README and docs to say `PromptLane` as product name while preserving `prompt-coach` as the current CLI/package during a compatibility window. (**implemented**)
 4. Add `loopdeck` CLI/package rename as a separate migration plan because it touches npm, plugin commands, docs, binary names, package files, and tests.
 
 Do not rename the npm package and CLI command in the same commit as the product/repo rename. That would mix brand migration with runtime compatibility risk.

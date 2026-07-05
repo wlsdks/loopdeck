@@ -117,8 +117,8 @@ npm install -g prompt-coach
 이 저장소에서 로컬 개발로 실행:
 
 ```sh
-git clone https://github.com/wlsdks/loopdeck.git
-cd loopdeck
+git clone https://github.com/wlsdks/promptlane.git
+cd promptlane
 pnpm install
 pnpm build
 ```
@@ -128,7 +128,7 @@ pnpm build
 Claude Code 안에서:
 
 ```text
-/plugin marketplace add wlsdks/loopdeck
+/plugin marketplace add wlsdks/promptlane
 /plugin install prompt-coach
 /reload-plugins
 /prompt-coach:setup
@@ -141,7 +141,7 @@ Claude Code 안에서:
 쉘에서:
 
 ```sh
-codex plugin marketplace add wlsdks/loopdeck
+codex plugin marketplace add wlsdks/promptlane
 ```
 
 그 다음 로컬 coach setup을 실행합니다.

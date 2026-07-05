@@ -74,9 +74,11 @@ PromptLane is the recommended name because:
 - `Lane` suggests a path from captured prompt to improved request to continued
   agent work
 - it does not imply loop engineering is the only use case
-- current npm checks returned not found for `promptlane` and `prompt-lane`
-- current repository checks found no `wlsdks/promptlane` or
-  `wlsdks/prompt-lane`
+- npm checks at design time returned not found for `promptlane` and
+  `prompt-lane`
+- repository checks at design time found no `wlsdks/promptlane` or
+  `wlsdks/prompt-lane`; `wlsdks/promptlane` was selected and renamed on
+  2026-07-05
 
 Names rejected during this pass:
 
@@ -357,9 +359,9 @@ Out of scope:
 
 Goal:
 
-- Rename repo from `wlsdks/loopdeck` to `wlsdks/promptlane` or
-  `wlsdks/prompt-lane` if available and desired.
+- Rename repo from `wlsdks/loopdeck` to `wlsdks/promptlane`.
 - Update repository URLs, docs, plugin manifests, and release checklists.
+- Status: implemented on 2026-07-05.
 
 Out of scope:
 
@@ -382,13 +384,9 @@ The repositioning is complete when:
 
 ## Open Questions
 
-1. Whether the future product repo should be `wlsdks/promptlane` or
-   `wlsdks/prompt-lane`.
-2. Whether to remove the `loopdeck` CLI alias before public beta or keep it as
+1. Whether to remove the `loopdeck` CLI alias before public beta or keep it as
    a silent compatibility alias until a later breaking change.
-3. Whether to rename the GitHub repository immediately after Slice 1 or after
-   README, plugin metadata, and docs are stable.
-4. Whether `docs/LOOPDECK.md` should remain as rejected-decision history or be
+2. Whether `docs/LOOPDECK.md` should remain as rejected-decision history or be
    deleted after `docs/PROMPTLANE.md` lands.
 
 These are migration sequencing questions, not blockers for adopting

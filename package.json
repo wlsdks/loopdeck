@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wlsdks/loopdeck.git"
+    "url": "https://github.com/wlsdks/promptlane.git"
   },
   "packageManager": "pnpm@10.18.0",
   "engines": {
