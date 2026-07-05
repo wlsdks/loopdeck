@@ -931,10 +931,17 @@ describe("plugin packaging files", () => {
       join(process.cwd(), "scripts/quality-95-evidence.mjs"),
       "utf8",
     );
+    const localEvidence = readFileSync(
+      join(process.cwd(), "docs/LOCAL_95_EVIDENCE_2026-07-06.md"),
+      "utf8",
+    );
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
 
     expect(packageJson.files).toContain("scripts/quality-95-evidence.mjs");
+    expect(packageJson.files).toContain(
+      "docs/LOCAL_95_EVIDENCE_2026-07-06.md",
+    );
     expect(packageJson.scripts["evidence:quality"]).toBe(
       "node scripts/quality-95-evidence.mjs",
     );
@@ -954,6 +961,7 @@ describe("plugin packaging files", () => {
       expect(content).toContain("scripts/quality-95-evidence.mjs");
     }
     for (const content of [backlog, plan]) {
+      expect(content).toContain("docs/LOCAL_95_EVIDENCE_2026-07-06.md");
       expect(content).toContain("PR #478");
       expect(content).toContain("28753458359");
       expect(content).toContain("corepack pnpm evidence:quality");
@@ -974,6 +982,21 @@ describe("plugin packaging files", () => {
       expect(content).toContain("scorecard_axes");
       expect(content).toContain("native_dialog_approved_dogfood");
       expect(content).toContain("scheduled_ui_patrol");
+    }
+    for (const content of [localEvidence, backlog, plan]) {
+      expect(content).toContain("corepack pnpm smoke:hooks");
+      expect(content).toContain("hook binary smoke passed");
+      expect(content).toContain("corepack pnpm smoke:mcp-coach-loop");
+      expect(content).toContain("mcp coach loop smoke passed");
+      expect(content).toContain("corepack pnpm dogfood:first-coach-loop");
+      expect(content).toContain("first coach loop dogfood passed");
+      expect(content).toContain("corepack pnpm dogfood:loop-memory-approval");
+      expect(content).toContain("loop memory approval dogfood passed");
+      expect(content).toContain("corepack pnpm smoke:release");
+      expect(content).toContain("release smoke passed");
+      expect(content).toContain("corepack pnpm benchmark -- --json");
+      expect(content).toContain("privacy_leak_count: 0");
+      expect(content).toContain("archive_effectiveness_score: 1");
     }
     for (const content of [readme, readmeKo]) {
       expect(content).toContain("prompt-coach quality-evidence");
