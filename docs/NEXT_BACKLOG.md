@@ -138,6 +138,10 @@ Decision:
 - The 9.5 quality plan now includes an Evidence Progress Ledger with PR #417,
   PR #419, PR #421, workflow_dispatch run `28717406758`, the missing
   `schedule` event, and Remaining 9.5 blockers.
+- Latest main CI after PR #424 exposed a GitHub Actions annotation because
+  `pnpm/action-setup@v4` runs on the deprecated Node 20 action runtime; update
+  the test workflow to `pnpm/action-setup@v6`, whose action metadata uses
+  Node 24, before treating release stability as closer to the 9.5 bar.
 
 Rationale:
 
