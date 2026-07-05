@@ -3592,4 +3592,11 @@
 - [x] RED: Add packaging drift guards requiring PromptLane product-facing metadata, README first viewport, `docs/PROMPTLANE.md`, and `docs/LOOPDECK.md` legacy status while preserving `prompt-coach` runtime ids.
 - [x] GREEN: Update README/README.ko, package and plugin metadata, Codex skill copy, AGENTS/CLAUDE/INSTRUCTION routing, NEXT_BACKLOG, PACKAGE_CONTENTS, root CLI/help/hook/coach/buddy copy, and runtime inventory to PromptLane-first wording.
 - [x] VERIFY: Focused packaging and CLI/hook tests passed; full `corepack pnpm test` passed.
-- [ ] INTEGRATE: Run full gate, push one coherent PR, merge it after CI, and prune the branch.
+- [x] INTEGRATE: PR #375 was merged to `main`; branch was pruned.
+
+## 2026-07-05 PromptLane Core Docs Alignment
+
+- [x] RED: Add packaging/docs drift guard requiring shipped core docs (`ARCHITECTURE`, `AGENT-HARNESS`, `PLUGINS`, `TECH_SPEC`) to name PromptLane as the prompt improvement workspace with loop-aware continuation while preserving `prompt-coach` runtime ids.
+- [x] GREEN: Align core doc product boundaries, harness wording, plugin MCP wording, and tech spec purpose to PromptLane-first positioning.
+- [x] VERIFY: Focused packaging test, full test/lint/build, pack dry-run, and diff check passed.
+- [ ] INTEGRATE: Push one coherent PR, merge it after CI, and prune the branch.
