@@ -7,8 +7,8 @@
 - [x] RED: PromptDetailView SSR test가 `Outcome evidence`, outcome summary, status, tests count, PR/CI refs 부재로 실패해야 한다.
 - [x] GREEN: prompt detail API가 해당 prompt id를 포함한 loop snapshot outcome을 raw-free `loop_outcomes`로 반환하고, web detail이 outcome evidence panel을 렌더링한다.
 - [x] EFFECT: PromptLane이 개선안의 예상 효과만 보여주는 상태에서 벗어나, 같은 prompt가 실제 loop 결과와 어떤 evidence로 연결됐는지 확인할 수 있게 한다.
-- [ ] VERIFY: focused tests, `corepack pnpm e2e:browser`, full local gate, PR CI, latest main CI, and branch prune all pass.
-- [ ] INTEGRATE: PR이 CI 통과 후 merge되고 branch prune까지 확인된다.
+- [x] VERIFY: focused tests, `corepack pnpm e2e:browser`, full local gate, PR CI, latest main CI run `28748310489`, and branch prune all pass.
+- [x] INTEGRATE: PR #453이 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인됐다.
 
 ### 판단 기준
 
