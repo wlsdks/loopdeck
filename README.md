@@ -702,6 +702,8 @@ still pending. Use it only as a release/goal-completion gate.
 native dialog dogfood without opening the dialog. It also includes the refusal
 preflight command that should stop before opening a native dialog unless
 `PROMPT_COACH_NATIVE_DIALOG_APPROVED=1` is set.
+Run `corepack pnpm dogfood:mcp-native-dialog-refusal` for that refusal
+preflight.
 The JSON output also includes `recommended_next_slices` (shown as recommended next slices
 in the text output), which separates immediately runnable local
 evidence work from items blocked on an external event or explicit operator
