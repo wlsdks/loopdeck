@@ -154,15 +154,31 @@
   JSON directly. Installed CLI users can run
   `prompt-coach quality-evidence --json` or
   `prompt-coach quality-evidence --require-complete`.
-  The JSON includes `recommended_next_slices`; `web_user_flow_current_main_evidence`
-  is the first unblocked local evidence action, while scheduled cron review and
-  native dialog dogfood stay marked as externally blocked until their event or
-  explicit approval exists.
+  The JSON includes `recommended_next_slices`; completed local evidence actions
+  are skipped so the recommendation loop moves forward instead of repeating the
+  last proof. Because `web_user_flow_current_main_evidence`,
+  `privacy_raw_free_regression_sweep`, and
+  `codex_claude_setup_smoke_refresh` were run and recorded, no immediately
+  runnable local evidence recommendation remains ahead of scheduled cron review
+  and native dialog dogfood, which stay marked as externally blocked until
+  their event or explicit approval exists.
 - `web_user_flow_current_main_evidence` was dogfooded after becoming the first
   recommendation: `corepack pnpm dogfood:web-user-flow` completed with
   `browser e2e passed` on current main. This refreshes local web workflow
   evidence without treating scheduled `ui-patrol` or native-dialog dogfood as
   complete.
+- `privacy_raw_free_regression_sweep` was run after becoming the first
+  recommendation: `corepack pnpm test -- src/security src/hooks src/mcp`
+  passed with 108 test files and 833 tests on current main-derived work. This
+  refreshes the highest-risk raw-free hook/MCP/security evidence without
+  treating any scorecard axis, scheduled `ui-patrol`, or native-dialog dogfood
+  as complete.
+- `codex_claude_setup_smoke_refresh` was run after becoming the first
+  recommendation: `corepack pnpm smoke:agent-setup` rebuilt server/web assets,
+  exercised setup dry-run, setup with MCP registration, Claude Code doctor, and
+  Codex doctor, then completed with `prompt-coach agent setup smoke passed` on
+  current main-derived work. This refreshes local Codex/Claude setup evidence
+  without opening provider CLIs or treating native-dialog dogfood as complete.
 - PR #478 proved that installed CLI path on the default branch; main CI run
   `28753458359` passed Node 22 and Node 24 after merge, so future agents can use
   the product CLI itself to decide whether 9.5 is still blocked before claiming

@@ -1,5 +1,38 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Quality Evidence Forward Recommendations
+
+- [x] CHECK: `prompt-coach quality-evidence --json` still recommended
+  `web_user_flow_current_main_evidence` first even after that recommendation
+  had been dogfooded and recorded with `browser e2e passed`.
+- [x] RED: quality evidence script and CLI tests expected completed web
+  dogfood evidence to be skipped and `privacy_raw_free_regression_sweep` to
+  become the first unblocked local recommendation; focused tests failed while
+  the script repeated the completed web slice.
+- [x] GREEN: `scripts/quality-95-evidence.mjs` now reads the 9.5 ledger for
+  completed web-user-flow evidence and skips
+  `web_user_flow_current_main_evidence` once that proof exists.
+- [x] RUN: after the recommender advanced, `corepack pnpm test -- src/security
+  src/hooks src/mcp` passed with 108 test files and 833 tests.
+- [x] RUN: after the recommender advanced again, `corepack pnpm
+  smoke:agent-setup` passed and ended with
+  `prompt-coach agent setup smoke passed`.
+- [x] GREEN: completed local recommendations now also skip
+  `privacy_raw_free_regression_sweep` and `codex_claude_setup_smoke_refresh`,
+  leaving scheduled UI patrol and native-dialog dogfood as externally blocked
+  next recommendations.
+- [x] EFFECT: the quality loop now advances toward the next useful local proof
+  instead of repeatedly asking agents to run evidence already recorded in the
+  default-branch ledger. After this slice, no immediately runnable local
+  recommendation remains ahead of the two explicit external blockers.
+
+### 판단 기준
+
+- Completed local evidence may stay in the ledger but must not keep occupying
+  the first recommended slot.
+- Scheduled `ui-patrol` and native-dialog dogfood must remain separate blockers.
+- Recommendation output must remain raw-free and machine-parseable.
+
 ## 2026-07-06 PromptLane Recommended Web User-Flow Evidence
 
 - [x] CHECK: `prompt-coach quality-evidence --json` now recommends

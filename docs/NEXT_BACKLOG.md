@@ -185,10 +185,12 @@ Decision:
   Installed CLI users can inspect the same summary with
   `prompt-coach quality-evidence --json` and fail closed with
   `prompt-coach quality-evidence --require-complete`.
-  The same JSON now includes `recommended_next_slices`, starting with
-  `web_user_flow_current_main_evidence`, so the next worker can distinguish
-  immediately runnable local evidence work from externally blocked cron or
-  operator-approved dogfood.
+  The same JSON includes `recommended_next_slices`, which now skips already
+  recorded local evidence actions. After `web_user_flow_current_main_evidence`,
+  `privacy_raw_free_regression_sweep`, and
+  `codex_claude_setup_smoke_refresh` were run and recorded, no immediately
+  runnable local recommendation remains ahead of externally blocked cron and
+  operator-approved dogfood items.
 - PR #478 moved that quality evidence gate onto the installed product CLI. Main
   CI run `28753458359` passed Node 22 and Node 24 after merge, so `prompt-coach
   quality-evidence --require-complete` is now a current default-branch release
@@ -206,6 +208,19 @@ Decision:
   on current main and completed with `browser e2e passed`. This proves the
   recommended local evidence action is executable, while scheduled `ui-patrol`
   and native-dialog dogfood remain separate pending blockers.
+- After `privacy_raw_free_regression_sweep` became the first
+  `recommended_next_slices` item, `corepack pnpm test -- src/security src/hooks
+  src/mcp` was run on current main-derived work and passed with 108 test files
+  and 833 tests. This refreshes the highest-risk raw-free agent-surface
+  evidence without treating any scorecard axis, scheduled `ui-patrol`, or
+  native-dialog dogfood as complete.
+- After `codex_claude_setup_smoke_refresh` became the first
+  `recommended_next_slices` item, `corepack pnpm smoke:agent-setup` passed on
+  current main-derived work. The smoke rebuilt server/web assets, exercised
+  setup dry-run, setup with MCP registration, Claude Code doctor, and Codex
+  doctor, then ended with `prompt-coach agent setup smoke passed`. This
+  refreshes local Codex/Claude setup evidence without opening provider CLIs or
+  treating native-dialog dogfood as complete.
 - fresh current-main web user-flow evidence is now recorded after PR #465:
   `corepack pnpm dogfood:web-user-flow` passed on main-derived work after main
   CI run `28750766036`, proving the archive/detail/dashboard/coach/projects/

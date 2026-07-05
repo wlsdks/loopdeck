@@ -103,12 +103,33 @@ describe("quality 9.5 evidence script", () => {
       "Do not claim 9.5 completion while blockers remain pending.",
     );
     expect(parsed.recommended_next_slices[0]).toMatchObject({
-      id: "web_user_flow_current_main_evidence",
+      id: "scheduled_ui_patrol_cron_review",
       axis: "web_ui_and_operational_evidence",
-      priority: 1,
-      blocked_by_external_event: false,
-      command: "corepack pnpm dogfood:web-user-flow",
+      priority: 90,
+      blocked_by_external_event: true,
+      command: "corepack pnpm evidence:ui-patrol",
     });
+    expect(parsed.recommended_next_slices).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "web_user_flow_current_main_evidence",
+        }),
+      ]),
+    );
+    expect(parsed.recommended_next_slices).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "privacy_raw_free_regression_sweep",
+        }),
+      ]),
+    );
+    expect(parsed.recommended_next_slices).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "codex_claude_setup_smoke_refresh",
+        }),
+      ]),
+    );
     expect(parsed.recommended_next_slices).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
