@@ -131,7 +131,7 @@ Current goal audit:
 - PR #450 closed the web expected-impact evidence log after PR #449 passed PR
   CI, local `corepack pnpm ui-patrol`, latest main CI run `28747568864`, and
   branch pruning.
-- latest main CI run `28749352031` passed `test (22)` and `test (24)` with
+- latest main CI run `28749788184` passed `test (22)` and `test (24)` with
   `pnpm test`, `pnpm lint`, `pnpm build`, and `pnpm pack:dry-run`.
 
 Decision:
@@ -158,8 +158,8 @@ Decision:
   dogfood, and fresh user-flow evidence from real PromptLane work.
 - The 9.5 quality plan now includes an Evidence Progress Ledger with PR #417,
   PR #419, PR #421, PR #425, PR #427, PR #429, PR #433, PR #447, PR #449,
-  PR #450, PR #457, PR #458, workflow_dispatch run `28717406758`,
-  latest main CI run `28749352031`, the missing `schedule` event, and
+  PR #450, PR #457, PR #458, PR #460, workflow_dispatch run `28717406758`,
+  latest main CI run `28749788184`, the missing `schedule` event, and
   Remaining 9.5 blockers.
 - The earlier GitHub Actions Node 20 runtime annotation and Node 24
   `better-sqlite3` install warning are closed. Keep the release-stability bar
@@ -178,7 +178,7 @@ Decision:
   now connect `expected_impact` predictions to actual raw-free loop outcomes
   and an `effectiveness` verdict without treating that as scheduled
   `ui-patrol` or native-dialog completion evidence.
-- The active effectiveness calibration slice extends that same raw-free
+- The effectiveness calibration evidence extends that same raw-free
   `effectiveness` evidence with linked-outcome, passing-outcome,
   failing-outcome, and total-test counts so users and agents can judge the
   strength of the verdict, not only its label.

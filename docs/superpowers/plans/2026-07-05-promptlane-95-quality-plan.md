@@ -79,11 +79,11 @@
 - PR #458 closed the prompt effectiveness verdict log after PR #457 passed PR
   CI, local `corepack pnpm ui-patrol`, latest main CI run `28749214218`, and
   branch pruning.
-- Current effectiveness calibration slice adds linked-outcome, passing-outcome,
+- PR #460 added effectiveness calibration with linked-outcome, passing-outcome,
   failing-outcome, and total-test counts to the raw-free `effectiveness`
   payload so Codex, Claude Code, CLI JSON, API, and web detail consumers can
   judge how much evidence supports the verdict instead of reading only a label.
-- latest main CI run `28749352031` after PR #458 passed `test (22)` and
+- latest main CI run `28749788184` after PR #460 passed `test (22)` and
   `test (24)` with `pnpm test`, `pnpm lint`, `pnpm build`, and
   `pnpm pack:dry-run`.
 
