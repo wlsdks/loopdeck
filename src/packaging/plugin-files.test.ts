@@ -1273,6 +1273,7 @@ describe("plugin packaging files", () => {
     expect(packageJson.files).toContain("docs/ARCHITECTURE.md");
     expect(packageJson.files).toContain("docs/PLUGINS.md");
     expect(packageJson.files).toContain("docs/LOOPDECK.md");
+    expect(packageJson.files).toContain("docs/LOOPDECK-LEGACY-SURFACES.md");
     expect(packageJson.files).toContain("docs/LOOP-SNAPSHOT-SCHEMA.md");
     expect(packageJson.files).toContain("docs/AGENT-HARNESS.md");
     expect(packageJson.files).toContain("docs/INSTRUCTION-FILES.md");
@@ -1297,6 +1298,27 @@ describe("plugin packaging files", () => {
     expect(readme).toContain("it is a legacy CLI alias");
     expect(readmeKo).toContain("`loopdeck`는 legacy CLI alias");
     expect(packageContents).toContain("legacy loopdeck");
+    expect(packageContents).toContain("docs/LOOPDECK-LEGACY-SURFACES.md");
+  });
+
+  it("ships an allowlist for remaining Loopdeck legacy surfaces", () => {
+    const allowlistPath = "docs/LOOPDECK-LEGACY-SURFACES.md";
+    const packageJson = readJson<{ files: string[] }>("package.json");
+    const allowlist = readFileSync(join(process.cwd(), allowlistPath), "utf8");
+
+    expect(packageJson.files).toContain(allowlistPath);
+    expect(allowlist).toContain("# Loopdeck Legacy Surfaces");
+    expect(allowlist).toContain("Product name: PromptLane");
+    expect(allowlist).toContain("Default runtime command: `prompt-coach`");
+    expect(allowlist).toContain("Legacy CLI alias: `loopdeck`");
+    expect(allowlist).toContain("MCP compatibility tool: `get_loopdeck_status`");
+    expect(allowlist).toContain("Historical planning docs");
+    expect(allowlist).toContain("Do not add `/loopdeck:*` command files");
+    expect(allowlist).toContain("Do not use Loopdeck as product-facing copy");
+    expect(allowlist).not.toContain("TODO");
+    expect(allowlist).not.toContain("TBD");
+    expect(allowlist).not.toContain("sk-proj");
+    expect(allowlist).not.toContain("/Users/");
   });
 
   it("restores executable mode for the npm CLI bin after server builds", () => {

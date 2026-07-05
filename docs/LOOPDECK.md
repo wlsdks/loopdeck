@@ -15,6 +15,9 @@ namespace, and canonical MCP server name stay `prompt-coach`.
 Use `docs/PROMPTLANE.md` for current product identity, positioning, runtime
 compatibility, privacy boundaries, and migration sequencing.
 
+Use `docs/LOOPDECK-LEGACY-SURFACES.md` for the allowlist of remaining
+Loopdeck/`loopdeck` strings and the review rule for new occurrences.
+
 ## Legacy Runtime Notes
 
 - `loopdeck` may still appear as a CLI alias for existing manual terminal
