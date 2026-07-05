@@ -268,6 +268,7 @@ function LoopOutcomeEvidencePanel({ prompt }: { prompt: PromptDetail }) {
             Effectiveness: {formatEffectivenessVerdict(effectiveness.verdict)}
           </strong>
           <p>{effectiveness.summary}</p>
+          <p>{formatEffectivenessCalibration(effectiveness.calibration)}</p>
           {effectiveness.evidence_refs.length > 0 && (
             <div className="loop-outcome-refs" aria-label="Effectiveness refs">
               {effectiveness.evidence_refs.map((ref) => (
@@ -305,16 +306,27 @@ function formatEffectivenessVerdict(
   return verdict[0].toUpperCase() + verdict.slice(1);
 }
 
+function formatEffectivenessCalibration(
+  calibration: NonNullable<PromptDetail["effectiveness"]>["calibration"],
+): string {
+  return `${calibration.passing_outcomes} passed / ${calibration.failing_outcomes} failed`;
+}
+
 function effectivenessFromOutcomes(
   outcomes: NonNullable<PromptDetail["loop_outcomes"]>,
 ): NonNullable<PromptDetail["effectiveness"]> {
-  const failed = outcomes.some((outcome) => outcome.status === "failed");
-  const passed = outcomes.some((outcome) => outcome.status === "passed");
+  const failed = outcomes.filter((outcome) => outcome.status === "failed");
+  const passed = outcomes.filter((outcome) => outcome.status === "passed");
   const testsRun = outcomes.reduce(
     (total, outcome) => total + (outcome.tests_run ?? 0),
     0,
   );
-  const verdict = passed && !failed ? "proven" : failed ? "mixed" : "unproven";
+  const verdict =
+    passed.length > 0 && failed.length === 0
+      ? "proven"
+      : failed.length > 0
+        ? "mixed"
+        : "unproven";
   const status =
     verdict === "proven"
       ? "passed"
@@ -330,6 +342,12 @@ function effectivenessFromOutcomes(
   return {
     verdict,
     summary: `Actual loop evidence ${status} with ${testCopy} across ${outcomeCopy}.`,
+    calibration: {
+      linked_outcomes: outcomes.length,
+      passing_outcomes: passed.length,
+      failing_outcomes: failed.length,
+      total_tests_run: testsRun,
+    },
     evidence_refs: Array.from(
       new Set(outcomes.flatMap((outcome) => outcome.evidence_refs)),
     ).slice(0, 5),

@@ -232,6 +232,11 @@ try {
   );
   await assertText(
     page,
+    "1 passed / 0 failed",
+    "Detail should show prompt effectiveness calibration counts.",
+  );
+  await assertText(
+    page,
     "main CI 28748001738",
     "Detail should show safe loop outcome evidence refs.",
   );

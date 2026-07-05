@@ -52,6 +52,12 @@ export function promptEffectivenessForOutcomes(
   return {
     verdict,
     summary: effectivenessSummary(verdict, testsRun, outcomes.length),
+    calibration: {
+      linked_outcomes: outcomes.length,
+      passing_outcomes: passed.length,
+      failing_outcomes: failed.length,
+      total_tests_run: testsRun,
+    },
     evidence_refs: evidenceRefs,
   };
 }

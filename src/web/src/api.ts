@@ -54,6 +54,12 @@ export type PromptLoopOutcomeEvidence = {
 export type PromptEffectiveness = {
   verdict: "proven" | "mixed" | "unproven";
   summary: string;
+  calibration: {
+    linked_outcomes: number;
+    passing_outcomes: number;
+    failing_outcomes: number;
+    total_tests_run: number;
+  };
   evidence_refs: string[];
 };
 

@@ -175,6 +175,12 @@ describe("prompt CLI commands", () => {
       verdict: "proven",
       summary:
         "Actual loop evidence passed with 2 tests across 1 linked outcome.",
+      calibration: {
+        linked_outcomes: 1,
+        passing_outcomes: 1,
+        failing_outcomes: 0,
+        total_tests_run: 2,
+      },
       evidence_refs: ["PR #453", "main CI 28748310489"],
     });
     expect(JSON.stringify(shown.effectiveness)).not.toContain(

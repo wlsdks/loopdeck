@@ -325,6 +325,12 @@ describe("SQLite prompt storage", () => {
       verdict: "proven",
       summary:
         "Actual loop evidence passed with 7 tests across 1 linked outcome.",
+      calibration: {
+        linked_outcomes: 1,
+        passing_outcomes: 1,
+        failing_outcomes: 0,
+        total_tests_run: 7,
+      },
       evidence_refs: ["PR #455", "main CI 28748664657"],
     });
     expect(JSON.stringify(effectiveness)).not.toContain("/Users/example");

@@ -95,6 +95,12 @@ describe("PromptDetailView", () => {
             verdict: "proven",
             summary:
               "Actual loop evidence passed with 3 tests across 1 linked outcome.",
+            calibration: {
+              linked_outcomes: 1,
+              passing_outcomes: 1,
+              failing_outcomes: 0,
+              total_tests_run: 3,
+            },
             evidence_refs: ["PR #451", "main CI 28748001738"],
           },
         },
@@ -107,6 +113,7 @@ describe("PromptDetailView", () => {
     expect(html).toContain(
       "Actual loop evidence passed with 3 tests across 1 linked outcome.",
     );
+    expect(html).toContain("1 passed / 0 failed");
     expect(html).toContain("Outcome evidence");
     expect(html).toContain("Expected impact matched");
     expect(html).toContain("passed");
@@ -153,6 +160,7 @@ describe("PromptDetailView", () => {
     expect(html).toContain(
       "Actual loop evidence passed with 4 tests across 1 linked outcome.",
     );
+    expect(html).toContain("1 passed / 0 failed");
   });
 
   it("renders a manual-copy fallback when draft clipboard copy fails", () => {

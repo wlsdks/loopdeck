@@ -1131,6 +1131,7 @@ describe("plugin packaging files", () => {
       "`prompt-coach show --json`",
       "`expected_impact` predictions to actual raw-free loop outcomes",
       "`effectiveness` verdict",
+      "effectiveness calibration",
       "latest main CI run `28749352031`",
     ]) {
       expect(backlog).toContain(currentBacklogEvidence);
