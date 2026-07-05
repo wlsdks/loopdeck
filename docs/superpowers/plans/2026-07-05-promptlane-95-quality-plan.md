@@ -154,6 +154,11 @@
   JSON directly. Installed CLI users can run
   `prompt-coach quality-evidence --json` or
   `prompt-coach quality-evidence --require-complete`.
+  The JSON includes `axis_evidence_coverage`, which separates satisfied local
+  proof such as `local_95_evidence_sweep` and
+  `web_user_flow_current_main_evidence` from remaining gaps such as
+  `scorecard_level_below_9_5`, `scheduled_ui_patrol`, and
+  `native_dialog_approved_dogfood`.
   The JSON includes `recommended_next_slices`; completed local evidence actions
   are skipped so the recommendation loop moves forward instead of repeating the
   last proof. Because `web_user_flow_current_main_evidence`,

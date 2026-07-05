@@ -49,6 +49,12 @@ const summary = {
     "9.5 requires current evidence for every scorecard axis, not only passing tests.",
   plan: planPath,
   scorecard_axes: scorecardAxes,
+  axis_evidence_coverage: axisEvidenceCoverage({
+    scorecardAxes,
+    uiPatrol,
+    nativeDialog,
+    completedEvidence,
+  }),
   evidence: {
     scheduled_ui_patrol: uiPatrol,
     native_dialog_approved_dogfood: nativeDialog,
@@ -154,13 +160,16 @@ function readScorecardAxes() {
 
 function readCompletedEvidence() {
   let plan = "";
+  let localEvidence = "";
   try {
     plan = readFileSync(planPath, "utf8");
+    localEvidence = readFileSync("docs/LOCAL_95_EVIDENCE_2026-07-06.md", "utf8");
   } catch {
     return {
       web_user_flow_current_main_evidence: false,
       privacy_raw_free_regression_sweep: false,
       codex_claude_setup_smoke_refresh: false,
+      local_95_evidence_sweep: false,
     };
   }
 
@@ -178,7 +187,99 @@ function readCompletedEvidence() {
       plan.includes("codex_claude_setup_smoke_refresh") &&
       plan.includes("corepack pnpm smoke:agent-setup") &&
       plan.includes("prompt-coach agent setup smoke passed"),
+    local_95_evidence_sweep:
+      plan.includes("docs/LOCAL_95_EVIDENCE_2026-07-06.md") &&
+      localEvidence.includes("corepack pnpm smoke:hooks") &&
+      localEvidence.includes("hook binary smoke passed") &&
+      localEvidence.includes("corepack pnpm smoke:mcp-coach-loop") &&
+      localEvidence.includes("mcp coach loop smoke passed") &&
+      localEvidence.includes("corepack pnpm dogfood:first-coach-loop") &&
+      localEvidence.includes("first coach loop dogfood passed") &&
+      localEvidence.includes("corepack pnpm dogfood:loop-memory-approval") &&
+      localEvidence.includes("loop memory approval dogfood passed") &&
+      localEvidence.includes("corepack pnpm smoke:release") &&
+      localEvidence.includes("release smoke passed") &&
+      localEvidence.includes("privacy_leak_count: 0") &&
+      localEvidence.includes("archive_effectiveness_score: 1"),
   };
+}
+
+function axisEvidenceCoverage({
+  scorecardAxes,
+  uiPatrol,
+  nativeDialog,
+  completedEvidence,
+}) {
+  return scorecardAxes.map((axis) => {
+    const satisfied = [];
+    const remaining = [];
+
+    if (
+      axis.id === "web_ui_and_operational_evidence" &&
+      completedEvidence.web_user_flow_current_main_evidence
+    ) {
+      satisfied.push("web_user_flow_current_main_evidence");
+    }
+    if (
+      axis.id === "local_first_privacy_boundary" &&
+      completedEvidence.privacy_raw_free_regression_sweep
+    ) {
+      satisfied.push("privacy_raw_free_regression_sweep");
+    }
+    if (
+      axis.id === "codex_and_claude_code_integration" &&
+      completedEvidence.codex_claude_setup_smoke_refresh
+    ) {
+      satisfied.push("codex_claude_setup_smoke_refresh");
+    }
+    if (
+      [
+        "local_first_privacy_boundary",
+        "codex_and_claude_code_integration",
+        "setup_doctor_and_mcp_smoke",
+        "loop_memory_and_continuation",
+        "release_stability",
+      ].includes(axis.id) &&
+      completedEvidence.local_95_evidence_sweep
+    ) {
+      satisfied.push("local_95_evidence_sweep");
+    }
+
+    if (
+      axis.id === "web_ui_and_operational_evidence" &&
+      uiPatrol.status !== "complete"
+    ) {
+      remaining.push("scheduled_ui_patrol");
+    }
+    if (
+      axis.id === "codex_and_claude_code_integration" &&
+      nativeDialog.status !== "complete"
+    ) {
+      remaining.push("native_dialog_approved_dogfood");
+    }
+    if (axis.status !== "meets_target") {
+      remaining.push("scorecard_level_below_9_5");
+    }
+
+    const hasExternalBlocker =
+      remaining.includes("scheduled_ui_patrol") ||
+      remaining.includes("native_dialog_approved_dogfood");
+
+    return {
+      id: axis.id,
+      axis: axis.axis,
+      status:
+        remaining.length === 0
+          ? "complete"
+          : hasExternalBlocker
+            ? "blocked_external"
+            : satisfied.length > 0
+              ? "partial"
+              : "missing",
+      satisfied_evidence: satisfied,
+      remaining_evidence: remaining,
+    };
+  });
 }
 
 function recommendedNextSlices({
