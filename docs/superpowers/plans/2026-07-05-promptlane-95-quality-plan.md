@@ -227,15 +227,14 @@
 - `quality-evidence` recommended next slices now carry explicit
   `blocked_reason`,
   preconditions, completion evidence, and guardrails for the remaining external
-  blockers. This makes the next operator or scheduled-event pass executable
+  blockers. This makes the next operator-approved pass executable
   without changing the rule that native dialog dogfood remains pending until
   real operator-approved evidence exists.
-- The human `prompt-coach quality-evidence` output also renders external
-  evidence status, including scheduled patrol cron and next expected UTC check
-  time plus the native dialog approved-run requirement. The default blocker
-  list also prints each blocker `remaining_evidence` and blocker `next_action`,
-  so normal CLI use can drive the remaining external work without requiring
-  JSON parsing.
+- The human `prompt-coach quality-evidence` output renders the remaining
+  external evidence status directly: the native dialog approved-run
+  requirement. The default blocker list also prints blocker `remaining_evidence`
+  and blocker `next_action`, so normal CLI use can drive the remaining external
+  work without requiring JSON parsing.
 - PR #478 proved that installed CLI path on the default branch, so future
   agents can use the product CLI itself to decide whether 9.5 is still blocked
   before claiming completion.

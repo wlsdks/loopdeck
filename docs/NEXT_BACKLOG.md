@@ -427,7 +427,7 @@ Completed:
   actual outcome evidence alongside the stored prompt metadata
 
 Next work should come from fresh user-flow evidence, a real MCP tool/schema
-change, scheduled UI patrol evidence, or explicit operator-approved dogfood.
+change, or explicit operator-approved dogfood.
 
 ### 3. MCP Registry Follow-Up (only when registration changes)
 
@@ -518,12 +518,11 @@ Remaining scope:
   boundary.
 - Favor small hooks with focused tests over a broad `App.tsx` rewrite.
 
-### 7. UI Patrol Cron
+### 7. Local UI Patrol
 
-`ui-patrol` is now wired as a scheduled GitHub Actions workflow plus a local
-`pnpm ui-patrol` command. It reuses the synthetic browser E2E flow and stores
-desktop/mobile screenshot artifacts through `SCREENSHOT_DIR` so visual
-regressions remain visible across sessions.
+`ui-patrol` remains a local browser verification command. It reuses the
+synthetic browser E2E flow and stores desktop/mobile screenshot artifacts
+through `SCREENSHOT_DIR` so visual regressions remain visible across sessions.
 
 Operational checkpoint:
 
@@ -539,7 +538,6 @@ Operational checkpoint:
 
 Remaining scope:
 
-- Review the first scheduled artifact after it runs.
 - Add targeted visual assertions only when a real regression appears; keep the
   patrol broad and low-touch by default.
 

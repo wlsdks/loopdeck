@@ -1,5 +1,25 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Stale Scheduled UI Patrol Docs Cleanup
+
+- [x] CHECK: CI workflow removal 이후에도 9.5 plan의 현재 blocker 문단이
+  scheduled patrol cron과 next expected UTC를 언급해 다음 작업자를 잘못된
+  external blocker로 유도할 수 있었다.
+- [x] RED: packaging guard가 `## Remaining 9.5 blockers`에서
+  `scheduled patrol cron`, `next expected UTC`, `scheduled-event pass`,
+  `scheduled \`ui-patrol\`` 문구를 금지하도록 추가했고 기존 문서에서 실패했다.
+- [x] GREEN: 현행 9.5 plan/backlog 문구를 local `ui-patrol` 기준으로 정리하고
+  남은 external blocker를 native dialog approved dogfood만으로 유지했다.
+- [x] EFFECT: CI 제거 후 품질 판단과 다음 작업 큐가 다시 scheduled GitHub
+  Actions evidence로 되돌아가지 않는다.
+
+### 판단 기준
+
+- Historical audit entries may mention retired scheduled patrol work.
+- Current priority, remaining blocker, and required-slice sections must use
+  local `ui-patrol` and `dogfood:web-user-flow`.
+- Do not run native dialog dogfood without explicit operator approval.
+
 ## 2026-07-06 PromptLane CI Workflow Removal
 
 - [x] CHECK: 사용자가 CI는 없어도 된다고 명시했고, 남은 GitHub Actions 파일은
