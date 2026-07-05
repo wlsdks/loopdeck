@@ -7,6 +7,15 @@ function readJson<T>(path: string): T {
   return JSON.parse(readFileSync(join(process.cwd(), path), "utf8")) as T;
 }
 
+function sectionBetween(content: string, heading: string): string {
+  const start = content.indexOf(heading);
+  if (start === -1) {
+    return "";
+  }
+  const nextHeading = content.indexOf("\n## ", start + heading.length);
+  return content.slice(start, nextHeading === -1 ? undefined : nextHeading);
+}
+
 describe("plugin packaging files", () => {
   it("keeps pnpm build-script approvals in pnpm-workspace.yaml", () => {
     const packageJson = readJson<{
@@ -843,11 +852,20 @@ describe("plugin packaging files", () => {
       join(process.cwd(), "docs/LOOP-SNAPSHOT-SCHEMA.md"),
       "utf8",
     );
+    const todo = readFileSync(join(process.cwd(), "tasks/todo.md"), "utf8");
+    const todoSection = sectionBetween(
+      todo,
+      "## 2026-07-06 PromptLane Loop Snapshot MCP Branding",
+    );
 
     expect(loopSnapshotSchema).toContain(
       "PromptLane MCP loop tools may expose snapshot-derived status and briefs.",
     );
     expect(loopSnapshotSchema).not.toContain("Loopdeck MCP tools may expose");
+    expect(todoSection).toContain(
+      "PR #439가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인됐다.",
+    );
+    expect(todoSection).toContain("latest main CI run `28745956945`");
   });
 
   it("keeps CI setup actions on Node 24 compatible versions", () => {
