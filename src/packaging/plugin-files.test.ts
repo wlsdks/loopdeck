@@ -937,6 +937,9 @@ describe("plugin packaging files", () => {
     expect(packageJson.scripts["evidence:quality"]).toBe(
       "node scripts/quality-95-evidence.mjs",
     );
+    expect(releaseChecklist).toContain(
+      "corepack pnpm evidence:quality -- --require-complete",
+    );
     for (const content of [packageContents, releaseChecklist]) {
       expect(content).toContain("scripts/quality-95-evidence.mjs");
     }
@@ -950,6 +953,7 @@ describe("plugin packaging files", () => {
     expect(evidenceScript).toContain("promptlane_95_quality");
     expect(evidenceScript).toContain("scorecard_axes");
     expect(evidenceScript).toContain("below_target");
+    expect(evidenceScript).toContain("requireComplete");
     expect(evidenceScript).toContain("pending_operator_approval");
     expect(evidenceScript).toContain("Do not claim 9.5 completion");
   });

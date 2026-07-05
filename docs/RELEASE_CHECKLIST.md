@@ -29,6 +29,7 @@ Use this checklist before publishing a public beta or npm package.
 - [ ] `corepack pnpm benchmark -- --json`
 - [ ] `corepack pnpm e2e:browser`
 - [ ] `corepack pnpm smoke:release`
+- [ ] `corepack pnpm evidence:quality -- --require-complete`
 - [ ] `git diff --check`
 
 ## Package Contents

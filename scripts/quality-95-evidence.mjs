@@ -41,7 +41,7 @@ if (nativeDialog.status !== "complete") {
   });
 }
 
-print({
+const summary = {
   check: "promptlane_95_quality",
   status: blockers.length === 0 ? "complete" : "pending",
   proof_standard:
@@ -57,15 +57,26 @@ print({
     blockers.length === 0
       ? "Run the full release gate before claiming the long-running goal complete."
       : "Do not claim 9.5 completion while blockers remain pending.",
-});
+};
+
+print(summary);
+
+if (args.requireComplete && summary.status !== "complete") {
+  console.error(
+    `promptlane_95_quality pending: ${blockers.length} blocker(s) remain; --require-complete refuses to pass.`,
+  );
+  process.exitCode = 1;
+}
 
 function parseArgs(argv) {
-  const parsed = { uiPatrolJson: undefined };
+  const parsed = { uiPatrolJson: undefined, requireComplete: false };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === "--ui-patrol-json") {
       parsed.uiPatrolJson = argv[index + 1];
       index += 1;
+    } else if (arg === "--require-complete") {
+      parsed.requireComplete = true;
     }
   }
   return parsed;
