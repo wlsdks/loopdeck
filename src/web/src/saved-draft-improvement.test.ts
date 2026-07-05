@@ -25,6 +25,12 @@ describe("improvementFromSavedDraft", () => {
     expect(improvement.safety_notes).toEqual(["Manual resubmission only."]);
     expect(improvement.summary).toBe("Saved draft reopened for reuse.");
     expect(improvement.mode).toBe("saved-draft");
+    expect(improvement.expected_impact).toEqual({
+      original_score: improvement.expected_impact.improved_score,
+      improved_score: improvement.expected_impact.improved_score,
+      delta: 0,
+      changed_axis_count: 1,
+    });
   });
 
   it("normalizes unknown saved draft analyzers to the local rules analyzer", () => {

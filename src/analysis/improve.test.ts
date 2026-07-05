@@ -9,6 +9,21 @@ describe("improvePrompt", () => {
       createdAt: "2026-05-02T10:00:00.000Z",
     });
 
+    expect(result.expected_impact).toEqual(
+      expect.objectContaining({
+        original_score: expect.any(Number),
+        improved_score: expect.any(Number),
+        delta: expect.any(Number),
+        changed_axis_count: result.changed_sections.length,
+      }),
+    );
+    expect(result.expected_impact.improved_score).toBeGreaterThan(
+      result.expected_impact.original_score,
+    );
+    expect(result.expected_impact.delta).toBe(
+      result.expected_impact.improved_score -
+        result.expected_impact.original_score,
+    );
     expect(result.improved_prompt).toContain("Goal");
     expect(result.improved_prompt).toContain("Scope");
     expect(result.improved_prompt).toContain("Verification");
