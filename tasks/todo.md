@@ -3578,4 +3578,11 @@
 - [x] RED: Add a focused CLI help-copy test requiring root `prompt-coach --help` to present Loopdeck as an agent loop memory and meta-prompting workbench while preserving the `prompt-coach` command id.
 - [x] GREEN: Update the root CLI description to the Loopdeck workbench positioning for Codex and Claude Code.
 - [x] VERIFY: Focused test, full test/lint/build, pack dry-run, and diff check passed.
+- [x] INTEGRATE: PR #373 was merged to `main`; branch was pruned.
+
+## 2026-07-05 PromptLane Repositioning Design
+
+- [x] RED: Add a focused packaging/docs drift test requiring a PromptLane repositioning spec before replacing Loopdeck branding.
+- [x] GREEN: Add `docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md` with PromptLane product naming, Loopdeck rejection, prompt improvement first positioning, compatibility rules, migration slices, TDD guard requirements, and package inclusion.
+- [x] VERIFY: Focused test, placeholder/path scan, full test/lint/build, pack dry-run, and diff check passed.
 - [ ] INTEGRATE: Push one coherent PR, merge it after CI, and prune the branch.
