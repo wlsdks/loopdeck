@@ -75,7 +75,7 @@ Verified CI and operational evidence:
 - PR #364 moved loop read routes onto the shared storage capability guard, so
   missing loop snapshot, compact boundary, memory, or merge-decision storage
   fails with one raw-free local configuration problem instead of an empty
-  Loopdeck status.
+  PromptLane status.
 - PR #365 clarified the saved-draft clipboard fallback message and verified the
   real Codex in-app Browser clipboard failure path without exposing the fake
   token or temporary local path used in the reuse pass.
