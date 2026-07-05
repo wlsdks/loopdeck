@@ -53,6 +53,11 @@ const summary = {
     native_dialog_approved_dogfood: nativeDialog,
   },
   blockers,
+  recommended_next_slices: recommendedNextSlices({
+    scorecardAxes,
+    uiPatrol,
+    nativeDialog,
+  }),
   next_action:
     blockers.length === 0
       ? "Run the full release gate before claiming the long-running goal complete."
@@ -143,6 +148,74 @@ function readScorecardAxes() {
     .filter((line) => !line.includes("---"))
     .map(parseScorecardRow)
     .filter(Boolean);
+}
+
+function recommendedNextSlices({ scorecardAxes, uiPatrol, nativeDialog }) {
+  const axesById = new Map(scorecardAxes.map((axis) => [axis.id, axis]));
+  const slices = [];
+
+  if (axesById.get("web_ui_and_operational_evidence")?.status !== "meets_target") {
+    slices.push({
+      id: "web_user_flow_current_main_evidence",
+      axis: "web_ui_and_operational_evidence",
+      priority: 1,
+      blocked_by_external_event: false,
+      command: "corepack pnpm dogfood:web-user-flow",
+      expected_effect:
+        "Refresh real PromptLane web workflow evidence before treating UI quality as current.",
+    });
+  }
+
+  if (axesById.get("local_first_privacy_boundary")?.status !== "meets_target") {
+    slices.push({
+      id: "privacy_raw_free_regression_sweep",
+      axis: "local_first_privacy_boundary",
+      priority: 2,
+      blocked_by_external_event: false,
+      command: "corepack pnpm test -- src/security src/hooks src/mcp",
+      expected_effect:
+        "Reconfirm raw-free local-first boundaries across the highest-risk agent surfaces.",
+    });
+  }
+
+  if (axesById.get("codex_and_claude_code_integration")?.status !== "meets_target") {
+    slices.push({
+      id: "codex_claude_setup_smoke_refresh",
+      axis: "codex_and_claude_code_integration",
+      priority: 3,
+      blocked_by_external_event: false,
+      command: "corepack pnpm smoke:agent-setup",
+      expected_effect:
+        "Refresh Codex and Claude Code setup evidence without opening provider CLIs.",
+    });
+  }
+
+  if (uiPatrol.status !== "complete") {
+    slices.push({
+      id: "scheduled_ui_patrol_cron_review",
+      axis: "web_ui_and_operational_evidence",
+      priority: 90,
+      blocked_by_external_event: true,
+      command: "corepack pnpm evidence:ui-patrol",
+      expected_effect:
+        "Verify the first real scheduled screenshot artifact after GitHub cron runs.",
+    });
+  }
+
+  if (nativeDialog.status !== "complete") {
+    slices.push({
+      id: "native_dialog_operator_dogfood",
+      axis: "codex_and_claude_code_integration",
+      priority: 100,
+      blocked_by_external_event: true,
+      command:
+        "PROMPT_COACH_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved",
+      expected_effect:
+        "Prove the real native ask UI handoff only after explicit operator approval.",
+    });
+  }
+
+  return slices;
 }
 
 function parseScorecardRow(line) {

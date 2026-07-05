@@ -1,5 +1,26 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Quality Evidence Recommended Next Slices
+
+- [x] CHECK: `prompt-coach quality-evidence`는 9.5 blocker를 보여주지만,
+  바로 실행 가능한 다음 작업과 cron/명시 승인처럼 외부 조건이 필요한 작업을
+  구분하지 않았다.
+- [x] RED: quality evidence JSON에 `recommended_next_slices`가 없고 CLI text에
+  recommended next slices 섹션이 없어 focused tests가 실패해야 한다.
+- [x] GREEN: quality evidence JSON과 CLI text가
+  `web_user_flow_current_main_evidence`를 첫 번째 unblocked local evidence
+  action으로 제안하고, scheduled UI patrol/native dialog dogfood는
+  `blocked_by_external_event: true`로 분리한다.
+- [x] EFFECT: future agents can keep improving toward 9.5 without pretending
+  externally gated evidence is complete or guessing the next useful local slice.
+
+### 판단 기준
+
+- Recommended slices must not mark scheduled `ui-patrol` or native-dialog
+  dogfood complete.
+- The first recommendation must be locally runnable and evidence-producing.
+- Text output must stay raw-free and avoid prompt bodies, raw paths, and tokens.
+
 ## 2026-07-06 PromptLane Quality Evidence CLI Ledger Refresh
 
 - [x] CHECK: PR #478로 installed CLI `prompt-coach quality-evidence`가

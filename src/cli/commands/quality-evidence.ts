@@ -14,6 +14,13 @@ type QualityEvidenceSummary = {
   status: string;
   scorecard_axes: unknown[];
   blockers: Array<{ id: string; status: string; next_action?: string }>;
+  recommended_next_slices?: Array<{
+    id: string;
+    priority: number;
+    blocked_by_external_event: boolean;
+    command: string;
+    expected_effect: string;
+  }>;
   next_action: string;
 };
 
@@ -87,6 +94,13 @@ function formatSummary(summary: QualityEvidenceSummary): string {
           (blocker) => `- ${blocker.id}: ${blocker.status}`,
         )
       : ["- none"];
+  const recommendedRows =
+    summary.recommended_next_slices && summary.recommended_next_slices.length > 0
+      ? summary.recommended_next_slices.map(
+          (slice) =>
+            `- ${slice.priority}. ${slice.id} (external event: ${slice.blocked_by_external_event ? "yes" : "no"}) ${slice.command} - ${slice.expected_effect}`,
+        )
+      : ["- none"];
 
   return [
     "PromptLane 9.5 quality evidence",
@@ -96,6 +110,9 @@ function formatSummary(summary: QualityEvidenceSummary): string {
     "",
     "Blockers",
     ...blockerRows,
+    "",
+    "Recommended next slices",
+    ...recommendedRows,
     "",
     `Next action: ${summary.next_action}`,
     "",

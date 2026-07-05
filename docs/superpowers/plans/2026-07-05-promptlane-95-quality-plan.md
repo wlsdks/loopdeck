@@ -154,6 +154,10 @@
   JSON directly. Installed CLI users can run
   `prompt-coach quality-evidence --json` or
   `prompt-coach quality-evidence --require-complete`.
+  The JSON includes `recommended_next_slices`; `web_user_flow_current_main_evidence`
+  is the first unblocked local evidence action, while scheduled cron review and
+  native dialog dogfood stay marked as externally blocked until their event or
+  explicit approval exists.
 - PR #478 proved that installed CLI path on the default branch; main CI run
   `28753458359` passed Node 22 and Node 24 after merge, so future agents can use
   the product CLI itself to decide whether 9.5 is still blocked before claiming
