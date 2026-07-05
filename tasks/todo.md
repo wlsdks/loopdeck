@@ -1,12 +1,26 @@
 # 작업 계획
 
+## 2026-07-05 PromptLane Instruction Contract
+
+- [x] RED: AGENTS.md/CLAUDE.md/harness/instruction docs가 PromptLane product contract와 Loopdeck legacy allowlist를 함께 라우팅하지 않으면 packaging test가 실패하도록 고정했다.
+- [x] GREEN: AGENTS.md와 instruction layering docs가 `docs/LOOPDECK-LEGACY-SURFACES.md`를 직접 안내한다.
+- [x] VERIFY: focused packaging test와 full gate를 통과한다.
+- [ ] INTEGRATE: 변경을 커밋, 푸시, PR, CI 확인 후 merge하고 branch를 정리한다.
+
+### 판단 기준
+
+- AGENTS.md는 repo-level source of truth로 짧게 유지하고 deeper docs로 라우팅한다.
+- CLAUDE.md는 Claude Code 전용 차이만 남기고 AGENTS.md를 먼저 읽게 한다.
+- Codex/Claude harness 판단은 `docs/AGENT-HARNESS.md`와 PromptLane product contract를 함께 따른다.
+- 새 `Loopdeck`/`loopdeck` 문자열은 legacy surface allowlist 기준으로 분류한다.
+
 ## 2026-07-05 PromptLane Repository Surface Audit
 
 - [x] CHECK: GitHub canonical repository, local origin, README, package metadata, Claude/Codex plugin metadata가 `wlsdks/promptlane`과 `PromptLane`을 쓰는지 확인했다.
 - [x] RED: loop continuation brief가 product-facing `Loopdeck` wording을 노출하면 focused test와 packaging guard가 실패하도록 고정했다.
 - [x] GREEN: continuation brief의 user-facing snapshot copy를 `PromptLane` 기준으로 수정한다.
 - [x] VERIFY: focused tests, full test/lint/build, pack dry-run, diff check를 통과한다.
-- [ ] INTEGRATE: 변경을 커밋, 푸시, PR, CI 확인 후 merge하고 branch를 정리한다.
+- [x] INTEGRATE: PR #394가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
 ### 판단 기준
 
