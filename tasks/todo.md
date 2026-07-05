@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-06 Codex Duplicate Hook Recovery Copy
+
+- [x] CHECK: `install-hook codex` already deduplicates same-file PromptLane hooks, but `doctor codex` still gives generic duplicate removal guidance that is less useful for same-file duplicate `UserPromptSubmit` output.
+- [x] RED: focused doctor test must fail until duplicate Codex hook next steps tell the user to rerun `prompt-coach install-hook codex` for same-file normalization.
+- [x] GREEN: doctor duplicate hook recovery copy points to the idempotent install-hook cleanup path while preserving manual user/project duplicate guidance.
+- [x] EFFECT: the focused doctor test proves rerunning `install-hook codex` removes same-file duplicate `UserPromptSubmit` handlers and returns `doctor codex` to ready state.
+- [ ] VERIFY: focused doctor test, full local gate, PR CI, latest main CI, and branch prune all pass.
+- [ ] INTEGRATE: PR is merged after CI and the temporary branch is pruned locally and remotely.
+
+### 판단 기준
+
+- `doctor codex` should explain how to stop duplicate `UserPromptSubmit` hook context output.
+- recovery copy should remain raw-free and should not expose local paths, prompt text, or tokens.
+- no automatic config mutation happens from doctor.
+
 ## 2026-07-06 Codex Same-File Duplicate Hook Doctor
 
 - [x] CHECK: `doctor codex` detects duplicate PromptLane hooks across user/project sources, but same-file duplicate `UserPromptSubmit` hook groups can still create duplicate hook context output without being diagnosed.

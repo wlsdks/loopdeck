@@ -224,7 +224,10 @@ function doctorNextSteps(
     (result as DoctorCodexResult).settings.duplicateHooks
   ) {
     steps.push(
-      "Remove the duplicate Codex hook from either user or project config.",
+      "Run prompt-coach install-hook codex to normalize duplicate hooks in the same Codex hooks file.",
+    );
+    steps.push(
+      "If Codex hook sources still show both user and project, remove one PromptLane hook registration manually.",
     );
   }
   if (result.lastIngestStatus && !result.lastIngestStatus.ok) {
