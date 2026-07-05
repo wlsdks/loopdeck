@@ -329,6 +329,21 @@ try {
     "Average archive score",
     "Dashboard should show average archive score after opening Archive score review.",
   );
+  await assertText(
+    page,
+    "Effectiveness evidence",
+    "Dashboard should show archive-level prompt effectiveness evidence.",
+  );
+  await assertText(
+    page,
+    "measured 1 / unmeasured 1",
+    "Dashboard should show measured vs unmeasured prompt effectiveness coverage.",
+  );
+  await assertText(
+    page,
+    "Link recent prompts to loop outcomes before claiming archive-wide effectiveness.",
+    "Dashboard should show the archive effectiveness next action.",
+  );
   await assertChartVisible(page, "dashboard", 1);
   await assertBrowserSafe(page, "dashboard");
   await captureScreenshot(page, "dashboard-desktop");

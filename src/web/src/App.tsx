@@ -68,6 +68,7 @@ import {
 import { CoachFeedbackPanel } from "./coach-feedback-panel.js";
 import { createPromptHabitCoach } from "./habit-coach.js";
 import { HabitCoachPanel } from "./habit-coach-panel.js";
+import "./archive-effectiveness-summary.css";
 import {
   LoopsView,
   type CommandCenterBriefSelection,
@@ -1965,6 +1966,51 @@ function ArchiveScoreReviewPanel({
           <div className="archive-distribution" aria-label="Score distribution">
             <h3>Score distribution</h3>
             <ScoreDistributionChart distribution={report.distribution} />
+          </div>
+          <div
+            className="archive-effectiveness-summary"
+            aria-label="Effectiveness evidence"
+          >
+            <h3>Effectiveness evidence</h3>
+            <div className="archive-effectiveness-grid">
+              <span>
+                <strong>
+                  measured {report.effectiveness_summary.measured_prompts} /
+                  unmeasured {report.effectiveness_summary.unmeasured_prompts}
+                </strong>
+                <small>prompt outcome coverage</small>
+              </span>
+              <span>
+                <strong>
+                  proven {report.effectiveness_summary.verdicts.proven} /
+                  mixed {report.effectiveness_summary.verdicts.mixed}
+                </strong>
+                <small>actual loop verdicts</small>
+              </span>
+              <span>
+                <strong>
+                  {report.effectiveness_summary.calibration.linked_outcomes}
+                </strong>
+                <small>linked outcomes</small>
+              </span>
+              <span>
+                <strong>
+                  {report.effectiveness_summary.calibration.total_tests_run}
+                </strong>
+                <small>tests run</small>
+              </span>
+            </div>
+            <p>{report.effectiveness_summary.next_action}</p>
+            {report.effectiveness_summary.top_evidence_refs.length > 0 && (
+              <div
+                className="archive-effectiveness-refs"
+                aria-label="Archive effectiveness refs"
+              >
+                {report.effectiveness_summary.top_evidence_refs.map((ref) => (
+                  <code key={ref}>{ref}</code>
+                ))}
+              </div>
+            )}
           </div>
           <div className="archive-gaps">
             <h3>Top quality gaps</h3>
