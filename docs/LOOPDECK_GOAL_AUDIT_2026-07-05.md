@@ -24,7 +24,7 @@ Verified repository state:
 - Runtime compatibility IDs: package, CLI, hook command, Claude Code slash
   namespace, and canonical MCP server remain `prompt-coach`
 - Latest merged main commit at audit time:
-  `5da9006 fix: prevent duplicate saved draft saves (#368)`
+  `f384240 docs: close stale mcp coach loop followups (#371)`
 - Open PRs at audit time: none
 - Local and remote `main` matched at audit time
 
@@ -88,6 +88,13 @@ Verified CI and operational evidence:
 - PR #368 disabled duplicate save for reopened saved drafts with `Already
   saved` copy and browser E2E coverage, so reopening a stored draft does not
   create another saved-draft row.
+- PR #369 added a docs drift guard so the Loopdeck goal audit and next backlog
+  keep citing the saved-draft reuse work from PR #366 through PR #368.
+- PR #370 closed the stale reuse audit next slice and now requires fresh
+  user-flow evidence before opening more reuse-flow work.
+- PR #371 closed the stale MCP coach-loop docs/smoke follow-ups after
+  `apply_clarifications` and `smoke:mcp-coach-loop` were documented and
+  shipped; only the approval-gated native ask UI dogfood remains.
 - `ui-patrol` workflow_dispatch run `28717201110` failed before #341 because
   the GitHub runner did not have Chromium installed.
 - `ui-patrol` workflow_dispatch run `28717406758` succeeded after #341.
@@ -117,8 +124,8 @@ Verified CI and operational evidence:
 | Loop data model | Loop snapshot and memory schema contracts exist and runtime slices have landed. | `docs/LOOP-SNAPSHOT-SCHEMA.md`, loop CLI/MCP/web implementation, status and selected worktree slices | Satisfied for MVP loop metadata model |
 | Privacy/local-first boundary | Prompt bodies stay in redacted archive; loop surfaces are raw-free; write paths are explicit. | `docs/LOOPDECK.md`, storage/server/MCP tests, route capability guard cleanup, MCP smoke audits | Satisfied for implemented paths |
 | AGENTS.md/CLAUDE.md/harness docs | Cross-agent and Claude-specific instruction boundaries are separated. | `AGENTS.md`, `CLAUDE.md`, `docs/INSTRUCTION-FILES.md`, `docs/AGENT-HARNESS.md` | Satisfied for current compatibility window |
-| Technical risk handling | Storage capability guard work, CI UI patrol evidence, dependency security cleanup, pnpm build-approval settings, package dry-run lifecycle stabilization, release/README checklist drift guards, Codex hook de-duplication, and reuse fallback E2E plus in-app Browser coverage reduced known reliability gaps. | ADR 0002, PR #340, PR #341, PR #345, PR #346, PR #357, PR #359, PR #361, PR #362, PR #363, PR #364, PR #365, PR #366, PR #367, PR #368, `docs/NEXT_BACKLOG.md` | Active and improving |
-| TDD implementation slices | Recent slices used focused RED tests, local gates, PR CI, and squash merges. | PR #340 through #368 tests/CI; `tasks/todo.md` | Satisfied for recent slices |
+| Technical risk handling | Storage capability guard work, CI UI patrol evidence, dependency security cleanup, pnpm build-approval settings, package dry-run lifecycle stabilization, release/README checklist drift guards, Codex hook de-duplication, reuse fallback E2E plus in-app Browser coverage, and audit drift guards reduced known reliability gaps. | ADR 0002, PR #340, PR #341, PR #345, PR #346, PR #357, PR #359, PR #361, PR #362, PR #363, PR #364, PR #365, PR #366, PR #367, PR #368, PR #369, PR #370, PR #371, `docs/NEXT_BACKLOG.md` | Active and improving |
+| TDD implementation slices | Recent slices used focused RED tests, local gates, PR CI, and squash merges. | PR #340 through #371 tests/CI; `tasks/todo.md` | Satisfied for recent slices |
 | Reuse copy fallback | Clipboard-write failure now opens a local manual-copy fallback instead of leaving the user at a dead end, including the real Codex in-app Browser clipboard failure mode. | `src/web/src/App.tsx`, `src/web/src/prompt-detail-view.test.ts`, `scripts/browser-e2e.mjs`, `corepack pnpm e2e:browser`, fresh Codex in-app Browser pass | Satisfied for automated and manual in-app Browser coverage |
 | Reuse saved draft workflow | Saved drafts can be reopened as the current coach draft so the operator can reuse the same copy/manual-fallback controls without auto-submitting to an agent; reopened rows show `Saved draft` and disable duplicate saves with `Already saved`. | `src/web/src/saved-draft-improvement.ts`, `src/web/src/improvement-mode-label.ts`, `src/web/src/improvement-save-state.ts`, `src/web/src/prompt-detail-view.tsx`, `scripts/browser-e2e.mjs` | Satisfied for current reuse flow |
 | UI patrol scheduled artifact | Manual workflow dispatch is verified; first scheduled cron artifact has not occurred yet. | Run `28717406758`; `.github/workflows/ui-patrol.yml` cron | Not yet complete as a scheduled-run requirement |

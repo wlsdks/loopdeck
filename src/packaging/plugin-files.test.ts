@@ -498,6 +498,33 @@ describe("plugin packaging files", () => {
     expect(mcpAudit).not.toContain("Add a future small smoke harness");
   });
 
+  it("keeps the Loopdeck goal audit and backlog aligned with latest merged evidence", () => {
+    const goalAudit = readFileSync(
+      join(process.cwd(), "docs/LOOPDECK_GOAL_AUDIT_2026-07-05.md"),
+      "utf8",
+    );
+    const backlog = readFileSync(
+      join(process.cwd(), "docs/NEXT_BACKLOG.md"),
+      "utf8",
+    );
+
+    expect(goalAudit).toContain(
+      "`f384240 docs: close stale mcp coach loop followups (#371)`",
+    );
+    for (const prNumber of ["#369", "#370", "#371"]) {
+      expect(goalAudit).toContain(`PR ${prNumber}`);
+      expect(backlog).toContain(`PR ${prNumber}`);
+    }
+    expect(backlog).toMatch(/No\s+immediate MCP coach-loop slice remains/);
+    expect(backlog).toMatch(/No\s+immediate reuse-flow slice remains/);
+    expect(backlog).not.toContain(
+      "Update MCP instructions/docs so agents call `apply_clarifications`",
+    );
+    expect(backlog).not.toContain(
+      "Immediate follow-up from the stdio audit",
+    );
+  });
+
   it("documents /loopdeck:* as a future alias-only slash namespace without shipping command files yet", () => {
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");

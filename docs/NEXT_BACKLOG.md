@@ -74,6 +74,13 @@ Current goal audit:
   missing loop snapshot, compact boundary, memory, or merge-decision storage
   fails with one raw-free local configuration problem instead of an empty
   Loopdeck status.
+- PR #369 added a docs drift guard so the Loopdeck goal audit and next backlog
+  continue citing the saved-draft reuse flow after PR #366 through PR #368.
+- PR #370 closed the stale reuse audit next slice; no immediate reuse-flow
+  slice remains until fresh user-flow evidence creates one.
+- PR #371 closed the stale MCP coach-loop docs/smoke follow-ups; no immediate
+  MCP coach-loop slice remains outside the approval-gated native ask UI
+  dogfood.
 
 Decision:
 
@@ -174,13 +181,13 @@ flows feel right end to end. Two quick passes are worth scheduling before
 investing in more refactors:
 
 - **MCP coach loop audit**: first stdio MCP audit completed in
-  `docs/MCP_COACH_LOOP_AUDIT_2026-07-05.md`. The flow works locally, but the
-  canonical path should be documented as `score_prompt` -> `improve_prompt` ->
-  ask user -> `apply_clarifications` -> optional `record_clarifications`.
-  Safe native-dialog preflight and MCP elicitation smoke completed in
-  `docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md`. Remaining follow-up: one
-  operator-approved interactive Claude Code or Codex session to verify the
-  real native ask UI handoff.
+  `docs/MCP_COACH_LOOP_AUDIT_2026-07-05.md`. The canonical path is now
+  documented as `score_prompt` -> `improve_prompt` -> ask user ->
+  `apply_clarifications` -> optional `record_clarifications`, and
+  `smoke:mcp-coach-loop` repeats that path over the real stdio MCP server. No
+  immediate MCP coach-loop slice remains. The remaining validation is one
+  operator-approved interactive Claude Code or Codex session to verify the real
+  native ask UI handoff.
 - **Reuse loop audit**: first in-app Browser audit completed in
   `docs/REUSE_LOOP_AUDIT_2026-07-05.md`. Search, detail, and save-draft reuse
   worked; the original `Copy draft` clipboard failure now has a local-only
@@ -197,15 +204,7 @@ These are user-perspective tasks rather than refactors. They should run in
 a fresh session with the explicit role of "user trying to do work" rather
 than "engineer touching code."
 
-Immediate follow-up from the stdio audit:
-
-- Update MCP instructions/docs so agents call `apply_clarifications` before
-  `record_clarifications` when they need to show the final draft in-chat.
-- Repeatable `smoke:mcp-coach-loop` harness now seeds a temporary archive and
-  verifies `score_prompt` -> `improve_prompt` -> `apply_clarifications` ->
-  optional `record_clarifications` over the real stdio MCP server.
-
-Immediate follow-up from the reuse audit:
+Current state from the reuse audit:
 
 - Prompt-detail copy-failure fallback landed: when draft clipboard writes are
   unavailable, the detail page shows a local manual-copy textarea for the
@@ -216,6 +215,8 @@ Immediate follow-up from the reuse audit:
 - The Codex in-app Browser pass now verifies the same fallback against the real
   clipboard bridge failure mode and keeps fake token/path content out of the
   visible archive, detail, and fallback states.
+- No immediate reuse-flow slice remains. Future reuse work should wait for
+  fresh user-flow evidence instead of re-opening the closed audit by default.
 - Keep auto-submit out of scope; copy/fallback must remain local and
   approval-gated.
 
