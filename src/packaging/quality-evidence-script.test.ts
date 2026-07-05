@@ -89,6 +89,8 @@ describe("quality 9.5 evidence script", () => {
         preconditions?: string[];
         completion_evidence?: string[];
         guardrails?: string[];
+        blocked_reason?: string;
+        available_after_utc?: string;
       }>;
       next_action: string;
     };
@@ -286,6 +288,8 @@ describe("quality 9.5 evidence script", () => {
         expect.objectContaining({
           id: "scheduled_ui_patrol_cron_review",
           blocked_by_external_event: true,
+          blocked_reason: "waiting_for_next_cron",
+          available_after_utc: "2026-07-06T06:17:00.000Z",
           preconditions: expect.arrayContaining([
             "A real GitHub Actions schedule event exists for ui-patrol.yml.",
           ]),
@@ -300,6 +304,7 @@ describe("quality 9.5 evidence script", () => {
         expect.objectContaining({
           id: "native_dialog_operator_dogfood",
           blocked_by_external_event: true,
+          blocked_reason: "operator_approval_required",
           preconditions: expect.arrayContaining([
             "The operator explicitly approves opening a native OS dialog.",
           ]),
