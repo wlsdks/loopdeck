@@ -1,5 +1,27 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Native Dialog Operator Brief
+
+- [x] CHECK: 남은 9.5 blocker는 승인형 native dialog dogfood뿐인데,
+  일반 `quality-evidence` 출력은 전체 summary가 길어 operator가 실행 전
+  확인해야 할 승인 조건, command, completion evidence, guardrail만 바로
+  보기 어려웠다.
+- [x] RED: `src/cli/commands/quality-evidence.test.ts`가
+  `qualityEvidenceForCli({ operatorBrief: true })`에 focused native dialog
+  operator brief를 요구했고 기존 formatter가 전체 summary를 반환해 실패했다.
+- [x] GREEN: `prompt-coach quality-evidence --operator-brief`를 추가해 현재
+  approval status, command, preconditions, completion evidence, guardrails,
+  그리고 dogfood를 실행하지 않는 result boundary를 출력한다.
+- [x] EFFECT: 명시 승인 없이는 native dialog를 열지 않는 정책을 유지하면서,
+  승인자가 남은 blocker를 안전하게 해소할 때 필요한 실행 brief를 제품 CLI에서
+  바로 확인할 수 있다.
+
+### 판단 기준
+
+- `--operator-brief` must not run the native dialog dogfood.
+- It must not mark `native_dialog_approved_dogfood` complete.
+- Output must stay local-only, raw-free, and free of absolute paths.
+
 ## 2026-07-06 PromptLane Native Dialog Approval Evidence Clarity
 
 - [x] CHECK: `quality-evidence` JSON의 recommended next slice는 native dialog
