@@ -235,6 +235,8 @@ function formatOperatorBrief(summary: QualityEvidenceSummary): string {
       ? [`approval_status=${nativeDialog.approval_status}`]
       : []),
     ...(slice?.command ? [`Command: ${slice.command}`] : []),
+    "Refusal preflight: corepack pnpm dogfood:mcp-native-dialog-approved",
+    "Expected refusal: command refuses before opening a native dialog unless PROMPT_COACH_NATIVE_DIALOG_APPROVED=1 is set.",
     ...(slice?.preconditions && slice.preconditions.length > 0
       ? [`Preconditions: ${slice.preconditions.join("; ")}`]
       : []),
