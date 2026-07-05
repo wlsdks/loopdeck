@@ -5,7 +5,7 @@
 - [x] RED: `docs/PROMPTLANE.md`가 데이터 모델과 privacy/local-first 경계를 명시하지 않으면 packaging test가 실패하도록 고정했다.
 - [x] GREEN: PromptLane product contract에 redacted Markdown archive, SQLite/FTS, loop snapshots, approved memories, instruction patch proposals, storage capability registry의 역할과 boundary를 추가했다.
 - [x] VERIFY: focused packaging test와 full gate를 통과한다.
-- [ ] INTEGRATE: 변경을 커밋, 푸시, PR, CI 확인 후 merge하고 branch를 정리한다.
+- [x] INTEGRATE: PR #399가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
 ### 판단 기준
 
