@@ -6,7 +6,7 @@
 - [x] RED: `smoke:agent-setup`, `scripts/agent-setup-smoke.mjs`, AGENT-HARNESS/PACKAGE_CONTENTS 연결이 없으면 packaging test가 실패하도록 고정했다.
 - [x] GREEN: 격리 HOME/PATH/data-dir에서 fake `claude`/`codex`를 감지시키고 setup dry-run, real setup, `doctor claude-code`, `doctor codex`를 실행하는 local-only smoke를 추가했다.
 - [x] VERIFY: focused packaging test, `node scripts/agent-setup-smoke.mjs`, full gate를 통과한다.
-- [ ] INTEGRATE: PR CI `test (22)`/`test (24)` 통과 후 merge하고 branch prune까지 확인한다.
+- [x] INTEGRATE: PR #407이 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
 ### 판단 기준
 
