@@ -6,7 +6,7 @@
 - [x] RED: packaging guard must fail while `better-sqlite3` remains on 11.x and no `prebuild-install@7.1.3` patch replaces deprecated permission constants.
 - [x] GREEN: `better-sqlite3` now targets the npm-published 12.x line and `prebuild-install@7.1.3` is patched through pnpm to use `fs.constants.R_OK` and `fs.constants.W_OK`.
 - [x] VERIFY: `NODE_OPTIONS=--trace-deprecation corepack pnpm rebuild better-sqlite3` completes without `fs.R_OK`, `DEP0176`, or `DeprecationWarning` output.
-- [ ] INTEGRATE: focused guard, full local gate, PR CI, latest main CI warning check, merge, and branch prune all pass.
+- [x] INTEGRATE: PR #427이 focused guard, full local gate, PR CI, latest main CI run `28744263539` warning check, merge, and branch prune까지 통과했다.
 
 ### 판단 기준
 
