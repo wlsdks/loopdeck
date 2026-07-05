@@ -1,5 +1,26 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Web Archive Effectiveness Summary
+
+- [x] CHECK: archive-level `effectiveness_summary`는 CLI/MCP/API에
+  연결됐지만, Dashboard의 Archive score review에는 아직 보이지 않아 실제
+  사용자가 웹에서 효과 판단을 하기 어려웠다.
+- [x] RED: browser E2E가 `Effectiveness evidence`, measured/unmeasured
+  coverage, next action을 Dashboard에서 찾지 못해 실패해야 한다.
+- [x] GREEN: Archive score review now renders measured vs unmeasured prompt
+  effectiveness, proven/mixed verdict counts, linked outcomes, tests run, safe
+  evidence refs, and review-first next action.
+- [x] EFFECT: web users can judge whether archive prompt improvements are
+  backed by actual loop outcomes without opening CLI JSON, MCP output, or one
+  prompt detail page.
+
+### 판단 기준
+
+- The UI must use the existing archive score report payload; no extra network
+  waterfall.
+- The block must remain compact and wrap-safe in the existing dashboard grid.
+- Browser E2E must prove the evidence block is visible and raw-free.
+
 ## 2026-07-06 PromptLane Archive Effectiveness Summary
 
 - [x] CHECK: 개별 prompt `effectiveness` verdict는 CLI/MCP/Web에 있지만,

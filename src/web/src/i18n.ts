@@ -751,6 +751,21 @@ const UI_TRANSLATIONS: Record<string, string> = {
   "No archive score report yet.": "아직 아카이브 점수 리포트가 없습니다.",
   "Average archive score": "평균 아카이브 점수",
   "Score distribution": "점수 분포",
+  "Effectiveness evidence": "효과성 증거",
+  "prompt outcome coverage": "프롬프트 outcome 적용 범위",
+  "actual loop verdicts": "실제 loop 판정",
+  "linked outcomes": "연결된 outcome",
+  "tests run": "실행된 테스트",
+  "Record loop outcomes to prove whether prompt improvements help.":
+    "프롬프트 개선이 실제로 도움이 되는지 증명하려면 loop outcome을 기록하세요.",
+  "Review mixed outcomes before treating prompt improvements as proven.":
+    "프롬프트 개선이 입증됐다고 보기 전에 mixed outcome을 먼저 검토하세요.",
+  "Link recent prompts to loop outcomes before claiming archive-wide effectiveness.":
+    "archive 전체 효과를 주장하기 전에 최근 프롬프트를 loop outcome에 연결하세요.",
+  "Keep using proven prompt patterns and continue collecting outcome evidence.":
+    "입증된 프롬프트 패턴을 계속 사용하면서 outcome evidence를 더 수집하세요.",
+  "Add passing evidence before treating prompt improvements as effective.":
+    "프롬프트 개선을 효과적이라고 보기 전에 passing evidence를 추가하세요.",
   "Top quality gaps": "주요 부족 항목",
   "Practice plan": "연습 계획",
   "Copy this into your next Claude Code or Codex request.":

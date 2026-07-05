@@ -99,6 +99,11 @@
   `score_prompt_archive`, so agents can judge measured vs unmeasured archive
   prompts, proven/mixed/unproven verdict counts, linked outcomes, tests run,
   safe evidence refs, and next action without prompt bodies or raw paths.
+- The web archive effectiveness summary slice renders the same
+  `effectiveness_summary` in the Dashboard Archive score review and extends the
+  browser E2E flow to prove users can see measured vs unmeasured coverage,
+  proven/mixed verdict counts, linked outcomes, tests run, and next action in a
+  raw-free web workflow.
 - `docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md` records current
   `corepack pnpm smoke:release` and `corepack pnpm pack:dry-run` evidence for
   the local-first release path.
@@ -118,7 +123,8 @@
   open a native dialog.
 - Fresh user-flow, expected-impact, prompt-linked outcome evidence, CLI prompt
   outcome evidence, prompt effectiveness verdict evidence, effectiveness
-  calibration evidence, and archive-level effectiveness summary are now
+  calibration evidence, archive-level effectiveness summary, and web archive
+  effectiveness summary are now
   repeatable through `dogfood:web-user-flow`, browser E2E, focused
   CLI/storage/web tests, and `corepack pnpm ui-patrol`. MCP score_prompt
   effectiveness evidence is now proven on the default branch through PR #462,

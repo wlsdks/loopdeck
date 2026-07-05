@@ -208,6 +208,11 @@ Decision:
   unmeasured prompts, proven/mixed/unproven verdicts, linked outcomes, tests
   run, safe evidence refs, and next action before claiming prompt improvement
   is actually working.
+- Web archive effectiveness summary is the landed user-facing follow-up: the
+  Dashboard Archive score review renders that same `effectiveness_summary`, and
+  browser E2E now asserts measured vs unmeasured coverage plus the review-first
+  next action so web users can judge effect without switching to CLI JSON or
+  MCP output.
 
 Rationale:
 
