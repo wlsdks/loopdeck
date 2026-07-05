@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-05 PromptLane Feature Portfolio Contract
+
+- [x] RED: `docs/PROMPTLANE.md`가 Keep/Improve/Build Next/Defer/Reject 기능 결정을 명시하지 않으면 packaging test가 실패하도록 고정했다.
+- [x] GREEN: PromptLane product contract의 Feature Portfolio를 결정 기준과 함께 유지/개선/신규/보류/거부 matrix로 보강했다.
+- [x] VERIFY: focused packaging test와 full gate를 통과한다.
+- [ ] INTEGRATE: 변경을 커밋, 푸시, PR, CI 확인 후 merge하고 branch를 정리한다.
+
+### 판단 기준
+
+- 기존 prompt capture, Markdown archive, SQLite/FTS, deterministic scoring, setup/status/hook/smoke command는 유지한다.
+- Codex/Claude setup guidance, selected continuation brief, user-approved memory/instruction patch workflow는 개선한다.
+- storage capability negotiation과 capability-aware MCP setup/status는 다음 신규 slice 후보로 둔다.
+- semantic vector memory, cloud/team sync, background cron collection은 명시적으로 보류한다.
+- hidden external LLM calls, automatic prompt resubmission, automatic merge/rebase/branch checkout, provider credential proxying, raw transcript scraping은 거부한다.
+
 ## 2026-07-05 PromptLane Instruction Contract
 
 - [x] RED: AGENTS.md/CLAUDE.md/harness/instruction docs가 PromptLane product contract와 Loopdeck legacy allowlist를 함께 라우팅하지 않으면 packaging test가 실패하도록 고정했다.
