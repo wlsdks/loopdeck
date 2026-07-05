@@ -97,15 +97,16 @@ describe("mcp catalog", () => {
     expect(readiness.firstCall).toBe("coach_prompt");
   });
 
-  it("uses Loopdeck-facing setup copy when the local server is unavailable", () => {
+  it("uses PromptLane-facing setup copy when the local server is unavailable", () => {
     const readiness = createMcpReadiness({
       health: { ok: false, version: "0.1.0" },
     });
 
     expect(readiness.status).toBe("Server unavailable");
     expect(readiness.summary).toBe(
-      "Start the local Loopdeck server before using Claude Code or Codex MCP tools.",
+      "Start the local PromptLane server before using Claude Code or Codex MCP tools.",
     );
+    expect(readiness.summary).not.toContain("Loopdeck");
     expect(readiness.summary).not.toContain("local prompt-coach server");
   });
 });

@@ -3614,3 +3614,10 @@
 - [x] GREEN: Replace Loopdeck-facing marketplace and slash command titles/descriptions with PromptLane wording without changing command filenames or runtime IDs.
 - [x] VERIFY: Focused packaging test, full test/lint/build, pack dry-run, and diff check passed.
 - [x] INTEGRATE: PR #379 was merged to `main`; branch was pruned.
+
+## 2026-07-05 PromptLane Runtime Surface Copy
+
+- [x] RED: Add focused MCP, storage, web readiness, and CLI loop tests requiring user-facing runtime copy to say PromptLane while preserving `prompt-coach` commands and `get_loopdeck_status` compatibility names.
+- [x] GREEN: Replace Loopdeck-facing runtime descriptions, local archive/server messages, instruction-memory headings, and loop status labels with PromptLane wording without renaming internal types or compatibility tool names.
+- [x] VERIFY: Focused tests, full test/lint/build, pack dry-run, and diff check passed.
+- [ ] INTEGRATE: Push one coherent PR, merge it after CI, and prune the branch.

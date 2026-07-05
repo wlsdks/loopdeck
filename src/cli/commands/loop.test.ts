@@ -253,7 +253,8 @@ describe("loop CLI command", () => {
 
     const text = loopStatusForCli({ dataDir });
 
-    expect(text).toContain("Loopdeck status ready");
+    expect(text).toContain("PromptLane status ready");
+    expect(text).not.toContain("Loopdeck status ready");
     expect(text).toContain("snapshots 2");
     expect(text).toContain("approved memories 1");
     expect(text).toContain("active worktrees 2");
@@ -478,7 +479,7 @@ describe("loop CLI command", () => {
 
     const text = loopStatusForCli({ dataDir });
 
-    expect(text).toContain("Loopdeck status empty");
+    expect(text).toContain("PromptLane status empty");
     expect(text).toContain("snapshots 0");
     expect(text).toContain("Next: prompt-coach loop collect");
   });
@@ -693,7 +694,7 @@ describe("loop CLI command", () => {
 
     expect(parsed.target_file).toBe("AGENTS.md");
     expect(parsed.writes_files).toBe(false);
-    expect(parsed.diff).toContain("## Loopdeck Memories");
+    expect(parsed.diff).toContain("## PromptLane Memories");
     expect(parsed.diff).toContain("Scheduler lifecycle should stay plist-only");
     expect(parsed.privacy.writes_instruction_files).toBe(false);
     expect(json).not.toContain("Make this better");

@@ -507,7 +507,7 @@ export function registerLoopRoutes(
       throw problem(
         404,
         "Not Found",
-        "No loop memory found. Approve a Loopdeck memory first.",
+        "No loop memory found. Approve a PromptLane memory first.",
         request.url,
       );
     }

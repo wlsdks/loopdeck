@@ -87,7 +87,7 @@ export function getLoopdeckStatusTool(
       available_tools: LOOP_TOOL_NAMES,
       next_action: "prompt-coach setup",
       next_actions: [
-        "Run prompt-coach init or prompt-coach setup before using Loopdeck MCP tools.",
+        "Run prompt-coach init or prompt-coach setup before using PromptLane MCP tools.",
         "Then run prompt-coach loop collect from the project you want to continue.",
       ],
       privacy,

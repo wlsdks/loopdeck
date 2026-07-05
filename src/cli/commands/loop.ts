@@ -58,7 +58,7 @@ export function registerLoopCommand(program: Command): void {
 
   loop
     .command("status")
-    .description("Show local Loopdeck snapshot readiness.")
+    .description("Show local PromptLane snapshot readiness.")
     .option("--data-dir <path>", "Override the prompt-coach data directory.")
     .option("--json", "Print JSON.")
     .action((options: LoopCliOptions) => {
@@ -129,7 +129,7 @@ export function registerLoopCommand(program: Command): void {
   loop
     .command("instruction-patch")
     .description(
-      "Propose an instruction-file patch from approved Loopdeck memory.",
+      "Propose an instruction-file patch from approved PromptLane memory.",
     )
     .option("--data-dir <path>", "Override the prompt-coach data directory.")
     .option(
@@ -144,7 +144,7 @@ export function registerLoopCommand(program: Command): void {
 
   loop
     .command("instruction-apply")
-    .description("Apply an approved Loopdeck memory to an instruction file.")
+    .description("Apply an approved PromptLane memory to an instruction file.")
     .option("--data-dir <path>", "Override the prompt-coach data directory.")
     .option(
       "--target-file <file>",
@@ -532,7 +532,7 @@ function formatLoopSnapshot(snapshot: LoopSnapshot): string {
 
 function formatLoopStatus(status: LoopdeckStatus): string {
   return [
-    `Loopdeck status ${status.status}`,
+    `PromptLane status ${status.status}`,
     `snapshots ${status.snapshot_count}`,
     `approved memories ${status.project_memory.approved_count}`,
     `active worktrees ${status.activity.active_worktrees}`,

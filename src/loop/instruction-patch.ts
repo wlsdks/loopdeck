@@ -61,7 +61,7 @@ export function proposeInstructionPatchFromMemory(input: {
     `--- a/${targetFile}`,
     `+++ b/${targetFile}`,
     "@@",
-    "+## Loopdeck Memories",
+    "+## PromptLane Memories",
     "+",
     `+- ${statement}`,
     `+  evidence: ${evidence}`,
@@ -72,7 +72,7 @@ export function proposeInstructionPatchFromMemory(input: {
   return {
     target_file: targetFile,
     patch_kind: "append_section",
-    title: `Append approved Loopdeck memory to ${targetFile}`,
+    title: `Append approved PromptLane memory to ${targetFile}`,
     diff: `${patchLines.join("\n")}\n`,
     writes_files: false,
     requires_user_approval: true,
@@ -166,7 +166,7 @@ function formatInstructionMemoryBlock(memory: LoopMemory): string {
   const sourceMemoryId = safePatchLine(memory.id);
 
   return [
-    "## Loopdeck Memories",
+    "## PromptLane Memories",
     "",
     `- ${statement}`,
     `  evidence: ${evidence}`,

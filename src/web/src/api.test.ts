@@ -2311,8 +2311,8 @@ describe("web api export client", () => {
           data: {
             target_file: "AGENTS.md",
             patch_kind: "append_section",
-            title: "Append approved Loopdeck memory to AGENTS.md",
-            diff: "--- a/AGENTS.md\n+++ b/AGENTS.md\n@@\n+## Loopdeck Memories\n+  source_memory: mem_web\n",
+            title: "Append approved PromptLane memory to AGENTS.md",
+            diff: "--- a/AGENTS.md\n+++ b/AGENTS.md\n@@\n+## PromptLane Memories\n+  source_memory: mem_web\n",
             writes_files: false,
             requires_user_approval: true,
             source_memory_id: "mem_web",
