@@ -6,7 +6,7 @@
 - [x] RED: goal audit/backlog가 #403, #405, #407, #408 및 최신 main commit evidence를 포함하지 않으면 packaging drift guard가 실패하도록 고정했다.
 - [x] GREEN: goal audit/backlog에 MCP storage setup guidance, loop memory evidence guard, agent setup smoke, close-log PR evidence와 “No immediate MVP reliability slice remains” 판단을 반영했다.
 - [x] VERIFY: focused packaging test와 full gate를 통과한다.
-- [ ] INTEGRATE: PR CI `test (22)`/`test (24)` 통과 후 merge하고 branch prune까지 확인한다.
+- [x] INTEGRATE: PR #409가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
 ### 판단 기준
 
