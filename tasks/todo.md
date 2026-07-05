@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-05 PromptLane Loop Memory Approval Dogfood
+
+- [x] CHECK: `record_loop_outcome`, `propose_loop_memory_candidate`, `record_loop_memory`, `propose_instruction_patch`가 MCP surface로 존재하며 approved memory와 instruction patch proposal을 분리하는지 확인했다.
+- [x] RED: `dogfood:loop-memory-approval`, `scripts/loop-memory-approval-dogfood.mjs`, AGENT-HARNESS/PACKAGE_CONTENTS/RELEASE_CHECKLIST 연결이 없으면 packaging test가 실패하도록 고정했다.
+- [x] GREEN: 격리 HOME/data-dir/project에서 Codex hook capture, loop snapshot, MCP outcome recording, memory candidate proposal, approved memory write, instruction patch proposal을 실행하는 dogfood script를 추가했다.
+- [x] VERIFY: focused packaging test, `node scripts/loop-memory-approval-dogfood.mjs`, full gate를 통과한다.
+- [ ] INTEGRATE: PR이 CI `test (22)`/`test (24)` 통과 후 merge되고 branch prune까지 확인된다.
+
+### 판단 기준
+
+- approved loop memory는 passed outcome과 evidence refs가 있을 때만 생성되어야 한다.
+- memory approval은 instruction files를 직접 쓰지 않고, patch proposal은 user approval gate와 `writes_files: false`를 유지해야 한다.
+- dogfood output은 prompt body, raw path, secret-looking token을 노출하지 않아야 한다.
+
 ## 2026-07-05 PromptLane 9.5 Quality Plan
 
 - [x] CHECK: 기존 수준평가가 축별 점수는 제시했지만 9.5/10을 증명하는 acceptance bar와 다음 slice를 repo에 고정하지 않았음을 확인했다.

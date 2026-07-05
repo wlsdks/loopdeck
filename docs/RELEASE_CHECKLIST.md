@@ -62,6 +62,7 @@ Confirm `corepack pnpm pack:dry-run` includes:
 - [ ] `scripts/agent-setup-smoke.mjs`
 - [ ] `scripts/browser-e2e.mjs`
 - [ ] `scripts/first-coach-loop-dogfood.mjs`
+- [ ] `scripts/loop-memory-approval-dogfood.mjs`
 - [ ] `scripts/hook-binary-smoke.mjs`
 - [ ] `scripts/mcp-coach-loop-smoke.mjs`
 - [ ] `scripts/mcp-elicitation-smoke.mjs`
