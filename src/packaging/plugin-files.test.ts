@@ -953,6 +953,62 @@ describe("plugin packaging files", () => {
     expect(evidence).not.toMatch(/gh[pousr]_[a-z0-9_]{12,}/i);
   });
 
+  it("ships fresh web user-flow dogfood evidence for the 9.5 web operations bar", () => {
+    const packageJson = readJson<{
+      files: string[];
+      scripts: Record<string, string>;
+    }>("package.json");
+    const evidencePath = "docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md";
+    const evidence = readFileSync(join(process.cwd(), evidencePath), "utf8");
+    const harness = readFileSync(
+      join(process.cwd(), "docs/AGENT-HARNESS.md"),
+      "utf8",
+    );
+    const packageContents = readFileSync(
+      join(process.cwd(), "docs/PACKAGE_CONTENTS.md"),
+      "utf8",
+    );
+    const backlog = readFileSync(
+      join(process.cwd(), "docs/NEXT_BACKLOG.md"),
+      "utf8",
+    );
+    const qualityPlan = readFileSync(
+      join(
+        process.cwd(),
+        "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
+      ),
+      "utf8",
+    );
+
+    expect(packageJson.scripts["dogfood:web-user-flow"]).toBe(
+      "pnpm e2e:browser",
+    );
+    expect(packageJson.files).toContain(evidencePath);
+    expect(harness).toContain(evidencePath);
+    expect(packageContents).toContain(evidencePath);
+    expect(backlog).toContain("dogfood:web-user-flow");
+    expect(qualityPlan).toContain("dogfood:web-user-flow");
+    for (const required of [
+      "corepack pnpm dogfood:web-user-flow",
+      "archive",
+      "detail",
+      "dashboard",
+      "coach",
+      "projects",
+      "mcp",
+      "exports",
+      "settings",
+      "mobile",
+      "9 screenshots",
+      "Privacy Observations",
+    ]) {
+      expect(evidence).toContain(required);
+    }
+    expect(evidence).not.toContain("/Users/");
+    expect(evidence).not.toMatch(/sk-[a-z0-9_-]{6,}/i);
+    expect(evidence).not.toMatch(/gh[pousr]_[a-z0-9_]{12,}/i);
+  });
+
   it("documents /loopdeck:* as a future alias-only slash namespace without shipping command files yet", () => {
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");

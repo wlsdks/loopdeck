@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-05 PromptLane Web User-Flow Dogfood Evidence
+
+- [x] CHECK: 9.5 web operations blocker still needed repeatable fresh user-flow evidence beyond scheduled `ui-patrol`, while `scripts/browser-e2e.mjs` already exercises the real archive/detail/dashboard/coach/projects/mcp/exports/settings/mobile flow.
+- [x] RED: package script, shipped evidence doc, harness/package docs, backlog, and 9.5 plan must link `dogfood:web-user-flow`, or packaging guard fails.
+- [x] GREEN: `dogfood:web-user-flow` now aliases `e2e:browser`, and `docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md` records the repeatable local web user-flow evidence lane.
+- [ ] VERIFY: focused packaging guard, `corepack pnpm dogfood:web-user-flow`, full local gate, PR CI, latest main CI, and branch prune all pass.
+- [ ] INTEGRATE: PR이 CI `test (22)`/`test (24)` 통과 후 merge되고 branch prune까지 확인된다.
+
+### 판단 기준
+
+- scheduled `ui-patrol` evidence remains separate because it requires a real `schedule` event.
+- web user-flow evidence must be replayable locally and in CI without real provider credentials, real prompt archives, or external LLM calls.
+- screenshots are evidence only when produced by a real browser run; docs must not invent screenshots.
+
 ## 2026-07-05 Better SQLite Node 24 Install Warning Cleanup
 
 - [x] CHECK: latest main CI after PR #426 passed but Node 24 install logs still showed `better-sqlite3` triggering `prebuild-install@7.1.3` `fs.R_OK` deprecation warnings.

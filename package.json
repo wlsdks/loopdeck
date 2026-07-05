@@ -45,6 +45,7 @@
     "docs/LOOP-SNAPSHOT-SCHEMA.md",
     "docs/AGENT-HARNESS.md",
     "docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md",
+    "docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md",
     "docs/INSTRUCTION-FILES.md",
     "docs/PLUGINS.md",
     "docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md",
@@ -106,6 +107,7 @@
     "dogfood:mcp-native-dialog-approved": "pnpm build && node scripts/mcp-native-dialog-approved.mjs",
     "dogfood:first-coach-loop": "pnpm build && node scripts/first-coach-loop-dogfood.mjs",
     "dogfood:loop-memory-approval": "pnpm build && node scripts/loop-memory-approval-dogfood.mjs",
+    "dogfood:web-user-flow": "pnpm e2e:browser",
     "smoke:release": "pnpm build && node scripts/release-smoke.mjs",
     "test": "vitest run",
     "ui-patrol": "node scripts/ui-patrol.mjs"

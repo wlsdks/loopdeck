@@ -156,6 +156,7 @@ Use the narrowest relevant gate first, then broaden before PR.
 | Hook behavior         | `corepack pnpm smoke:hooks`, focused hook tests             |
 | Loop CLI/status/brief | `corepack pnpm test -- src/loop src/cli`                    |
 | Web Loops UI          | `corepack pnpm ui-patrol` plus focused web tests            |
+| Web user-flow dogfood | `corepack pnpm dogfood:web-user-flow` and `docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md` |
 | Plugin/packaging      | `corepack pnpm pack:dry-run`, package contents tests        |
 | Instruction docs      | `git diff --check`, packaging docs tests if shipped         |
 | Dependency update     | CI `test (22)`, CI `test (24)`, engine compatibility review |
