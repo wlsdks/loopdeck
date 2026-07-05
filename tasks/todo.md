@@ -1,5 +1,28 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Scorecard Review Candidates
+
+- [x] CHECK: `axis_evidence_coverage` separated satisfied evidence from
+  remaining gaps, but it did not identify which axes were ready for scorecard
+  review versus still blocked by external evidence.
+- [x] RED: quality evidence script and CLI tests required
+  `scorecard_review_candidates` to include axes whose only remaining gap is
+  `scorecard_level_below_9_5` and exclude axes still blocked by
+  `scheduled_ui_patrol` or `native_dialog_approved_dogfood`.
+- [x] GREEN: `scripts/quality-95-evidence.mjs` now emits
+  `scorecard_review_candidates` for local-first privacy, setup/MCP smoke, loop
+  memory/continuation, and release stability without marking them complete.
+- [x] GREEN: `prompt-coach quality-evidence` text now renders a
+  `Scorecard review candidates` section for human review.
+
+### 판단 기준
+
+- Review candidates must not remove blockers or change `promptlane_95_quality`
+  from `pending`.
+- Web UI operations and Codex/Claude integration must stay out of review
+  candidates while scheduled UI patrol or native-dialog dogfood is pending.
+- Candidate output must stay local-only and raw-free.
+
 ## 2026-07-06 PromptLane Axis Evidence Coverage
 
 - [x] CHECK: `corepack pnpm --silent evidence:quality` had blockers and

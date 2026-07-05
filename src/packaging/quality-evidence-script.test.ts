@@ -64,6 +64,11 @@ describe("quality 9.5 evidence script", () => {
         satisfied_evidence: string[];
         remaining_evidence: string[];
       }>;
+      scorecard_review_candidates: Array<{
+        id: string;
+        satisfied_evidence: string[];
+        required_review: string;
+      }>;
       recommended_next_slices: Array<{
         id: string;
         axis: string;
@@ -140,6 +145,49 @@ describe("quality 9.5 evidence script", () => {
             "native_dialog_approved_dogfood",
             "scorecard_level_below_9_5",
           ]),
+        }),
+      ]),
+    );
+    expect(parsed.scorecard_review_candidates).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "local_first_privacy_boundary",
+          required_review: "scorecard_level_below_9_5",
+          satisfied_evidence: expect.arrayContaining([
+            "privacy_raw_free_regression_sweep",
+            "local_95_evidence_sweep",
+          ]),
+        }),
+        expect.objectContaining({
+          id: "setup_doctor_and_mcp_smoke",
+          required_review: "scorecard_level_below_9_5",
+          satisfied_evidence: expect.arrayContaining([
+            "local_95_evidence_sweep",
+          ]),
+        }),
+        expect.objectContaining({
+          id: "loop_memory_and_continuation",
+          required_review: "scorecard_level_below_9_5",
+          satisfied_evidence: expect.arrayContaining([
+            "local_95_evidence_sweep",
+          ]),
+        }),
+        expect.objectContaining({
+          id: "release_stability",
+          required_review: "scorecard_level_below_9_5",
+          satisfied_evidence: expect.arrayContaining([
+            "local_95_evidence_sweep",
+          ]),
+        }),
+      ]),
+    );
+    expect(parsed.scorecard_review_candidates).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "web_ui_and_operational_evidence",
+        }),
+        expect.objectContaining({
+          id: "codex_and_claude_code_integration",
         }),
       ]),
     );

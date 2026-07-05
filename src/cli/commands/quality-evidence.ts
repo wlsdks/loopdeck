@@ -19,6 +19,11 @@ type QualityEvidenceSummary = {
     satisfied_evidence: string[];
     remaining_evidence: string[];
   }>;
+  scorecard_review_candidates?: Array<{
+    id: string;
+    required_review: string;
+    satisfied_evidence: string[];
+  }>;
   blockers: Array<{ id: string; status: string; next_action?: string }>;
   recommended_next_slices?: Array<{
     id: string;
@@ -114,6 +119,14 @@ function formatSummary(summary: QualityEvidenceSummary): string {
             `- ${axis.id}: ${axis.status} satisfied=${axis.satisfied_evidence.join(",") || "none"} remaining=${axis.remaining_evidence.join(",") || "none"}`,
         )
       : ["- none"];
+  const scorecardReviewRows =
+    summary.scorecard_review_candidates &&
+    summary.scorecard_review_candidates.length > 0
+      ? summary.scorecard_review_candidates.map(
+          (axis) =>
+            `- ${axis.id}: review=${axis.required_review} satisfied=${axis.satisfied_evidence.join(",") || "none"}`,
+        )
+      : ["- none"];
 
   return [
     "PromptLane 9.5 quality evidence",
@@ -126,6 +139,9 @@ function formatSummary(summary: QualityEvidenceSummary): string {
     "",
     "Axis evidence coverage",
     ...axisCoverageRows,
+    "",
+    "Scorecard review candidates",
+    ...scorecardReviewRows,
     "",
     "Recommended next slices",
     ...recommendedRows,

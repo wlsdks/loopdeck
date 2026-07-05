@@ -15,6 +15,11 @@ describe("quality-evidence CLI command", () => {
         satisfied_evidence: string[];
         remaining_evidence: string[];
       }>;
+      scorecard_review_candidates: Array<{
+        id: string;
+        required_review: string;
+        satisfied_evidence: string[];
+      }>;
       blockers: Array<{ id: string; status: string }>;
       recommended_next_slices: Array<{
         id: string;
@@ -45,6 +50,28 @@ describe("quality-evidence CLI command", () => {
           remaining_evidence: expect.arrayContaining([
             "native_dialog_approved_dogfood",
           ]),
+        }),
+      ]),
+    );
+    expect(parsed.scorecard_review_candidates).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "local_first_privacy_boundary",
+          required_review: "scorecard_level_below_9_5",
+        }),
+        expect.objectContaining({
+          id: "release_stability",
+          required_review: "scorecard_level_below_9_5",
+        }),
+      ]),
+    );
+    expect(parsed.scorecard_review_candidates).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "web_ui_and_operational_evidence",
+        }),
+        expect.objectContaining({
+          id: "codex_and_claude_code_integration",
         }),
       ]),
     );
@@ -101,6 +128,13 @@ describe("quality-evidence CLI command", () => {
       "codex_and_claude_code_integration: blocked_external",
     );
     expect(text).toContain("remaining=native_dialog_approved_dogfood");
+    expect(text).toContain("Scorecard review candidates");
+    expect(text).toContain(
+      "local_first_privacy_boundary: review=scorecard_level_below_9_5",
+    );
+    expect(text).toContain(
+      "release_stability: review=scorecard_level_below_9_5",
+    );
     expect(text).toContain("scheduled_ui_patrol");
     expect(text).toContain("native_dialog_approved_dogfood");
     expect(text).toContain("Recommended next slices");

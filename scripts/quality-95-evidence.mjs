@@ -13,6 +13,12 @@ const uiPatrol = args.uiPatrolJson
 const nativeDialog = readNativeDialogEvidence();
 const scorecardAxes = readScorecardAxes();
 const completedEvidence = readCompletedEvidence();
+const axisCoverage = axisEvidenceCoverage({
+  scorecardAxes,
+  uiPatrol,
+  nativeDialog,
+  completedEvidence,
+});
 const underTargetAxes = scorecardAxes.filter(
   (axis) => axis.status !== "meets_target",
 );
@@ -49,12 +55,8 @@ const summary = {
     "9.5 requires current evidence for every scorecard axis, not only passing tests.",
   plan: planPath,
   scorecard_axes: scorecardAxes,
-  axis_evidence_coverage: axisEvidenceCoverage({
-    scorecardAxes,
-    uiPatrol,
-    nativeDialog,
-    completedEvidence,
-  }),
+  axis_evidence_coverage: axisCoverage,
+  scorecard_review_candidates: scorecardReviewCandidates(axisCoverage),
   evidence: {
     scheduled_ui_patrol: uiPatrol,
     native_dialog_approved_dogfood: nativeDialog,
@@ -280,6 +282,22 @@ function axisEvidenceCoverage({
       remaining_evidence: remaining,
     };
   });
+}
+
+function scorecardReviewCandidates(axisCoverage) {
+  return axisCoverage
+    .filter(
+      (axis) =>
+        axis.satisfied_evidence.length > 0 &&
+        axis.remaining_evidence.length === 1 &&
+        axis.remaining_evidence[0] === "scorecard_level_below_9_5",
+    )
+    .map((axis) => ({
+      id: axis.id,
+      axis: axis.axis,
+      required_review: "scorecard_level_below_9_5",
+      satisfied_evidence: axis.satisfied_evidence,
+    }));
 }
 
 function recommendedNextSlices({
