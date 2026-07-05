@@ -201,6 +201,13 @@ Decision:
   evidence through structured MCP content without opening the web UI or running
   `prompt-coach show --json`. PR #462 and latest main CI run `28750281428`
   proved this on the default branch.
+- Archive-level effectiveness summary is the active follow-up: archive score
+  reports now expose `effectiveness_summary` through `prompt-coach score
+  --json`, human `prompt-coach score` output, `/api/v1/score`, and MCP
+  `score_prompt_archive`, allowing Codex and Claude Code to compare measured vs
+  unmeasured prompts, proven/mixed/unproven verdicts, linked outcomes, tests
+  run, safe evidence refs, and next action before claiming prompt improvement
+  is actually working.
 
 Rationale:
 

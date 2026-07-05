@@ -93,6 +93,12 @@
   `score_prompt` for stored prompt ids, so Codex and Claude Code can inspect
   prompt impact evidence without opening the web UI or shelling out to
   `prompt-coach show --json`.
+- The archive effectiveness summary slice adds `effectiveness_summary` to
+  `createArchiveScoreReport()`, `prompt-coach score --json`, the human
+  `prompt-coach score` report, `/api/v1/score`, and MCP
+  `score_prompt_archive`, so agents can judge measured vs unmeasured archive
+  prompts, proven/mixed/unproven verdict counts, linked outcomes, tests run,
+  safe evidence refs, and next action without prompt bodies or raw paths.
 - `docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md` records current
   `corepack pnpm smoke:release` and `corepack pnpm pack:dry-run` evidence for
   the local-first release path.
@@ -111,8 +117,8 @@
   `dogfood:mcp-native-dialog-approved` without explicit approval because it can
   open a native dialog.
 - Fresh user-flow, expected-impact, prompt-linked outcome evidence, CLI prompt
-  outcome evidence, prompt effectiveness verdict evidence, and effectiveness
-  calibration evidence are now
+  outcome evidence, prompt effectiveness verdict evidence, effectiveness
+  calibration evidence, and archive-level effectiveness summary are now
   repeatable through `dogfood:web-user-flow`, browser E2E, focused
   CLI/storage/web tests, and `corepack pnpm ui-patrol`. MCP score_prompt
   effectiveness evidence is now proven on the default branch through PR #462,

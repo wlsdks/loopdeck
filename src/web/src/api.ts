@@ -1239,6 +1239,23 @@ export type ArchiveScoreReport = {
     rate: number;
   }>;
   next_prompt_template: string;
+  effectiveness_summary: {
+    measured_prompts: number;
+    unmeasured_prompts: number;
+    verdicts: {
+      proven: number;
+      mixed: number;
+      unproven: number;
+    };
+    calibration: {
+      linked_outcomes: number;
+      passing_outcomes: number;
+      failing_outcomes: number;
+      total_tests_run: number;
+    };
+    top_evidence_refs: string[];
+    next_action: string;
+  };
   low_score_prompts: ArchivePromptScoreSummary[];
   filters: {
     tool?: string;

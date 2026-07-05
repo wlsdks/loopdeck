@@ -550,6 +550,10 @@ describe("prompt read/delete API", () => {
     const body = response.json<{
       data: {
         archive_score: { scored_prompts: number; average: number };
+        effectiveness_summary: {
+          measured_prompts: number;
+          unmeasured_prompts: number;
+        };
         low_score_prompts: Array<{ id: string; project: string }>;
         privacy: {
           returns_prompt_bodies: boolean;
@@ -560,6 +564,10 @@ describe("prompt read/delete API", () => {
 
     expect(body.archive_score.scored_prompts).toBe(3);
     expect(body.archive_score.average).toBeGreaterThanOrEqual(0);
+    expect(body.effectiveness_summary).toMatchObject({
+      measured_prompts: 0,
+      unmeasured_prompts: 3,
+    });
     expect(body.low_score_prompts.map((prompt) => prompt.id)).toContain(
       ids.alpha,
     );

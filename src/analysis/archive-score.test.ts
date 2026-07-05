@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import type { PromptReadStoragePort, PromptSummary } from "../storage/ports.js";
+import type {
+  PromptDetail,
+  PromptReadStoragePort,
+  PromptSummary,
+} from "../storage/ports.js";
 import { createArchiveScoreReport } from "./archive-score.js";
 
 describe("createArchiveScoreReport", () => {
@@ -115,9 +119,89 @@ describe("createArchiveScoreReport", () => {
     expect(report.next_prompt_template).toContain("검증:");
     expect(report.next_prompt_template).not.toContain("Goal:");
   });
+
+  it("summarizes actual prompt effectiveness without leaking prompt bodies or raw paths", () => {
+    const prompts = [
+      prompt({
+        id: "prmt_proven",
+        cwd: "/Users/example/private-project",
+        received_at: "2026-07-06T10:00:00.000Z",
+        quality_score: 90,
+        quality_score_band: "excellent",
+      }),
+      prompt({
+        id: "prmt_mixed",
+        cwd: "/Users/example/private-project",
+        received_at: "2026-07-06T10:01:00.000Z",
+        quality_score: 70,
+        quality_score_band: "good",
+      }),
+      prompt({
+        id: "prmt_unproven",
+        cwd: "/Users/example/other-project",
+        received_at: "2026-07-06T10:02:00.000Z",
+        quality_score: 45,
+        quality_score_band: "needs_work",
+      }),
+    ];
+    const storage = fakeStorage(prompts, {
+      prmt_proven: detail(prompts[0], {
+        verdict: "proven",
+        summary:
+          "Actual loop evidence passed with 5 tests across 1 linked outcome.",
+        calibration: {
+          linked_outcomes: 1,
+          passing_outcomes: 1,
+          failing_outcomes: 0,
+          total_tests_run: 5,
+        },
+        evidence_refs: ["pnpm test"],
+      }),
+      prmt_mixed: detail(prompts[1], {
+        verdict: "mixed",
+        summary:
+          "Actual loop evidence has mixed results with 3 tests across 2 linked outcomes.",
+        calibration: {
+          linked_outcomes: 2,
+          passing_outcomes: 1,
+          failing_outcomes: 1,
+          total_tests_run: 3,
+        },
+        evidence_refs: ["PR #466", "sk-proj-secret"],
+      }),
+    });
+
+    const report = createArchiveScoreReport(storage, { maxPrompts: 10 });
+    const serialized = JSON.stringify(report);
+
+    expect(report.effectiveness_summary).toEqual({
+      measured_prompts: 2,
+      unmeasured_prompts: 1,
+      verdicts: {
+        proven: 1,
+        mixed: 1,
+        unproven: 0,
+      },
+      calibration: {
+        linked_outcomes: 3,
+        passing_outcomes: 2,
+        failing_outcomes: 1,
+        total_tests_run: 8,
+      },
+      top_evidence_refs: ["pnpm test", "PR #466"],
+      next_action:
+        "Review mixed outcomes before treating prompt improvements as proven.",
+    });
+    expect(serialized).not.toContain("secret prompt body");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-secret");
+  });
 });
 
-function fakeStorage(items: PromptSummary[]): PromptReadStoragePort {
+function fakeStorage(
+  items: PromptSummary[],
+  details: Record<string, PromptDetail> = {},
+): PromptReadStoragePort {
   return {
     listPrompts(options = {}) {
       const limit = options.limit ?? 20;
@@ -132,8 +216,8 @@ function fakeStorage(items: PromptSummary[]): PromptReadStoragePort {
     searchPrompts() {
       return { items: [] };
     },
-    getPrompt() {
-      return undefined;
+    getPrompt(id) {
+      return details[id];
     },
     deletePrompt() {
       return { deleted: false };
@@ -156,6 +240,18 @@ function fakeStorage(items: PromptSummary[]): PromptReadStoragePort {
     createPromptImprovementDraft() {
       return undefined;
     },
+  };
+}
+
+function detail(
+  summary: PromptSummary,
+  effectiveness: NonNullable<PromptDetail["effectiveness"]>,
+): PromptDetail {
+  return {
+    ...summary,
+    markdown: "secret prompt body",
+    improvement_drafts: [],
+    effectiveness,
   };
 }
 

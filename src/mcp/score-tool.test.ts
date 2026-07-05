@@ -237,6 +237,12 @@ describe("scorePromptTool", () => {
       }),
     );
     expect(result.next_prompt_template).toContain("Goal:");
+    expect(result.effectiveness_summary).toMatchObject({
+      measured_prompts: 0,
+      unmeasured_prompts: 2,
+      next_action:
+        "Record loop outcomes to prove whether prompt improvements help.",
+    });
     expect(result.privacy).toMatchObject({
       local_only: true,
       external_calls: false,
@@ -256,6 +262,19 @@ describe("scorePromptTool", () => {
 
     expect(properties?.language).toBeDefined();
     expect(properties?.language?.enum).toEqual(["en", "ko"]);
+  });
+
+  it("declares archive effectiveness summary in the score_prompt_archive MCP schema", () => {
+    const schema = SCORE_PROMPT_ARCHIVE_TOOL_DEFINITION.outputSchema as {
+      oneOf?: Array<{ required?: string[] }>;
+      properties?: Record<string, unknown>;
+    };
+    const successShape = schema.oneOf?.find((shape) =>
+      shape.required?.includes("archive_score"),
+    );
+
+    expect(schema.properties?.effectiveness_summary).toBeDefined();
+    expect(successShape?.required).toContain("effectiveness_summary");
   });
 
   it("renders archive practice plan in Korean when language=ko is passed", async () => {
