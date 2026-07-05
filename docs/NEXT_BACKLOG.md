@@ -190,6 +190,9 @@ Decision:
   `web_user_flow_current_main_evidence` from remaining gaps such as
   `scorecard_level_below_9_5`, `scheduled_ui_patrol`, and
   `native_dialog_approved_dogfood`.
+  The JSON also includes `scorecard_review_candidates`, which lists axes whose
+  local evidence is present and whose only remaining gap is
+  `scorecard_level_below_9_5`, without treating those axes as complete.
   The same JSON includes `recommended_next_slices`, which now skips already
   recorded local evidence actions. After `web_user_flow_current_main_evidence`,
   `privacy_raw_free_regression_sweep`, and
