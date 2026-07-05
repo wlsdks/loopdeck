@@ -77,7 +77,7 @@ Current goal audit:
 - PR #364 moved loop read routes onto the shared storage capability guard, so
   missing loop snapshot, compact boundary, memory, or merge-decision storage
   fails with one raw-free local configuration problem instead of an empty
-  Loopdeck status.
+  PromptLane status.
 - PR #369 added a docs drift guard so the Loopdeck goal audit and next backlog
   continue citing the saved-draft reuse flow after PR #366 through PR #368.
 - PR #370 closed the stale reuse audit next slice; no immediate reuse-flow

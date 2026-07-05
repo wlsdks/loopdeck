@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-05 PromptLane Runtime Copy Boundary
+
+- [x] RED: CLI loop schedule help가 `Loopdeck` 제품명을 노출하면 `src/cli/index.test.ts`가 실패하도록 고정했다.
+- [x] GREEN: `loop schedule` help description을 PromptLane 중심으로 정리했다.
+- [x] GREEN: active backlog/audit 문서의 stale `Loopdeck status` copy를 PromptLane status로 정리하고 active product surface guard 범위에 포함했다.
+- [x] VERIFY: focused CLI/packaging tests, full test/lint/build, pack dry-run, diff check를 통과한다.
+- [ ] INTEGRATE: 변경을 커밋, 푸시, PR, CI 확인 후 merge하고 branch를 정리한다.
+
+### 판단 기준
+
+- `get_loopdeck_status` 같은 published compatibility id는 유지한다.
+- 사용자-facing CLI/help/docs copy는 PromptLane을 제품명으로 사용한다.
+- `Loopdeck`는 allowlist 문서의 legacy/internal/historical 범주 밖에서 제품명으로 쓰지 않는다.
+
 ## 2026-07-05 Loopdeck Legacy Surface Inventory
 
 - [x] RED: 남아 있는 `Loopdeck`/`loopdeck` surface allowlist 문서가 package contract에 없으면 packaging test가 실패하도록 고정했다.

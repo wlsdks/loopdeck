@@ -52,7 +52,7 @@ const DEFAULT_INTERVAL_SECONDS = 900;
 export function registerLoopScheduleCommand(loop: Command): void {
   const schedule = loop
     .command("schedule")
-    .description("Manage opt-in Loopdeck collection schedules.");
+    .description("Manage opt-in PromptLane collection schedules.");
 
   schedule
     .command("install")

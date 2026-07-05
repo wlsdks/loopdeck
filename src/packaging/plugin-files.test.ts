@@ -575,6 +575,20 @@ describe("plugin packaging files", () => {
     );
   });
 
+  it("keeps active audit and backlog status copy branded as PromptLane", () => {
+    const docs = [
+      readFileSync(join(process.cwd(), "docs/NEXT_BACKLOG.md"), "utf8"),
+      readFileSync(
+        join(process.cwd(), "docs/LOOPDECK_GOAL_AUDIT_2026-07-05.md"),
+        "utf8",
+      ),
+    ].join("\n");
+
+    expect(docs).toContain("PromptLane status");
+    expect(docs).not.toContain("empty Loopdeck status");
+    expect(docs).not.toContain("Loopdeck status.");
+  });
+
   it("keeps the Loopdeck goal audit aligned with merged saved-draft reuse slices", () => {
     const audit = readFileSync(
       join(process.cwd(), "docs/LOOPDECK_GOAL_AUDIT_2026-07-05.md"),

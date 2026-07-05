@@ -59,6 +59,20 @@ describe("CLI command surface", () => {
     }
     expect(missing).toEqual([]);
   });
+
+  it("brands loop schedule help as PromptLane", () => {
+    const loopCommand = createProgram().commands.find(
+      (command) => command.name() === "loop",
+    );
+    const scheduleCommand = loopCommand?.commands.find(
+      (command) => command.name() === "schedule",
+    );
+
+    expect(scheduleCommand?.description()).toBe(
+      "Manage opt-in PromptLane collection schedules.",
+    );
+    expect(scheduleCommand?.description()).not.toContain("Loopdeck");
+  });
 });
 
 describe("runCli error handling", () => {
