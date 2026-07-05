@@ -137,6 +137,24 @@ function archiveScoreFixture(): ArchiveScoreReport {
     ],
     next_prompt_template:
       "Verification: name commands or acceptance checks.\nGoal:\nContext:\nScope:\nOutput:",
+    effectiveness_summary: {
+      measured_prompts: 1,
+      unmeasured_prompts: 2,
+      verdicts: {
+        proven: 1,
+        mixed: 0,
+        unproven: 0,
+      },
+      calibration: {
+        linked_outcomes: 1,
+        passing_outcomes: 1,
+        failing_outcomes: 0,
+        total_tests_run: 3,
+      },
+      top_evidence_refs: ["pnpm test"],
+      next_action:
+        "Link recent prompts to loop outcomes before claiming archive-wide effectiveness.",
+    },
     low_score_prompts: [
       {
         id: "prmt_low",

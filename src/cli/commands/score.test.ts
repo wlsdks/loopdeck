@@ -34,6 +34,11 @@ describe("score CLI command", () => {
     });
     const report = JSON.parse(json) as {
       archive_score: { average: number; scored_prompts: number };
+      effectiveness_summary: {
+        measured_prompts: number;
+        unmeasured_prompts: number;
+        next_action: string;
+      };
       low_score_prompts: Array<{ id: string; project: string }>;
       next_prompt_template: string;
       practice_plan: Array<{ prompt_rule: string }>;
@@ -43,6 +48,12 @@ describe("score CLI command", () => {
     expect(report.archive_score.scored_prompts).toBe(3);
     expect(report.archive_score.average).toBeLessThan(100);
     expect(report.practice_plan[0]?.prompt_rule).toBeTruthy();
+    expect(report.effectiveness_summary).toMatchObject({
+      measured_prompts: 0,
+      unmeasured_prompts: 3,
+      next_action:
+        "Record loop outcomes to prove whether prompt improvements help.",
+    });
     expect(report.next_prompt_template).toContain("Goal:");
     expect(report.low_score_prompts.map((prompt) => prompt.id)).toContain(
       ids.weak,
@@ -59,6 +70,11 @@ describe("score CLI command", () => {
 
     expect(text).toContain("Prompt archive score");
     expect(text).toContain("Practice plan");
+    expect(text).toContain("Effectiveness evidence");
+    expect(text).toContain("measured 0, unmeasured 3");
+    expect(text).toContain(
+      "Record loop outcomes to prove whether prompt improvements help.",
+    );
     expect(text).toContain("Next prompt template");
     expect(text).toContain("Lowest scoring prompts");
     expect(text).toContain(ids.weak);

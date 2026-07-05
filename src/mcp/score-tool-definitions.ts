@@ -6,6 +6,7 @@ import {
   PREPARE_AGENT_JUDGE_BATCH_TOOL_DEFINITION,
   RECORD_AGENT_JUDGMENTS_TOOL_DEFINITION,
 } from "./agent-judge-tool-definitions.js";
+import { ARCHIVE_EFFECTIVENESS_SUMMARY_SCHEMA } from "./archive-effectiveness-summary-schema.js";
 import { APPLY_CLARIFICATIONS_TOOL_DEFINITION } from "./apply-clarifications-tool.js";
 import { ASK_CLARIFYING_QUESTIONS_TOOL_DEFINITION } from "./ask-clarifying-questions-tool.js";
 import {
@@ -19,7 +20,6 @@ import {
 } from "./loop-tool-definitions.js";
 import { PROMPT_EFFECTIVENESS_SCHEMA } from "./prompt-effectiveness-schema.js";
 import { RECORD_CLARIFICATIONS_TOOL_DEFINITION } from "./record-clarifications-tool.js";
-
 export {
   PREPARE_AGENT_REWRITE_TOOL_DEFINITION,
   RECORD_AGENT_REWRITE_TOOL_DEFINITION,
@@ -29,9 +29,7 @@ export {
   RECORD_AGENT_JUDGMENTS_TOOL_DEFINITION,
 } from "./agent-judge-tool-definitions.js";
 type JsonValue =
-  | string
-  | number | boolean
-  | null | readonly JsonValue[]
+  | string | number | boolean | null | readonly JsonValue[]
   | { readonly [key: string]: JsonValue };
 
 type JsonObject = { readonly [key: string]: JsonValue };
@@ -493,6 +491,7 @@ export const SCORE_PROMPT_ARCHIVE_TOOL_DEFINITION: PromptCoachMcpToolDefinition 
           },
         },
         next_prompt_template: { type: "string" },
+        effectiveness_summary: ARCHIVE_EFFECTIVENESS_SUMMARY_SCHEMA,
         low_score_prompts: {
           type: "array",
           items: {
@@ -560,6 +559,7 @@ export const SCORE_PROMPT_ARCHIVE_TOOL_DEFINITION: PromptCoachMcpToolDefinition 
             "top_gaps",
             "practice_plan",
             "next_prompt_template",
+            "effectiveness_summary",
             "low_score_prompts",
             "filters",
             "has_more",

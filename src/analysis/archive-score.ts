@@ -1,9 +1,11 @@
 import { basename } from "node:path";
 
 import { qualityScoreBand } from "./analyze.js";
+import { detectSensitiveValues } from "../redaction/detectors.js";
 import type { PromptQualityScoreBand } from "../shared/schema.js";
 import type {
   ListPromptsOptions,
+  PromptEffectiveness,
   PromptReadStoragePort,
   PromptSummary,
 } from "../storage/ports.js";
@@ -36,6 +38,7 @@ export type ArchiveScoreReport = {
   practice_plan: ArchivePracticePlanItem[];
   next_prompt_template: string;
   low_score_prompts: ArchivePromptScoreSummary[];
+  effectiveness_summary: ArchiveEffectivenessSummary;
   filters: {
     tool?: string;
     project?: string;
@@ -71,6 +74,15 @@ export type ArchivePromptScoreSummary = {
   quality_gaps: string[];
   tags: string[];
   is_sensitive: boolean;
+};
+
+export type ArchiveEffectivenessSummary = {
+  measured_prompts: number;
+  unmeasured_prompts: number;
+  verdicts: Record<PromptEffectiveness["verdict"], number>;
+  calibration: PromptEffectiveness["calibration"];
+  top_evidence_refs: string[];
+  next_action: string;
 };
 
 const DEFAULT_MAX_PROMPTS = 200;
@@ -164,7 +176,7 @@ const GAP_RULES_KO: Record<
 };
 
 export function createArchiveScoreReport(
-  storage: Pick<PromptReadStoragePort, "listPrompts">,
+  storage: Pick<PromptReadStoragePort, "getPrompt" | "listPrompts">,
   options: ArchiveScoreOptions = {},
   now: Date = new Date(),
 ): ArchiveScoreReport {
@@ -218,6 +230,7 @@ export function createArchiveScoreReport(
           a.id.localeCompare(b.id),
       )
       .slice(0, lowScoreLimit),
+    effectiveness_summary: summarizeEffectiveness(storage, prompts),
     filters: {
       tool: options.tool,
       project: options.cwdPrefix ? projectLabel(options.cwdPrefix) : undefined,
@@ -233,6 +246,70 @@ export function createArchiveScoreReport(
       returns_raw_paths: false,
     },
   };
+}
+
+function summarizeEffectiveness(
+  storage: Pick<PromptReadStoragePort, "getPrompt">,
+  prompts: PromptSummary[],
+): ArchiveEffectivenessSummary {
+  const summary: ArchiveEffectivenessSummary = {
+    measured_prompts: 0,
+    unmeasured_prompts: 0,
+    verdicts: {
+      proven: 0,
+      mixed: 0,
+      unproven: 0,
+    },
+    calibration: {
+      linked_outcomes: 0,
+      passing_outcomes: 0,
+      failing_outcomes: 0,
+      total_tests_run: 0,
+    },
+    top_evidence_refs: [],
+    next_action: "Record loop outcomes to prove whether prompt improvements help.",
+  };
+  const evidenceRefs: string[] = [];
+
+  for (const prompt of prompts) {
+    const effectiveness = storage.getPrompt(prompt.id)?.effectiveness;
+    if (!effectiveness) {
+      summary.unmeasured_prompts += 1;
+      continue;
+    }
+
+    summary.measured_prompts += 1;
+    summary.verdicts[effectiveness.verdict] += 1;
+    summary.calibration.linked_outcomes +=
+      effectiveness.calibration.linked_outcomes;
+    summary.calibration.passing_outcomes +=
+      effectiveness.calibration.passing_outcomes;
+    summary.calibration.failing_outcomes +=
+      effectiveness.calibration.failing_outcomes;
+    summary.calibration.total_tests_run +=
+      effectiveness.calibration.total_tests_run;
+    evidenceRefs.push(...effectiveness.evidence_refs);
+  }
+
+  summary.top_evidence_refs = uniqueSafeEvidenceRefs(evidenceRefs);
+  summary.next_action = nextEffectivenessAction(summary);
+  return summary;
+}
+
+function nextEffectivenessAction(summary: ArchiveEffectivenessSummary): string {
+  if (summary.verdicts.mixed > 0) {
+    return "Review mixed outcomes before treating prompt improvements as proven.";
+  }
+  if (summary.measured_prompts === 0) {
+    return "Record loop outcomes to prove whether prompt improvements help.";
+  }
+  if (summary.unmeasured_prompts > 0) {
+    return "Link recent prompts to loop outcomes before claiming archive-wide effectiveness.";
+  }
+  if (summary.verdicts.proven > 0) {
+    return "Keep using proven prompt patterns and continue collecting outcome evidence.";
+  }
+  return "Add passing evidence before treating prompt improvements as effective.";
 }
 
 function buildPracticePlan(
@@ -388,6 +465,22 @@ function toArchivePromptScoreSummary(
     tags: prompt.tags,
     is_sensitive: prompt.is_sensitive,
   };
+}
+
+function uniqueSafeEvidenceRefs(refs: string[]): string[] {
+  const safeRefs: string[] = [];
+  const seen = new Set<string>();
+
+  for (const ref of refs) {
+    const trimmed = ref.trim();
+    if (!trimmed || seen.has(trimmed)) continue;
+    if (detectSensitiveValues(trimmed).length > 0) continue;
+    seen.add(trimmed);
+    safeRefs.push(trimmed);
+    if (safeRefs.length >= 5) break;
+  }
+
+  return safeRefs;
 }
 
 function projectLabel(path: string): string {

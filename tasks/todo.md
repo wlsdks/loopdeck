@@ -1,5 +1,34 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Archive Effectiveness Summary
+
+- [x] CHECK: 개별 prompt `effectiveness` verdict는 CLI/MCP/Web에 있지만,
+  최근 archive 전체가 실제 loop outcome으로 검증됐는지 한 번에 판단하는
+  summary surface가 약했다.
+- [x] RED: `createArchiveScoreReport()`가 `effectiveness_summary`를 반환하지
+  않아 archive-level 효과 집계 테스트가 실패해야 한다.
+- [x] RED: `prompt-coach score` 텍스트 출력이 `Effectiveness evidence`
+  섹션을 보여주지 않아 CLI 테스트가 실패해야 한다.
+- [x] RED: MCP `score_prompt_archive` output schema가
+  `effectiveness_summary`를 선언하지 않아 schema drift 테스트가 실패해야
+  한다.
+- [x] GREEN: archive score report, CLI JSON/text, server score API, MCP
+  archive tool, and web API type now share the same raw-free
+  `effectiveness_summary`.
+- [x] EFFECT: PromptLane can now judge whether prompt improvement is backed by
+  actual linked loop outcomes across the recent archive, not only by predicted
+  prompt score or one prompt detail page.
+
+### 판단 기준
+
+- Summary counts measured vs unmeasured prompts, proven/mixed/unproven
+  verdicts, linked outcomes, passing/failing outcomes, tests run, and safe
+  evidence refs.
+- Prompt bodies, raw local paths, and token-like evidence refs must not appear
+  in the summary.
+- A mixed outcome must produce a review-first next action instead of claiming
+  improvement is proven.
+
 ## 2026-07-06 PromptLane Fresh Web User-Flow Evidence
 
 - [x] CHECK: scheduled `ui-patrol` still has no `schedule` event, so web
