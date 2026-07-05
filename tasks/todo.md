@@ -5,8 +5,8 @@
 - [x] CHECK: `ui-patrol.yml` has a real Monday cron (`17 6 * * 1`), but as of 2026-07-06 00:04 KST the scheduled run has not fired yet; the workflow still used `pnpm/action-setup@v4`.
 - [x] RED: packaging guard must fail while the scheduled UI patrol workflow uses `pnpm/action-setup@v4` instead of Node 24 compatible `pnpm/action-setup@v6`.
 - [x] GREEN: `.github/workflows/ui-patrol.yml` now uses `pnpm/action-setup@v6`, matching the latest verified action major whose metadata uses `runs.using: node24`.
-- [ ] VERIFY: focused packaging guard, full local gate, PR CI, latest main CI, and branch prune all pass.
-- [ ] INTEGRATE: PR이 CI `test (22)`/`test (24)` 통과 후 merge되고 branch prune까지 확인된다.
+- [x] VERIFY: focused packaging guard, full local gate, PR CI, latest main CI run `28745108598`, and branch prune all pass.
+- [x] INTEGRATE: PR #433이 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인됐다.
 
 ### 판단 기준
 
