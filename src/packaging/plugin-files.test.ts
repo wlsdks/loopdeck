@@ -894,6 +894,19 @@ describe("plugin packaging files", () => {
     expect(todoSection).toContain("latest main CI run `28746602316`");
   });
 
+  it("keeps the Codex hook-count doctor evidence log tied to merged evidence", () => {
+    const todo = readFileSync(join(process.cwd(), "tasks/todo.md"), "utf8");
+    const todoSection = sectionBetween(
+      todo,
+      "## 2026-07-06 Codex Doctor Hook Count Evidence",
+    );
+
+    expect(todoSection).toContain(
+      "PR #445가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인됐다.",
+    );
+    expect(todoSection).toContain("latest main CI run `28746879799`");
+  });
+
   it("keeps CI setup actions on Node 24 compatible versions", () => {
     const workflow = readFileSync(
       join(process.cwd(), ".github/workflows/test.yml"),

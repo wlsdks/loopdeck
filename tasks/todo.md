@@ -6,8 +6,8 @@
 - [x] RED: focused doctor test must fail until duplicate Codex hook results expose `hookCount=2`, repaired results expose `hookCount=1`, and plain output says `duplicate hooks found (2 handlers)`.
 - [x] GREEN: doctor Codex settings include a raw-free hook count and plain duplicate output shows the handler count.
 - [x] EFFECT: the same test proves the user can compare duplicate count before repair and ready state after repair without seeing raw paths, prompts, or tokens.
-- [ ] VERIFY: focused doctor test, full local gate, PR CI, latest main CI, and branch prune all pass.
-- [ ] INTEGRATE: PR is merged after CI and the temporary branch is pruned locally and remotely.
+- [x] VERIFY: focused doctor test, full local gate, PR CI, latest main CI run `28746879799`, and branch prune all pass.
+- [x] INTEGRATE: PR #445가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인됐다.
 
 ### 판단 기준
 
