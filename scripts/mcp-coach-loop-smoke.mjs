@@ -140,6 +140,39 @@ function seedStoredPrompt(dataDir) {
     if (!promptId) {
       throw new Error("Smoke failed to seed a stored prompt.");
     }
+    storage.createLoopSnapshot({
+      id: "loop_mcp_coach_score_effectiveness",
+      created_at: "2026-07-05T00:05:00.000Z",
+      tool: "claude-code",
+      source: "mcp",
+      cwd_label: "prompt-coach-smoke-project",
+      project_id: "proj_mcp_coach_smoke",
+      prompt_ids: [promptId],
+      event_counts: {
+        prompts: 1,
+        tests_run: 3,
+      },
+      quality: {
+        average_prompt_score: 10,
+        top_gaps: ["Goal clarity", "Verification criteria"],
+        unresolved_questions: [],
+      },
+      outcome: {
+        status: "passed",
+        summary: "MCP score effectiveness evidence passed.",
+        evidence_refs: ["smoke:mcp-coach-loop", "test:score_prompt"],
+      },
+      next_brief: {
+        generated: true,
+        prompt_id: promptId,
+        summary: "Continue from MCP score effectiveness evidence.",
+      },
+      privacy: {
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        local_only: true,
+      },
+    });
     return promptId;
   } finally {
     storage.close();
@@ -226,6 +259,16 @@ function assertSmokeResult({ initialize, score, improve, applied, recorded }) {
     score?.privacy?.returns_prompt_body,
     false,
     "score_prompt should not return prompt bodies.",
+  );
+  assertEqual(
+    score?.effectiveness?.verdict,
+    "proven",
+    "score_prompt should return stored prompt effectiveness evidence.",
+  );
+  assertEqual(
+    score?.effectiveness?.calibration?.total_tests_run,
+    3,
+    "score_prompt should return effectiveness calibration counts.",
   );
   assertEqual(improve?.is_error === true, false, "improve_prompt should pass.");
   assertTruthy(

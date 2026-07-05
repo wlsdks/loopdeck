@@ -1112,6 +1112,7 @@ describe("plugin packaging files", () => {
       "prompt-linked outcome evidence",
       "CLI prompt outcome evidence",
       "prompt effectiveness verdict",
+      "MCP score_prompt effectiveness evidence",
       "prompt-coach show\n  --json",
       "`loop_outcomes`",
       "`effectiveness` verdict",
@@ -1129,6 +1130,7 @@ describe("plugin packaging files", () => {
       "prompt-linked outcome evidence",
       "CLI prompt outcome evidence",
       "Prompt effectiveness verdict",
+      "MCP score_prompt effectiveness evidence",
       "`prompt-coach show --json`",
       "`expected_impact` predictions to actual raw-free loop outcomes",
       "`effectiveness` verdict",
@@ -1162,12 +1164,14 @@ describe("plugin packaging files", () => {
       "smoke:agent-setup",
       "smoke:hooks",
       "smoke:mcp-coach-loop",
+      "score_prompt effectiveness evidence",
       "PASS",
       "Privacy Observations",
       "Human-only Remaining Steps",
     ]) {
       expect(evidence).toContain(required);
     }
+    expect(harness).toContain("score_prompt effectiveness evidence");
     expect(evidence).not.toContain("/Users/");
     expect(evidence).not.toMatch(/sk-[a-z0-9_-]{6,}/i);
     expect(evidence).not.toMatch(/gh[pousr]_[a-z0-9_]{12,}/i);

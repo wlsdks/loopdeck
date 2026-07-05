@@ -629,6 +629,33 @@ describe("MCP stdio server", () => {
     );
   });
 
+  it("declares stored prompt effectiveness evidence on score_prompt output schema", async () => {
+    const response = await handleMcpMessage({
+      jsonrpc: "2.0",
+      id: "tools-score-effectiveness",
+      method: "tools/list",
+      params: {},
+    });
+
+    const tools = (
+      response as {
+        result: {
+          tools: Array<{
+            name: string;
+            outputSchema: {
+              properties: Record<string, unknown>;
+            };
+          }>;
+        };
+      }
+    ).result.tools;
+    const scorePrompt = tools.find((tool) => tool.name === "score_prompt");
+
+    expect(scorePrompt?.outputSchema.properties).toHaveProperty(
+      "effectiveness",
+    );
+  });
+
   it("returns structured MCP content for improve_prompt calls", async () => {
     const response = await handleMcpMessage({
       jsonrpc: "2.0",
