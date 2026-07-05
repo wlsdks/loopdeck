@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-05 PromptLane 9.5 Quality Plan
+
+- [x] CHECK: 기존 수준평가가 축별 점수는 제시했지만 9.5/10을 증명하는 acceptance bar와 다음 slice를 repo에 고정하지 않았음을 확인했다.
+- [x] RED: 9.5 quality plan 문서, package inclusion, NEXT_BACKLOG 링크가 없으면 packaging test가 실패하도록 고정했다.
+- [x] GREEN: `docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md`에 축별 9.5 bar, 증거 기준, 다음 TDD slice를 기록하고 package/backlog에 연결했다.
+- [x] VERIFY: focused packaging test와 full gate를 통과한다.
+- [ ] INTEGRATE: PR이 CI `test (22)`/`test (24)` 통과 후 merge되고 branch prune까지 확인된다.
+
+### 판단 기준
+
+- 9.5점은 감상 평가가 아니라 축별 evidence bar로 판단한다.
+- 테스트 통과만으로 goal complete를 선언하지 않고, 실제 dogfood/CI/package/privacy 증거가 축별 요구사항과 맞아야 한다.
+
 ## 2026-07-05 PromptLane First Coach Loop Dogfood
 
 - [x] CHECK: setup smoke와 MCP smoke는 있지만 temp archive에서 실제 `hook codex` capture를 local server로 통과시킨 뒤 `coach`와 `loop` CLI로 이어지는 first loop dogfood가 없음을 확인했다.

@@ -797,6 +797,38 @@ describe("plugin packaging files", () => {
     );
   });
 
+  it("ships the PromptLane 9.5 quality plan and links it from the operational backlog", () => {
+    const packageJson = readJson<{
+      files: string[];
+    }>("package.json");
+    const planPath =
+      "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md";
+    const plan = readFileSync(join(process.cwd(), planPath), "utf8");
+    const backlog = readFileSync(
+      join(process.cwd(), "docs/NEXT_BACKLOG.md"),
+      "utf8",
+    );
+
+    expect(packageJson.files).toContain(planPath);
+    expect(backlog).toContain(planPath);
+    for (const axis of [
+      "Product planning and positioning",
+      "Local-first privacy boundary",
+      "Codex and Claude Code integration",
+      "Setup, doctor, and MCP smoke",
+      "Loop memory and continuation",
+      "Web UI and operational evidence",
+      "Release stability",
+    ]) {
+      expect(plan).toContain(axis);
+      expect(plan).toContain("9.5 bar");
+    }
+    expect(plan).toContain("dogfood:first-coach-loop");
+    expect(plan).toContain("dogfood:mcp-native-dialog-approved");
+    expect(plan).toContain("scheduled `ui-patrol`");
+    expect(plan).not.toMatch(/\bTBD\b|TODO:|implement later|fill in details/i);
+  });
+
   it("documents /loopdeck:* as a future alias-only slash namespace without shipping command files yet", () => {
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
