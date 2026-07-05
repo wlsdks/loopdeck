@@ -245,8 +245,9 @@ Decision:
 - The human `prompt-coach quality-evidence` summary now renders external
   evidence status directly: native dialog approved-run requirement.
   `prompt-coach quality-evidence --operator-brief` prints only the current
-  approval status, command, preconditions, completion evidence, and guardrails
-  for that remaining dogfood step, while explicitly not running it.
+  approval status, command, refusal preflight command, preconditions,
+  completion evidence, and guardrails for that remaining dogfood step, while
+  explicitly not running it.
   The default blocker list also prints each blocker `remaining_evidence` and
   blocker `next_action`, so agents no longer need to switch to JSON output just
   to decide which lower-level evidence keeps an axis below 9.5.

@@ -12,6 +12,8 @@
 - [x] GREEN: `prompt-coach quality-evidence --operator-brief`를 추가해 현재
   approval status, command, preconditions, completion evidence, guardrails,
   그리고 dogfood를 실행하지 않는 result boundary를 출력한다.
+- [x] GREEN: operator brief에 approval env 없이 실행할 수 있는 refusal
+  preflight command와 기대 refusal 조건을 추가했다.
 - [x] EFFECT: 명시 승인 없이는 native dialog를 열지 않는 정책을 유지하면서,
   승인자가 남은 blocker를 안전하게 해소할 때 필요한 실행 brief를 제품 CLI에서
   바로 확인할 수 있다.

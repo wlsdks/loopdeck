@@ -699,7 +699,9 @@ pnpm prompt-coach quality-evidence --require-complete
 `--require-complete` fails while scorecard axes or direct evidence blockers are
 still pending. Use it only as a release/goal-completion gate.
 `--operator-brief` prints the focused approval checklist for the remaining
-native dialog dogfood without opening the dialog.
+native dialog dogfood without opening the dialog. It also includes the refusal
+preflight command that should stop before opening a native dialog unless
+`PROMPT_COACH_NATIVE_DIALOG_APPROVED=1` is set.
 The JSON output also includes `recommended_next_slices` (shown as recommended next slices
 in the text output), which separates immediately runnable local
 evidence work from items blocked on an external event or explicit operator

@@ -295,6 +295,12 @@ describe("quality-evidence CLI command", () => {
       "Command: PROMPT_COACH_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved",
     );
     expect(brief).toContain(
+      "Refusal preflight: corepack pnpm dogfood:mcp-native-dialog-approved",
+    );
+    expect(brief).toContain(
+      "Expected refusal: command refuses before opening a native dialog unless PROMPT_COACH_NATIVE_DIALOG_APPROVED=1 is set.",
+    );
+    expect(brief).toContain(
       "Preconditions: The operator explicitly approves opening a native OS dialog.",
     );
     expect(brief).toContain(
