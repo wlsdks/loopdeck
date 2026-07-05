@@ -782,6 +782,26 @@ describe("plugin packaging files", () => {
     expect(nextSlice).not.toContain("/Users/");
   });
 
+  it("documents the PromptLane repositioning before replacing Loopdeck branding", () => {
+    const specPath =
+      "docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md";
+    const packageJson = readJson<{ files: string[] }>("package.json");
+    const spec = readFileSync(join(process.cwd(), specPath), "utf8");
+
+    expect(packageJson.files).toContain(specPath);
+    expect(spec).toContain("# PromptLane Repositioning Design");
+    expect(spec).toContain("Product name: PromptLane");
+    expect(spec).toContain("Loopdeck is rejected as the primary product name");
+    expect(spec).toContain("prompt improvement workspace");
+    expect(spec).toContain("loop-aware continuation");
+    expect(spec).toContain("Keep `prompt-coach`");
+    expect(spec).toContain("TDD");
+    expect(spec).not.toContain("TODO");
+    expect(spec).not.toContain("TBD");
+    expect(spec).not.toContain("sk-proj");
+    expect(spec).not.toContain("/Users/");
+  });
+
   it("ships a machine-checkable runtime id inventory before rename work", () => {
     const inventoryPath =
       "docs/superpowers/plans/2026-07-04-loopdeck-runtime-id-inventory.json";
