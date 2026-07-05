@@ -118,7 +118,7 @@ PromptLane does not call the provider on the user's behalf.
 
 ## Feature Portfolio
 
-Keep:
+### Keep
 
 - local prompt capture
 - redacted Markdown archive as human-readable source of truth
@@ -128,23 +128,52 @@ Keep:
 - web archive/detail/search/settings surfaces
 - setup, doctor, status, hook, and smoke commands
 
-Improve:
+Decision rule: keep features that already prove the first value loop without
+weakening local-first privacy or changing runtime IDs.
+
+### Improve
 
 - PromptLane-first README and plugin metadata
 - Codex and Claude Code setup/status guidance
-- continuation briefs
-- worktree/session/branch filtering
+- selected worktree/session/branch continuation briefs
 - user-approved memory and instruction patch workflows
 - package/plugin docs around compatibility IDs
 
-Do not expand now:
+Decision rule: improve surfaces that make the next prompt more specific,
+reviewable, and safe for plain Codex or Claude Code users.
+
+### Build Next
+
+- storage capability negotiation
+- capability-aware MCP setup/status responses
+- loop memory review surfaces that show evidence before approval
+- focused smoke coverage for Codex and Claude Code happy paths
+
+Decision rule: build only slices that reduce ambiguity, privacy risk, or setup
+failure in the current local-first workflow.
+
+### Defer
 
 - generic durable execution runtime
 - semantic vector memory by default
 - cloud/team sync
+- background cron collection beyond explicit local commands
+- team/shared memory sync
+
+Decision rule: defer features that need a broader trust, storage, cost, or
+multi-user model before they can be safe.
+
+### Reject
+
+- hidden external LLM calls
 - external provider judge calls from inside PromptLane
 - automatic prompt resubmission
 - automatic merge/rebase/branch checkout
+- provider credential extraction, storage, proxying, or replay
+- raw transcript scraping from private app state
+
+Decision rule: reject features that make PromptLane act as a hidden provider
+proxy, autonomous agent runtime, transcript scraper, or merge bot.
 
 ## Autonomy Model
 

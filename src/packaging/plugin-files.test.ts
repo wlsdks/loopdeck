@@ -506,6 +506,41 @@ describe("plugin packaging files", () => {
     expect(positioning).toContain("`prompt-coach`");
   });
 
+  it("keeps the PromptLane feature portfolio decisions explicit", () => {
+    const positioning = readFileSync(
+      join(process.cwd(), "docs/PROMPTLANE.md"),
+      "utf8",
+    );
+
+    for (const heading of [
+      "## Feature Portfolio",
+      "### Keep",
+      "### Improve",
+      "### Build Next",
+      "### Defer",
+      "### Reject",
+    ]) {
+      expect(positioning).toContain(heading);
+    }
+
+    for (const requiredDecision of [
+      "local prompt capture",
+      "redacted Markdown archive",
+      "deterministic prompt scoring",
+      "Codex and Claude Code setup/status guidance",
+      "selected worktree/session/branch continuation briefs",
+      "user-approved memory and instruction patch workflows",
+      "storage capability negotiation",
+      "semantic vector memory by default",
+      "cloud/team sync",
+      "hidden external LLM calls",
+      "automatic prompt resubmission",
+      "automatic merge/rebase/branch checkout",
+    ]) {
+      expect(positioning).toContain(requiredDecision);
+    }
+  });
+
   it("keeps agent instruction docs routed through the PromptLane product contract", () => {
     const agents = readFileSync(join(process.cwd(), "AGENTS.md"), "utf8");
     const claude = readFileSync(join(process.cwd(), "CLAUDE.md"), "utf8");
