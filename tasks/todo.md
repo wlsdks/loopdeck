@@ -6,7 +6,7 @@
 - [x] RED: 9.5 quality plan 문서, package inclusion, NEXT_BACKLOG 링크가 없으면 packaging test가 실패하도록 고정했다.
 - [x] GREEN: `docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md`에 축별 9.5 bar, 증거 기준, 다음 TDD slice를 기록하고 package/backlog에 연결했다.
 - [x] VERIFY: focused packaging test와 full gate를 통과한다.
-- [ ] INTEGRATE: PR이 CI `test (22)`/`test (24)` 통과 후 merge되고 branch prune까지 확인된다.
+- [x] INTEGRATE: PR #415가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
 ### 판단 기준
 
