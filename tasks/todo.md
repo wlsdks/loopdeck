@@ -6,7 +6,7 @@
 - [x] GREEN: `docs/LOOPDECK-LEGACY-SURFACES.md`를 추가해 legacy CLI alias, MCP compatibility tool, internal runtime type, historical planning docs, forbidden product-facing copy를 분류했다.
 - [x] GREEN: `package.json#files`, `docs/PACKAGE_CONTENTS.md`, `docs/PROMPTLANE.md`, `docs/LOOPDECK.md`를 allowlist 문서와 연결했다.
 - [x] VERIFY: focused packaging guard, full test/lint/build, pack dry-run, diff check를 통과한다.
-- [ ] INTEGRATE: 변경을 커밋, 푸시, PR, CI 확인 후 merge하고 branch를 정리한다.
+- [x] INTEGRATE: PR #389가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
 ### 판단 기준
 
