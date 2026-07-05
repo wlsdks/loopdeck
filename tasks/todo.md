@@ -15,6 +15,8 @@
   goal is still pending without treating passing tests as full product proof.
 - [x] GREEN: `scorecard_axes` now lists all seven 9.5 scorecard axes from the
   plan and marks axes below 9.5 as `below_target`.
+- [x] GREEN: `--require-complete` keeps JSON output available but exits nonzero
+  while `promptlane_95_quality.status` is not `complete`.
 
 ### 판단 기준
 
@@ -25,6 +27,8 @@
   or operator-approved native dialog evidence is missing.
 - The command must keep 9.5 status `pending` while any scorecard axis is below
   its 9.5 target.
+- Release/goal-completion automation can use
+  `corepack pnpm evidence:quality -- --require-complete` as a fail-closed gate.
 
 ## 2026-07-06 PromptLane Scheduled UI Patrol Evidence Checker
 

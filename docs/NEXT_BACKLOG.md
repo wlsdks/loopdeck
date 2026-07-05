@@ -177,7 +177,9 @@ Decision:
   `promptlane_95_quality` summary. It includes `scorecard_axes`,
   `scheduled_ui_patrol`, and `native_dialog_approved_dogfood` blockers so
   agents do not claim 9.5 completion while any scorecard axis or direct
-  evidence blocker is still pending.
+  evidence blocker is still pending. Release/goal-completion checks can run
+  `corepack pnpm evidence:quality -- --require-complete` to fail closed while
+  that summary is not `complete`.
 - The earlier GitHub Actions Node 20 runtime annotation and Node 24
   `better-sqlite3` install warning are closed. Keep the release-stability bar
   focused on fresh CI/package warnings that affect local-first install, build,

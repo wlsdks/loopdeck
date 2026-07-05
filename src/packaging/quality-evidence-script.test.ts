@@ -96,4 +96,43 @@ describe("quality 9.5 evidence script", () => {
     );
     expect(result.stdout).not.toContain(process.cwd());
   });
+
+  it("fails closed when require-complete is set and 9.5 evidence is still pending", () => {
+    sandbox = mkdtempSync(join(tmpdir(), "promptlane-quality-evidence-"));
+    const uiPatrolPath = join(sandbox, "ui-patrol.json");
+    writeFileSync(
+      uiPatrolPath,
+      JSON.stringify({
+        check: "scheduled_ui_patrol",
+        status: "pending_no_schedule_run",
+        expected_artifact: "ui-patrol-screenshots",
+        expected_png_count: 9,
+      }),
+    );
+
+    const result = spawnSync(
+      process.execPath,
+      [
+        "scripts/quality-95-evidence.mjs",
+        "--ui-patrol-json",
+        uiPatrolPath,
+        "--require-complete",
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "pipe"],
+      },
+    );
+
+    expect(result.status).toBe(1);
+    const parsed = JSON.parse(result.stdout) as {
+      status: string;
+      blockers: Array<{ id: string }>;
+    };
+    expect(parsed.status).toBe("pending");
+    expect(parsed.blockers.length).toBeGreaterThan(0);
+    expect(result.stderr).toContain("promptlane_95_quality pending");
+    expect(result.stderr).toContain("--require-complete");
+  });
 });
