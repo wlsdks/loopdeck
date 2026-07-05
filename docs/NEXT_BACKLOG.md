@@ -213,6 +213,12 @@ Decision:
   browser E2E now asserts measured vs unmeasured coverage plus the review-first
   next action so web users can judge effect without switching to CLI JSON or
   MCP output.
+- Archive effectiveness benchmark evidence is landed: PR #469 added
+  `archive_effectiveness_score` as a benchmark hard gate, and
+  `corepack pnpm benchmark -- --json` reported
+  `archive_effectiveness_score: 1`, `privacy_leak_count: 0`, and raw-free
+  `effectiveness_summary` coverage from a linked passed loop outcome. Main CI
+  run `28751693022` passed `test (22)` and `test (24)` after merge.
 
 Rationale:
 

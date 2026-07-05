@@ -149,6 +149,27 @@ describe("plugin packaging files", () => {
     expect(benchmarkSpec).toContain("Pass threshold");
   });
 
+  it("keeps the 9.5 ledger tied to effectiveness benchmark evidence", () => {
+    const plan = readFileSync(
+      join(
+        process.cwd(),
+        "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
+      ),
+      "utf8",
+    );
+    const backlog = readFileSync(
+      join(process.cwd(), "docs/NEXT_BACKLOG.md"),
+      "utf8",
+    );
+
+    for (const content of [plan, backlog]) {
+      expect(content).toContain("PR #469");
+      expect(content).toContain("archive_effectiveness_score");
+      expect(content).toContain("28751693022");
+      expect(content).toContain("privacy_leak_count: 0");
+    }
+  });
+
   it("keeps README verification gates aligned with the package dry-run wrapper", () => {
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");

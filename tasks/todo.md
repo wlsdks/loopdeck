@@ -1,5 +1,29 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Archive Effectiveness Benchmark Ledger
+
+- [x] CHECK: PR #469로 `archive_effectiveness_score` benchmark hard gate는
+  main에 들어갔지만, 9.5 plan/backlog ledger가 아직 그 효과 측정 evidence를
+  추적하지 않아 다음 작업자가 stale evidence로 판단할 수 있었다.
+- [x] RED: packaging guard가 9.5 plan과 backlog에서 PR #469,
+  `archive_effectiveness_score`, main CI run `28751693022`,
+  `privacy_leak_count: 0`를 찾지 못해 실패해야 한다.
+- [x] GREEN: 9.5 plan과 backlog가 benchmark JSON 결과, raw-free
+  `effectiveness_summary`, linked passed loop outcome, Node 22/24 main CI
+  evidence를 함께 기록한다.
+- [x] EFFECT: PromptLane의 효과 판단은 CLI/MCP/Web summary에서 끝나지
+  않고, `corepack pnpm benchmark -- --json` hard gate로 회귀를 잡는다는
+  기준이 장기 품질 장부에 남는다.
+
+### 판단 기준
+
+- Evidence ledger must include PR #469, `archive_effectiveness_score`,
+  main CI run `28751693022`, and `privacy_leak_count: 0`.
+- This slice must not claim scheduled `ui-patrol` or native-dialog dogfood is
+  complete.
+- The guard must fail if future docs remove the benchmark effectiveness
+  evidence from the 9.5 ledger.
+
 ## 2026-07-06 PromptLane Web Archive Effectiveness Summary
 
 - [x] CHECK: archive-level `effectiveness_summary`는 CLI/MCP/API에

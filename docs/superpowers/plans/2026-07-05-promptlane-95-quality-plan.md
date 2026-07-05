@@ -104,6 +104,11 @@
   browser E2E flow to prove users can see measured vs unmeasured coverage,
   proven/mixed verdict counts, linked outcomes, tests run, and next action in a
   raw-free web workflow.
+- PR #469 promoted archive effectiveness from a visible summary to a benchmark
+  hard gate: `corepack pnpm benchmark -- --json` now reports
+  `archive_effectiveness_score: 1`, `privacy_leak_count: 0`, and safe
+  `effectiveness_summary` coverage backed by a linked passed loop outcome. Main
+  CI run `28751693022` passed Node 22 and Node 24 after merge.
 - `docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md` records current
   `corepack pnpm smoke:release` and `corepack pnpm pack:dry-run` evidence for
   the local-first release path.
@@ -123,13 +128,14 @@
   open a native dialog.
 - Fresh user-flow, expected-impact, prompt-linked outcome evidence, CLI prompt
   outcome evidence, prompt effectiveness verdict evidence, effectiveness
-  calibration evidence, archive-level effectiveness summary, and web archive
-  effectiveness summary are now
+  calibration evidence, archive-level effectiveness summary, web archive
+  effectiveness summary, and archive effectiveness benchmark evidence are now
   repeatable through `dogfood:web-user-flow`, browser E2E, focused
-  CLI/storage/web tests, and `corepack pnpm ui-patrol`. MCP score_prompt
-  effectiveness evidence is now proven on the default branch through PR #462,
-  main CI `28750281428`, and branch pruning. Release smoke evidence is current
-  in `docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md`. Web operations still need
+  CLI/storage/web tests, `corepack pnpm ui-patrol`, and
+  `corepack pnpm benchmark -- --json`. MCP score_prompt effectiveness evidence
+  is now proven on the default branch through PR #462, main CI `28750281428`,
+  and branch pruning. Release smoke evidence is current in
+  `docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md`. Web operations still need
   scheduled artifact evidence before claiming 9.5.
 
 ## Required Slices
