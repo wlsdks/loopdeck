@@ -101,7 +101,6 @@ describe("plugin packaging files", () => {
       join(process.cwd(), "docs/RELEASE_CHECKLIST.md"),
       "utf8",
     );
-
     for (const command of [
       "corepack pnpm format",
       "corepack pnpm test",
@@ -932,13 +931,21 @@ describe("plugin packaging files", () => {
       join(process.cwd(), "scripts/quality-95-evidence.mjs"),
       "utf8",
     );
+    const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
+    const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
 
     expect(packageJson.files).toContain("scripts/quality-95-evidence.mjs");
     expect(packageJson.scripts["evidence:quality"]).toBe(
       "node scripts/quality-95-evidence.mjs",
     );
+    expect(readFileSync(join(process.cwd(), "src/cli/index.ts"), "utf8")).toContain(
+      "registerQualityEvidenceCommand",
+    );
     expect(releaseChecklist).toContain(
       "corepack pnpm evidence:quality -- --require-complete",
+    );
+    expect(releaseChecklist).toContain(
+      "pnpm prompt-coach quality-evidence --require-complete",
     );
     expect(releaseChecklist).toContain(
       "corepack pnpm --silent evidence:quality",
@@ -950,10 +957,16 @@ describe("plugin packaging files", () => {
       expect(content).toContain("corepack pnpm evidence:quality");
       expect(content).toContain("corepack pnpm --silent evidence:quality");
       expect(content).toContain("node scripts/quality-95-evidence.mjs");
+      expect(content).toContain("prompt-coach quality-evidence --json");
       expect(content).toContain("promptlane_95_quality");
       expect(content).toContain("scorecard_axes");
       expect(content).toContain("native_dialog_approved_dogfood");
       expect(content).toContain("scheduled_ui_patrol");
+    }
+    for (const content of [readme, readmeKo]) {
+      expect(content).toContain("prompt-coach quality-evidence");
+      expect(content).toContain("prompt-coach quality-evidence --json");
+      expect(content).toContain("prompt-coach quality-evidence --require-complete");
     }
     expect(evidenceScript).toContain("promptlane_95_quality");
     expect(evidenceScript).toContain("scorecard_axes");

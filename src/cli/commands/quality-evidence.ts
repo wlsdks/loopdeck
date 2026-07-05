@@ -1,0 +1,104 @@
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import type { Command } from "commander";
+
+import { UserError } from "../user-error.js";
+
+type QualityEvidenceCliOptions = {
+  json?: boolean;
+  requireComplete?: boolean;
+};
+
+type QualityEvidenceSummary = {
+  check: string;
+  status: string;
+  scorecard_axes: unknown[];
+  blockers: Array<{ id: string; status: string; next_action?: string }>;
+  next_action: string;
+};
+
+export function registerQualityEvidenceCommand(program: Command): void {
+  program
+    .command("quality-evidence")
+    .description("Report PromptLane 9.5 quality evidence and blockers.")
+    .option("--json", "Print JSON.")
+    .option(
+      "--require-complete",
+      "Exit with an error while the 9.5 quality evidence is still pending.",
+    )
+    .action((options: QualityEvidenceCliOptions) => {
+      console.log(qualityEvidenceForCli(options));
+    });
+}
+
+export function qualityEvidenceForCli(
+  options: QualityEvidenceCliOptions = {},
+): string {
+  const result = runQualityEvidenceScript(options);
+  const summary = JSON.parse(result.stdout) as QualityEvidenceSummary;
+
+  if (options.requireComplete && result.status !== 0) {
+    throw new UserError(
+      result.stderr.trim() ||
+        "promptlane_95_quality pending; --require-complete refuses to pass.",
+    );
+  }
+
+  return options.json ? JSON.stringify(summary, null, 2) : formatSummary(summary);
+}
+
+function runQualityEvidenceScript(options: QualityEvidenceCliOptions): {
+  status: number;
+  stdout: string;
+  stderr: string;
+} {
+  const args = [qualityEvidenceScriptPath()];
+  if (options.requireComplete) {
+    args.push("--require-complete");
+  }
+  const result = spawnSync(process.execPath, args, {
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+
+  if (!result.stdout.trim()) {
+    throw new UserError(
+      result.stderr.trim() || "Unable to read PromptLane quality evidence.",
+    );
+  }
+
+  return {
+    status: result.status ?? 1,
+    stdout: result.stdout,
+    stderr: result.stderr,
+  };
+}
+
+function qualityEvidenceScriptPath(): string {
+  return fileURLToPath(
+    new URL("../../../scripts/quality-95-evidence.mjs", import.meta.url),
+  );
+}
+
+function formatSummary(summary: QualityEvidenceSummary): string {
+  const blockerRows =
+    summary.blockers.length > 0
+      ? summary.blockers.map(
+          (blocker) => `- ${blocker.id}: ${blocker.status}`,
+        )
+      : ["- none"];
+
+  return [
+    "PromptLane 9.5 quality evidence",
+    `Status: ${summary.status}`,
+    `Scorecard axes: ${summary.scorecard_axes.length}`,
+    `Blockers: ${summary.blockers.length}`,
+    "",
+    "Blockers",
+    ...blockerRows,
+    "",
+    `Next action: ${summary.next_action}`,
+    "",
+    "Privacy: local-only, no external calls, no prompt bodies, no raw paths.",
+  ].join("\n");
+}

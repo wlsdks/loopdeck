@@ -559,6 +559,17 @@ pnpm prompt-coach score --json
 pnpm prompt-coach score --tool codex --json
 ```
 
+PromptLane 9.5 품질 evidence gate 확인:
+
+```sh
+pnpm prompt-coach quality-evidence
+pnpm prompt-coach quality-evidence --json
+pnpm prompt-coach quality-evidence --require-complete
+```
+
+`--require-complete`는 scorecard axis나 직접 evidence blocker가 남아 있으면
+실패합니다. release/goal-completion gate로만 사용하세요.
+
 ## 로컬 분석 Preview
 
 프롬프트 상세 화면은 로컬 rule-based analysis preview를 제공합니다. 목표, 배경 맥락, 범위 제한, 출력 형식, 검증 기준이 포함되어 있는지 요약합니다. 각 프롬프트에는 checklist breakdown 기반의 deterministic `0-100` Prompt Quality Score도 표시됩니다.
