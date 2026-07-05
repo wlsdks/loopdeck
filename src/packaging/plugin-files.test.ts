@@ -947,6 +947,20 @@ describe("plugin packaging files", () => {
     expect(todoSection).toContain("latest main CI run `28747890493`");
   });
 
+  it("keeps the prompt outcome effectiveness log tied to merged evidence", () => {
+    const todo = readFileSync(join(process.cwd(), "tasks/todo.md"), "utf8");
+    const todoSection = sectionBetween(
+      todo,
+      "## 2026-07-06 PromptLane Prompt Outcome Effectiveness Evidence",
+    );
+
+    expect(todoSection).toContain(
+      "PR #453이 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인됐다.",
+    );
+    expect(todoSection).toContain("latest main CI run `28748310489`");
+    expect(todoSection).toContain("`corepack pnpm e2e:browser`");
+  });
+
   it("keeps CI setup actions on Node 24 compatible versions", () => {
     const workflow = readFileSync(
       join(process.cwd(), ".github/workflows/test.yml"),
