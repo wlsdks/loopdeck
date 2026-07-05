@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-05 Better SQLite Node 24 Install Warning Cleanup
+
+- [x] CHECK: latest main CI after PR #426 passed but Node 24 install logs still showed `better-sqlite3` triggering `prebuild-install@7.1.3` `fs.R_OK` deprecation warnings.
+- [x] RED: packaging guard must fail while `better-sqlite3` remains on 11.x and no `prebuild-install@7.1.3` patch replaces deprecated permission constants.
+- [x] GREEN: `better-sqlite3` now targets the npm-published 12.x line and `prebuild-install@7.1.3` is patched through pnpm to use `fs.constants.R_OK` and `fs.constants.W_OK`.
+- [x] VERIFY: `NODE_OPTIONS=--trace-deprecation corepack pnpm rebuild better-sqlite3` completes without `fs.R_OK`, `DEP0176`, or `DeprecationWarning` output.
+- [ ] INTEGRATE: focused guard, full local gate, PR CI, latest main CI warning check, merge, and branch prune all pass.
+
+### 판단 기준
+
+- dependency warning cleanup은 무조건 suppression하지 않고, 먼저 npm 최신 버전과 upstream state를 확인한다.
+- upstream `prebuild-install` 최신이 여전히 `7.1.3`이면 warning-free release가 나오기 전까지 작은 pnpm patch를 유지한다.
+- patch는 deprecated permission constants만 바꾼다. install flow, native binary resolution, `better-sqlite3` runtime API는 바꾸지 않는다.
+
 ## 2026-07-05 CI Action Runtime Warning Cleanup
 
 - [x] CHECK: latest main CI run `28743502403` passed Node 22 and Node 24 but emitted GitHub Actions annotations because `pnpm/action-setup@v4` runs on the deprecated Node 20 action runtime.

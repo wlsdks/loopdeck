@@ -142,6 +142,11 @@ Decision:
   `pnpm/action-setup@v4` runs on the deprecated Node 20 action runtime; update
   the test workflow to `pnpm/action-setup@v6`, whose action metadata uses
   Node 24, before treating release stability as closer to the 9.5 bar.
+- Latest main CI after PR #426 still showed a Node 24 install warning from
+  `better-sqlite3` through `prebuild-install@7.1.3` using deprecated
+  `fs.R_OK`; keep the dependency on the npm-published `better-sqlite3` 12.x
+  line and patch only the transient `prebuild-install` permission constants
+  until upstream publishes a warning-free release.
 
 Rationale:
 
