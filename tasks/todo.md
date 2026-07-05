@@ -5,13 +5,14 @@
 - [x] CHECK: latest main CI run `28743502403` passed Node 22 and Node 24 but emitted GitHub Actions annotations because `pnpm/action-setup@v4` runs on the deprecated Node 20 action runtime.
 - [x] RED: packaging guard must fail while `.github/workflows/test.yml` still uses `pnpm/action-setup@v4` instead of Node 24 compatible `pnpm/action-setup@v6`.
 - [x] GREEN: `.github/workflows/test.yml` now uses `pnpm/action-setup@v6`, matching the latest official action major whose metadata uses `runs.using: node24`.
-- [ ] VERIFY: focused packaging guard, full local gate, PR CI, latest main CI, and branch prune all pass.
-- [ ] INTEGRATE: PR이 CI `test (22)`/`test (24)` 통과 후 merge되고 branch prune까지 확인된다.
+- [x] VERIFY: focused packaging guard, full local gate, PR CI, latest main CI, and branch prune all pass.
+- [x] INTEGRATE: PR #425가 CI `test (22)`/`test (24)` 통과 후 merge되고 branch prune까지 확인됐다.
 
 ### 판단 기준
 
 - 릴리스 안정성 9.5 판단에는 통과 여부뿐 아니라 CI annotation drift도 포함한다.
 - GitHub Actions action major update는 공식 metadata로 runtime을 확인하고, workflow guard로 재발을 막는다.
+- 최신 main CI run `28743728855`에는 `Node.js 20 is deprecated` annotation이 남지 않았지만, Node 24 install 단계의 `better-sqlite3` `fs.R_OK` deprecation warning은 별도 release-stability slice로 판단한다.
 
 ## 2026-07-05 PromptLane 9.5 Scorecard Refresh
 
