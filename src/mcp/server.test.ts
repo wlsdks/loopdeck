@@ -43,7 +43,7 @@ describe("MCP stdio server", () => {
     );
   });
 
-  it("uses Loopdeck archive copy in agent-facing tool descriptions while preserving prompt-coach commands", async () => {
+  it("uses PromptLane archive copy in agent-facing tool descriptions while preserving prompt-coach commands", async () => {
     const response = await handleMcpMessage({
       jsonrpc: "2.0",
       id: "tool-copy",
@@ -53,13 +53,15 @@ describe("MCP stdio server", () => {
     const tools = (response?.result as { tools: Array<unknown> }).tools;
     const joinedDescriptions = collectDescriptionStrings(tools).join("\n");
 
-    expect(joinedDescriptions).toContain("local Loopdeck archive");
+    expect(joinedDescriptions).toContain("local PromptLane archive");
+    expect(joinedDescriptions).not.toContain("local Loopdeck archive");
     expect(joinedDescriptions).not.toContain("local prompt-coach archive");
     expect(joinedDescriptions).not.toContain("prompt-coach archive");
     expect(joinedDescriptions).not.toContain("prompt-coach storage");
     expect(joinedDescriptions).not.toContain("Prompt Coach");
     expect(joinedDescriptions).toContain("prompt-coach MCP tool");
-    expect(JSON.stringify(tools)).toContain("Loopdeck status preflight");
+    expect(JSON.stringify(tools)).toContain("PromptLane status preflight");
+    expect(JSON.stringify(tools)).not.toContain("Loopdeck status preflight");
     expect(JSON.stringify(tools)).not.toContain("Prompt-memory status preflight");
   });
 

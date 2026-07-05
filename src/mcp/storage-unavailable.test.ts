@@ -14,8 +14,9 @@ describe("storageUnavailableMessage", () => {
     const message = storageUnavailableMessage(error);
 
     expect(message).toBe(
-      "Local Loopdeck archive is not available. Run `prompt-coach init` first or pass --data-dir. Reason: ENOENT.",
+      "Local PromptLane archive is not available. Run `prompt-coach init` first or pass --data-dir. Reason: ENOENT.",
     );
+    expect(message).not.toContain("Loopdeck");
     expect(message).not.toContain("/Users/example");
     expect(message).not.toContain("prompt-coach.sqlite");
   });
@@ -26,8 +27,9 @@ describe("storageUnavailableMessage", () => {
     );
 
     expect(message).toBe(
-      "Local Loopdeck archive is not available. Run `prompt-coach init` first or pass --data-dir.",
+      "Local PromptLane archive is not available. Run `prompt-coach init` first or pass --data-dir.",
     );
+    expect(message).not.toContain("Loopdeck");
     expect(message).not.toContain("/tmp/private");
   });
 });

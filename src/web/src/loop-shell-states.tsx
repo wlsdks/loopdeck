@@ -6,7 +6,7 @@ export function LoopEmptyState() {
   return (
     <section className="panel loops-empty">
       <div>
-        <span className="panel-eyebrow">Loopdeck</span>
+        <span className="panel-eyebrow">PromptLane</span>
         <h2>No loop snapshots yet</h2>
         <p>
           Run <code>prompt-coach loop collect</code> after a Codex or Claude

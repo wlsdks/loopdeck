@@ -49,10 +49,10 @@ export const GET_LOOPDECK_STATUS_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
   {
     name: "get_loopdeck_status",
     description:
-      "Check whether local Loopdeck loop snapshots are available for the current Loopdeck archive. Use this when Codex or Claude Code needs to know if a previous loop can be continued or whether the user should run `prompt-coach loop collect` first. Returns safe loop metadata, available loop tools, next actions, and privacy flags. It never returns prompt bodies, raw absolute paths, secrets, transcripts, or external LLM results.",
+      "Check whether local PromptLane loop snapshots are available for the current PromptLane archive. Use this when Codex or Claude Code needs to know if a previous loop can be continued or whether the user should run `prompt-coach loop collect` first. Returns safe loop metadata, available loop tools, next actions, and privacy flags. It never returns prompt bodies, raw absolute paths, secrets, transcripts, or external LLM results.",
     annotations: {
       ...LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS,
-      title: "Loopdeck loop status",
+      title: "PromptLane loop status",
     },
     inputSchema: {
       type: "object",
@@ -379,10 +379,10 @@ export const PREPARE_LOOP_BRIEF_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
   {
     name: "prepare_loop_brief",
     description:
-      "Prepare a copy-ready continuation prompt from a local Loopdeck snapshot. Use this when Codex or Claude Code is resuming an agent loop, handing off work across sessions/worktrees, or needs the next prompt after `prompt-coach loop collect`. Omit filters for the latest snapshot, or pass worktree/session/branch filters to continue a selected loop. This is read-only and never auto-submits the prompt. It returns prompt ids and loop metadata only, never prompt bodies, raw paths, secrets, transcripts, or external LLM results.",
+      "Prepare a copy-ready continuation prompt from a local PromptLane snapshot. Use this when Codex or Claude Code is resuming an agent loop, handing off work across sessions/worktrees, or needs the next prompt after `prompt-coach loop collect`. Omit filters for the latest snapshot, or pass worktree/session/branch filters to continue a selected loop. This is read-only and never auto-submits the prompt. It returns prompt ids and loop metadata only, never prompt bodies, raw paths, secrets, transcripts, or external LLM results.",
     annotations: {
       ...LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS,
-      title: "Prepare Loopdeck continuation brief",
+      title: "Prepare PromptLane continuation brief",
     },
     inputSchema: {
       type: "object",
@@ -459,10 +459,10 @@ export const RECORD_LOOP_OUTCOME_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
   {
     name: "record_loop_outcome",
     description:
-      "Record user-approved outcome metadata for a local Loopdeck snapshot after Codex or Claude Code has verified a loop result. Use this to mark a specific snapshot, or the latest snapshot when snapshot_id is omitted, as passed, failed, blocked, abandoned, in progress, or unknown. This writes only status, summary, and evidence references; it never stores prompt bodies, raw absolute paths, secrets, transcripts, or external LLM results.",
+      "Record user-approved outcome metadata for a local PromptLane snapshot after Codex or Claude Code has verified a loop result. Use this to mark a specific snapshot, or the latest snapshot when snapshot_id is omitted, as passed, failed, blocked, abandoned, in progress, or unknown. This writes only status, summary, and evidence references; it never stores prompt bodies, raw absolute paths, secrets, transcripts, or external LLM results.",
     annotations: {
       ...LOCAL_LOOP_WRITE_TOOL_ANNOTATIONS,
-      title: "Record Loopdeck outcome",
+      title: "Record PromptLane outcome",
     },
     inputSchema: {
       type: "object",
@@ -471,7 +471,7 @@ export const RECORD_LOOP_OUTCOME_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
         snapshot_id: {
           type: "string",
           description:
-            "Optional local Loopdeck snapshot id. Omit this to update the latest snapshot.",
+            "Optional local PromptLane snapshot id. Omit this to update the latest snapshot.",
         },
         latest: {
           type: "boolean",
@@ -544,10 +544,10 @@ export const PROPOSE_LOOP_MEMORY_CANDIDATE_TOOL_DEFINITION: PromptCoachMcpToolDe
   {
     name: "propose_loop_memory_candidate",
     description:
-      "Decide whether the latest local Loopdeck outcome is safe and evidence-backed enough to propose as a memory candidate. This is read-only and approval-gated: it never writes AGENTS.md, CLAUDE.md, memory files, prompt bodies, raw paths, secrets, transcripts, compact summaries, or external LLM results.",
+      "Decide whether the latest local PromptLane outcome is safe and evidence-backed enough to propose as a memory candidate. This is read-only and approval-gated: it never writes AGENTS.md, CLAUDE.md, memory files, prompt bodies, raw paths, secrets, transcripts, compact summaries, or external LLM results.",
     annotations: {
       ...LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS,
-      title: "Propose Loopdeck memory candidate",
+      title: "Propose PromptLane memory candidate",
     },
     inputSchema: {
       type: "object",
@@ -614,10 +614,10 @@ export const RECORD_LOOP_MEMORY_TOOL_DEFINITION: PromptCoachMcpToolDefinition =
   {
     name: "record_loop_memory",
     description:
-      "Record a user-approved Loopdeck memory from the latest eligible loop outcome. This writes only the approved candidate statement and safe evidence refs into local Loopdeck storage; it never writes AGENTS.md, CLAUDE.md, project docs, prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
+      "Record a user-approved PromptLane memory from the latest eligible loop outcome. This writes only the approved candidate statement and safe evidence refs into local PromptLane storage; it never writes AGENTS.md, CLAUDE.md, project docs, prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
     annotations: {
       ...LOCAL_LOOP_WRITE_TOOL_ANNOTATIONS,
-      title: "Record approved Loopdeck memory",
+      title: "Record approved PromptLane memory",
     },
     inputSchema: {
       type: "object",
@@ -692,7 +692,7 @@ export const PROPOSE_INSTRUCTION_PATCH_TOOL_DEFINITION: PromptCoachMcpToolDefini
   {
     name: "propose_instruction_patch",
     description:
-      "Propose a reviewable unified diff for adding the latest approved Loopdeck memory to AGENTS.md or CLAUDE.md. This is read-only: it returns a patch proposal string and never writes instruction files, project docs, prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
+      "Propose a reviewable unified diff for adding the latest approved PromptLane memory to AGENTS.md or CLAUDE.md. This is read-only: it returns a patch proposal string and never writes instruction files, project docs, prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
     annotations: {
       ...LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS,
       title: "Propose instruction patch",
@@ -774,7 +774,7 @@ export const APPLY_INSTRUCTION_PATCH_TOOL_DEFINITION: PromptCoachMcpToolDefiniti
   {
     name: "apply_instruction_patch",
     description:
-      "Apply the latest approved Loopdeck memory to AGENTS.md or CLAUDE.md only when confirm_apply is true. This writes one local instruction file, is idempotent by source memory id, and never returns prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
+      "Apply the latest approved PromptLane memory to AGENTS.md or CLAUDE.md only when confirm_apply is true. This writes one local instruction file, is idempotent by source memory id, and never returns prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
     annotations: {
       ...LOCAL_LOOP_WRITE_TOOL_ANNOTATIONS,
       idempotentHint: true,

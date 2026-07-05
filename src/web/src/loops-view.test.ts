@@ -11,7 +11,7 @@ describe("LoopsView", () => {
       createElement(LoopsView, { loading: false, loops: loopList() }),
     );
 
-    expect(html).toContain("Loopdeck status ready");
+    expect(html).toContain("PromptLane status ready");
     expect(html).toContain("Next: prompt-coach loop brief");
     expect(html).toContain("Approved memories 1");
     expect(html).toContain("Active worktrees 2");

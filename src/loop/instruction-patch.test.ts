@@ -41,7 +41,7 @@ describe("proposeInstructionPatchFromMemory", () => {
     });
     expect(proposal.diff).toContain("--- a/AGENTS.md");
     expect(proposal.diff).toContain("+++ b/AGENTS.md");
-    expect(proposal.diff).toContain("## Loopdeck Memories");
+    expect(proposal.diff).toContain("## PromptLane Memories");
     expect(proposal.diff).toContain(
       "Scheduler lifecycle should stay plist-only",
     );
@@ -109,7 +109,7 @@ describe("proposeInstructionPatchFromMemory", () => {
         },
       });
       expect(JSON.stringify(result)).not.toContain(targetDir);
-      expect(readFileSync(targetPath, "utf8")).toContain("## Loopdeck Memories");
+      expect(readFileSync(targetPath, "utf8")).toContain("## PromptLane Memories");
       expect(readFileSync(targetPath, "utf8")).toContain("source_memory: mem_123");
 
       const second = applyInstructionPatchFromMemory({

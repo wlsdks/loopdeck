@@ -493,7 +493,7 @@ describe("Loopdeck MCP tools", () => {
         writes_instruction_files: false,
       },
     });
-    expect(result.diff).toContain("## Loopdeck Memories");
+    expect(result.diff).toContain("## PromptLane Memories");
     expect(result.diff).toContain("Scheduler lifecycle should stay plist-only");
     expect(serialized).not.toContain("Make this better");
     expect(serialized).not.toContain("/Users/example");
