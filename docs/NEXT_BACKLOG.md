@@ -36,6 +36,9 @@ queue.
 - pnpm build-script approvals now live in `pnpm-workspace.yaml`, matching the
   forward-compatible settings location while keeping the approved build list to
   `better-sqlite3` and `esbuild`.
+- The PromptLane MVP reliability slices in `docs/PROMPTLANE.md` have landed
+  through focused TDD slices: capability-aware MCP setup guidance, evidence-first
+  loop memory storage guards, and focused Codex/Claude Code setup smoke.
 
 ## Current Priority Decision
 
@@ -85,11 +88,22 @@ Current goal audit:
 - PR #371 closed the stale MCP coach-loop docs/smoke follow-ups; no immediate
   MCP coach-loop slice remains outside the approval-gated native ask UI
   dogfood.
+- PR #403 improved shared MCP `storage_unavailable` guidance so Codex and
+  Claude Code users see setup/register/doctor recovery steps instead of a
+  generic init-only message.
+- PR #405 added a storage-level evidence guard so approved loop memories cannot
+  be recorded without safe evidence refs.
+- PR #407 added `smoke:agent-setup`, a local-only Codex and Claude Code
+  setup/doctor happy-path smoke using isolated HOME/data-dir and fake provider
+  binaries.
+- PR #408 closed the agent setup smoke log after CI passed and branch pruning
+  was confirmed.
 
 Decision:
 
-1. Implement storage capability negotiation first.
-2. Then improve the MCP tool registry only when the next MCP tool or schema
+1. Treat the PromptLane MVP reliability slices as landed for the current
+   local-first runtime.
+2. Improve the MCP tool registry only when the next MCP tool or schema
    change touches the registration surface.
 3. Keep Codex native dialog fallback as dogfood/integration evidence, not a
    blocking core feature.
@@ -164,7 +178,26 @@ Next capability PR:
   derives `tools/list` and `tools/call` dispatch from one tool list without
   filtering SQLite setup state.
 
-### 2. MCP Registry Follow-Up (only when registration changes)
+### 2. PromptLane MVP Reliability Slice Status
+
+No immediate MVP reliability slice remains from the current PromptLane product
+contract.
+
+Completed:
+
+- storage capability negotiation: shared route capability guard and explicit MCP
+  storage-unavailable setup guidance
+- capability-aware MCP setup/status responses: shared raw-free setup recovery
+  message for storage-backed MCP handlers
+- evidence-first loop memory review: candidate generation requires passed loops
+  with evidence and storage writes reject missing or unsafe evidence refs
+- focused Codex and Claude Code smoke coverage: `smoke:agent-setup` verifies
+  setup/doctor happy paths without running real provider CLIs
+
+Next work should come from fresh user-flow evidence, a real MCP tool/schema
+change, scheduled UI patrol evidence, or explicit operator-approved dogfood.
+
+### 3. MCP Registry Follow-Up (only when registration changes)
 
 Goal:
 
@@ -179,7 +212,7 @@ Scope:
 - Derive `tools/list` and `tools/call` dispatch from the same registered tool
   list.
 
-### 3. User-Flow Validation Passes
+### 4. User-Flow Validation Passes
 
 The Phase 2 features are implemented; the open question is whether the
 flows feel right end to end. Two quick passes are worth scheduling before
@@ -225,7 +258,7 @@ Current state from the reuse audit:
 - Keep auto-submit out of scope; copy/fallback must remain local and
   approval-gated.
 
-### 4. Codex Native Dialog Fallback Dogfood
+### 5. Codex Native Dialog Fallback Dogfood
 
 Goal:
 
@@ -241,7 +274,7 @@ Scope:
 - Do not open OS dialogs unexpectedly from automated tests.
 - Treat this as integration evidence; do not block core loop-memory work on it.
 
-### 5. `App.tsx` Query-Hook Extraction
+### 6. `App.tsx` Query-Hook Extraction
 
 First slice landed after the reuse-flow audits showed prompt detail copy and
 save state still had to be threaded through `App.tsx`: selected prompt detail
@@ -253,7 +286,7 @@ Remaining scope:
   boundary.
 - Favor small hooks with focused tests over a broad `App.tsx` rewrite.
 
-### 6. UI Patrol Cron
+### 7. UI Patrol Cron
 
 `ui-patrol` is now wired as a scheduled GitHub Actions workflow plus a local
 `pnpm ui-patrol` command. It reuses the synthetic browser E2E flow and stores

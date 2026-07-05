@@ -775,12 +775,14 @@ describe("plugin packaging files", () => {
     );
 
     expect(goalAudit).toContain(
-      "`f384240 docs: close stale mcp coach loop followups (#371)`",
+      "`b87ad08 docs: close agent setup smoke log (#408)`",
     );
-    for (const prNumber of ["#369", "#370", "#371"]) {
+    for (const prNumber of ["#403", "#405", "#407", "#408"]) {
       expect(goalAudit).toContain(`PR ${prNumber}`);
       expect(backlog).toContain(`PR ${prNumber}`);
     }
+    expect(backlog).toContain("No immediate MVP reliability slice remains");
+    expect(goalAudit).toContain("PromptLane MVP reliability slices");
     expect(backlog).toMatch(/No\s+immediate MCP coach-loop slice remains/);
     expect(backlog).toMatch(/No\s+immediate reuse-flow slice remains/);
     expect(backlog).not.toContain(

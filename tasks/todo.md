@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-05 PromptLane Goal Audit Refresh
+
+- [x] CHECK: `docs/NEXT_BACKLOG.md`와 `docs/LOOPDECK_GOAL_AUDIT_2026-07-05.md`가 #371 기준에 머물러 있고 #403-#408 MVP reliability slices를 반영하지 않는지 확인했다.
+- [x] RED: goal audit/backlog가 #403, #405, #407, #408 및 최신 main commit evidence를 포함하지 않으면 packaging drift guard가 실패하도록 고정했다.
+- [x] GREEN: goal audit/backlog에 MCP storage setup guidance, loop memory evidence guard, agent setup smoke, close-log PR evidence와 “No immediate MVP reliability slice remains” 판단을 반영했다.
+- [x] VERIFY: focused packaging test와 full gate를 통과한다.
+- [ ] INTEGRATE: PR CI `test (22)`/`test (24)` 통과 후 merge하고 branch prune까지 확인한다.
+
+### 판단 기준
+
+- 장기 목표 감사 문서는 최신 merged main의 실제 evidence를 따라야 한다.
+- 이미 닫힌 MVP reliability slice를 backlog에 open work처럼 남기지 않는다.
+- 남은 작업은 scheduled UI patrol evidence, 승인형 native dialog dogfood, 실제 MCP registry trigger, fresh user-flow evidence로 분리한다.
+
 ## 2026-07-05 PromptLane Agent Setup Smoke
 
 - [x] CHECK: 기존 release/hook/MCP smoke는 있지만, Codex와 Claude Code의 `setup --profile coach --register-mcp` 및 `doctor` happy path를 독립적으로 검증하는 focused smoke가 없는지 확인했다.

@@ -24,7 +24,7 @@ Verified repository state:
 - Runtime compatibility IDs: package, CLI, hook command, Claude Code slash
   namespace, and canonical MCP server remain `prompt-coach`
 - Latest merged main commit at audit time:
-  `f384240 docs: close stale mcp coach loop followups (#371)`
+  `b87ad08 docs: close agent setup smoke log (#408)`
 - Open PRs at audit time: none
 - Local and remote `main` matched at audit time
 
@@ -95,6 +95,16 @@ Verified CI and operational evidence:
 - PR #371 closed the stale MCP coach-loop docs/smoke follow-ups after
   `apply_clarifications` and `smoke:mcp-coach-loop` were documented and
   shipped; only the approval-gated native ask UI dogfood remains.
+- PR #403 improved shared MCP `storage_unavailable` guidance so Codex and
+  Claude Code users see setup/register/doctor recovery steps without raw local
+  paths.
+- PR #405 added a storage-level evidence guard so approved loop memories cannot
+  be recorded without safe evidence refs.
+- PR #407 added `smoke:agent-setup`, a local-only Codex and Claude Code
+  setup/doctor happy-path smoke using isolated HOME/data-dir and fake provider
+  binaries.
+- PR #408 closed the agent setup smoke log after CI `test (22)` and `test (24)`
+  passed and branch pruning was confirmed.
 - `ui-patrol` workflow_dispatch run `28717201110` failed before #341 because
   the GitHub runner did not have Chromium installed.
 - `ui-patrol` workflow_dispatch run `28717406758` succeeded after #341.
@@ -120,12 +130,13 @@ Verified CI and operational evidence:
 | --- | --- | --- | --- |
 | Product name and positioning | PromptLane is the product direction while `prompt-coach` remains the compatibility runtime ID. Loopdeck is legacy terminology and a compatibility CLI alias. | `docs/PROMPTLANE.md`, `docs/LOOPDECK.md`, `docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md`, repo `wlsdks/promptlane` | Satisfied for current compatibility window |
 | Existing feature portfolio decision | Keep/improve/defer/reject decisions are documented. | Feature portfolio matrix in `docs/PROMPTLANE.md` and the PromptLane repositioning spec | Satisfied for current slices |
-| Codex and Claude Code first-class integration | Hook, MCP, instruction, plugin, smoke, and dogfood paths are documented and partially verified. The native-dialog dogfood command now refuses to open OS dialogs unless the operator approval env is set. | `docs/AGENT-HARNESS.md`, `AGENTS.md`, `CLAUDE.md`, MCP smoke scripts, native dogfood audits, `scripts/mcp-native-dialog-approved.mjs` | Mostly satisfied; real answered OS-dialog run still needs operator approval |
+| Codex and Claude Code first-class integration | Hook, MCP, instruction, plugin, smoke, and dogfood paths are documented and partially verified. `smoke:agent-setup` now verifies setup/doctor happy paths with isolated fake provider binaries. The native-dialog dogfood command still refuses to open OS dialogs unless the operator approval env is set. | `docs/AGENT-HARNESS.md`, `AGENTS.md`, `CLAUDE.md`, MCP smoke scripts, `scripts/agent-setup-smoke.mjs`, native dogfood audits, `scripts/mcp-native-dialog-approved.mjs` | Mostly satisfied; real answered OS-dialog run still needs operator approval |
 | Loop data model | Loop snapshot and memory schema contracts exist and runtime slices have landed. | `docs/LOOP-SNAPSHOT-SCHEMA.md`, loop CLI/MCP/web implementation, status and selected worktree slices | Satisfied for MVP loop metadata model |
-| Privacy/local-first boundary | Prompt bodies stay in redacted archive; loop surfaces are raw-free; write paths are explicit. | `docs/PROMPTLANE.md`, storage/server/MCP tests, route capability guard cleanup, MCP smoke audits | Satisfied for implemented paths |
+| Privacy/local-first boundary | Prompt bodies stay in redacted archive; loop surfaces are raw-free; write paths are explicit. Approved loop memories now require safe evidence refs at the storage boundary. | `docs/PROMPTLANE.md`, storage/server/MCP tests, route capability guard cleanup, MCP smoke audits, PR #405 | Satisfied for implemented paths |
 | AGENTS.md/CLAUDE.md/harness docs | Cross-agent and Claude-specific instruction boundaries are separated. | `AGENTS.md`, `CLAUDE.md`, `docs/INSTRUCTION-FILES.md`, `docs/AGENT-HARNESS.md` | Satisfied for current compatibility window |
-| Technical risk handling | Storage capability guard work, CI UI patrol evidence, dependency security cleanup, pnpm build-approval settings, package dry-run lifecycle stabilization, release/README checklist drift guards, Codex hook de-duplication, reuse fallback E2E plus in-app Browser coverage, and audit drift guards reduced known reliability gaps. | ADR 0002, PR #340, PR #341, PR #345, PR #346, PR #357, PR #359, PR #361, PR #362, PR #363, PR #364, PR #365, PR #366, PR #367, PR #368, PR #369, PR #370, PR #371, `docs/NEXT_BACKLOG.md` | Active and improving |
-| TDD implementation slices | Recent slices used focused RED tests, local gates, PR CI, and squash merges. | PR #340 through #371 tests/CI; `tasks/todo.md` | Satisfied for recent slices |
+| Technical risk handling | Storage capability guard work, MCP setup guidance, loop-memory evidence guards, agent setup smoke, CI UI patrol evidence, dependency security cleanup, pnpm build-approval settings, package dry-run lifecycle stabilization, release/README checklist drift guards, Codex hook de-duplication, reuse fallback E2E plus in-app Browser coverage, and audit drift guards reduced known reliability gaps. | ADR 0002, PR #340, PR #341, PR #345, PR #346, PR #357, PR #359, PR #361, PR #362, PR #363, PR #364, PR #365, PR #366, PR #367, PR #368, PR #369, PR #370, PR #371, PR #403, PR #405, PR #407, PR #408, `docs/NEXT_BACKLOG.md` | Active and improving |
+| TDD implementation slices | Recent slices used focused RED tests, local gates, PR CI, and squash merges. | PR #340 through #408 tests/CI; `tasks/todo.md` | Satisfied for recent slices |
+| PromptLane MVP reliability slices | The current product-contract reliability slices for storage capability, MCP setup guidance, evidence-first memory, and focused Codex/Claude setup smoke have landed. | PR #403, PR #405, PR #407, PR #408, `docs/NEXT_BACKLOG.md`, `tasks/todo.md` | Satisfied for current MVP reliability scope |
 | Reuse copy fallback | Clipboard-write failure now opens a local manual-copy fallback instead of leaving the user at a dead end, including the real Codex in-app Browser clipboard failure mode. | `src/web/src/App.tsx`, `src/web/src/prompt-detail-view.test.ts`, `scripts/browser-e2e.mjs`, `corepack pnpm e2e:browser`, fresh Codex in-app Browser pass | Satisfied for automated and manual in-app Browser coverage |
 | Reuse saved draft workflow | Saved drafts can be reopened as the current coach draft so the operator can reuse the same copy/manual-fallback controls without auto-submitting to an agent; reopened rows show `Saved draft` and disable duplicate saves with `Already saved`. | `src/web/src/saved-draft-improvement.ts`, `src/web/src/improvement-mode-label.ts`, `src/web/src/improvement-save-state.ts`, `src/web/src/prompt-detail-view.tsx`, `scripts/browser-e2e.mjs` | Satisfied for current reuse flow |
 | UI patrol scheduled artifact | Manual workflow dispatch is verified; first scheduled cron artifact has not occurred yet. | Run `28717406758`; `.github/workflows/ui-patrol.yml` cron | Not yet complete as a scheduled-run requirement |
