@@ -117,6 +117,9 @@ Required properties:
   so agents can judge measured vs unmeasured prompts, proven/mixed/unproven
   counts, linked outcome counts, tests run, safe evidence refs, and next action
   before treating prompt-score improvements as actual workflow improvement
+- route the same archive effectiveness coverage into `coach_prompt` agent
+  briefs so the default one-call Codex/Claude Code path tells the agent to
+  review unmeasured prompts before claiming archive-wide improvement
 - return explicit unavailable/setup guidance instead of transport-level crashes
 - avoid raw prompt bodies, compact summaries, transcripts, raw local paths,
   secret-looking tokens, and provider credentials

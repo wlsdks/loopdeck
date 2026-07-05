@@ -219,6 +219,11 @@ Decision:
   `archive_effectiveness_score: 1`, `privacy_leak_count: 0`, and raw-free
   `effectiveness_summary` coverage from a linked passed loop outcome. Main CI
   run `28751693022` passed `test (22)` and `test (24)` after merge.
+- One-call coach effectiveness guidance is the active agent-native follow-up:
+  `coach_prompt` agent briefs now summarize measured vs unmeasured archive
+  effectiveness coverage, linked outcomes, tests run, and safe evidence refs,
+  and `coach_prompt_actionability` requires that signal before the benchmark
+  can pass.
 
 Rationale:
 
