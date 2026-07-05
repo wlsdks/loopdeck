@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-05 PromptLane Risk Execution Contract
+
+- [x] RED: `docs/PROMPTLANE.md`가 기술 리스크, MVP slice 순서, TDD 실행 규칙을 명시하지 않으면 packaging test가 실패하도록 고정했다.
+- [x] GREEN: PromptLane product contract에 storage capability drift, MCP registry drift, privacy regression, overbuilding autonomy, runtime compatibility breakage와 mitigation을 추가했다.
+- [x] VERIFY: focused packaging test와 full gate를 통과한다.
+- [ ] INTEGRATE: 변경을 커밋, 푸시, PR, CI 확인 후 merge하고 branch를 정리한다.
+
+### 판단 기준
+
+- 다음 구현은 storage capability negotiation을 우선한다.
+- MCP registry 정리는 새 tool/schema 변경이 실제로 닿을 때만 수행한다.
+- privacy regression은 raw-free fixture, packaging guard, focused privacy test로 막는다.
+- auto-submit, background cron, merge automation은 승인 gate 전에는 구현하지 않는다.
+- 각 slice는 RED/GREEN/VERIFY/INTEGRATE 순서로 진행한다.
+
 ## 2026-07-05 PromptLane Data Privacy Contract
 
 - [x] RED: `docs/PROMPTLANE.md`가 데이터 모델과 privacy/local-first 경계를 명시하지 않으면 packaging test가 실패하도록 고정했다.
