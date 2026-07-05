@@ -3621,3 +3621,10 @@
 - [x] GREEN: Replace Loopdeck-facing runtime descriptions, local archive/server messages, instruction-memory headings, and loop status labels with PromptLane wording without renaming internal types or compatibility tool names.
 - [x] VERIFY: Focused tests, full test/lint/build, pack dry-run, and diff check passed.
 - [x] INTEGRATE: PR #381 was merged to `main`; branch was pruned.
+
+## 2026-07-05 PromptLane Safety Guidance Copy
+
+- [x] RED: Use focused API/web guidance tests and literal scans to prove safety/privacy guidance no longer needs to expose `Loopdeck` as the product name.
+- [x] GREEN: Replace safety guidance phrases such as `Loopdeck does not ...`, `outside Loopdeck`, and `Loopdeck records ...` with PromptLane wording while preserving internal `LoopdeckStatus` compatibility identifiers.
+- [x] VERIFY: Focused API/web tests, full test/lint/build, pack dry-run, and diff check passed.
+- [ ] INTEGRATE: Push one coherent PR, merge it after CI, and prune the branch.
