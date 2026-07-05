@@ -38,10 +38,19 @@ describe("improve CLI", () => {
     });
     const parsed = JSON.parse(output) as {
       improved_prompt: string;
+      expected_impact: {
+        original_score: number;
+        improved_score: number;
+        delta: number;
+      };
       requires_user_approval: boolean;
     };
 
     expect(parsed.requires_user_approval).toBe(true);
+    expect(parsed.expected_impact.improved_score).toBeGreaterThan(
+      parsed.expected_impact.original_score,
+    );
+    expect(parsed.expected_impact.delta).toBeGreaterThan(0);
     expect(parsed.improved_prompt).toContain("Verification");
     expect(parsed.improved_prompt).toContain("Output");
   });
@@ -66,6 +75,13 @@ describe("improve CLI", () => {
     // dropped them.
     expect(output).toMatch(/Clarifying questions/i);
     expect(output).toMatch(/^\s*1\./m);
+  });
+
+  it("renders expected impact in the human output for weak prompts", () => {
+    const output = improvePromptForCli({ text: "Make this better" });
+
+    expect(output).toMatch(/Expected impact/i);
+    expect(output).toMatch(/Score: \d+\/100 -> \d+\/100 \(\+\d+\)/);
   });
 
   it("renders Korean clarifying questions for Korean prompts in human output", () => {

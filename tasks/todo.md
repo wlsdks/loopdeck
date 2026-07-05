@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Improve Expected Impact Evidence
+
+- [x] CHECK: `improve`가 approval-ready draft를 만들지만 사용자가 “정말 나아졌는지” 판단할 수 있는 원문 점수, 개선안 예상 점수, delta를 직접 보여주지 않았다.
+- [x] RED: focused improve test가 `expected_impact` 부재로 실패하고, CLI human output test가 `Expected impact` 섹션 부재로 실패해야 한다.
+- [x] GREEN: `PromptImprovement`가 로컬 deterministic analyzer 기반 `expected_impact`를 포함하고, CLI human output이 score before/after/delta와 changed axis count를 출력한다.
+- [x] EFFECT: 같은 테스트가 개선안이 원문보다 높은 점수를 갖고 delta가 양수임을 검증하며, MCP 결과는 prompt body, raw path, secret을 노출하지 않는다.
+- [ ] VERIFY: focused tests, full local gate, PR CI, latest main CI, and branch prune all pass.
+- [ ] INTEGRATE: PR이 CI 통과 후 merge되고 branch prune까지 확인된다.
+
+### 판단 기준
+
+- effectiveness means the user can compare the weak original prompt with the proposed draft using safe numeric metadata.
+- expected impact is advisory local-rules evidence, not an external LLM judgment or automatic approval.
+- score metadata must not expose raw prompt bodies, raw paths, provider credentials, tokens, or transcript content.
+
 ## 2026-07-06 Codex Doctor Hook Count Evidence
 
 - [x] CHECK: `doctor codex` now detects duplicate hooks and proves `install-hook codex` repairs them, but JSON/plain output only exposes `duplicateHooks=true` and not the safe handler count needed to compare before/after state.

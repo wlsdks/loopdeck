@@ -30,6 +30,12 @@ export type PromptImprovement = {
   requires_user_approval: true;
   summary: string;
   improved_prompt: string;
+  expected_impact: {
+    original_score: number;
+    improved_score: number;
+    delta: number;
+    changed_axis_count: number;
+  };
   changed_sections: PromptQualityCriterion[];
   clarifying_questions: ClarifyingQuestion[];
   safety_notes: string[];
@@ -75,22 +81,34 @@ export function improvePrompt(input: ImprovePromptInput): PromptImprovement {
     source === "stored"
       ? buildStoredSections(sanitizedPrompt, changedSections, language)
       : buildSections(sanitizedPrompt, changedSections, language);
+  const improvedPrompt = [
+    introFor(language),
+    "",
+    ...sections.flatMap((section) => [
+      `## ${section.label}`,
+      section.body,
+      "",
+    ]),
+  ]
+    .join("\n")
+    .trim();
+  const improvedAnalysis = analyzePrompt({
+    prompt: improvedPrompt,
+    createdAt: input.createdAt,
+  });
 
   return {
     mode: "copy",
     requires_user_approval: true,
     summary: summaryFor(language, changedSections.length === 0),
-    improved_prompt: [
-      introFor(language),
-      "",
-      ...sections.flatMap((section) => [
-        `## ${section.label}`,
-        section.body,
-        "",
-      ]),
-    ]
-      .join("\n")
-      .trim(),
+    improved_prompt: improvedPrompt,
+    expected_impact: {
+      original_score: analysis.quality_score.value,
+      improved_score: improvedAnalysis.quality_score.value,
+      delta:
+        improvedAnalysis.quality_score.value - analysis.quality_score.value,
+      changed_axis_count: changedSections.length,
+    },
     changed_sections: changedSections,
     clarifying_questions: buildClarifyingQuestions(
       analysis.checklist,

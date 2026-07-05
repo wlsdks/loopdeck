@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
+import { analyzePrompt } from "../analysis/analyze.js";
 import { normalizeClaudeCodePayload } from "../adapters/claude-code.js";
 import { initializePromptCoach } from "../config/config.js";
 import { redactPrompt } from "../redaction/redact.js";
@@ -247,6 +248,10 @@ describe("improvePromptTool", () => {
 
     expect(result.source).toBe("text");
     expect(result.requires_user_approval).toBe(true);
+    expect(result.expected_impact.improved_score).toBeGreaterThan(
+      result.expected_impact.original_score,
+    );
+    expect(result.expected_impact.delta).toBeGreaterThan(0);
     expect(result.improved_prompt).toContain("Please work from");
     expect(result.privacy).toEqual({
       local_only: true,
@@ -312,6 +317,12 @@ describe("improvePromptTool", () => {
     expect(result.improved_prompt).toContain("src/mcp/score-tool.ts");
     expect(result.improved_prompt).toContain("pnpm vitest run");
     expect(result.improved_prompt).not.toContain(originalPrompt);
+    expect(result.expected_impact.improved_score).toBe(
+      analyzePrompt({
+        prompt: result.improved_prompt,
+        createdAt: result.created_at,
+      }).quality_score.value,
+    );
     expect(result.rewrite_source).toBe("redacted_stored_prompt");
     expect(serialized).not.toContain("/Users/example");
   });

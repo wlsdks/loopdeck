@@ -167,6 +167,8 @@ function formatStoredImprovement(result: ImprovePromptToolResult): string {
   return [
     result.summary,
     "",
+    formatExpectedImpact(result),
+    "",
     result.improved_prompt,
     "",
     "Next action",
@@ -195,7 +197,13 @@ function readPromptInput(options: ImproveCliOptions): string {
 
 function formatImprovement(result: PromptImprovement): string {
   const language = inferLanguageFromQuestions(result);
-  const lines: string[] = [result.summary, "", result.improved_prompt];
+  const lines: string[] = [
+    result.summary,
+    "",
+    formatExpectedImpact(result, language),
+    "",
+    result.improved_prompt,
+  ];
 
   if (result.clarifying_questions.length > 0) {
     lines.push(
@@ -214,6 +222,20 @@ function formatImprovement(result: PromptImprovement): string {
   }
 
   return lines.join("\n");
+}
+
+function formatExpectedImpact(
+  result: PromptImprovement,
+  language: "en" | "ko" = "en",
+): string {
+  const impact = result.expected_impact;
+  const delta = impact.delta >= 0 ? `+${impact.delta}` : `${impact.delta}`;
+  const title = language === "ko" ? "예상 개선 효과" : "Expected impact";
+  return [
+    title,
+    `Score: ${impact.original_score}/100 -> ${impact.improved_score}/100 (${delta})`,
+    `Changed axes: ${impact.changed_axis_count}`,
+  ].join("\n");
 }
 
 const SECTION_HEADERS: Record<
