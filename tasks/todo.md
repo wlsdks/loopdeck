@@ -5,7 +5,7 @@
 - [x] RED: `docs/PROMPTLANE.md`가 기술 리스크, MVP slice 순서, TDD 실행 규칙을 명시하지 않으면 packaging test가 실패하도록 고정했다.
 - [x] GREEN: PromptLane product contract에 storage capability drift, MCP registry drift, privacy regression, overbuilding autonomy, runtime compatibility breakage와 mitigation을 추가했다.
 - [x] VERIFY: focused packaging test와 full gate를 통과한다.
-- [ ] INTEGRATE: 변경을 커밋, 푸시, PR, CI 확인 후 merge하고 branch를 정리한다.
+- [x] INTEGRATE: PR #401이 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
 ### 판단 기준
 
