@@ -565,6 +565,32 @@ describe("plugin packaging files", () => {
     }
   });
 
+  it("keeps the PromptLane risk and execution plan explicit", () => {
+    const positioning = readFileSync(
+      join(process.cwd(), "docs/PROMPTLANE.md"),
+      "utf8",
+    );
+
+    for (const requiredText of [
+      "## Risk And Execution Plan",
+      "Storage capability drift",
+      "MCP registry drift",
+      "Privacy regression",
+      "Overbuilding autonomy",
+      "Runtime compatibility breakage",
+      "MVP Slice 1: storage capability negotiation",
+      "MVP Slice 2: capability-aware MCP setup/status responses",
+      "MVP Slice 3: evidence-first loop memory review",
+      "MVP Slice 4: focused Codex and Claude Code smoke coverage",
+      "RED: add the narrowest failing test or packaging guard first",
+      "GREEN: make the smallest product-aligned change",
+      "VERIFY: run the focused test, then broaden to the repo gate",
+      "INTEGRATE: commit, push, PR, CI `test (22)` and `test (24)`, merge, and prune",
+    ]) {
+      expect(positioning).toContain(requiredText);
+    }
+  });
+
   it("keeps agent instruction docs routed through the PromptLane product contract", () => {
     const agents = readFileSync(join(process.cwd(), "AGENTS.md"), "utf8");
     const claude = readFileSync(join(process.cwd(), "CLAUDE.md"), "utf8");

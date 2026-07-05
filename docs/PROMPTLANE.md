@@ -194,6 +194,33 @@ multi-user model before they can be safe.
 Decision rule: reject features that make PromptLane act as a hidden provider
 proxy, autonomous agent runtime, transcript scraper, or merge bot.
 
+## Risk And Execution Plan
+
+PromptLane should move through small reliability slices before adding broader
+agent-loop features.
+
+| Risk | Why it matters | Mitigation |
+| --- | --- | --- |
+| Storage capability drift | Storage-backed routes and MCP tools can fail differently when local SQLite/archive state is unavailable | Implement storage capability negotiation through one shared path |
+| MCP registry drift | Tool definitions, handlers, and setup guidance can fall out of sync | Touch registry structure only when a tool/schema change already needs it |
+| Privacy regression | Loop memory and continuation features can accidentally expose prompt bodies, raw paths, transcripts, compact summaries, or credentials | Keep raw-free fixtures, packaging guards, and focused privacy tests on every slice |
+| Overbuilding autonomy | Background cron, auto-submit, and merge automation would change the trust model before the local prompt loop is proven | Keep autonomy staged and require explicit approval gates |
+| Runtime compatibility breakage | Renaming `prompt-coach` runtime IDs too early would break existing hooks, MCP setup, slash commands, and scripts | Keep runtime IDs stable until a dedicated migration proves compatibility |
+
+Next MVP slices:
+
+1. MVP Slice 1: storage capability negotiation.
+2. MVP Slice 2: capability-aware MCP setup/status responses.
+3. MVP Slice 3: evidence-first loop memory review.
+4. MVP Slice 4: focused Codex and Claude Code smoke coverage.
+
+TDD execution rule for each slice:
+
+- RED: add the narrowest failing test or packaging guard first.
+- GREEN: make the smallest product-aligned change.
+- VERIFY: run the focused test, then broaden to the repo gate.
+- INTEGRATE: commit, push, PR, CI `test (22)` and `test (24)`, merge, and prune.
+
 ## Autonomy Model
 
 PromptLane may become more helpful, but autonomy must remain staged.
