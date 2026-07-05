@@ -875,6 +875,40 @@ describe("plugin packaging files", () => {
     expect(prebuildInstallPatch).not.toMatch(/^\+.*fs\.W_OK/m);
   });
 
+  it("keeps the 9.5 release-stability backlog aligned with merged evidence", () => {
+    const backlog = readFileSync(
+      join(process.cwd(), "docs/NEXT_BACKLOG.md"),
+      "utf8",
+    );
+    const plan = readFileSync(
+      join(
+        process.cwd(),
+        "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
+      ),
+      "utf8",
+    );
+
+    for (const currentEvidence of [
+      "PR #425",
+      "PR #427",
+      "PR #433",
+      "PR #434",
+      "latest main CI run `28745224451`",
+    ]) {
+      expect(backlog).toContain(currentEvidence);
+      expect(plan).toContain(currentEvidence);
+    }
+
+    for (const staleFollowUp of [
+      "update the test workflow to `pnpm/action-setup@v6`",
+      "Latest main CI after PR #426 still showed",
+      "before treating release stability as closer to the 9.5 bar",
+    ]) {
+      expect(backlog).not.toContain(staleFollowUp);
+      expect(plan).not.toContain(staleFollowUp);
+    }
+  });
+
   it("ships the PromptLane 9.5 quality plan and links it from the operational backlog", () => {
     const packageJson = readJson<{
       files: string[];
@@ -911,12 +945,14 @@ describe("plugin packaging files", () => {
       "PR #421",
       "PR #429",
       "PR #430",
+      "PR #433",
+      "PR #434",
       "dogfood:loop-memory-approval",
       "dogfood:web-user-flow",
       "docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md",
       "docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md",
       "workflow_dispatch run `28717406758`",
-      "latest main CI run `28744698708`",
+      "latest main CI run `28745224451`",
       "no `schedule` event",
       "Remaining 9.5 blockers",
     ]) {

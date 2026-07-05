@@ -37,6 +37,11 @@
   workflow_dispatch run `28717406758` still has a non-expired
   `ui-patrol-screenshots` artifact with 9 png files, but the latest workflow
   history has no `schedule` event.
+- PR #425 updated the main test workflow to `pnpm/action-setup@v6`, removing
+  the deprecated Node 20 action runtime annotation from Node 22/24 CI.
+- PR #427 moved `better-sqlite3` to the npm-published 12.x line and patched the
+  transient `prebuild-install@7.1.3` permission constants, removing the Node 24
+  `fs.R_OK` deprecation warning without suppressing install output.
 - PR #429 added `dogfood:web-user-flow`, providing repeatable fresh web
   user-flow evidence for archive, detail, dashboard, coach, projects, mcp,
   exports, settings, and mobile flows through
@@ -44,7 +49,12 @@
 - PR #430 closed the web user-flow dogfood evidence log after PR #429 passed
   local focused packaging guard, `corepack pnpm dogfood:web-user-flow`, full
   local gate, PR CI, latest main CI run `28744584511`, and branch prune.
-- latest main CI run `28744698708` after PR #430 passed `test (22)` and
+- PR #433 updated the scheduled `ui-patrol.yml` workflow to
+  `pnpm/action-setup@v6`, so the next real cron run uses the same Node 24
+  action runtime major as the main test workflow.
+- PR #434 closed the UI patrol action runtime log after PR #433 passed PR CI,
+  latest main CI run `28745108598`, and branch pruning.
+- latest main CI run `28745224451` after PR #434 passed `test (22)` and
   `test (24)` with `pnpm test`, `pnpm lint`, `pnpm build`, and
   `pnpm pack:dry-run`.
 

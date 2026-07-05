@@ -1,6 +1,6 @@
 # Next Backlog
 
-Last updated: 2026-07-05
+Last updated: 2026-07-06
 
 This is the prioritized "what to pick up next" list after the PromptLane
 repositioning and architecture decision pass. It is intentionally short. The PRD itself
@@ -106,12 +106,24 @@ Current goal audit:
   coach-loop, first-loop, and loop-memory approval.
 - PR #420 closed the Codex and Claude Code dogfood evidence log after CI passed
   and branch pruning was confirmed.
+- PR #425 updated the main test workflow to `pnpm/action-setup@v6`, removing
+  the deprecated Node 20 action runtime annotation from Node 22/24 CI.
+- PR #427 moved `better-sqlite3` to the npm-published 12.x line and patched the
+  transient `prebuild-install@7.1.3` permission constants, removing the Node 24
+  `fs.R_OK` deprecation warning without suppressing install output.
+- PR #433 updated the scheduled `ui-patrol.yml` workflow to
+  `pnpm/action-setup@v6`, so the next real cron run uses the same Node 24
+  action runtime major as the main test workflow.
+- PR #434 closed the UI patrol action runtime log after PR #433 passed PR CI,
+  latest main CI run `28745108598`, and branch pruning.
 - GitHub `ui-patrol` workflow history inspected on 2026-07-05 still shows
   workflow_dispatch run `28717406758` and no `schedule` event; workflow_dispatch run
   `28717406758` still has a non-expired `ui-patrol-screenshots` artifact with
   9 png files, but scheduled `ui-patrol` evidence remains pending.
 - Local `corepack pnpm ui-patrol` on current main after PR #410 passed and
   captured 9 png files.
+- Latest main CI run `28745224451` passed `test (22)` and `test (24)` with
+  `pnpm test`, `pnpm lint`, `pnpm build`, and `pnpm pack:dry-run`.
 
 Decision:
 
@@ -136,17 +148,13 @@ Decision:
   after a real cron run exists, explicit operator-approved native ask UI
   dogfood, and fresh user-flow evidence from real PromptLane work.
 - The 9.5 quality plan now includes an Evidence Progress Ledger with PR #417,
-  PR #419, PR #421, workflow_dispatch run `28717406758`, the missing
-  `schedule` event, and Remaining 9.5 blockers.
-- Latest main CI after PR #424 exposed a GitHub Actions annotation because
-  `pnpm/action-setup@v4` runs on the deprecated Node 20 action runtime; update
-  the test workflow to `pnpm/action-setup@v6`, whose action metadata uses
-  Node 24, before treating release stability as closer to the 9.5 bar.
-- Latest main CI after PR #426 still showed a Node 24 install warning from
-  `better-sqlite3` through `prebuild-install@7.1.3` using deprecated
-  `fs.R_OK`; keep the dependency on the npm-published `better-sqlite3` 12.x
-  line and patch only the transient `prebuild-install` permission constants
-  until upstream publishes a warning-free release.
+  PR #419, PR #421, PR #425, PR #427, PR #429, PR #433, workflow_dispatch run
+  `28717406758`, latest main CI run `28745224451`, the missing `schedule`
+  event, and Remaining 9.5 blockers.
+- The earlier GitHub Actions Node 20 runtime annotation and Node 24
+  `better-sqlite3` install warning are closed. Keep the release-stability bar
+  focused on fresh CI/package warnings that affect local-first install, build,
+  test, pack, or scheduled operational evidence.
 - `dogfood:web-user-flow` is the repeatable fresh web user-flow evidence lane;
   it runs the same Playwright-backed archive/detail/dashboard/coach/projects/
   mcp/exports/settings/mobile flow documented in
