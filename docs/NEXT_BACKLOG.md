@@ -178,6 +178,10 @@ Decision:
   now connect `expected_impact` predictions to actual raw-free loop outcomes
   and an `effectiveness` verdict without treating that as scheduled
   `ui-patrol` or native-dialog completion evidence.
+- The active effectiveness calibration slice extends that same raw-free
+  `effectiveness` evidence with linked-outcome, passing-outcome,
+  failing-outcome, and total-test counts so users and agents can judge the
+  strength of the verdict, not only its label.
 
 Rationale:
 

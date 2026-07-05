@@ -79,6 +79,10 @@
 - PR #458 closed the prompt effectiveness verdict log after PR #457 passed PR
   CI, local `corepack pnpm ui-patrol`, latest main CI run `28749214218`, and
   branch pruning.
+- Current effectiveness calibration slice adds linked-outcome, passing-outcome,
+  failing-outcome, and total-test counts to the raw-free `effectiveness`
+  payload so Codex, Claude Code, CLI JSON, API, and web detail consumers can
+  judge how much evidence supports the verdict instead of reading only a label.
 - latest main CI run `28749352031` after PR #458 passed `test (22)` and
   `test (24)` with `pnpm test`, `pnpm lint`, `pnpm build`, and
   `pnpm pack:dry-run`.
@@ -91,7 +95,8 @@
   `dogfood:mcp-native-dialog-approved` without explicit approval because it can
   open a native dialog.
 - Fresh user-flow, expected-impact, prompt-linked outcome evidence, CLI prompt
-  outcome evidence, and prompt effectiveness verdict evidence are now
+  outcome evidence, prompt effectiveness verdict evidence, and effectiveness
+  calibration evidence are now
   repeatable through `dogfood:web-user-flow`, browser E2E, focused
   CLI/storage/web tests, and `corepack pnpm ui-patrol`. Web operations still
   need scheduled artifact evidence before claiming 9.5.

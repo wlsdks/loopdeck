@@ -257,6 +257,12 @@ describe("prompt read/delete API", () => {
         effectiveness?: {
           verdict: string;
           summary: string;
+          calibration: {
+            linked_outcomes: number;
+            passing_outcomes: number;
+            failing_outcomes: number;
+            total_tests_run: number;
+          };
           evidence_refs: string[];
         };
       };
@@ -275,6 +281,12 @@ describe("prompt read/delete API", () => {
       verdict: "proven",
       summary:
         "Actual loop evidence passed with 3 tests across 1 linked outcome.",
+      calibration: {
+        linked_outcomes: 1,
+        passing_outcomes: 1,
+        failing_outcomes: 0,
+        total_tests_run: 3,
+      },
       evidence_refs: ["PR #451", "main CI 28748001738"],
     });
     expect(detail.body).not.toContain("/Users/example/project");
