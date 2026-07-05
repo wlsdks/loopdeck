@@ -98,6 +98,8 @@ Current goal audit:
   binaries.
 - PR #408 closed the agent setup smoke log after CI passed and branch pruning
   was confirmed.
+- Local `corepack pnpm ui-patrol` on current main after PR #410 passed and
+  captured 9 png files.
 
 Decision:
 
@@ -301,6 +303,9 @@ Operational checkpoint:
   ui-patrol`.
 - Follow-up `workflow_dispatch` run `28717406758` passed and uploaded 9
   screenshot artifacts.
+- Local `corepack pnpm ui-patrol` on current main after PR #410 passed and
+  captured 9 png files: archive, detail, dashboard, coach, projects, MCP,
+  exports, settings desktop, and settings mobile.
 
 Remaining scope:
 
