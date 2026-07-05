@@ -171,6 +171,15 @@ describe("prompt CLI commands", () => {
       },
     ]);
     expect(JSON.stringify(shown.loop_outcomes)).not.toContain("/Users/example");
+    expect(shown.effectiveness).toEqual({
+      verdict: "proven",
+      summary:
+        "Actual loop evidence passed with 2 tests across 1 linked outcome.",
+      evidence_refs: ["PR #453", "main CI 28748310489"],
+    });
+    expect(JSON.stringify(shown.effectiveness)).not.toContain(
+      "/Users/example",
+    );
   });
 
   it("shows drafts:N suffix on list rows that have saved improvement drafts", async () => {

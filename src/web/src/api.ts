@@ -40,6 +40,7 @@ export type PromptDetail = PromptSummary & {
   improvement_drafts: PromptImprovementDraft[];
   judge_score?: PromptJudgeScore;
   loop_outcomes?: PromptLoopOutcomeEvidence[];
+  effectiveness?: PromptEffectiveness;
 };
 
 export type PromptLoopOutcomeEvidence = {
@@ -48,6 +49,12 @@ export type PromptLoopOutcomeEvidence = {
   summary: string;
   evidence_refs: string[];
   tests_run?: number;
+};
+
+export type PromptEffectiveness = {
+  verdict: "proven" | "mixed" | "unproven";
+  summary: string;
+  evidence_refs: string[];
 };
 
 export type PromptJudgeScore = {

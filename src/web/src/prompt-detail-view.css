@@ -136,6 +136,21 @@
   padding-top: 10px;
 }
 
+.loop-outcome-verdict {
+  background: var(--pm-surface-subtle);
+  border: 1px solid var(--pm-border);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px;
+}
+
+.loop-outcome-verdict strong {
+  color: var(--pm-text);
+  font-size: 13px;
+}
+
 .loop-outcome-row {
   align-items: center;
   display: flex;

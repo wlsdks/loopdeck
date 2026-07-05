@@ -250,6 +250,8 @@ export type ManualCopyFallback = {
 function LoopOutcomeEvidencePanel({ prompt }: { prompt: PromptDetail }) {
   const outcomes = prompt.loop_outcomes ?? [];
   if (outcomes.length === 0) return null;
+  const effectiveness =
+    prompt.effectiveness ?? effectivenessFromOutcomes(outcomes);
 
   return (
     <section className="loop-outcome-panel" aria-label="Outcome evidence">
@@ -260,6 +262,21 @@ function LoopOutcomeEvidencePanel({ prompt }: { prompt: PromptDetail }) {
         </div>
         <span>{outcomes.length} linked</span>
       </header>
+      {effectiveness && (
+        <div className="loop-outcome-verdict" aria-label="Effectiveness">
+          <strong>
+            Effectiveness: {formatEffectivenessVerdict(effectiveness.verdict)}
+          </strong>
+          <p>{effectiveness.summary}</p>
+          {effectiveness.evidence_refs.length > 0 && (
+            <div className="loop-outcome-refs" aria-label="Effectiveness refs">
+              {effectiveness.evidence_refs.map((ref) => (
+                <code key={ref}>{ref}</code>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
       <ul>
         {outcomes.map((outcome) => (
           <li key={outcome.snapshot_id}>
@@ -280,6 +297,43 @@ function LoopOutcomeEvidencePanel({ prompt }: { prompt: PromptDetail }) {
       </ul>
     </section>
   );
+}
+
+function formatEffectivenessVerdict(
+  verdict: NonNullable<PromptDetail["effectiveness"]>["verdict"],
+): string {
+  return verdict[0].toUpperCase() + verdict.slice(1);
+}
+
+function effectivenessFromOutcomes(
+  outcomes: NonNullable<PromptDetail["loop_outcomes"]>,
+): NonNullable<PromptDetail["effectiveness"]> {
+  const failed = outcomes.some((outcome) => outcome.status === "failed");
+  const passed = outcomes.some((outcome) => outcome.status === "passed");
+  const testsRun = outcomes.reduce(
+    (total, outcome) => total + (outcome.tests_run ?? 0),
+    0,
+  );
+  const verdict = passed && !failed ? "proven" : failed ? "mixed" : "unproven";
+  const status =
+    verdict === "proven"
+      ? "passed"
+      : verdict === "mixed"
+        ? "has mixed results"
+        : "has no passing outcome yet";
+  const testCopy = testsRun === 1 ? "1 test" : `${testsRun} tests`;
+  const outcomeCopy =
+    outcomes.length === 1
+      ? "1 linked outcome"
+      : `${outcomes.length} linked outcomes`;
+
+  return {
+    verdict,
+    summary: `Actual loop evidence ${status} with ${testCopy} across ${outcomeCopy}.`,
+    evidence_refs: Array.from(
+      new Set(outcomes.flatMap((outcome) => outcome.evidence_refs)),
+    ).slice(0, 5),
+  };
 }
 
 function PromptCoachPanel({

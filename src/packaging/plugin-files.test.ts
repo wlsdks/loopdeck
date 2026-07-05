@@ -1094,8 +1094,10 @@ describe("plugin packaging files", () => {
       "expected_impact",
       "prompt-linked outcome evidence",
       "CLI prompt outcome evidence",
+      "prompt effectiveness verdict",
       "prompt-coach show\n  --json",
       "`loop_outcomes`",
+      "`effectiveness` verdict",
       "`Outcome evidence`",
       "docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md",
       "docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md",
@@ -1109,8 +1111,10 @@ describe("plugin packaging files", () => {
     for (const currentBacklogEvidence of [
       "prompt-linked outcome evidence",
       "CLI prompt outcome evidence",
+      "Prompt effectiveness verdict",
       "`prompt-coach show --json`",
       "`expected_impact` predictions to actual raw-free loop outcomes",
+      "`effectiveness` verdict",
     ]) {
       expect(backlog).toContain(currentBacklogEvidence);
     }

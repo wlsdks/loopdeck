@@ -200,6 +200,11 @@ try {
     "Detail should show the seeded LLM judge score value.",
   );
   await page.locator(".loop-outcome-panel").first().waitFor();
+  const promptDetail = await currentPromptDetail(page);
+  assert(
+    promptDetail.effectiveness?.verdict === "proven",
+    "Prompt detail API should include the raw-free effectiveness verdict.",
+  );
   await assertTextAny(
     page,
     ["Outcome evidence"],
@@ -214,6 +219,16 @@ try {
     page,
     "4 tests",
     "Detail should show loop outcome test-count evidence.",
+  );
+  await assertText(
+    page,
+    "Effectiveness: Proven",
+    "Detail should summarize whether actual loop evidence proves the prompt effective.",
+  );
+  await assertText(
+    page,
+    "Actual loop evidence passed with 4 tests across 1 linked outcome.",
+    "Detail should show the raw-free effectiveness verdict summary.",
   );
   await assertText(
     page,
@@ -751,6 +766,20 @@ async function restoreClipboard(page) {
 async function assertText(page, expected, message) {
   const text = await page.locator("body").innerText();
   assertIncludes(text, expected, message);
+}
+
+async function currentPromptDetail(page) {
+  const text = await page.locator("body").innerText();
+  const match = text.match(/prompt-coach:score_prompt prompt_id=(\S+)/);
+  assert(match, "Detail view should expose the selected prompt id.");
+  return page.evaluate(async (promptId) => {
+    const response = await fetch(`/api/v1/prompts/${promptId}`);
+    if (!response.ok) {
+      throw new Error(`Prompt detail API failed with ${response.status}`);
+    }
+    const body = await response.json();
+    return body.data;
+  }, match[1]);
 }
 
 async function assertTextAny(page, expectedOptions, message) {
