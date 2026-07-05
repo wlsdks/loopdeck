@@ -110,6 +110,9 @@ Required properties:
 
 - use structured content where supported
 - include clear `next_action` or `next_actions` fields for human approval paths
+- expose `score_prompt effectiveness evidence` for stored prompt ids when linked
+  loop outcomes exist, including raw-free verdict, evidence refs, and
+  calibration counts
 - return explicit unavailable/setup guidance instead of transport-level crashes
 - avoid raw prompt bodies, compact summaries, transcripts, raw local paths,
   secret-looking tokens, and provider credentials

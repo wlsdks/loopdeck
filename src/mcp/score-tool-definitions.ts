@@ -17,6 +17,7 @@ import {
   RECORD_LOOP_MEMORY_TOOL_DEFINITION,
   RECORD_LOOP_OUTCOME_TOOL_DEFINITION,
 } from "./loop-tool-definitions.js";
+import { PROMPT_EFFECTIVENESS_SCHEMA } from "./prompt-effectiveness-schema.js";
 import { RECORD_CLARIFICATIONS_TOOL_DEFINITION } from "./record-clarifications-tool.js";
 
 export {
@@ -29,10 +30,8 @@ export {
 } from "./agent-judge-tool-definitions.js";
 type JsonValue =
   | string
-  | number
-  | boolean
-  | null
-  | readonly JsonValue[]
+  | number | boolean
+  | null | readonly JsonValue[]
   | { readonly [key: string]: JsonValue };
 
 type JsonObject = { readonly [key: string]: JsonValue };
@@ -213,6 +212,7 @@ export const SCORE_PROMPT_TOOL_DEFINITION: PromptCoachMcpToolDefinition = {
       },
       redaction_notice: { type: "string" },
       analyzer: { type: "string" },
+      effectiveness: PROMPT_EFFECTIVENESS_SCHEMA,
       privacy: {
         type: "object",
         required: [

@@ -182,6 +182,11 @@ Decision:
   `effectiveness` evidence with linked-outcome, passing-outcome,
   failing-outcome, and total-test counts so users and agents can judge the
   strength of the verdict, not only its label.
+- MCP score_prompt effectiveness evidence is the active agent-native follow-up:
+  `score_prompt` now exposes raw-free `effectiveness` verdict and calibration
+  counts for stored prompt ids so Codex and Claude Code can inspect impact
+  evidence through structured MCP content without opening the web UI or running
+  `prompt-coach show --json`.
 
 Rationale:
 

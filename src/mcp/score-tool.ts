@@ -4,7 +4,7 @@ import { improvePrompt, type PromptImprovement } from "../analysis/improve.js";
 import { loadHookAuth, loadPromptCoachConfig } from "../config/config.js";
 import type { PromptAnalysisPreview } from "../shared/schema.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
-import type { PromptSummary } from "../storage/ports.js";
+import type { PromptEffectiveness, PromptSummary } from "../storage/ports.js";
 import {
   improvementNextActionRequiresAsk,
   shouldAskForImprovement,
@@ -437,6 +437,7 @@ function withStoredPrompt(
         source: args.latest === true ? "latest" : "prompt_id",
         promptId: id,
         analysis: prompt.analysis,
+        effectiveness: prompt.effectiveness,
         includeSuggestions: args.include_suggestions !== false,
       });
     } finally {
@@ -451,6 +452,7 @@ function toToolResult(input: {
   source: "text" | "prompt_id" | "latest";
   promptId?: string;
   analysis: PromptAnalysisPreview;
+  effectiveness?: PromptEffectiveness;
   includeSuggestions: boolean;
 }): ScorePromptToolResult {
   const breakdownByKey = new Map(
@@ -473,6 +475,7 @@ function toToolResult(input: {
       ? { redaction_notice: input.analysis.redaction_notice }
       : {}),
     analyzer: input.analysis.analyzer,
+    ...(input.effectiveness ? { effectiveness: input.effectiveness } : {}),
     privacy: {
       local_only: true,
       stores_input: false,

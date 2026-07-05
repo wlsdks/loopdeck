@@ -83,6 +83,11 @@
   failing-outcome, and total-test counts to the raw-free `effectiveness`
   payload so Codex, Claude Code, CLI JSON, API, and web detail consumers can
   judge how much evidence supports the verdict instead of reading only a label.
+- Current MCP score_prompt effectiveness evidence slice returns the same
+  raw-free `effectiveness` verdict and calibration counts through MCP
+  `score_prompt` for stored prompt ids, so Codex and Claude Code can inspect
+  prompt impact evidence without opening the web UI or shelling out to
+  `prompt-coach show --json`.
 - latest main CI run `28749788184` after PR #460 passed `test (22)` and
   `test (24)` with `pnpm test`, `pnpm lint`, `pnpm build`, and
   `pnpm pack:dry-run`.
@@ -98,8 +103,10 @@
   outcome evidence, prompt effectiveness verdict evidence, and effectiveness
   calibration evidence are now
   repeatable through `dogfood:web-user-flow`, browser E2E, focused
-  CLI/storage/web tests, and `corepack pnpm ui-patrol`. Web operations still
-  need scheduled artifact evidence before claiming 9.5.
+  CLI/storage/web tests, and `corepack pnpm ui-patrol`. MCP score_prompt
+  effectiveness evidence is the active Codex/Claude Code follow-up until PR CI,
+  main CI, and branch pruning prove it on the default branch. Web operations
+  still need scheduled artifact evidence before claiming 9.5.
 
 ## Required Slices
 

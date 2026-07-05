@@ -121,6 +121,82 @@ describe("scorePromptTool", () => {
     expect(serialized).not.toContain("Make this better");
   });
 
+  it("includes raw-free prompt effectiveness evidence when scoring a stored prompt", async () => {
+    const dataDir = createTempDir();
+    const init = initializePromptCoach({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: init.hookAuth.web_session_secret,
+      now: () => new Date("2026-07-06T00:00:00.000Z"),
+    });
+    const stored = await storeClaudePrompt(
+      storage,
+      "Review the MCP score tool, keep changes scoped, run pnpm vitest run src/mcp/score-tool.test.ts, and summarize risks.",
+      "2026-07-05T23:59:00.000Z",
+    );
+    storage.createLoopSnapshot({
+      id: "loop_mcp_score_effectiveness",
+      created_at: "2026-07-06T00:05:00.000Z",
+      tool: "codex",
+      source: "mcp",
+      cwd_label: "private-project",
+      project_id: "proj_mcp_score",
+      prompt_ids: [stored.id],
+      event_counts: {
+        prompts: 1,
+        tests_run: 4,
+      },
+      quality: {
+        average_prompt_score: 86,
+        top_gaps: [],
+        unresolved_questions: [],
+      },
+      outcome: {
+        status: "passed",
+        summary:
+          "MCP score evidence passed for /Users/example/private-project with sk-proj-1234567890abcdef.",
+        evidence_refs: [
+          "PR #460",
+          "main CI 28749788184",
+          "/Users/example/private-project",
+        ],
+      },
+      next_brief: {
+        generated: true,
+        prompt_id: stored.id,
+        summary: "Continue from MCP effectiveness evidence.",
+      },
+      privacy: {
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        local_only: true,
+      },
+    });
+    storage.close();
+
+    const result = scorePromptTool({ prompt_id: stored.id }, { dataDir });
+    const serialized = JSON.stringify(result);
+
+    expect(result).toMatchObject({
+      source: "prompt_id",
+      prompt_id: stored.id,
+      effectiveness: {
+        verdict: "proven",
+        summary:
+          "Actual loop evidence passed with 4 tests across 1 linked outcome.",
+        calibration: {
+          linked_outcomes: 1,
+          passing_outcomes: 1,
+          failing_outcomes: 0,
+          total_tests_run: 4,
+        },
+        evidence_refs: ["PR #460", "main CI 28749788184"],
+      },
+    });
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-1234567890abcdef");
+  });
+
   it("scores the stored prompt archive without returning bodies or raw paths", async () => {
     const dataDir = createTempDir();
     const init = initializePromptCoach({ dataDir });

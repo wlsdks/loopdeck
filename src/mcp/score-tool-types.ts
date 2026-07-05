@@ -5,6 +5,7 @@ import type {
   PromptQualityScore,
 } from "../shared/schema.js";
 import type { ProjectInstructionReview } from "../storage/ports.js";
+import type { PromptEffectiveness } from "../storage/ports.js";
 
 export type ScorePromptToolArguments = {
   prompt?: string;
@@ -69,6 +70,7 @@ export type ScorePromptToolResult =
       >;
       redaction_notice?: string;
       analyzer: string;
+      effectiveness?: PromptEffectiveness;
       privacy: {
         local_only: true;
         stores_input: false;
