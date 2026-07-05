@@ -38,6 +38,8 @@ describe("quality-evidence CLI command", () => {
         preconditions?: string[];
         completion_evidence?: string[];
         guardrails?: string[];
+        blocked_reason?: string;
+        available_after_utc?: string;
       }>;
     };
 
@@ -141,6 +143,8 @@ describe("quality-evidence CLI command", () => {
       priority: 90,
       blocked_by_external_event: true,
       command: "corepack pnpm evidence:ui-patrol",
+      blocked_reason: "waiting_for_next_cron",
+      available_after_utc: "2026-07-06T06:17:00.000Z",
       preconditions: expect.arrayContaining([
         "A real GitHub Actions schedule event exists for ui-patrol.yml.",
       ]),
@@ -155,6 +159,7 @@ describe("quality-evidence CLI command", () => {
       expect.arrayContaining([
         expect.objectContaining({
           id: "native_dialog_operator_dogfood",
+          blocked_reason: "operator_approval_required",
           preconditions: expect.arrayContaining([
             "The operator explicitly approves opening a native OS dialog.",
           ]),
@@ -285,6 +290,8 @@ describe("quality-evidence CLI command", () => {
     expect(text).toContain("scheduled_ui_patrol_cron_review");
     expect(text).toContain("corepack pnpm evidence:ui-patrol");
     expect(text).toContain("external event: yes");
+    expect(text).toContain("blocked_reason=waiting_for_next_cron");
+    expect(text).toContain("available_after_utc=2026-07-06T06:17:00.000Z");
     expect(text).toContain(
       "preconditions=A real GitHub Actions schedule event exists for ui-patrol.yml.",
     );
@@ -292,6 +299,7 @@ describe("quality-evidence CLI command", () => {
     expect(text).toContain(
       "guardrails=Do not treat workflow_dispatch evidence as scheduled evidence.",
     );
+    expect(text).toContain("blocked_reason=operator_approval_required");
     expect(text).toContain("Privacy: local-only");
     expect(text).not.toContain(process.cwd());
   });

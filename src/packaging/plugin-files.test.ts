@@ -1060,6 +1060,8 @@ describe("plugin packaging files", () => {
       expect(content).toContain("scorecard_level_below_9_5");
       expect(content).toContain("recommended_next_slices");
       expect(content).toContain("blocked_by_external_event");
+      expect(content).toContain("blocked_reason");
+      expect(content).toContain("available_after_utc");
       expect(content).toContain("product_positioning_metadata_alignment");
       expect(content).toContain("manual_ui_patrol_artifact_evidence");
       expect(content).toContain("codex_claude_local_integration_evidence");

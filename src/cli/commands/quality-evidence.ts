@@ -38,6 +38,8 @@ type QualityEvidenceSummary = {
     preconditions?: string[];
     completion_evidence?: string[];
     guardrails?: string[];
+    blocked_reason?: string;
+    available_after_utc?: string;
     expected_effect: string;
   }>;
   evidence?: {
@@ -135,6 +137,12 @@ function formatSummary(summary: QualityEvidenceSummary): string {
     summary.recommended_next_slices && summary.recommended_next_slices.length > 0
       ? summary.recommended_next_slices.flatMap((slice) => [
           `- ${slice.priority}. ${slice.id} (external event: ${slice.blocked_by_external_event ? "yes" : "no"}) ${slice.command} - ${slice.expected_effect}`,
+          ...(slice.blocked_reason
+            ? [`  blocked_reason=${slice.blocked_reason}`]
+            : []),
+          ...(slice.available_after_utc
+            ? [`  available_after_utc=${slice.available_after_utc}`]
+            : []),
           ...(slice.preconditions && slice.preconditions.length > 0
             ? [`  preconditions=${slice.preconditions.join("; ")}`]
             : []),

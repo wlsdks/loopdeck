@@ -1,5 +1,23 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Recommendation Blocked Reasons
+
+- [x] CHECK: `recommended_next_slices` marked external blockers but did not
+  expose why they were blocked or when a scheduled retry becomes relevant.
+- [x] RED: quality evidence script and CLI tests required
+  `scheduled_ui_patrol_cron_review` to include `blocked_reason` plus
+  `available_after_utc`, and native dialog dogfood to include
+  `blocked_reason=operator_approval_required`.
+- [x] GREEN: recommendations now carry those fields and CLI text renders them.
+- [x] EFFECT: agents can distinguish waiting for cron from needing operator
+  approval without interpreting free-form preconditions.
+
+### 판단 기준
+
+- Do not treat `available_after_utc` as completion evidence.
+- Do not run native dialog dogfood without explicit operator approval.
+- Keep recommendation output raw-free and free of local paths.
+
 ## 2026-07-06 PromptLane Axis Blocker Causes
 
 - [x] CHECK: scorecard axis blockers still said to raise the axis with direct

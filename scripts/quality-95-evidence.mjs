@@ -506,6 +506,10 @@ function recommendedNextSlices({
       axis: "web_ui_and_operational_evidence",
       priority: 90,
       blocked_by_external_event: true,
+      blocked_reason: uiPatrol.schedule_wait_state || uiPatrol.status,
+      ...(uiPatrol.next_expected_schedule_utc
+        ? { available_after_utc: uiPatrol.next_expected_schedule_utc }
+        : {}),
       command: "corepack pnpm evidence:ui-patrol",
       preconditions: [
         "A real GitHub Actions schedule event exists for ui-patrol.yml.",
@@ -528,6 +532,7 @@ function recommendedNextSlices({
       axis: "codex_and_claude_code_integration",
       priority: 100,
       blocked_by_external_event: true,
+      blocked_reason: "operator_approval_required",
       command:
         "PROMPT_COACH_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved",
       preconditions: [

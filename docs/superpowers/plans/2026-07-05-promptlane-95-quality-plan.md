@@ -244,10 +244,12 @@
 - `docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md` is packaged as
   `native_dialog_preflight` evidence for MCP elicitation and no-dialog fallback
   behavior. It must not be treated as approved native OS dialog dogfood.
-- `quality-evidence` recommended next slices now carry explicit preconditions,
-  completion evidence, and guardrails for the remaining external blockers. This
-  makes the next operator or scheduled-event pass executable without changing
-  the rule that 9.5 remains pending until real external evidence exists.
+- `quality-evidence` recommended next slices now carry explicit
+  `blocked_reason`, `available_after_utc` when a cron wait applies,
+  preconditions, completion evidence, and guardrails for the remaining external
+  blockers. This makes the next operator or scheduled-event pass executable
+  without changing the rule that 9.5 remains pending until real external
+  evidence exists.
 - The human `prompt-coach quality-evidence` output also renders external
   evidence status, including scheduled patrol cron and next expected UTC check
   time plus the native dialog approved-run requirement. The default blocker
