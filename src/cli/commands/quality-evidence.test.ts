@@ -30,6 +30,9 @@ describe("quality-evidence CLI command", () => {
         priority: number;
         blocked_by_external_event: boolean;
         command: string;
+        preconditions?: string[];
+        completion_evidence?: string[];
+        guardrails?: string[];
       }>;
     };
 
@@ -133,7 +136,32 @@ describe("quality-evidence CLI command", () => {
       priority: 90,
       blocked_by_external_event: true,
       command: "corepack pnpm evidence:ui-patrol",
+      preconditions: expect.arrayContaining([
+        "A real GitHub Actions schedule event exists for ui-patrol.yml.",
+      ]),
+      completion_evidence: expect.arrayContaining([
+        "scheduled_ui_patrol status is complete",
+      ]),
+      guardrails: expect.arrayContaining([
+        "Do not treat workflow_dispatch evidence as scheduled evidence.",
+      ]),
     });
+    expect(parsed.recommended_next_slices).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "native_dialog_operator_dogfood",
+          preconditions: expect.arrayContaining([
+            "The operator explicitly approves opening a native OS dialog.",
+          ]),
+          completion_evidence: expect.arrayContaining([
+            'interaction_status: "answered"',
+          ]),
+          guardrails: expect.arrayContaining([
+            "Do not run this command in automated CI or scheduled checks.",
+          ]),
+        }),
+      ]),
+    );
     expect(parsed.recommended_next_slices).not.toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -188,6 +216,13 @@ describe("quality-evidence CLI command", () => {
     expect(text).toContain("scheduled_ui_patrol_cron_review");
     expect(text).toContain("corepack pnpm evidence:ui-patrol");
     expect(text).toContain("external event: yes");
+    expect(text).toContain(
+      "preconditions=A real GitHub Actions schedule event exists for ui-patrol.yml.",
+    );
+    expect(text).toContain("completion=scheduled_ui_patrol status is complete");
+    expect(text).toContain(
+      "guardrails=Do not treat workflow_dispatch evidence as scheduled evidence.",
+    );
     expect(text).toContain("Privacy: local-only");
     expect(text).not.toContain(process.cwd());
   });

@@ -76,6 +76,9 @@ describe("quality 9.5 evidence script", () => {
         blocked_by_external_event: boolean;
         command: string;
         expected_effect: string;
+        preconditions?: string[];
+        completion_evidence?: string[];
+        guardrails?: string[];
       }>;
       next_action: string;
     };
@@ -259,10 +262,30 @@ describe("quality 9.5 evidence script", () => {
         expect.objectContaining({
           id: "scheduled_ui_patrol_cron_review",
           blocked_by_external_event: true,
+          preconditions: expect.arrayContaining([
+            "A real GitHub Actions schedule event exists for ui-patrol.yml.",
+          ]),
+          completion_evidence: expect.arrayContaining([
+            "scheduled_ui_patrol status is complete",
+            "ui-patrol-screenshots artifact contains 9 png files",
+          ]),
+          guardrails: expect.arrayContaining([
+            "Do not treat workflow_dispatch evidence as scheduled evidence.",
+          ]),
         }),
         expect.objectContaining({
           id: "native_dialog_operator_dogfood",
           blocked_by_external_event: true,
+          preconditions: expect.arrayContaining([
+            "The operator explicitly approves opening a native OS dialog.",
+          ]),
+          completion_evidence: expect.arrayContaining([
+            'interaction_status: "answered"',
+            "approved native dialog dogfood passed",
+          ]),
+          guardrails: expect.arrayContaining([
+            "Do not run this command in automated CI or scheduled checks.",
+          ]),
         }),
       ]),
     );

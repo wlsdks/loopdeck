@@ -238,6 +238,11 @@ Decision:
   `native_dialog_preflight` evidence: it proves MCP elicitation and no-dialog
   fallback behavior while explicitly refusing to treat that as
   `native_dialog_approved_dogfood`.
+- `quality-evidence` now includes structured external action criteria on its
+  recommended next slices. The scheduled `ui-patrol` and native dialog operator
+  dogfood recommendations include preconditions, completion evidence, and
+  guardrails so agents can unblock the remaining 9.5 work without confusing
+  manual/readiness evidence with real external completion.
 - PR #478 moved that quality evidence gate onto the installed product CLI. Main
   CI run `28753458359` passed Node 22 and Node 24 after merge, so `prompt-coach
   quality-evidence --require-complete` is now a current default-branch release
