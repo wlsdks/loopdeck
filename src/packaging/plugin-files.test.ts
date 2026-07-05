@@ -868,6 +868,13 @@ describe("plugin packaging files", () => {
       join(process.cwd(), "docs/NEXT_BACKLOG.md"),
       "utf8",
     );
+    const plan = readFileSync(
+      join(
+        process.cwd(),
+        "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
+      ),
+      "utf8",
+    );
     const todo = readFileSync(join(process.cwd(), "tasks/todo.md"), "utf8");
     const workflowPath = join(process.cwd(), ".github/workflows/ui-patrol.yml");
     const evidenceScriptPath = join(process.cwd(), "scripts/ui-patrol-evidence.mjs");
@@ -890,6 +897,12 @@ describe("plugin packaging files", () => {
     expect(latestTodo).toContain("dogfood:web-user-flow");
     expect(latestTodo).not.toContain("scheduled `ui-patrol` evidence remains pending");
     expect(latestTodo).not.toContain("corepack pnpm evidence:ui-patrol");
+    const remainingPlan = sectionBetween(plan, "## Remaining 9.5 blockers");
+    expect(remainingPlan).toContain("local browser evidence");
+    expect(remainingPlan).not.toContain("scheduled patrol cron");
+    expect(remainingPlan).not.toContain("next expected UTC");
+    expect(remainingPlan).not.toContain("scheduled-event pass");
+    expect(remainingPlan).not.toContain("scheduled `ui-patrol`");
     expect(goalAudit).toContain("PR #419");
     expect(goalAudit).toContain("PR #420");
     expect(backlog).toContain("PR #419");
