@@ -6,7 +6,7 @@
 - [x] RED: `dogfood:first-coach-loop`, `scripts/first-coach-loop-dogfood.mjs`, AGENT-HARNESS/PACKAGE_CONTENTS 연결이 없으면 packaging test가 실패하도록 고정했다.
 - [x] GREEN: 격리 HOME/data-dir/server port에서 `hook codex`, `coach --json`, `loop collect --json`, `loop brief --json`을 실행하고 raw secret/body/path privacy를 확인하는 dogfood script를 추가했다.
 - [x] VERIFY: focused packaging test, `node scripts/first-coach-loop-dogfood.mjs`, full gate를 통과한다.
-- [ ] INTEGRATE: PR이 CI `test (22)`/`test (24)` 통과 후 merge되고 branch prune까지 확인된다.
+- [x] INTEGRATE: PR #413이 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
 ### 판단 기준
 
