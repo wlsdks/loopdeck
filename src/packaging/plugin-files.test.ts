@@ -743,10 +743,12 @@ describe("plugin packaging files", () => {
       "utf8",
     );
 
+    expect(reuseAudit).toContain("local PromptLane web server");
     expect(reuseAudit).toContain("No immediate reuse-flow slice remains");
     expect(reuseAudit).toContain("PR #366");
     expect(reuseAudit).toContain("PR #367");
     expect(reuseAudit).toContain("PR #368");
+    expect(reuseAudit).not.toContain("local Loopdeck");
     expect(reuseAudit).not.toContain("Re-run the reuse flow");
   });
 

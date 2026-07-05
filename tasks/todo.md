@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Reuse Audit Branding Drift
+
+- [x] CHECK: scheduled `ui-patrol` has not fired yet, and `docs/REUSE_LOOP_AUDIT_2026-07-05.md` still described the tested server as a local Loopdeck web server.
+- [x] RED: focused packaging guard must fail unless the reuse audit says `local PromptLane web server` and no longer contains `local Loopdeck`.
+- [x] GREEN: reuse audit path-tested copy now says `local PromptLane web server`.
+- [ ] VERIFY: focused packaging guard, full local gate, PR CI, latest main CI, and branch prune all pass.
+- [ ] INTEGRATE: PR이 CI `test (22)`/`test (24)` 통과 후 merge되고 branch prune까지 확인된다.
+
+### 판단 기준
+
+- active audit evidence should use PromptLane for product-facing surfaces.
+- `loopdeck` remains allowed only as an explicit compatibility alias or legacy tool name.
+- naming cleanup must not rewrite historical command ids, package names, MCP tool ids, or compatibility docs.
+
 ## 2026-07-06 PromptLane Release Stability Backlog Refresh
 
 - [x] CHECK: scheduled `ui-patrol` has not fired yet because the 2026-07-06 15:17 KST cron time has not arrived, while `docs/NEXT_BACKLOG.md` and the 9.5 quality plan still carried stale release-stability follow-up wording.
