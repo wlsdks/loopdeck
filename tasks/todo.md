@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-05 PromptLane First Coach Loop Dogfood
+
+- [x] CHECK: setup smoke와 MCP smoke는 있지만 temp archive에서 실제 `hook codex` capture를 local server로 통과시킨 뒤 `coach`와 `loop` CLI로 이어지는 first loop dogfood가 없음을 확인했다.
+- [x] RED: `dogfood:first-coach-loop`, `scripts/first-coach-loop-dogfood.mjs`, AGENT-HARNESS/PACKAGE_CONTENTS 연결이 없으면 packaging test가 실패하도록 고정했다.
+- [x] GREEN: 격리 HOME/data-dir/server port에서 `hook codex`, `coach --json`, `loop collect --json`, `loop brief --json`을 실행하고 raw secret/body/path privacy를 확인하는 dogfood script를 추가했다.
+- [x] VERIFY: focused packaging test, `node scripts/first-coach-loop-dogfood.mjs`, full gate를 통과한다.
+- [ ] INTEGRATE: PR이 CI `test (22)`/`test (24)` 통과 후 merge되고 branch prune까지 확인된다.
+
+### 판단 기준
+
+- dogfood는 실제 사용자 config, 실제 prompt archive, provider credential, external call을 건드리지 않는다.
+- hook은 local PromptLane server가 떠 있을 때만 archive를 채우며, 실패 시 fail-open이어야 한다.
+- coach/loop output은 local-only, no auto-submit, no prompt body/raw path exposure를 유지해야 한다.
+
 ## 2026-07-05 PromptLane Local UI Patrol Evidence
 
 - [x] CHECK: GitHub `ui-patrol` history still has no scheduled cron run; manual dispatch and current local evidence are the available operational proof.
