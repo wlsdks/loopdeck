@@ -5,8 +5,8 @@
 - [x] CHECK: `doctor codex` detects duplicate PromptLane hooks across user/project sources, but same-file duplicate `UserPromptSubmit` hook groups can still create duplicate hook context output without being diagnosed.
 - [x] RED: focused doctor test must fail when one Codex hooks file contains two PromptLane `UserPromptSubmit` hook groups and `duplicateHooks` remains false.
 - [x] GREEN: doctor detects same-file duplicate PromptLane Codex `UserPromptSubmit` hooks while preserving existing user/project duplicate detection.
-- [ ] VERIFY: focused doctor test, full local gate, PR CI, latest main CI, and branch prune all pass.
-- [ ] INTEGRATE: PR is merged after CI and the temporary branch is pruned locally and remotely.
+- [x] VERIFY: focused doctor test, full local gate, PR CI, latest main CI run `28746274401`, and branch prune all pass.
+- [x] INTEGRATE: PR #441가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인됐다.
 
 ### 판단 기준
 
