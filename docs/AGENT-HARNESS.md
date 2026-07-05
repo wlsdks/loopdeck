@@ -49,6 +49,7 @@ corepack pnpm prompt-coach setup --profile coach --register-mcp --open-web
 corepack pnpm prompt-coach doctor codex
 corepack pnpm smoke:agent-setup
 corepack pnpm dogfood:first-coach-loop
+corepack pnpm dogfood:loop-memory-approval
 corepack pnpm prompt-coach loop status
 corepack pnpm prompt-coach loop collect
 corepack pnpm prompt-coach loop brief
@@ -80,6 +81,7 @@ Claude-facing setup should keep these commands and checks working:
 corepack pnpm prompt-coach doctor claude-code
 corepack pnpm smoke:agent-setup
 corepack pnpm dogfood:first-coach-loop
+corepack pnpm dogfood:loop-memory-approval
 corepack pnpm smoke:mcp-coach-loop
 corepack pnpm smoke:mcp-elicitation
 corepack pnpm smoke:mcp-native-dialog

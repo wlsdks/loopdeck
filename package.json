@@ -68,6 +68,7 @@
     "scripts/agent-setup-smoke.mjs",
     "scripts/browser-e2e.mjs",
     "scripts/first-coach-loop-dogfood.mjs",
+    "scripts/loop-memory-approval-dogfood.mjs",
     "scripts/hook-binary-smoke.mjs",
     "scripts/mcp-elicitation-smoke.mjs",
     "scripts/mcp-coach-loop-smoke.mjs",
@@ -103,6 +104,7 @@
     "smoke:mcp-native-dialog": "pnpm build && node scripts/mcp-native-dialog-preflight.mjs",
     "dogfood:mcp-native-dialog-approved": "pnpm build && node scripts/mcp-native-dialog-approved.mjs",
     "dogfood:first-coach-loop": "pnpm build && node scripts/first-coach-loop-dogfood.mjs",
+    "dogfood:loop-memory-approval": "pnpm build && node scripts/loop-memory-approval-dogfood.mjs",
     "smoke:release": "pnpm build && node scripts/release-smoke.mjs",
     "test": "vitest run",
     "ui-patrol": "node scripts/ui-patrol.mjs"

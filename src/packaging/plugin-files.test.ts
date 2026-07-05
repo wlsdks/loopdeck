@@ -1465,6 +1465,51 @@ describe("plugin packaging files", () => {
     expect(packageContents).toContain("scripts/first-coach-loop-dogfood.mjs");
   });
 
+  it("ships a loop memory approval dogfood for evidence-backed memory and instruction patch flow", () => {
+    const packageJson = readJson<{
+      files: string[];
+      scripts: Record<string, string>;
+    }>("package.json");
+    const smoke = readFileSync(
+      join(process.cwd(), "scripts/loop-memory-approval-dogfood.mjs"),
+      "utf8",
+    );
+    const harness = readFileSync(
+      join(process.cwd(), "docs/AGENT-HARNESS.md"),
+      "utf8",
+    );
+    const packageContents = readFileSync(
+      join(process.cwd(), "docs/PACKAGE_CONTENTS.md"),
+      "utf8",
+    );
+    const releaseChecklist = readFileSync(
+      join(process.cwd(), "docs/RELEASE_CHECKLIST.md"),
+      "utf8",
+    );
+
+    expect(packageJson.files).toContain(
+      "scripts/loop-memory-approval-dogfood.mjs",
+    );
+    expect(packageJson.scripts["dogfood:loop-memory-approval"]).toBe(
+      "pnpm build && node scripts/loop-memory-approval-dogfood.mjs",
+    );
+    expect(smoke).toContain("record_loop_outcome");
+    expect(smoke).toContain("propose_loop_memory_candidate");
+    expect(smoke).toContain("record_loop_memory");
+    expect(smoke).toContain("propose_instruction_patch");
+    expect(smoke).toContain("PROMPT_COACH_LOOP_MEMORY_SECRET");
+    expect(smoke).toContain("assertNotIncludes");
+    expect(smoke).toContain("loop memory approval dogfood passed");
+    expect(smoke).not.toContain("/Users/");
+    expect(harness).toContain("corepack pnpm dogfood:loop-memory-approval");
+    expect(packageContents).toContain(
+      "scripts/loop-memory-approval-dogfood.mjs",
+    );
+    expect(releaseChecklist).toContain(
+      "`scripts/loop-memory-approval-dogfood.mjs`",
+    );
+  });
+
   it("installs Playwright Chromium before the scheduled UI patrol", () => {
     const workflow = readFileSync(
       join(process.cwd(), ".github/workflows/ui-patrol.yml"),
