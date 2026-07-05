@@ -179,6 +179,18 @@
   Codex doctor, then completed with `prompt-coach agent setup smoke passed` on
   current main-derived work. This refreshes local Codex/Claude setup evidence
   without opening provider CLIs or treating native-dialog dogfood as complete.
+- `docs/LOCAL_95_EVIDENCE_2026-07-06.md` records the current local 9.5 evidence
+  sweep: `corepack pnpm smoke:hooks` ended with `hook binary smoke passed`,
+  `corepack pnpm smoke:mcp-coach-loop` ended with
+  `mcp coach loop smoke passed`, `corepack pnpm dogfood:first-coach-loop` ended
+  with `first coach loop dogfood passed`,
+  `corepack pnpm dogfood:loop-memory-approval` ended with
+  `loop memory approval dogfood passed`, `corepack pnpm smoke:release` ended
+  with `release smoke passed`, and `corepack pnpm benchmark -- --json`
+  returned `privacy_leak_count: 0` plus `archive_effectiveness_score: 1`.
+  This strengthens the local proof for privacy, Codex/Claude integration,
+  setup/MCP smoke, loop memory, and release stability while keeping scheduled
+  `ui-patrol` and native-dialog dogfood as separate blockers.
 - PR #478 proved that installed CLI path on the default branch; main CI run
   `28753458359` passed Node 22 and Node 24 after merge, so future agents can use
   the product CLI itself to decide whether 9.5 is still blocked before claiming

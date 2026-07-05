@@ -221,6 +221,17 @@ Decision:
   doctor, then ended with `prompt-coach agent setup smoke passed`. This
   refreshes local Codex/Claude setup evidence without opening provider CLIs or
   treating native-dialog dogfood as complete.
+- `docs/LOCAL_95_EVIDENCE_2026-07-06.md` records the current local 9.5 evidence
+  sweep after `corepack pnpm smoke:hooks` ended with `hook binary smoke passed`,
+  `corepack pnpm smoke:mcp-coach-loop` ended with
+  `mcp coach loop smoke passed`, `corepack pnpm dogfood:first-coach-loop` ended
+  with `first coach loop dogfood passed`,
+  `corepack pnpm dogfood:loop-memory-approval` ended with
+  `loop memory approval dogfood passed`, `corepack pnpm smoke:release` ended
+  with `release smoke passed`, and `corepack pnpm benchmark -- --json`
+  returned `privacy_leak_count: 0` plus `archive_effectiveness_score: 1`.
+  This ledger strengthens current local proof while keeping scheduled
+  `ui-patrol` and native-dialog dogfood as separate blockers.
 - fresh current-main web user-flow evidence is now recorded after PR #465:
   `corepack pnpm dogfood:web-user-flow` passed on main-derived work after main
   CI run `28750766036`, proving the archive/detail/dashboard/coach/projects/

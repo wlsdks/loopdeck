@@ -1,5 +1,37 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Local 9.5 Evidence Ledger
+
+- [x] CHECK: `corepack pnpm evidence:ui-patrol` still reports
+  `pending_no_schedule_run`, so scheduled UI patrol remains externally blocked.
+- [x] RUN: `corepack pnpm smoke:hooks` passed and ended with
+  `hook binary smoke passed`.
+- [x] RUN: `corepack pnpm smoke:mcp-coach-loop` passed and ended with
+  `mcp coach loop smoke passed`.
+- [x] RUN: `corepack pnpm dogfood:first-coach-loop` passed and ended with
+  `first coach loop dogfood passed`.
+- [x] RUN: `corepack pnpm dogfood:loop-memory-approval` passed and ended with
+  `loop memory approval dogfood passed`.
+- [x] RUN: `corepack pnpm smoke:release` passed and ended with
+  `release smoke passed`.
+- [x] RUN: `corepack pnpm benchmark -- --json` passed with
+  `privacy_leak_count: 0` and `archive_effectiveness_score: 1`.
+- [x] RED: packaging guard required
+  `docs/LOCAL_95_EVIDENCE_2026-07-06.md` in shipped package files and failed
+  before the ledger existed in `package.json#files`.
+- [x] GREEN: local 9.5 evidence ledger is packaged and referenced from the
+  9.5 plan/backlog without treating scheduled `ui-patrol` or native-dialog
+  dogfood as complete.
+
+### 판단 기준
+
+- Native dialog approved dogfood must not run without explicit operator
+  approval.
+- The local evidence ledger strengthens scorecard evidence but must not make
+  `promptlane_95_quality` complete by itself.
+- Evidence text must stay raw-free and avoid prompt bodies, raw paths, tokens,
+  provider credentials, transcript bodies, and compact summaries.
+
 ## 2026-07-06 PromptLane Quality Evidence Forward Recommendations
 
 - [x] CHECK: `prompt-coach quality-evidence --json` still recommended
