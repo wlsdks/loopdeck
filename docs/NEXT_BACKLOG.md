@@ -247,7 +247,8 @@ Decision:
   `prompt-coach quality-evidence --operator-brief` prints only the current
   approval status, command, refusal preflight command, preconditions,
   completion evidence, and guardrails for that remaining dogfood step, while
-  explicitly not running it.
+  explicitly not running it. The refusal preflight command is
+  `corepack pnpm dogfood:mcp-native-dialog-refusal`.
   The default blocker list also prints each blocker `remaining_evidence` and
   blocker `next_action`, so agents no longer need to switch to JSON output just
   to decide which lower-level evidence keeps an axis below 9.5.

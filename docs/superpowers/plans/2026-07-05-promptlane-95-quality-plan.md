@@ -237,7 +237,8 @@
   requirement. `prompt-coach quality-evidence --operator-brief` renders the
   current approval status, command, refusal preflight command, preconditions,
   completion evidence, and guardrails for the remaining dogfood step without
-  running it. The default
+  running it. The refusal preflight command is
+  `corepack pnpm dogfood:mcp-native-dialog-refusal`. The default
   blocker list also prints blocker `remaining_evidence` and blocker `next_action`, so normal CLI use can drive the remaining external
   work without requiring JSON parsing.
 - PR #478 proved that installed CLI path on the default branch, so future

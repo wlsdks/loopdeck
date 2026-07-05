@@ -113,6 +113,7 @@
     "smoke:mcp-elicitation": "pnpm build && node scripts/mcp-elicitation-smoke.mjs",
     "smoke:mcp-native-dialog": "pnpm build && node scripts/mcp-native-dialog-preflight.mjs",
     "dogfood:mcp-native-dialog-approved": "pnpm build && node scripts/mcp-native-dialog-approved.mjs",
+    "dogfood:mcp-native-dialog-refusal": "pnpm build && node scripts/mcp-native-dialog-approved.mjs",
     "dogfood:first-coach-loop": "pnpm build && node scripts/first-coach-loop-dogfood.mjs",
     "dogfood:loop-memory-approval": "pnpm build && node scripts/loop-memory-approval-dogfood.mjs",
     "dogfood:web-user-flow": "pnpm e2e:browser",

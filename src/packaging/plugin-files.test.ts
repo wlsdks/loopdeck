@@ -2131,6 +2131,9 @@ describe("plugin packaging files", () => {
     expect(packageJson.scripts["dogfood:mcp-native-dialog-approved"]).toBe(
       "pnpm build && node scripts/mcp-native-dialog-approved.mjs",
     );
+    expect(packageJson.scripts["dogfood:mcp-native-dialog-refusal"]).toBe(
+      "pnpm build && node scripts/mcp-native-dialog-approved.mjs",
+    );
     expect(smoke).toContain("PROMPT_COACH_NATIVE_DIALOG_APPROVED");
     expect(smoke).toContain("Refusing to open a native OS dialog");
     expect(smoke).toContain("allow_native_dialog: true");

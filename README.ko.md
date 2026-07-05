@@ -574,6 +574,8 @@ pnpm prompt-coach quality-evidence --require-complete
 확인해야 할 focused checklist만 출력합니다. 또한
 `PROMPT_COACH_NATIVE_DIALOG_APPROVED=1`이 없으면 native dialog를 열기 전에
 거부되어야 하는 refusal preflight command도 함께 보여줍니다.
+해당 refusal preflight는 `corepack pnpm dogfood:mcp-native-dialog-refusal`로
+실행합니다.
 JSON 출력에는 `recommended_next_slices`도 포함됩니다. 텍스트 출력에서는 recommended next slices로
 표시되며, 바로 실행할 수 있는 로컬 evidence
 작업과 외부 이벤트 또는 명시적 운영자 승인이 필요한 작업을 분리합니다.
