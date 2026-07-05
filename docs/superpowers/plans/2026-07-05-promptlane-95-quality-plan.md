@@ -245,6 +245,10 @@
   completion evidence, and guardrails for the remaining external blockers. This
   makes the next operator or scheduled-event pass executable without changing
   the rule that 9.5 remains pending until real external evidence exists.
+- The human `prompt-coach quality-evidence` output also renders external
+  evidence status, including scheduled patrol cron and next expected UTC check
+  time plus the native dialog approved-run requirement, so normal CLI use can
+  drive the remaining external work without requiring JSON parsing.
 - PR #478 proved that installed CLI path on the default branch; main CI run
   `28753458359` passed Node 22 and Node 24 after merge, so future agents can use
   the product CLI itself to decide whether 9.5 is still blocked before claiming

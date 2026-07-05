@@ -244,6 +244,11 @@ Decision:
   dogfood recommendations include preconditions, completion evidence, and
   guardrails so agents can unblock the remaining 9.5 work without confusing
   manual/readiness evidence with real external completion.
+- The human `prompt-coach quality-evidence` summary now renders external
+  evidence status directly: scheduled patrol status, workflow, cron,
+  `next_expected_schedule_utc`, and native dialog approved-run requirement.
+  Agents no longer need to switch to JSON output just to decide when to re-check
+  the remaining external blockers.
 - PR #478 moved that quality evidence gate onto the installed product CLI. Main
   CI run `28753458359` passed Node 22 and Node 24 after merge, so `prompt-coach
   quality-evidence --require-complete` is now a current default-branch release

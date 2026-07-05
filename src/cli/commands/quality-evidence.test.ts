@@ -210,6 +210,14 @@ describe("quality-evidence CLI command", () => {
     expect(text).toContain("remaining=native_dialog_approved_dogfood");
     expect(text).toContain("Scorecard review candidates");
     expect(text).toContain("- none");
+    expect(text).toContain("External evidence status");
+    expect(text).toContain(
+      "scheduled_ui_patrol: pending_no_schedule_run workflow=ui-patrol.yml cron=17 6 * * 1",
+    );
+    expect(text).toContain("next_expected_schedule_utc=");
+    expect(text).toContain(
+      "native_dialog_approved_dogfood: pending_operator_approval approved_run_required=yes",
+    );
     expect(text).toContain("scheduled_ui_patrol");
     expect(text).toContain("native_dialog_approved_dogfood");
     expect(text).toContain("Recommended next slices");

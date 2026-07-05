@@ -1,5 +1,25 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Quality Evidence External Status Text
+
+- [x] CHECK: `quality-evidence --json` exposed external evidence metadata, but
+  human `quality-evidence` text skipped schedule/native evidence status.
+- [x] RED: CLI test required an `External evidence status` section with
+  scheduled patrol status, workflow, cron, next expected schedule time, and
+  native dialog approved-run requirement; the focused test failed while the
+  section was absent.
+- [x] GREEN: the text formatter now renders external evidence status when the
+  JSON summary includes it.
+- [x] EFFECT: operators and agents can use the default CLI summary to decide
+  when to re-check the remaining external blockers.
+
+### 판단 기준
+
+- Do not remove or downgrade the external blockers through text rendering.
+- Keep text output raw-free and free of local paths.
+- Keep JSON output unchanged except for data already emitted by the evidence
+  script.
+
 ## 2026-07-06 PromptLane UI Patrol Next Schedule Evidence
 
 - [x] CHECK: `ui-patrol.yml` still has no `schedule` event, and
