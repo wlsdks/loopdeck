@@ -783,6 +783,10 @@ describe("plugin packaging files", () => {
     }
     expect(backlog).toContain("No immediate MVP reliability slice remains");
     expect(goalAudit).toContain("PromptLane MVP reliability slices");
+    expect(goalAudit).toContain("Local `corepack pnpm ui-patrol`");
+    expect(backlog).toContain("Local `corepack pnpm ui-patrol`");
+    expect(goalAudit).toContain("9 png files");
+    expect(backlog).toContain("9 png files");
     expect(backlog).toMatch(/No\s+immediate MCP coach-loop slice remains/);
     expect(backlog).toMatch(/No\s+immediate reuse-flow slice remains/);
     expect(backlog).not.toContain(

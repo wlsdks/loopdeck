@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-05 PromptLane Local UI Patrol Evidence
+
+- [x] CHECK: GitHub `ui-patrol` history still has no scheduled cron run; manual dispatch and current local evidence are the available operational proof.
+- [x] RED: goal audit/backlog must include local `corepack pnpm ui-patrol` evidence and 9 png files, or packaging drift guard fails.
+- [x] GREEN: goal audit/backlog record the current local `corepack pnpm ui-patrol` pass while keeping first scheduled cron artifact pending.
+- [x] VERIFY: focused packaging test와 full gate를 통과한다.
+- [ ] INTEGRATE: PR이 CI `test (22)`/`test (24)` 통과 후 merge되고 branch prune까지 확인된다.
+
+### 판단 기준
+
+- Manual workflow artifact와 local patrol evidence는 증거로 인정하되 scheduled cron artifact를 완료로 둔갑시키지 않는다.
+- UI patrol은 broad operational guard로 유지하고 실제 visual regression이 나오기 전까지 targeted assertion을 늘리지 않는다.
+
 ## 2026-07-05 PromptLane Goal Audit Refresh
 
 - [x] CHECK: `docs/NEXT_BACKLOG.md`와 `docs/LOOPDECK_GOAL_AUDIT_2026-07-05.md`가 #371 기준에 머물러 있고 #403-#408 MVP reliability slices를 반영하지 않는지 확인했다.

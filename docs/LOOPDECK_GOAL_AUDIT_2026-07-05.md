@@ -111,6 +111,9 @@ Verified CI and operational evidence:
 - Run `28717406758` uploaded `ui-patrol-screenshots` with 9 png files:
   archive, detail, dashboard, coach, projects, MCP, exports, settings desktop,
   and settings mobile.
+- Local `corepack pnpm ui-patrol` on current main after PR #410 passed and
+  captured 9 png files: archive, detail, dashboard, coach, projects, MCP,
+  exports, settings desktop, and settings mobile.
 - The first scheduled `ui-patrol` run has not appeared yet in the latest
   workflow history inspected after #359.
 - `corepack pnpm e2e:browser` on `codex/reuse-copy-fallback-audit-refresh`
@@ -139,7 +142,7 @@ Verified CI and operational evidence:
 | PromptLane MVP reliability slices | The current product-contract reliability slices for storage capability, MCP setup guidance, evidence-first memory, and focused Codex/Claude setup smoke have landed. | PR #403, PR #405, PR #407, PR #408, `docs/NEXT_BACKLOG.md`, `tasks/todo.md` | Satisfied for current MVP reliability scope |
 | Reuse copy fallback | Clipboard-write failure now opens a local manual-copy fallback instead of leaving the user at a dead end, including the real Codex in-app Browser clipboard failure mode. | `src/web/src/App.tsx`, `src/web/src/prompt-detail-view.test.ts`, `scripts/browser-e2e.mjs`, `corepack pnpm e2e:browser`, fresh Codex in-app Browser pass | Satisfied for automated and manual in-app Browser coverage |
 | Reuse saved draft workflow | Saved drafts can be reopened as the current coach draft so the operator can reuse the same copy/manual-fallback controls without auto-submitting to an agent; reopened rows show `Saved draft` and disable duplicate saves with `Already saved`. | `src/web/src/saved-draft-improvement.ts`, `src/web/src/improvement-mode-label.ts`, `src/web/src/improvement-save-state.ts`, `src/web/src/prompt-detail-view.tsx`, `scripts/browser-e2e.mjs` | Satisfied for current reuse flow |
-| UI patrol scheduled artifact | Manual workflow dispatch is verified; first scheduled cron artifact has not occurred yet. | Run `28717406758`; `.github/workflows/ui-patrol.yml` cron | Not yet complete as a scheduled-run requirement |
+| UI patrol scheduled artifact | Manual workflow dispatch and local `corepack pnpm ui-patrol` are verified; first scheduled cron artifact has not occurred yet. | Run `28717406758`; local `corepack pnpm ui-patrol` with 9 png files; `.github/workflows/ui-patrol.yml` cron | Not yet complete as a scheduled-run requirement |
 | Codex native dialog fallback | Safe no-dialog preflight, MCP elicitation smoke, and approval-gated harness refusal are verified; real OS/native ask UI dogfood is not run. | `docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md`, `scripts/mcp-native-dialog-approved.mjs`, `package.json` | Pending explicit operator approval for the answered dialog run |
 | MCP registry follow-up | Decision is documented to wait until a new MCP tool/schema change touches registration. | ADR 0001, `docs/NEXT_BACKLOG.md` | Deferred by design |
 
