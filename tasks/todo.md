@@ -20,6 +20,9 @@
 - [x] GREEN: machine parsers can use
   `corepack pnpm --silent evidence:quality` or
   `node scripts/quality-95-evidence.mjs` for clean JSON without pnpm banners.
+- [x] GREEN: installed CLI users can run `prompt-coach quality-evidence`,
+  `prompt-coach quality-evidence --json`, and
+  `prompt-coach quality-evidence --require-complete`.
 
 ### 판단 기준
 

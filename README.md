@@ -687,6 +687,17 @@ pnpm prompt-coach score --latest --json
 pnpm prompt-coach score --tool codex --json
 ```
 
+Inspect the PromptLane 9.5 quality evidence gate:
+
+```sh
+pnpm prompt-coach quality-evidence
+pnpm prompt-coach quality-evidence --json
+pnpm prompt-coach quality-evidence --require-complete
+```
+
+`--require-complete` fails while scorecard axes or direct evidence blockers are
+still pending. Use it only as a release/goal-completion gate.
+
 ## Local Analysis Preview
 
 Prompt detail views include a local rule-based analysis preview. It summarizes whether a prompt includes clear targets, context, constraints, output format, and verification criteria. Each prompt also receives a deterministic `0-100` Prompt Quality Score with a checklist-based breakdown.

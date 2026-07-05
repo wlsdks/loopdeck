@@ -144,7 +144,9 @@
   goal-completion gate must fail closed while that summary is pending. Use
   `corepack pnpm --silent evidence:quality` or
   `node scripts/quality-95-evidence.mjs` when another tool needs to parse the
-  JSON directly.
+  JSON directly. Installed CLI users can run
+  `prompt-coach quality-evidence --json` or
+  `prompt-coach quality-evidence --require-complete`.
 - Native OS ask UI dogfood remains operator-approved only; do not run
   `dogfood:mcp-native-dialog-approved` without explicit approval because it can
   open a native dialog.

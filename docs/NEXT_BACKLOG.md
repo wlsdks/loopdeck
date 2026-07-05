@@ -182,6 +182,9 @@ Decision:
   that summary is not `complete`. JSON parsers should use
   `corepack pnpm --silent evidence:quality` or
   `node scripts/quality-95-evidence.mjs` to avoid package-manager banners.
+  Installed CLI users can inspect the same summary with
+  `prompt-coach quality-evidence --json` and fail closed with
+  `prompt-coach quality-evidence --require-complete`.
 - The earlier GitHub Actions Node 20 runtime annotation and Node 24
   `better-sqlite3` install warning are closed. Keep the release-stability bar
   focused on fresh CI/package warnings that affect local-first install, build,

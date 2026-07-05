@@ -30,6 +30,7 @@ Use this checklist before publishing a public beta or npm package.
 - [ ] `corepack pnpm e2e:browser`
 - [ ] `corepack pnpm smoke:release`
 - [ ] `corepack pnpm evidence:quality -- --require-complete`
+- [ ] `pnpm prompt-coach quality-evidence --require-complete`
 - [ ] `git diff --check`
 
 For machine-readable inspection of the 9.5 quality summary, use

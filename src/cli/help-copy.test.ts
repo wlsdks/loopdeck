@@ -50,6 +50,7 @@ describe("CLI help copy", () => {
       helpFor("statusline-chain"),
       helpFor("install-statusline"),
       helpFor("uninstall-statusline"),
+      helpFor("quality-evidence"),
       nestedHelpFor("service", "install"),
     ].join("\n");
 
@@ -61,6 +62,7 @@ describe("CLI help copy", () => {
     expect(help).toContain("combines PromptLane with another tool");
     expect(help).toContain("Install the PromptLane status line");
     expect(help).toContain("Uninstall the PromptLane status line");
+    expect(help).toContain("Report PromptLane 9.5 quality evidence");
     expect(help).toContain("Install a login service for the local PromptLane server.");
     expect(help).not.toContain("local prompt-coach HTTP server");
     expect(help).not.toContain("local prompt-coach MCP server");
