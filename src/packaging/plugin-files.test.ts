@@ -829,6 +829,16 @@ describe("plugin packaging files", () => {
     expect(backlog).toContain("PR #420");
   });
 
+  it("keeps CI setup actions on Node 24 compatible versions", () => {
+    const workflow = readFileSync(
+      join(process.cwd(), ".github/workflows/test.yml"),
+      "utf8",
+    );
+
+    expect(workflow).toContain("pnpm/action-setup@v6");
+    expect(workflow).not.toContain("pnpm/action-setup@v4");
+  });
+
   it("ships the PromptLane 9.5 quality plan and links it from the operational backlog", () => {
     const packageJson = readJson<{
       files: string[];
