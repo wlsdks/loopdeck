@@ -24,7 +24,12 @@ type QualityEvidenceSummary = {
     required_review: string;
     satisfied_evidence: string[];
   }>;
-  blockers: Array<{ id: string; status: string; next_action?: string }>;
+  blockers: Array<{
+    id: string;
+    status: string;
+    remaining_evidence?: string[];
+    next_action?: string;
+  }>;
   recommended_next_slices?: Array<{
     id: string;
     priority: number;
@@ -120,6 +125,9 @@ function formatSummary(summary: QualityEvidenceSummary): string {
     summary.blockers.length > 0
       ? summary.blockers.flatMap((blocker) => [
           `- ${blocker.id}: ${blocker.status}`,
+          ...(blocker.remaining_evidence && blocker.remaining_evidence.length > 0
+            ? [`  remaining_evidence=${blocker.remaining_evidence.join(",")}`]
+            : []),
           ...(blocker.next_action ? [`  next_action=${blocker.next_action}`] : []),
         ])
       : ["- none"];
