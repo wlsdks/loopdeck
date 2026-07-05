@@ -122,7 +122,16 @@ Current goal audit:
   9 png files, but scheduled `ui-patrol` evidence remains pending.
 - Local `corepack pnpm ui-patrol` on current main after PR #410 passed and
   captured 9 png files.
-- Latest main CI run `28745224451` passed `test (22)` and `test (24)` with
+- PR #447 added local `expected_impact` evidence to prompt improvements so
+  CLI JSON and MCP results expose original score, improved score, delta, and
+  changed axis count without external calls or automatic approval.
+- PR #449 rendered expected-impact evidence in the web prompt detail coach
+  panel and extended browser E2E/`ui-patrol` to assert that row before copy/save
+  actions.
+- PR #450 closed the web expected-impact evidence log after PR #449 passed PR
+  CI, local `corepack pnpm ui-patrol`, latest main CI run `28747568864`, and
+  branch pruning.
+- latest main CI run `28747682131` passed `test (22)` and `test (24)` with
   `pnpm test`, `pnpm lint`, `pnpm build`, and `pnpm pack:dry-run`.
 
 Decision:
@@ -148,9 +157,9 @@ Decision:
   after a real cron run exists, explicit operator-approved native ask UI
   dogfood, and fresh user-flow evidence from real PromptLane work.
 - The 9.5 quality plan now includes an Evidence Progress Ledger with PR #417,
-  PR #419, PR #421, PR #425, PR #427, PR #429, PR #433, workflow_dispatch run
-  `28717406758`, latest main CI run `28745224451`, the missing `schedule`
-  event, and Remaining 9.5 blockers.
+  PR #419, PR #421, PR #425, PR #427, PR #429, PR #433, PR #447, PR #449,
+  PR #450, workflow_dispatch run `28717406758`, latest main CI run
+  `28747682131`, the missing `schedule` event, and Remaining 9.5 blockers.
 - The earlier GitHub Actions Node 20 runtime annotation and Node 24
   `better-sqlite3` install warning are closed. Keep the release-stability bar
   focused on fresh CI/package warnings that affect local-first install, build,
@@ -159,6 +168,9 @@ Decision:
   it runs the same Playwright-backed archive/detail/dashboard/coach/projects/
   mcp/exports/settings/mobile flow documented in
   `docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md`.
+- Expected-impact evidence is now visible in CLI/MCP/Web surfaces and guarded by
+  focused tests plus browser E2E, so future prompt-improvement work should
+  preserve a measurable before/after signal instead of only returning a rewrite.
 
 Rationale:
 
