@@ -1,5 +1,28 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Axis Evidence Coverage
+
+- [x] CHECK: `corepack pnpm --silent evidence:quality` had blockers and
+  recommendations, but no machine-readable per-axis evidence coverage.
+- [x] RED: quality evidence script and CLI tests required
+  `axis_evidence_coverage` with satisfied evidence and remaining evidence for
+  local privacy, Codex/Claude integration, and web operations; tests failed
+  while the field was missing.
+- [x] GREEN: `scripts/quality-95-evidence.mjs` now emits
+  `axis_evidence_coverage` with `partial`, `blocked_external`, `missing`, or
+  `complete` status without upgrading static scorecard levels.
+- [x] GREEN: `prompt-coach quality-evidence` text now renders an
+  `Axis evidence coverage` section so humans can see local proof vs remaining
+  external/scorecard gaps without opening JSON.
+
+### 판단 기준
+
+- Coverage must not mark `promptlane_95_quality` complete.
+- Coverage must distinguish satisfied local evidence from
+  `scheduled_ui_patrol`, `native_dialog_approved_dogfood`, and
+  `scorecard_level_below_9_5`.
+- Output must remain local-only and raw-free.
+
 ## 2026-07-06 PromptLane Local 9.5 Evidence Ledger
 
 - [x] CHECK: `corepack pnpm evidence:ui-patrol` still reports

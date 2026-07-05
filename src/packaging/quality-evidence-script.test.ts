@@ -58,6 +58,12 @@ describe("quality 9.5 evidence script", () => {
         status: string;
       }>;
       blockers: Array<{ id: string; status: string }>;
+      axis_evidence_coverage: Array<{
+        id: string;
+        status: string;
+        satisfied_evidence: string[];
+        remaining_evidence: string[];
+      }>;
       recommended_next_slices: Array<{
         id: string;
         axis: string;
@@ -96,6 +102,44 @@ describe("quality 9.5 evidence script", () => {
         expect.objectContaining({
           id: "native_dialog_approved_dogfood",
           status: "pending_operator_approval",
+        }),
+      ]),
+    );
+    expect(parsed.axis_evidence_coverage).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "local_first_privacy_boundary",
+          status: "partial",
+          satisfied_evidence: expect.arrayContaining([
+            "privacy_raw_free_regression_sweep",
+            "local_95_evidence_sweep",
+          ]),
+          remaining_evidence: expect.arrayContaining([
+            "scorecard_level_below_9_5",
+          ]),
+        }),
+        expect.objectContaining({
+          id: "web_ui_and_operational_evidence",
+          status: "blocked_external",
+          satisfied_evidence: expect.arrayContaining([
+            "web_user_flow_current_main_evidence",
+          ]),
+          remaining_evidence: expect.arrayContaining([
+            "scheduled_ui_patrol",
+            "scorecard_level_below_9_5",
+          ]),
+        }),
+        expect.objectContaining({
+          id: "codex_and_claude_code_integration",
+          status: "blocked_external",
+          satisfied_evidence: expect.arrayContaining([
+            "codex_claude_setup_smoke_refresh",
+            "local_95_evidence_sweep",
+          ]),
+          remaining_evidence: expect.arrayContaining([
+            "native_dialog_approved_dogfood",
+            "scorecard_level_below_9_5",
+          ]),
         }),
       ]),
     );
