@@ -3564,4 +3564,11 @@
 - [x] RED: Add a focused packaging/docs drift test requiring the MCP coach loop audit to stop carrying completed docs and smoke-harness follow-ups.
 - [x] GREEN: Refresh `docs/MCP_COACH_LOOP_AUDIT_2026-07-05.md` so only the approval-gated native ask UI dogfood remains.
 - [x] VERIFY: Focused test, full test/lint/build, pack dry-run, and diff check passed.
+- [x] INTEGRATE: PR #371 was merged to `main`; branch was pruned.
+
+## 2026-07-05 Goal Audit And Backlog Drift Guard
+
+- [x] RED: Add a focused packaging/docs drift test requiring the Loopdeck goal audit and next backlog to cite latest merged evidence through PR #371 and stop carrying completed MCP/reuse follow-up text.
+- [x] GREEN: Refresh `docs/LOOPDECK_GOAL_AUDIT_2026-07-05.md` and `docs/NEXT_BACKLOG.md` so completed audit follow-ups are closed and only scheduled UI patrol plus approval-gated native ask dogfood remain.
+- [x] VERIFY: Focused test, full test/lint/build, pack dry-run, and diff check passed.
 - [ ] INTEGRATE: Push one coherent PR, merge it after CI, and prune the branch.
