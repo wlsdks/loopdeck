@@ -92,14 +92,67 @@ describe("quality 9.5 evidence script", () => {
           status: "below_target",
         }),
         expect.objectContaining({
+          id: "local_first_privacy_boundary",
+          current_level: "9.5/10",
+          target_level: "9.5/10",
+          status: "meets_target",
+        }),
+        expect.objectContaining({
+          id: "setup_doctor_and_mcp_smoke",
+          current_level: "9.5/10",
+          target_level: "9.5/10",
+          status: "meets_target",
+        }),
+        expect.objectContaining({
+          id: "loop_memory_and_continuation",
+          current_level: "9.5/10",
+          target_level: "9.5/10",
+          status: "meets_target",
+        }),
+        expect.objectContaining({
           id: "web_ui_and_operational_evidence",
           current_level: "8.6/10",
           status: "below_target",
+        }),
+        expect.objectContaining({
+          id: "release_stability",
+          current_level: "9.5/10",
+          target_level: "9.5/10",
+          status: "meets_target",
+        }),
+      ]),
+    );
+    expect(parsed.blockers).toHaveLength(5);
+    expect(parsed.blockers).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "scorecard_axis:local_first_privacy_boundary",
+        }),
+        expect.objectContaining({
+          id: "scorecard_axis:setup_doctor_and_mcp_smoke",
+        }),
+        expect.objectContaining({
+          id: "scorecard_axis:loop_memory_and_continuation",
+        }),
+        expect.objectContaining({
+          id: "scorecard_axis:release_stability",
         }),
       ]),
     );
     expect(parsed.blockers).toEqual(
       expect.arrayContaining([
+        expect.objectContaining({
+          id: "scorecard_axis:product_planning_and_positioning",
+          status: "below_target",
+        }),
+        expect.objectContaining({
+          id: "scorecard_axis:codex_and_claude_code_integration",
+          status: "below_target",
+        }),
+        expect.objectContaining({
+          id: "scorecard_axis:web_ui_and_operational_evidence",
+          status: "below_target",
+        }),
         expect.objectContaining({
           id: "scheduled_ui_patrol",
           status: "pending_no_schedule_run",
@@ -114,14 +167,12 @@ describe("quality 9.5 evidence script", () => {
       expect.arrayContaining([
         expect.objectContaining({
           id: "local_first_privacy_boundary",
-          status: "partial",
+          status: "complete",
           satisfied_evidence: expect.arrayContaining([
             "privacy_raw_free_regression_sweep",
             "local_95_evidence_sweep",
           ]),
-          remaining_evidence: expect.arrayContaining([
-            "scorecard_level_below_9_5",
-          ]),
+          remaining_evidence: [],
         }),
         expect.objectContaining({
           id: "web_ui_and_operational_evidence",
@@ -149,37 +200,7 @@ describe("quality 9.5 evidence script", () => {
       ]),
     );
     expect(parsed.scorecard_review_candidates).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          id: "local_first_privacy_boundary",
-          required_review: "scorecard_level_below_9_5",
-          satisfied_evidence: expect.arrayContaining([
-            "privacy_raw_free_regression_sweep",
-            "local_95_evidence_sweep",
-          ]),
-        }),
-        expect.objectContaining({
-          id: "setup_doctor_and_mcp_smoke",
-          required_review: "scorecard_level_below_9_5",
-          satisfied_evidence: expect.arrayContaining([
-            "local_95_evidence_sweep",
-          ]),
-        }),
-        expect.objectContaining({
-          id: "loop_memory_and_continuation",
-          required_review: "scorecard_level_below_9_5",
-          satisfied_evidence: expect.arrayContaining([
-            "local_95_evidence_sweep",
-          ]),
-        }),
-        expect.objectContaining({
-          id: "release_stability",
-          required_review: "scorecard_level_below_9_5",
-          satisfied_evidence: expect.arrayContaining([
-            "local_95_evidence_sweep",
-          ]),
-        }),
-      ]),
+      [],
     );
     expect(parsed.scorecard_review_candidates).not.toEqual(
       expect.arrayContaining([
@@ -195,11 +216,11 @@ describe("quality 9.5 evidence script", () => {
       "Do not claim 9.5 completion while blockers remain pending.",
     );
     expect(parsed.recommended_next_slices[0]).toMatchObject({
-      id: "scorecard_review_candidates",
-      axis: "scorecard_review",
-      priority: 10,
-      blocked_by_external_event: false,
-      command: "prompt-coach quality-evidence --json",
+      id: "scheduled_ui_patrol_cron_review",
+      axis: "web_ui_and_operational_evidence",
+      priority: 90,
+      blocked_by_external_event: true,
+      command: "corepack pnpm evidence:ui-patrol",
     });
     expect(parsed.recommended_next_slices).not.toEqual(
       expect.arrayContaining([
@@ -224,10 +245,6 @@ describe("quality 9.5 evidence script", () => {
     );
     expect(parsed.recommended_next_slices).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({
-          id: "scorecard_review_candidates",
-          blocked_by_external_event: false,
-        }),
         expect.objectContaining({
           id: "scheduled_ui_patrol_cron_review",
           blocked_by_external_event: true,

@@ -203,6 +203,11 @@ Decision:
   cron and operator-approved dogfood items. Each recommendation carries
   `blocked_by_external_event` so agents can distinguish local work from
   cron/operator wait states.
+  That local scorecard review is now applied for the four non-external
+  candidates: local-first privacy boundary, setup/doctor/MCP smoke, loop memory
+  and continuation, and release stability are 9.5/10 in the scorecard. Product
+  planning, Codex/Claude operator dogfood, web operations, scheduled
+  `ui-patrol`, and native-dialog approved dogfood remain pending.
 - PR #478 moved that quality evidence gate onto the installed product CLI. Main
   CI run `28753458359` passed Node 22 and Node 24 after merge, so `prompt-coach
   quality-evidence --require-complete` is now a current default-branch release

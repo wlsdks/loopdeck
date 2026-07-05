@@ -1,5 +1,28 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Local Scorecard Axis Promotion
+
+- [x] CHECK: `scorecard_review_candidates` identified four axes whose local
+  evidence was present and whose only remaining gap was
+  `scorecard_level_below_9_5`.
+- [x] RED: quality evidence script and CLI tests required local-first privacy,
+  setup/doctor/MCP smoke, loop memory/continuation, and release stability to
+  report `9.5/10` and `meets_target`; tests failed while the scorecard still
+  reported them below target.
+- [x] GREEN: the 9.5 scorecard now promotes those four non-external axes while
+  leaving product planning, Codex/Claude operator dogfood, web operations,
+  scheduled `ui-patrol`, and native-dialog approved dogfood pending.
+- [x] EFFECT: `quality-evidence` now has fewer scorecard blockers and no local
+  scorecard-review recommendation ahead of the explicit external blockers.
+
+### 판단 기준
+
+- Do not promote web operations until scheduled `ui-patrol` evidence exists.
+- Do not promote Codex/Claude integration until operator-approved native-dialog
+  dogfood evidence exists.
+- Do not claim full 9.5 completion while product planning or external blockers
+  remain pending.
+
 ## 2026-07-06 PromptLane Scorecard Review Recommendation
 
 - [x] CHECK: `scorecard_review_candidates` existed, but

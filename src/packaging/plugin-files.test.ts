@@ -973,6 +973,10 @@ describe("plugin packaging files", () => {
       expect(content).toContain("scorecard_level_below_9_5");
       expect(content).toContain("recommended_next_slices");
       expect(content).toContain("blocked_by_external_event");
+      expect(content).toContain("local-first privacy boundary");
+      expect(content).toContain("setup/doctor/MCP smoke");
+      expect(content).toContain("loop memory");
+      expect(content).toContain("release stability");
       expect(content).toContain("web_user_flow_current_main_evidence");
       expect(content).toContain("corepack pnpm dogfood:web-user-flow");
       expect(content).toContain("browser e2e passed");
@@ -987,6 +991,12 @@ describe("plugin packaging files", () => {
       expect(content).toContain("native_dialog_approved_dogfood");
       expect(content).toContain("scheduled_ui_patrol");
     }
+    expect(plan).toContain("| Local-first privacy boundary | 9.5/10 |");
+    expect(plan).toContain("| Setup, doctor, and MCP smoke | 9.5/10 |");
+    expect(plan).toContain("| Loop memory and continuation | 9.5/10 |");
+    expect(plan).toContain("| Release stability | 9.5/10 |");
+    expect(plan).toContain("| Codex and Claude Code integration | 9.0/10 |");
+    expect(plan).toContain("| Web UI and operational evidence | 8.6/10 |");
     for (const content of [localEvidence, backlog, plan]) {
       expect(content).toContain("corepack pnpm smoke:hooks");
       expect(content).toContain("hook binary smoke passed");

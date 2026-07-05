@@ -8,7 +8,11 @@ describe("quality-evidence CLI command", () => {
     const parsed = JSON.parse(json) as {
       check: string;
       status: string;
-      scorecard_axes: Array<{ id: string; status: string }>;
+      scorecard_axes: Array<{
+        id: string;
+        current_level: string;
+        status: string;
+      }>;
       axis_evidence_coverage: Array<{
         id: string;
         status: string;
@@ -32,8 +36,37 @@ describe("quality-evidence CLI command", () => {
     expect(parsed.check).toBe("promptlane_95_quality");
     expect(parsed.status).toBe("pending");
     expect(parsed.scorecard_axes).toHaveLength(7);
+    expect(parsed.scorecard_axes).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "local_first_privacy_boundary",
+          current_level: "9.5/10",
+          status: "meets_target",
+        }),
+        expect.objectContaining({
+          id: "setup_doctor_and_mcp_smoke",
+          current_level: "9.5/10",
+          status: "meets_target",
+        }),
+        expect.objectContaining({
+          id: "loop_memory_and_continuation",
+          current_level: "9.5/10",
+          status: "meets_target",
+        }),
+        expect.objectContaining({
+          id: "release_stability",
+          current_level: "9.5/10",
+          status: "meets_target",
+        }),
+      ]),
+    );
     expect(parsed.axis_evidence_coverage).toEqual(
       expect.arrayContaining([
+        expect.objectContaining({
+          id: "local_first_privacy_boundary",
+          status: "complete",
+          remaining_evidence: [],
+        }),
         expect.objectContaining({
           id: "web_ui_and_operational_evidence",
           status: "blocked_external",
@@ -54,18 +87,7 @@ describe("quality-evidence CLI command", () => {
         }),
       ]),
     );
-    expect(parsed.scorecard_review_candidates).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          id: "local_first_privacy_boundary",
-          required_review: "scorecard_level_below_9_5",
-        }),
-        expect.objectContaining({
-          id: "release_stability",
-          required_review: "scorecard_level_below_9_5",
-        }),
-      ]),
-    );
+    expect(parsed.scorecard_review_candidates).toEqual([]);
     expect(parsed.scorecard_review_candidates).not.toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -86,10 +108,10 @@ describe("quality-evidence CLI command", () => {
       ]),
     );
     expect(parsed.recommended_next_slices[0]).toMatchObject({
-      id: "scorecard_review_candidates",
-      priority: 10,
-      blocked_by_external_event: false,
-      command: "prompt-coach quality-evidence --json",
+      id: "scheduled_ui_patrol_cron_review",
+      priority: 90,
+      blocked_by_external_event: true,
+      command: "corepack pnpm evidence:ui-patrol",
     });
     expect(parsed.recommended_next_slices).not.toEqual(
       expect.arrayContaining([
@@ -119,8 +141,9 @@ describe("quality-evidence CLI command", () => {
     expect(text).toContain("PromptLane 9.5 quality evidence");
     expect(text).toContain("Status: pending");
     expect(text).toContain("Scorecard axes: 7");
-    expect(text).toContain("Blockers: 9");
+    expect(text).toContain("Blockers: 5");
     expect(text).toContain("Axis evidence coverage");
+    expect(text).toContain("local_first_privacy_boundary: complete");
     expect(text).toContain(
       "web_ui_and_operational_evidence: blocked_external",
     );
@@ -131,18 +154,10 @@ describe("quality-evidence CLI command", () => {
     );
     expect(text).toContain("remaining=native_dialog_approved_dogfood");
     expect(text).toContain("Scorecard review candidates");
-    expect(text).toContain(
-      "local_first_privacy_boundary: review=scorecard_level_below_9_5",
-    );
-    expect(text).toContain(
-      "release_stability: review=scorecard_level_below_9_5",
-    );
+    expect(text).toContain("- none");
     expect(text).toContain("scheduled_ui_patrol");
     expect(text).toContain("native_dialog_approved_dogfood");
     expect(text).toContain("Recommended next slices");
-    expect(text).toContain("scorecard_review_candidates");
-    expect(text).toContain("prompt-coach quality-evidence --json");
-    expect(text).toContain("external event: no");
     expect(text).toContain("scheduled_ui_patrol_cron_review");
     expect(text).toContain("corepack pnpm evidence:ui-patrol");
     expect(text).toContain("external event: yes");
