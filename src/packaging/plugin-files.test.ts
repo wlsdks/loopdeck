@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parse as parseYaml } from "yaml";
@@ -37,8 +37,15 @@ describe("plugin packaging files", () => {
     );
     expect(packageJson.scripts.prepack).toBe("corepack pnpm build");
     expect(packageJson.scripts.prepare).toBe("corepack pnpm build");
-    expect(existsSync(join(process.cwd(), "scripts/pack-dry-run.mjs"))).toBe(
-      true,
+    const packDryRunScript = readFileSync(
+      join(process.cwd(), "scripts/pack-dry-run.mjs"),
+      "utf8",
+    );
+    expect(packDryRunScript).toContain(
+      "delete npmEnv.npm_config_patched_dependencies",
+    );
+    expect(packDryRunScript).toContain(
+      "delete npmEnv.pnpm_config_patched_dependencies",
     );
   });
 
@@ -837,6 +844,35 @@ describe("plugin packaging files", () => {
 
     expect(workflow).toContain("pnpm/action-setup@v6");
     expect(workflow).not.toContain("pnpm/action-setup@v4");
+  });
+
+  it("keeps better-sqlite3 on the Node 24 release-stability line", () => {
+    const packageJson = readJson<{
+      dependencies: Record<string, string>;
+    }>("package.json");
+    const lockfile = readFileSync(
+      join(process.cwd(), "pnpm-lock.yaml"),
+      "utf8",
+    );
+    const workspace = readFileSync(
+      join(process.cwd(), "pnpm-workspace.yaml"),
+      "utf8",
+    );
+    const prebuildInstallPatch = readFileSync(
+      join(process.cwd(), "patches/prebuild-install@7.1.3.patch"),
+      "utf8",
+    );
+
+    expect(packageJson.dependencies["better-sqlite3"]).toMatch(/^\^12\./);
+    expect(lockfile).toContain("better-sqlite3@12.");
+    expect(lockfile).not.toContain("better-sqlite3@11.");
+    expect(workspace).toContain(
+      "prebuild-install@7.1.3: patches/prebuild-install@7.1.3.patch",
+    );
+    expect(prebuildInstallPatch).toContain("fs.constants.R_OK");
+    expect(prebuildInstallPatch).toContain("fs.constants.W_OK");
+    expect(prebuildInstallPatch).not.toMatch(/^\+.*fs\.R_OK/m);
+    expect(prebuildInstallPatch).not.toMatch(/^\+.*fs\.W_OK/m);
   });
 
   it("ships the PromptLane 9.5 quality plan and links it from the operational backlog", () => {
