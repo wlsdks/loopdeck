@@ -9,6 +9,7 @@ Benchmark v1 is the local regression benchmark for `prompt-coach`. It checks whe
 - finding previously useful prompts again
 - surfacing weak prompting habits
 - helping the user write a better next prompt
+- checking whether prompt improvements are backed by loop outcome evidence
 - preserving the local-first privacy boundary
 
 This benchmark is intentionally local-only. It does not call an external LLM judge, embedding API, analytics service, or telemetry endpoint.
@@ -138,7 +139,24 @@ Pass threshold:
 
 - `>= 0.8`
 
-### 7. Experimental Rules A/B Lift
+### 7. Prompt Effectiveness Evidence
+
+Checks:
+
+- `/api/v1/score` returns archive-level `effectiveness_summary`
+- at least one benchmark prompt is linked to a passed loop outcome
+- linked outcome and test counts are present
+- unsafe evidence refs are filtered from the summary
+
+Metric:
+
+- `archive_effectiveness_score`
+
+Pass threshold:
+
+- `>= 0.8`
+
+### 8. Experimental Rules A/B Lift
 
 For each rule registered in `EXPERIMENTAL_RULE_IDS` (currently `verification_v2`), the benchmark runs `analyzePrompt` over every fixture and coach case twice — baseline and the rule enabled in isolation — and reports the score delta.
 
@@ -162,7 +180,7 @@ To enable a rule for live ingest, edit `~/.prompt-coach/config.json`:
 
 The change applies on next server start. The setting is purely additive — if the rule is empty or omitted, the analyzer behaves exactly as the baseline.
 
-### 8. Local Runtime Performance
+### 9. Local Runtime Performance
 
 Checks:
 
@@ -191,6 +209,7 @@ Pass thresholds:
     "coach_gap_fix_rate": 1,
     "coach_prompt_actionability": 1,
     "prompt_quality_score_calibration": 1,
+    "archive_effectiveness_score": 1,
     "analytics_score": 1,
     "ingest_p95_ms": 21,
     "search_p95_ms": 8,
@@ -198,6 +217,22 @@ Pass thresholds:
     "export_ms": 16
   },
   "details": {
+    "archive_effectiveness": {
+      "measured_prompts": 1,
+      "unmeasured_prompts": 4,
+      "verdicts": {
+        "proven": 1,
+        "mixed": 0,
+        "unproven": 0
+      },
+      "calibration": {
+        "linked_outcomes": 1,
+        "passing_outcomes": 1,
+        "total_tests_run": 3
+      },
+      "top_evidence_refs": ["benchmark:effectiveness"],
+      "next_action": "Keep linking prompt improvements to loop outcomes."
+    },
     "experimental_rules_ab": {
       "verification_v2": {
         "cases": 10,
@@ -216,6 +251,7 @@ Pass thresholds:
     "coach_gap_fix_rate": 0.8,
     "coach_prompt_actionability": 0.8,
     "prompt_quality_score_calibration": 0.8,
+    "archive_effectiveness_score": 0.8,
     "analytics_score": 0.75,
     "ingest_p95_ms": 500,
     "search_p95_ms": 250,

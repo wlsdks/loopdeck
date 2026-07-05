@@ -130,6 +130,25 @@ describe("plugin packaging files", () => {
     expect(releaseChecklist).not.toContain("Confirm `pnpm pack:dry-run`");
   });
 
+  it("keeps the benchmark contract tied to archive effectiveness evidence", () => {
+    const benchmark = readFileSync(
+      join(process.cwd(), "scripts/benchmark.mjs"),
+      "utf8",
+    );
+    const benchmarkSpec = readFileSync(
+      join(process.cwd(), "docs/BENCHMARK_V1.md"),
+      "utf8",
+    );
+
+    for (const content of [benchmark, benchmarkSpec]) {
+      expect(content).toContain("archive_effectiveness_score");
+      expect(content).toContain("effectiveness_summary");
+      expect(content).toContain("linked_outcomes");
+    }
+    expect(benchmarkSpec).toContain("Prompt Effectiveness Evidence");
+    expect(benchmarkSpec).toContain("Pass threshold");
+  });
+
   it("keeps README verification gates aligned with the package dry-run wrapper", () => {
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");

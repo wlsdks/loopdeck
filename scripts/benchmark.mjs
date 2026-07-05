@@ -45,6 +45,7 @@ const thresholds = {
   coach_gap_fix_rate: 0.8,
   coach_prompt_actionability: 0.8,
   prompt_quality_score_calibration: 0.8,
+  archive_effectiveness_score: 0.8,
   analytics_score: 0.75,
   ingest_p95_ms: 500,
   search_p95_ms: 250,
@@ -148,6 +149,12 @@ try {
       await apiGet(serverBaseUrl, auth.app_token, `/api/v1/prompts/${item.id}`),
     );
   }
+  seedArchiveEffectivenessOutcome(fixtureIds.get("database_migration"));
+  const archiveScore = await apiGet(
+    serverBaseUrl,
+    auth.app_token,
+    "/api/v1/score?limit=100&low_score_limit=3",
+  );
 
   const searchDurations = [];
   const retrievalCases = [];
@@ -192,10 +199,13 @@ try {
   const coachScore = scorePromptCoach();
   const coachPromptActionability = scoreCoachPromptActionability();
   const scoreCalibration = scorePromptQualityCalibration({ list, details });
+  const archiveEffectivenessScore =
+    scoreArchiveEffectiveness(archiveScore.data);
   const analyticsScore = scoreAnalytics(dashboard.data);
   const privacyLeakCount = countPrivacyLeaks({
     list,
     details,
+    archiveScore,
     dashboard,
     preview,
     exported,
@@ -207,6 +217,7 @@ try {
     coach_gap_fix_rate: coachScore,
     coach_prompt_actionability: coachPromptActionability,
     prompt_quality_score_calibration: scoreCalibration,
+    archive_effectiveness_score: archiveEffectivenessScore,
     analytics_score: analyticsScore,
     ingest_p95_ms: Math.round(p95(ingestDurations)),
     search_p95_ms: Math.round(p95(searchDurations)),
@@ -231,6 +242,7 @@ try {
     },
     details: {
       retrieval_cases: retrievalCases,
+      archive_effectiveness: archiveScore.data.effectiveness_summary,
       experimental_rules_ab: experimentalComparison,
     },
   };
@@ -369,6 +381,23 @@ function scoreAnalytics(dashboard) {
   return roundScore(checks.filter(Boolean).length / checks.length);
 }
 
+function scoreArchiveEffectiveness(report) {
+  const summary = report.effectiveness_summary;
+  const serialized = JSON.stringify(summary);
+  const checks = [
+    summary.measured_prompts >= 1,
+    summary.unmeasured_prompts === fixtures.length - summary.measured_prompts,
+    summary.verdicts.proven >= 1,
+    summary.calibration.linked_outcomes >= 1,
+    summary.calibration.passing_outcomes >= 1,
+    summary.calibration.total_tests_run >= 1,
+    summary.top_evidence_refs.includes("benchmark:effectiveness"),
+    typeof summary.next_action === "string" && summary.next_action.length > 20,
+    !serialized.includes(rawSecret) && !serialized.includes(rawPathPrefix),
+  ];
+  return roundScore(checks.filter(Boolean).length / checks.length);
+}
+
 function scorePromptQualityCalibration({ list, details }) {
   const listItems = list.data.items;
   const detailItems = details.map((detail) => detail.data);
@@ -397,6 +426,77 @@ function scorePromptQualityCalibration({ list, details }) {
   ];
 
   return roundScore(checks.filter(Boolean).length / checks.length);
+}
+
+function seedArchiveEffectivenessOutcome(promptId) {
+  assert(promptId, "Benchmark effectiveness fixture prompt id is missing.");
+  const db = new Database(join(dataDir, "prompt-coach.sqlite"));
+  try {
+    db.prepare(
+      `
+      INSERT INTO loop_snapshots (
+        id,
+        created_at,
+        tool,
+        source,
+        session_id,
+        thread_id,
+        cwd_label,
+        project_id,
+        git_root_hash,
+        branch,
+        worktree_label,
+        prompt_ids_json,
+        event_counts_json,
+        quality_json,
+        outcome_json,
+        next_brief_json,
+        privacy_json
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `,
+    ).run(
+      "loop_benchmark_effectiveness",
+      new Date().toISOString(),
+      "codex",
+      "mcp",
+      "benchmark-loop",
+      null,
+      "benchmark-project",
+      "proj_benchmark",
+      null,
+      "codex/benchmark-effectiveness",
+      "benchmark-effectiveness",
+      JSON.stringify([promptId]),
+      JSON.stringify({ prompts: 1, tests_run: 3 }),
+      JSON.stringify({
+        average_prompt_score: 80,
+        top_gaps: ["verification_criteria"],
+        unresolved_questions: [],
+      }),
+      JSON.stringify({
+        status: "passed",
+        summary: "benchmark effectiveness outcome passed",
+        evidence_refs: [
+          "benchmark:effectiveness",
+          "pnpm benchmark",
+          `${rawPathPrefix}/benchmark-project/private.txt`,
+          rawSecret,
+        ],
+      }),
+      JSON.stringify({
+        generated: true,
+        prompt_id: promptId,
+        summary: "Continue from benchmark effectiveness evidence.",
+      }),
+      JSON.stringify({
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        local_only: true,
+      }),
+    );
+  } finally {
+    db.close();
+  }
 }
 
 function countPrivacyLeaks(surfaces) {
@@ -591,6 +691,8 @@ function passes(scores) {
       thresholds.coach_prompt_actionability &&
     scores.prompt_quality_score_calibration >=
       thresholds.prompt_quality_score_calibration &&
+    scores.archive_effectiveness_score >=
+      thresholds.archive_effectiveness_score &&
     scores.analytics_score >= thresholds.analytics_score &&
     scores.ingest_p95_ms <= thresholds.ingest_p95_ms &&
     scores.search_p95_ms <= thresholds.search_p95_ms &&
