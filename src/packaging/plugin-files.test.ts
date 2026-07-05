@@ -964,6 +964,12 @@ describe("plugin packaging files", () => {
       expect(content).toContain("web_user_flow_current_main_evidence");
       expect(content).toContain("corepack pnpm dogfood:web-user-flow");
       expect(content).toContain("browser e2e passed");
+      expect(content).toContain("privacy_raw_free_regression_sweep");
+      expect(content).toContain("108 test files");
+      expect(content).toContain("833 tests");
+      expect(content).toContain("codex_claude_setup_smoke_refresh");
+      expect(content).toContain("corepack pnpm smoke:agent-setup");
+      expect(content).toContain("prompt-coach agent setup smoke passed");
       expect(content).toContain("promptlane_95_quality");
       expect(content).toContain("scorecard_axes");
       expect(content).toContain("native_dialog_approved_dogfood");
@@ -978,6 +984,14 @@ describe("plugin packaging files", () => {
     expect(evidenceScript).toContain("promptlane_95_quality");
     expect(evidenceScript).toContain("scorecard_axes");
     expect(evidenceScript).toContain("recommendedNextSlices");
+    expect(evidenceScript).toContain("readCompletedEvidence");
+    expect(evidenceScript).toContain("web_user_flow_current_main_evidence");
+    expect(evidenceScript).toContain("browser e2e passed");
+    expect(evidenceScript).toContain("privacy_raw_free_regression_sweep");
+    expect(evidenceScript).toContain("108 test files");
+    expect(evidenceScript).toContain("833 tests");
+    expect(evidenceScript).toContain("codex_claude_setup_smoke_refresh");
+    expect(evidenceScript).toContain("prompt-coach agent setup smoke passed");
     expect(evidenceScript).toContain("blocked_by_external_event");
     expect(evidenceScript).toContain("below_target");
     expect(evidenceScript).toContain("requireComplete");

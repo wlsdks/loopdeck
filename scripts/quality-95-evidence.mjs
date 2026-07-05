@@ -12,6 +12,7 @@ const uiPatrol = args.uiPatrolJson
   : runUiPatrolEvidence();
 const nativeDialog = readNativeDialogEvidence();
 const scorecardAxes = readScorecardAxes();
+const completedEvidence = readCompletedEvidence();
 const underTargetAxes = scorecardAxes.filter(
   (axis) => axis.status !== "meets_target",
 );
@@ -57,6 +58,7 @@ const summary = {
     scorecardAxes,
     uiPatrol,
     nativeDialog,
+    completedEvidence,
   }),
   next_action:
     blockers.length === 0
@@ -150,11 +152,48 @@ function readScorecardAxes() {
     .filter(Boolean);
 }
 
-function recommendedNextSlices({ scorecardAxes, uiPatrol, nativeDialog }) {
+function readCompletedEvidence() {
+  let plan = "";
+  try {
+    plan = readFileSync(planPath, "utf8");
+  } catch {
+    return {
+      web_user_flow_current_main_evidence: false,
+      privacy_raw_free_regression_sweep: false,
+      codex_claude_setup_smoke_refresh: false,
+    };
+  }
+
+  return {
+    web_user_flow_current_main_evidence:
+      plan.includes("web_user_flow_current_main_evidence") &&
+      plan.includes("corepack pnpm dogfood:web-user-flow") &&
+      plan.includes("browser e2e passed"),
+    privacy_raw_free_regression_sweep:
+      plan.includes("privacy_raw_free_regression_sweep") &&
+      plan.includes("corepack pnpm test -- src/security src/hooks src/mcp") &&
+      plan.includes("108 test files") &&
+      plan.includes("833 tests"),
+    codex_claude_setup_smoke_refresh:
+      plan.includes("codex_claude_setup_smoke_refresh") &&
+      plan.includes("corepack pnpm smoke:agent-setup") &&
+      plan.includes("prompt-coach agent setup smoke passed"),
+  };
+}
+
+function recommendedNextSlices({
+  scorecardAxes,
+  uiPatrol,
+  nativeDialog,
+  completedEvidence,
+}) {
   const axesById = new Map(scorecardAxes.map((axis) => [axis.id, axis]));
   const slices = [];
 
-  if (axesById.get("web_ui_and_operational_evidence")?.status !== "meets_target") {
+  if (
+    axesById.get("web_ui_and_operational_evidence")?.status !== "meets_target" &&
+    !completedEvidence.web_user_flow_current_main_evidence
+  ) {
     slices.push({
       id: "web_user_flow_current_main_evidence",
       axis: "web_ui_and_operational_evidence",
@@ -166,7 +205,10 @@ function recommendedNextSlices({ scorecardAxes, uiPatrol, nativeDialog }) {
     });
   }
 
-  if (axesById.get("local_first_privacy_boundary")?.status !== "meets_target") {
+  if (
+    axesById.get("local_first_privacy_boundary")?.status !== "meets_target" &&
+    !completedEvidence.privacy_raw_free_regression_sweep
+  ) {
     slices.push({
       id: "privacy_raw_free_regression_sweep",
       axis: "local_first_privacy_boundary",
@@ -178,7 +220,10 @@ function recommendedNextSlices({ scorecardAxes, uiPatrol, nativeDialog }) {
     });
   }
 
-  if (axesById.get("codex_and_claude_code_integration")?.status !== "meets_target") {
+  if (
+    axesById.get("codex_and_claude_code_integration")?.status !== "meets_target" &&
+    !completedEvidence.codex_claude_setup_smoke_refresh
+  ) {
     slices.push({
       id: "codex_claude_setup_smoke_refresh",
       axis: "codex_and_claude_code_integration",

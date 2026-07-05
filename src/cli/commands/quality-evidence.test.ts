@@ -30,10 +30,31 @@ describe("quality-evidence CLI command", () => {
       ]),
     );
     expect(parsed.recommended_next_slices[0]).toMatchObject({
-      id: "web_user_flow_current_main_evidence",
-      priority: 1,
-      blocked_by_external_event: false,
+      id: "scheduled_ui_patrol_cron_review",
+      priority: 90,
+      blocked_by_external_event: true,
     });
+    expect(parsed.recommended_next_slices).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "web_user_flow_current_main_evidence",
+        }),
+      ]),
+    );
+    expect(parsed.recommended_next_slices).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "privacy_raw_free_regression_sweep",
+        }),
+      ]),
+    );
+    expect(parsed.recommended_next_slices).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "codex_claude_setup_smoke_refresh",
+        }),
+      ]),
+    );
     expect(json).not.toContain(process.cwd());
 
     const text = qualityEvidenceForCli();
@@ -45,9 +66,12 @@ describe("quality-evidence CLI command", () => {
     expect(text).toContain("scheduled_ui_patrol");
     expect(text).toContain("native_dialog_approved_dogfood");
     expect(text).toContain("Recommended next slices");
-    expect(text).toContain("web_user_flow_current_main_evidence");
-    expect(text).toContain("corepack pnpm dogfood:web-user-flow");
-    expect(text).toContain("external event: no");
+    expect(text).toContain("scheduled_ui_patrol_cron_review");
+    expect(text).toContain("corepack pnpm evidence:ui-patrol");
+    expect(text).not.toContain("web_user_flow_current_main_evidence");
+    expect(text).not.toContain("privacy_raw_free_regression_sweep");
+    expect(text).not.toContain("codex_claude_setup_smoke_refresh");
+    expect(text).toContain("external event: yes");
     expect(text).toContain("Privacy: local-only");
     expect(text).not.toContain(process.cwd());
   });
