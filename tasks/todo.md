@@ -5,8 +5,8 @@
 - [x] CHECK: `docs/LOOP-SNAPSHOT-SCHEMA.md` is an active loop snapshot/privacy contract, but its MCP section still described the surface as `Loopdeck MCP tools`.
 - [x] RED: packaging guard must fail unless the active schema says `PromptLane MCP loop tools may expose snapshot-derived status and briefs` and no longer says `Loopdeck MCP tools may expose`.
 - [x] GREEN: active loop snapshot MCP surface wording now uses PromptLane while preserving `prompt-coach` runtime IDs and legacy `loopdeck` compatibility boundaries.
-- [ ] VERIFY: focused packaging guard, full local gate, PR CI, latest main CI, and branch prune all pass.
-- [ ] INTEGRATE: PR is merged after CI and the temporary branch is pruned locally and remotely.
+- [x] VERIFY: focused packaging guard, full local gate, PR CI, latest main CI run `28745956945`, and branch prune all pass.
+- [x] INTEGRATE: PR #439가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인됐다.
 
 ### 판단 기준
 
