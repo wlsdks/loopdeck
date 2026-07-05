@@ -44,6 +44,8 @@ plan proves otherwise.
 
 Do not use broad search-and-replace. `prompt-coach` is correct in commands,
 package names, config paths, MCP server names, and slash namespaces.
+Use `docs/LOOPDECK-LEGACY-SURFACES.md` before adding or changing any
+`Loopdeck` or `loopdeck` string.
 
 ## Core Workflows
 

@@ -33,10 +33,11 @@ The npm package intentionally includes:
 - public product and release docs under `docs/`
   - includes `docs/LEGAL_USAGE_GUIDE.md` so users can inspect the provider
     documentation boundary for agent-judge mode
-  - includes `docs/PROMPTLANE.md`, `docs/LOOPDECK.md`, and
-    `docs/LOOP-SNAPSHOT-SCHEMA.md` so installed users can inspect the active
-    PromptLane product contract, the Loopdeck legacy decision, and the loop
-    snapshot privacy schema
+  - includes `docs/PROMPTLANE.md`, `docs/LOOPDECK.md`,
+    `docs/LOOPDECK-LEGACY-SURFACES.md`, and `docs/LOOP-SNAPSHOT-SCHEMA.md` so
+    installed users can inspect the active PromptLane product contract, the
+    Loopdeck legacy decision, the remaining legacy surface allowlist, and the
+    loop snapshot privacy schema
   - includes `docs/AGENT-HARNESS.md` and `docs/INSTRUCTION-FILES.md` so
     installed plugin and CLI users can inspect the Codex/Claude Code harness
     contract and instruction-file layering rules without cloning the repo

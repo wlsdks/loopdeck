@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-05 Loopdeck Legacy Surface Inventory
+
+- [x] RED: 남아 있는 `Loopdeck`/`loopdeck` surface allowlist 문서가 package contract에 없으면 packaging test가 실패하도록 고정했다.
+- [x] GREEN: `docs/LOOPDECK-LEGACY-SURFACES.md`를 추가해 legacy CLI alias, MCP compatibility tool, internal runtime type, historical planning docs, forbidden product-facing copy를 분류했다.
+- [x] GREEN: `package.json#files`, `docs/PACKAGE_CONTENTS.md`, `docs/PROMPTLANE.md`, `docs/LOOPDECK.md`를 allowlist 문서와 연결했다.
+- [x] VERIFY: focused packaging guard, full test/lint/build, pack dry-run, diff check를 통과한다.
+- [ ] INTEGRATE: 변경을 커밋, 푸시, PR, CI 확인 후 merge하고 branch를 정리한다.
+
+### 판단 기준
+
+- 새 `Loopdeck`/`loopdeck` 문자열은 allowlist의 네 허용 범주 중 하나여야 한다.
+- product-facing copy는 PromptLane을 사용하고, `prompt-coach`는 runtime compatibility ID로 유지한다.
+- `get_loopdeck_status` 같은 published MCP/tool compatibility 이름은 유지하되 설명 copy는 PromptLane을 사용한다.
+
 ## 2026-07-05 PromptLane Loopdeck Alias Boundary
 
 - [x] RED: Codex default prompts, README, PLUGINS가 `loopdeck` alias를 추천하거나 preferred/manual command로 홍보하면 packaging test가 실패하도록 고정했다.
