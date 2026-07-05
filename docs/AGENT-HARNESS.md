@@ -2,14 +2,15 @@
 
 Last updated: 2026-07-05
 
-This document defines Loopdeck's Codex and Claude Code integration contract.
-It complements `AGENTS.md`, `CLAUDE.md`, and the Loopdeck design spec.
+This document defines PromptLane's Codex and Claude Code integration contract.
+It complements `AGENTS.md`, `CLAUDE.md`, and the PromptLane product contract.
 
 ## Product Boundary
 
-Loopdeck is not a generic agent runtime. It is a local-first workbench for
-capturing and improving coding-agent loops that already happen in Codex,
-Claude Code, and similar tools.
+PromptLane is not a generic agent runtime. It is a local-first prompt
+improvement workspace for coding-agent work that already happens in Codex,
+Claude Code, and similar tools. Loop features are loop-aware continuation for the
+next prompt, not autonomous agent control.
 
 The harness should provide:
 
@@ -58,7 +59,7 @@ Acceptance criteria:
 - MCP status and brief tools return structured, local-only data.
 - Worktree awareness is derived from git-safe labels and existing snapshots.
 - No feature reads private Codex databases or raw transcript stores.
-- Any scheduled collection is opt-in and calls explicit Loopdeck commands.
+- Any scheduled collection is opt-in and calls explicit `prompt-coach` commands.
 
 ## Claude Code Surfaces
 
@@ -66,7 +67,7 @@ Use Claude Code's plugin-oriented surfaces:
 
 - plugin skills and command markdown files
 - hooks for capture and lifecycle metadata
-- MCP server config for Loopdeck tools
+- MCP server config for PromptLane tools
 - optional monitors only when they are explicit and local
 - `CLAUDE.md` for Claude-specific caveats, with `AGENTS.md` as the shared rule
   file
@@ -94,7 +95,8 @@ Acceptance criteria:
 
 ## MCP Tool Contract
 
-Loopdeck MCP tools are an agent-readable local API.
+PromptLane MCP tools are an agent-readable local API for prompt improvement and
+loop-aware continuation.
 
 Required properties:
 
@@ -103,8 +105,8 @@ Required properties:
 - return explicit unavailable/setup guidance instead of transport-level crashes
 - avoid raw prompt bodies, compact summaries, transcripts, raw local paths,
   secret-looking tokens, and provider credentials
-- keep old `prompt-coach` tool/server compatibility during the Loopdeck
-  migration
+- keep old `prompt-coach` tool/server compatibility during the PromptLane
+  compatibility window
 
 Write-capable tools must require explicit user-approved arguments when they
 affect local state. Instruction-file writes require an explicit apply gate.

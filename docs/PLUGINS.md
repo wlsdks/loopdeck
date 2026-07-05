@@ -1,4 +1,9 @@
-# Plugin Packaging
+# PromptLane Plugin Packaging
+
+PromptLane is a local-first prompt improvement workspace with loop-aware continuation
+for Codex, Claude Code, and long-running coding-agent work.
+`prompt-coach` remains the compatibility package, CLI, hook command, slash
+namespace, and MCP server name.
 
 `prompt-coach` supports two integration layers:
 
@@ -24,7 +29,7 @@ prompt-coach setup --profile coach --register-mcp --open-web
 The coach profile installs capture hooks, low-friction rewrite guidance through
 hook context, local server startup where supported, and the Claude Code status
 line when Claude Code is detected. `--register-mcp` is explicit consent to run
-the detected agent CLI registration commands for the Loopdeck MCP server,
+the detected agent CLI registration commands for the PromptLane MCP server,
 which gives the active agent session access to coach/rewrite/judge tools. From a
 development checkout, run `pnpm setup`; it registers MCP with absolute Node +
 `dist/cli/index.js` paths so Codex does not require a global `prompt-coach`
@@ -101,8 +106,8 @@ The plugin exposes:
 - `/prompt-coach:habits` to summarize recurring prompt habit gaps
 - `/prompt-coach:open` to open the local archive
 
-Claude Code slash commands remain under `/prompt-coach:*` during the Loopdeck
-migration. The npm package also installs a `loopdeck` CLI alias for manual
+Claude Code slash commands remain under `/prompt-coach:*` during the PromptLane
+compatibility window. The npm package also installs a legacy `loopdeck` CLI alias for manual
 terminal fallbacks, but plugin command ids stay stable until a dedicated plugin
 rename plan is implemented. That gate is documented in
 `docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md`.
@@ -221,19 +226,19 @@ counts, latest prompt metadata, available tool names, and next actions.
 `get_loopdeck_status` checks whether local loop snapshots exist and returns
 safe latest-loop metadata. It also reports safe compact-boundary metadata when
 a compact happened after the latest snapshot. `prepare_loop_brief` returns a
-copy-ready continuation prompt from the latest Loopdeck snapshot, or from the
+copy-ready continuation prompt from the latest PromptLane snapshot, or from the
 newest snapshot matching optional `worktree`, `session_id`, and `branch`
 filters, without prompt bodies, raw paths, or auto-submission; when the
 selected snapshot is pre-compact, it asks the user to refresh the snapshot
 instead of replaying compact summaries or custom compact instructions.
 `record_loop_outcome` writes only user-approved status, summary, and evidence
-references for a Loopdeck snapshot; it does not store prompt bodies, raw paths,
+references for a PromptLane snapshot; it does not store prompt bodies, raw paths,
 or external LLM results.
 `propose_loop_memory_candidate` is the semantic-memory decision gate: it checks
 the latest passed loop outcome and safe evidence refs, then returns a
 user-reviewable candidate without writing memory or instruction files.
 `record_loop_memory` records a user-approved candidate into local
-Loopdeck storage only; instruction-file patches remain a separate explicit
+PromptLane storage only; instruction-file patches remain a separate explicit
 workflow. Its structured `next_actions` point agents to `prepare_loop_brief`
 and `propose_instruction_patch target_file=AGENTS.md`.
 `propose_instruction_patch` returns a reviewable unified diff for
@@ -275,7 +280,7 @@ paths.
 The web Loops view uses the same privacy boundary for recent loop snapshots,
 empty state guidance, compact refresh markers, and copy-ready next loop briefs;
 it can also record an eligible latest memory candidate through the local web
-session. That web approval only writes the local Loopdeck memory record;
+session. That web approval only writes the local PromptLane memory record;
 after approval, the same view can fetch a review-only AGENTS.md patch preview.
 Instruction-file writes still require the separate explicit apply workflow. It
 does not render prompt bodies, compact summaries, custom compact instructions,
@@ -352,7 +357,7 @@ rewrite the interactive composer, or auto-submit prompts. If local ingest is
 unavailable or fails, the hook fails open and does not block.
 
 The installed hook set also includes `Stop`, `PreCompact`, and `PostCompact`.
-Stop events are handled locally: prompt-coach collects a Loopdeck snapshot from
+Stop events are handled locally: prompt-coach collects a PromptLane snapshot from
 recent prompt metadata without posting the lifecycle event to the prompt ingest
 route. Compact events record only safe boundary metadata and an optional HMAC
 content hash; prompt-coach does not store prompt bodies, raw paths, transcript

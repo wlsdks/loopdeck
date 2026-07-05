@@ -1,7 +1,9 @@
-# Loopdeck Architecture
+# PromptLane Architecture
 
-Loopdeck is a local-first agent loop memory and meta-prompting workbench for
-Claude Code, Codex, and coding-agent workflows. The current npm package and CLI
+PromptLane is a local-first prompt improvement workspace for Claude Code,
+Codex, and long-running coding-agent work. Loop features are loop-aware continuation:
+they help the next prompt stay specific across sessions,
+worktrees, branches, and compact boundaries. The current npm package and CLI
 command remain `prompt-coach` during the compatibility window. The architecture
 is intentionally modular without copying a
 Spring-style class hierarchy into Node.js. The project uses TypeScript modules,

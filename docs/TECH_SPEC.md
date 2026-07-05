@@ -1,4 +1,4 @@
-# Loopdeck Technical Spec
+# PromptLane Technical Spec
 
 Date: 2026-05-01
 
@@ -12,7 +12,7 @@ Related docs:
 
 ## 1. Purpose
 
-This document defines the technical design for Loopdeck, a local-first agent loop memory and meta-prompting workbench for Codex, Claude Code, and coding-agent workflows. The current npm package and CLI command remain `prompt-coach` during the compatibility window.
+This document defines the technical design for PromptLane, a local-first prompt improvement workspace for Codex, Claude Code, and long-running coding-agent work. Loop features are loop-aware continuation for the next prompt across sessions, worktrees, branches, and compact boundaries. The current npm package and CLI command remain `prompt-coach` during the compatibility window.
 
 The implementation records prompts from supported AI coding tools, redacts sensitive values, stores a Markdown archive, indexes prompts in SQLite/FTS, serves a local web UI, and provides CLI workflows for setup, search, review, import, export, and prompt improvement.
 

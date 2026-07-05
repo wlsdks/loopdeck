@@ -853,6 +853,34 @@ describe("plugin packaging files", () => {
     expect(readmeKo).toContain("loop 기능은 loop-aware continuation");
   });
 
+  it("keeps shipped core docs aligned with the PromptLane product contract", () => {
+    const packageJson = readJson<{ files: string[] }>("package.json");
+    const docs = [
+      "docs/ARCHITECTURE.md",
+      "docs/AGENT-HARNESS.md",
+      "docs/PLUGINS.md",
+      "docs/TECH_SPEC.md",
+    ];
+
+    for (const docPath of docs) {
+      expect(packageJson.files).toContain(docPath);
+      const doc = readFileSync(join(process.cwd(), docPath), "utf8");
+      expect(doc).toContain("PromptLane");
+      expect(doc).toMatch(/prompt\s+improvement workspace/);
+      expect(doc).toMatch(/loop-aware\s+continuation/);
+      expect(doc).toContain("`prompt-coach`");
+      expect(doc).not.toContain(
+        "Loopdeck is a local-first agent loop memory and meta-prompting workbench",
+      );
+      expect(doc).not.toContain(
+        "Loopdeck is not a generic agent runtime",
+      );
+      expect(doc).not.toContain(
+        "This document defines the technical design for Loopdeck",
+      );
+    }
+  });
+
   it("ships a machine-checkable runtime id inventory before rename work", () => {
     const inventoryPath =
       "docs/superpowers/plans/2026-07-04-loopdeck-runtime-id-inventory.json";
