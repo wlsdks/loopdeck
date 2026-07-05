@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Release Stability Backlog Refresh
+
+- [x] CHECK: scheduled `ui-patrol` has not fired yet because the 2026-07-06 15:17 KST cron time has not arrived, while `docs/NEXT_BACKLOG.md` and the 9.5 quality plan still carried stale release-stability follow-up wording.
+- [x] RED: packaging guard must fail unless backlog and 9.5 plan include PR #425, PR #427, PR #433, PR #434, latest main CI run `28745224451`, and no stale action-runtime or better-sqlite3 warning follow-up text.
+- [x] GREEN: backlog and 9.5 quality plan now record the closed release-stability evidence while keeping scheduled `ui-patrol` artifact evidence pending.
+- [ ] VERIFY: focused packaging guard, full local gate, PR CI, latest main CI, and branch prune all pass.
+- [ ] INTEGRATE: PR이 CI `test (22)`/`test (24)` 통과 후 merge되고 branch prune까지 확인된다.
+
+### 판단 기준
+
+- release-stability backlog must describe current evidence, not already-closed follow-ups.
+- scheduled `ui-patrol` evidence remains pending until a real `schedule` event and artifact exist.
+- completed warning cleanup must stay guarded by tests, workflow metadata, dependency versions, and latest main CI evidence.
+
 ## 2026-07-06 PromptLane UI Patrol Action Runtime Cleanup
 
 - [x] CHECK: `ui-patrol.yml` has a real Monday cron (`17 6 * * 1`), but as of 2026-07-06 00:04 KST the scheduled run has not fired yet; the workflow still used `pnpm/action-setup@v4`.
