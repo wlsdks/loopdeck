@@ -1,5 +1,28 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Coach Prompt Effectiveness Brief
+
+- [x] CHECK: `score_prompt`, archive score, web, benchmark에는 효과 evidence가
+  있지만 기본 one-call `coach_prompt`의 `agent_brief`는
+  `effectiveness_summary`를 다음 행동 판단에 반영하지 않았다.
+- [x] RED: MCP `coachPromptTool` 테스트가 linked passed loop outcome이 있는
+  archive에서도 `agent_brief.summary`의 `Effectiveness evidence`와
+  unmeasured prompt review action을 찾지 못해 실패해야 한다.
+- [x] GREEN: `coach_prompt` agent brief가 measured/unmeasured coverage,
+  linked outcomes, tests run, safe evidence refs, review-first next action을
+  포함한다.
+- [x] EFFECT: Codex/Claude Code가 one-call coach result만 봐도 prompt
+  improvement를 실제 효과로 주장하기 전에 어떤 prompt가 아직 미측정인지
+  확인할 수 있다.
+
+### 판단 기준
+
+- Brief must use the existing archive `effectiveness_summary`; no extra
+  storage or network call.
+- Brief must not expose prompt bodies, raw local paths, or token-like secrets.
+- Benchmark `coach_prompt_actionability` must require effectiveness evidence in
+  the one-call agent brief.
+
 ## 2026-07-06 PromptLane Archive Effectiveness Benchmark Ledger
 
 - [x] CHECK: PR #469로 `archive_effectiveness_score` benchmark hard gate는

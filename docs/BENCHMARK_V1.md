@@ -95,6 +95,8 @@ Checks:
 - the agent brief includes a concrete first fix
 - the agent brief includes a low-score review target
 - the agent brief includes a reusable next request template
+- the agent brief includes archive effectiveness coverage and a review-first
+  action when prompts are still unmeasured
 - the result stays privacy-safe
 
 Metric:

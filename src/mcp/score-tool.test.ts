@@ -991,6 +991,98 @@ describe("coachPromptTool", () => {
     expect(serialized).not.toContain("/tmp/");
   });
 
+  it("routes the agent brief through archive effectiveness evidence before claiming improvement", async () => {
+    const dataDir = createTempDir();
+    const init = initializePromptCoach({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: init.hookAuth.web_session_secret,
+      now: nextDate(["2026-07-06T01:00:00.000Z", "2026-07-06T01:01:00.000Z"]),
+    });
+    const measured = await storeClaudePrompt(
+      storage,
+      "Review src/mcp/score-tool.ts, keep changes scoped to coach_prompt, run pnpm vitest run src/mcp/score-tool.test.ts, and summarize risks.",
+      "2026-07-06T00:59:00.000Z",
+    );
+    await storeClaudePrompt(
+      storage,
+      "Make this better with token sk-proj-1234567890abcdef",
+      "2026-07-06T01:00:00.000Z",
+    );
+    storage.createLoopSnapshot({
+      id: "loop_coach_effectiveness_brief",
+      created_at: "2026-07-06T01:05:00.000Z",
+      tool: "codex",
+      source: "mcp",
+      cwd_label: "private-project",
+      project_id: "proj_coach_effectiveness",
+      prompt_ids: [measured.id],
+      event_counts: {
+        prompts: 1,
+        tests_run: 5,
+      },
+      quality: {
+        average_prompt_score: 88,
+        top_gaps: [],
+        unresolved_questions: [],
+      },
+      outcome: {
+        status: "passed",
+        summary:
+          "Coach effectiveness brief passed for /Users/example/private-project with sk-proj-1234567890abcdef.",
+        evidence_refs: [
+          "PR #469",
+          "main CI 28751693022",
+          "/Users/example/private-project",
+          "sk-proj-1234567890abcdef",
+        ],
+      },
+      next_brief: {
+        generated: true,
+        prompt_id: measured.id,
+        summary: "Continue from coach effectiveness evidence.",
+      },
+      privacy: {
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        local_only: true,
+      },
+    });
+    storage.close();
+
+    const result = coachPromptTool(
+      { include_archive: true, include_project_rules: false },
+      { dataDir },
+    );
+    const serialized = JSON.stringify(result.agent_brief);
+
+    expect(result.archive).toMatchObject({
+      effectiveness_summary: {
+        measured_prompts: 1,
+        unmeasured_prompts: 1,
+        calibration: {
+          linked_outcomes: 1,
+          passing_outcomes: 1,
+          total_tests_run: 5,
+        },
+      },
+    });
+    expect(result.agent_brief.summary).toContain(
+      "Effectiveness evidence: 1 measured, 1 unmeasured",
+    );
+    expect(result.agent_brief.next_actions).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining(
+          "Review 1 unmeasured prompt before claiming archive-wide improvement.",
+        ),
+      ]),
+    );
+    expect(serialized).toContain("PR #469");
+    expect(serialized).toContain("main CI 28751693022");
+    expect(serialized).not.toContain("/Users/example");
+    expect(serialized).not.toContain("sk-proj-1234567890abcdef");
+  });
+
   it("routes the agent to ask the user when the latest prompt has clarifying_questions", async () => {
     const dataDir = createTempDir();
     const init = initializePromptCoach({ dataDir });

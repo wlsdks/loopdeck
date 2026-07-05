@@ -360,6 +360,13 @@ function scoreCoachPromptActionability() {
     typeof result.agent_brief.next_request_template === "string" &&
       result.agent_brief.next_request_template.includes("Goal:") &&
       result.agent_brief.next_request_template.includes("Verification:"),
+    result.agent_brief.summary.includes("Effectiveness evidence"),
+    result.agent_brief.next_actions.some((action) =>
+      action.includes("unmeasured prompt"),
+    ),
+    result.agent_brief.next_actions.some((action) =>
+      action.includes("benchmark:effectiveness"),
+    ),
     result.agent_brief.next_actions.length >= 3,
     !serialized.includes(rawSecret) && !serialized.includes(rawPathPrefix),
   ];

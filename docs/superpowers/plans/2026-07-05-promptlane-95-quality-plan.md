@@ -109,6 +109,11 @@
   `archive_effectiveness_score: 1`, `privacy_leak_count: 0`, and safe
   `effectiveness_summary` coverage backed by a linked passed loop outcome. Main
   CI run `28751693022` passed Node 22 and Node 24 after merge.
+- The one-call coach effectiveness brief slice routes that same archive
+  coverage into `coach_prompt` agent briefs, so Codex and Claude Code agents see
+  measured vs unmeasured prompts, linked outcomes, tests run, safe evidence
+  refs, and a review-first action before claiming archive-wide improvement.
+  `coach_prompt_actionability` now requires this signal in the benchmark.
 - `docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md` records current
   `corepack pnpm smoke:release` and `corepack pnpm pack:dry-run` evidence for
   the local-first release path.
@@ -129,9 +134,10 @@
 - Fresh user-flow, expected-impact, prompt-linked outcome evidence, CLI prompt
   outcome evidence, prompt effectiveness verdict evidence, effectiveness
   calibration evidence, archive-level effectiveness summary, web archive
-  effectiveness summary, and archive effectiveness benchmark evidence are now
-  repeatable through `dogfood:web-user-flow`, browser E2E, focused
-  CLI/storage/web tests, `corepack pnpm ui-patrol`, and
+  effectiveness summary, archive effectiveness benchmark evidence, and one-call
+  coach effectiveness guidance are now repeatable through
+  `dogfood:web-user-flow`, browser E2E, focused CLI/storage/web tests,
+  `corepack pnpm ui-patrol`, and
   `corepack pnpm benchmark -- --json`. MCP score_prompt effectiveness evidence
   is now proven on the default branch through PR #462, main CI `28750281428`,
   and branch pruning. Release smoke evidence is current in
