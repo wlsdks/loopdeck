@@ -868,6 +868,19 @@ describe("plugin packaging files", () => {
     expect(todoSection).toContain("latest main CI run `28745956945`");
   });
 
+  it("keeps the Codex duplicate-hook doctor log tied to merged evidence", () => {
+    const todo = readFileSync(join(process.cwd(), "tasks/todo.md"), "utf8");
+    const todoSection = sectionBetween(
+      todo,
+      "## 2026-07-06 Codex Same-File Duplicate Hook Doctor",
+    );
+
+    expect(todoSection).toContain(
+      "PR #441가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인됐다.",
+    );
+    expect(todoSection).toContain("latest main CI run `28746274401`");
+  });
+
   it("keeps CI setup actions on Node 24 compatible versions", () => {
     const workflow = readFileSync(
       join(process.cwd(), ".github/workflows/test.yml"),
