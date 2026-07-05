@@ -24,13 +24,20 @@ const axisCoverage = axisEvidenceCoverage({
 const underTargetAxes = scorecardAxes.filter(
   (axis) => axis.status !== "meets_target",
 );
+const axisCoverageById = new Map(axisCoverage.map((axis) => [axis.id, axis]));
 
 const blockers = [];
 for (const axis of underTargetAxes) {
+  const remainingEvidence =
+    axisCoverageById.get(axis.id)?.remaining_evidence ?? [];
   blockers.push({
     id: `scorecard_axis:${axis.id}`,
     status: axis.status,
-    next_action: `Raise ${axis.axis} from ${axis.current_level} to ${axis.target_level} with direct evidence.`,
+    remaining_evidence: remainingEvidence,
+    next_action:
+      remainingEvidence.length > 0
+        ? `Complete remaining evidence for ${axis.axis}: ${remainingEvidence.join(", ")}.`
+        : `Raise ${axis.axis} from ${axis.current_level} to ${axis.target_level} with direct evidence.`,
   });
 }
 if (uiPatrol.status !== "complete") {

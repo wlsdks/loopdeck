@@ -62,7 +62,12 @@ describe("quality 9.5 evidence script", () => {
         target_level: string;
         status: string;
       }>;
-      blockers: Array<{ id: string; status: string }>;
+      blockers: Array<{
+        id: string;
+        status: string;
+        remaining_evidence?: string[];
+        next_action?: string;
+      }>;
       axis_evidence_coverage: Array<{
         id: string;
         status: string;
@@ -155,10 +160,22 @@ describe("quality 9.5 evidence script", () => {
         expect.objectContaining({
           id: "scorecard_axis:codex_and_claude_code_integration",
           status: "below_target",
+          remaining_evidence: expect.arrayContaining([
+            "native_dialog_approved_dogfood",
+            "scorecard_level_below_9_5",
+          ]),
+          next_action:
+            "Complete remaining evidence for Codex and Claude Code integration: native_dialog_approved_dogfood, scorecard_level_below_9_5.",
         }),
         expect.objectContaining({
           id: "scorecard_axis:web_ui_and_operational_evidence",
           status: "below_target",
+          remaining_evidence: expect.arrayContaining([
+            "scheduled_ui_patrol",
+            "scorecard_level_below_9_5",
+          ]),
+          next_action:
+            "Complete remaining evidence for Web UI and operational evidence: scheduled_ui_patrol, scorecard_level_below_9_5.",
         }),
         expect.objectContaining({
           id: "scheduled_ui_patrol",

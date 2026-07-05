@@ -1,5 +1,25 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Axis Blocker Causes
+
+- [x] CHECK: scorecard axis blockers still said to raise the axis with direct
+  evidence, even when `axis_evidence_coverage` already knew the exact remaining
+  evidence.
+- [x] RED: quality evidence script and CLI tests required axis blockers to
+  expose `remaining_evidence` and point `next_action` at
+  `native_dialog_approved_dogfood` or `scheduled_ui_patrol`; tests failed with
+  generic next actions.
+- [x] GREEN: axis blockers now include `remaining_evidence` and text output
+  shows the same lower-level evidence before the next action.
+- [x] EFFECT: agents can see why an axis is below 9.5 without manually joining
+  blocker rows to axis coverage.
+
+### 판단 기준
+
+- Do not mark any axis complete through blocker explanation changes.
+- Keep blocker output raw-free and free of local paths.
+- Preserve scheduled and native dialog blockers as separate direct evidence.
+
 ## 2026-07-06 PromptLane Quality Blocker Next Actions
 
 - [x] CHECK: `prompt-coach quality-evidence` 기본 텍스트의 Blockers 섹션이

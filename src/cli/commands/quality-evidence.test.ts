@@ -24,7 +24,12 @@ describe("quality-evidence CLI command", () => {
         required_review: string;
         satisfied_evidence: string[];
       }>;
-      blockers: Array<{ id: string; status: string }>;
+      blockers: Array<{
+        id: string;
+        status: string;
+        remaining_evidence?: string[];
+        next_action?: string;
+      }>;
       recommended_next_slices: Array<{
         id: string;
         priority: number;
@@ -192,6 +197,42 @@ describe("quality-evidence CLI command", () => {
     expect(text).toContain("Scorecard axes: 7");
     expect(text).toContain("Blockers: 4");
     expect(text).toContain("Blockers");
+    expect(parsed.blockers).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "scorecard_axis:codex_and_claude_code_integration",
+          remaining_evidence: expect.arrayContaining([
+            "native_dialog_approved_dogfood",
+            "scorecard_level_below_9_5",
+          ]),
+        }),
+        expect.objectContaining({
+          id: "scorecard_axis:web_ui_and_operational_evidence",
+          remaining_evidence: expect.arrayContaining([
+            "scheduled_ui_patrol",
+            "scorecard_level_below_9_5",
+          ]),
+        }),
+      ]),
+    );
+    expect(text).toContain(
+      "- scorecard_axis:codex_and_claude_code_integration: below_target",
+    );
+    expect(text).toContain(
+      "remaining_evidence=native_dialog_approved_dogfood,scorecard_level_below_9_5",
+    );
+    expect(text).toContain(
+      "next_action=Complete remaining evidence for Codex and Claude Code integration: native_dialog_approved_dogfood, scorecard_level_below_9_5.",
+    );
+    expect(text).toContain(
+      "- scorecard_axis:web_ui_and_operational_evidence: below_target",
+    );
+    expect(text).toContain(
+      "remaining_evidence=scheduled_ui_patrol,scorecard_level_below_9_5",
+    );
+    expect(text).toContain(
+      "next_action=Complete remaining evidence for Web UI and operational evidence: scheduled_ui_patrol, scorecard_level_below_9_5.",
+    );
     expect(text).toContain(
       "- scheduled_ui_patrol: pending_no_schedule_run",
     );
