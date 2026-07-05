@@ -1397,6 +1397,42 @@ describe("plugin packaging files", () => {
     expect(smoke).not.toContain("/Users/");
   });
 
+  it("ships a first coach loop dogfood smoke for real CLI prompt and loop flow", () => {
+    const packageJson = readJson<{
+      files: string[];
+      scripts: Record<string, string>;
+    }>("package.json");
+    const smoke = readFileSync(
+      join(process.cwd(), "scripts/first-coach-loop-dogfood.mjs"),
+      "utf8",
+    );
+    const harness = readFileSync(
+      join(process.cwd(), "docs/AGENT-HARNESS.md"),
+      "utf8",
+    );
+    const packageContents = readFileSync(
+      join(process.cwd(), "docs/PACKAGE_CONTENTS.md"),
+      "utf8",
+    );
+
+    expect(packageJson.files).toContain(
+      "scripts/first-coach-loop-dogfood.mjs",
+    );
+    expect(packageJson.scripts["dogfood:first-coach-loop"]).toBe(
+      "pnpm build && node scripts/first-coach-loop-dogfood.mjs",
+    );
+    expect(smoke).toContain("hook codex");
+    expect(smoke).toContain("coach --json");
+    expect(smoke).toContain("loop collect --json");
+    expect(smoke).toContain("loop brief --json");
+    expect(smoke).toContain("PROMPT_COACH_FIRST_LOOP_SECRET");
+    expect(smoke).toContain("assertNotIncludes");
+    expect(smoke).toContain("first coach loop dogfood passed");
+    expect(smoke).not.toContain("/Users/");
+    expect(harness).toContain("corepack pnpm dogfood:first-coach-loop");
+    expect(packageContents).toContain("scripts/first-coach-loop-dogfood.mjs");
+  });
+
   it("installs Playwright Chromium before the scheduled UI patrol", () => {
     const workflow = readFileSync(
       join(process.cwd(), ".github/workflows/ui-patrol.yml"),
