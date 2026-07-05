@@ -14,12 +14,12 @@
 
 | Axis | Current level after latest evidence | 9.5 bar | Evidence that must exist |
 | --- | --- | --- | --- |
-| Product planning and positioning | 9.0/10 | 9.5 bar: every active first-screen surface, plugin surface, README path, and backlog slice says PromptLane is prompt improvement first, loop-aware continuation second, with no product-facing Loopdeck drift. | Packaging guard, README/plugin metadata, repo metadata, docs/PROMPTLANE.md, docs/NEXT_BACKLOG.md, goal audit. |
-| Local-first privacy boundary | 9.0/10 | 9.5 bar: every hook, MCP, CLI, server, web, export, loop, and dogfood path proves no prompt body, raw path, provider credential, transcript body, compact summary, or external provider call leaks outside the allowed storage layer. | Focused privacy tests, raw-free fixtures, dogfood:first-coach-loop, dogfood:loop-memory-approval, smoke:mcp-coach-loop, browser E2E, release smoke. |
+| Product planning and positioning | 9.2/10 | 9.5 bar: every active first-screen surface, plugin surface, README path, and backlog slice says PromptLane is prompt improvement first, loop-aware continuation second, with no product-facing Loopdeck drift. | Packaging guard, README/plugin metadata, repo metadata, docs/PROMPTLANE.md, docs/NEXT_BACKLOG.md, goal audit, expected-impact evidence. |
+| Local-first privacy boundary | 9.1/10 | 9.5 bar: every hook, MCP, CLI, server, web, export, loop, and dogfood path proves no prompt body, raw path, provider credential, transcript body, compact summary, or external provider call leaks outside the allowed storage layer. | Focused privacy tests, raw-free fixtures, dogfood:first-coach-loop, dogfood:loop-memory-approval, smoke:mcp-coach-loop, browser E2E, release smoke. |
 | Codex and Claude Code integration | 9.0/10 | 9.5 bar: setup, doctor, hook capture, MCP registration, plugin install guidance, slash commands, statusline, and recovery copy are all verified for both tools in isolated smoke and at least one real operator dogfood pass. | smoke:agent-setup, smoke:hooks, dogfood:first-coach-loop, docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md, AGENT-HARNESS. |
 | Setup, doctor, and MCP smoke | 9.0/10 | 9.5 bar: setup and doctor smoke proves capture readiness; MCP smoke proves score/improve/clarify/record loop; failure states produce raw-free recovery actions instead of generic errors. | smoke:agent-setup, smoke:mcp-coach-loop, storage_unavailable tests, package checks. |
 | Loop memory and continuation | 9.0/10 | 9.5 bar: collect, brief, outcome, memory candidate, memory approval, instruction patch proposal, and apply gate are proven through CLI and MCP with evidence-first rules and no automatic instruction writes. | Loop unit tests, storage evidence guards, dogfood:first-coach-loop, dogfood:loop-memory-approval. |
-| Web UI and operational evidence | 8.0/10 | 9.5 bar: archive, detail, coach, saved draft reuse, settings, loops, exports, projects, and mobile layout have screenshots or browser assertions, plus scheduled `ui-patrol` artifact evidence. | corepack pnpm ui-patrol, workflow_dispatch run `28717406758`, scheduled `ui-patrol`, browser E2E, screenshot artifacts, in-app Browser audit. |
+| Web UI and operational evidence | 8.4/10 | 9.5 bar: archive, detail, coach, saved draft reuse, settings, loops, exports, projects, and mobile layout have screenshots or browser assertions, plus scheduled `ui-patrol` artifact evidence. | corepack pnpm ui-patrol, workflow_dispatch run `28717406758`, scheduled `ui-patrol`, browser E2E, screenshot artifacts, in-app Browser audit. |
 | Release stability | 9.0/10 | 9.5 bar: Node 22 and 24 CI, pack dry-run, release smoke, first coach loop dogfood, package contents, dependency audit, and release checklist all agree on shipped files and commands. | GitHub Actions, corepack pnpm pack:dry-run, smoke:release, dogfood:first-coach-loop, dogfood:loop-memory-approval, docs/RELEASE_CHECKLIST.md. |
 
 ## Evidence Progress Ledger
@@ -54,7 +54,16 @@
   action runtime major as the main test workflow.
 - PR #434 closed the UI patrol action runtime log after PR #433 passed PR CI,
   latest main CI run `28745108598`, and branch pruning.
-- latest main CI run `28745224451` after PR #434 passed `test (22)` and
+- PR #447 added `expected_impact` to local prompt improvements, exposing
+  original score, improved draft score, delta, and changed axis count through
+  CLI JSON and MCP results without external calls or automatic approval.
+- PR #449 rendered the same expected-impact evidence in the web prompt detail
+  coach panel before copy/save actions, and extended browser E2E so
+  `corepack pnpm ui-patrol` asserts the expected-impact row in a real browser.
+- PR #450 closed the web expected-impact evidence log after PR #449 passed PR
+  CI, local `corepack pnpm ui-patrol`, latest main CI run `28747568864`, and
+  branch pruning.
+- latest main CI run `28747682131` after PR #450 passed `test (22)` and
   `test (24)` with `pnpm test`, `pnpm lint`, `pnpm build`, and
   `pnpm pack:dry-run`.
 
@@ -65,8 +74,9 @@
 - Native OS ask UI dogfood remains operator-approved only; do not run
   `dogfood:mcp-native-dialog-approved` without explicit approval because it can
   open a native dialog.
-- Fresh user-flow evidence is now repeatable through `dogfood:web-user-flow`,
-  but web operations still need ongoing real-work reruns before claiming 9.5.
+- Fresh user-flow and expected-impact evidence are now repeatable through
+  `dogfood:web-user-flow`, browser E2E, and `corepack pnpm ui-patrol`, but web
+  operations still need scheduled artifact evidence before claiming 9.5.
 
 ## Required Slices
 

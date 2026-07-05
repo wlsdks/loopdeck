@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Expected Impact 9.5 Ledger Refresh
+
+- [x] CHECK: PR #447-#450으로 expected-impact 기능과 web 증거가 landing 되었지만 9.5 quality plan과 backlog Evidence Ledger가 PR #434/latest main CI `28745224451` 상태에 머물렀다.
+- [x] RED: packaging guard가 9.5 plan에 PR #447, PR #449, PR #450, `expected_impact`, latest main CI run `28747682131`이 없어서 실패해야 한다.
+- [x] GREEN: 9.5 quality plan과 backlog가 expected-impact CLI/MCP/Web evidence, browser E2E/ui-patrol assertion, latest main CI를 반영한다.
+- [x] EFFECT: 9.5 scorecard가 실제 제품 효과 증거를 따라가며, 다음 작업자가 stale score/evidence로 완료 판단하지 못하게 한다.
+- [ ] VERIFY: focused packaging guard, full local gate, PR CI, latest main CI, and branch prune all pass.
+- [ ] INTEGRATE: PR이 CI 통과 후 merge되고 branch prune까지 확인된다.
+
+### 판단 기준
+
+- evidence ledger must track measurable before/after prompt-improvement evidence, not only feature names.
+- scheduled `ui-patrol` remains pending until a real `schedule` event exists.
+- this slice must not claim the long-running goal is complete.
+
 ## 2026-07-06 PromptLane Web Expected Impact Evidence
 
 - [x] CHECK: `improve` expected impact는 CLI/MCP에 노출되지만 web prompt detail의 current improvement draft에는 원문 점수, 개선안 점수, delta가 보이지 않았다.
