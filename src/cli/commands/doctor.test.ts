@@ -355,6 +355,29 @@ describe("doctorCodex", () => {
     expect(formatDoctorResult("codex", result)).toContain(
       "duplicate hooks found",
     );
+    expect(formatDoctorResult("codex", result)).toContain(
+      "Run prompt-coach install-hook codex to normalize duplicate hooks in the same Codex hooks file.",
+    );
+
+    installCodexHook({ dataDir, hooksPath, configPath });
+    const repaired = await doctorCodex({
+      dataDir,
+      hooksPath,
+      configPath,
+      checkServer: async () => true,
+    });
+    const repairedHooks = JSON.parse(readFileSync(hooksPath, "utf8")) as {
+      hooks: {
+        UserPromptSubmit: Array<{
+          hooks: Array<{ command: string; type: "command" }>;
+        }>;
+      };
+    };
+
+    expect(repairedHooks.hooks.UserPromptSubmit).toHaveLength(1);
+    expect(repairedHooks.hooks.UserPromptSubmit[0].hooks).toHaveLength(1);
+    expect(repaired.settings.duplicateHooks).toBe(false);
+    expect(repaired.settings.ok).toBe(true);
   });
 
   it("formats Codex doctor output with hook and feature flag status", async () => {
