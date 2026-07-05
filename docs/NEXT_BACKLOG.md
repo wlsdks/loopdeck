@@ -114,6 +114,16 @@ Decision:
    work only when they affect local-first install, build, test, pack, or CI
    evidence.
 
+9.5 quality upgrade:
+
+- `docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md` defines
+  the evidence bars needed to move product planning, privacy, Codex/Claude
+  integration, setup/MCP smoke, loop memory, web operations, and release
+  stability from beta-grade to 9.5/10.
+- The next executable quality slices are real operator dogfood for Codex and
+  Claude Code, loop memory approval dogfood, and scheduled `ui-patrol` artifact
+  evidence.
+
 Rationale:
 
 - PromptLane now has enough agent-loop runtime surface that storage-backed
