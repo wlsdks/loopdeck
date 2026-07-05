@@ -284,4 +284,28 @@ describe("quality-evidence CLI command", () => {
       /promptlane_95_quality pending/,
     );
   });
+
+  it("prints a focused operator brief for the approval-gated native dialog dogfood", () => {
+    const brief = qualityEvidenceForCli({ operatorBrief: true });
+
+    expect(brief).toContain("PromptLane native dialog operator brief");
+    expect(brief).toContain("Status: pending_operator_approval");
+    expect(brief).toContain("approval_status=operator_approval_required");
+    expect(brief).toContain(
+      "Command: PROMPT_COACH_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved",
+    );
+    expect(brief).toContain(
+      "Preconditions: The operator explicitly approves opening a native OS dialog.",
+    );
+    expect(brief).toContain(
+      'Completion evidence: interaction_status: "answered"; approved native dialog dogfood passed',
+    );
+    expect(brief).toContain(
+      "Guardrails: Do not run this command in automated CI or scheduled checks.",
+    );
+    expect(brief).toContain(
+      "Result boundary: This brief does not run the native dialog dogfood.",
+    );
+    expect(brief).not.toContain(process.cwd());
+  });
 });

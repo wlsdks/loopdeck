@@ -189,7 +189,9 @@ Decision:
   `node scripts/quality-95-evidence.mjs` to avoid package-manager banners.
   Installed CLI users can inspect the same summary with
   `prompt-coach quality-evidence --json` and fail closed with
-  `prompt-coach quality-evidence --require-complete`.
+  `prompt-coach quality-evidence --require-complete`. They can also run
+  `prompt-coach quality-evidence --operator-brief` to print the focused
+  native-dialog approval checklist without opening the dialog.
   The JSON includes `axis_evidence_coverage`, which separates satisfied local
   proof such as `local_95_evidence_sweep` and
   `web_user_flow_current_main_evidence` from remaining gaps such as
@@ -242,6 +244,9 @@ Decision:
   native UI automatically.
 - The human `prompt-coach quality-evidence` summary now renders external
   evidence status directly: native dialog approved-run requirement.
+  `prompt-coach quality-evidence --operator-brief` prints only the current
+  approval status, command, preconditions, completion evidence, and guardrails
+  for that remaining dogfood step, while explicitly not running it.
   The default blocker list also prints each blocker `remaining_evidence` and
   blocker `next_action`, so agents no longer need to switch to JSON output just
   to decide which lower-level evidence keeps an axis below 9.5.

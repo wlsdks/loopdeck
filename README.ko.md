@@ -564,11 +564,14 @@ PromptLane 9.5 품질 evidence gate 확인:
 ```sh
 pnpm prompt-coach quality-evidence
 pnpm prompt-coach quality-evidence --json
+pnpm prompt-coach quality-evidence --operator-brief
 pnpm prompt-coach quality-evidence --require-complete
 ```
 
 `--require-complete`는 scorecard axis나 직접 evidence blocker가 남아 있으면
 실패합니다. release/goal-completion gate로만 사용하세요.
+`--operator-brief`는 남은 native dialog dogfood를 실행하지 않고, 승인 전에
+확인해야 할 focused checklist만 출력합니다.
 JSON 출력에는 `recommended_next_slices`도 포함됩니다. 텍스트 출력에서는 recommended next slices로
 표시되며, 바로 실행할 수 있는 로컬 evidence
 작업과 외부 이벤트 또는 명시적 운영자 승인이 필요한 작업을 분리합니다.

@@ -149,7 +149,9 @@
   `node scripts/quality-95-evidence.mjs` when another tool needs to parse the
   JSON directly. Installed CLI users can run
   `prompt-coach quality-evidence --json` or
-  `prompt-coach quality-evidence --require-complete`.
+  `prompt-coach quality-evidence --require-complete`. They can run
+  `prompt-coach quality-evidence --operator-brief` when they only need the
+  focused native-dialog approval checklist and do not want to open the dialog.
   The JSON includes `axis_evidence_coverage`, which separates satisfied local
   proof such as `local_95_evidence_sweep`,
   `web_user_flow_current_main_evidence` from remaining gaps such as
@@ -232,7 +234,10 @@
   real operator-approved evidence exists.
 - The human `prompt-coach quality-evidence` output renders the remaining
   external evidence status directly: the native dialog approved-run
-  requirement. The default blocker list also prints blocker `remaining_evidence` and blocker `next_action`, so normal CLI use can drive the remaining external
+  requirement. `prompt-coach quality-evidence --operator-brief` renders the
+  current approval status, command, preconditions, completion evidence, and
+  guardrails for the remaining dogfood step without running it. The default
+  blocker list also prints blocker `remaining_evidence` and blocker `next_action`, so normal CLI use can drive the remaining external
   work without requiring JSON parsing.
 - PR #478 proved that installed CLI path on the default branch, so future
   agents can use the product CLI itself to decide whether 9.5 is still blocked

@@ -692,11 +692,14 @@ Inspect the PromptLane 9.5 quality evidence gate:
 ```sh
 pnpm prompt-coach quality-evidence
 pnpm prompt-coach quality-evidence --json
+pnpm prompt-coach quality-evidence --operator-brief
 pnpm prompt-coach quality-evidence --require-complete
 ```
 
 `--require-complete` fails while scorecard axes or direct evidence blockers are
 still pending. Use it only as a release/goal-completion gate.
+`--operator-brief` prints the focused approval checklist for the remaining
+native dialog dogfood without opening the dialog.
 The JSON output also includes `recommended_next_slices` (shown as recommended next slices
 in the text output), which separates immediately runnable local
 evidence work from items blocked on an external event or explicit operator

@@ -6,6 +6,7 @@ import { UserError } from "../user-error.js";
 
 type QualityEvidenceCliOptions = {
   json?: boolean;
+  operatorBrief?: boolean;
   requireComplete?: boolean;
 };
 
@@ -60,6 +61,10 @@ export function registerQualityEvidenceCommand(program: Command): void {
     .description("Report PromptLane 9.5 quality evidence and blockers.")
     .option("--json", "Print JSON.")
     .option(
+      "--operator-brief",
+      "Print the focused operator brief for the approval-gated native dialog dogfood.",
+    )
+    .option(
       "--require-complete",
       "Exit with an error while the 9.5 quality evidence is still pending.",
     )
@@ -81,7 +86,9 @@ export function qualityEvidenceForCli(
     );
   }
 
-  return options.json ? JSON.stringify(summary, null, 2) : formatSummary(summary);
+  if (options.json) return JSON.stringify(summary, null, 2);
+  if (options.operatorBrief) return formatOperatorBrief(summary);
+  return formatSummary(summary);
 }
 
 function runQualityEvidenceScript(options: QualityEvidenceCliOptions): {
@@ -213,4 +220,31 @@ function formatExternalEvidenceRows(summary: QualityEvidenceSummary): string[] {
   }
 
   return rows.length > 0 ? rows : ["- none"];
+}
+
+function formatOperatorBrief(summary: QualityEvidenceSummary): string {
+  const nativeDialog = summary.evidence?.native_dialog_approved_dogfood;
+  const slice = summary.recommended_next_slices?.find(
+    (candidate) => candidate.id === "native_dialog_operator_dogfood",
+  );
+
+  return [
+    "PromptLane native dialog operator brief",
+    `Status: ${nativeDialog?.status ?? "unknown"}`,
+    ...(nativeDialog?.approval_status
+      ? [`approval_status=${nativeDialog.approval_status}`]
+      : []),
+    ...(slice?.command ? [`Command: ${slice.command}`] : []),
+    ...(slice?.preconditions && slice.preconditions.length > 0
+      ? [`Preconditions: ${slice.preconditions.join("; ")}`]
+      : []),
+    ...(slice?.completion_evidence && slice.completion_evidence.length > 0
+      ? [`Completion evidence: ${slice.completion_evidence.join("; ")}`]
+      : []),
+    ...(slice?.guardrails && slice.guardrails.length > 0
+      ? [`Guardrails: ${slice.guardrails.join("; ")}`]
+      : []),
+    "Result boundary: This brief does not run the native dialog dogfood.",
+    "Privacy: local-only, no external calls, no prompt bodies, no raw paths.",
+  ].join("\n");
 }
