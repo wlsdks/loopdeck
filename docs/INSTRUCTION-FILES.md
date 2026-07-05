@@ -43,6 +43,7 @@ drift and wastes agent context.
 Keep repo-level instruction files short and route deeper work to docs:
 
 - Product planning: `docs/PROMPTLANE.md`, `docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md`
+- Legacy naming surfaces: `docs/LOOPDECK.md`, `docs/LOOPDECK-LEGACY-SURFACES.md`
 - Current operational queue: `docs/NEXT_BACKLOG.md`
 - Harness details: `docs/AGENT-HARNESS.md`
 - Architecture: `docs/ARCHITECTURE.md`

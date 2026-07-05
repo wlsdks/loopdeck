@@ -16,6 +16,7 @@
 - 구조 판단 전: `docs/ARCHITECTURE.md`
 - 제품/PromptLane 기획 판단 전: `docs/PROMPTLANE.md`, `docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md`
 - 과거 Loopdeck 결정 확인 전: `docs/LOOPDECK.md`
+- Loopdeck/`loopdeck` 문자열 추가 또는 변경 전: `docs/LOOPDECK-LEGACY-SURFACES.md`
 - loop snapshot/schema/privacy 판단 전: `docs/LOOP-SNAPSHOT-SCHEMA.md`
 - 현재 우선순위 확인: `docs/NEXT_BACKLOG.md`, `tasks/todo.md`
 - Codex/Claude Code harness 판단 전: `docs/AGENT-HARNESS.md`

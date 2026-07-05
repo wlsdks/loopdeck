@@ -506,6 +506,40 @@ describe("plugin packaging files", () => {
     expect(positioning).toContain("`prompt-coach`");
   });
 
+  it("keeps agent instruction docs routed through the PromptLane product contract", () => {
+    const agents = readFileSync(join(process.cwd(), "AGENTS.md"), "utf8");
+    const claude = readFileSync(join(process.cwd(), "CLAUDE.md"), "utf8");
+    const harness = readFileSync(
+      join(process.cwd(), "docs/AGENT-HARNESS.md"),
+      "utf8",
+    );
+    const instructionFiles = readFileSync(
+      join(process.cwd(), "docs/INSTRUCTION-FILES.md"),
+      "utf8",
+    );
+
+    expect(agents).toContain("제품명은 **PromptLane**");
+    expect(agents).toContain("docs/PROMPTLANE.md");
+    expect(agents).toContain("docs/LOOPDECK-LEGACY-SURFACES.md");
+    expect(agents).toContain("docs/AGENT-HARNESS.md");
+    expect(agents).toContain("corepack pnpm pack:dry-run");
+
+    expect(claude).toContain("AGENTS.md");
+    expect(claude).toContain("PromptLane");
+    expect(claude).toContain("prompt-coach");
+    expect(claude).toContain("docs/INSTRUCTION-FILES.md");
+
+    expect(harness).toContain("PromptLane's Codex and Claude Code integration contract");
+    expect(harness).toContain("loop-aware continuation");
+    expect(harness).toContain("hidden external LLM calls");
+    expect(harness).toContain("corepack pnpm pack:dry-run");
+
+    expect(instructionFiles).toContain("PromptLane");
+    expect(instructionFiles).toContain("docs/LOOPDECK-LEGACY-SURFACES.md");
+    expect(instructionFiles).toContain("AGENTS.md");
+    expect(instructionFiles).toContain("CLAUDE.md");
+  });
+
   it("keeps active product surfaces branded as PromptLane, not Prompt Coach or Loopdeck", () => {
     const activeSurfacePaths = [
       "package.json",
