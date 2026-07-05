@@ -3620,4 +3620,4 @@
 - [x] RED: Add focused MCP, storage, web readiness, and CLI loop tests requiring user-facing runtime copy to say PromptLane while preserving `prompt-coach` commands and `get_loopdeck_status` compatibility names.
 - [x] GREEN: Replace Loopdeck-facing runtime descriptions, local archive/server messages, instruction-memory headings, and loop status labels with PromptLane wording without renaming internal types or compatibility tool names.
 - [x] VERIFY: Focused tests, full test/lint/build, pack dry-run, and diff check passed.
-- [ ] INTEGRATE: Push one coherent PR, merge it after CI, and prune the branch.
+- [x] INTEGRATE: PR #381 was merged to `main`; branch was pruned.
