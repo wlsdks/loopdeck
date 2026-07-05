@@ -58,6 +58,14 @@ describe("quality 9.5 evidence script", () => {
         status: string;
       }>;
       blockers: Array<{ id: string; status: string }>;
+      recommended_next_slices: Array<{
+        id: string;
+        axis: string;
+        priority: number;
+        blocked_by_external_event: boolean;
+        command: string;
+        expected_effect: string;
+      }>;
       next_action: string;
     };
 
@@ -93,6 +101,25 @@ describe("quality 9.5 evidence script", () => {
     );
     expect(parsed.next_action).toContain(
       "Do not claim 9.5 completion while blockers remain pending.",
+    );
+    expect(parsed.recommended_next_slices[0]).toMatchObject({
+      id: "web_user_flow_current_main_evidence",
+      axis: "web_ui_and_operational_evidence",
+      priority: 1,
+      blocked_by_external_event: false,
+      command: "corepack pnpm dogfood:web-user-flow",
+    });
+    expect(parsed.recommended_next_slices).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "scheduled_ui_patrol_cron_review",
+          blocked_by_external_event: true,
+        }),
+        expect.objectContaining({
+          id: "native_dialog_operator_dogfood",
+          blocked_by_external_event: true,
+        }),
+      ]),
     );
     expect(result.stdout).not.toContain(process.cwd());
   });

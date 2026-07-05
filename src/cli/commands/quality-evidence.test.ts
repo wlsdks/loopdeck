@@ -10,6 +10,11 @@ describe("quality-evidence CLI command", () => {
       status: string;
       scorecard_axes: Array<{ id: string; status: string }>;
       blockers: Array<{ id: string; status: string }>;
+      recommended_next_slices: Array<{
+        id: string;
+        priority: number;
+        blocked_by_external_event: boolean;
+      }>;
     };
 
     expect(parsed.check).toBe("promptlane_95_quality");
@@ -24,6 +29,11 @@ describe("quality-evidence CLI command", () => {
         }),
       ]),
     );
+    expect(parsed.recommended_next_slices[0]).toMatchObject({
+      id: "web_user_flow_current_main_evidence",
+      priority: 1,
+      blocked_by_external_event: false,
+    });
     expect(json).not.toContain(process.cwd());
 
     const text = qualityEvidenceForCli();
@@ -34,6 +44,10 @@ describe("quality-evidence CLI command", () => {
     expect(text).toContain("Blockers: 9");
     expect(text).toContain("scheduled_ui_patrol");
     expect(text).toContain("native_dialog_approved_dogfood");
+    expect(text).toContain("Recommended next slices");
+    expect(text).toContain("web_user_flow_current_main_evidence");
+    expect(text).toContain("corepack pnpm dogfood:web-user-flow");
+    expect(text).toContain("external event: no");
     expect(text).toContain("Privacy: local-only");
     expect(text).not.toContain(process.cwd());
   });

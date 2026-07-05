@@ -960,6 +960,8 @@ describe("plugin packaging files", () => {
       expect(content).toContain("corepack pnpm --silent evidence:quality");
       expect(content).toContain("node scripts/quality-95-evidence.mjs");
       expect(content).toContain("prompt-coach quality-evidence --json");
+      expect(content).toContain("recommended_next_slices");
+      expect(content).toContain("web_user_flow_current_main_evidence");
       expect(content).toContain("promptlane_95_quality");
       expect(content).toContain("scorecard_axes");
       expect(content).toContain("native_dialog_approved_dogfood");
@@ -969,9 +971,12 @@ describe("plugin packaging files", () => {
       expect(content).toContain("prompt-coach quality-evidence");
       expect(content).toContain("prompt-coach quality-evidence --json");
       expect(content).toContain("prompt-coach quality-evidence --require-complete");
+      expect(content).toContain("recommended next slices");
     }
     expect(evidenceScript).toContain("promptlane_95_quality");
     expect(evidenceScript).toContain("scorecard_axes");
+    expect(evidenceScript).toContain("recommendedNextSlices");
+    expect(evidenceScript).toContain("blocked_by_external_event");
     expect(evidenceScript).toContain("below_target");
     expect(evidenceScript).toContain("requireComplete");
     expect(evidenceScript).toContain("pending_operator_approval");

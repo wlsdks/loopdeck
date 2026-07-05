@@ -185,6 +185,10 @@ Decision:
   Installed CLI users can inspect the same summary with
   `prompt-coach quality-evidence --json` and fail closed with
   `prompt-coach quality-evidence --require-complete`.
+  The same JSON now includes `recommended_next_slices`, starting with
+  `web_user_flow_current_main_evidence`, so the next worker can distinguish
+  immediately runnable local evidence work from externally blocked cron or
+  operator-approved dogfood.
 - PR #478 moved that quality evidence gate onto the installed product CLI. Main
   CI run `28753458359` passed Node 22 and Node 24 after merge, so `prompt-coach
   quality-evidence --require-complete` is now a current default-branch release
