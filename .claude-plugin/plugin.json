@@ -4,7 +4,7 @@
   "version": "0.1.0-beta.0",
   "author": {
     "name": "PromptLane contributors",
-    "url": "https://github.com/wlsdks/loopdeck"
+    "url": "https://github.com/wlsdks/promptlane"
   },
   "commands": [
     "./commands/setup.md",
@@ -18,8 +18,8 @@
     "./commands/habits.md",
     "./commands/open.md"
   ],
-  "homepage": "https://github.com/wlsdks/loopdeck",
-  "repository": "https://github.com/wlsdks/loopdeck",
+  "homepage": "https://github.com/wlsdks/promptlane",
+  "repository": "https://github.com/wlsdks/promptlane",
   "license": "MIT",
   "keywords": [
     "promptlane",

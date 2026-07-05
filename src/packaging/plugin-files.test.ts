@@ -160,7 +160,7 @@ describe("plugin packaging files", () => {
       "PromptLane local-first prompt improvement workspace for Codex, Claude Code, and long-running coding-agent work.",
     );
     expect(packageJson.repository.url).toBe(
-      "https://github.com/wlsdks/loopdeck.git",
+      "https://github.com/wlsdks/promptlane.git",
     );
     expect(packageJson.engines.node).toBe(">=22.12 <25");
     expect(readFileSync(join(process.cwd(), "README.md"), "utf8")).toContain(
@@ -180,8 +180,8 @@ describe("plugin packaging files", () => {
       expect(manifest.description).not.toContain(
         "agent loop memory and meta-prompting workbench",
       );
-      expect(manifest.homepage).toBe("https://github.com/wlsdks/loopdeck");
-      expect(manifest.repository).toBe("https://github.com/wlsdks/loopdeck");
+      expect(manifest.homepage).toBe("https://github.com/wlsdks/promptlane");
+      expect(manifest.repository).toBe("https://github.com/wlsdks/promptlane");
       expect(manifest.keywords).toEqual(
         expect.arrayContaining(["promptlane", "prompt-coach"]),
       );
@@ -498,6 +498,75 @@ describe("plugin packaging files", () => {
     );
     expect(positioning).toContain("Product name: PromptLane.");
     expect(positioning).toContain("`prompt-coach`");
+  });
+
+  it("keeps active product surfaces branded as PromptLane, not Prompt Coach or Loopdeck", () => {
+    const activeSurfacePaths = [
+      "package.json",
+      "README.md",
+      "README.ko.md",
+      ".claude-plugin/marketplace.json",
+      ".claude-plugin/plugin.json",
+      "plugins/prompt-coach/.codex-plugin/plugin.json",
+      "plugins/prompt-coach/skills/prompt-coach/SKILL.md",
+      "commands/setup.md",
+      "commands/status.md",
+      "commands/guard.md",
+      "commands/buddy.md",
+      "commands/coach.md",
+      "commands/score.md",
+      "commands/judge.md",
+      "commands/improve-last.md",
+      "commands/habits.md",
+      "commands/open.md",
+      "docs/PROMPTLANE.md",
+      "docs/PLUGINS.md",
+      "docs/ARCHITECTURE.md",
+      "docs/AGENT-HARNESS.md",
+      "docs/TECH_SPEC.md",
+      "docs/IMPLEMENTATION_PLAN.md",
+      "docs/RELEASE_CHECKLIST.md",
+    ];
+    const forbiddenProductNamePatterns = [
+      /\bPrompt Coach\b/,
+      /\bPromptCoach\b/,
+      /Loopdeck is a local-first/i,
+      /Loopdeck archive/,
+      /Loopdeck status/,
+      /Loopdeck server/,
+      /Loopdeck Coach/,
+      /Loopdeck Buddy/,
+      /Loopdeck Score/,
+      /Loopdeck Habits/,
+      /Loopdeck Agent Judge/,
+      /Open Loopdeck/,
+      /Set Up Loopdeck/,
+      /Loopdeck Rewrite Guard/,
+      /Loopdeck Memories/,
+      /Loopdeck does not/,
+      /outside Loopdeck/,
+      /Loopdeck records/,
+      /Loopdeck storage/,
+      /local Loopdeck/,
+    ];
+
+    for (const surfacePath of activeSurfacePaths) {
+      const content = readFileSync(join(process.cwd(), surfacePath), "utf8");
+
+      expect(content, surfacePath).toContain("PromptLane");
+      for (const pattern of forbiddenProductNamePatterns) {
+        expect(content, `${surfacePath} should not match ${pattern}`).not.toMatch(
+          pattern,
+        );
+      }
+    }
+
+    const packageJson = readJson<{ repository: { url: string } }>(
+      "package.json",
+    );
+    expect(packageJson.repository.url).toBe(
+      "https://github.com/wlsdks/promptlane.git",
+    );
   });
 
   it("keeps the Loopdeck goal audit aligned with merged saved-draft reuse slices", () => {

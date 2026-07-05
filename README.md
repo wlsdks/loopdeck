@@ -129,8 +129,8 @@ npm install -g prompt-coach
 For local development from this repository:
 
 ```sh
-git clone https://github.com/wlsdks/loopdeck.git
-cd loopdeck
+git clone https://github.com/wlsdks/promptlane.git
+cd promptlane
 pnpm install   # also builds dist via the prepare lifecycle
 pnpm setup     # installs Claude Code + Codex hooks, MCP, status line, and service
 ```
@@ -149,7 +149,7 @@ enables the local server on session start.
 Inside Claude Code:
 
 ```text
-/plugin marketplace add wlsdks/loopdeck
+/plugin marketplace add wlsdks/promptlane
 /plugin install prompt-coach
 /reload-plugins
 /prompt-coach:setup
@@ -164,7 +164,7 @@ settings, and then runs the real setup if approved.
 From your shell:
 
 ```sh
-codex plugin marketplace add wlsdks/loopdeck
+codex plugin marketplace add wlsdks/promptlane
 ```
 
 Then run the local coach setup:
@@ -517,7 +517,7 @@ Recommended order:
 Claude Code can consume this repository as a marketplace:
 
 ```text
-/plugin marketplace add wlsdks/loopdeck
+/plugin marketplace add wlsdks/promptlane
 /plugin install prompt-coach
 /reload-plugins
 /prompt-coach:setup
@@ -604,7 +604,7 @@ pnpm prompt-coach buddy --once
 Codex can add the same repository as a marketplace:
 
 ```sh
-codex plugin marketplace add wlsdks/loopdeck
+codex plugin marketplace add wlsdks/promptlane
 ```
 
 After that, use `prompt-coach setup` to install the Codex hook and enable Codex hooks.

@@ -4,10 +4,10 @@
   "description": "PromptLane is a local-first prompt improvement workspace for Codex, Claude Code, and long-running coding-agent work.",
   "author": {
     "name": "PromptLane contributors",
-    "url": "https://github.com/wlsdks/loopdeck"
+    "url": "https://github.com/wlsdks/promptlane"
   },
-  "homepage": "https://github.com/wlsdks/loopdeck",
-  "repository": "https://github.com/wlsdks/loopdeck",
+  "homepage": "https://github.com/wlsdks/promptlane",
+  "repository": "https://github.com/wlsdks/promptlane",
   "license": "MIT",
   "keywords": [
     "promptlane",
@@ -28,9 +28,9 @@
     "developerName": "PromptLane contributors",
     "category": "Coding",
     "capabilities": ["Interactive", "Read", "Write"],
-    "websiteURL": "https://github.com/wlsdks/loopdeck",
-    "privacyPolicyURL": "https://github.com/wlsdks/loopdeck/blob/main/SECURITY.md",
-    "termsOfServiceURL": "https://github.com/wlsdks/loopdeck/blob/main/README.md",
+    "websiteURL": "https://github.com/wlsdks/promptlane",
+    "privacyPolicyURL": "https://github.com/wlsdks/promptlane/blob/main/SECURITY.md",
+    "termsOfServiceURL": "https://github.com/wlsdks/promptlane/blob/main/README.md",
     "defaultPrompt": [
       "Set up PromptLane for this machine",
       "Check whether PromptLane is capturing Codex prompts",

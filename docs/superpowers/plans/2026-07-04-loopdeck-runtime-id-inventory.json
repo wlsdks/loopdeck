@@ -10,7 +10,7 @@
       "pc-claude": "./dist/cli/pc-claude.js",
       "pc-codex": "./dist/cli/pc-codex.js"
     },
-    "repository": "https://github.com/wlsdks/loopdeck.git"
+    "repository": "https://github.com/wlsdks/promptlane.git"
   },
   "claude_code_plugin": {
     "manifest": ".claude-plugin/plugin.json",

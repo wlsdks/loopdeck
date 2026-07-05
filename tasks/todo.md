@@ -1,5 +1,21 @@
 # 작업 계획
 
+## 2026-07-05 PromptLane Name And Repository Surface
+
+- [x] DECISION: `Prompt Coach`는 서비스명으로 쓰지 않고 `PromptLane`을 제품명으로 사용한다.
+- [x] DECISION: `Loopdeck`은 primary product/repository name으로 쓰지 않고 legacy CLI alias와 historical migration 문맥으로만 남긴다.
+- [x] META: GitHub repository를 `wlsdks/loopdeck`에서 `wlsdks/promptlane`으로 rename하고 local origin과 repo description/topics를 갱신했다.
+- [x] RED: active product surfaces가 `Prompt Coach` 또는 product-facing `Loopdeck` wording을 다시 노출하면 packaging test가 실패하도록 고정한다.
+- [x] GREEN: README, plugin metadata, package metadata, install docs, product docs가 `PromptLane`과 `wlsdks/promptlane` 기준으로 맞춰진다.
+- [x] VERIFY: focused packaging guard, full test/lint/build, pack dry-run, diff check를 통과한다.
+- [ ] INTEGRATE: 변경을 커밋, 푸시, PR, CI 확인 후 merge하고 branch를 정리한다.
+
+### 판단 기준
+
+- 제품명은 `PromptLane`이고 `prompt-coach`는 package/CLI/hook/MCP/slash compatibility runtime ID다.
+- `loopdeck`는 현재 binary alias, tag, historical docs, internal compatibility symbols에서만 허용한다.
+- 사용자 설치 경로와 GitHub marketplace 경로는 `wlsdks/promptlane`을 사용한다.
+
 ## 2026-07-04 Agent Loop Memory Design
 
 - [x] 2026년 7월 기준 Codex, Claude Code, OpenAI Agents, Anthropic context engineering, Google ADK, AGENTS.md 자료 확인
