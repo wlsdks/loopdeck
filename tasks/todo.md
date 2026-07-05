@@ -1,5 +1,22 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane Prompt Effectiveness Verdict
+
+- [x] CHECK: `expected_impact`와 `loop_outcomes`는 각각 보이지만, Codex/Claude Code와 web 사용자가 실제 효과를 매번 수동으로 해석해야 했다.
+- [x] RED: storage `getPrompt()`가 linked outcome에서 `effectiveness` verdict를 반환하지 않아 실패해야 한다.
+- [x] RED: `prompt-coach show --json`이 같은 `effectiveness` verdict를 포함하지 않아 실패해야 한다.
+- [x] RED: web prompt detail이 `Effectiveness: proven`과 raw-free verdict summary를 렌더링하지 않아 실패해야 한다.
+- [x] GREEN: storage detail, CLI JSON, web detail이 같은 raw-free effectiveness verdict를 공유한다.
+- [x] EFFECT: 예상 개선량과 실제 loop outcome 사이를 사용자가 직접 추론하지 않아도, passed outcome/test/ref 기반으로 prompt 효과를 빠르게 판단할 수 있다.
+- [ ] VERIFY: focused tests, `corepack pnpm e2e:browser`, full local gate, PR CI, latest main CI, and branch prune all pass.
+- [ ] INTEGRATE: PR이 CI 통과 후 merge되고 branch prune까지 확인된다.
+
+### 판단 기준
+
+- `effectiveness`는 raw-free `loop_outcomes`에서만 계산하고 prompt body, raw local path, token-like secret을 노출하지 않는다.
+- verdict는 자동 승인이나 외부 LLM 판단이 아니라 local evidence summary다.
+- scheduled `ui-patrol`과 approval-gated native dialog dogfood는 별도 blocker로 유지한다.
+
 ## 2026-07-06 PromptLane CLI Prompt Outcome Evidence
 
 - [x] CHECK: web/API prompt detail은 actual loop outcome evidence를 보여주지만, Codex/Claude Code가 자주 쓰는 `prompt-coach show --json`은 같은 효과 증거를 직접 볼 수 없었다.

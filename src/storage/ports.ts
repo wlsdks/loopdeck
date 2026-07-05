@@ -73,6 +73,7 @@ export type PromptDetail = PromptSummary & {
   analysis?: PromptAnalysisPreview;
   improvement_drafts: PromptImprovementDraft[];
   loop_outcomes?: PromptLoopOutcomeEvidence[];
+  effectiveness?: PromptEffectiveness;
 };
 
 export type PromptLoopOutcomeEvidence = {
@@ -81,6 +82,12 @@ export type PromptLoopOutcomeEvidence = {
   summary: string;
   evidence_refs: string[];
   tests_run?: number;
+};
+
+export type PromptEffectiveness = {
+  verdict: "proven" | "mixed" | "unproven";
+  summary: string;
+  evidence_refs: string[];
 };
 
 export type PromptUsefulness = {

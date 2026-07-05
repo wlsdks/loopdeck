@@ -267,6 +267,72 @@ describe("SQLite prompt storage", () => {
     storage.close();
   });
 
+  it("summarizes prompt effectiveness from linked loop outcomes", async () => {
+    const dataDir = createTempDir();
+    initializePromptCoach({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+      now: () => new Date("2026-07-04T01:00:00.000Z"),
+    });
+
+    const stored = await storeClaudePrompt(storage, {
+      prompt: "Use PromptLane to clarify the task and prove it with tests.",
+      receivedAt: "2026-07-04T01:00:00.000Z",
+    });
+    storage.createLoopSnapshot({
+      id: "loop_prompt_effectiveness_verdict",
+      created_at: "2026-07-04T01:05:00.000Z",
+      tool: "codex",
+      source: "mcp",
+      cwd_label: "private-project",
+      project_id: "proj_prompt_effectiveness",
+      prompt_ids: [stored.id],
+      event_counts: {
+        prompts: 1,
+        tests_run: 7,
+      },
+      quality: {
+        average_prompt_score: 84,
+        top_gaps: [],
+        unresolved_questions: [],
+      },
+      outcome: {
+        status: "passed",
+        summary:
+          "Expected impact held for /Users/example/project/private.txt with sk-proj-1234567890abcdef.",
+        evidence_refs: [
+          "PR #455",
+          "main CI 28748664657",
+          "/Users/example/project/private.txt",
+        ],
+      },
+      next_brief: {
+        generated: true,
+        prompt_id: stored.id,
+        summary: "Continue from the verified effectiveness verdict.",
+      },
+      privacy: {
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        local_only: true,
+      },
+    });
+
+    const effectiveness = storage.getPrompt(stored.id)?.effectiveness;
+
+    expect(effectiveness).toEqual({
+      verdict: "proven",
+      summary:
+        "Actual loop evidence passed with 7 tests across 1 linked outcome.",
+      evidence_refs: ["PR #455", "main CI 28748664657"],
+    });
+    expect(JSON.stringify(effectiveness)).not.toContain("/Users/example");
+    expect(JSON.stringify(effectiveness)).not.toContain("sk-proj-");
+
+    storage.close();
+  });
+
   it("records approved loop memories without prompt bodies or raw paths", () => {
     const dataDir = createTempDir();
     initializePromptCoach({ dataDir });

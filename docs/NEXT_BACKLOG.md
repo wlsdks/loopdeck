@@ -173,6 +173,11 @@ Decision:
   preserve a measurable before/after signal instead of only returning a rewrite.
 - Prompt-linked outcome evidence is the next active effectiveness slice: prompt detail should connect `expected_impact` predictions to actual raw-free loop outcomes and browser assertions, without treating this as scheduled `ui-patrol` or native-dialog completion evidence.
 - CLI prompt outcome evidence is the active agent-native follow-up: `prompt-coach show --json` should expose the same raw-free `loop_outcomes` contract from storage `getPrompt()` so Codex and Claude Code sessions can evaluate real outcome evidence without opening the web UI.
+- Prompt effectiveness verdict is the active evidence-quality follow-up:
+  storage `getPrompt()`, `prompt-coach show --json`, and the web prompt detail
+  should summarize raw-free linked loop outcomes as an `effectiveness` verdict
+  so agents and users can judge actual prompt impact without manually
+  reconciling every outcome row.
 
 Rationale:
 

@@ -254,6 +254,11 @@ describe("prompt read/delete API", () => {
           evidence_refs: string[];
           tests_run?: number;
         }>;
+        effectiveness?: {
+          verdict: string;
+          summary: string;
+          evidence_refs: string[];
+        };
       };
     }>().data;
     expect(body.loop_outcomes).toEqual([
@@ -266,6 +271,12 @@ describe("prompt read/delete API", () => {
         tests_run: 3,
       },
     ]);
+    expect(body.effectiveness).toEqual({
+      verdict: "proven",
+      summary:
+        "Actual loop evidence passed with 3 tests across 1 linked outcome.",
+      evidence_refs: ["PR #451", "main CI 28748001738"],
+    });
     expect(detail.body).not.toContain("/Users/example/project");
     expect(detail.body).not.toContain("sk-proj-1234567890abcdef");
   });

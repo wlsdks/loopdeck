@@ -74,6 +74,11 @@
   `loop_outcomes` contract into storage `getPrompt()` so `prompt-coach show
   --json`, web detail, and future agent-native consumers share one effectiveness
   evidence source instead of web-only derivation.
+- Current prompt effectiveness verdict slice summarizes those raw-free linked
+  loop outcomes into an `effectiveness` verdict shared by storage
+  `getPrompt()`, `prompt-coach show --json`, and the web prompt detail, so
+  users and agents can judge actual prompt impact without manually reconciling
+  every outcome row.
 
 ## Remaining 9.5 blockers
 
@@ -84,7 +89,9 @@
   open a native dialog.
 - Fresh user-flow, expected-impact, prompt-linked outcome evidence, and CLI
   prompt outcome evidence are now repeatable through `dogfood:web-user-flow`,
-  browser E2E, focused CLI/storage tests, and `corepack pnpm ui-patrol`, but web
+  browser E2E, focused CLI/storage tests, and `corepack pnpm ui-patrol`. The
+  prompt effectiveness verdict remains the active evidence-quality slice until
+  PR CI, main CI, and branch pruning prove it on the default branch. Web
   operations still need scheduled artifact evidence before claiming 9.5.
 
 ## Required Slices

@@ -91,17 +91,68 @@ describe("PromptDetailView", () => {
               tests_run: 3,
             },
           ],
+          effectiveness: {
+            verdict: "proven",
+            summary:
+              "Actual loop evidence passed with 3 tests across 1 linked outcome.",
+            evidence_refs: ["PR #451", "main CI 28748001738"],
+          },
         },
         queueNavigation: {},
       }),
     );
 
+    expect(html).toContain("Effectiveness");
+    expect(html).toContain("Proven");
+    expect(html).toContain(
+      "Actual loop evidence passed with 3 tests across 1 linked outcome.",
+    );
     expect(html).toContain("Outcome evidence");
     expect(html).toContain("Expected impact matched");
     expect(html).toContain("passed");
     expect(html).toContain("3 tests");
     expect(html).toContain("PR #451");
     expect(html).toContain("main CI 28748001738");
+  });
+
+  it("derives an effectiveness verdict when older detail payloads only include outcomes", () => {
+    const html = renderToStaticMarkup(
+      createElement(PromptDetailView, {
+        copied: false,
+        copiedImprovement: false,
+        language: "en",
+        savedImprovement: false,
+        onBack: vi.fn(),
+        onBookmark: vi.fn(),
+        onCloseManualCopyFallback: vi.fn(),
+        onCopy: vi.fn(),
+        onCopyImprovement: vi.fn(),
+        onCopySavedDraft: vi.fn(),
+        onDelete: vi.fn(),
+        onNavigate: vi.fn(),
+        onOpenQualityGap: vi.fn(),
+        onSaveImprovement: vi.fn(),
+        prompt: {
+          ...buildPromptDetail(),
+          loop_outcomes: [
+            {
+              snapshot_id: "loop_effectiveness_fallback",
+              status: "passed",
+              summary: "Browser payload had outcome evidence only.",
+              evidence_refs: ["main CI 28748001738"],
+              tests_run: 4,
+            },
+          ],
+        },
+        queueNavigation: {},
+      }),
+    );
+
+    expect(html).toContain("Effectiveness");
+    expect(html).toContain("Proven");
+    expect(html).toContain(
+      "Actual loop evidence passed with 4 tests across 1 linked outcome.",
+    );
   });
 
   it("renders a manual-copy fallback when draft clipboard copy fails", () => {
