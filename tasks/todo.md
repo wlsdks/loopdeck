@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-05 PromptLane MCP Storage Setup Guidance
+
+- [x] CHECK: GitHub repository name/description, local origin, package repository, README heading이 `promptlane`/PromptLane 기준인지 확인했다.
+- [x] RED: MCP storage unavailable 메시지가 Codex/Claude Code setup/register/doctor 흐름을 안내하지 않으면 `src/mcp/storage-unavailable.test.ts`가 실패하도록 고정했다.
+- [x] GREEN: 공통 MCP storage error helper가 PromptLane setup, MCP registration, doctor, custom `--data-dir` 경로를 raw-free 문장으로 안내하도록 수정했다.
+- [x] VERIFY: focused MCP tests와 full gate를 통과한다.
+- [ ] INTEGRATE: PR CI `test (22)`/`test (24)` 통과 후 merge하고 branch prune까지 확인한다.
+
+### 판단 기준
+
+- GitHub repository canonical name은 `wlsdks/promptlane`이다.
+- npm package, CLI, slash namespace, MCP server compatibility ID는 `prompt-coach`로 유지한다.
+- MCP storage failure는 사용자가 다음 행동을 바로 알 수 있어야 한다: setup/register, 실제 Codex/Claude Code prompt 제출, doctor 확인, custom `--data-dir` 일치.
+- storage error copy는 raw local path나 SQLite 파일명을 노출하지 않는다.
+
 ## 2026-07-05 PromptLane Risk Execution Contract
 
 - [x] RED: `docs/PROMPTLANE.md`가 기술 리스크, MVP slice 순서, TDD 실행 규칙을 명시하지 않으면 packaging test가 실패하도록 고정했다.
