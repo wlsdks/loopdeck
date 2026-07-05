@@ -1,5 +1,24 @@
 # 작업 계획
 
+## 2026-07-06 PromptLane External Evidence Action Criteria
+
+- [x] CHECK: The remaining 9.5 blockers are external, but the recommended next
+  slices only exposed command and expected effect.
+- [x] RED: quality evidence CLI/script tests required external recommendations
+  to include preconditions, completion evidence, and guardrails; tests failed
+  while those fields were absent.
+- [x] GREEN: `quality-evidence` now emits those fields for scheduled
+  `ui-patrol` review and native dialog operator dogfood, and the CLI text
+  renders them below each recommendation.
+- [x] EFFECT: future operators and agents can identify what must be true before
+  running the action, what proves completion, and what must not be substituted.
+
+### 판단 기준
+
+- Do not remove existing blockers through action criteria alone.
+- Do not treat manual/readiness evidence as scheduled or approved evidence.
+- Keep the structured criteria raw-free and path-free in CLI output.
+
 ## 2026-07-06 PromptLane Native Dialog Preflight Evidence
 
 - [x] CHECK: Approved native OS dialog dogfood still requires explicit operator

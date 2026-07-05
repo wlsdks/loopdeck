@@ -493,6 +493,16 @@ function recommendedNextSlices({
       priority: 90,
       blocked_by_external_event: true,
       command: "corepack pnpm evidence:ui-patrol",
+      preconditions: [
+        "A real GitHub Actions schedule event exists for ui-patrol.yml.",
+      ],
+      completion_evidence: [
+        "scheduled_ui_patrol status is complete",
+        "ui-patrol-screenshots artifact contains 9 png files",
+      ],
+      guardrails: [
+        "Do not treat workflow_dispatch evidence as scheduled evidence.",
+      ],
       expected_effect:
         "Verify the first real scheduled screenshot artifact after GitHub cron runs.",
     });
@@ -506,6 +516,16 @@ function recommendedNextSlices({
       blocked_by_external_event: true,
       command:
         "PROMPT_COACH_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved",
+      preconditions: [
+        "The operator explicitly approves opening a native OS dialog.",
+      ],
+      completion_evidence: [
+        'interaction_status: "answered"',
+        "approved native dialog dogfood passed",
+      ],
+      guardrails: [
+        "Do not run this command in automated CI or scheduled checks.",
+      ],
       expected_effect:
         "Prove the real native ask UI handoff only after explicit operator approval.",
     });

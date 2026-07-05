@@ -239,6 +239,10 @@
 - `docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md` is packaged as
   `native_dialog_preflight` evidence for MCP elicitation and no-dialog fallback
   behavior. It must not be treated as approved native OS dialog dogfood.
+- `quality-evidence` recommended next slices now carry explicit preconditions,
+  completion evidence, and guardrails for the remaining external blockers. This
+  makes the next operator or scheduled-event pass executable without changing
+  the rule that 9.5 remains pending until real external evidence exists.
 - PR #478 proved that installed CLI path on the default branch; main CI run
   `28753458359` passed Node 22 and Node 24 after merge, so future agents can use
   the product CLI itself to decide whether 9.5 is still blocked before claiming
