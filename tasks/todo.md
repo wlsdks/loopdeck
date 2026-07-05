@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-06 Codex Doctor Hook Count Evidence
+
+- [x] CHECK: `doctor codex` now detects duplicate hooks and proves `install-hook codex` repairs them, but JSON/plain output only exposes `duplicateHooks=true` and not the safe handler count needed to compare before/after state.
+- [x] RED: focused doctor test must fail until duplicate Codex hook results expose `hookCount=2`, repaired results expose `hookCount=1`, and plain output says `duplicate hooks found (2 handlers)`.
+- [x] GREEN: doctor Codex settings include a raw-free hook count and plain duplicate output shows the handler count.
+- [x] EFFECT: the same test proves the user can compare duplicate count before repair and ready state after repair without seeing raw paths, prompts, or tokens.
+- [ ] VERIFY: focused doctor test, full local gate, PR CI, latest main CI, and branch prune all pass.
+- [ ] INTEGRATE: PR is merged after CI and the temporary branch is pruned locally and remotely.
+
+### 판단 기준
+
+- effectiveness means the diagnostic output helps verify whether the duplicate hook issue was actually reduced.
+- count output must be safe numeric metadata only.
+- no automatic config mutation happens from doctor.
+
 ## 2026-07-06 Codex Duplicate Hook Recovery Copy
 
 - [x] CHECK: `install-hook codex` already deduplicates same-file PromptLane hooks, but `doctor codex` still gives generic duplicate removal guidance that is less useful for same-file duplicate `UserPromptSubmit` output.

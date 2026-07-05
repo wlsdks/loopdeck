@@ -350,10 +350,11 @@ describe("doctorCodex", () => {
 
     expect(result.settings.hookInstalled).toBe(true);
     expect(result.settings.codexHooksEnabled).toBe(true);
+    expect(result.settings.hookCount).toBe(2);
     expect(result.settings.duplicateHooks).toBe(true);
     expect(result.settings.ok).toBe(false);
     expect(formatDoctorResult("codex", result)).toContain(
-      "duplicate hooks found",
+      "duplicate hooks found (2 handlers)",
     );
     expect(formatDoctorResult("codex", result)).toContain(
       "Run prompt-coach install-hook codex to normalize duplicate hooks in the same Codex hooks file.",
@@ -376,6 +377,7 @@ describe("doctorCodex", () => {
 
     expect(repairedHooks.hooks.UserPromptSubmit).toHaveLength(1);
     expect(repairedHooks.hooks.UserPromptSubmit[0].hooks).toHaveLength(1);
+    expect(repaired.settings.hookCount).toBe(1);
     expect(repaired.settings.duplicateHooks).toBe(false);
     expect(repaired.settings.ok).toBe(true);
   });

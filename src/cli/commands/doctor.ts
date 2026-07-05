@@ -76,6 +76,7 @@ export type DoctorCodexResult = {
     hookInstalled: boolean;
     codexHooksEnabled: boolean;
     duplicateHooks: boolean;
+    hookCount: number;
     hookSources: string[];
   };
   mcp: { registered: boolean };
@@ -190,7 +191,7 @@ function formatCodexSettings(result: DoctorCodexResult): string {
       ? ` (${result.settings.hookSources.join(", ")})`
       : "";
   const duplicate = result.settings.duplicateHooks
-    ? "; duplicate hooks found"
+    ? `; duplicate hooks found (${result.settings.hookCount} handlers)`
     : "";
   return `- Codex hook: ${result.settings.hookInstalled ? `installed${source}` : "missing"}; hooks ${result.settings.codexHooksEnabled ? "enabled" : "disabled"}${duplicate}`;
 }
@@ -399,6 +400,7 @@ function inspectCodexSettings(
     hookInstalled,
     codexHooksEnabled,
     duplicateHooks,
+    hookCount: promptCoachHookCount,
     hookSources,
   };
 }
