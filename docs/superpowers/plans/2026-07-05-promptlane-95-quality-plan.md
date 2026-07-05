@@ -37,6 +37,9 @@
   workflow_dispatch run `28717406758` still has a non-expired
   `ui-patrol-screenshots` artifact with 9 png files, but the latest workflow
   history has no `schedule` event.
+- `dogfood:web-user-flow` now provides repeatable fresh web user-flow evidence
+  for archive, detail, dashboard, coach, projects, mcp, exports, settings, and
+  mobile flows through `docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md`.
 - Latest main CI after PR #422 passed `test (22)` and `test (24)` with
   `pnpm test`, `pnpm lint`, `pnpm build`, and `pnpm pack:dry-run`.
 
@@ -47,9 +50,8 @@
 - Native OS ask UI dogfood remains operator-approved only; do not run
   `dogfood:mcp-native-dialog-approved` without explicit approval because it can
   open a native dialog.
-- Fresh user-flow evidence from real PromptLane work should keep validating the
-  web archive/detail/coach/settings/loop surfaces before claiming 9.5 for web
-  operations.
+- Fresh user-flow evidence is now repeatable through `dogfood:web-user-flow`,
+  but web operations still need ongoing real-work reruns before claiming 9.5.
 
 ## Required Slices
 

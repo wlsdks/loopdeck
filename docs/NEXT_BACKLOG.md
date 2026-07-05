@@ -147,6 +147,10 @@ Decision:
   `fs.R_OK`; keep the dependency on the npm-published `better-sqlite3` 12.x
   line and patch only the transient `prebuild-install` permission constants
   until upstream publishes a warning-free release.
+- `dogfood:web-user-flow` is the repeatable fresh web user-flow evidence lane;
+  it runs the same Playwright-backed archive/detail/dashboard/coach/projects/
+  mcp/exports/settings/mobile flow documented in
+  `docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md`.
 
 Rationale:
 

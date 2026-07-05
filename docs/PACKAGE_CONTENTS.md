@@ -41,6 +41,9 @@ The npm package intentionally includes:
   - includes `docs/AGENT-HARNESS.md` and `docs/INSTRUCTION-FILES.md` so
     installed plugin and CLI users can inspect the Codex/Claude Code harness
     contract and instruction-file layering rules without cloning the repo
+  - includes `docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md` and
+    `docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md` so package users can inspect
+    repeatable Codex/Claude Code integration and web user-flow evidence
   - includes `docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-plan.md`
     so package-local README and plugin docs can link to the compatibility gate
   - includes `docs/superpowers/plans/2026-07-04-loopdeck-plugin-rename-issue-slices.md`
