@@ -83,6 +83,9 @@ describe("doctorClaudeCode", () => {
       status: 503,
       checked_at: "2026-05-01T00:00:00.000Z",
     });
+    expect(formatDoctorResult("claude-code", result)).toContain(
+      "Status: needs attention",
+    );
   });
 
   it("formats Claude Code doctor output with next actions", async () => {
@@ -128,6 +131,8 @@ describe("doctorClaudeCode", () => {
 
     const output = formatDoctorResult("claude-code", result, options);
 
+    expect(result.ingest.ok).toBe(false);
+    expect(output).toContain("Status: needs attention");
     expect(output).toContain("Last ingest: failed (401)");
     expect(output).toContain(
       "Reinstall the hook to refresh the local ingest token: promptlane install-hook claude-code.",
@@ -292,6 +297,33 @@ describe("doctorCodex", () => {
     expect(result.settings.duplicateHooks).toBe(false);
   });
 
+  it("marks Codex doctor as needs attention when MCP is not registered", async () => {
+    const dir = createTempDir();
+    const dataDir = join(dir, "data");
+    const hooksPath = join(dir, ".codex", "hooks.json");
+    const configPath = join(dir, ".codex", "config.toml");
+    initializePromptLane({ dataDir });
+    installCodexHook({ dataDir, hooksPath, configPath });
+
+    const result = await doctorCodex({
+      dataDir,
+      hooksPath,
+      configPath,
+      mcpConfigPath: join(dir, "missing-codex-mcp.toml"),
+      checkServer: async () => true,
+      commandRunner: () => ({ status: 1, stderr: "no mcp server registered" }),
+    });
+
+    expect(result.server.ok).toBe(true);
+    expect(result.token.ok).toBe(true);
+    expect(result.ingest.ok).toBe(true);
+    expect(result.settings.ok).toBe(true);
+    expect(result.mcp.registered).toBe(false);
+    expect(formatDoctorResult("codex", result)).toContain(
+      "Status: needs attention",
+    );
+  });
+
   it("detects duplicate Codex hooks across user and project sources", async () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
@@ -380,6 +412,38 @@ describe("doctorCodex", () => {
     expect(repaired.settings.hookCount).toBe(1);
     expect(repaired.settings.duplicateHooks).toBe(false);
     expect(repaired.settings.ok).toBe(true);
+  });
+
+  it("marks Codex doctor as needs attention when the latest ingest returned 401", async () => {
+    const dir = createTempDir();
+    const dataDir = join(dir, "data");
+    const hooksPath = join(dir, ".codex", "hooks.json");
+    const configPath = join(dir, ".codex", "config.toml");
+    initializePromptLane({ dataDir });
+    installCodexHook({ dataDir, hooksPath, configPath });
+    writeLastHookStatus(dataDir, {
+      ok: false,
+      status: 401,
+      checked_at: "2026-07-06T00:00:00.000Z",
+    });
+
+    const options = {
+      dataDir,
+      hooksPath,
+      configPath,
+      checkServer: async () => true,
+    };
+    const result = await doctorCodex(options);
+    const output = formatDoctorResult("codex", result, options);
+
+    expect(result.server.ok).toBe(true);
+    expect(result.token.ok).toBe(true);
+    expect(result.ingest.ok).toBe(false);
+    expect(output).toContain("Status: needs attention");
+    expect(output).toContain("Last ingest: failed (401)");
+    expect(output).toContain(
+      "Reinstall the hook to refresh the local ingest token: promptlane install-hook codex.",
+    );
   });
 
   it("formats Codex doctor output with hook and feature flag status", async () => {

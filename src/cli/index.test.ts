@@ -171,6 +171,19 @@ describe("runCli error handling", () => {
       "missing --target. Try: promptlane __throws-user --target X",
     );
   });
+
+  it("returns a non-zero code set by a successful command action", async () => {
+    const program = createProgram();
+    program.command("__sets-exit-code").action(() => {
+      process.exitCode = 1;
+    });
+
+    const exitCode = await runCli(["node", "promptlane", "__sets-exit-code"], {
+      program,
+    });
+
+    expect(exitCode).toBe(1);
+  });
 });
 
 function createTempDir(): string {

@@ -79,6 +79,69 @@ describe("Claude Code hook install/uninstall", () => {
     );
   });
 
+  it("replaces legacy prompt-coach Claude Code hooks during install", () => {
+    const dir = createTempDir();
+    const dataDir = join(dir, "data");
+    const settingsPath = join(dir, "settings.json");
+    initializePromptLane({ dataDir });
+    writeFileSync(
+      settingsPath,
+      `${JSON.stringify(
+        {
+          hooks: {
+            UserPromptSubmit: [
+              {
+                hooks: [
+                  {
+                    type: "command",
+                    command:
+                      'PROMPT_COACH_HOOK="prompt-coach hook claude-code" /usr/bin/node /repo/dist/cli/index.js hook claude-code --rewrite-guard "context"',
+                    timeout: 2,
+                  },
+                ],
+              },
+            ],
+            SessionStart: [
+              {
+                hooks: [
+                  {
+                    type: "command",
+                    command:
+                      'PROMPT_COACH_HOOK="prompt-coach hook session-start claude-code" /usr/bin/node /repo/dist/cli/index.js hook session-start claude-code --open-web',
+                    timeout: 5,
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    installClaudeCodeHook({
+      dataDir,
+      settingsPath,
+      rewriteGuard: "context",
+      rewriteMinScore: "80",
+      openWeb: true,
+    });
+    const settings = JSON.parse(readFileSync(settingsPath, "utf8"));
+
+    expect(settings.hooks.UserPromptSubmit).toHaveLength(1);
+    expect(settings.hooks.SessionStart).toHaveLength(1);
+    expect(settings.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
+      'PROMPTLANE_HOOK="promptlane hook claude-code"',
+    );
+    expect(settings.hooks.SessionStart[0].hooks[0].command).toContain(
+      'PROMPTLANE_HOOK="promptlane hook session-start claude-code"',
+    );
+    expect(JSON.stringify(settings)).not.toContain("PROMPT_COACH_HOOK");
+    expect(JSON.stringify(settings)).not.toContain("prompt-coach");
+  });
+
+
   it("can install Claude Code hook with opt-in rewrite guard flags", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
@@ -274,6 +337,56 @@ describe("Codex hook install/uninstall", () => {
     );
   });
 
+  it("replaces legacy prompt-coach Codex hook during install", () => {
+    const dir = createTempDir();
+    const dataDir = join(dir, "data");
+    const hooksPath = join(dir, ".codex", "hooks.json");
+    const configPath = join(dir, ".codex", "config.toml");
+    initializePromptLane({ dataDir });
+    mkdirSync(join(dir, ".codex"), { recursive: true });
+    writeFileSync(
+      hooksPath,
+      `${JSON.stringify(
+        {
+          hooks: {
+            UserPromptSubmit: [
+              {
+                hooks: [
+                  {
+                    type: "command",
+                    command:
+                      'PROMPT_COACH_HOOK="prompt-coach hook codex" /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard "context"',
+                    timeout: 2,
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    const result = installCodexHook({
+      dataDir,
+      hooksPath,
+      configPath,
+      rewriteGuard: "context",
+      rewriteMinScore: "80",
+    });
+    const hooks = JSON.parse(readFileSync(hooksPath, "utf8"));
+
+    expect(result.changed).toBe(true);
+    expect(hooks.hooks.UserPromptSubmit).toHaveLength(1);
+    expect(hooks.hooks.UserPromptSubmit[0].hooks).toHaveLength(1);
+    expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
+      'PROMPTLANE_HOOK="promptlane hook codex"',
+    );
+    expect(JSON.stringify(hooks)).not.toContain("PROMPT_COACH_HOOK");
+    expect(JSON.stringify(hooks)).not.toContain("prompt-coach");
+  });
+
   it("deduplicates legacy and current Codex hooks during install", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
@@ -330,6 +443,90 @@ describe("Codex hook install/uninstall", () => {
       'PROMPTLANE_HOOK="promptlane hook codex"',
     );
     expect(JSON.stringify(hooks)).not.toContain("PROMPT_MEMORY_HOOK");
+  });
+
+  it("deduplicates legacy prompt-coach and current Codex lifecycle hooks during install", () => {
+    const dir = createTempDir();
+    const dataDir = join(dir, "data");
+    const hooksPath = join(dir, ".codex", "hooks.json");
+    const configPath = join(dir, ".codex", "config.toml");
+    initializePromptLane({ dataDir });
+    mkdirSync(join(dir, ".codex"), { recursive: true });
+    writeFileSync(
+      hooksPath,
+      `${JSON.stringify(
+        {
+          hooks: {
+            Stop: [
+              {
+                hooks: [
+                  {
+                    type: "command",
+                    command:
+                      'PROMPT_COACH_HOOK="prompt-coach hook stop codex" /usr/bin/node /repo/dist/cli/index.js hook codex',
+                    timeout: 2,
+                  },
+                ],
+              },
+              {
+                hooks: [
+                  {
+                    type: "command",
+                    command:
+                      'PROMPTLANE_HOOK="promptlane hook stop codex" /usr/bin/node /repo/dist/cli/index.js hook codex',
+                    timeout: 2,
+                  },
+                ],
+              },
+            ],
+            PreCompact: [
+              {
+                hooks: [
+                  {
+                    type: "command",
+                    command:
+                      'PROMPT_COACH_HOOK="prompt-coach hook pre-compact codex" /usr/bin/node /repo/dist/cli/index.js hook codex',
+                    timeout: 2,
+                  },
+                ],
+              },
+            ],
+            PostCompact: [
+              {
+                hooks: [
+                  {
+                    type: "command",
+                    command:
+                      'PROMPT_COACH_HOOK="prompt-coach hook post-compact codex" /usr/bin/node /repo/dist/cli/index.js hook codex',
+                    timeout: 2,
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    installCodexHook({ dataDir, hooksPath, configPath });
+    const hooks = JSON.parse(readFileSync(hooksPath, "utf8"));
+
+    expect(hooks.hooks.Stop).toHaveLength(1);
+    expect(hooks.hooks.PreCompact).toHaveLength(1);
+    expect(hooks.hooks.PostCompact).toHaveLength(1);
+    expect(hooks.hooks.Stop[0].hooks[0].command).toContain(
+      'PROMPTLANE_HOOK="promptlane hook stop codex"',
+    );
+    expect(hooks.hooks.PreCompact[0].hooks[0].command).toContain(
+      'PROMPTLANE_HOOK="promptlane hook pre-compact codex"',
+    );
+    expect(hooks.hooks.PostCompact[0].hooks[0].command).toContain(
+      'PROMPTLANE_HOOK="promptlane hook post-compact codex"',
+    );
+    expect(JSON.stringify(hooks)).not.toContain("PROMPT_COACH_HOOK");
+    expect(JSON.stringify(hooks)).not.toContain("prompt-coach");
   });
 
   it("can install Codex hook with opt-in rewrite guard flags", () => {
@@ -460,6 +657,45 @@ describe("Codex hook install/uninstall", () => {
       'PROMPTLANE_HOOK="promptlane hook session-start codex"',
     );
     expect(JSON.stringify(hooks)).not.toContain("PROMPT_MEMORY_HOOK");
+  });
+
+  it("removes legacy prompt-coach Codex SessionStart hook when open-web is not requested", () => {
+    const dir = createTempDir();
+    const dataDir = join(dir, "data");
+    const hooksPath = join(dir, ".codex", "hooks.json");
+    const configPath = join(dir, ".codex", "config.toml");
+    initializePromptLane({ dataDir });
+    mkdirSync(join(dir, ".codex"), { recursive: true });
+    writeFileSync(
+      hooksPath,
+      `${JSON.stringify(
+        {
+          hooks: {
+            SessionStart: [
+              {
+                hooks: [
+                  {
+                    type: "command",
+                    command:
+                      'PROMPT_COACH_HOOK="prompt-coach hook session-start codex" /usr/bin/node /repo/dist/cli/index.js hook session-start codex --open-web',
+                    timeout: 5,
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    installCodexHook({ dataDir, hooksPath, configPath });
+    const hooks = JSON.parse(readFileSync(hooksPath, "utf8"));
+
+    expect(hooks.hooks.SessionStart ?? []).toEqual([]);
+    expect(JSON.stringify(hooks)).not.toContain("PROMPT_COACH_HOOK");
+    expect(JSON.stringify(hooks)).not.toContain("prompt-coach");
   });
 
   it("uninstalls hook and revokes the previous ingest token", () => {
