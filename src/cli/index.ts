@@ -78,6 +78,8 @@ export async function runCli(
   const program = options.program ?? createProgram();
   const stdout = options.stdout ?? process.stdout;
   const stderr = options.stderr ?? process.stderr;
+  const previousExitCode = process.exitCode;
+  process.exitCode = undefined;
   program.exitOverride();
   program.configureOutput({
     writeOut: (value) => {
@@ -90,13 +92,18 @@ export async function runCli(
 
   if (argv.length <= 2) {
     program.outputHelp();
+    process.exitCode = previousExitCode;
     return 0;
   }
 
   try {
     await program.parseAsync(argv);
-    return 0;
+    const exitCode =
+      typeof process.exitCode === "number" ? process.exitCode : 0;
+    process.exitCode = previousExitCode;
+    return exitCode;
   } catch (error) {
+    process.exitCode = previousExitCode;
     if (isUserError(error)) {
       stderr.write(`Error: ${error.message}\n`);
       return 1;

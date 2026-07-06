@@ -58,6 +58,7 @@ export type DoctorCodexOptions = {
 export type DoctorClaudeCodeResult = {
   server: { ok: boolean };
   token: { ok: boolean };
+  ingest: { ok: boolean };
   settings: {
     ok: boolean;
     invalid: boolean;
@@ -70,6 +71,7 @@ export type DoctorClaudeCodeResult = {
 export type DoctorCodexResult = {
   server: { ok: boolean };
   token: { ok: boolean };
+  ingest: { ok: boolean };
   settings: {
     ok: boolean;
     invalid: boolean;
@@ -114,7 +116,13 @@ export function registerDoctorCommand(program: Command): void {
               : formatDoctorResult("codex", result, options),
           );
 
-          if (!result.server.ok || !result.token.ok || !result.settings.ok) {
+          if (
+            !result.server.ok ||
+            !result.token.ok ||
+            !result.ingest.ok ||
+            !result.settings.ok ||
+            !result.mcp.registered
+          ) {
             process.exitCode = 1;
           }
           return;
@@ -133,7 +141,13 @@ export function registerDoctorCommand(program: Command): void {
             : formatDoctorResult("claude-code", result, options),
         );
 
-        if (!result.server.ok || !result.token.ok || !result.settings.ok) {
+        if (
+          !result.server.ok ||
+          !result.token.ok ||
+          !result.ingest.ok ||
+          !result.settings.ok ||
+          !result.mcp.registered
+        ) {
           process.exitCode = 1;
         }
       },
@@ -149,7 +163,12 @@ export function formatDoctorResult(
     tool === "codex"
       ? formatCodexSettings(result as DoctorCodexResult)
       : formatClaudeSettings(result as DoctorClaudeCodeResult);
-  const ok = result.server.ok && result.token.ok && result.settings.ok;
+  const ok =
+    result.server.ok &&
+    result.token.ok &&
+    result.ingest.ok &&
+    result.settings.ok &&
+    result.mcp.registered;
   const lines = [
     `promptlane doctor: ${tool}`,
     `Status: ${ok ? "ready" : "needs attention"}`,
@@ -157,6 +176,7 @@ export function formatDoctorResult(
     "Checks:",
     `- Local server: ${result.server.ok ? "ok" : "not reachable"}`,
     `- Local ingest token: ${result.token.ok ? "ok" : "missing"}`,
+    `- Last ingest check: ${result.ingest.ok ? "ok" : "failed"}`,
     settings,
     `- MCP command access: ${result.mcp.registered ? "registered" : "not detected"}`,
   ];
@@ -266,10 +286,12 @@ export async function doctorClaudeCode(
   const settings = inspectSettings(
     options.settingsPath ?? defaultClaudeSettingsPath(),
   );
+  const lastIngestStatus = readLastHookStatus(options.dataDir);
 
   return {
     server: { ok: await inspectServer(options) },
     token: { ok: inspectToken(options.dataDir) },
+    ingest: inspectIngest(lastIngestStatus),
     settings,
     mcp: {
       registered: inspectMcpRegistration({
@@ -283,7 +305,7 @@ export async function doctorClaudeCode(
           !options.mcpConfigPath || Boolean(options.commandRunner),
       }),
     },
-    lastIngestStatus: readLastHookStatus(options.dataDir),
+    lastIngestStatus,
   };
 }
 
@@ -291,10 +313,12 @@ export async function doctorCodex(
   options: DoctorCodexOptions = {},
 ): Promise<DoctorCodexResult> {
   const settings = inspectCodexSettings(options);
+  const lastIngestStatus = readLastHookStatus(options.dataDir);
 
   return {
     server: { ok: await inspectServer(options) },
     token: { ok: inspectToken(options.dataDir) },
+    ingest: inspectIngest(lastIngestStatus),
     settings,
     mcp: {
       registered: inspectMcpRegistration({
@@ -305,8 +329,14 @@ export async function doctorCodex(
           !options.mcpConfigPath || Boolean(options.commandRunner),
       }),
     },
-    lastIngestStatus: readLastHookStatus(options.dataDir),
+    lastIngestStatus,
   };
+}
+
+function inspectIngest(lastIngestStatus: LastHookStatus | undefined): {
+  ok: boolean;
+} {
+  return { ok: lastIngestStatus?.ok ?? true };
 }
 
 function inspectToken(dataDir?: string): boolean {

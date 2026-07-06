@@ -70,17 +70,28 @@ export type CodexHookInstallResult = {
 };
 
 const PROMPTLANE_MARKER = "promptlane hook claude-code";
+const LEGACY_PROMPT_COACH_MARKER = "prompt-coach hook claude-code";
 const CODEX_PROMPTLANE_MARKER = "promptlane hook codex";
+const LEGACY_CODEX_PROMPT_COACH_MARKER = "prompt-coach hook codex";
 const LEGACY_CODEX_PROMPT_MEMORY_MARKER = "prompt-memory hook codex";
 const CODEX_PROMPTLANE_STOP_MARKER = "promptlane hook stop codex";
+const LEGACY_CODEX_PROMPT_COACH_STOP_MARKER = "prompt-coach hook stop codex";
 const CODEX_PROMPTLANE_PRE_COMPACT_MARKER =
   "promptlane hook pre-compact codex";
+const LEGACY_CODEX_PROMPT_COACH_PRE_COMPACT_MARKER =
+  "prompt-coach hook pre-compact codex";
 const CODEX_PROMPTLANE_POST_COMPACT_MARKER =
   "promptlane hook post-compact codex";
+const LEGACY_CODEX_PROMPT_COACH_POST_COMPACT_MARKER =
+  "prompt-coach hook post-compact codex";
 const PROMPTLANE_SESSION_MARKER =
   "promptlane hook session-start claude-code";
+const LEGACY_PROMPT_COACH_SESSION_MARKER =
+  "prompt-coach hook session-start claude-code";
 const CODEX_PROMPTLANE_SESSION_MARKER =
   "promptlane hook session-start codex";
+const LEGACY_CODEX_PROMPT_COACH_SESSION_MARKER =
+  "prompt-coach hook session-start codex";
 const LEGACY_CODEX_PROMPT_MEMORY_SESSION_MARKER =
   "prompt-memory hook session-start codex";
 const CODEX_HOOKS_FEATURE_KEY = "hooks";
@@ -551,6 +562,11 @@ function ensureCodexHook(
       hooks.SessionStart ?? [],
       options.sessionStartCommand,
     );
+  } else {
+    hooks.SessionStart = removePromptLaneHookGroups(
+      hooks.SessionStart ?? [],
+      isLegacyCodexSessionStartHook,
+    );
   }
 
   return {
@@ -650,7 +666,7 @@ function ensureSessionStartHook(
   const next = [...groups].map((group) => ({
     ...group,
     hooks: group.hooks.map((hook) => {
-      if (!hook.command.includes(marker)) {
+      if (!isSessionStartHookForMarker(hook.command, marker)) {
         return hook;
       }
 
@@ -719,9 +735,19 @@ function removeSessionStartHook(
   return [...groups]
     .map((group) => ({
       ...group,
-      hooks: group.hooks.filter((hook) => !hook.command.includes(marker)),
+      hooks: group.hooks.filter(
+        (hook) => !isSessionStartHookForMarker(hook.command, marker),
+      ),
     }))
     .filter((group) => group.hooks.length > 0);
+}
+
+function isSessionStartHookForMarker(command: string, marker: string): boolean {
+  return (
+    command.includes(marker) ||
+    (marker === PROMPTLANE_SESSION_MARKER &&
+      command.includes(LEGACY_PROMPT_COACH_SESSION_MARKER))
+  );
 }
 
 function ensureCodexHooksFeature(config: string): string {
@@ -868,12 +894,16 @@ function isRewriteGuardMode(
 }
 
 function isClaudePromptLaneHook(command: string): boolean {
-  return command.includes(PROMPTLANE_MARKER);
+  return (
+    command.includes(PROMPTLANE_MARKER) ||
+    command.includes(LEGACY_PROMPT_COACH_MARKER)
+  );
 }
 
 function isCodexPromptLaneHook(command: string): boolean {
   return (
     command.includes(CODEX_PROMPTLANE_MARKER) ||
+    command.includes(LEGACY_CODEX_PROMPT_COACH_MARKER) ||
     command.includes(LEGACY_CODEX_PROMPT_MEMORY_MARKER)
   );
 }
@@ -881,6 +911,7 @@ function isCodexPromptLaneHook(command: string): boolean {
 function isCodexStopHook(command: string): boolean {
   return (
     command.includes(CODEX_PROMPTLANE_STOP_MARKER) ||
+    command.includes(LEGACY_CODEX_PROMPT_COACH_STOP_MARKER) ||
     isCodexPromptLaneHook(command)
   );
 }
@@ -888,6 +919,7 @@ function isCodexStopHook(command: string): boolean {
 function isCodexPreCompactHook(command: string): boolean {
   return (
     command.includes(CODEX_PROMPTLANE_PRE_COMPACT_MARKER) ||
+    command.includes(LEGACY_CODEX_PROMPT_COACH_PRE_COMPACT_MARKER) ||
     isCodexPromptLaneHook(command)
   );
 }
@@ -895,6 +927,7 @@ function isCodexPreCompactHook(command: string): boolean {
 function isCodexPostCompactHook(command: string): boolean {
   return (
     command.includes(CODEX_PROMPTLANE_POST_COMPACT_MARKER) ||
+    command.includes(LEGACY_CODEX_PROMPT_COACH_POST_COMPACT_MARKER) ||
     isCodexPromptLaneHook(command)
   );
 }
@@ -902,6 +935,14 @@ function isCodexPostCompactHook(command: string): boolean {
 function isCodexSessionStartHook(command: string): boolean {
   return (
     command.includes(CODEX_PROMPTLANE_SESSION_MARKER) ||
+    command.includes(LEGACY_CODEX_PROMPT_COACH_SESSION_MARKER) ||
+    command.includes(LEGACY_CODEX_PROMPT_MEMORY_SESSION_MARKER)
+  );
+}
+
+function isLegacyCodexSessionStartHook(command: string): boolean {
+  return (
+    command.includes(LEGACY_CODEX_PROMPT_COACH_SESSION_MARKER) ||
     command.includes(LEGACY_CODEX_PROMPT_MEMORY_SESSION_MARKER)
   );
 }
