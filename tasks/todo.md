@@ -1,5 +1,16 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Quality Dashboard Error Detail
+
+- [x] CHECK: `getQualityDashboard`가 non-OK 응답에서 `failApi`를 거치지 않아
+  quality dashboard session/recovery detail이 Error로 올라오지 않고, archive
+  measurement flow에서 원인 안내를 잃을 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 quality dashboard non-OK detail 보존을
+  요구하게 해 promise가 reject되지 않는 실패를 확인했다.
+- [x] GREEN: quality dashboard API client가 `failApi`를 사용하도록 고쳐 web
+  measurement catch가 서버 recovery detail을 그대로 표시할 수 있게 했다.
+- [x] VERIFY: focused web API test, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Archive Score Error Detail
 
 - [x] CHECK: `getArchiveScoreReport`가 non-OK 응답에서 `failApi`를 거치지 않아

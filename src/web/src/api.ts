@@ -1517,6 +1517,11 @@ export async function getQualityDashboard(
   const response = await fetch(url, {
     credentials: "same-origin",
   });
+
+  if (!response.ok) {
+    await failApi(response, "Quality dashboard failed");
+  }
+
   const body = (await response.json()) as { data: QualityDashboard };
   return body.data;
 }
