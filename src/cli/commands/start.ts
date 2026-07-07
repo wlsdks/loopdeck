@@ -66,8 +66,7 @@ export function buildStartGuide(options: StartOptions = {}): StartGuide {
       },
       {
         title: "Send one real coding prompt",
-        detail:
-          "Use Claude Code or Codex normally. The prompt should be a real coding request, not a test string. Inside Claude Code, follow it with /promptlane:improve-last to see PromptLane rewrite guidance for that prompt.",
+        detail: firstPromptDetail(tools),
         commands: [],
       },
       {
@@ -137,4 +136,23 @@ function resolveTools(value: string | undefined): AgentTool[] {
     return [value];
   }
   throw new UserError(`Unsupported tool: ${value}. Use claude-code or codex.`);
+}
+
+function firstPromptDetail(tools: AgentTool[]): string {
+  const followUps: string[] = [];
+  if (tools.includes("claude-code")) {
+    followUps.push(
+      "Inside Claude Code, follow it with /promptlane:improve-last to see PromptLane rewrite guidance for that prompt.",
+    );
+  }
+  if (tools.includes("codex")) {
+    followUps.push(
+      "Inside Codex, ask the agent to run coach_prompt for the latest score and next request guidance.",
+    );
+  }
+
+  return [
+    "Use Claude Code or Codex normally. The prompt should be a real coding request, not a test string.",
+    ...followUps,
+  ].join(" ");
 }
