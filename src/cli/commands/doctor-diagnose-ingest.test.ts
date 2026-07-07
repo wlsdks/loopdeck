@@ -23,8 +23,9 @@ describe("diagnoseIngestFailure", () => {
     });
 
     expect(diagnosis.cause).toBe<IngestFailureCause>("server_owner_mismatch");
-    expect(diagnosis.hint).toContain("/tmp/pm-temp/data");
-    expect(diagnosis.hint).toContain("/Users/x/.promptlane");
+    expect(diagnosis.hint).toContain("another PromptLane server");
+    expect(diagnosis.hint).not.toContain("/tmp/pm-temp/data");
+    expect(diagnosis.hint).not.toContain("/Users/x/.promptlane");
     expect(diagnosis.hint).toContain("promptlane service install");
   });
 
