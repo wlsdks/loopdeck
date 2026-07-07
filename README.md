@@ -16,7 +16,7 @@
 ```sh
 npm install -g promptlane
 promptlane setup --profile coach --register-mcp --open-web
-# then send a real Claude Code or Codex prompt and run:
+# then send one Codex or Claude Code prompt and run:
 promptlane coach
 ```
 
@@ -35,14 +35,14 @@ This project is not affiliated with, endorsed by, or sponsored by Anthropic, Ope
 ## First 3-Minute Coach Loop
 
 The first success is not the web dashboard. It is seeing a score and one useful
-fix for a real Claude Code or Codex prompt you just sent.
+fix for a real Codex or Claude Code prompt you just sent.
 
 For most users, the happy path is:
 
 ```sh
 promptlane start --open-web
 promptlane setup --profile coach --register-mcp --open-web
-# send one real Claude Code or Codex coding prompt
+# send one Codex or Claude Code coding prompt
 promptlane coach
 ```
 

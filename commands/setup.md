@@ -77,7 +77,7 @@ open without printing prompts, paths, or tokens.
 After setup, keep the first success path short:
 
 ```bash
-# ask the user to send one real Claude Code or Codex coding prompt, then:
+# ask the user to send one Codex or Claude Code coding prompt, then:
 promptlane coach
 ```
 

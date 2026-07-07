@@ -2846,7 +2846,7 @@ function emptyPromptHint(
     return "Repeated stored prompt bodies will appear here.";
   if (focus === "quality-gap")
     return "Try adding verification criteria, output format, and scope.";
-  return "Run coach setup, send one real Claude Code or Codex request, then check the first score and improvement suggestion.";
+  return "Run coach setup, send one Codex or Claude Code request, then check the first score and improvement suggestion.";
 }
 
 function emptyPromptSecondaryHint(

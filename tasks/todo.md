@@ -67,9 +67,19 @@
 - [x] VERIFY: `corepack pnpm vitest run src/cli/commands/doctor.test.ts
   src/cli/commands/setup.test.ts`, `corepack pnpm lint:types`,
   `corepack pnpm smoke:agent-setup`이 통과했다.
-- [ ] NEXT: 다음 후보는 `start` guide, README/AGENT-HARNESS, plugin docs의
+- [x] NEXT: 다음 후보는 `start` guide, README/AGENT-HARNESS, plugin docs의
   first-score path가 web/setup/doctor와 같은 순서로 안내되는지 문서/CLI snapshot
   중심으로 확인하고, 문서만 필요하면 테스트 없이 `rg`와 diff check로 마무리한다.
+- [x] CHECK: active quickstart 표면인 README, README.ko, slash setup guide,
+  archive empty-state copy를 확인했다. 과거 spec과 일반 compatibility 문구는
+  historical/contextual text라 수정 범위에서 제외했다.
+- [x] GREEN: quickstart와 empty-state first-score path를 `setup -> one Codex
+  or Claude Code prompt -> coach/first score` 순서로 정리했다.
+- [x] VERIFY: first-score wording `rg`, `corepack pnpm lint:types`,
+  `git diff --check`가 통과했다. 문서-only/copy-only 변경이라 full gate는
+  실행하지 않았다.
+- [ ] NEXT: 다음 후보는 branch의 세 커밋을 PR 가능한 단위로 정리하고, 필요한
+  경우 focused package check만 추가로 돌린 뒤 push/PR 단계로 넘기는 것이다.
 
 ### 판단 기준
 
