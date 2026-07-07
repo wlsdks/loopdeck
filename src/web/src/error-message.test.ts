@@ -13,6 +13,7 @@ import {
   loopListErrorMessage,
   loopWorktreeErrorMessage,
   projectInstructionAnalysisErrorMessage,
+  projectListErrorMessage,
   projectPolicyUpdateErrorMessage,
   promptListErrorMessage,
   selectedPromptErrorMessage,
@@ -198,6 +199,16 @@ describe("errorMessageOrDefault", () => {
 
     expect(loopListErrorMessage(error)).toBe(
       "Loop list failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the loop list request.",
+    );
+  });
+
+  it("preserves project list recovery detail", () => {
+    const error = new Error(
+      "Project list failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the project list request.",
+    );
+
+    expect(projectListErrorMessage(error)).toBe(
+      "Project list failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the project list request.",
     );
   });
 });

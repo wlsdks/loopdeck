@@ -85,3 +85,7 @@ export function loopWorktreeErrorMessage(error: unknown): string {
 export function loopListErrorMessage(error: unknown): string {
   return errorMessageOrDefault(error, "Could not load loop snapshots.");
 }
+
+export function projectListErrorMessage(error: unknown): string {
+  return errorMessageOrDefault(error, "Could not load projects.");
+}
