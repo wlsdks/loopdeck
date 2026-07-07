@@ -1503,6 +1503,11 @@ export async function listPrompts(
   const response = await fetch(`/api/v1/prompts?${params}`, {
     credentials: "same-origin",
   });
+
+  if (!response.ok) {
+    await failApi(response, "Prompt list failed");
+  }
+
   const body = (await response.json()) as { data: PromptListResponse };
   return body.data;
 }
