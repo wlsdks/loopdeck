@@ -2753,6 +2753,29 @@ describe("createServer P2 ingest boundary", () => {
     expect(response.body).not.toContain("sk-proj-secret");
   });
 
+  it("guides missing project instruction review users to run analysis first", async () => {
+    const storage = createMemoryStorage();
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/projects/proj_missing/instructions",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+
+    expect(response.statusCode).toBe(404);
+    const detail = response.json<{ detail: string }>().detail;
+    expect(detail).toBe(
+      "Project instruction review not found. Run instruction analysis for an existing project, then reopen this review.",
+    );
+    expect(detail).not.toContain("proj_missing");
+    expect(response.body).not.toContain("/Users/example");
+    expect(response.body).not.toContain("sk-proj-secret");
+  });
+
   it("requires csrf for anonymized export preview and executes by job id", async () => {
     const storage = createMemoryStorage();
     storage.promptDetails = [
