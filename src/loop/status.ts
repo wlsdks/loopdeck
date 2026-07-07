@@ -2,6 +2,7 @@ import { latestCompactBoundaryAfterSnapshot } from "./brief.js";
 import type { LoopBriefCompactBoundary } from "./brief.js";
 import type { LoopMemoryCandidateDecision } from "./memory-candidate.js";
 import type { LoopSnapshot } from "./types.js";
+import { quoteForShell } from "../shared/shell-quote.js";
 
 export type PromptLaneStatusLevel = "ready" | "empty";
 
@@ -406,13 +407,17 @@ function mergeReadinessForWorktree(
 function continuationCommandForWorktree(
   worktree: PromptLaneStatusActivityWorktree,
 ): string {
-  return [
-    "promptlane loop brief",
-    `--worktree ${worktree.worktree}`,
-    worktree.branch ? `--branch ${worktree.branch}` : undefined,
-  ]
-    .filter((part): part is string => Boolean(part))
-    .join(" ");
+  const command = [
+    "promptlane",
+    "loop",
+    "brief",
+    "--worktree",
+    worktree.worktree,
+  ];
+  if (worktree.branch) {
+    command.push("--branch", worktree.branch);
+  }
+  return command.map(quoteForShell).join(" ");
 }
 
 function summarizeWorktreeActivity(
