@@ -1,6 +1,7 @@
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 
 import type { PromptDetail } from "./api.js";
+import { selectedPromptErrorMessage } from "./error-message.js";
 import type { View } from "./routing.js";
 
 export type SelectedPromptQuery = {
@@ -44,7 +45,7 @@ export function useSelectedPromptQuery({
 
     void loadPrompt(query.id)
       .then(setSelected)
-      .catch(() => onError("Could not find the prompt."));
+      .catch((error) => onError(selectedPromptErrorMessage(error)));
   }, [loadPrompt, onError, view]);
 
   return { selected, setSelected };
