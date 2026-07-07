@@ -5389,3 +5389,9 @@
 - [x] RED: Add focused ingest diagnosis test requiring a running `promptlane server` without `--data-dir` to count as the default data directory when the configured doctor data-dir is custom.
 - [x] GREEN: Infer the default PromptLane data directory for bound server commands that omit `--data-dir` so owner mismatch diagnosis stays accurate and raw-free.
 - [x] VERIFY: Focused ingest diagnosis/doctor tests, typecheck, touched-file formatting, and diff hygiene passed.
+
+## 2026-07-08 Effectiveness Backlog Drift Guard
+
+- [x] RED: Add a focused packaging/docs drift test requiring landed archive and one-call coach effectiveness work to stop being described as active follow-ups.
+- [x] GREEN: Refresh `docs/NEXT_BACKLOG.md` so archive-level effectiveness summary and `coach_prompt` effectiveness guidance are recorded as landed evidence.
+- [x] VERIFY: Focused packaging docs test, typecheck, and diff hygiene passed.

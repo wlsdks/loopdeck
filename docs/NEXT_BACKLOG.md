@@ -324,7 +324,7 @@ Decision:
   evidence through structured MCP content without opening the web UI or running
   `promptlane show --json`. PR #462 and latest main CI run `28750281428`
   proved this on the default branch.
-- Archive-level effectiveness summary is the active follow-up: archive score
+- Archive-level effectiveness summary is landed: archive score
   reports now expose `effectiveness_summary` through `promptlane score
   --json`, human `promptlane score` output, `/api/v1/score`, and MCP
   `score_prompt_archive`, allowing Codex and Claude Code to compare measured vs
@@ -342,7 +342,7 @@ Decision:
   `archive_effectiveness_score: 1`, `privacy_leak_count: 0`, and raw-free
   `effectiveness_summary` coverage from a linked passed loop outcome. Main CI
   run `28751693022` passed `test (22)` and `test (24)` after merge.
-- One-call coach effectiveness guidance is the active agent-native follow-up:
+- One-call coach effectiveness guidance is landed:
   `coach_prompt` agent briefs now summarize measured vs unmeasured archive
   effectiveness coverage, linked outcomes, tests run, and safe evidence refs,
   and `coach_prompt_actionability` requires that signal before the benchmark
