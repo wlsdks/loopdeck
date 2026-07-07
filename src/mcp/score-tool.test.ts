@@ -1009,7 +1009,9 @@ describe("coachPromptTool", () => {
     expect(result.agent_brief.next_actions).toEqual(
       expect.arrayContaining([
         "Run promptlane start to see the shortest setup -> real prompt -> coach path.",
-        "Run promptlane setup --profile coach --register-mcp, then submit one real Claude Code or Codex prompt.",
+        "Run promptlane setup --profile coach --register-mcp before using archive-backed MCP tools.",
+        "Send one Codex or Claude Code prompt, then call coach_prompt or rerun get_promptlane_status.",
+        "For custom storage, initialize it with promptlane init --data-dir <path> and pass the same --data-dir to the MCP server.",
         "Run promptlane server if connected tools cannot reach the local service.",
       ]),
     );
