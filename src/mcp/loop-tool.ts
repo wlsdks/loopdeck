@@ -19,6 +19,7 @@ import {
   promptlaneStatusPrivacy,
 } from "../loop/status.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
+import { MCP_FIRST_PROMPT_NEXT_STEP } from "./first-prompt-next-step.js";
 import type { ScorePromptToolOptions } from "./score-tool-types.js";
 import type {
   ApplyInstructionPatchToolArguments,
@@ -92,8 +93,9 @@ export function getPromptLaneLoopStatusTool(
       next_action: "promptlane setup --profile coach --register-mcp",
       next_actions: [
         "Run promptlane setup --profile coach --register-mcp before using PromptLane loop MCP tools.",
-        "For custom storage, initialize it with promptlane init --data-dir <path> and pass the same --data-dir to the MCP server.",
+        MCP_FIRST_PROMPT_NEXT_STEP,
         "Then run promptlane loop collect from the project you want to continue.",
+        "For custom storage, initialize it with promptlane init --data-dir <path> and pass the same --data-dir to the MCP server.",
       ],
       privacy,
     };

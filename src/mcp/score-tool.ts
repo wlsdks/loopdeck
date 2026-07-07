@@ -6,6 +6,7 @@ import type { PromptAnalysisPreview } from "../shared/schema.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import type { PromptEffectiveness, PromptSummary } from "../storage/ports.js";
 import { createAgentCoachBrief } from "./coach-brief.js";
+import { MCP_FIRST_PROMPT_NEXT_STEP } from "./first-prompt-next-step.js";
 import { shouldAskForImprovement } from "./improvement-next-action.js";
 import { projectLabel } from "./project-label.js";
 import { storageUnavailableMessage } from "./storage-unavailable.js";
@@ -45,9 +46,6 @@ import type {
   ScorePromptToolOptions,
   ScorePromptToolResult,
 } from "./score-tool-types.js";
-
-const MCP_FIRST_PROMPT_NEXT_STEP =
-  "Send one Codex or Claude Code prompt, then call coach_prompt or rerun get_promptlane_status.";
 
 export {
   COACH_PROMPT_TOOL_DEFINITION,

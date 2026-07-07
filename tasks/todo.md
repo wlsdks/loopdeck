@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Loop MCP First Prompt Guidance
+
+- [x] CHECK: 일반 `get_promptlane_status` setup-needed/empty 상태는 첫
+  Codex/Claude Code prompt 후 `coach_prompt` 또는 status recheck를 안내하지만,
+  `get_promptlane_loop_status` setup-needed fallback은 바로 `loop collect`로
+  넘어가 첫 사용자에게 capture/score 선행 단계를 덜 분명하게 보여줬다.
+- [x] RED: `src/mcp/loop-tool.test.ts`가 loop MCP setup guidance에 MCP용
+  first-prompt next step이 포함되고 `loop collect`보다 먼저 나오도록 요구하게 해
+  실패를 확인했다.
+- [x] GREEN: MCP first-prompt next step을 공유 상수로 분리하고, loop MCP
+  setup-needed next actions가 setup -> first prompt/coach_prompt -> loop collect
+  순서를 따르게 했다.
+- [x] VERIFY: focused MCP loop/status/server tests, typecheck, formatting/diff
+  checks를 실행한다.
+
 ## 2026-07-08 PromptLane Hook Shell Quote Centralization
 
 - [x] CHECK: install-hook/statusline은 shared `quoteForShell` 도입 이후에도
