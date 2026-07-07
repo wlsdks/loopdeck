@@ -1587,6 +1587,11 @@ export async function getLoopBrief(id: string): Promise<LoopBrief> {
       credentials: "same-origin",
     },
   );
+
+  if (!response.ok) {
+    await failApi(response, "Loop brief failed");
+  }
+
   const body = (await response.json()) as { data: LoopBrief };
   return body.data;
 }
