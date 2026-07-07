@@ -156,7 +156,7 @@ export function createServer(options: CreateServerOptions): FastifyInstance {
       problem(
         404,
         "Not Found",
-        "The requested route does not exist.",
+        "The requested route does not exist. Check `/api/v1/health` for server readiness or reopen the PromptLane web app route before retrying.",
         request.url,
       ).problem,
     );
