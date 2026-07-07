@@ -1,4 +1,5 @@
 import type { LoopSnapshot } from "./types.js";
+import { deriveProjectLabel } from "../shared/project-label.js";
 
 export type LoopSnapshotSelection = {
   worktree?: string;
@@ -28,4 +29,37 @@ export function selectLoopSnapshot(
     }
     return true;
   });
+}
+
+export function selectedLoopSnapshotNotFoundMessage(
+  selection: LoopSnapshotSelection,
+): string {
+  return `No loop snapshot matched the selected worktree/session/branch filters. ${selectedLoopSnapshotRecoveryAction(selection)}`;
+}
+
+function selectedLoopSnapshotRecoveryAction(
+  selection: LoopSnapshotSelection,
+): string {
+  const collectCommand = ["promptlane", "loop", "collect"];
+  if (selection.worktree) {
+    collectCommand.push("--worktree", safeSelectionValue(selection.worktree));
+  }
+  if (selection.branch) {
+    collectCommand.push("--branch", safeSelectionValue(selection.branch));
+  }
+  return `Run \`${collectCommand.join(" ")}\` from that project, or retry \`promptlane loop brief\` with fewer filters.`;
+}
+
+function safeSelectionValue(value: string): string {
+  return looksLikeRawPath(value)
+    ? deriveProjectLabel(value, "selected-project")
+    : value;
+}
+
+function looksLikeRawPath(value: string): boolean {
+  return (
+    value.startsWith("/") ||
+    value.startsWith("~/") ||
+    /^[A-Za-z]:[\\/]/.test(value)
+  );
 }

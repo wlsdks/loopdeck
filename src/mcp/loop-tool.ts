@@ -12,6 +12,7 @@ import { decideLoopMemoryCandidate } from "../loop/memory-candidate.js";
 import {
   hasLoopSnapshotSelection,
   selectLoopSnapshot,
+  selectedLoopSnapshotNotFoundMessage,
 } from "../loop/snapshot-selection.js";
 import { createPromptLaneStatus, promptlaneStatusPrivacy } from "../loop/status.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
@@ -131,7 +132,7 @@ export function prepareLoopBriefTool(
         return loopToolError(
           "not_found",
           hasSelection
-            ? "No loop snapshot matched the selected worktree/session/branch filters."
+            ? selectedLoopSnapshotNotFoundMessage(selection)
             : "No loop snapshot found. Run `promptlane loop collect` first.",
         );
       }
