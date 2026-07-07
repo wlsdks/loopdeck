@@ -5205,3 +5205,10 @@
 - [x] GREEN: Extract prompt list loading, cursor, and summary patch state from `App.tsx` into `usePromptListQuery`.
 - [x] VERIFY: Focused web query tests, web typecheck, touched-code formatting check, and diff hygiene passed.
 - [x] INTEGRATE: Commit prepared from `codex/promptlane-prompt-list-query-hook` for PR.
+
+## 2026-07-08 Dashboard Query Hook Extraction
+
+- [x] RED: Add focused dashboard query tests for view-gated dashboard, archive score, and coach feedback loading decisions.
+- [x] GREEN: Extract dashboard/archive score/coach feedback automatic loading state from `App.tsx` into `useDashboardQuery`.
+- [x] VERIFY: Focused dashboard/list query tests, web typecheck, touched-code formatting check, and diff hygiene passed.
+- [x] INTEGRATE: Commit prepared from `codex/promptlane-dashboard-query-hook` for PR.

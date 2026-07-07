@@ -102,8 +102,6 @@ import {
 } from "./quality-options.js";
 import {
   filtersFromLocation,
-  needsArchiveScoreData,
-  needsDashboardData,
   pathForView,
   routeFromLocation,
   writeFiltersToLocation,
@@ -114,6 +112,7 @@ import {
   getPromptListCursor,
   usePromptListQuery,
 } from "./prompt-list-query.js";
+import { useDashboardQuery } from "./dashboard-query.js";
 import { useSelectedPromptQuery } from "./selected-prompt-query.js";
 
 const LIVE_MEASUREMENT_REFRESH_MS = 12_000;
@@ -132,14 +131,7 @@ export function App() {
     { ok: boolean; version: string } | undefined
   >();
   const [settings, setSettings] = useState<SettingsResponse | undefined>();
-  const [dashboard, setDashboard] = useState<QualityDashboard | undefined>();
-  const [coachFeedback, setCoachFeedback] = useState<
-    CoachFeedbackSummary | undefined
-  >();
   const [trendDays, setTrendDays] = useState<7 | 30>(7);
-  const [archiveScore, setArchiveScore] = useState<
-    ArchiveScoreReport | undefined
-  >();
   const [measurementCheckedAt, setMeasurementCheckedAt] = useState<
     string | undefined
   >();
@@ -191,6 +183,19 @@ export function App() {
     loadPrompt: getPrompt,
     onError: setError,
     view,
+  });
+  const {
+    archiveScore,
+    coachFeedback,
+    dashboard,
+    setArchiveScore,
+    setDashboard,
+  } = useDashboardQuery({
+    getArchiveScoreReport,
+    getCoachFeedbackSummary,
+    getQualityDashboard,
+    trendDays,
+    viewName: view.name,
   });
 
   useEffect(() => {
@@ -247,39 +252,6 @@ export function App() {
       .then(setSettings)
       .catch(() => undefined);
   }, []);
-
-  useEffect(() => {
-    if (!needsDashboardData(view.name)) {
-      return;
-    }
-    if (dashboard && dashboard.trend.daily.length === trendDays) {
-      return;
-    }
-
-    void getQualityDashboard({ trendDays })
-      .then(setDashboard)
-      .catch(() => undefined);
-  }, [dashboard, trendDays, view.name]);
-
-  useEffect(() => {
-    if (!needsArchiveScoreData(view.name) || archiveScore) {
-      return;
-    }
-
-    void getArchiveScoreReport()
-      .then(setArchiveScore)
-      .catch(() => undefined);
-  }, [archiveScore, view.name]);
-
-  useEffect(() => {
-    if (view.name !== "dashboard" || coachFeedback) {
-      return;
-    }
-
-    void getCoachFeedbackSummary()
-      .then(setCoachFeedback)
-      .catch(() => undefined);
-  }, [coachFeedback, view.name]);
 
   useEffect(() => {
     if (view.name !== "projects" || projects.length > 0) {
