@@ -78,15 +78,20 @@
 - [x] VERIFY: first-score wording `rg`, `corepack pnpm lint:types`,
   `git diff --check`가 통과했다. 문서-only/copy-only 변경이라 full gate는
   실행하지 않았다.
-- [ ] NEXT: 다음 후보는 branch의 세 커밋을 PR 가능한 단위로 정리하고, 필요한
+- [x] NEXT: 다음 후보는 branch의 변경을 PR 가능한 단위로 정리하고, 필요한
   경우 focused package check만 추가로 돌린 뒤 push/PR 단계로 넘기는 것이다.
 - [x] CHECK: `codex/promptlane-first-value-dogfood-hardening` 브랜치를 원격에
   push했고 draft PR #511을 열었다. PR 본문에는 이번 branch의 first-value
   onboarding smoke hardening, web/CLI/doc copy alignment, focused validation
   명령을 기록했다.
-- [ ] NEXT: PR #511의 diff를 리뷰 관점으로 한 번 더 훑어 불필요한 scope creep,
+- [x] NEXT: PR #511의 diff를 리뷰 관점으로 한 번 더 훑어 불필요한 scope creep,
   stale wording, privacy/local-first regression 가능성이 없는지 focused review를
   수행한다.
+- [x] REVIEW: PR #511 diff를 코드/harness/web/docs/tasks로 나눠 확인했다. 제품
+  코드에는 추가 수정이 필요한 privacy/local-first regression을 찾지 못했고,
+  진행 로그의 stale wording만 정리했다.
+- [ ] NEXT: PR #511을 ready로 전환할지, 또는 draft 상태로 두고 maintainer review를
+  기다릴지 결정한다. 전환 전에는 필요한 focused check만 재실행한다.
 
 ### 판단 기준
 
