@@ -2298,7 +2298,7 @@ function readProjectDistribution(
     .all() as Array<{ key: string; count: number }>;
 
   return rows.map((row) => ({
-    key: row.key,
+    key: createProjectKey(row.key, "quality-distribution"),
     label: projectLabel(row.key),
     count: row.count,
     ratio: ratio(row.count, total),
@@ -2401,7 +2401,7 @@ function readProjectQualityProfiles(
       };
 
       return {
-        key: project.key,
+        key: createProjectKey(project.key, "quality-profile"),
         label: project.label,
         prompt_count: project.prompt_count,
         quality_gap_count: project.quality_gap_count,
