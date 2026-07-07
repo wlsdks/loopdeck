@@ -14,7 +14,10 @@ import {
   selectLoopSnapshot,
   selectedLoopSnapshotNotFoundMessage,
 } from "../loop/snapshot-selection.js";
-import { createPromptLaneStatus, promptlaneStatusPrivacy } from "../loop/status.js";
+import {
+  createPromptLaneStatus,
+  promptlaneStatusPrivacy,
+} from "../loop/status.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import type { ScorePromptToolOptions } from "./score-tool-types.js";
 import type {
@@ -89,6 +92,7 @@ export function getPromptLaneLoopStatusTool(
       next_action: "promptlane setup --profile coach --register-mcp",
       next_actions: [
         "Run promptlane setup --profile coach --register-mcp before using PromptLane loop MCP tools.",
+        "For custom storage, initialize it with promptlane init --data-dir <path> and pass the same --data-dir to the MCP server.",
         "Then run promptlane loop collect from the project you want to continue.",
       ],
       privacy,

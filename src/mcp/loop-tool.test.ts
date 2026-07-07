@@ -166,20 +166,26 @@ describe("PromptLane MCP tools", () => {
   });
 
   it("returns concrete setup guidance when loop storage is unavailable", () => {
-    const result = getPromptLaneLoopStatusTool(
-      {},
-      { dataDir: join(tmpdir(), `promptlane-missing-${randomUUID()}`) },
-    );
+    const dataDir = join(tmpdir(), `promptlane-missing-${randomUUID()}`);
+    const result = getPromptLaneLoopStatusTool({}, { dataDir });
+    const serialized = JSON.stringify(result);
 
     expect(result).toMatchObject({
       status: "setup_needed",
       snapshot_count: 0,
       next_action: "promptlane setup --profile coach --register-mcp",
-      next_actions: [
+    });
+    expect(result.next_actions).toEqual(
+      expect.arrayContaining([
         "Run promptlane setup --profile coach --register-mcp before using PromptLane loop MCP tools.",
         "Then run promptlane loop collect from the project you want to continue.",
-      ],
-    });
+      ]),
+    );
+    expect(result.next_actions).toContain(
+      "For custom storage, initialize it with promptlane init --data-dir <path> and pass the same --data-dir to the MCP server.",
+    );
+    expect(serialized).not.toContain(dataDir);
+    expect(serialized).not.toContain(tmpdir());
   });
 
   it("reports compact boundaries newer than the latest loop snapshot", () => {

@@ -5414,3 +5414,12 @@
   coach briefs while preserving start/server/doctor recovery guidance.
 - [x] VERIFY: Focused MCP score-tool/server tests, typecheck, touched-file
   formatting, and diff hygiene passed.
+
+## 2026-07-08 Loop MCP Custom Data Dir Guidance
+
+- [x] RED: Extend focused `get_promptlane_loop_status` setup guidance test so
+  custom `--data-dir` recovery appears without echoing raw local paths.
+- [x] GREEN: Add the same raw-free custom storage next action to loop MCP
+  setup-needed responses.
+- [x] VERIFY: Focused loop MCP tests, MCP server tests, typecheck,
+  touched-file formatting, and diff hygiene passed.
