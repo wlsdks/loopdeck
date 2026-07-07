@@ -276,7 +276,12 @@ export function registerPromptRoutes(
     const result = storage.setPromptBookmark(params.id, body.bookmarked);
 
     if (!result.updated) {
-      throw problem(404, "Not Found", "Prompt not found.", request.url);
+      throw problem(
+        404,
+        "Not Found",
+        "Prompt not found. Open the local archive or search prompts before changing bookmark state.",
+        request.url,
+      );
     }
 
     return { data: result };
