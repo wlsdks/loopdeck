@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Coach Feedback Contract Error
+
+- [x] CHECK: web API `getCoachFeedbackSummary`가 `/api/v1/coach-feedback/summary` 성공
+  응답의 ratio/count 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 dashboard UI에
+  넘길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed coach feedback summary body를
+  `Coach feedback summary failed: Invalid response.`로 reject하도록 요구하게 해 현재 `{}`
+  resolve 실패를 확인했다.
+- [x] GREEN: `getCoachFeedbackSummary`가 `total`, `helpful`, `not_helpful`, `wrong`,
+  `helpful_ratio` 숫자 계약을 확인하고 깨진 성공 응답은 raw-free coach feedback contract
+  오류로 중단하도록 고쳤다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
+  check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Archive Score Contract Error
 
 - [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의 archive
