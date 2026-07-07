@@ -5212,3 +5212,10 @@
 - [x] GREEN: Extract dashboard/archive score/coach feedback automatic loading state from `App.tsx` into `useDashboardQuery`.
 - [x] VERIFY: Focused dashboard/list query tests, web typecheck, touched-code formatting check, and diff hygiene passed.
 - [x] INTEGRATE: Commit prepared from `codex/promptlane-dashboard-query-hook` for PR.
+
+## 2026-07-08 Workspace Query Hook Extraction
+
+- [x] RED: Add focused workspace query tests for projects/loops view-gated loading and project row patching.
+- [x] GREEN: Extract projects and loops list automatic loading state from `App.tsx` into `useWorkspaceQuery` while leaving loop worktree navigation in `App.tsx`.
+- [x] VERIFY: Focused workspace/dashboard query tests, web typecheck, touched-code formatting check, and diff hygiene passed.
+- [x] INTEGRATE: Commit prepared from `codex/promptlane-workspace-query-hook` for PR.

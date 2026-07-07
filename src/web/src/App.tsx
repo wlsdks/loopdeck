@@ -114,6 +114,7 @@ import {
 } from "./prompt-list-query.js";
 import { useDashboardQuery } from "./dashboard-query.js";
 import { useSelectedPromptQuery } from "./selected-prompt-query.js";
+import { useWorkspaceQuery } from "./workspace-query.js";
 
 const LIVE_MEASUREMENT_REFRESH_MS = 12_000;
 export function App() {
@@ -136,8 +137,6 @@ export function App() {
     string | undefined
   >();
   const [measurementBusy, setMeasurementBusy] = useState(false);
-  const [projects, setProjects] = useState<ProjectSummary[]>([]);
-  const [loops, setLoops] = useState<LoopListResponse | undefined>();
   const [loopWorktree, setLoopWorktree] = useState<
     LoopWorktreeResponse | undefined
   >();
@@ -197,6 +196,11 @@ export function App() {
     trendDays,
     viewName: view.name,
   });
+  const { loops, projects, setLoops, updateProject } = useWorkspaceQuery({
+    listLoops,
+    listProjects,
+    viewName: view.name,
+  });
 
   useEffect(() => {
     persistLanguage(language);
@@ -252,26 +256,6 @@ export function App() {
       .then(setSettings)
       .catch(() => undefined);
   }, []);
-
-  useEffect(() => {
-    if (view.name !== "projects" || projects.length > 0) {
-      return;
-    }
-
-    void listProjects()
-      .then(setProjects)
-      .catch(() => undefined);
-  }, [projects.length, view.name]);
-
-  useEffect(() => {
-    if (view.name !== "loops" || loops) {
-      return;
-    }
-
-    void listLoops()
-      .then(setLoops)
-      .catch(() => undefined);
-  }, [loops, view.name]);
 
   useEffect(() => {
     if (view.name !== "loops" || !view.worktree) {
@@ -616,11 +600,7 @@ export function App() {
       const updated = await updateProjectPolicy(project.project_id, {
         capture_disabled: !project.policy.capture_disabled,
       });
-      setProjects((current) =>
-        current.map((item) =>
-          item.project_id === updated.project_id ? updated : item,
-        ),
-      );
+      updateProject(updated);
     } catch {
       setError("Could not save the project capture policy.");
     }
@@ -633,13 +613,7 @@ export function App() {
     }));
     try {
       const review = await analyzeProjectInstructions(project.project_id);
-      setProjects((current) =>
-        current.map((item) =>
-          item.project_id === project.project_id
-            ? { ...item, instruction_review: review }
-            : item,
-        ),
-      );
+      updateProject({ ...project, instruction_review: review });
     } catch {
       setError("Could not analyze project instruction files.");
     } finally {
