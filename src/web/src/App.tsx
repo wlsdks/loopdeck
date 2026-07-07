@@ -68,6 +68,7 @@ import {
 } from "./i18n.js";
 import {
   archiveScoreErrorMessage,
+  bookmarkErrorMessage,
   errorMessageOrDefault,
   exportPreviewErrorMessage,
   improvementDraftSaveErrorMessage,
@@ -523,8 +524,8 @@ export function App() {
       void getQualityDashboard()
         .then(setDashboard)
         .catch(() => undefined);
-    } catch {
-      setError("Could not save the bookmark status.");
+    } catch (error) {
+      setError(bookmarkErrorMessage(error));
     }
   }
 
