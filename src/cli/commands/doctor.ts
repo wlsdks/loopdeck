@@ -67,6 +67,7 @@ export type DoctorClaudeCodeResult = {
   };
   mcp: { registered: boolean };
   lastIngestStatus?: LastHookStatus;
+  next_actions: string[];
 };
 
 export type DoctorCodexResult = {
@@ -84,7 +85,12 @@ export type DoctorCodexResult = {
   };
   mcp: { registered: boolean };
   lastIngestStatus?: LastHookStatus;
+  next_actions: string[];
 };
+
+type DoctorResultWithoutNextActions =
+  | Omit<DoctorClaudeCodeResult, "next_actions">
+  | Omit<DoctorCodexResult, "next_actions">;
 
 export function registerDoctorCommand(program: Command): void {
   program
@@ -188,7 +194,9 @@ export function formatDoctorResult(
     );
   }
 
-  const next = doctorNextSteps(tool, result, options);
+  const next = result.next_actions.length
+    ? result.next_actions
+    : doctorNextSteps(tool, result, options);
   if (next.length > 0) {
     lines.push("", "Next:");
     for (const step of next) {
@@ -219,7 +227,10 @@ function formatCodexSettings(result: DoctorCodexResult): string {
 
 function doctorNextSteps(
   tool: "claude-code" | "codex",
-  result: DoctorClaudeCodeResult | DoctorCodexResult,
+  result:
+    | DoctorClaudeCodeResult
+    | DoctorCodexResult
+    | DoctorResultWithoutNextActions,
   options?: DoctorClaudeCodeOptions | DoctorCodexOptions,
 ): string[] {
   const steps: string[] = [];
@@ -297,7 +308,7 @@ export async function doctorClaudeCode(
   );
   const lastIngestStatus = readLastHookStatus(options.dataDir);
 
-  return {
+  const result = {
     server: { ok: await inspectServer(options) },
     token: { ok: inspectToken(options.dataDir) },
     ingest: inspectIngest(lastIngestStatus),
@@ -316,6 +327,10 @@ export async function doctorClaudeCode(
     },
     lastIngestStatus,
   };
+  return {
+    ...result,
+    next_actions: doctorNextSteps("claude-code", result, options),
+  };
 }
 
 export async function doctorCodex(
@@ -324,7 +339,7 @@ export async function doctorCodex(
   const settings = inspectCodexSettings(options);
   const lastIngestStatus = readLastHookStatus(options.dataDir);
 
-  return {
+  const result = {
     server: { ok: await inspectServer(options) },
     token: { ok: inspectToken(options.dataDir) },
     ingest: inspectIngest(lastIngestStatus),
@@ -339,6 +354,10 @@ export async function doctorCodex(
       }),
     },
     lastIngestStatus,
+  };
+  return {
+    ...result,
+    next_actions: doctorNextSteps("codex", result, options),
   };
 }
 

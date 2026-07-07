@@ -5359,3 +5359,9 @@
 - [x] RED: Add focused doctor output expectation requiring server-down recovery to mention `promptlane service start` before falling back to foreground `promptlane server`.
 - [x] GREEN: Align doctor server recovery guidance with setup's background-service path while preserving setup fallback for uninstalled services.
 - [x] VERIFY: Focused doctor/setup/start tests, typecheck, and diff hygiene passed.
+
+## 2026-07-08 Doctor JSON Next Actions
+
+- [x] RED: Add focused doctor tests requiring Claude Code and Codex JSON/result output to include the same raw-free recovery `next_actions` as plain text output.
+- [x] GREEN: Store doctor next actions on the result object so automation and text formatting share the same recovery guidance.
+- [x] VERIFY: Focused doctor/setup/start tests, typecheck, and diff hygiene passed.
