@@ -925,13 +925,14 @@ const UI_TRANSLATIONS: Record<string, string> = {
   "Hook Capture": "Hook 수집",
   "last delivery succeeded": "마지막 전송 성공",
   "last delivery failed": "마지막 전송 실패",
-  "No hook delivery has been recorded yet.": "아직 hook 전송 기록이 없습니다.",
+  "Run promptlane setup --profile coach, then send one Codex or Claude Code prompt.":
+    "`promptlane setup --profile coach` 실행 후 Codex 또는 Claude Code 프롬프트를 하나 보내세요.",
   "First prompt stored": "첫 프롬프트 저장",
-  "Send a test prompt to complete this check.":
-    "테스트 프롬프트를 전송하면 완료됩니다.",
+  "Send one Codex or Claude Code prompt after setup.":
+    "설정 후 Codex 또는 Claude Code 프롬프트를 하나 보내면 완료됩니다.",
   "Reuse loop": "재사용 루프",
-  "No copied or saved prompts yet.":
-    "복사하거나 저장한 프롬프트가 아직 없습니다.",
+  "Copy or save an improved draft from Coach to start reuse.":
+    "Coach에서 개선 초안을 복사하거나 저장하면 재사용 루프가 시작됩니다.",
   "Needs attention": "확인 필요",
   Waiting: "대기",
   "Goal clarity": "목표 명확성",

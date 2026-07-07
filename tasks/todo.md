@@ -43,9 +43,21 @@
   Codex hook capture, MCP server, `record_loop_outcome`,
   `propose_loop_memory_candidate`, `record_loop_memory`,
   `propose_instruction_patch`까지 통과했다.
-- [ ] NEXT: 다음 개선 후보는 web/user-flow 또는 CLI operator wording처럼
+- [x] NEXT: 다음 개선 후보는 web/user-flow 또는 CLI operator wording처럼
   자동 dogfood가 통과해도 실제 첫 사용자 경험에서 "무엇을 다음에 해야 하는지"
   덜 분명한 표면을 하나 고르는 것이다.
+- [x] RED: `scripts/browser-e2e.mjs`에 Settings onboarding의 Hook Capture
+  waiting 상태가 실행 가능한 다음 행동을 보여야 한다는 assertion을 추가했고,
+  기존 `"No hook delivery has been recorded yet."` 문구에서 실패했다.
+- [x] GREEN: Settings onboarding pending copy를 행동 지향으로 바꿨다. Hook
+  Capture는 `promptlane setup --profile coach` 후 Codex/Claude Code prompt를
+  보내라고 안내하고, First prompt stored와 Reuse loop도 다음 행동을 직접 말한다.
+- [x] VERIFY: `corepack pnpm dogfood:web-user-flow`, `corepack pnpm ui-patrol`,
+  `corepack pnpm lint:types`, `git diff --check`가 통과했다. `ui-patrol`
+  screenshot에서 desktop/mobile Settings 문구 wrapping도 확인했다.
+- [ ] NEXT: 다음 후보는 CLI `setup`/`doctor`/`quality-evidence` 텍스트 중
+  web에서 개선한 첫 행동 안내와 불일치하는 문구가 있는지 focused CLI 출력
+  snapshot으로 확인하고 하나만 정리한다.
 
 ### 판단 기준
 

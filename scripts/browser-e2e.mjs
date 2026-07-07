@@ -498,6 +498,11 @@ try {
   await page.getByRole("button", { name: "Settings" }).click();
   await page.getByRole("heading", { name: "Settings" }).waitFor();
   await page.getByText("[local path]").first().waitFor();
+  await assertText(
+    page,
+    "Run promptlane setup --profile coach, then send one Codex or Claude Code prompt.",
+    "Settings should show an actionable next step when hook capture is waiting.",
+  );
   await assertBrowserSafe(page, "settings");
   await assertText(
     page,
