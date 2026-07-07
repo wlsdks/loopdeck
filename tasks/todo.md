@@ -5371,3 +5371,9 @@
 - [x] RED: Add focused ingest diagnosis test requiring server-owner mismatch recovery hints to avoid echoing configured or bound raw data-dir paths.
 - [x] GREEN: Replace raw data-dir values in the mismatch hint with a path-free local server conflict explanation and the service stop/install recovery command.
 - [x] VERIFY: Focused ingest diagnosis/doctor tests, typecheck, and diff hygiene passed.
+
+## 2026-07-08 Doctor Data Dir Equals Parsing
+
+- [x] RED: Add focused ingest diagnosis test requiring server-owner mismatch detection when the running server uses `--data-dir=<path>` syntax.
+- [x] GREEN: Teach the doctor ingest process parser to recognize both spaced and equals-style `--data-dir` arguments while keeping mismatch hints raw-free.
+- [x] VERIFY: Focused ingest diagnosis/doctor tests, typecheck, touched-file formatting, and diff hygiene passed.
