@@ -102,6 +102,9 @@ describe("createServer P2 ingest boundary", () => {
 
   it("issues local web sessions and requires csrf for cookie delete", async () => {
     const storage = createMemoryStorage();
+    storage.promptDetails.push(
+      promptDetail({ id: "prmt_20260501_100000_abcdefabcdef" }),
+    );
     const server = createTestServer({ storage });
 
     const session = await server.inject({
@@ -258,6 +261,38 @@ describe("createServer P2 ingest boundary", () => {
     const detail = response.json<{ detail: string }>().detail;
     expect(detail).toBe(
       "Prompt not found. Open the local archive or search prompts before recording prompt usage.",
+    );
+    expect(detail).not.toContain("deadbeefdead");
+    expect(response.body).not.toContain("/Users/example");
+    expect(response.body).not.toContain("sk-proj-secret");
+  });
+
+  it("guides missing prompt delete users back to local archive search", async () => {
+    const storage = createMemoryStorage();
+    const server = createTestServer({ storage });
+    const session = await server.inject({
+      method: "GET",
+      url: "/api/v1/session",
+      headers: { host: "127.0.0.1:17373" },
+    });
+    const cookie = String(session.headers["set-cookie"]);
+    const csrfToken = session.json<{ data: { csrf_token: string } }>().data
+      .csrf_token;
+
+    const response = await server.inject({
+      method: "DELETE",
+      url: "/api/v1/prompts/prmt_20260501_100000_deadbeefdead",
+      headers: {
+        host: "127.0.0.1:17373",
+        cookie,
+        "x-csrf-token": csrfToken,
+      },
+    });
+
+    expect(response.statusCode).toBe(404);
+    const detail = response.json<{ detail: string }>().detail;
+    expect(detail).toBe(
+      "Prompt not found. Open the local archive or search prompts before retrying deletion.",
     );
     expect(detail).not.toContain("deadbeefdead");
     expect(response.body).not.toContain("/Users/example");
@@ -3772,7 +3807,10 @@ function createMemoryStorage() {
     getPrompt(id: string) {
       return this.promptDetails.find((prompt) => prompt.id === id);
     },
-    deletePrompt() {
+    deletePrompt(id: string) {
+      const index = this.promptDetails.findIndex((prompt) => prompt.id === id);
+      if (index === -1) return { deleted: false };
+      this.promptDetails.splice(index, 1);
       return { deleted: true };
     },
     getQualityDashboard() {
@@ -3918,6 +3956,34 @@ function createMemoryStorage() {
         }
       | undefined;
     failPolicyLookup: boolean;
+  };
+}
+
+function promptDetail(patch: Partial<PromptDetail> = {}): PromptDetail {
+  return {
+    id: "prmt_20260501_100000_abcdefabcdef",
+    tool: "codex",
+    source_event: "UserPromptSubmit",
+    session_id: "session-web",
+    cwd: "[REDACTED:path]",
+    created_at: "2026-05-01T10:00:00.000Z",
+    received_at: "2026-05-01T10:00:00.000Z",
+    snippet: "Use focused tests before broad verification.",
+    prompt_length: 44,
+    is_sensitive: false,
+    excluded_from_analysis: false,
+    redaction_policy: "mask",
+    adapter_version: "test",
+    index_status: "indexed",
+    tags: [],
+    quality_gaps: [],
+    quality_score: 80,
+    quality_score_band: "good",
+    usefulness: { copied_count: 0, bookmarked: false },
+    duplicate_count: 0,
+    markdown: "# Prompt\n\nUse focused tests before broad verification.",
+    improvement_drafts: [],
+    ...patch,
   };
 }
 
