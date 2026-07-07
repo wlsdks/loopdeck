@@ -189,11 +189,13 @@ describe("quality-evidence CLI command", () => {
       },
       {
         command: "corepack pnpm evidence:quality -- --require-complete",
-        purpose: "Fail closed unless all 9.5 quality evidence remains complete.",
+        purpose:
+          "Fail closed unless all 9.5 quality evidence remains complete.",
       },
       {
         command: "pnpm promptlane quality-evidence --require-complete",
-        purpose: "Verify the built product CLI exposes the same complete quality evidence.",
+        purpose:
+          "Verify the built product CLI exposes the same complete quality evidence.",
       },
       {
         command: "git diff --check",
@@ -252,9 +254,7 @@ describe("quality-evidence CLI command", () => {
       "satisfied=web_user_flow_current_main_evidence,manual_ui_patrol_artifact_evidence,local_ui_patrol_evidence",
     );
     expect(text).toContain("remaining=none");
-    expect(text).toContain(
-      "codex_and_claude_code_integration: complete",
-    );
+    expect(text).toContain("codex_and_claude_code_integration: complete");
     expect(text).toContain(
       "satisfied=codex_claude_setup_smoke_refresh,codex_claude_local_integration_evidence,native_dialog_preflight,local_95_evidence_sweep",
     );
@@ -295,7 +295,9 @@ describe("quality-evidence CLI command", () => {
   });
 
   it("does not fail closed when requireComplete is set and evidence is complete", () => {
-    expect(() => qualityEvidenceForCli({ requireComplete: true })).not.toThrow();
+    expect(() =>
+      qualityEvidenceForCli({ requireComplete: true }),
+    ).not.toThrow();
   });
 
   it("prints a focused operator brief for the approval-gated native dialog dogfood", () => {
@@ -303,7 +305,15 @@ describe("quality-evidence CLI command", () => {
 
     expect(brief).toContain("PromptLane native dialog operator brief");
     expect(brief).toContain("Status: complete");
-    expect(brief).toContain("approval_status=operator_approved_answer_recorded");
+    expect(brief).toContain(
+      "approval_status=operator_approved_answer_recorded",
+    );
+    expect(brief).toContain(
+      "Operator action: none; approved native dialog evidence is already recorded.",
+    );
+    expect(brief).toContain(
+      "Completion record: docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md",
+    );
     expect(brief).not.toContain(
       "Command: PROMPTLANE_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved",
     );

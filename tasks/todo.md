@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Quality Operator Brief Complete State
+
+- [x] CHECK: `promptlane quality-evidence --operator-brief`는 현재
+  `native_dialog_approved_dogfood`가 complete인데도, 완료 증거가 이미 기록되어
+  추가 operator action이 없다는 문장을 직접 보여주지 않았다.
+- [x] RED: `src/cli/commands/quality-evidence.test.ts`가 complete 상태 operator
+  brief에 no-action boundary와 completion audit 문서 위치를 요구하게 해 실패를
+  확인했다.
+- [x] GREEN: native dialog evidence가 complete일 때 operator brief가
+  "Operator action: none"과 완료 기록 문서 경로를 출력하게 했다.
+- [x] VERIFY: focused quality-evidence CLI test, built CLI operator brief,
+  typecheck, formatting/diff checks를 실행한다.
+
 ## 2026-07-08 PromptLane Start Codex First-Score Guidance
 
 - [x] CHECK: `promptlane start --tool codex`는 first-score happy path와

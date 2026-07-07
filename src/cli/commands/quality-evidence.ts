@@ -133,14 +133,18 @@ function formatSummary(summary: QualityEvidenceSummary): string {
     summary.blockers.length > 0
       ? summary.blockers.flatMap((blocker) => [
           `- ${blocker.id}: ${blocker.status}`,
-          ...(blocker.remaining_evidence && blocker.remaining_evidence.length > 0
+          ...(blocker.remaining_evidence &&
+          blocker.remaining_evidence.length > 0
             ? [`  remaining_evidence=${blocker.remaining_evidence.join(",")}`]
             : []),
-          ...(blocker.next_action ? [`  next_action=${blocker.next_action}`] : []),
+          ...(blocker.next_action
+            ? [`  next_action=${blocker.next_action}`]
+            : []),
         ])
       : ["- none"];
   const recommendedRows =
-    summary.recommended_next_slices && summary.recommended_next_slices.length > 0
+    summary.recommended_next_slices &&
+    summary.recommended_next_slices.length > 0
       ? summary.recommended_next_slices.flatMap((slice) => [
           `- ${slice.priority}. ${slice.id} (external event: ${slice.blocked_by_external_event ? "yes" : "no"}) ${slice.command} - ${slice.expected_effect}`,
           ...(slice.blocked_reason
@@ -152,8 +156,7 @@ function formatSummary(summary: QualityEvidenceSummary): string {
           ...(slice.preconditions && slice.preconditions.length > 0
             ? [`  preconditions=${slice.preconditions.join("; ")}`]
             : []),
-          ...(slice.completion_evidence &&
-          slice.completion_evidence.length > 0
+          ...(slice.completion_evidence && slice.completion_evidence.length > 0
             ? [`  completion=${slice.completion_evidence.join("; ")}`]
             : []),
           ...(slice.guardrails && slice.guardrails.length > 0
@@ -240,12 +243,19 @@ function formatOperatorBrief(summary: QualityEvidenceSummary): string {
   const slice = summary.recommended_next_slices?.find(
     (candidate) => candidate.id === "native_dialog_operator_dogfood",
   );
+  const evidenceComplete = nativeDialog?.status === "complete";
 
   return [
     "PromptLane native dialog operator brief",
     `Status: ${nativeDialog?.status ?? "unknown"}`,
     ...(nativeDialog?.approval_status
       ? [`approval_status=${nativeDialog.approval_status}`]
+      : []),
+    ...(evidenceComplete
+      ? [
+          "Operator action: none; approved native dialog evidence is already recorded.",
+          "Completion record: docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md",
+        ]
       : []),
     ...(slice?.command ? [`Command: ${slice.command}`] : []),
     "Refusal preflight: corepack pnpm dogfood:mcp-native-dialog-refusal",
