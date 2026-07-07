@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web API Problem Errors
+
+- [x] CHECK: server problem responses now expose readable `errors[]` field messages, but
+  web API client `failApi` only surfaces `detail/title/message` and drops field-level
+  recovery hints.
+- [x] RED: `src/web/src/api.test.ts`가 problem `errors[0]`의 `prompt: Prompt cannot be
+  empty.`를 thrown API error message에 포함하도록 요구하게 해 generic detail-only 실패를
+  확인했다.
+- [x] GREEN: `failApi`가 string `errors[]` field/message 항목을 detail suffix에 붙이도록
+  고쳤다.
+- [x] VERIFY: focused web API test, typecheck, implementation format check, diff
+  whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Ingest Too Large Prompt Message
 
 - [x] CHECK: ingest route prompt length validation이 response `detail`은 readable하지만

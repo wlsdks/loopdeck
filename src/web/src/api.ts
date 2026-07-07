@@ -1711,11 +1711,18 @@ async function failApi(response: Response, label: string): Promise<never> {
       detail?: unknown;
       title?: unknown;
       message?: unknown;
+      errors?: unknown;
     };
+    const issueDetail = apiErrorIssueText(body.errors);
     detail =
       apiErrorText(body.detail) ||
       apiErrorText(body.title) ||
       apiErrorText(body.message);
+    if (detail && issueDetail) {
+      detail = `${detail} ${issueDetail}`;
+    } else {
+      detail ||= issueDetail;
+    }
   } catch {
     // body may not be JSON, that is fine.
   }
@@ -1725,6 +1732,27 @@ async function failApi(response: Response, label: string): Promise<never> {
 
 function apiErrorText(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
+}
+
+function apiErrorIssueText(value: unknown): string {
+  if (!Array.isArray(value)) {
+    return "";
+  }
+  return value
+    .map((item) => {
+      if (!item || typeof item !== "object") {
+        return "";
+      }
+      const record = item as { field?: unknown; message?: unknown };
+      const field = apiErrorText(record.field);
+      const message = apiErrorText(record.message);
+      if (!message) {
+        return "";
+      }
+      return field ? `${field}: ${message}` : message;
+    })
+    .filter(Boolean)
+    .join(" ");
 }
 
 export async function updateProjectPolicy(
