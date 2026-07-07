@@ -257,6 +257,34 @@ describe("createPromptLaneStatus", () => {
     );
   });
 
+  it("shell-quotes command-center continuation commands with spaces and quotes", () => {
+    const status = createPromptLaneStatus({
+      compactBoundaries: [],
+      snapshots: [
+        loopSnapshot({
+          id: "loop_quoted_command",
+          session_id: "session-quoted",
+          branch: "feature/agent loop 'quoted'",
+          worktree_label: "agent loop worktree",
+        }),
+        loopSnapshot({
+          id: "loop_other_command",
+          session_id: "session-other",
+          branch: "main",
+          worktree_label: "main-worktree",
+        }),
+      ],
+    });
+
+    expect(status.activity.command_center?.review_items[0]).toMatchObject({
+      continuation_command:
+        "promptlane loop brief --worktree 'agent loop worktree' --branch 'feature/agent loop '\\''quoted'\\'''",
+    });
+    expect(status.next_actions).toContain(
+      "Use selected continuation command: promptlane loop brief --worktree 'agent loop worktree' --branch 'feature/agent loop '\\''quoted'\\'''",
+    );
+  });
+
   it("builds a raw-free multi-worktree command center for merge review", () => {
     const status = createPromptLaneStatus({
       snapshots: [

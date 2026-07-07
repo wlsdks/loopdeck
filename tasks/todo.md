@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Command Center Command Quoting
+
+- [x] CHECK: command-center continuation command는 web/CLI/MCP status가 공유하는
+  agent-loop next action 표면인데, worktree/branch 값을 문자열 interpolation 후
+  join해 공백/따옴표 포함 label에서 복사 실행이 깨질 수 있었다.
+- [x] RED: `src/loop/status.test.ts`에 command-center continuation command와
+  `next_actions`가 공백/따옴표 포함 worktree/branch 값을 shell-quote해야 한다는
+  focused test를 추가해 실패를 확인했다.
+- [x] GREEN: `continuationCommandForWorktree`가 argv 배열을 만들고 shared
+  `quoteForShell`로 렌더링하게 했다. 기존 safe 값은 unquoted로 유지된다.
+- [x] VERIFY: focused loop status/CLI/MCP/web tests, typecheck,
+  formatting/diff checks를 실행한다.
+
 ## 2026-07-08 PromptLane Shared Shell Quote Helper
 
 - [x] CHECK: selected brief command, brief recovery command, Codex HUD buddy
