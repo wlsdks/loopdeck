@@ -3011,7 +3011,12 @@ describe("createServer P2 ingest boundary", () => {
     expect(response.json()).toMatchObject({
       status: 401,
       title: "Unauthorized",
+      detail:
+        "Missing or invalid bearer token. Reinstall the agent hook with `promptlane install-hook claude-code` or `promptlane install-hook codex`, then run the matching `promptlane doctor` command if ingest still fails.",
     });
+    expect(response.body).not.toContain("ingest-token");
+    expect(response.body).not.toContain("/Users/example");
+    expect(response.body).not.toContain("sk-proj-secret");
   });
 
   it("rejects wrong ingest token", async () => {
