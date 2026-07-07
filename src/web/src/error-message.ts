@@ -21,3 +21,10 @@ export function projectPolicyUpdateErrorMessage(error: unknown): string {
     "Could not save the project capture policy.",
   );
 }
+
+export function exportPreviewErrorMessage(error: unknown): string {
+  return errorMessageOrDefault(
+    error,
+    "Could not create the anonymized export preview.",
+  );
+}

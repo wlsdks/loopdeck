@@ -68,6 +68,7 @@ import {
 } from "./i18n.js";
 import {
   errorMessageOrDefault,
+  exportPreviewErrorMessage,
   projectInstructionAnalysisErrorMessage,
   projectPolicyUpdateErrorMessage,
 } from "./error-message.js";
@@ -589,8 +590,8 @@ export function App() {
       const preview = await createExportPreview(exportPreset);
       setExportPreview(preview);
       setExportPayload(undefined);
-    } catch {
-      setError("Could not create the anonymized export preview.");
+    } catch (error) {
+      setError(exportPreviewErrorMessage(error));
     } finally {
       setExportBusy(false);
     }
