@@ -178,8 +178,18 @@ describe("PromptLane MCP tools", () => {
     expect(result.next_actions).toEqual(
       expect.arrayContaining([
         "Run promptlane setup --profile coach --register-mcp before using PromptLane loop MCP tools.",
+        "Send one Codex or Claude Code prompt, then call coach_prompt or rerun get_promptlane_status.",
         "Then run promptlane loop collect from the project you want to continue.",
       ]),
+    );
+    expect(
+      result.next_actions.indexOf(
+        "Send one Codex or Claude Code prompt, then call coach_prompt or rerun get_promptlane_status.",
+      ),
+    ).toBeLessThan(
+      result.next_actions.indexOf(
+        "Then run promptlane loop collect from the project you want to continue.",
+      ),
     );
     expect(result.next_actions).toContain(
       "For custom storage, initialize it with promptlane init --data-dir <path> and pass the same --data-dir to the MCP server.",
