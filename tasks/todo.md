@@ -5263,3 +5263,9 @@
 - [x] RED: Add focused archive review model tests for reviewable score bands and the six-prompt review queue limit.
 - [x] GREEN: Extract archive review prompt selection from `App.tsx` into `archive-review-model`.
 - [x] VERIFY: Focused archive-review/measurement tests and web typecheck passed.
+
+## 2026-07-08 Project Empty State Model Extraction
+
+- [x] RED: Add a focused project empty-state test requiring the explicit coach setup command.
+- [x] GREEN: Extract project empty-state copy from `App.tsx` into `project-empty-state` and align the command with `promptlane setup --profile coach`.
+- [x] VERIFY: Focused project/prompt empty-state tests and web typecheck passed.

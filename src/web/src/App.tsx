@@ -91,6 +91,7 @@ import {
   formatTrendDate,
 } from "./formatters.js";
 import { McpToolsView } from "./mcp-tools-view.js";
+import { getProjectEmptyState } from "./project-empty-state.js";
 import { getPromptEmptyState } from "./prompt-empty-state.js";
 import {
   activeFilterChips,
@@ -2166,10 +2167,11 @@ function ProjectsView({
   projects: ProjectSummary[];
 }) {
   if (projects.length === 0) {
+    const emptyState = getProjectEmptyState();
     return (
       <div className="panel empty">
-        <h2>No project records yet.</h2>
-        <code>promptlane setup</code>
+        <h2>{emptyState.title}</h2>
+        <code>{emptyState.command}</code>
       </div>
     );
   }
@@ -2463,10 +2465,6 @@ function FieldList({ items, title }: { items: string[]; title: string }) {
 function StatusBadge({ prompt }: { prompt: PromptSummary }) {
   const label = prompt.is_sensitive ? "redacted" : prompt.index_status;
   return <span className="badge">{label}</span>;
-}
-
-function projectLabel(path: string): string {
-  return path.split("/").filter(Boolean).at(-1) ?? path;
 }
 
 const SIDEBAR_COLLAPSED_STORAGE_KEY = "pm:sidebar-collapsed";
