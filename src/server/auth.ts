@@ -50,7 +50,7 @@ export function requireAppAccess(
     throw problem(
       401,
       "Unauthorized",
-      "Missing or invalid app session.",
+      "Missing or invalid app session. Open `/api/v1/session` from the local web app, then retry the request.",
       request.url,
     );
   }

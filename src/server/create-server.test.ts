@@ -148,6 +148,24 @@ describe("createServer P2 ingest boundary", () => {
     expect(deleted.statusCode).toBe(200);
   });
 
+  it("guides missing app session users to refresh the local web session", async () => {
+    const server = createTestServer();
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/prompts",
+      headers: { host: "127.0.0.1:17373" },
+    });
+
+    expect(response.statusCode).toBe(401);
+    expect(response.json()).toMatchObject({
+      detail:
+        "Missing or invalid app session. Open `/api/v1/session` from the local web app, then retry the request.",
+    });
+    expect(response.body).not.toContain("/Users/example");
+    expect(response.body).not.toContain("sk-proj-secret");
+  });
+
   it("guides missing prompt detail users back to local archive search", async () => {
     const storage = createMemoryStorage();
     const server = createTestServer({ storage });
