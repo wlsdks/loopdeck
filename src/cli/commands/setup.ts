@@ -27,6 +27,7 @@ import {
 import type { PromptRewriteGuardMode } from "../../hooks/rewrite-guard.js";
 import {
   doctorCommand,
+  FIRST_PROMPT_NEXT_STEP,
   mcpRegistrationCommand,
   mcpRegistrationSpec,
 } from "../agent-access.js";
@@ -328,7 +329,7 @@ function isFirstScoreStep(step: string): boolean {
   return (
     step.startsWith("Run promptlane server") ||
     step.startsWith("Run promptlane service start") ||
-    step.startsWith("Send one real coding prompt") ||
+    step.startsWith("Send one Codex or Claude Code prompt") ||
     step.startsWith("Then run /promptlane:improve-last")
   );
 }
@@ -645,9 +646,7 @@ function buildNextSteps(options: {
   }
 
   if (options.profile === "coach") {
-    steps.push(
-      "Send one real coding prompt in Claude Code or Codex, then run promptlane coach.",
-    );
+    steps.push(FIRST_PROMPT_NEXT_STEP);
     if (options.detectedTools.includes("claude-code")) {
       steps.push(
         "Then run /promptlane:improve-last inside Claude Code to see PromptLane rewrite guidance for that prompt.",

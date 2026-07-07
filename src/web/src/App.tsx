@@ -2673,7 +2673,7 @@ function buildSetupChecks({
         ? `${lastIngest.ok ? "last delivery succeeded" : "last delivery failed"} ${
             lastIngest.status ?? ""
           }`.trim()
-        : "No hook delivery has been recorded yet.",
+        : "Run promptlane setup --profile coach, then send one Codex or Claude Code prompt.",
     },
     {
       label: "First prompt stored",
@@ -2681,7 +2681,7 @@ function buildSetupChecks({
       detail:
         promptCount > 0
           ? `${promptCount} stored`
-          : "Send a test prompt to complete this check.",
+          : "Send one Codex or Claude Code prompt after setup.",
     },
     {
       label: "Reuse loop",
@@ -2689,7 +2689,7 @@ function buildSetupChecks({
       detail:
         usefulCount > 0
           ? `${usefulCount} reuse candidates`
-          : "No copied or saved prompts yet.",
+          : "Copy or save an improved draft from Coach to start reuse.",
     },
   ];
 }
@@ -2846,7 +2846,7 @@ function emptyPromptHint(
     return "Repeated stored prompt bodies will appear here.";
   if (focus === "quality-gap")
     return "Try adding verification criteria, output format, and scope.";
-  return "Run coach setup, send one real Claude Code or Codex request, then check the first score and improvement suggestion.";
+  return "Run coach setup, send one Codex or Claude Code request, then check the first score and improvement suggestion.";
 }
 
 function emptyPromptSecondaryHint(

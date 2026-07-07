@@ -1,5 +1,113 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Long-Running Product Polish
+
+- [x] CHECK: 장기 goal을 등록했다. 목표는 PromptLane를 local-first
+  agent-loop memory/workspace 제품으로 기획, 아키텍처, Codex/Claude Code
+  통합, privacy invariant, UI/CLI/MCP/doctor/runtime 검증까지 장기 개선하는
+  것이다.
+- [x] CHECK: 현재 `quality-evidence`는 `promptlane_95_quality`를
+  `complete`로 보고하고, 7개 scorecard axis 모두 `9.5/10`이며 blocker와
+  recommended next slice가 없다.
+- [x] CHECK: 현재 main에서 기본 release gate가 통과했다:
+  `corepack pnpm test`, `corepack pnpm lint`, `corepack pnpm build`,
+  `corepack pnpm pack:dry-run`, `git diff --check`.
+- [x] CHECK: `corepack pnpm smoke:release`도 통과해 SQLite, Markdown, FTS,
+  hook installer preview, local server, Claude Code/Codex payload capture,
+  import/export, delete cleanup 흐름이 현재 빌드에서 동작한다.
+- [ ] NEXT: 9.5 완료 상태를 단순 유지하는 작업보다, 사용자가 첫 설치 후
+  "다음 요청이 실제로 더 좋아졌다"고 느끼는 end-to-end 제품 경험을 기준으로
+  다음 개선 슬라이스를 선정한다.
+- [x] NEXT: 첫 후보는 `first value loop`의 operator journey 재검토다. setup,
+  doctor, hook/MCP registration, first coach loop, continuation brief,
+  approved memory, instruction patch proposal이 한 화면/한 명령 흐름에서
+  어디서 끊기는지 실제 로컬 실행으로 확인하고 가장 큰 마찰 하나만 줄인다.
+- [x] RED: `corepack pnpm smoke:agent-setup`이 isolated setup 이후
+  `doctor claude-code`에서 실패했다. fake provider binaries가 `mcp add/list`
+  상태를 시뮬레이션하지 않았고, doctor readiness가 local server까지 요구하는
+  현재 contract와 smoke harness가 맞지 않았다.
+- [x] GREEN: `scripts/agent-setup-smoke.mjs`의 fake provider가 MCP 등록 파일과
+  `mcp list` 출력을 시뮬레이션하게 하고, doctor 실행 전 isolated local server를
+  시작하도록 고쳤다.
+- [x] VERIFY: 수정 후 `corepack pnpm smoke:agent-setup`, `corepack pnpm test`,
+  `corepack pnpm lint`, `corepack pnpm pack:dry-run`, `git diff --check`가
+  통과했다.
+- [x] NEXT: 다음 슬라이스는 first coach loop와 loop-memory approval dogfood를
+  이어서 실행해, setup/doctor 이후 사용자가 실제로 copy-ready prompt,
+  continuation brief, approved memory까지 도달하는 흐름의 다음 마찰 하나를
+  찾는다.
+- [x] CHECK: `corepack pnpm dogfood:first-coach-loop`는 isolated server,
+  Codex hook capture, `coach --json`, `loop collect --json`,
+  `loop brief --json`까지 통과했다.
+- [x] CHECK: `corepack pnpm dogfood:loop-memory-approval`은 isolated server,
+  Codex hook capture, MCP server, `record_loop_outcome`,
+  `propose_loop_memory_candidate`, `record_loop_memory`,
+  `propose_instruction_patch`까지 통과했다.
+- [x] NEXT: 다음 개선 후보는 web/user-flow 또는 CLI operator wording처럼
+  자동 dogfood가 통과해도 실제 첫 사용자 경험에서 "무엇을 다음에 해야 하는지"
+  덜 분명한 표면을 하나 고르는 것이다.
+- [x] RED: `scripts/browser-e2e.mjs`에 Settings onboarding의 Hook Capture
+  waiting 상태가 실행 가능한 다음 행동을 보여야 한다는 assertion을 추가했고,
+  기존 `"No hook delivery has been recorded yet."` 문구에서 실패했다.
+- [x] GREEN: Settings onboarding pending copy를 행동 지향으로 바꿨다. Hook
+  Capture는 `promptlane setup --profile coach` 후 Codex/Claude Code prompt를
+  보내라고 안내하고, First prompt stored와 Reuse loop도 다음 행동을 직접 말한다.
+- [x] VERIFY: `corepack pnpm dogfood:web-user-flow`, `corepack pnpm ui-patrol`,
+  `corepack pnpm lint:types`, `git diff --check`가 통과했다. `ui-patrol`
+  screenshot에서 desktop/mobile Settings 문구 wrapping도 확인했다.
+- [x] NEXT: 다음 후보는 CLI `setup`/`doctor`/`quality-evidence` 텍스트 중
+  web에서 개선한 첫 행동 안내와 불일치하는 문구가 있는지 focused CLI 출력
+  snapshot으로 확인하고 하나만 정리한다.
+- [x] RED: `doctor claude-code`가 server/token/hook/MCP는 ready지만 아직 hook
+  delivery가 없는 첫 사용자 상태에서 MCP elicitation note만 보여주고, 첫 prompt를
+  보내라는 next action을 보여주지 않는 focused test를 추가해 실패를 확인했다.
+- [x] GREEN: CLI 공통 first-prompt next step을 `src/cli/agent-access.ts`에 두고
+  `setup`과 `doctor`가 같은 `"Send one Codex or Claude Code prompt, then run
+  promptlane coach."` 문구를 쓰게 했다.
+- [x] VERIFY: `corepack pnpm vitest run src/cli/commands/doctor.test.ts
+  src/cli/commands/setup.test.ts`, `corepack pnpm lint:types`,
+  `corepack pnpm smoke:agent-setup`이 통과했다.
+- [x] NEXT: 다음 후보는 `start` guide, README/AGENT-HARNESS, plugin docs의
+  first-score path가 web/setup/doctor와 같은 순서로 안내되는지 문서/CLI snapshot
+  중심으로 확인하고, 문서만 필요하면 테스트 없이 `rg`와 diff check로 마무리한다.
+- [x] CHECK: active quickstart 표면인 README, README.ko, slash setup guide,
+  archive empty-state copy를 확인했다. 과거 spec과 일반 compatibility 문구는
+  historical/contextual text라 수정 범위에서 제외했다.
+- [x] GREEN: quickstart와 empty-state first-score path를 `setup -> one Codex
+  or Claude Code prompt -> coach/first score` 순서로 정리했다.
+- [x] VERIFY: first-score wording `rg`, `corepack pnpm lint:types`,
+  `git diff --check`가 통과했다. 문서-only/copy-only 변경이라 full gate는
+  실행하지 않았다.
+- [x] NEXT: 다음 후보는 branch의 변경을 PR 가능한 단위로 정리하고, 필요한
+  경우 focused package check만 추가로 돌린 뒤 push/PR 단계로 넘기는 것이다.
+- [x] CHECK: `codex/promptlane-first-value-dogfood-hardening` 브랜치를 원격에
+  push했고 draft PR #511을 열었다. PR 본문에는 이번 branch의 first-value
+  onboarding smoke hardening, web/CLI/doc copy alignment, focused validation
+  명령을 기록했다.
+- [x] NEXT: PR #511의 diff를 리뷰 관점으로 한 번 더 훑어 불필요한 scope creep,
+  stale wording, privacy/local-first regression 가능성이 없는지 focused review를
+  수행한다.
+- [x] REVIEW: PR #511 diff를 코드/harness/web/docs/tasks로 나눠 확인했다. 제품
+  코드에는 추가 수정이 필요한 privacy/local-first regression을 찾지 못했고,
+  진행 로그의 stale wording만 정리했다.
+- [x] NEXT: PR #511을 ready로 전환할지, 또는 draft 상태로 두고 maintainer review를
+  기다릴지 결정한다. 전환 전에는 필요한 focused check만 재실행한다.
+- [x] VERIFY: PR ready 전 package-focused `corepack pnpm pack:dry-run`과
+  `git diff --check`가 통과했다.
+- [x] CHECK: PR #511을 ready for review로 전환했다.
+- [ ] NEXT: PR #511 리뷰/머지 후 main 기준으로 다음 small slice를 고른다. 후보는
+  loop/session/worktree continuation UX, MCP status wording, 또는 quality-evidence
+  operator brief 중 가장 직접적인 사용자 마찰이다.
+
+### 판단 기준
+
+- 새 기능은 Codex/Claude Code의 현재 공식 표면(AGENTS.md, skills, hooks,
+  MCP, sessions/worktrees)에 붙는 경우에만 추가한다.
+- 숨은 provider call, automatic prompt resubmission, raw transcript scraping,
+  private app DB 접근, credential proxy/storage는 계속 reject한다.
+- 다음 구현 슬라이스는 RED -> GREEN -> focused verify -> local gate 순서로
+  진행하고, `promptlane` runtime identity compatibility window를 깨지 않는다.
+
 ## 2026-07-06 PromptLane Approved Native Dialog Evidence
 
 - [x] CHECK: PR #507 이후

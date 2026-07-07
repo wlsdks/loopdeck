@@ -18,6 +18,7 @@ import {
   type CodexHooksSettings,
 } from "./install-hook.js";
 import {
+  FIRST_PROMPT_NEXT_STEP,
   mcpListSpec,
   mcpRegistrationCommand,
   type AgentTool,
@@ -232,6 +233,14 @@ function doctorNextSteps(
   }
   if (!result.settings.ok) {
     steps.push(`Run promptlane install-hook ${tool}.`);
+  }
+  if (
+    result.server.ok &&
+    result.token.ok &&
+    result.settings.ok &&
+    !result.lastIngestStatus
+  ) {
+    steps.push(FIRST_PROMPT_NEXT_STEP);
   }
   if (!result.mcp.registered) {
     steps.push(`Register MCP: ${mcpRegistrationCommand(tool)}.`);

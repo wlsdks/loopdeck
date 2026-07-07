@@ -125,12 +125,12 @@ describe("runSetup", () => {
       expect.arrayContaining([
         "Register MCP for agent commands: claude mcp add --transport stdio promptlane -- promptlane mcp.",
         "Register MCP for agent commands: codex mcp add promptlane -- promptlane mcp.",
-        "Send one real coding prompt in Claude Code or Codex, then run promptlane coach.",
+        "Send one Codex or Claude Code prompt, then run promptlane coach.",
       ]),
     );
     expect(
       result.nextSteps.indexOf(
-        "Send one real coding prompt in Claude Code or Codex, then run promptlane coach.",
+        "Send one Codex or Claude Code prompt, then run promptlane coach.",
       ),
     ).toBeLessThan(
       result.nextSteps.indexOf(
@@ -356,13 +356,13 @@ describe("runSetup", () => {
     expect(output).toContain("Claude Code hook: installed");
     expect(output).toContain("Codex hook: installed");
     expect(output).toContain("First score path:");
-    expect(output.indexOf("Send one real coding prompt")).toBeLessThan(
+    expect(output.indexOf("Send one Codex or Claude Code prompt")).toBeLessThan(
       output.indexOf("If capture does not appear:"),
     );
     expect(output).toContain("Register MCP for agent commands");
     expect(output).toContain("promptlane coach");
     expect(output).toContain("/promptlane:improve-last");
-    expect(output.indexOf("Send one real coding prompt")).toBeLessThan(
+    expect(output.indexOf("Send one Codex or Claude Code prompt")).toBeLessThan(
       output.indexOf("/promptlane:improve-last"),
     );
     expect(output).toContain("Use --json for automation.");
