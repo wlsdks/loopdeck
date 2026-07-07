@@ -813,8 +813,9 @@ describe("plugin packaging files", () => {
     );
 
     expect(goalAudit).toContain(
-      "`2f99c10 docs: close codex claude dogfood log`",
+      "Initial audit baseline commit: `2f99c10 docs: close codex claude dogfood log`",
     );
+    expect(goalAudit).not.toContain("Latest merged main commit at audit time");
     for (const prNumber of [
       "#403",
       "#405",

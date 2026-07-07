@@ -5156,3 +5156,10 @@
 - [x] GREEN: Refresh `docs/PROMPTLANE_GOAL_AUDIT_2026-07-05.md` and `docs/NEXT_BACKLOG.md` to match current local `quality-evidence` status, local browser evidence, approved native-dialog evidence, and first-step MCP guidance.
 - [x] VERIFY: Focused packaging guard, `quality-evidence`, and diff hygiene passed.
 - [x] INTEGRATE: Commit prepared from `codex/promptlane-goal-audit-evidence-alignment` for PR.
+
+## 2026-07-08 Goal Audit Baseline Copy
+
+- [x] RED: Add a focused packaging guard that rejects the stale `Latest merged main commit at audit time` label in the long-lived goal audit.
+- [x] GREEN: Rename the fixed `2f99c10` pointer to an initial audit baseline and clarify that later merged PR evidence extends it.
+- [x] VERIFY: Focused packaging guard and diff hygiene passed.
+- [x] INTEGRATE: Commit prepared from `codex/promptlane-goal-audit-baseline-copy` for PR.
