@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Server Zod Error Message
+
+- [x] CHECK: 공통 `createServer` Zod error handler가 structured problem `errors`
+  항목에 human-readable `issue.message` 대신 내부 `issue.code`를 넣어 web/API 사용자가
+  out-of-range 복구 기준을 보기 어렵다.
+- [x] RED: `src/server/create-server.test.ts`가 `daily_limit` validation error message에
+  `10000` 한계를 포함하고 `too_big` code만 노출하지 않도록 요구하게 해 실패를 확인했다.
+- [x] GREEN: 공통 Zod mapper가 `issue.message`를 problem error message로 보내도록
+  고쳤다.
+- [x] VERIFY: focused server create-server test, typecheck, implementation format check,
+  diff whitespace check를 실행했다. `create-server.test.ts` 전체 포맷은 기존 fixture
+  줄바꿈 churn을 만들기 때문에 적용하지 않았다.
+
 ## 2026-07-08 PromptLane Web API Error Message Fallback
 
 - [x] CHECK: web API client `failApi`가 canonical `detail/title`만 읽어 Fastify 기본
