@@ -3064,7 +3064,12 @@ describe("createServer P2 ingest boundary", () => {
     expect(response.json()).toMatchObject({
       status: 404,
       title: "Not Found",
+      detail:
+        "The requested route does not exist. Check `/api/v1/health` for server readiness or reopen the PromptLane web app route before retrying.",
+      instance: "/api/v1/this-route-does-not-exist",
     });
+    expect(response.body).not.toContain("/Users/example");
+    expect(response.body).not.toContain("sk-proj-secret");
   });
 
   it("returns 400 (not 500) when the JSON body is malformed", async () => {

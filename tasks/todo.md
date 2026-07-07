@@ -1,5 +1,16 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Unknown Route Recovery
+
+- [x] CHECK: HTTP/web unknown route 404는 "The requested route does not exist."만
+  반환해, local server readiness 확인 또는 web app route 재진입 경로가 덜 분명했다.
+- [x] RED: `src/server/create-server.test.ts`가 unknown route에서 health check/web
+  app route recovery detail과 raw-free detail을 요구하게 해 실패를 확인했다.
+- [x] GREEN: Fastify notFound handler의 404 detail을 `/api/v1/health` readiness 확인
+  및 PromptLane web app route 재진입 안내로 교체했다.
+- [x] VERIFY: focused server route test, typecheck, diff whitespace check를
+  실행한다.
+
 ## 2026-07-08 PromptLane Web Export Job Recovery
 
 - [x] CHECK: HTTP/web `POST /api/v1/exports`는 stale/missing export job 실행에서
