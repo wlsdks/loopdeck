@@ -445,6 +445,13 @@ describe("createServer P2 ingest boundary", () => {
       payload: { daily_limit: 99_999 },
     });
     expect(tooHigh.statusCode).toBe(422);
+    const problem = tooHigh.json<{
+      errors: Array<{ field: string; message: string }>;
+    }>();
+    const error = problem.errors[0];
+    expect(error?.field).toBe("daily_limit");
+    expect(error?.message).toContain("10000");
+    expect(error?.message).not.toBe("too_big");
   });
 
   it("returns browser-safe projects without exposing raw paths or tokens", async () => {
