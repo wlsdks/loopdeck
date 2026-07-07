@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Ingest Bearer Recovery
+
+- [x] CHECK: Codex/Claude Code hook ingest route의 missing/invalid bearer token 실패는
+  "Missing or invalid bearer token."만 반환해, stale hook token을 갱신하고 doctor로
+  확인하는 복구 경로가 덜 분명했다.
+- [x] RED: `src/server/create-server.test.ts`가 unauthenticated ingest에서
+  `install-hook`/`doctor` recovery detail과 raw-free detail을 요구하게 해 실패를
+  확인했다.
+- [x] GREEN: shared `requireBearerToken` 401 detail을 Claude Code/Codex hook reinstall
+  및 matching doctor command 안내로 교체했다.
+- [x] VERIFY: focused server route test, typecheck, diff whitespace check를
+  실행한다.
+
 ## 2026-07-08 PromptLane Web App Session Recovery
 
 - [x] CHECK: HTTP/web app access route의 missing/invalid session 실패는 "Missing or

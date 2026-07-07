@@ -30,7 +30,7 @@ export function requireBearerToken(
     throw problem(
       401,
       "Unauthorized",
-      "Missing or invalid bearer token.",
+      "Missing or invalid bearer token. Reinstall the agent hook with `promptlane install-hook claude-code` or `promptlane install-hook codex`, then run the matching `promptlane doctor` command if ingest still fails.",
       request.url,
     );
   }
