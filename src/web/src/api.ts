@@ -1711,7 +1711,7 @@ async function failApi(response: Response, label: string): Promise<never> {
       detail?: string;
       title?: string;
     };
-    detail = body.detail || body.title || "";
+    detail = body.detail?.trim() || body.title?.trim() || "";
   } catch {
     // body may not be JSON, that is fine.
   }

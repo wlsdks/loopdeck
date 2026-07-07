@@ -2753,6 +2753,22 @@ describe("web api export client", () => {
     );
   });
 
+  it("uses the response title when detail is blank", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        errorResponse(403, {
+          detail: "   ",
+          title: "Refresh the local PromptLane web session, then retry.",
+        }),
+      );
+    const { deletePrompt } = await import("./api.js");
+
+    await expect(deletePrompt("prmt_x")).rejects.toThrow(
+      "Delete failed (403): Refresh the local PromptLane web session, then retry.",
+    );
+  });
+
   it("still surfaces the status when the error body is not JSON", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
