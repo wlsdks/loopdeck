@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Brief Recovery Command Quoting
+
+- [x] CHECK: selected loop brief가 선택 필터와 일치하는 snapshot을 찾지 못할 때
+  CLI/MCP가 공유 recovery message로 `promptlane loop collect ...` 명령을 안내하지만,
+  worktree/branch 값에 공백이나 따옴표가 있으면 복사 실행이 깨질 수 있었다.
+- [x] RED: `src/cli/commands/loop.test.ts`에 selected brief recovery command가
+  공백/따옴표 포함 필터 값을 shell-quote해야 한다는 focused test를 추가해 실패를
+  확인했다.
+- [x] GREEN: raw path label sanitization은 유지하고, 최종 recovery command argv
+  조각을 `quoteForShell` helper로 렌더링하게 했다.
+- [x] VERIFY: focused loop CLI/MCP tests, typecheck, formatting/diff checks를
+  실행한다.
+
 ## 2026-07-08 PromptLane Selected Brief Command Quoting
 
 - [x] CHECK: web/server selected continuation brief action은
