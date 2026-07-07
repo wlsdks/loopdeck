@@ -77,3 +77,7 @@ export function selectedPromptErrorMessage(error: unknown): string {
 export function promptListErrorMessage(error: unknown): string {
   return errorMessageOrDefault(error, "Could not load prompts.");
 }
+
+export function loopWorktreeErrorMessage(error: unknown): string {
+  return errorMessageOrDefault(error, "Could not load loop worktree detail.");
+}
