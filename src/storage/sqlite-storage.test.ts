@@ -1364,7 +1364,7 @@ describe("SQLite prompt storage", () => {
     db.close();
   });
 
-  it("detects exact duplicate prompt groups without returning prompt bodies", async () => {
+  it("detects exact duplicate prompt groups without returning prompt bodies or raw paths", async () => {
     const dataDir = createTempDir();
     initializePromptLane({ dataDir });
     const storage = createSqlitePromptStorage({
@@ -1404,14 +1404,15 @@ describe("SQLite prompt storage", () => {
       expect.objectContaining({
         count: 2,
         latest_received_at: "2026-05-01T10:01:00.000Z",
-        projects: ["/Users/example/project-a", "/Users/example/project-b"],
+        projects: ["project-a", "project-b"],
         prompts: expect.arrayContaining([
-          expect.objectContaining({ id: first.id }),
-          expect.objectContaining({ id: second.id }),
+          expect.objectContaining({ id: first.id, cwd: "project-a" }),
+          expect.objectContaining({ id: second.id, cwd: "project-b" }),
         ]),
       }),
     ]);
     expect(JSON.stringify(groups)).not.toContain(repeatedPrompt);
+    expect(JSON.stringify(groups)).not.toContain("/Users/example");
 
     expect(storage.deletePrompt(first.id)).toEqual({ deleted: true });
     expect(storage.getPrompt(second.id)?.duplicate_count).toBe(0);

@@ -2158,7 +2158,11 @@ function readDuplicatePromptGroups(
       )
       .all(group.stored_content_hash) as PromptWithSignalRow[];
     const projects = [
-      ...new Set(rows.map((row) => row.cwd).sort((a, b) => a.localeCompare(b))),
+      ...new Set(
+        rows
+          .map((row) => projectLabel(row.cwd))
+          .sort((a, b) => a.localeCompare(b)),
+      ),
     ];
 
     return {
@@ -2171,7 +2175,7 @@ function readDuplicatePromptGroups(
         return {
           id: row.id,
           tool: row.tool,
-          cwd: row.cwd,
+          cwd: projectLabel(row.cwd),
           received_at: row.received_at,
           tags: signals.tags,
           quality_gaps: signals.quality_gaps,

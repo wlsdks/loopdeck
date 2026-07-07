@@ -5305,3 +5305,9 @@
 - [x] RED: Add focused shared project-label test for POSIX/backslash paths and caller-specific fallbacks.
 - [x] GREEN: Move project label normalization into `shared/project-label` and keep storage/MCP/archive fallbacks at their wrappers.
 - [x] VERIFY: Focused shared/storage/MCP/archive-score project-label tests and repo typecheck passed.
+
+## 2026-07-08 Duplicate Groups Raw-Free Projects
+
+- [x] RED: Expand duplicate prompt group storage test to reject raw project paths in dashboard output.
+- [x] GREEN: Return project labels for duplicate group `projects` and prompt `cwd` fields.
+- [x] VERIFY: Focused sqlite storage/project-label tests and repo typecheck passed.
