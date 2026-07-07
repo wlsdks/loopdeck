@@ -29,6 +29,18 @@ describe("loop detail guidance", () => {
     });
   });
 
+  it("shell-quotes selected brief command filters with spaces and quotes", () => {
+    expect(
+      selectedBriefActionFor({
+        worktree: "agent loop worktree",
+        sessionId: "session 'quoted'",
+        branch: "feature/branch filter",
+      }).command,
+    ).toBe(
+      "promptlane loop brief --worktree 'agent loop worktree' --session 'session '\\''quoted'\\''' --branch 'feature/branch filter'",
+    );
+  });
+
   it("describes selected and review command filters separately", () => {
     expect(selectionScopeFor({ hasSession: true, hasBranch: true })).toEqual({
       label: "Selection scope",

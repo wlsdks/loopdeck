@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Selected Brief Command Quoting
+
+- [x] CHECK: web/server selected continuation brief action은
+  `promptlane loop brief --worktree ...` command를 사용자에게 복사 가능한 형태로
+  제공하지만, worktree/session/branch 값에 공백이나 따옴표가 있으면 shell command가
+  깨질 수 있었다.
+- [x] RED: `src/server/loop-detail-guidance.test.ts`에 selected brief command가
+  공백/따옴표 포함 필터 값을 shell-quote해야 한다는 focused test를 추가해 실패를
+  확인했다.
+- [x] GREEN: `selectedBriefCommand`가 모든 argv 조각을 작은 `quoteForShell`
+  helper로 렌더링하게 했다. 기존 안전한 label/branch 값은 그대로 unquoted로 유지한다.
+- [x] VERIFY: focused loop detail guidance test, typecheck, formatting/diff
+  checks를 실행한다.
+
 ## 2026-07-08 PromptLane Codex HUD Custom Data Dir
 
 - [x] CHECK: `install-codex-hud`는 `--data-dir`를 실제 buddy argv에는 전달하지만,
