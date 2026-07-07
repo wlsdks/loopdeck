@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Session Error Detail
+
+- [x] CHECK: `ensureSession`이 `/api/v1/session` non-OK 응답을 확인하지 않아
+  session recovery detail 대신 `body.data.csrf_token` TypeError를 던진다.
+- [x] RED: `src/web/src/api.test.ts`가 session bootstrap recovery detail 보존을
+  요구하게 해 TypeError 실패를 확인했다.
+- [x] GREEN: `ensureSession`이 non-OK session 응답에서 shared `failApi`를 사용해
+  서버 recovery detail을 `Session failed (...)` Error message로 보존하도록 고쳤다.
+- [x] VERIFY: focused web API test, typecheck, diff whitespace check를 실행했다.
+  `api.test.ts` 전체 포맷은 기존 대형 fixture 포맷 churn을 만들기 때문에 적용하지
+  않았다.
+
 ## 2026-07-08 PromptLane Web Coach Feedback Query Error Detail
 
 - [x] CHECK: `getCoachFeedbackSummary`는 서버 recovery detail을 Error message에 보존하지만,

@@ -2452,6 +2452,21 @@ describe("web api export client", () => {
     );
   });
 
+  it("preserves session bootstrap recovery detail on failed responses", async () => {
+    fetchMock.mockResolvedValueOnce(
+      errorResponse(401, {
+        detail:
+          "Missing or invalid app session. Open a new local PromptLane web session, then retry the request.",
+      }),
+    );
+    const { listPrompts } = await import("./api.js");
+
+    await expect(listPrompts({})).rejects.toThrow(
+      "Session failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the request.",
+    );
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
   it("preserves project list recovery detail on failed responses", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))

@@ -1450,6 +1450,9 @@ export async function ensureSession(): Promise<void> {
     credentials: "same-origin",
   })
     .then(async (response) => {
+      if (!response.ok) {
+        await failApi(response, "Session failed");
+      }
       const body = (await response.json()) as { data: { csrf_token: string } };
       csrfToken = body.data.csrf_token;
     })
