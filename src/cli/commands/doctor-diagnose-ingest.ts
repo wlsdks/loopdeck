@@ -53,7 +53,7 @@ export function diagnoseIngestFailure({
   ) {
     return {
       cause: "server_owner_mismatch",
-      hint: `A different server is bound to port ${port} using data dir ${ownerDataDir} instead of ${configuredDataDir}. Stop it and start the configured service: promptlane service stop && promptlane service install.`,
+      hint: `another PromptLane server is bound to port ${port} with a different local data directory. Stop it and start the configured service: promptlane service stop && promptlane service install.`,
     };
   }
 

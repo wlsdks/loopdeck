@@ -5365,3 +5365,9 @@
 - [x] RED: Add focused doctor tests requiring Claude Code and Codex JSON/result output to include the same raw-free recovery `next_actions` as plain text output.
 - [x] GREEN: Store doctor next actions on the result object so automation and text formatting share the same recovery guidance.
 - [x] VERIFY: Focused doctor/setup/start tests, typecheck, and diff hygiene passed.
+
+## 2026-07-08 Doctor Ingest Diagnosis Raw-Free Paths
+
+- [x] RED: Add focused ingest diagnosis test requiring server-owner mismatch recovery hints to avoid echoing configured or bound raw data-dir paths.
+- [x] GREEN: Replace raw data-dir values in the mismatch hint with a path-free local server conflict explanation and the service stop/install recovery command.
+- [x] VERIFY: Focused ingest diagnosis/doctor tests, typecheck, and diff hygiene passed.
