@@ -1731,7 +1731,7 @@ async function failApi(response: Response, label: string): Promise<never> {
 }
 
 function apiErrorText(value: unknown): string {
-  return typeof value === "string" ? value.trim() : "";
+  return typeof value === "string" ? sanitizeApiErrorText(value.trim()) : "";
 }
 
 function apiErrorIssueText(value: unknown): string {
@@ -1758,6 +1758,18 @@ function apiErrorIssueText(value: unknown): string {
     visibleIssues.push(`${remaining} more error(s).`);
   }
   return visibleIssues.join(" ");
+}
+
+function sanitizeApiErrorText(value: string): string {
+  return value
+    .replace(
+      /\/(?:Users|home|private|tmp|var|opt|workspace|Volumes)\/[^\s)'"`]+/gi,
+      "[REDACTED:path]",
+    )
+    .replace(
+      /\b(?:AIza[0-9A-Za-z_-]{20,}|npm_[A-Za-z0-9]{30,}|(?:sk|pk|ghp|github_pat|xoxb|AKIA)[a-zA-Z0-9_-]{8,})\b/g,
+      "[REDACTED:secret]",
+    );
 }
 
 export async function updateProjectPolicy(

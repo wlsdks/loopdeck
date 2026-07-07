@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web API Error Redaction
+
+- [x] CHECK: web API client `failApi`가 structured problem `errors[]`를 browser-visible
+  error에 붙이면서 future/malformed server error가 raw path 또는 token-shaped secret을
+  담으면 그대로 노출할 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 structured problem detail의 `/Users/...` path와
+  `sk-proj...` token을 `[REDACTED:path]`, `[REDACTED:secret]`으로 마스킹하도록
+  요구하게 해 raw value 노출 실패를 확인했다.
+- [x] GREEN: browser-visible API error text sanitizer를 추가해 path와 API-key 형태 secret을
+  마스킹하도록 고쳤다.
+- [x] VERIFY: focused web API test, typecheck, implementation format check, diff
+  whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web API Problem Error Cap
 
 - [x] CHECK: web API client `failApi`가 structured problem `errors[]`를 모두 붙여
