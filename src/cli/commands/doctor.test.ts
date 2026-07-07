@@ -34,6 +34,13 @@ describe("doctorClaudeCode", () => {
     expect(result.server.ok).toBe(false);
     expect(result.token.ok).toBe(false);
     expect(result.settings.hookInstalled).toBe(false);
+    expect(result.next_actions).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("promptlane service start"),
+        expect.stringContaining("promptlane setup --profile coach"),
+        expect.stringContaining("Register MCP: claude mcp add"),
+      ]),
+    );
   });
 
   it("detects invalid settings JSON", async () => {
@@ -356,6 +363,11 @@ describe("doctorCodex", () => {
     expect(result.ingest.ok).toBe(true);
     expect(result.settings.ok).toBe(true);
     expect(result.mcp.registered).toBe(false);
+    expect(result.next_actions).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("Register MCP: codex mcp add promptlane"),
+      ]),
+    );
     expect(formatDoctorResult("codex", result)).toContain(
       "Status: needs attention",
     );
