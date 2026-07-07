@@ -1538,8 +1538,22 @@ export async function getQualityDashboard(
     await failApi(response, "Quality dashboard failed");
   }
 
-  const body = (await response.json()) as { data: QualityDashboard };
-  return body.data;
+  const body = (await response.json()) as {
+    data?: {
+      total_prompts?: unknown;
+      quality_score?: unknown;
+      missing_items?: unknown;
+    };
+  };
+  if (
+    typeof body.data?.total_prompts !== "number" ||
+    typeof body.data.quality_score !== "object" ||
+    body.data.quality_score === null ||
+    !Array.isArray(body.data.missing_items)
+  ) {
+    throw new Error("Quality dashboard failed: Invalid response.");
+  }
+  return body.data as QualityDashboard;
 }
 
 export async function getArchiveScoreReport(): Promise<ArchiveScoreReport> {

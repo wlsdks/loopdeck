@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Quality Dashboard Contract Error
+
+- [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의 첫 화면 품질
+  지표 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 dashboard UI에 넘길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed quality dashboard body를
+  `Quality dashboard failed: Invalid response.`로 reject하도록 요구하게 해 현재 `{}` resolve
+  실패를 확인했다.
+- [x] GREEN: `getQualityDashboard`가 `total_prompts`, `quality_score`, `missing_items`
+  계약을 확인하고 깨진 성공 응답은 raw-free quality dashboard contract 오류로 중단하도록
+  고쳤다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
+  check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Health Contract Error
 
 - [x] CHECK: web API `getHealth`가 `/api/v1/health` 성공 응답의 `ok`/`version` 계약을
