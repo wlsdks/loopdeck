@@ -88,6 +88,40 @@ describe("doctorClaudeCode", () => {
     );
   });
 
+  it("recommends sending the first prompt when Claude Code setup is ready but no hook delivery exists", async () => {
+    const dir = createTempDir();
+    const dataDir = join(dir, "data");
+    const settingsPath = join(dir, "settings.json");
+    const mcpConfigPath = join(dir, "claude.json");
+    initializePromptLane({ dataDir });
+    installClaudeCodeHook({ dataDir, settingsPath });
+    writeFileSync(
+      mcpConfigPath,
+      JSON.stringify({
+        mcpServers: {
+          promptlane: {
+            command: "promptlane",
+            args: ["mcp"],
+          },
+        },
+      }),
+    );
+
+    const result = await doctorClaudeCode({
+      dataDir,
+      settingsPath,
+      mcpConfigPath,
+      checkServer: async () => true,
+    });
+
+    const output = formatDoctorResult("claude-code", result);
+
+    expect(output).toContain("Status: ready");
+    expect(output).toContain(
+      "Send one Codex or Claude Code prompt, then run promptlane coach.",
+    );
+  });
+
   it("formats Claude Code doctor output with next actions", async () => {
     const dir = createTempDir();
 

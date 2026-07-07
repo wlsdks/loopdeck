@@ -91,7 +91,10 @@ try {
     plistPath,
   ]);
   assertIncludes(setup.stdout, "Profile: coach");
-  assertIncludes(setup.stdout, "Send one real coding prompt in Claude Code or Codex");
+  assertIncludes(
+    setup.stdout,
+    "Send one Codex or Claude Code prompt, then run promptlane coach.",
+  );
   assertNoSecretOutput(setup);
 
   const claudeSettings = readFileSync(settingsPath, "utf8");

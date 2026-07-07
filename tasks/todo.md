@@ -55,9 +55,21 @@
 - [x] VERIFY: `corepack pnpm dogfood:web-user-flow`, `corepack pnpm ui-patrol`,
   `corepack pnpm lint:types`, `git diff --check`가 통과했다. `ui-patrol`
   screenshot에서 desktop/mobile Settings 문구 wrapping도 확인했다.
-- [ ] NEXT: 다음 후보는 CLI `setup`/`doctor`/`quality-evidence` 텍스트 중
+- [x] NEXT: 다음 후보는 CLI `setup`/`doctor`/`quality-evidence` 텍스트 중
   web에서 개선한 첫 행동 안내와 불일치하는 문구가 있는지 focused CLI 출력
   snapshot으로 확인하고 하나만 정리한다.
+- [x] RED: `doctor claude-code`가 server/token/hook/MCP는 ready지만 아직 hook
+  delivery가 없는 첫 사용자 상태에서 MCP elicitation note만 보여주고, 첫 prompt를
+  보내라는 next action을 보여주지 않는 focused test를 추가해 실패를 확인했다.
+- [x] GREEN: CLI 공통 first-prompt next step을 `src/cli/agent-access.ts`에 두고
+  `setup`과 `doctor`가 같은 `"Send one Codex or Claude Code prompt, then run
+  promptlane coach."` 문구를 쓰게 했다.
+- [x] VERIFY: `corepack pnpm vitest run src/cli/commands/doctor.test.ts
+  src/cli/commands/setup.test.ts`, `corepack pnpm lint:types`,
+  `corepack pnpm smoke:agent-setup`이 통과했다.
+- [ ] NEXT: 다음 후보는 `start` guide, README/AGENT-HARNESS, plugin docs의
+  first-score path가 web/setup/doctor와 같은 순서로 안내되는지 문서/CLI snapshot
+  중심으로 확인하고, 문서만 필요하면 테스트 없이 `rg`와 diff check로 마무리한다.
 
 ### 판단 기준
 

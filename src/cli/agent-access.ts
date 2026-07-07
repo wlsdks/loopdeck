@@ -17,6 +17,9 @@ export const PUBLISHED_PROMPTLANE_ENTRY: PromptLaneEntry = {
   args: [],
 };
 
+export const FIRST_PROMPT_NEXT_STEP =
+  "Send one Codex or Claude Code prompt, then run promptlane coach.";
+
 export function defaultPromptLaneEntry(): PromptLaneEntry {
   const cliPath = process.argv[1];
   if (typeof cliPath === "string" && DIST_CLI_PATTERN.test(cliPath)) {
