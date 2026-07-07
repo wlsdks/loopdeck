@@ -13,6 +13,7 @@ import {
   hasLoopSnapshotSelection,
   loopBriefNoSnapshotMcpMessage,
   loopMemoryNoSnapshotMcpMessage,
+  loopOutcomeNoSnapshotMcpMessage,
   selectLoopSnapshot,
   selectedLoopSnapshotNotFoundMessage,
 } from "../loop/snapshot-selection.js";
@@ -229,7 +230,7 @@ export function recordLoopOutcomeTool(
       if (!snapshotId) {
         return loopToolError(
           "not_found",
-          "No loop snapshot found. Run `promptlane loop collect` first.",
+          loopOutcomeNoSnapshotMcpMessage("record_loop_outcome"),
         );
       }
 
