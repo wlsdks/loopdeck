@@ -11,6 +11,7 @@ import { dirname, join } from "node:path";
 import type { Command } from "commander";
 
 import { resolveCliEntryPath } from "../entry-path.js";
+import { quoteForShell } from "../../shared/shell-quote.js";
 import type { LastHookStatus } from "../../hooks/hook-status.js";
 import { UserError } from "../user-error.js";
 import {
@@ -109,7 +110,10 @@ function registerChainedStatusLineCommand(program: Command): void {
     )
     .argument("<tool>", "Tool to render a chained status line for.")
     .requiredOption("--previous <base64url>", "Previous status line command.")
-    .requiredOption("--promptlane <base64url>", "PromptLane status line command.")
+    .requiredOption(
+      "--promptlane <base64url>",
+      "PromptLane status line command.",
+    )
     .action((tool: string, options: ChainedStatusLineOptions) => {
       if (tool !== "claude-code") {
         throw new UserError(
@@ -402,20 +406,20 @@ function removeStatusLine(settings: StatusLineSettings): StatusLineSettings {
 
 function buildStatusLineCommand(dataDir?: string): string {
   const dataDirArg = dataDir ? ` --data-dir ${JSON.stringify(dataDir)}` : "";
-  return `${markerAssignment(STATUSLINE_MARKER)} ${shellQuote(
+  return `${markerAssignment(STATUSLINE_MARKER)} ${quoteForShell(
     process.execPath,
-  )} ${shellQuote(cliEntryPath())} statusline claude-code${dataDirArg}`;
+  )} ${quoteForShell(cliEntryPath())} statusline claude-code${dataDirArg}`;
 }
 
 function buildChainedStatusLineCommand(
   previousCommand: string,
   promptLaneCommand: string,
 ): string {
-  return `${markerAssignment(STATUSLINE_MARKER)} ${shellQuote(
+  return `${markerAssignment(STATUSLINE_MARKER)} ${quoteForShell(
     process.execPath,
-  )} ${shellQuote(cliEntryPath())} statusline-chain claude-code --previous ${shellQuote(
+  )} ${quoteForShell(cliEntryPath())} statusline-chain claude-code --previous ${quoteForShell(
     encodeStatusLineCommand(previousCommand),
-  )} --promptlane ${shellQuote(encodeStatusLineCommand(promptLaneCommand))}`;
+  )} --promptlane ${quoteForShell(encodeStatusLineCommand(promptLaneCommand))}`;
 }
 
 function isPromptLaneStatusLine(command: string | undefined): boolean {
@@ -519,11 +523,7 @@ function normalizePromptLaneStatusLineOutput(
 }
 
 function markerAssignment(marker: string): string {
-  return `PROMPTLANE_STATUSLINE=${shellQuote(marker)}`;
-}
-
-function shellQuote(value: string): string {
-  return JSON.stringify(value);
+  return `PROMPTLANE_STATUSLINE=${quoteForShell(marker)}`;
 }
 
 function cliEntryPath(): string {

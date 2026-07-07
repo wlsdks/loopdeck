@@ -132,15 +132,14 @@ describe("Claude Code hook install/uninstall", () => {
     expect(settings.hooks.UserPromptSubmit).toHaveLength(1);
     expect(settings.hooks.SessionStart).toHaveLength(1);
     expect(settings.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
-      'PROMPTLANE_HOOK="promptlane hook claude-code"',
+      "PROMPTLANE_HOOK='promptlane hook claude-code'",
     );
     expect(settings.hooks.SessionStart[0].hooks[0].command).toContain(
-      'PROMPTLANE_HOOK="promptlane hook session-start claude-code"',
+      "PROMPTLANE_HOOK='promptlane hook session-start claude-code'",
     );
     expect(JSON.stringify(settings)).not.toContain("PROMPT_COACH_HOOK");
     expect(JSON.stringify(settings)).not.toContain("prompt-coach");
   });
-
 
   it("can install Claude Code hook with opt-in rewrite guard flags", () => {
     const dir = createTempDir();
@@ -330,7 +329,7 @@ describe("Codex hook install/uninstall", () => {
     expect(hooks.hooks.UserPromptSubmit).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit[0].hooks).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
-      'PROMPTLANE_HOOK="promptlane hook codex"',
+      "PROMPTLANE_HOOK='promptlane hook codex'",
     );
     expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).not.toContain(
       "PROMPT_MEMORY_HOOK",
@@ -381,7 +380,7 @@ describe("Codex hook install/uninstall", () => {
     expect(hooks.hooks.UserPromptSubmit).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit[0].hooks).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
-      'PROMPTLANE_HOOK="promptlane hook codex"',
+      "PROMPTLANE_HOOK='promptlane hook codex'",
     );
     expect(JSON.stringify(hooks)).not.toContain("PROMPT_COACH_HOOK");
     expect(JSON.stringify(hooks)).not.toContain("prompt-coach");
@@ -415,7 +414,7 @@ describe("Codex hook install/uninstall", () => {
                   {
                     type: "command",
                     command:
-                      'PROMPTLANE_HOOK="promptlane hook codex" /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard "context"',
+                      "PROMPTLANE_HOOK='promptlane hook codex' /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard context",
                     timeout: 2,
                   },
                 ],
@@ -440,7 +439,7 @@ describe("Codex hook install/uninstall", () => {
     expect(hooks.hooks.UserPromptSubmit).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit[0].hooks).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
-      'PROMPTLANE_HOOK="promptlane hook codex"',
+      "PROMPTLANE_HOOK='promptlane hook codex'",
     );
     expect(JSON.stringify(hooks)).not.toContain("PROMPT_MEMORY_HOOK");
   });
@@ -473,7 +472,7 @@ describe("Codex hook install/uninstall", () => {
                   {
                     type: "command",
                     command:
-                      'PROMPTLANE_HOOK="promptlane hook stop codex" /usr/bin/node /repo/dist/cli/index.js hook codex',
+                      "PROMPTLANE_HOOK='promptlane hook stop codex' /usr/bin/node /repo/dist/cli/index.js hook codex",
                     timeout: 2,
                   },
                 ],
@@ -517,13 +516,13 @@ describe("Codex hook install/uninstall", () => {
     expect(hooks.hooks.PreCompact).toHaveLength(1);
     expect(hooks.hooks.PostCompact).toHaveLength(1);
     expect(hooks.hooks.Stop[0].hooks[0].command).toContain(
-      'PROMPTLANE_HOOK="promptlane hook stop codex"',
+      "PROMPTLANE_HOOK='promptlane hook stop codex'",
     );
     expect(hooks.hooks.PreCompact[0].hooks[0].command).toContain(
-      'PROMPTLANE_HOOK="promptlane hook pre-compact codex"',
+      "PROMPTLANE_HOOK='promptlane hook pre-compact codex'",
     );
     expect(hooks.hooks.PostCompact[0].hooks[0].command).toContain(
-      'PROMPTLANE_HOOK="promptlane hook post-compact codex"',
+      "PROMPTLANE_HOOK='promptlane hook post-compact codex'",
     );
     expect(JSON.stringify(hooks)).not.toContain("PROMPT_COACH_HOOK");
     expect(JSON.stringify(hooks)).not.toContain("prompt-coach");
@@ -654,7 +653,7 @@ describe("Codex hook install/uninstall", () => {
     expect(hooks.hooks.SessionStart).toHaveLength(1);
     expect(hooks.hooks.SessionStart[0].hooks).toHaveLength(1);
     expect(hooks.hooks.SessionStart[0].hooks[0].command).toContain(
-      'PROMPTLANE_HOOK="promptlane hook session-start codex"',
+      "PROMPTLANE_HOOK='promptlane hook session-start codex'",
     );
     expect(JSON.stringify(hooks)).not.toContain("PROMPT_MEMORY_HOOK");
   });

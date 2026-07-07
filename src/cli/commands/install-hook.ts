@@ -14,6 +14,7 @@ import {
   initializePromptLane,
   revokeIngestToken,
 } from "../../config/config.js";
+import { quoteForShell } from "../../shared/shell-quote.js";
 import { UserError } from "../user-error.js";
 
 export type ClaudeSettings = {
@@ -76,20 +77,17 @@ const LEGACY_CODEX_PROMPT_COACH_MARKER = "prompt-coach hook codex";
 const LEGACY_CODEX_PROMPT_MEMORY_MARKER = "prompt-memory hook codex";
 const CODEX_PROMPTLANE_STOP_MARKER = "promptlane hook stop codex";
 const LEGACY_CODEX_PROMPT_COACH_STOP_MARKER = "prompt-coach hook stop codex";
-const CODEX_PROMPTLANE_PRE_COMPACT_MARKER =
-  "promptlane hook pre-compact codex";
+const CODEX_PROMPTLANE_PRE_COMPACT_MARKER = "promptlane hook pre-compact codex";
 const LEGACY_CODEX_PROMPT_COACH_PRE_COMPACT_MARKER =
   "prompt-coach hook pre-compact codex";
 const CODEX_PROMPTLANE_POST_COMPACT_MARKER =
   "promptlane hook post-compact codex";
 const LEGACY_CODEX_PROMPT_COACH_POST_COMPACT_MARKER =
   "prompt-coach hook post-compact codex";
-const PROMPTLANE_SESSION_MARKER =
-  "promptlane hook session-start claude-code";
+const PROMPTLANE_SESSION_MARKER = "promptlane hook session-start claude-code";
 const LEGACY_PROMPT_COACH_SESSION_MARKER =
   "prompt-coach hook session-start claude-code";
-const CODEX_PROMPTLANE_SESSION_MARKER =
-  "promptlane hook session-start codex";
+const CODEX_PROMPTLANE_SESSION_MARKER = "promptlane hook session-start codex";
 const LEGACY_CODEX_PROMPT_COACH_SESSION_MARKER =
   "prompt-coach hook session-start codex";
 const LEGACY_CODEX_PROMPT_MEMORY_SESSION_MARKER =
@@ -99,7 +97,9 @@ const CODEX_HOOKS_FEATURE_KEY = "hooks";
 export function registerInstallHookCommands(program: Command): void {
   program
     .command("install-hook")
-    .description("Install the PromptLane capture hook for Claude Code or Codex.")
+    .description(
+      "Install the PromptLane capture hook for Claude Code or Codex.",
+    )
     .argument("<tool>", "Tool to install hook for.")
     .option("--data-dir <path>", "Override the promptlane data directory.")
     .option("--settings-path <path>", "Override Claude Code settings path.")
@@ -583,10 +583,7 @@ function removeCodexHook(
     hooks.UserPromptSubmit ?? [],
     isCodexPromptLaneHook,
   );
-  hooks.Stop = removePromptLaneHookGroups(
-    hooks.Stop ?? [],
-    isCodexStopHook,
-  );
+  hooks.Stop = removePromptLaneHookGroups(hooks.Stop ?? [], isCodexStopHook);
   hooks.PreCompact = removePromptLaneHookGroups(
     hooks.PreCompact ?? [],
     isCodexPreCompactHook,
@@ -835,9 +832,9 @@ function buildHookCommandWithOptions(
   const rewriteArgs = buildRewriteGuardArgs(options);
   const marker =
     tool === "claude-code" ? PROMPTLANE_MARKER : CODEX_PROMPTLANE_MARKER;
-  return `${markerAssignment(marker)} ${shellQuote(
+  return `${markerAssignment(marker)} ${quoteForShell(
     process.execPath,
-  )} ${shellQuote(cliEntryPath())} hook ${tool}${dataDirArg}${rewriteArgs}`;
+  )} ${quoteForShell(cliEntryPath())} hook ${tool}${dataDirArg}${rewriteArgs}`;
 }
 
 function buildSessionStartHookCommand(
@@ -849,16 +846,19 @@ function buildSessionStartHookCommand(
     tool === "claude-code"
       ? PROMPTLANE_SESSION_MARKER
       : CODEX_PROMPTLANE_SESSION_MARKER;
-  return `${markerAssignment(marker)} ${shellQuote(
+  return `${markerAssignment(marker)} ${quoteForShell(
     process.execPath,
-  )} ${shellQuote(cliEntryPath())} hook session-start ${tool}${dataDirArg} --open-web`;
+  )} ${quoteForShell(cliEntryPath())} hook session-start ${tool}${dataDirArg} --open-web`;
 }
 
-function buildCodexLifecycleHookCommand(marker: string, dataDir?: string): string {
+function buildCodexLifecycleHookCommand(
+  marker: string,
+  dataDir?: string,
+): string {
   const dataDirArg = dataDir ? ` --data-dir ${JSON.stringify(dataDir)}` : "";
-  return `${markerAssignment(marker)} ${shellQuote(
+  return `${markerAssignment(marker)} ${quoteForShell(
     process.execPath,
-  )} ${shellQuote(cliEntryPath())} hook codex${dataDirArg}`;
+  )} ${quoteForShell(cliEntryPath())} hook codex${dataDirArg}`;
 }
 
 function buildRewriteGuardArgs(
@@ -870,13 +870,13 @@ function buildRewriteGuardArgs(
   const args: string[] = [];
   const rewriteGuard = options.rewriteGuard;
   if (isRewriteGuardMode(rewriteGuard)) {
-    args.push(` --rewrite-guard ${shellQuote(rewriteGuard)}`);
+    args.push(` --rewrite-guard ${quoteForShell(rewriteGuard)}`);
   }
   if (options.rewriteMinScore !== undefined) {
-    args.push(` --rewrite-min-score ${shellQuote(options.rewriteMinScore)}`);
+    args.push(` --rewrite-min-score ${quoteForShell(options.rewriteMinScore)}`);
   }
   if (options.rewriteLanguage === "en" || options.rewriteLanguage === "ko") {
-    args.push(` --rewrite-language ${shellQuote(options.rewriteLanguage)}`);
+    args.push(` --rewrite-language ${quoteForShell(options.rewriteLanguage)}`);
   }
 
   return args.join("");
@@ -948,11 +948,7 @@ function isLegacyCodexSessionStartHook(command: string): boolean {
 }
 
 function markerAssignment(marker: string): string {
-  return `PROMPTLANE_HOOK=${shellQuote(marker)}`;
-}
-
-function shellQuote(value: string): string {
-  return JSON.stringify(value);
+  return `PROMPTLANE_HOOK=${quoteForShell(marker)}`;
 }
 
 function cliEntryPath(): string {
