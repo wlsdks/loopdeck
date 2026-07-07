@@ -132,7 +132,7 @@ export function createServer(options: CreateServerOptions): FastifyInstance {
         problem(
           400,
           "Bad Request",
-          "The request body could not be parsed.",
+          "The request body could not be parsed. Send valid JSON; if this came from an agent hook, reinstall the hook and run `promptlane doctor`.",
           request.url,
         ).problem,
       );
