@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Loop List Contract Error
+
+- [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의 top-level loop list
+  계약을 검증하지 않아 malformed 응답을 `{}` 또는 `undefined` 상태로 UI에 넘길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed loop list body를
+  `Loop list failed: Invalid response.`로 reject하도록 요구하게 해 현재 `{}` resolve 실패를
+  확인했다.
+- [x] GREEN: `listLoops`가 `status` 객체와 `items` 배열 계약을 확인하고 깨진 성공 응답은
+  raw-free loop list contract 오류로 중단하도록 고쳤다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
+  check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Project List Contract Error
 
 - [x] CHECK: web API `listProjects`가 `/api/v1/projects` 성공 응답의 `data.items`
