@@ -138,6 +138,29 @@ describe("createServer P2 ingest boundary", () => {
     expect(deleted.statusCode).toBe(200);
   });
 
+  it("guides missing prompt detail users back to local archive search", async () => {
+    const storage = createMemoryStorage();
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/prompts/prmt_20260501_100000_deadbeefdead",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+
+    expect(response.statusCode).toBe(404);
+    const detail = response.json<{ detail: string }>().detail;
+    expect(detail).toBe(
+      "Prompt not found. Open the local archive or search prompts before retrying this prompt detail link.",
+    );
+    expect(detail).not.toContain("deadbeefdead");
+    expect(response.body).not.toContain("/Users/example");
+    expect(response.body).not.toContain("sk-proj-secret");
+  });
+
   it("returns browser-safe settings without exposing secrets", async () => {
     const server = createTestServer({
       excludedProjectRoots: ["/Users/example/private-project"],
