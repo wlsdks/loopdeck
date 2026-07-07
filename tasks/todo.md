@@ -80,6 +80,13 @@
   실행하지 않았다.
 - [ ] NEXT: 다음 후보는 branch의 세 커밋을 PR 가능한 단위로 정리하고, 필요한
   경우 focused package check만 추가로 돌린 뒤 push/PR 단계로 넘기는 것이다.
+- [x] CHECK: `codex/promptlane-first-value-dogfood-hardening` 브랜치를 원격에
+  push했고 draft PR #511을 열었다. PR 본문에는 이번 branch의 first-value
+  onboarding smoke hardening, web/CLI/doc copy alignment, focused validation
+  명령을 기록했다.
+- [ ] NEXT: PR #511의 diff를 리뷰 관점으로 한 번 더 훑어 불필요한 scope creep,
+  stale wording, privacy/local-first regression 가능성이 없는지 focused review를
+  수행한다.
 
 ### 판단 기준
 
