@@ -69,6 +69,7 @@ import { CoachFeedbackPanel } from "./coach-feedback-panel.js";
 import { createPromptHabitCoach } from "./habit-coach.js";
 import { HabitCoachPanel } from "./habit-coach-panel.js";
 import "./archive-effectiveness-summary.css";
+import { getQueueNavigation, getVisibleChrome } from "./app-view.js";
 import { LoopsView, type CommandCenterBriefSelection } from "./loops-view.js";
 import {
   createArchiveMeasurement,
@@ -271,50 +272,13 @@ export function App() {
       .catch(() => undefined);
   }, []);
 
-  const visibleTitle = useMemo(() => {
-    if (view.name === "settings") return "Settings";
-    if (view.name === "exports") return "Anonymized export";
-    if (view.name === "mcp") return "MCP tools";
-    if (view.name === "projects") return "Projects";
-    if (view.name === "loops") return "Loops";
-    if (view.name === "scores") return "Prompt scores";
-    if (view.name === "coach") return "Prompt coach";
-    if (view.name === "detail") return "Prompt detail";
-    if (view.name === "dashboard") return "Quality dashboard";
-    return "Prompt archive";
-  }, [view]);
-  const visibleEyebrow = useMemo(() => {
-    if (view.name === "coach") {
-      return "Prompt improvement workspace";
-    }
-    if (view.name === "mcp") {
-      return "Agent-native coach tools";
-    }
-    if (view.name === "loops") {
-      return "Agent loop memory";
-    }
-    if (view.name === "scores") {
-      return "Prompt habit analysis";
-    }
-    return "Local prompt archive";
-  }, [view]);
-  const queueNavigation = useMemo(() => {
-    if (view.name !== "detail") {
-      return { current: undefined, next: undefined, previous: undefined };
-    }
-
-    const index = prompts.findIndex((prompt) => prompt.id === view.id);
-    if (index === -1) {
-      return { current: undefined, next: undefined, previous: undefined };
-    }
-
-    return {
-      current: index + 1,
-      next: prompts[index + 1],
-      previous: prompts[index - 1],
-      total: prompts.length,
-    };
-  }, [prompts, view]);
+  const visibleChrome = useMemo(() => getVisibleChrome(view), [view]);
+  const visibleTitle = visibleChrome.title;
+  const visibleEyebrow = visibleChrome.eyebrow;
+  const queueNavigation = useMemo(
+    () => getQueueNavigation(view, prompts),
+    [prompts, view],
+  );
 
   async function confirmBulkDelete(): Promise<void> {
     const ids = [...selectedIds];
