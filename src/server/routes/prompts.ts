@@ -348,7 +348,12 @@ export function registerPromptRoutes(
     const result = storage.deletePrompt(params.id);
 
     if (!result.deleted) {
-      throw problem(404, "Not Found", "Prompt not found.", request.url);
+      throw problem(
+        404,
+        "Not Found",
+        "Prompt not found. Open the local archive or search prompts before retrying deletion.",
+        request.url,
+      );
     }
 
     return { data: result };
