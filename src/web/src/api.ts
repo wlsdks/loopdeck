@@ -1599,8 +1599,17 @@ export async function listLoops(): Promise<LoopListResponse> {
     await failApi(response, "Loop list failed");
   }
 
-  const body = (await response.json()) as { data: LoopListResponse };
-  return body.data;
+  const body = (await response.json()) as {
+    data?: { status?: unknown; items?: unknown };
+  };
+  if (
+    typeof body.data?.status !== "object" ||
+    body.data.status === null ||
+    !Array.isArray(body.data.items)
+  ) {
+    throw new Error("Loop list failed: Invalid response.");
+  }
+  return body.data as LoopListResponse;
 }
 
 export async function getLoopBrief(id: string): Promise<LoopBrief> {

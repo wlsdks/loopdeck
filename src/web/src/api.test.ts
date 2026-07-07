@@ -2569,6 +2569,17 @@ describe("web api export client", () => {
     );
   });
 
+  it("reports malformed loop list responses without returning undefined", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(jsonResponse({ data: {} }));
+    const { listLoops } = await import("./api.js");
+
+    await expect(listLoops()).rejects.toThrow(
+      "Loop list failed: Invalid response.",
+    );
+  });
+
   it("preserves loop brief recovery detail on failed responses", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
