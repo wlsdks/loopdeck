@@ -70,6 +70,7 @@ import {
   archiveScoreErrorMessage,
   bookmarkErrorMessage,
   bulkDeleteErrorMessage,
+  draftCopyMarkerErrorMessage,
   errorMessageOrDefault,
   exportPreviewErrorMessage,
   improvementDraftSaveErrorMessage,
@@ -479,8 +480,8 @@ export function App() {
             }
           : current,
       );
-    } catch {
-      setError("Copied the draft, but could not save the copy marker.");
+    } catch (error) {
+      setError(draftCopyMarkerErrorMessage(error));
     }
   }
 
