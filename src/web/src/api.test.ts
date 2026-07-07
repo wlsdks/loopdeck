@@ -2468,6 +2468,22 @@ describe("web api export client", () => {
     );
   });
 
+  it("preserves loop brief recovery detail on failed responses", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        errorResponse(404, {
+          detail:
+            "Loop snapshot not found. Run `promptlane loop collect`, then reopen the continuation brief.",
+        }),
+      );
+    const { getLoopBrief } = await import("./api.js");
+
+    await expect(getLoopBrief("loop_missing")).rejects.toThrow(
+      "Loop brief failed (404): Loop snapshot not found. Run `promptlane loop collect`, then reopen the continuation brief.",
+    );
+  });
+
   it("creates anonymized export previews with csrf and returns raw-free job data", async () => {
     const job: ExportJob = {
       id: "exp_abcdef123456",
