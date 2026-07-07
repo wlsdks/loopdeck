@@ -5191,3 +5191,10 @@
 - [x] GREEN: Refresh the 9.5 quality plan completion-state copy to match current complete `quality-evidence` output and the approved native-dialog audit.
 - [x] VERIFY: Focused packaging guards, `quality-evidence`, stale blocker scan, and diff hygiene passed.
 - [x] INTEGRATE: Commit prepared from `codex/promptlane-quality-plan-native-evidence-alignment` for PR.
+
+## 2026-07-08 Backlog Quality Completion Alignment
+
+- [x] RED: Add a focused packaging guard requiring `docs/NEXT_BACKLOG.md` to stop carrying stale native-dialog pending/blocker copy after quality evidence became complete.
+- [x] GREEN: Refresh the backlog 9.5 quality section to describe current complete evidence, future operator-gated recommendations, and explicit-approval-only native-dialog dogfood.
+- [x] VERIFY: Focused packaging guard, stale backlog scan, `quality-evidence`, and diff hygiene passed.
+- [x] INTEGRATE: Commit prepared from `codex/promptlane-backlog-quality-completion-alignment` for PR.
