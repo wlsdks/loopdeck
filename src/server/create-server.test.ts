@@ -3122,7 +3122,12 @@ describe("createServer P2 ingest boundary", () => {
     expect(response.json()).toMatchObject({
       status: 400,
       title: "Bad Request",
+      detail:
+        "The request body could not be parsed. Send valid JSON; if this came from an agent hook, reinstall the hook and run `promptlane doctor`.",
     });
+    expect(response.body).not.toContain("this is not json");
+    expect(response.body).not.toContain("/Users/example");
+    expect(response.body).not.toContain("sk-proj-secret");
   });
 
   it("normalizes, redacts, and stores a valid Claude Code fixture", async () => {

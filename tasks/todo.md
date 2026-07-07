@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Malformed JSON Recovery
+
+- [x] CHECK: malformed JSON body 400은 "The request body could not be parsed."만
+  반환해, agent hook payload 문제일 때 valid JSON/hook reinstall/doctor 복구 경로가
+  덜 분명했다.
+- [x] RED: `src/server/create-server.test.ts`가 malformed ingest JSON에서 valid
+  JSON/hook recovery detail과 raw-free detail을 요구하게 해 실패를 확인했다.
+- [x] GREEN: shared Fastify parse error 400 detail을 valid JSON 전송 및 agent hook
+  reinstall/doctor recovery 안내로 교체했다.
+- [x] VERIFY: focused server route test, typecheck, diff whitespace check를
+  실행한다.
+
 ## 2026-07-08 PromptLane Ingest Bearer Recovery
 
 - [x] CHECK: Codex/Claude Code hook ingest route의 missing/invalid bearer token 실패는
