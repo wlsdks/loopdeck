@@ -1,6 +1,6 @@
 # Next Backlog
 
-Last updated: 2026-07-06
+Last updated: 2026-07-08
 
 This is the prioritized "what to pick up next" list after the PromptLane
 repositioning and architecture decision pass. It is intentionally short. The PRD itself
@@ -65,8 +65,8 @@ Current goal audit:
   `promptlane` as the runtime compatibility id.
 - PR #343 added an approval-gated native-dialog dogfood command. It proves the
   command refuses to open a native OS dialog without
-  `PROMPTLANE_NATIVE_DIALOG_APPROVED=1`, but it does not replace the
-  remaining human-approved answered-dialog dogfood.
+  `PROMPTLANE_NATIVE_DIALOG_APPROVED=1`; the later approved answered-dialog
+  dogfood is now recorded in `docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md`.
 - PR #345 cleared dependency security alerts for `vite`, `esbuild`, and
   `fast-uri`.
 - PR #346 removed the pnpm package-field warning by moving build approvals to
@@ -183,7 +183,7 @@ Decision:
   PR #450, PR #457, PR #458, PR #460, PR #464, workflow_dispatch run
   `28717406758`, local release gate,
   `docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md`, the missing `schedule`
-  event, and Remaining 9.5 blockers.
+  event, and the 9.5 Evidence Completion State.
 - `corepack pnpm evidence:quality` emits the machine-readable
   `promptlane_95_quality` summary. It includes `scorecard_axes` and direct
   evidence checks so agents do not claim 9.5 completion unless every scorecard
@@ -196,7 +196,7 @@ Decision:
   `promptlane quality-evidence --json` and fail closed with
   `promptlane quality-evidence --require-complete`. They can also run
   `promptlane quality-evidence --operator-brief` to print the focused
-  native-dialog approval checklist without opening the dialog.
+  native-dialog approval status without opening the dialog.
   The JSON includes `axis_evidence_coverage`, which separates satisfied local
   proof such as `local_95_evidence_sweep`,
   `web_user_flow_current_main_evidence`, and the approved
@@ -246,17 +246,16 @@ Decision:
   `native_dialog_preflight` and approved native-dialog evidence: it proves MCP
   elicitation, no-dialog fallback behavior, and the explicitly approved
   `native_dialog_approved_dogfood` pass.
-- `quality-evidence` now includes structured external action criteria on its
-  recommended next slices. The native dialog operator dogfood recommendation
-  includes `blocked_reason`, preconditions, completion evidence, and guardrails
-  so agents can unblock the remaining 9.5 work without running approval-gated
+- `quality-evidence` now includes structured criteria for future
+  operator-gated recommendations. If a future native-dialog operator dogfood
+  recommendation appears, it must include `blocked_reason`, preconditions,
+  completion evidence, and guardrails so agents do not run approval-gated
   native UI automatically.
-- The human `promptlane quality-evidence` summary now renders external
-  evidence status directly: native dialog approved-run requirement.
-  `promptlane quality-evidence --operator-brief` prints only the current
-  approval status, command, refusal preflight command, preconditions,
-  completion evidence, and guardrails for that remaining dogfood step, while
-  explicitly not running it. The refusal preflight command is
+- The human `promptlane quality-evidence` summary now renders the current
+  complete evidence status directly. `promptlane quality-evidence
+  --operator-brief` prints the current approval status, refusal preflight
+  command, completion evidence, and guardrails while explicitly not opening a
+  native dialog. The refusal preflight command is
   `corepack pnpm dogfood:mcp-native-dialog-refusal`.
   The default blocker list also prints each blocker `remaining_evidence` and
   blocker `next_action`, so agents no longer need to switch to JSON output just
@@ -276,8 +275,8 @@ Decision:
 - After `web_user_flow_current_main_evidence` became the first
   `recommended_next_slices` item, `corepack pnpm dogfood:web-user-flow` was run
   on current main and completed with `browser e2e passed`. This proves the
-  recommended local evidence action is executable, while native-dialog dogfood
-  remains a separate pending blocker.
+  recommended local evidence action is executable. Approved native-dialog
+  dogfood is recorded separately and remains explicit-approval-only.
 - After `privacy_raw_free_regression_sweep` became the first
   `recommended_next_slices` item, `corepack pnpm test -- src/security src/hooks
   src/mcp` was run on current main-derived work and passed with 108 test files
@@ -288,8 +287,8 @@ Decision:
   current main-derived work. The smoke rebuilt server/web assets, exercised
   setup dry-run, setup with MCP registration, Claude Code doctor, and Codex
   doctor, then ended with `promptlane agent setup smoke passed`. This
-  refreshes local Codex/Claude setup evidence without opening provider CLIs or
-  treating native-dialog dogfood as complete.
+  refreshes local Codex/Claude setup evidence without opening provider CLIs;
+  approved native-dialog dogfood is recorded separately.
 - `docs/LOCAL_95_EVIDENCE_2026-07-06.md` records the current local 9.5 evidence
   sweep after `corepack pnpm smoke:hooks` ended with `hook binary smoke passed`,
   `corepack pnpm smoke:mcp-coach-loop` ended with
@@ -299,8 +298,8 @@ Decision:
   `loop memory approval dogfood passed`, `corepack pnpm smoke:release` ended
   with `release smoke passed`, and `corepack pnpm benchmark -- --json`
   returned `privacy_leak_count: 0` plus `archive_effectiveness_score: 1`.
-  This ledger strengthens current local proof while keeping native-dialog
-  dogfood as a separate blocker.
+  This ledger strengthens current local proof while native-dialog approval
+  evidence is tracked through the approved audit.
 - fresh current-main web user-flow evidence is now recorded after PR #465:
   `corepack pnpm dogfood:web-user-flow` passed on main-derived work after main
   CI run `28750766036`, proving the archive/detail/dashboard/coach/projects/

@@ -1461,6 +1461,16 @@ describe("plugin packaging files", () => {
     ]) {
       expect(plan).not.toContain(staleQualityPlanText);
     }
+    for (const staleBacklogQualityText of [
+      "Remaining 9.5 blockers",
+      "remaining 9.5 work",
+      "native dialog approved-run requirement",
+      "that remaining dogfood step",
+      "remaining human-approved answered-dialog dogfood",
+      "native-dialog approval checklist",
+    ]) {
+      expect(backlog).not.toContain(staleBacklogQualityText);
+    }
     for (const currentEvidence of [
       "## Evidence Progress Ledger",
       "PR #417",
