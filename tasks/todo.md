@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Hook Shell Quote Centralization
+
+- [x] CHECK: install-hook/statusline은 shared `quoteForShell` 도입 이후에도
+  local `shellQuote = JSON.stringify` helper를 유지해 command quoting 규칙이
+  다시 drift될 수 있었다.
+- [x] RED: `src/packaging/plugin-files.test.ts` guard가 command-rendering
+  surfaces에서 local `shellQuote` helper를 금지하고, `quoteForShell` 사용 시
+  shared `shell-quote` import를 요구하게 해 install-hook/statusline에서 실패를
+  확인했다.
+- [x] GREEN: install-hook/statusline이 shared `quoteForShell`을 사용하게 하고,
+  hook command 기대값을 shared single-quote shell form으로 갱신했다.
+- [x] VERIFY: focused packaging/install-hook/statusline tests, typecheck,
+  formatting/diff checks를 실행한다.
+
 ## 2026-07-08 PromptLane MCP Registration Command Quoting
 
 - [x] CHECK: setup/doctor가 사용자에게 보여주는 MCP registration command는

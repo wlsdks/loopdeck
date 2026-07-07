@@ -58,6 +58,26 @@ describe("plugin packaging files", () => {
     );
   });
 
+  it("keeps shell command quoting centralized in the shared helper", () => {
+    const commandSources = [
+      "src/cli/commands/install-hook.ts",
+      "src/cli/commands/statusline.ts",
+      "src/cli/commands/install-codex-hud.ts",
+      "src/cli/agent-access.ts",
+      "src/loop/status.ts",
+      "src/loop/snapshot-selection.ts",
+      "src/server/loop-detail-guidance.ts",
+    ];
+
+    for (const sourcePath of commandSources) {
+      const source = readFileSync(join(process.cwd(), sourcePath), "utf8");
+      expect(source).not.toMatch(/function\s+shellQuote\s*\(/);
+      if (source.includes("quoteForShell")) {
+        expect(source).toContain("shared/shell-quote.js");
+      }
+    }
+  });
+
   it("keeps package contents and npm publishing docs aligned with shipped bins and scripts", () => {
     const packageJson = readJson<{
       bin: Record<string, string>;
