@@ -5,6 +5,7 @@ import type {
   LoopWorktreeResponse,
   ProjectSummary,
 } from "./api.js";
+import { loopWorktreeErrorMessage } from "./error-message.js";
 import type { View } from "./routing.js";
 
 export type LoopWorktreeSelection = {
@@ -128,8 +129,8 @@ export function useWorkspaceQuery({
             ...(selection.branch ? { branch: selection.branch } : {}),
           });
         }
-      } catch {
-        onError("Could not load loop worktree detail.");
+      } catch (error) {
+        onError(loopWorktreeErrorMessage(error));
       }
     },
     [currentView, getLoopWorktree, navigate, onError],

@@ -10,6 +10,7 @@ import {
   errorMessageOrDefault,
   exportPreviewErrorMessage,
   improvementDraftSaveErrorMessage,
+  loopWorktreeErrorMessage,
   projectInstructionAnalysisErrorMessage,
   projectPolicyUpdateErrorMessage,
   promptListErrorMessage,
@@ -176,6 +177,16 @@ describe("errorMessageOrDefault", () => {
 
     expect(promptListErrorMessage(error)).toBe(
       "Prompt list failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the prompt archive request.",
+    );
+  });
+
+  it("preserves loop worktree recovery detail", () => {
+    const error = new Error(
+      "Loop worktree drilldown failed (404): Worktree snapshot not found. Run `promptlane loop collect --worktree agent-loop-worktree`, then reopen the loop worktree drilldown.",
+    );
+
+    expect(loopWorktreeErrorMessage(error)).toBe(
+      "Loop worktree drilldown failed (404): Worktree snapshot not found. Run `promptlane loop collect --worktree agent-loop-worktree`, then reopen the loop worktree drilldown.",
     );
   });
 });
