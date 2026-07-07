@@ -1385,9 +1385,28 @@ describe("plugin packaging files", () => {
       "corepack pnpm test",
       "corepack pnpm lint",
       "corepack pnpm build",
+      "corepack pnpm pack:dry-run",
+      "corepack pnpm benchmark -- --json",
+      "corepack pnpm e2e:browser",
+      "corepack pnpm smoke:release",
+      "corepack pnpm evidence:quality -- --require-complete",
+      "pnpm promptlane quality-evidence --require-complete",
+      "git diff --check",
+      "local browser evidence",
+      "approved native-dialog evidence",
       "Raw prompt bodies, raw local paths, and token-like secrets were not emitted",
     ]) {
       expect(releaseEvidence).toContain(releaseEvidenceText);
+    }
+
+    for (const staleReleaseEvidence of [
+      "operator-approved blocker",
+      "Remaining Release-Adjacent Blockers",
+      "Scheduled `ui-patrol` artifact evidence is still pending",
+      "dogfood:mcp-native-dialog-approved` still requires explicit operator",
+      "scheduled `ui-patrol.yml` workflow remains separate operational evidence",
+    ]) {
+      expect(releaseEvidence).not.toContain(staleReleaseEvidence);
     }
 
     for (const staleFollowUp of [

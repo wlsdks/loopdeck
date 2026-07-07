@@ -5177,3 +5177,10 @@
 - [x] GREEN: Add format, benchmark, browser E2E, release smoke, and built product CLI quality-evidence checks to the structured `release_gate`, backlog, and 9.5 plan.
 - [x] VERIFY: Focused CLI, packaging, quality-evidence, build, built-CLI output, and diff hygiene checks passed.
 - [x] INTEGRATE: Commit prepared from `codex/promptlane-quality-release-gate-checklist-alignment` for PR.
+
+## 2026-07-08 Release Stability Evidence Policy Alignment
+
+- [x] RED: Add a focused packaging guard requiring release stability evidence to stop carrying scheduled UI patrol and native-dialog blocker language while listing the full `release_gate`.
+- [x] GREEN: Refresh `docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md` to use local browser evidence, approved native-dialog evidence, and the checklist-aligned local release gate.
+- [x] VERIFY: Focused packaging guard, `quality-evidence`, stale blocker scan, and diff hygiene checks passed.
+- [x] INTEGRATE: Commit prepared from `codex/promptlane-release-evidence-policy-alignment` for PR.

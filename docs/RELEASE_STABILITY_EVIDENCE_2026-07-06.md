@@ -2,8 +2,9 @@
 
 This document records current release-stability evidence for the PromptLane
 9.5 quality bar. It is evidence only for the local-first release smoke and
-package lifecycle paths; native dialog dogfood remains a separate
-operator-approved blocker.
+package lifecycle paths. Browser operations use local browser evidence, and
+native-dialog evidence is recorded through the approved dogfood audit without
+making automated tests open OS dialogs.
 
 ## Commands
 
@@ -16,13 +17,20 @@ operator-approved blocker.
 
 - PR #464 added this evidence document, package manifest coverage, and the
   release-stability packaging guard.
-- The current local release gate is local-first: focused tests,
+- The current local release gate is local-first and matches
+  `quality-evidence` `release_gate`: `corepack pnpm format`,
   `corepack pnpm test`, `corepack pnpm lint`, `corepack pnpm build`,
-  `corepack pnpm pack:dry-run`, `corepack pnpm smoke:release`, and package
-  manifest guards.
-- General PR/main test CI is not a release requirement. The scheduled
-  `ui-patrol.yml` workflow remains separate operational evidence for browser
-  screenshots.
+  `corepack pnpm pack:dry-run`, `corepack pnpm benchmark -- --json`,
+  `corepack pnpm e2e:browser`, `corepack pnpm smoke:release`,
+  `corepack pnpm evidence:quality -- --require-complete`,
+  `pnpm promptlane quality-evidence --require-complete`, and `git diff --check`.
+- General PR/main test CI and scheduled UI patrol workflows are not release
+  requirements. Web operations are verified with local browser evidence:
+  `corepack pnpm ui-patrol` and `corepack pnpm dogfood:web-user-flow`.
+- Native-dialog integration evidence is tracked as approved native-dialog
+  evidence in `docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md`; automated
+  release gates still must not open native OS dialogs without explicit approval.
+- The current local scorecard treats that audit as approved native-dialog evidence.
 
 ## Privacy Observations
 
@@ -33,9 +41,11 @@ operator-approved blocker.
   the verified CLI, server, import, export, SQLite, Markdown, FTS, or delete
   paths.
 
-## Remaining Release-Adjacent Blockers
+## Release-Adjacent Evidence
 
-- Scheduled `ui-patrol` artifact evidence is still pending because the current
-  workflow history has no `schedule` event.
-- `dogfood:mcp-native-dialog-approved` still requires explicit operator
-  approval before opening a native dialog.
+- `docs/UI_PATROL_EVIDENCE_2026-07-06.md` records local browser evidence.
+- `docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md` records approved
+  native-dialog evidence.
+- `corepack pnpm --silent evidence:quality` reports `promptlane_95_quality`
+  as `complete`; run the full local release gate before claiming release or
+  long-running-goal completion.
