@@ -29,6 +29,27 @@ describe("diagnoseIngestFailure", () => {
     expect(diagnosis.hint).toContain("promptlane service install");
   });
 
+  it("detects server owner mismatch when data-dir uses equals syntax", () => {
+    const runner = staticRunner({
+      lsofStdout: "p99999\ncnode\n",
+      psStdout:
+        "/Users/x/.nvm/.../node /path/cli.js server --data-dir=/tmp/pm-temp/data\n",
+    });
+
+    const diagnosis = diagnoseIngestFailure({
+      tool: "claude-code",
+      status: 401,
+      configuredDataDir: "/Users/x/.promptlane",
+      commandRunner: runner,
+      readFile: () => undefined,
+    });
+
+    expect(diagnosis.cause).toBe<IngestFailureCause>("server_owner_mismatch");
+    expect(diagnosis.hint).not.toContain("/tmp/pm-temp/data");
+    expect(diagnosis.hint).not.toContain("/Users/x/.promptlane");
+    expect(diagnosis.hint).toContain("promptlane service install");
+  });
+
   it("returns 'node_abi_mismatch' when server.err.log contains a NODE_MODULE_VERSION error", () => {
     const runner = staticRunner({
       lsofStdout: "p99999\n",
