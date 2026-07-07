@@ -1,5 +1,3 @@
-import { basename } from "node:path";
-
 import { qualityScoreBand } from "./analyze.js";
 import { detectSensitiveValues } from "../redaction/detectors.js";
 import type { PromptQualityScoreBand } from "../shared/schema.js";
@@ -267,7 +265,8 @@ function summarizeEffectiveness(
       total_tests_run: 0,
     },
     top_evidence_refs: [],
-    next_action: "Record loop outcomes to prove whether prompt improvements help.",
+    next_action:
+      "Record loop outcomes to prove whether prompt improvements help.",
   };
   const evidenceRefs: string[] = [];
 
@@ -484,14 +483,12 @@ function uniqueSafeEvidenceRefs(refs: string[]): string[] {
 }
 
 function projectLabel(path: string): string {
-  const trimmed = path.trim();
+  const trimmed = path.trim().replace(/[\\/]+$/, "");
   if (!trimmed) {
     return "unknown";
   }
 
-  return (
-    basename(trimmed) || trimmed.split("/").filter(Boolean).at(-1) || trimmed
-  );
+  return trimmed.split(/[\\/]/).filter(Boolean).at(-1) || trimmed;
 }
 
 function clampPositiveInt(

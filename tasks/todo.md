@@ -5281,3 +5281,9 @@
 - [x] RED: Add focused storage project-label tests for backslash-separated paths.
 - [x] GREEN: Update storage project labels to trim and split both POSIX and backslash path separators.
 - [x] VERIFY: Focused storage/MCP project-label tests and repo typecheck passed.
+
+## 2026-07-08 Archive Score Project Label Path Separators
+
+- [x] RED: Add focused archive-score test for backslash-separated cwd/cwdPrefix project labels.
+- [x] GREEN: Update archive score project labels to trim and split both POSIX and backslash path separators.
+- [x] VERIFY: Focused archive-score/storage project-label tests and repo typecheck passed.

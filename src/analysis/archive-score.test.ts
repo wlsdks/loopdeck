@@ -120,6 +120,27 @@ describe("createArchiveScoreReport", () => {
     expect(report.next_prompt_template).not.toContain("Goal:");
   });
 
+  it("summarizes backslash-separated project paths without returning raw paths", () => {
+    const storage = fakeStorage([
+      prompt({
+        id: "prmt_windows_path",
+        cwd: String.raw`C:\Users\example\private-project`,
+        quality_score: 20,
+        quality_score_band: "weak",
+      }),
+    ]);
+
+    const report = createArchiveScoreReport(storage, {
+      cwdPrefix: String.raw`C:\Users\example\private-project`,
+      maxPrompts: 10,
+    });
+    const serialized = JSON.stringify(report);
+
+    expect(report.filters.project).toBe("private-project");
+    expect(report.low_score_prompts[0]?.project).toBe("private-project");
+    expect(serialized).not.toContain(String.raw`C:\Users\example`);
+  });
+
   it("summarizes actual prompt effectiveness without leaking prompt bodies or raw paths", () => {
     const prompts = [
       prompt({
