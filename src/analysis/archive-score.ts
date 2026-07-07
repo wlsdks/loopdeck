@@ -1,5 +1,6 @@
 import { qualityScoreBand } from "./analyze.js";
 import { detectSensitiveValues } from "../redaction/detectors.js";
+import { deriveProjectLabel } from "../shared/project-label.js";
 import type { PromptQualityScoreBand } from "../shared/schema.js";
 import type {
   ListPromptsOptions,
@@ -483,12 +484,7 @@ function uniqueSafeEvidenceRefs(refs: string[]): string[] {
 }
 
 function projectLabel(path: string): string {
-  const trimmed = path.trim().replace(/[\\/]+$/, "");
-  if (!trimmed) {
-    return "unknown";
-  }
-
-  return trimmed.split(/[\\/]/).filter(Boolean).at(-1) || trimmed;
+  return deriveProjectLabel(path, "unknown");
 }
 
 function clampPositiveInt(
