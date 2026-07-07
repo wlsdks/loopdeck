@@ -73,3 +73,7 @@ export function similarPromptsErrorMessage(error: unknown): string {
 export function selectedPromptErrorMessage(error: unknown): string {
   return errorMessageOrDefault(error, "Could not find the prompt.");
 }
+
+export function promptListErrorMessage(error: unknown): string {
+  return errorMessageOrDefault(error, "Could not load prompts.");
+}

@@ -12,6 +12,7 @@ import {
   improvementDraftSaveErrorMessage,
   projectInstructionAnalysisErrorMessage,
   projectPolicyUpdateErrorMessage,
+  promptListErrorMessage,
   selectedPromptErrorMessage,
   similarPromptsErrorMessage,
 } from "./error-message.js";
@@ -165,6 +166,16 @@ describe("errorMessageOrDefault", () => {
 
     expect(selectedPromptErrorMessage(error)).toBe(
       "Prompt not found (404): Prompt not found. Open the local archive or search prompts before reopening the detail view.",
+    );
+  });
+
+  it("preserves prompt list recovery detail", () => {
+    const error = new Error(
+      "Prompt list failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the prompt archive request.",
+    );
+
+    expect(promptListErrorMessage(error)).toBe(
+      "Prompt list failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the prompt archive request.",
     );
   });
 });
