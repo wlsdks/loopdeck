@@ -5405,3 +5405,12 @@
   status responses.
 - [x] VERIFY: Focused MCP score-tool tests, typecheck, touched-file formatting,
   and diff hygiene passed.
+
+## 2026-07-08 Coach Prompt Custom Data Dir Guidance
+
+- [x] RED: Extend focused `coach_prompt` setup guidance test so the one-call
+  agent brief must include the raw-free custom `--data-dir` recovery action.
+- [x] GREEN: Reuse `get_promptlane_status` setup next actions in not-ready
+  coach briefs while preserving start/server/doctor recovery guidance.
+- [x] VERIFY: Focused MCP score-tool/server tests, typecheck, touched-file
+  formatting, and diff hygiene passed.

@@ -20,12 +20,12 @@ export function createAgentCoachBrief(input: {
       headline: "PromptLane is not ready yet.",
       summary:
         "No captured prompt archive is available for coaching in this data directory.",
-      next_actions: [
+      next_actions: uniqueActions([
         "Run promptlane start to see the shortest setup -> real prompt -> coach path.",
-        "Run promptlane setup --profile coach --register-mcp, then submit one real Claude Code or Codex prompt.",
+        ...input.status.next_actions,
         "Run promptlane server if connected tools cannot reach the local service.",
         "Run promptlane doctor claude-code or promptlane doctor codex if capture still does not work.",
-      ],
+      ]),
       suggested_user_response:
         "I cannot coach the latest prompt yet because promptlane has no ready archive. Run promptlane start, finish the coach setup, then capture one real request first.",
     };
@@ -148,4 +148,8 @@ function isToolError(value: unknown): value is { is_error: true } {
 
 function formatPromptCount(count: number, label: string): string {
   return `${count} ${label} ${count === 1 ? "prompt" : "prompts"}`;
+}
+
+function uniqueActions(actions: string[]): string[] {
+  return Array.from(new Set(actions));
 }
