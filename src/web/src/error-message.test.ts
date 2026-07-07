@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   errorMessageOrDefault,
+  exportPreviewErrorMessage,
   projectInstructionAnalysisErrorMessage,
   projectPolicyUpdateErrorMessage,
 } from "./error-message.js";
@@ -55,6 +56,16 @@ describe("errorMessageOrDefault", () => {
 
     expect(projectPolicyUpdateErrorMessage(error)).toBe(
       "Project policy update failed (404): Project not found. Refresh the local project list, then retry the policy change from an existing project.",
+    );
+  });
+
+  it("preserves export preview recovery detail", () => {
+    const error = new Error(
+      "Export preview failed (403): Missing or invalid CSRF token. Refresh the local PromptLane web session, then retry the action.",
+    );
+
+    expect(exportPreviewErrorMessage(error)).toBe(
+      "Export preview failed (403): Missing or invalid CSRF token. Refresh the local PromptLane web session, then retry the action.",
     );
   });
 });
