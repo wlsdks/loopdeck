@@ -1295,10 +1295,12 @@ describe("SQLite prompt storage", () => {
     const alpha = await storeClaudePrompt(storage, {
       prompt: "Reusable refactor prompt with pnpm test",
       receivedAt: "2026-05-01T10:00:00.000Z",
+      cwd: "/Users/example/reusable-project",
     });
     const beta = await storeClaudePrompt(storage, {
       prompt: "One-off docs prompt",
       receivedAt: "2026-05-01T10:01:00.000Z",
+      cwd: "/Users/example/docs-project",
     });
 
     expect(storage.recordPromptUsage(alpha.id, "prompt_copied")).toMatchObject({
@@ -1335,15 +1337,20 @@ describe("SQLite prompt storage", () => {
     expect(storage.getQualityDashboard().useful_prompts).toEqual([
       expect.objectContaining({
         id: alpha.id,
+        cwd: "reusable-project",
         copied_count: 2,
         bookmarked: true,
       }),
       expect.objectContaining({
         id: beta.id,
+        cwd: "docs-project",
         copied_count: 0,
         bookmarked: true,
       }),
     ]);
+    expect(
+      JSON.stringify(storage.getQualityDashboard().useful_prompts),
+    ).not.toContain("/Users/example");
 
     const db = new Database(join(dataDir, "promptlane.sqlite"));
     expect(storage.deletePrompt(alpha.id)).toEqual({ deleted: true });
