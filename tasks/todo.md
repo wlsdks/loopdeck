@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web App Session Recovery
+
+- [x] CHECK: HTTP/web app access route의 missing/invalid session 실패는 "Missing or
+  invalid app session."만 반환해, local web session을 다시 열어야 한다는 복구
+  경로가 덜 분명했다.
+- [x] RED: `src/server/create-server.test.ts`가 session 없는 `/api/v1/prompts`
+  요청에서 `/api/v1/session` recovery detail과 raw-free detail을 요구하게 해 실패를
+  확인했다.
+- [x] GREEN: shared `requireAppAccess` app-session 401 detail을 local web session
+  refresh recovery 안내로 교체했다.
+- [x] VERIFY: focused server route test, typecheck, diff whitespace check를
+  실행한다.
+
 ## 2026-07-08 PromptLane Web CSRF Recovery
 
 - [x] CHECK: protected HTTP/web write route의 missing/invalid CSRF 실패는 "Missing
