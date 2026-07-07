@@ -5311,3 +5311,9 @@
 - [x] RED: Expand duplicate prompt group storage test to reject raw project paths in dashboard output.
 - [x] GREEN: Return project labels for duplicate group `projects` and prompt `cwd` fields.
 - [x] VERIFY: Focused sqlite storage/project-label tests and repo typecheck passed.
+
+## 2026-07-08 Useful Prompts Raw-Free Cwd
+
+- [x] RED: Expand useful prompt dashboard test to reject raw cwd paths.
+- [x] GREEN: Return project labels for useful prompt `cwd` values in the quality dashboard.
+- [x] VERIFY: Focused sqlite storage/project-label tests, typecheck, and diff hygiene passed.

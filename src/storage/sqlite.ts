@@ -2219,7 +2219,7 @@ function readUsefulPrompts(db: Database.Database): UsefulPrompt[] {
     return {
       id: row.id,
       tool: row.tool,
-      cwd: row.cwd,
+      cwd: projectLabel(row.cwd),
       received_at: row.received_at,
       copied_count: row.copied_count,
       last_copied_at: row.last_copied_at ?? undefined,
