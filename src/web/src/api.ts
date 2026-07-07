@@ -1906,8 +1906,25 @@ export async function getCoachFeedbackSummary(): Promise<CoachFeedbackSummary> {
   if (!response.ok) {
     await failApi(response, "Coach feedback summary failed");
   }
-  const body = (await response.json()) as { data: CoachFeedbackSummary };
-  return body.data;
+  const body = (await response.json()) as {
+    data?: {
+      total?: unknown;
+      helpful?: unknown;
+      not_helpful?: unknown;
+      wrong?: unknown;
+      helpful_ratio?: unknown;
+    };
+  };
+  if (
+    typeof body.data?.total !== "number" ||
+    typeof body.data.helpful !== "number" ||
+    typeof body.data.not_helpful !== "number" ||
+    typeof body.data.wrong !== "number" ||
+    typeof body.data.helpful_ratio !== "number"
+  ) {
+    throw new Error("Coach feedback summary failed: Invalid response.");
+  }
+  return body.data as CoachFeedbackSummary;
 }
 
 export async function sendCoachFeedback(input: {
