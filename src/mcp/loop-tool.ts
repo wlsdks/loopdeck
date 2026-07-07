@@ -12,6 +12,7 @@ import { decideLoopMemoryCandidate } from "../loop/memory-candidate.js";
 import {
   hasLoopSnapshotSelection,
   loopBriefNoSnapshotMcpMessage,
+  loopMemoryNoSnapshotMcpMessage,
   selectLoopSnapshot,
   selectedLoopSnapshotNotFoundMessage,
 } from "../loop/snapshot-selection.js";
@@ -292,7 +293,7 @@ export function proposeLoopMemoryCandidateTool(
       if (!snapshot) {
         return loopToolError(
           "not_found",
-          "No loop snapshot found. Run `promptlane loop collect` first.",
+          loopMemoryNoSnapshotMcpMessage("propose_loop_memory_candidate"),
         );
       }
 
@@ -349,7 +350,7 @@ export function recordLoopMemoryTool(
       if (!snapshot) {
         return loopToolError(
           "not_found",
-          "No loop snapshot found. Run `promptlane loop collect` first.",
+          loopMemoryNoSnapshotMcpMessage("record_loop_memory"),
         );
       }
 

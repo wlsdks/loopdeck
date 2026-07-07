@@ -20,6 +20,7 @@ import {
 import {
   hasLoopSnapshotSelection,
   loopBriefNoSnapshotCliMessage,
+  loopMemoryNoSnapshotCliMessage,
   selectLoopSnapshot,
   selectedLoopSnapshotNotFoundMessage,
 } from "../../loop/snapshot-selection.js";
@@ -288,7 +289,7 @@ export function loopMemoryCandidateForCli(
     const snapshot = storage.getLatestLoopSnapshot();
     if (!snapshot) {
       throw new UserError(
-        "No loop snapshot found. Run `promptlane loop collect` first.",
+        loopMemoryNoSnapshotCliMessage("promptlane loop memory-candidate"),
       );
     }
 
@@ -304,7 +305,7 @@ export function loopMemoryApproveForCli(options: LoopCliOptions = {}): string {
     const snapshot = storage.getLatestLoopSnapshot();
     if (!snapshot) {
       throw new UserError(
-        "No loop snapshot found. Run `promptlane loop collect` first.",
+        loopMemoryNoSnapshotCliMessage("promptlane loop memory-approve"),
       );
     }
 

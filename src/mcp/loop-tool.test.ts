@@ -446,6 +446,20 @@ describe("PromptLane MCP tools", () => {
     expect(serialized).not.toContain("/Users/example");
   });
 
+  it("guides first-time memory candidate users through prompt capture, collect, and outcome evidence", () => {
+    const dataDir = createTempDir();
+    initializePromptLane({ dataDir });
+
+    const result = proposeLoopMemoryCandidateTool({}, { dataDir });
+
+    expect(result).toEqual({
+      is_error: true,
+      error_code: "not_found",
+      message:
+        "No loop snapshot found. Send one Codex or Claude Code prompt, call coach_prompt or rerun get_promptlane_status to confirm the first score, run `promptlane loop collect`, then record a passed loop outcome with safe evidence before retrying propose_loop_memory_candidate.",
+    });
+  });
+
   it("records a user-approved loop memory without writing instruction files", () => {
     const dataDir = seedLoopSnapshot({
       outcome: {

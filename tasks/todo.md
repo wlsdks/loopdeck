@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Loop Memory First-Prompt Recovery
+
+- [x] CHECK: empty archive에서 `loop memory-candidate`와 MCP
+  `propose_loop_memory_candidate`가 바로 `loop collect`만 안내해, loop memory가
+  요구하는 first prompt/coach/collect/outcome evidence 순서가 덜 분명했다.
+- [x] RED: CLI/MCP memory candidate no-snapshot tests가 first prompt + first
+  score 확인, `promptlane loop collect`, passed outcome evidence 기록 후 retry를
+  안내해야 한다고 요구하게 해 실패를 확인했다.
+- [x] GREEN: CLI/MCP 표면별 loop memory no-snapshot recovery helper를 추가하고,
+  `memory-candidate`, `memory-approve`, `propose_loop_memory_candidate`,
+  `record_loop_memory`가 같은 순서를 안내하게 했다.
+- [x] VERIFY: focused loop CLI/MCP tests, typecheck, formatting/diff checks를
+  실행한다.
+
 ## 2026-07-08 PromptLane Loop Brief First-Prompt Recovery
 
 - [x] CHECK: empty archive에서 `promptlane loop brief`와 MCP

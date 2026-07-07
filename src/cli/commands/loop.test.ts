@@ -597,6 +597,15 @@ describe("loop CLI command", () => {
     expect(text).not.toContain("/Users/example");
   });
 
+  it("guides first-time loop memory users through prompt capture, collect, and outcome evidence", () => {
+    const dataDir = createTempDir();
+    initializePromptLane({ dataDir });
+
+    expect(() => loopMemoryCandidateForCli({ dataDir })).toThrow(
+      "No loop snapshot found. Send one Codex or Claude Code prompt, run `promptlane coach` to confirm the first score, run `promptlane loop collect`, then record a passed loop outcome with safe evidence before retrying `promptlane loop memory-candidate`.",
+    );
+  });
+
   it("records an approved memory from the latest eligible candidate", async () => {
     const dataDir = createTempDir();
     await seedPrompts(dataDir);
