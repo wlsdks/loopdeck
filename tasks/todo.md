@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Project Instruction Review Recovery
+
+- [x] CHECK: HTTP/web `GET /api/v1/projects/:id/instructions`는 stale/missing
+  instruction review에서 "Project instruction review not found."만 반환해, 먼저
+  instruction analysis를 실행해야 한다는 복구 경로가 덜 분명했다.
+- [x] RED: `src/server/create-server.test.ts`가 missing review에서 instruction
+  analysis-first recovery detail과 raw-free detail을 요구하게 해 실패를 확인했다.
+- [x] GREEN: project instruction review route의 missing review 404 detail을 existing
+  project에서 instruction analysis를 먼저 실행하라는 recovery 안내로 교체했다.
+- [x] VERIFY: focused server route test, typecheck, diff whitespace check를
+  실행한다.
+
 ## 2026-07-08 PromptLane Web Project Instruction Analyze Recovery
 
 - [x] CHECK: HTTP/web `POST /api/v1/projects/:id/instructions/analyze`는

@@ -97,7 +97,7 @@ export function registerProjectRoutes(
       throw problem(
         404,
         "Not Found",
-        "Project instruction review not found.",
+        "Project instruction review not found. Run instruction analysis for an existing project, then reopen this review.",
         request.url,
       );
     }
