@@ -1,5 +1,16 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Error Detail Preservation
+
+- [x] CHECK: web API layer는 RFC 7807 `detail`을 Error message에 보존하지만, App
+  handler catch가 generic 문구로 덮어쓰면 loop memory approval 같은 핵심 recovery
+  detail이 UI까지 전달되지 않는다.
+- [x] RED: `src/web/src/error-message.test.ts`가 API Error message 보존과 non-Error
+  fallback 동작을 요구하게 해 helper missing 실패를 확인했다.
+- [x] GREEN: `errorMessageOrDefault` helper를 추가하고 loop memory approval catch가
+  API/server recovery detail을 보존하도록 적용했다.
+- [x] VERIFY: focused web helper test, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Unsupported Media Recovery
 
 - [x] CHECK: unsupported content-type 415는 "The request content-type is not

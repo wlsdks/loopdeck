@@ -66,6 +66,7 @@ import {
   persistLanguage,
   type Language,
 } from "./i18n.js";
+import { errorMessageOrDefault } from "./error-message.js";
 import { CoachFeedbackPanel } from "./coach-feedback-panel.js";
 import { createPromptHabitCoach } from "./habit-coach.js";
 import { HabitCoachPanel } from "./habit-coach-panel.js";
@@ -326,8 +327,8 @@ export function App() {
       await approveLoopMemory({ approvedBy: "web" });
       const nextLoops = await listLoops();
       setLoops(nextLoops);
-    } catch {
-      setError("Could not approve loop memory.");
+    } catch (error) {
+      setError(errorMessageOrDefault(error, "Could not approve loop memory."));
     }
   }
 
