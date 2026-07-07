@@ -39,3 +39,7 @@ export function improvementDraftSaveErrorMessage(error: unknown): string {
     "Could not save the improvement draft.",
   );
 }
+
+export function bookmarkErrorMessage(error: unknown): string {
+  return errorMessageOrDefault(error, "Could not save the bookmark status.");
+}

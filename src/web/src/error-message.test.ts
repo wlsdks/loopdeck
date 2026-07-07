@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   archiveScoreErrorMessage,
+  bookmarkErrorMessage,
   errorMessageOrDefault,
   exportPreviewErrorMessage,
   improvementDraftSaveErrorMessage,
@@ -88,6 +89,16 @@ describe("errorMessageOrDefault", () => {
 
     expect(improvementDraftSaveErrorMessage(error)).toBe(
       "Improvement draft save failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry saving the improvement draft.",
+    );
+  });
+
+  it("preserves bookmark recovery detail", () => {
+    const error = new Error(
+      "Bookmark failed (404): Prompt not found. Open the local archive or search prompts before changing bookmark state.",
+    );
+
+    expect(bookmarkErrorMessage(error)).toBe(
+      "Bookmark failed (404): Prompt not found. Open the local archive or search prompts before changing bookmark state.",
     );
   });
 });
