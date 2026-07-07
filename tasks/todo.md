@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Loop Outcome First-Prompt Recovery
+
+- [x] CHECK: MCP `record_loop_outcome`의 latest snapshot 경로가 empty archive에서
+  바로 `loop collect`만 안내해, outcome 기록 전에 first prompt/score 확인이
+  선행되어야 한다는 흐름이 덜 분명했다.
+- [x] RED: `src/mcp/loop-tool.test.ts`가 no-snapshot `record_loop_outcome`에
+  first prompt + `coach_prompt`/status recheck + `promptlane loop collect` 후
+  retry 안내를 요구하게 해 실패를 확인했다.
+- [x] GREEN: MCP outcome no-snapshot recovery helper를 추가하고
+  `recordLoopOutcomeTool`이 `record_loop_outcome`에 맞는 recovery를 반환하게 했다.
+- [x] VERIFY: focused MCP loop-tool test, typecheck, formatting/diff checks를
+  실행한다.
+
 ## 2026-07-08 PromptLane Loop Memory First-Prompt Recovery
 
 - [x] CHECK: empty archive에서 `loop memory-candidate`와 MCP

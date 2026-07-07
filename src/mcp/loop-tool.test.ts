@@ -408,6 +408,28 @@ describe("PromptLane MCP tools", () => {
     expect(serialized).not.toContain("/Users/example");
   });
 
+  it("guides first-time outcome recording through prompt capture before collect", () => {
+    const dataDir = createTempDir();
+    initializePromptLane({ dataDir });
+
+    const result = recordLoopOutcomeTool(
+      {
+        latest: true,
+        status: "passed",
+        summary: "Focused MCP tests passed.",
+        evidence_refs: ["test:src/mcp/loop-tool.test.ts"],
+      },
+      { dataDir },
+    );
+
+    expect(result).toEqual({
+      is_error: true,
+      error_code: "not_found",
+      message:
+        "No loop snapshot found. Send one Codex or Claude Code prompt, call coach_prompt or rerun get_promptlane_status to confirm the first score, then run `promptlane loop collect` before retrying record_loop_outcome.",
+    });
+  });
+
   it("proposes a memory candidate from the latest passed loop without writing memory", () => {
     const dataDir = seedLoopSnapshot({
       outcome: {
