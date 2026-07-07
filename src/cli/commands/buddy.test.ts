@@ -83,6 +83,44 @@ describe("buddy CLI", () => {
     expect(result.privacy.returns_prompt_bodies).toBe(false);
   });
 
+  it("exposes all setup recovery actions in JSON without leaking custom data-dir paths", () => {
+    const dataDir = createTempDir();
+
+    rmSync(dataDir, { recursive: true, force: true });
+
+    const json = renderBuddyForCli({ dataDir, json: true });
+    const result = JSON.parse(json) as {
+      next_actions: string[];
+      next_move: string;
+    };
+
+    expect(result.next_move).toBe(result.next_actions[0]);
+    expect(result.next_actions).toContain(
+      "Run promptlane setup --profile coach --register-mcp before using archive-backed MCP tools.",
+    );
+    expect(result.next_actions).toContain(
+      "For custom storage, initialize it with promptlane init --data-dir <path> and pass the same --data-dir to the MCP server.",
+    );
+    expect(json).not.toContain(dataDir);
+    expect(json).not.toContain(tmpdir());
+  });
+
+  it("renders secondary setup actions in block output without leaking custom data-dir paths", () => {
+    const dataDir = createTempDir();
+
+    rmSync(dataDir, { recursive: true, force: true });
+
+    const output = renderBuddyForCli({ dataDir, style: "block" });
+
+    expect(output).toContain("Next move");
+    expect(output).toContain("Also do");
+    expect(output).toContain(
+      "For custom storage, initialize it with promptlane init --data-dir <path> and pass the same --data-dir to the MCP server.",
+    );
+    expect(output).not.toContain(dataDir);
+    expect(output).not.toContain(tmpdir());
+  });
+
   it("renders a single-line snapshot when --style line is used", async () => {
     const dataDir = createTempDir();
     const init = initializePromptLane({ dataDir });

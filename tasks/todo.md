@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Buddy Setup Actions
+
+- [x] CHECK: MCP/coach/loop setup-needed 흐름은 custom data-dir 복구 안내를
+  raw-free next action으로 제공하지만, `buddy` block 출력은 첫 번째
+  `next_move`만 보여 보조 복구 액션을 놓칠 수 있었다.
+- [x] RED: `src/cli/commands/buddy.test.ts`에 `buddy --json`이 모든 setup
+  recovery action을 top-level `next_actions`로 노출하고, block 출력도 두 번째
+  이후 action을 보여야 한다는 focused tests를 추가해 실패를 확인했다.
+- [x] GREEN: `BuddySnapshot`에 additive `next_actions`를 추가하고 기존
+  `next_move`는 첫 번째 action으로 유지했다. block 출력은 두 번째 이후 action을
+  `Also do` 줄로 렌더링한다.
+- [x] VERIFY: focused CLI test, typecheck, formatting/diff checks를 실행했다.
+
 ## 2026-07-08 PromptLane Long-Running Product Polish
 
 - [x] CHECK: 장기 goal을 등록했다. 목표는 PromptLane를 local-first

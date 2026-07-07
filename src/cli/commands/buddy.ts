@@ -43,6 +43,7 @@ export type BuddySnapshot = {
     top_gap?: string;
   };
   next_move: string;
+  next_actions: string[];
   privacy: {
     local_only: true;
     external_calls: false;
@@ -119,6 +120,7 @@ function createBuddySnapshot(options: BuddyCliOptions = {}): BuddySnapshot {
   const result = createBuddyCoachResult(options);
   const latest = createLatestPromptSnapshot(result);
   const habit = createHabitSnapshot(result);
+  const nextActions = createNextActions({ result, latest, habit });
 
   return {
     mode: "buddy",
@@ -126,7 +128,8 @@ function createBuddySnapshot(options: BuddyCliOptions = {}): BuddySnapshot {
     status: result.status,
     ...(latest ? { latest_prompt: latest } : {}),
     ...(habit ? { habit } : {}),
-    next_move: createNextMove({ result, latest, habit }),
+    next_move: nextActions[0] ?? "Run promptlane setup.",
+    next_actions: nextActions,
     privacy: {
       local_only: true,
       external_calls: false,
@@ -239,6 +242,7 @@ function formatBuddySnapshot(snapshot: BuddySnapshot): string {
 
   rows.push(
     `Next move     ${snapshot.next_move}`,
+    ...snapshot.next_actions.slice(1).map((action) => `Also do      ${action}`),
     `Updated       ${snapshot.generated_at}`,
     "Privacy      local-only, no external calls, no prompt bodies, no raw paths",
   );
@@ -246,7 +250,7 @@ function formatBuddySnapshot(snapshot: BuddySnapshot): string {
   return rows.join("\n");
 }
 
-function createNextMove({
+function createNextActions({
   result,
   latest,
   habit,
@@ -254,20 +258,22 @@ function createNextMove({
   result: CoachPromptToolResult;
   latest: BuddySnapshot["latest_prompt"];
   habit: BuddySnapshot["habit"];
-}): string {
+}): string[] {
   if (result.status.status !== "ready") {
-    return result.status.next_actions[0] ?? "Run promptlane setup.";
+    return result.status.next_actions.length > 0
+      ? result.status.next_actions
+      : ["Run promptlane setup."];
   }
 
   if (latest?.top_gap) {
-    return `Fix ${latest.top_gap} before the next submit.`;
+    return [`Fix ${latest.top_gap} before the next submit.`];
   }
 
   if (habit?.top_gap) {
-    return `Practice ${habit.top_gap} across the next few prompts.`;
+    return [`Practice ${habit.top_gap} across the next few prompts.`];
   }
 
-  return "Keep goal, scope, output format, and verification explicit.";
+  return ["Keep goal, scope, output format, and verification explicit."];
 }
 
 async function runBuddyLoop(options: BuddyCliOptions): Promise<void> {
