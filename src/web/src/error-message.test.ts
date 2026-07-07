@@ -4,6 +4,7 @@ import {
   archiveScoreErrorMessage,
   errorMessageOrDefault,
   exportPreviewErrorMessage,
+  improvementDraftSaveErrorMessage,
   projectInstructionAnalysisErrorMessage,
   projectPolicyUpdateErrorMessage,
 } from "./error-message.js";
@@ -77,6 +78,16 @@ describe("errorMessageOrDefault", () => {
 
     expect(archiveScoreErrorMessage(error)).toBe(
       "Archive score report failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the archive score request.",
+    );
+  });
+
+  it("preserves improvement draft save recovery detail", () => {
+    const error = new Error(
+      "Improvement draft save failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry saving the improvement draft.",
+    );
+
+    expect(improvementDraftSaveErrorMessage(error)).toBe(
+      "Improvement draft save failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry saving the improvement draft.",
     );
   });
 });

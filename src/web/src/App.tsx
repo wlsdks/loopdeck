@@ -70,6 +70,7 @@ import {
   archiveScoreErrorMessage,
   errorMessageOrDefault,
   exportPreviewErrorMessage,
+  improvementDraftSaveErrorMessage,
   projectInstructionAnalysisErrorMessage,
   projectPolicyUpdateErrorMessage,
 } from "./error-message.js";
@@ -507,8 +508,8 @@ export function App() {
       );
       setSavedImprovementId(prompt.id);
       window.setTimeout(() => setSavedImprovementId(undefined), 3000);
-    } catch {
-      setError("Could not save the improvement draft.");
+    } catch (error) {
+      setError(improvementDraftSaveErrorMessage(error));
     }
   }
 

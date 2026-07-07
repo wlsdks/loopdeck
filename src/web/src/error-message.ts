@@ -32,3 +32,10 @@ export function exportPreviewErrorMessage(error: unknown): string {
 export function archiveScoreErrorMessage(error: unknown): string {
   return errorMessageOrDefault(error, "Could not evaluate the prompt archive.");
 }
+
+export function improvementDraftSaveErrorMessage(error: unknown): string {
+  return errorMessageOrDefault(
+    error,
+    "Could not save the improvement draft.",
+  );
+}
