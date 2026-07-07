@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Prompt List Error Detail
+
+- [x] CHECK: `listPrompts`는 서버 recovery detail을 Error message에 보존하지만,
+  prompt list query hook catch가 generic 문구로 덮어써 archive/search 복구 안내가
+  UI까지 전달되지 않는다.
+- [x] RED: `src/web/src/error-message.test.ts`가 prompt list recovery detail 보존
+  helper를 요구하게 해 helper missing 실패를 확인했다.
+- [x] GREEN: prompt list fallback helper를 추가하고 prompt list query handler가
+  API/server recovery detail을 보존하도록 연결했다.
+- [x] VERIFY: focused web helper/query tests, typecheck, format check, diff whitespace
+  check를 실행했다.
+
 ## 2026-07-08 PromptLane Web Selected Prompt Error Detail
 
 - [x] CHECK: `getPrompt`는 서버 recovery detail을 Error message에 보존하지만,

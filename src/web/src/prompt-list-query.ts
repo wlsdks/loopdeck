@@ -5,6 +5,7 @@ import type {
   PromptListResponse,
   PromptSummary,
 } from "./api.js";
+import { promptListErrorMessage } from "./error-message.js";
 
 export type PromptListQueryOptions = {
   cursor?: string;
@@ -82,8 +83,8 @@ export function usePromptListQuery({
         }),
       );
       setNextCursor(result.next_cursor);
-    } catch {
-      onError("Could not load prompts.");
+    } catch (error) {
+      onError(promptListErrorMessage(error));
     } finally {
       setLoading(false);
     }
