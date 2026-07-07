@@ -5198,3 +5198,10 @@
 - [x] GREEN: Refresh the backlog 9.5 quality section to describe current complete evidence, future operator-gated recommendations, and explicit-approval-only native-dialog dogfood.
 - [x] VERIFY: Focused packaging guard, stale backlog scan, `quality-evidence`, and diff hygiene passed.
 - [x] INTEGRATE: Commit prepared from `codex/promptlane-backlog-quality-completion-alignment` for PR.
+
+## 2026-07-08 Prompt List Query Hook Extraction
+
+- [x] RED: Add focused prompt-list query tests for replace/append behavior, search cursor hiding, and row patching.
+- [x] GREEN: Extract prompt list loading, cursor, and summary patch state from `App.tsx` into `usePromptListQuery`.
+- [x] VERIFY: Focused web query tests, web typecheck, touched-code formatting check, and diff hygiene passed.
+- [x] INTEGRATE: Commit prepared from `codex/promptlane-prompt-list-query-hook` for PR.
