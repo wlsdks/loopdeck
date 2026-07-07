@@ -73,7 +73,12 @@ export function registerProjectRoutes(
     const result = storage.analyzeProjectInstructions(params.id);
 
     if (!result) {
-      throw problem(404, "Not Found", "Project not found.", request.url);
+      throw problem(
+        404,
+        "Not Found",
+        "Project not found. Refresh the local project list, then retry instruction analysis from an existing project.",
+        request.url,
+      );
     }
 
     return { data: result };

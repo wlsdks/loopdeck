@@ -2721,6 +2721,38 @@ describe("createServer P2 ingest boundary", () => {
     expect(analyzed.body).not.toContain("Do not leak this file body");
   });
 
+  it("guides missing project instruction analyze users back to project list refresh", async () => {
+    const storage = createMemoryStorage();
+    const server = createTestServer({ storage });
+    const session = await server.inject({
+      method: "GET",
+      url: "/api/v1/session",
+      headers: { host: "127.0.0.1:17373" },
+    });
+    const cookie = String(session.headers["set-cookie"]);
+    const csrfToken = session.json<{ data: { csrf_token: string } }>().data
+      .csrf_token;
+
+    const response = await server.inject({
+      method: "POST",
+      url: "/api/v1/projects/proj_missing/instructions/analyze",
+      headers: {
+        host: "127.0.0.1:17373",
+        cookie,
+        "x-csrf-token": csrfToken,
+      },
+    });
+
+    expect(response.statusCode).toBe(404);
+    const detail = response.json<{ detail: string }>().detail;
+    expect(detail).toBe(
+      "Project not found. Refresh the local project list, then retry instruction analysis from an existing project.",
+    );
+    expect(detail).not.toContain("proj_missing");
+    expect(response.body).not.toContain("/Users/example");
+    expect(response.body).not.toContain("sk-proj-secret");
+  });
+
   it("requires csrf for anonymized export preview and executes by job id", async () => {
     const storage = createMemoryStorage();
     storage.promptDetails = [
@@ -3821,6 +3853,7 @@ function createMemoryStorage() {
       return instructionReviews.get(projectId);
     },
     analyzeProjectInstructions(projectId: string) {
+      if (projectId !== "proj_memory") return undefined;
       const review: ProjectInstructionReview = {
         generated_at: "2026-05-03T00:00:00.000Z",
         analyzer: "local-project-instructions-v1",
