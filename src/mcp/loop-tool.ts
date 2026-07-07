@@ -12,6 +12,7 @@ import { decideLoopMemoryCandidate } from "../loop/memory-candidate.js";
 import {
   hasLoopSnapshotSelection,
   loopBriefNoSnapshotMcpMessage,
+  loopInstructionPatchNoMemoryMcpMessage,
   loopMemoryNoSnapshotMcpMessage,
   loopOutcomeNoSnapshotMcpMessage,
   selectLoopSnapshot,
@@ -430,7 +431,7 @@ export function proposeInstructionPatchTool(
       if (!memory) {
         return loopToolError(
           "not_found",
-          "No loop memory found. Run `promptlane loop memory-approve` first.",
+          loopInstructionPatchNoMemoryMcpMessage("propose_instruction_patch"),
         );
       }
       return proposeInstructionPatchFromMemory({ memory, targetFile });
@@ -476,7 +477,7 @@ export function applyInstructionPatchTool(
       if (!memory) {
         return loopToolError(
           "not_found",
-          "No loop memory found. Run `promptlane loop memory-approve` first.",
+          loopInstructionPatchNoMemoryMcpMessage("apply_instruction_patch"),
         );
       }
       return applyInstructionPatchFromMemory({

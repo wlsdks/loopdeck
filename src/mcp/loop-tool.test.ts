@@ -575,6 +575,25 @@ describe("PromptLane MCP tools", () => {
     expect(serialized).not.toContain("/Users/example");
   });
 
+  it("guides instruction patch tools to approve evidence-backed memory first", () => {
+    const dataDir = createTempDir();
+    initializePromptLane({ dataDir });
+
+    const result = proposeInstructionPatchTool(
+      {
+        target_file: "AGENTS.md",
+      },
+      { dataDir },
+    );
+
+    expect(result).toEqual({
+      is_error: true,
+      error_code: "not_found",
+      message:
+        "No loop memory found. Capture one Codex or Claude Code prompt, call coach_prompt or rerun get_promptlane_status, collect a loop snapshot, record a passed outcome with safe evidence, then call record_loop_memory before retrying propose_instruction_patch.",
+    });
+  });
+
   it("applies an instruction patch only with explicit confirmation", () => {
     const dataDir = seedLoopSnapshot({
       outcome: {
