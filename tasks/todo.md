@@ -1,5 +1,61 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Long-Running Product Polish
+
+- [x] CHECK: 장기 goal을 등록했다. 목표는 PromptLane를 local-first
+  agent-loop memory/workspace 제품으로 기획, 아키텍처, Codex/Claude Code
+  통합, privacy invariant, UI/CLI/MCP/doctor/runtime 검증까지 장기 개선하는
+  것이다.
+- [x] CHECK: 현재 `quality-evidence`는 `promptlane_95_quality`를
+  `complete`로 보고하고, 7개 scorecard axis 모두 `9.5/10`이며 blocker와
+  recommended next slice가 없다.
+- [x] CHECK: 현재 main에서 기본 release gate가 통과했다:
+  `corepack pnpm test`, `corepack pnpm lint`, `corepack pnpm build`,
+  `corepack pnpm pack:dry-run`, `git diff --check`.
+- [x] CHECK: `corepack pnpm smoke:release`도 통과해 SQLite, Markdown, FTS,
+  hook installer preview, local server, Claude Code/Codex payload capture,
+  import/export, delete cleanup 흐름이 현재 빌드에서 동작한다.
+- [ ] NEXT: 9.5 완료 상태를 단순 유지하는 작업보다, 사용자가 첫 설치 후
+  "다음 요청이 실제로 더 좋아졌다"고 느끼는 end-to-end 제품 경험을 기준으로
+  다음 개선 슬라이스를 선정한다.
+- [x] NEXT: 첫 후보는 `first value loop`의 operator journey 재검토다. setup,
+  doctor, hook/MCP registration, first coach loop, continuation brief,
+  approved memory, instruction patch proposal이 한 화면/한 명령 흐름에서
+  어디서 끊기는지 실제 로컬 실행으로 확인하고 가장 큰 마찰 하나만 줄인다.
+- [x] RED: `corepack pnpm smoke:agent-setup`이 isolated setup 이후
+  `doctor claude-code`에서 실패했다. fake provider binaries가 `mcp add/list`
+  상태를 시뮬레이션하지 않았고, doctor readiness가 local server까지 요구하는
+  현재 contract와 smoke harness가 맞지 않았다.
+- [x] GREEN: `scripts/agent-setup-smoke.mjs`의 fake provider가 MCP 등록 파일과
+  `mcp list` 출력을 시뮬레이션하게 하고, doctor 실행 전 isolated local server를
+  시작하도록 고쳤다.
+- [x] VERIFY: 수정 후 `corepack pnpm smoke:agent-setup`, `corepack pnpm test`,
+  `corepack pnpm lint`, `corepack pnpm pack:dry-run`, `git diff --check`가
+  통과했다.
+- [x] NEXT: 다음 슬라이스는 first coach loop와 loop-memory approval dogfood를
+  이어서 실행해, setup/doctor 이후 사용자가 실제로 copy-ready prompt,
+  continuation brief, approved memory까지 도달하는 흐름의 다음 마찰 하나를
+  찾는다.
+- [x] CHECK: `corepack pnpm dogfood:first-coach-loop`는 isolated server,
+  Codex hook capture, `coach --json`, `loop collect --json`,
+  `loop brief --json`까지 통과했다.
+- [x] CHECK: `corepack pnpm dogfood:loop-memory-approval`은 isolated server,
+  Codex hook capture, MCP server, `record_loop_outcome`,
+  `propose_loop_memory_candidate`, `record_loop_memory`,
+  `propose_instruction_patch`까지 통과했다.
+- [ ] NEXT: 다음 개선 후보는 web/user-flow 또는 CLI operator wording처럼
+  자동 dogfood가 통과해도 실제 첫 사용자 경험에서 "무엇을 다음에 해야 하는지"
+  덜 분명한 표면을 하나 고르는 것이다.
+
+### 판단 기준
+
+- 새 기능은 Codex/Claude Code의 현재 공식 표면(AGENTS.md, skills, hooks,
+  MCP, sessions/worktrees)에 붙는 경우에만 추가한다.
+- 숨은 provider call, automatic prompt resubmission, raw transcript scraping,
+  private app DB 접근, credential proxy/storage는 계속 reject한다.
+- 다음 구현 슬라이스는 RED -> GREEN -> focused verify -> local gate 순서로
+  진행하고, `promptlane` runtime identity compatibility window를 깨지 않는다.
+
 ## 2026-07-06 PromptLane Approved Native Dialog Evidence
 
 - [x] CHECK: PR #507 이후

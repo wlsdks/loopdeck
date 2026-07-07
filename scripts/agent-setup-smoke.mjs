@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import {
   chmodSync,
   existsSync,
@@ -24,12 +24,16 @@ const hooksPath = join(tempRoot, "codex-hooks.json");
 const configPath = join(tempRoot, "codex-config.toml");
 const plistPath = join(tempRoot, "LaunchAgents", "com.promptlane.server.plist");
 const mcpConfigPath = join(tempRoot, "mcp-config.json");
+const serverPort = 20_000 + Math.floor(Math.random() * 20_000);
+const serverBaseUrl = `http://127.0.0.1:${serverPort}`;
 const env = {
   ...process.env,
   HOME: homeDir,
   USERPROFILE: homeDir,
+  PROMPTLANE_AGENT_SETUP_SMOKE_MCP_CONFIG: mcpConfigPath,
   PATH: `${binDir}${process.platform === "win32" ? ";" : ":"}${process.env.PATH ?? ""}`,
 };
+let serverProcess;
 
 try {
   assertFileExists(cliPath, "Run `pnpm build` before agent setup smoke.");
@@ -66,6 +70,7 @@ try {
 
   step("Initialize storage for doctor checks");
   runCli(["init", "--data-dir", dataDir]);
+  configureSmokePort();
 
   step("Run promptlane setup --profile coach --register-mcp");
   const setup = runCli([
@@ -95,6 +100,10 @@ try {
   assertIncludes(claudeSettings, "promptlane hook claude-code");
   assertIncludes(codexHooks, "promptlane hook codex");
   assertIncludes(codexConfig, "hooks = true");
+
+  step("Start local server for doctor checks");
+  serverProcess = startServer();
+  await waitForHealth(`${serverBaseUrl}/api/v1/health`);
 
   step("Run promptlane doctor claude-code");
   const claudeDoctor = runCli([
@@ -131,6 +140,10 @@ try {
 
   console.log("promptlane agent setup smoke passed");
 } finally {
+  if (serverProcess) {
+    serverProcess.kill("SIGTERM");
+    await waitForExit(serverProcess);
+  }
   rmSync(tempRoot, { recursive: true, force: true });
 }
 
@@ -151,8 +164,75 @@ function runCli(args) {
   return result;
 }
 
+function startServer() {
+  const child = spawn(process.execPath, [cliPath, "server", "--data-dir", dataDir], {
+    cwd: repoRoot,
+    encoding: "utf8",
+    env,
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  child.stderr.on("data", (chunk) => {
+    const text = Buffer.from(chunk).toString("utf8").trim();
+    if (text) {
+      console.error(text);
+    }
+  });
+  return child;
+}
+
+async function waitForHealth(url) {
+  const started = Date.now();
+  while (Date.now() - started < 10_000) {
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        return;
+      }
+    } catch {
+      // Retry until the server starts listening.
+    }
+    await delay(100);
+  }
+  throw new Error("Server did not become healthy within 10 seconds.");
+}
+
+function configureSmokePort() {
+  const configPath = join(dataDir, "config.json");
+  const config = JSON.parse(readFileSync(configPath, "utf8"));
+  config.server.port = serverPort;
+  writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`, {
+    mode: 0o600,
+  });
+}
+
+function waitForExit(child) {
+  return new Promise((resolve) => {
+    if (child.exitCode !== null) {
+      resolve();
+      return;
+    }
+    child.once("exit", () => resolve());
+  });
+}
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 function writeExecutable(path) {
-  writeFileSync(path, "#!/bin/sh\nexit 0\n");
+  writeFileSync(
+    path,
+    `#!/bin/sh
+if [ "$1" = "mcp" ] && [ "$2" = "add" ] && [ -n "$PROMPTLANE_AGENT_SETUP_SMOKE_MCP_CONFIG" ]; then
+  mkdir -p "$(dirname "$PROMPTLANE_AGENT_SETUP_SMOKE_MCP_CONFIG")"
+  printf '{"mcpServers":{"promptlane":{"command":"promptlane","args":["mcp"]}}}\\n' > "$PROMPTLANE_AGENT_SETUP_SMOKE_MCP_CONFIG"
+fi
+if [ "$1" = "mcp" ] && [ "$2" = "list" ]; then
+  printf 'promptlane  promptlane mcp\\n'
+fi
+exit 0
+`,
+  );
   chmodSync(path, 0o755);
 }
 
