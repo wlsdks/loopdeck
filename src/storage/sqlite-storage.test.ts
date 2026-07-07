@@ -882,8 +882,16 @@ describe("SQLite prompt storage", () => {
     expect(dashboard.patterns).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          project: "/Users/example/project-a",
+          project: "project-a",
           item_key: "verification_criteria",
+        }),
+      ]),
+    );
+    expect(dashboard.instruction_suggestions).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          scope: "project",
+          project: "project-a",
         }),
       ]),
     );
