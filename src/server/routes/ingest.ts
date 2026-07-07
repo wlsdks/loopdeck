@@ -116,7 +116,7 @@ async function handlePromptIngest(
       "Validation Error",
       "Prompt cannot be empty.",
       instance,
-      [{ field: "prompt", message: "empty" }],
+      [{ field: "prompt", message: "Prompt cannot be empty." }],
     );
   }
 
