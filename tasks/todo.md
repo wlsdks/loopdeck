@@ -5317,3 +5317,9 @@
 - [x] RED: Expand useful prompt dashboard test to reject raw cwd paths.
 - [x] GREEN: Return project labels for useful prompt `cwd` values in the quality dashboard.
 - [x] VERIFY: Focused sqlite storage/project-label tests, typecheck, and diff hygiene passed.
+
+## 2026-07-08 Quality Patterns Raw-Free Projects
+
+- [x] RED: Expand quality dashboard test to require project labels for repeated pattern and project suggestion outputs.
+- [x] GREEN: Return project labels from quality pattern summaries while keeping internal aggregation keyed by source path.
+- [x] VERIFY: Focused sqlite storage/project-label tests, typecheck, and diff hygiene passed.

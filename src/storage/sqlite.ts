@@ -2558,11 +2558,15 @@ function buildQualityPatterns(
   }
 
   return [...gaps.values()]
-    .map((gap) => ({
-      ...gap,
-      total: projectTotals.get(gap.project) ?? 0,
-      message: patternMessage(gap.project, gap.item_key, gap.count),
-    }))
+    .map((gap) => {
+      const project = projectLabel(gap.project);
+      return {
+        ...gap,
+        project,
+        total: projectTotals.get(gap.project) ?? 0,
+        message: patternMessage(project, gap.item_key, gap.count),
+      };
+    })
     .filter((gap) => gap.total >= 2 && gap.count >= 2)
     .sort((a, b) => b.count - a.count || a.project.localeCompare(b.project))
     .slice(0, 8);
