@@ -20,6 +20,7 @@ import {
 import {
   hasLoopSnapshotSelection,
   selectLoopSnapshot,
+  selectedLoopSnapshotNotFoundMessage,
 } from "../../loop/snapshot-selection.js";
 import {
   createPromptLaneStatus,
@@ -256,7 +257,7 @@ export function loopBriefForCli(options: LoopCliOptions = {}): string {
     if (!snapshot) {
       throw new UserError(
         hasSelection
-          ? "No loop snapshot matched the selected worktree/session/branch filters."
+          ? selectedLoopSnapshotNotFoundMessage(selection)
           : "No loop snapshot found. Run `promptlane loop collect` first.",
       );
     }

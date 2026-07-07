@@ -5341,3 +5341,9 @@
 - [x] RED: Add focused measurement test requiring dashboard privacy when archive score data is unavailable.
 - [x] GREEN: Use dashboard privacy metadata as the measurement fallback instead of treating missing archive score as automatically safe.
 - [x] VERIFY: Focused measurement/habit-coach/storage dashboard tests, typecheck, touched-file formatting, and diff hygiene passed.
+
+## 2026-07-08 Selected Loop Brief Recovery
+
+- [x] RED: Add focused CLI/MCP tests requiring selected loop brief misses to explain the recovery command instead of stopping at a generic filter mismatch, plus a raw-path echo regression check.
+- [x] GREEN: Share selected loop snapshot not-found wording from the loop domain so CLI and MCP return the same raw-free recovery action.
+- [x] VERIFY: Focused loop CLI/MCP tests, typecheck, and diff hygiene passed.

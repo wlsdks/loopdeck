@@ -205,6 +205,51 @@ describe("loop CLI command", () => {
     expect(text).not.toContain("/Users/example");
   });
 
+  it("explains how to recover when selected brief filters match no snapshot", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    loopCollectForCli({
+      dataDir,
+      cwdPrefix: "/Users/example/private-project",
+      now: new Date("2026-07-04T01:00:00.000Z"),
+      cwd: "/Users/example/private-project",
+      branch: "feature/selected-loop",
+      worktree: "selected-worktree",
+    });
+
+    expect(() =>
+      loopBriefForCli({
+        dataDir,
+        worktree: "missing-worktree",
+        session: "missing-session",
+        branch: "feature/missing-loop",
+      }),
+    ).toThrow(
+      "No loop snapshot matched the selected worktree/session/branch filters. Run `promptlane loop collect --worktree missing-worktree --branch feature/missing-loop` from that project, or retry `promptlane loop brief` with fewer filters.",
+    );
+  });
+
+  it("does not echo raw paths in selected brief recovery guidance", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    loopCollectForCli({
+      dataDir,
+      cwdPrefix: "/Users/example/private-project",
+      now: new Date("2026-07-04T01:00:00.000Z"),
+      cwd: "/Users/example/private-project",
+      worktree: "selected-worktree",
+    });
+
+    expect(() =>
+      loopBriefForCli({
+        dataDir,
+        worktree: "/Users/example/private-project",
+      }),
+    ).toThrow(
+      "No loop snapshot matched the selected worktree/session/branch filters. Run `promptlane loop collect --worktree private-project` from that project, or retry `promptlane loop brief` with fewer filters.",
+    );
+  });
+
   it("marks continuation briefs when compact happened after the latest snapshot", async () => {
     const dataDir = createTempDir();
     await seedPrompts(dataDir);

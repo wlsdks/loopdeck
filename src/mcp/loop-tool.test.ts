@@ -303,9 +303,15 @@ describe("PromptLane MCP tools", () => {
     const dataDir = seedLoopSnapshot();
 
     const result = prepareLoopBriefTool(
-      { worktree: "missing-worktree" } as Parameters<
-        typeof prepareLoopBriefTool
-      >[0] & { worktree: string },
+      {
+        worktree: "missing-worktree",
+        session_id: "missing-session",
+        branch: "feature/missing-loop",
+      } as Parameters<typeof prepareLoopBriefTool>[0] & {
+        worktree: string;
+        session_id: string;
+        branch: string;
+      },
       { dataDir },
     );
 
@@ -313,7 +319,7 @@ describe("PromptLane MCP tools", () => {
       is_error: true,
       error_code: "not_found",
       message:
-        "No loop snapshot matched the selected worktree/session/branch filters.",
+        "No loop snapshot matched the selected worktree/session/branch filters. Run `promptlane loop collect --worktree missing-worktree --branch feature/missing-loop` from that project, or retry `promptlane loop brief` with fewer filters.",
     });
   });
 
