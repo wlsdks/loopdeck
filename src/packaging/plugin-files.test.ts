@@ -838,6 +838,16 @@ describe("plugin packaging files", () => {
     expect(backlog).toContain("9 png files");
     expect(backlog).toMatch(/No\s+immediate MCP coach-loop slice remains/);
     expect(backlog).toMatch(/No\s+immediate reuse-flow slice remains/);
+    expect(backlog).toContain("Archive-level effectiveness summary is landed");
+    expect(backlog).toContain(
+      "One-call coach effectiveness guidance is landed",
+    );
+    expect(backlog).not.toContain(
+      "Archive-level effectiveness summary is the active follow-up",
+    );
+    expect(backlog).not.toContain(
+      "One-call coach effectiveness guidance is the active agent-native follow-up",
+    );
     expect(backlog).not.toContain(
       "Update MCP instructions/docs so agents call `apply_clarifications`",
     );
