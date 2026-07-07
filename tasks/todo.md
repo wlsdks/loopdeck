@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Start Codex First-Score Guidance
+
+- [x] CHECK: `promptlane start --tool codex`는 first-score happy path와
+  `promptlane coach` 명령을 보여주지만, "Send one real coding prompt" 단계의
+  in-agent follow-up은 Claude Code slash command만 언급해 Codex 사용자가
+  agent-native `coach_prompt`를 바로 떠올리기 어려웠다.
+- [x] RED: `src/cli/commands/start.test.ts`가 Codex 전용 start guide의 send-step
+  detail에 `Inside Codex`와 `coach_prompt` 안내가 있어야 한다고 요구하게 해
+  실패를 확인했다.
+- [x] GREEN: `buildStartGuide`가 선택된 tool 집합에 맞춰 Claude Code
+  `/promptlane:improve-last`와 Codex `coach_prompt` follow-up 안내를 구성하게
+  했다.
+- [x] VERIFY: focused start command test, typecheck, formatting/diff checks를
+  실행한다.
+
 ## 2026-07-08 PromptLane Web Empty Loop Korean Next Actions
 
 - [x] CHECK: web Loops empty panel이 서버 `next_actions`를 렌더링하게 됐지만,

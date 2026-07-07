@@ -38,8 +38,13 @@ describe("start guide", () => {
   it("can focus on one tool without hiding the coach flow", () => {
     const guide = buildStartGuide({ tool: "codex" });
     const output = formatStartGuide(guide);
+    const sendStep = guide.steps.find(
+      (step) => step.title === "Send one real coding prompt",
+    );
 
     expect(guide.tools).toEqual(["codex"]);
+    expect(sendStep?.detail).toContain("Inside Codex");
+    expect(sendStep?.detail).toContain("coach_prompt");
     expect(output).toContain("codex mcp add promptlane");
     expect(output).toContain("promptlane doctor codex");
     expect(output).toContain("promptlane coach");
@@ -91,9 +96,7 @@ describe("start guide", () => {
       expect(output).toContain(
         "claude mcp add --transport stdio promptlane -- promptlane mcp",
       );
-      expect(output).toContain(
-        "codex mcp add promptlane -- promptlane mcp",
-      );
+      expect(output).toContain("codex mcp add promptlane -- promptlane mcp");
       expect(output).not.toContain("/Users/secret-dev/");
       expect(output).not.toMatch(/\bdist\/cli\/index\.js\b/);
     } finally {
