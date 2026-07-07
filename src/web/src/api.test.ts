@@ -2381,7 +2381,18 @@ describe("web api export client", () => {
       }
 
       if (url === "/api/v1/quality") {
-        return jsonResponse({ data: { total_prompts: 0 } });
+        return jsonResponse({
+          data: {
+            total_prompts: 0,
+            quality_score: {
+              average: 0,
+              max: 100,
+              band: "poor",
+              scored_prompts: 0,
+            },
+            missing_items: [],
+          },
+        });
       }
 
       if (url === "/api/v1/score?limit=200&low_score_limit=8") {
@@ -2433,6 +2444,17 @@ describe("web api export client", () => {
 
     await expect(getQualityDashboard()).rejects.toThrow(
       "Quality dashboard failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the quality dashboard request.",
+    );
+  });
+
+  it("reports malformed quality dashboard responses without returning incomplete metrics", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(jsonResponse({ data: {} }));
+    const { getQualityDashboard } = await import("./api.js");
+
+    await expect(getQualityDashboard()).rejects.toThrow(
+      "Quality dashboard failed: Invalid response.",
     );
   });
 
