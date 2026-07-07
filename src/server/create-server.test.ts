@@ -129,6 +129,12 @@ describe("createServer P2 ingest boundary", () => {
       },
     });
     expect(noCsrf.statusCode).toBe(403);
+    expect(noCsrf.json()).toMatchObject({
+      detail:
+        "Missing or invalid CSRF token. Refresh the local web session from `/api/v1/session`, then retry the protected action.",
+    });
+    expect(noCsrf.body).not.toContain("/Users/example");
+    expect(noCsrf.body).not.toContain("sk-proj-secret");
 
     const deleted = await server.inject({
       method: "DELETE",

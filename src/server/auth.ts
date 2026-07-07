@@ -59,7 +59,7 @@ export function requireAppAccess(
     throw problem(
       403,
       "Forbidden",
-      "Missing or invalid CSRF token.",
+      "Missing or invalid CSRF token. Refresh the local web session from `/api/v1/session`, then retry the protected action.",
       request.url,
     );
   }
