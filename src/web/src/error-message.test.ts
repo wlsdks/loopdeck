@@ -4,6 +4,7 @@ import {
   archiveScoreErrorMessage,
   bookmarkErrorMessage,
   bulkDeleteErrorMessage,
+  copyUsageEventErrorMessage,
   draftCopyMarkerErrorMessage,
   errorMessageOrDefault,
   exportPreviewErrorMessage,
@@ -121,6 +122,16 @@ describe("errorMessageOrDefault", () => {
 
     expect(draftCopyMarkerErrorMessage(error)).toBe(
       "Improvement draft copy event failed (404): Improvement draft not found. Open the prompt detail from the local archive, review saved drafts, then retry the copy action.",
+    );
+  });
+
+  it("preserves prompt copy usage event recovery detail", () => {
+    const error = new Error(
+      "Prompt event failed (404): Prompt not found. Open the local archive or search prompts before recording copy usage.",
+    );
+
+    expect(copyUsageEventErrorMessage(error)).toBe(
+      "Prompt event failed (404): Prompt not found. Open the local archive or search prompts before recording copy usage.",
     );
   });
 });

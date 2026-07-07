@@ -54,3 +54,10 @@ export function draftCopyMarkerErrorMessage(error: unknown): string {
     "Copied the draft, but could not save the copy marker.",
   );
 }
+
+export function copyUsageEventErrorMessage(error: unknown): string {
+  return errorMessageOrDefault(
+    error,
+    "Copied the prompt, but could not save the usage event.",
+  );
+}
