@@ -5323,3 +5323,9 @@
 - [x] RED: Expand quality dashboard test to require project labels for repeated pattern and project suggestion outputs.
 - [x] GREEN: Return project labels from quality pattern summaries while keeping internal aggregation keyed by source path.
 - [x] VERIFY: Focused sqlite storage/project-label tests, typecheck, and diff hygiene passed.
+
+## 2026-07-08 Project Profiles Raw-Free Keys
+
+- [x] RED: Expand quality dashboard test to reject raw project paths in serialized dashboard output.
+- [x] GREEN: Return stable project ids for project distribution/profile keys while preserving labels and internal aggregation.
+- [x] VERIFY: Focused sqlite storage/project-label tests, typecheck, and diff hygiene passed.

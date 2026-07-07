@@ -897,7 +897,7 @@ describe("SQLite prompt storage", () => {
     );
     expect(dashboard.project_profiles).toEqual([
       expect.objectContaining({
-        key: "/Users/example/project-a",
+        key: expect.stringMatching(/^proj_[a-f0-9]{24}$/),
         label: "project-a",
         prompt_count: 2,
         quality_gap_count: 2,
@@ -912,7 +912,7 @@ describe("SQLite prompt storage", () => {
         }),
       }),
       expect.objectContaining({
-        key: "/Users/example/project-b",
+        key: expect.stringMatching(/^proj_[a-f0-9]{24}$/),
         label: "project-b",
         prompt_count: 1,
         quality_gap_count: 0,
@@ -931,6 +931,7 @@ describe("SQLite prompt storage", () => {
     expect(serialized).not.toContain(
       "Because README onboarding is incomplete.",
     );
+    expect(serialized).not.toContain("/Users/example");
     expect(storage.getPrompt(sensitive.id)?.is_sensitive).toBe(true);
   });
 
