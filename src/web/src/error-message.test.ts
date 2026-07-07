@@ -4,6 +4,7 @@ import {
   archiveScoreErrorMessage,
   bookmarkErrorMessage,
   bulkDeleteErrorMessage,
+  draftCopyMarkerErrorMessage,
   errorMessageOrDefault,
   exportPreviewErrorMessage,
   improvementDraftSaveErrorMessage,
@@ -110,6 +111,16 @@ describe("errorMessageOrDefault", () => {
 
     expect(bulkDeleteErrorMessage(error)).toBe(
       "Delete failed (404): Prompt not found. Open the local archive or search prompts before deleting again.",
+    );
+  });
+
+  it("preserves draft copy marker recovery detail", () => {
+    const error = new Error(
+      "Improvement draft copy event failed (404): Improvement draft not found. Open the prompt detail from the local archive, review saved drafts, then retry the copy action.",
+    );
+
+    expect(draftCopyMarkerErrorMessage(error)).toBe(
+      "Improvement draft copy event failed (404): Improvement draft not found. Open the prompt detail from the local archive, review saved drafts, then retry the copy action.",
     );
   });
 });

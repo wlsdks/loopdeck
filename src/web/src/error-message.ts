@@ -47,3 +47,10 @@ export function bookmarkErrorMessage(error: unknown): string {
 export function bulkDeleteErrorMessage(error: unknown): string {
   return errorMessageOrDefault(error, "Could not bulk delete some prompts.");
 }
+
+export function draftCopyMarkerErrorMessage(error: unknown): string {
+  return errorMessageOrDefault(
+    error,
+    "Copied the draft, but could not save the copy marker.",
+  );
+}
