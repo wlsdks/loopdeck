@@ -698,6 +698,51 @@ describe("createServer P2 ingest boundary", () => {
     expect(serialized).not.toContain("/Users/example");
   });
 
+  it("guides web loop brief users to capture the first loop before retrying", async () => {
+    const storage = createMemoryStorage();
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/brief",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toContain(
+      "No loop snapshot found. Send one Codex or Claude Code prompt, run `promptlane coach` to confirm the first score, then run `promptlane loop collect` before retrying `promptlane loop brief`.",
+    );
+    expect(response.body).not.toContain("/Users/example");
+    expect(response.body).not.toContain("sk-proj-secret");
+  });
+
+  it("guides selected web loop brief users to collect matching filters before retrying", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({ worktree_label: "other-worktree" }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/loops/brief?worktree=missing-worktree&branch=feature%2Fmissing-loop",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toContain(
+      "No loop snapshot matched the selected worktree/session/branch filters. Run `promptlane loop collect --worktree missing-worktree --branch feature/missing-loop` from that project, or retry `promptlane loop brief` with fewer filters.",
+    );
+    expect(response.body).not.toContain("/Users/example");
+    expect(response.body).not.toContain("sk-proj-secret");
+  });
+
   it("returns a selected worktree loop brief without falling back to global latest", async () => {
     const storage = createMemoryStorage();
     storage.loopSnapshots.push(

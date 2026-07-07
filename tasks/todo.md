@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Brief Recovery
+
+- [x] CHECK: HTTP/web `GET /api/v1/loops/brief`는 snapshot이 없거나 선택
+  필터가 맞지 않을 때 CLI/MCP보다 짧은 "Loop snapshot not found." 또는
+  selected-filter miss 문구만 반환해 first prompt/collect retry 경로가 덜
+  분명했다.
+- [x] RED: `src/server/create-server.test.ts`가 empty web brief에는 first
+  prompt/score/collect 후 retry 안내를, selected-filter miss에는 필터를 포함한
+  `promptlane loop collect ...` recovery command를 요구하게 해 실패를 확인했다.
+- [x] GREEN: server brief route가 shared brief no-snapshot helper와 selected
+  snapshot recovery helper를 사용하게 했다.
+- [x] VERIFY: focused server route test, typecheck, diff whitespace check를
+  실행한다.
+
 ## 2026-07-08 PromptLane Web Memory Approval Recovery
 
 - [x] CHECK: HTTP/web `POST /api/v1/loops/memory/approve`는 loop snapshot이

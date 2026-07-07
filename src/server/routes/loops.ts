@@ -18,9 +18,11 @@ import {
 import { decideLoopMemoryCandidate } from "../../loop/memory-candidate.js";
 import {
   hasLoopSnapshotSelection,
+  loopBriefNoSnapshotCliMessage,
   loopInstructionPatchNoMemoryCliMessage,
   loopMemoryNoSnapshotCliMessage,
   selectLoopSnapshot,
+  selectedLoopSnapshotNotFoundMessage,
 } from "../../loop/snapshot-selection.js";
 import type {
   CompactBoundaryStoragePort,
@@ -443,8 +445,8 @@ export function registerLoopRoutes(
         404,
         "Not Found",
         hasLoopSnapshotSelection(selection)
-          ? "No loop snapshot matched the selected worktree/session/branch filters."
-          : "Loop snapshot not found.",
+          ? selectedLoopSnapshotNotFoundMessage(selection)
+          : loopBriefNoSnapshotCliMessage(),
         request.url,
       );
     }
