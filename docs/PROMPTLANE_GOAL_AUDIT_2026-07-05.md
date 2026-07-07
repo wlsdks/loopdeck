@@ -23,10 +23,9 @@ Verified repository state:
 - GitHub repository: `wlsdks/promptlane`
 - Runtime compatibility IDs: package, CLI, hook command, Claude Code slash
   namespace, and canonical MCP server remain `promptlane`
-- Latest merged main commit at audit time:
-  `2f99c10 docs: close codex claude dogfood log`
-- Open PRs at audit time: none
-- Local and remote `main` matched at audit time
+- Initial audit baseline commit: `2f99c10 docs: close codex claude dogfood log`
+- Later entries below extend that baseline with merged PR evidence instead of
+  trying to keep this document's header commit pointer current on every merge.
 
 Verified CI and operational evidence:
 
