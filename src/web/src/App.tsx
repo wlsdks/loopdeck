@@ -66,7 +66,10 @@ import {
   persistLanguage,
   type Language,
 } from "./i18n.js";
-import { errorMessageOrDefault } from "./error-message.js";
+import {
+  errorMessageOrDefault,
+  projectInstructionAnalysisErrorMessage,
+} from "./error-message.js";
 import { CoachFeedbackPanel } from "./coach-feedback-panel.js";
 import { createPromptHabitCoach } from "./habit-coach.js";
 import { HabitCoachPanel } from "./habit-coach-panel.js";
@@ -540,8 +543,8 @@ export function App() {
     try {
       const review = await analyzeProjectInstructions(project.project_id);
       updateProject({ ...project, instruction_review: review });
-    } catch {
-      setError("Could not analyze project instruction files.");
+    } catch (error) {
+      setError(projectInstructionAnalysisErrorMessage(error));
     } finally {
       setProjectInstructionBusy((current) => ({
         ...current,

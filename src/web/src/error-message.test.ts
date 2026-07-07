@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { errorMessageOrDefault } from "./error-message.js";
+import {
+  errorMessageOrDefault,
+  projectInstructionAnalysisErrorMessage,
+} from "./error-message.js";
 
 describe("errorMessageOrDefault", () => {
   it("preserves API recovery detail from Error messages", () => {
@@ -31,6 +34,16 @@ describe("errorMessageOrDefault", () => {
       ),
     ).toBe(
       "Export job execution failed (404): Export job not found. Create a new export preview, then run the export from that preview.",
+    );
+  });
+
+  it("preserves project instruction analysis recovery detail", () => {
+    const error = new Error(
+      "Project instruction analysis failed (404): Project not found. Refresh the local project list, then retry instruction analysis from an existing project.",
+    );
+
+    expect(projectInstructionAnalysisErrorMessage(error)).toBe(
+      "Project instruction analysis failed (404): Project not found. Refresh the local project list, then retry instruction analysis from an existing project.",
     );
   });
 });

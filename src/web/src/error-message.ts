@@ -7,3 +7,10 @@ export function errorMessageOrDefault(error: unknown, fallback: string): string 
   }
   return fallback;
 }
+
+export function projectInstructionAnalysisErrorMessage(error: unknown): string {
+  return errorMessageOrDefault(
+    error,
+    "Could not analyze project instruction files.",
+  );
+}
