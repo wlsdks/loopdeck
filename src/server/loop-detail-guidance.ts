@@ -112,7 +112,8 @@ export function commandDistinctionFor(): {
 } {
   return {
     label: "Command distinction",
-    selected_command_role: "continue the selected worktree/session/branch filters",
+    selected_command_role:
+      "continue the selected worktree/session/branch filters",
     review_command_role:
       "copy the review packet command-center hint for merge review",
     reason:
@@ -268,9 +269,7 @@ export function evidenceCountExplanationFor(evidenceCount: number): {
   reason:
     | "selected worktree has evidence refs recorded"
     | "selected worktree has no evidence refs recorded";
-  next_action:
-    | "compare evidence before merge"
-    | "record loop outcome evidence";
+  next_action: "compare evidence before merge" | "record loop outcome evidence";
 } {
   if (evidenceCount === 0) {
     return {
@@ -303,5 +302,12 @@ function selectedBriefCommand(selection: {
   ];
   if (selection.sessionId) parts.push("--session", selection.sessionId);
   if (selection.branch) parts.push("--branch", selection.branch);
-  return parts.join(" ");
+  return parts.map(quoteForShell).join(" ");
+}
+
+function quoteForShell(value: string): string {
+  if (/^[A-Za-z0-9_./@:=+-]+$/.test(value)) {
+    return value;
+  }
+  return `'${value.replaceAll("'", "'\\''")}'`;
 }
