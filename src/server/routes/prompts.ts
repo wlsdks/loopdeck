@@ -192,7 +192,12 @@ export function registerPromptRoutes(
     const prompt = storage.getPrompt(params.id);
 
     if (!prompt) {
-      throw problem(404, "Not Found", "Prompt not found.", request.url);
+      throw problem(
+        404,
+        "Not Found",
+        "Prompt not found. Open the local archive or search prompts before retrying this prompt detail link.",
+        request.url,
+      );
     }
 
     const judgeScore = options.storage.getLatestJudgeScore?.(params.id);
