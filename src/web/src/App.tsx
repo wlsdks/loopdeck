@@ -69,10 +69,7 @@ import { CoachFeedbackPanel } from "./coach-feedback-panel.js";
 import { createPromptHabitCoach } from "./habit-coach.js";
 import { HabitCoachPanel } from "./habit-coach-panel.js";
 import "./archive-effectiveness-summary.css";
-import {
-  LoopsView,
-  type CommandCenterBriefSelection,
-} from "./loops-view.js";
+import { LoopsView, type CommandCenterBriefSelection } from "./loops-view.js";
 import {
   createArchiveMeasurement,
   type ArchiveMeasurement,
@@ -113,6 +110,10 @@ import {
   type View,
   type WorkspaceSection,
 } from "./routing.js";
+import {
+  getPromptListCursor,
+  usePromptListQuery,
+} from "./prompt-list-query.js";
 import { useSelectedPromptQuery } from "./selected-prompt-query.js";
 
 const LIVE_MEASUREMENT_REFRESH_MS = 12_000;
@@ -127,8 +128,6 @@ export function App() {
   const [filters, setFilters] = useState<PromptFilters>(() =>
     filtersFromLocation(),
   );
-  const [prompts, setPrompts] = useState<PromptSummary[]>([]);
-  const [nextCursor, setNextCursor] = useState<string | undefined>();
   const [health, setHealth] = useState<
     { ok: boolean; version: string } | undefined
   >();
@@ -161,7 +160,6 @@ export function App() {
   >();
   const [exportBusy, setExportBusy] = useState(false);
   const [exportCopied, setExportCopied] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | undefined>();
   const [pendingDelete, setPendingDelete] = useState<
     PromptDetail | undefined
@@ -184,6 +182,11 @@ export function App() {
       }
     | undefined
   >();
+  const { loading, nextCursor, prompts, refreshList, updatePrompt } =
+    usePromptListQuery({
+      listPrompts,
+      onError: setError,
+    });
   const { selected, setSelected } = useSelectedPromptQuery({
     loadPrompt: getPrompt,
     onError: setError,
@@ -360,27 +363,6 @@ export function App() {
       total: prompts.length,
     };
   }, [prompts, view]);
-
-  async function refreshList(
-    nextFilters = filters,
-    options: { cursor?: string; replace?: boolean } = {},
-  ): Promise<void> {
-    setLoading(true);
-    setError(undefined);
-    try {
-      const result = await listPrompts(nextFilters, options.cursor);
-      setPrompts((current) =>
-        options.cursor && !options.replace
-          ? [...current, ...result.items]
-          : result.items,
-      );
-      setNextCursor(result.next_cursor);
-    } catch {
-      setError("Could not load prompts.");
-    } finally {
-      setLoading(false);
-    }
-  }
 
   function toggleSelectId(id: string): void {
     setSelectedIds((current) => {
@@ -797,11 +779,7 @@ export function App() {
     setSelected((current) =>
       current?.id === id ? { ...current, usefulness } : current,
     );
-    setPrompts((current) =>
-      current.map((prompt) =>
-        prompt.id === id ? { ...prompt, usefulness } : prompt,
-      ),
-    );
+    updatePrompt(id, { usefulness });
   }
 
   function navigate(next: View): void {
@@ -1080,7 +1058,7 @@ export function App() {
               focus={filters.focus}
               qualityGap={filters.qualityGap}
               loading={loading}
-              nextCursor={filters.query?.trim() ? undefined : nextCursor}
+              nextCursor={getPromptListCursor(filters, nextCursor)}
               onLoadMore={() =>
                 void refreshList(filters, { cursor: nextCursor })
               }
@@ -1982,8 +1960,8 @@ function ArchiveScoreReviewPanel({
               </span>
               <span>
                 <strong>
-                  proven {report.effectiveness_summary.verdicts.proven} /
-                  mixed {report.effectiveness_summary.verdicts.mixed}
+                  proven {report.effectiveness_summary.verdicts.proven} / mixed{" "}
+                  {report.effectiveness_summary.verdicts.mixed}
                 </strong>
                 <small>actual loop verdicts</small>
               </span>
