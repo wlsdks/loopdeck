@@ -8,6 +8,7 @@ import type {
 import {
   loopListErrorMessage,
   loopWorktreeErrorMessage,
+  projectListErrorMessage,
 } from "./error-message.js";
 import type { View } from "./routing.js";
 
@@ -101,8 +102,8 @@ export function useWorkspaceQuery({
 
     void listProjects()
       .then(setProjects)
-      .catch(() => undefined);
-  }, [currentView.name, listProjects, projects.length]);
+      .catch((error) => onError(projectListErrorMessage(error)));
+  }, [currentView.name, listProjects, onError, projects.length]);
 
   useEffect(() => {
     if (!shouldLoadLoops(currentView.name, Boolean(loops))) {
