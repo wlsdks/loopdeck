@@ -70,6 +70,7 @@ import {
   archiveScoreErrorMessage,
   bookmarkErrorMessage,
   bulkDeleteErrorMessage,
+  copyUsageEventErrorMessage,
   draftCopyMarkerErrorMessage,
   errorMessageOrDefault,
   exportPreviewErrorMessage,
@@ -416,8 +417,8 @@ export function App() {
         void getQualityDashboard()
           .then(setDashboard)
           .catch(() => undefined);
-      } catch {
-        setError("Copied the prompt, but could not save the usage event.");
+      } catch (error) {
+        setError(copyUsageEventErrorMessage(error));
       }
       return;
     }
