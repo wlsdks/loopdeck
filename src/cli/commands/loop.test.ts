@@ -229,6 +229,28 @@ describe("loop CLI command", () => {
     );
   });
 
+  it("shell-quotes selected brief recovery filters with spaces and quotes", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    loopCollectForCli({
+      dataDir,
+      cwdPrefix: "/Users/example/private-project",
+      now: new Date("2026-07-04T01:00:00.000Z"),
+      cwd: "/Users/example/private-project",
+      worktree: "selected-worktree",
+    });
+
+    expect(() =>
+      loopBriefForCli({
+        dataDir,
+        worktree: "missing worktree",
+        branch: "feature/missing 'loop'",
+      }),
+    ).toThrow(
+      "No loop snapshot matched the selected worktree/session/branch filters. Run `promptlane loop collect --worktree 'missing worktree' --branch 'feature/missing '\\''loop'\\'''` from that project, or retry `promptlane loop brief` with fewer filters.",
+    );
+  });
+
   it("does not echo raw paths in selected brief recovery guidance", async () => {
     const dataDir = createTempDir();
     await seedPrompts(dataDir);
@@ -322,9 +344,7 @@ describe("loop CLI command", () => {
     expect(text).toContain(
       "recent decision primary-worktree continue Needs one more verification pass before merge.",
     );
-    expect(text).toContain(
-      "review primary-worktree ready for continuation",
-    );
+    expect(text).toContain("review primary-worktree ready for continuation");
     expect(text).toContain(
       "command promptlane loop brief --worktree primary-worktree",
     );
@@ -674,7 +694,9 @@ describe("loop CLI command", () => {
         external_calls: false,
       },
     });
-    expect(parsed.next_action).toBe("review recorded merge decision before merge");
+    expect(parsed.next_action).toBe(
+      "review recorded merge decision before merge",
+    );
     expect(json).not.toContain("Make this better");
     expect(json).not.toContain("/Users/example");
 
@@ -682,8 +704,12 @@ describe("loop CLI command", () => {
 
     expect(text).toContain("Loop merge decisions");
     expect(text).toContain("primary-worktree continue");
-    expect(text).toContain("Need one more focused verification pass before merge.");
-    expect(text).toContain("Privacy: local-only, no prompt bodies, no raw paths, no git writes.");
+    expect(text).toContain(
+      "Need one more focused verification pass before merge.",
+    );
+    expect(text).toContain(
+      "Privacy: local-only, no prompt bodies, no raw paths, no git writes.",
+    );
     expect(text).not.toContain("Make this better");
     expect(text).not.toContain("/Users/example");
   });
@@ -704,9 +730,12 @@ describe("loop CLI command", () => {
         dataDir,
         worktree: "primary-worktree",
         decision: "continue",
-        reason: "Check /Users/example/private-project/log.txt with sk-proj-secret",
+        reason:
+          "Check /Users/example/private-project/log.txt with sk-proj-secret",
       }),
-    ).toThrow("Loop merge decision reason must not include raw paths or secrets.");
+    ).toThrow(
+      "Loop merge decision reason must not include raw paths or secrets.",
+    );
   });
 
   it("prints an instruction patch proposal from the latest approved memory without writing files", async () => {

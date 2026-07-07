@@ -47,7 +47,7 @@ function selectedLoopSnapshotRecoveryAction(
   if (selection.branch) {
     collectCommand.push("--branch", safeSelectionValue(selection.branch));
   }
-  return `Run \`${collectCommand.join(" ")}\` from that project, or retry \`promptlane loop brief\` with fewer filters.`;
+  return `Run \`${collectCommand.map(quoteForShell).join(" ")}\` from that project, or retry \`promptlane loop brief\` with fewer filters.`;
 }
 
 function safeSelectionValue(value: string): string {
@@ -62,4 +62,11 @@ function looksLikeRawPath(value: string): boolean {
     value.startsWith("~/") ||
     /^[A-Za-z]:[\\/]/.test(value)
   );
+}
+
+function quoteForShell(value: string): string {
+  if (/^[A-Za-z0-9_./@:=+-]+$/.test(value)) {
+    return value;
+  }
+  return `'${value.replaceAll("'", "'\\''")}'`;
 }
