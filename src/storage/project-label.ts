@@ -1,4 +1,5 @@
+import { deriveProjectLabel } from "../shared/project-label.js";
+
 export function projectLabel(value: string): string {
-  const trimmed = value.trim().replace(/[\\/]+$/, "");
-  return trimmed.split(/[\\/]/).at(-1) || trimmed || "unknown";
+  return deriveProjectLabel(value, "unknown");
 }

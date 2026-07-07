@@ -5299,3 +5299,9 @@
 - [x] RED: Add focused storage project-label test for whitespace-wrapped POSIX/backslash paths.
 - [x] GREEN: Trim storage project-label input before removing trailing POSIX/backslash separators.
 - [x] VERIFY: Focused storage project-label/loop status tests and repo typecheck passed.
+
+## 2026-07-08 Shared Project Label Helper
+
+- [x] RED: Add focused shared project-label test for POSIX/backslash paths and caller-specific fallbacks.
+- [x] GREEN: Move project label normalization into `shared/project-label` and keep storage/MCP/archive fallbacks at their wrappers.
+- [x] VERIFY: Focused shared/storage/MCP/archive-score project-label tests and repo typecheck passed.
