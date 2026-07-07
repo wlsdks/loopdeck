@@ -5233,3 +5233,9 @@
 - [x] GREEN: Extract bulk-selection state and helpers from `App.tsx` into `usePromptSelection`.
 - [x] VERIFY: Focused prompt selection/list query tests, web typecheck, touched-code formatting check, and diff hygiene passed.
 - [x] INTEGRATE: Commit prepared from `codex/promptlane-prompt-selection-hook` for PR.
+
+## 2026-07-08 App View Model Extraction
+
+- [x] RED: Add focused tests for route-driven page chrome labels and detail queue navigation.
+- [x] GREEN: Extract `getVisibleChrome` and `getQueueNavigation` from `App.tsx` into a pure `app-view` helper.
+- [x] VERIFY: Focused app-view/routing tests and web typecheck passed.
