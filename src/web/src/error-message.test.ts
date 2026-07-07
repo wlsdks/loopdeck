@@ -12,6 +12,7 @@ import {
   improvementDraftSaveErrorMessage,
   projectInstructionAnalysisErrorMessage,
   projectPolicyUpdateErrorMessage,
+  selectedPromptErrorMessage,
   similarPromptsErrorMessage,
 } from "./error-message.js";
 
@@ -154,6 +155,16 @@ describe("errorMessageOrDefault", () => {
 
     expect(similarPromptsErrorMessage(error)).toBe(
       "Similar prompts unavailable (404): Prompt not found. Open the local archive, select an existing prompt, then retry similar prompt lookup.",
+    );
+  });
+
+  it("preserves selected prompt recovery detail", () => {
+    const error = new Error(
+      "Prompt not found (404): Prompt not found. Open the local archive or search prompts before reopening the detail view.",
+    );
+
+    expect(selectedPromptErrorMessage(error)).toBe(
+      "Prompt not found (404): Prompt not found. Open the local archive or search prompts before reopening the detail view.",
     );
   });
 });
