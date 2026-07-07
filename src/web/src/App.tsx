@@ -71,6 +71,7 @@ import {
   askEventSummaryErrorMessage,
   bookmarkErrorMessage,
   bulkDeleteErrorMessage,
+  commandCenterLoopBriefErrorMessage,
   copyUsageEventErrorMessage,
   draftCopyMarkerErrorMessage,
   errorMessageOrDefault,
@@ -374,11 +375,14 @@ export function App() {
     selection: CommandCenterBriefSelection,
   ): Promise<void> {
     setError(undefined);
+    const brief = await getSelectedLoopBrief({
+      worktree: selection.worktree,
+      ...(selection.branch ? { branch: selection.branch } : {}),
+    }).catch((error) => {
+      setError(commandCenterLoopBriefErrorMessage(error));
+      throw error;
+    });
     try {
-      const brief = await getSelectedLoopBrief({
-        worktree: selection.worktree,
-        ...(selection.branch ? { branch: selection.branch } : {}),
-      });
       const copied = await copyTextToClipboard(brief.prompt);
       if (!copied) {
         setError("Could not copy command center loop brief.");

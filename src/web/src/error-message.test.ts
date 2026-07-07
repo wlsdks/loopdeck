@@ -7,6 +7,7 @@ import {
   bookmarkErrorMessage,
   bulkDeleteErrorMessage,
   coachFeedbackQueryErrorMessage,
+  commandCenterLoopBriefErrorMessage,
   copyUsageEventErrorMessage,
   draftCopyMarkerErrorMessage,
   errorMessageOrDefault,
@@ -223,6 +224,16 @@ describe("errorMessageOrDefault", () => {
 
     expect(selectedLoopBriefErrorMessage(error)).toBe(
       "Selected loop brief failed (404): No loop snapshot found for the selected worktree. Run `promptlane loop collect --worktree agent-loop-worktree`, then retry the continuation brief.",
+    );
+  });
+
+  it("preserves command center loop brief recovery detail", () => {
+    const error = new Error(
+      "Selected loop brief failed (404): No loop snapshot found for the selected command center scope. Run `promptlane loop collect --worktree agent-loop-worktree`, then retry the command center brief.",
+    );
+
+    expect(commandCenterLoopBriefErrorMessage(error)).toBe(
+      "Selected loop brief failed (404): No loop snapshot found for the selected command center scope. Run `promptlane loop collect --worktree agent-loop-worktree`, then retry the command center brief.",
     );
   });
 

@@ -94,6 +94,13 @@ export function selectedLoopBriefErrorMessage(error: unknown): string {
   return errorMessageOrDefault(error, "Could not copy selected loop brief.");
 }
 
+export function commandCenterLoopBriefErrorMessage(error: unknown): string {
+  return errorMessageOrDefault(
+    error,
+    "Could not copy command center loop brief.",
+  );
+}
+
 export function projectListErrorMessage(error: unknown): string {
   return errorMessageOrDefault(error, "Could not load projects.");
 }

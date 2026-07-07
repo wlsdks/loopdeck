@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Command Center Brief Error Detail
+
+- [x] CHECK: `getSelectedLoopBrief`는 command center loop brief에서도 서버 recovery
+  detail을 Error message에 보존하지만, command center copy handler catch가 API 실패와
+  clipboard 실패를 같은 generic 문구로 덮어써 command center brief 복구 안내가 UI까지
+  전달되지 않는다.
+- [x] RED: `src/web/src/error-message.test.ts`가 command center loop brief recovery
+  detail 보존 helper를 요구하게 해 helper missing 실패를 확인했다.
+- [x] GREEN: command center loop brief fallback helper를 추가하고 copy handler가
+  API/server recovery detail을 보존한 뒤 clipboard 실패만 기존 copy fallback으로
+  처리하도록 분리했다.
+- [x] VERIFY: focused web helper test, typecheck, code format check, diff whitespace
+  check를 실행했다.
+
 ## 2026-07-08 PromptLane Web Selected Loop Brief Error Detail
 
 - [x] CHECK: `getSelectedLoopBrief`는 서버 recovery detail을 Error message에 보존하지만,
