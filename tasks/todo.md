@@ -5347,3 +5347,9 @@
 - [x] RED: Add focused CLI/MCP tests requiring selected loop brief misses to explain the recovery command instead of stopping at a generic filter mismatch, plus a raw-path echo regression check.
 - [x] GREEN: Share selected loop snapshot not-found wording from the loop domain so CLI and MCP return the same raw-free recovery action.
 - [x] VERIFY: Focused loop CLI/MCP tests, typecheck, and diff hygiene passed.
+
+## 2026-07-08 Loop Status Selected Continuation Actions
+
+- [x] RED: Add focused loop status test requiring multi-worktree status `next_actions` to surface selected continuation commands.
+- [x] GREEN: Reuse the command-center continuation commands in top-level status actions so MCP/CLI agents can choose the intended worktree/branch without digging through nested review items.
+- [x] VERIFY: Focused loop status/MCP/CLI loop tests, typecheck, and diff hygiene passed.

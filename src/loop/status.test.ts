@@ -249,6 +249,12 @@ describe("createPromptLaneStatus", () => {
     expect(serialized).not.toContain("Make this better");
     expect(serialized).not.toContain("/Users/example");
     expect(serialized).not.toContain("sk-proj-secret");
+    expect(status.next_actions).toEqual(
+      expect.arrayContaining([
+        "Use selected continuation command: promptlane loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
+        "Use selected continuation command: promptlane loop brief --worktree main-worktree --branch codex/agent-loop-memory-design",
+      ]),
+    );
   });
 
   it("builds a raw-free multi-worktree command center for merge review", () => {
@@ -262,7 +268,10 @@ describe("createPromptLaneStatus", () => {
           outcome: {
             status: "unknown",
             summary: "Investigate before merge",
-            evidence_refs: ["pnpm test", "/Users/example/private-project/log.txt"],
+            evidence_refs: [
+              "pnpm test",
+              "/Users/example/private-project/log.txt",
+            ],
           },
         }),
         loopSnapshot({

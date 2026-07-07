@@ -165,11 +165,15 @@ export function createPromptLaneStatus(input: {
     : hasSnapshots
       ? "promptlane loop brief"
       : "promptlane loop collect";
+  const activity = summarizeLoopActivity(
+    input.snapshots,
+    input.mergeDecisions ?? [],
+  );
 
   return {
     status: hasSnapshots ? "ready" : "empty",
     snapshot_count: input.snapshots.length,
-    activity: summarizeLoopActivity(input.snapshots, input.mergeDecisions ?? []),
+    activity,
     project_memory: {
       approved_count: projectMemoryCount,
       included_in_brief: Boolean(latest && projectMemoryCount > 0),
@@ -190,6 +194,7 @@ export function createPromptLaneStatus(input: {
       hasSnapshots,
       compactBoundary,
       memoryCandidate: input.memoryCandidate,
+      activity,
     }),
     privacy: promptlaneStatusPrivacy(),
   };
@@ -214,7 +219,9 @@ export function summarizeLoopActivity(
     active_worktrees: activeWorktrees,
     active_sessions: activeSessions,
     ...(latest?.branch ? { latest_branch: latest.branch } : {}),
-    ...(latest?.worktree_label ? { latest_worktree: latest.worktree_label } : {}),
+    ...(latest?.worktree_label
+      ? { latest_worktree: latest.worktree_label }
+      : {}),
     needs_review: needsReview,
     next_action: needsReview
       ? "compare loop snapshots by worktree before merging agent output"
@@ -502,6 +509,7 @@ function nextActionsForStatus(input: {
   hasSnapshots: boolean;
   compactBoundary?: LoopBriefCompactBoundary;
   memoryCandidate?: Pick<LoopMemoryCandidateDecision, "eligible">;
+  activity: PromptLaneStatusActivity;
 }): string[] {
   if (!input.hasSnapshots) {
     return [
@@ -519,8 +527,20 @@ function nextActionsForStatus(input: {
 
   return withMemoryCandidateAction(input.memoryCandidate, [
     "Use promptlane loop brief or prepare_loop_brief to get a copy-ready continuation prompt.",
+    ...selectedContinuationActions(input.activity),
     "Run promptlane loop collect again after the next agent turn to refresh the snapshot.",
   ]);
+}
+
+function selectedContinuationActions(
+  activity: PromptLaneStatusActivity,
+): string[] {
+  return (
+    activity.command_center?.review_items.map(
+      (item) =>
+        `Use selected continuation command: ${item.continuation_command}`,
+    ) ?? []
+  );
 }
 
 function withMemoryCandidateAction(
