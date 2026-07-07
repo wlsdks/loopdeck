@@ -804,6 +804,17 @@ describe("loop CLI command", () => {
     expect(text).not.toContain("/Users/example");
   });
 
+  it("guides instruction patch users to approve evidence-backed memory first", () => {
+    const dataDir = createTempDir();
+    initializePromptLane({ dataDir });
+
+    expect(() =>
+      loopInstructionPatchForCli({ dataDir, targetFile: "AGENTS.md" }),
+    ).toThrow(
+      "No loop memory found. Capture one Codex or Claude Code prompt, confirm the first score, collect a loop snapshot, record a passed outcome with safe evidence, then run `promptlane loop memory-approve` before retrying `promptlane loop instruction-patch --target-file AGENTS.md`.",
+    );
+  });
+
   it("applies an approved instruction patch only with explicit confirmation", async () => {
     const dataDir = createTempDir();
     const projectDir = createTempDir();

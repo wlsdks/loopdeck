@@ -58,6 +58,16 @@ export function loopMemoryNoSnapshotMcpMessage(tool: string): string {
   return `No loop snapshot found. Send one Codex or Claude Code prompt, call coach_prompt or rerun get_promptlane_status to confirm the first score, run \`promptlane loop collect\`, then record a passed loop outcome with safe evidence before retrying ${tool}.`;
 }
 
+export function loopInstructionPatchNoMemoryCliMessage(
+  command: string,
+): string {
+  return `No loop memory found. Capture one Codex or Claude Code prompt, confirm the first score, collect a loop snapshot, record a passed outcome with safe evidence, then run \`promptlane loop memory-approve\` before retrying \`${command}\`.`;
+}
+
+export function loopInstructionPatchNoMemoryMcpMessage(tool: string): string {
+  return `No loop memory found. Capture one Codex or Claude Code prompt, call coach_prompt or rerun get_promptlane_status, collect a loop snapshot, record a passed outcome with safe evidence, then call record_loop_memory before retrying ${tool}.`;
+}
+
 function selectedLoopSnapshotRecoveryAction(
   selection: LoopSnapshotSelection,
 ): string {

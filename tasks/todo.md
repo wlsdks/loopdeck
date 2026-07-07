@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Instruction Patch Memory Recovery
+
+- [x] CHECK: instruction patch proposal/apply가 approved loop memory가 없을 때
+  단순히 `loop memory-approve`만 안내해, evidence-backed memory를 만들기 위한
+  first prompt/score/collect/outcome evidence 순서가 덜 분명했다.
+- [x] RED: CLI/MCP instruction patch no-memory tests가 first prompt, score
+  확인, loop snapshot collect, passed outcome evidence, memory approval 후 retry를
+  안내해야 한다고 요구하게 해 실패를 확인했다.
+- [x] GREEN: CLI/MCP instruction patch no-memory recovery helper를 추가하고
+  proposal/apply 양쪽이 같은 evidence-first 순서를 안내하게 했다.
+- [x] VERIFY: focused loop CLI/MCP tests, typecheck, formatting/diff checks를
+  실행한다.
+
 ## 2026-07-08 PromptLane Loop Outcome First-Prompt Recovery
 
 - [x] CHECK: MCP `record_loop_outcome`의 latest snapshot 경로가 empty archive에서

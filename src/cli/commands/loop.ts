@@ -20,6 +20,7 @@ import {
 import {
   hasLoopSnapshotSelection,
   loopBriefNoSnapshotCliMessage,
+  loopInstructionPatchNoMemoryCliMessage,
   loopMemoryNoSnapshotCliMessage,
   selectLoopSnapshot,
   selectedLoopSnapshotNotFoundMessage,
@@ -354,7 +355,9 @@ export function loopInstructionPatchForCli(
     const memory = storage.listLoopMemories({ limit: 1 }).items.at(0);
     if (!memory) {
       throw new UserError(
-        "No loop memory found. Run `promptlane loop memory-approve` first.",
+        loopInstructionPatchNoMemoryCliMessage(
+          `promptlane loop instruction-patch --target-file ${targetFile}`,
+        ),
       );
     }
     const proposal = proposeInstructionPatchFromMemory({
@@ -382,7 +385,9 @@ export function loopInstructionPatchApplyForCli(
     const memory = storage.listLoopMemories({ limit: 1 }).items.at(0);
     if (!memory) {
       throw new UserError(
-        "No loop memory found. Run `promptlane loop memory-approve` first.",
+        loopInstructionPatchNoMemoryCliMessage(
+          `promptlane loop instruction-apply --target-file ${targetFile} --confirm-apply`,
+        ),
       );
     }
     const result = applyInstructionPatchFromMemory({
