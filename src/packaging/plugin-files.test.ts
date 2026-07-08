@@ -168,11 +168,10 @@ describe("plugin packaging files", () => {
     expect(publishing).toContain("git checkout v1.0.0");
     expect(publishing).toContain("If main has moved past `v1.0.0`");
     expect(publishing).toContain(
-      "The existing `v1.0.0` tag predates `scripts/npm-publish-preflight.mjs`",
+      "`v1.0.0` must point at the commit you are publishing",
     );
-    expect(publishing).toContain(
-      "Do not expect `corepack pnpm npm-publish:preflight` to exist after `git checkout v1.0.0`.",
-    );
+    expect(publishing).not.toContain("tag predates");
+    expect(publishing).not.toContain("Do not expect `corepack pnpm");
     expect(preflightScript).toContain("git checkout ${expectedTag}");
     expect(preflightScript).toContain("tagged release commit");
     expect(preflightScript).toContain("manual npm checks");

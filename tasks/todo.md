@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane NPM Publish Runbook Current Tag
+
+- [x] CHECK: `v1.0.0` now points at current main and
+  `npm-publish:preflight` exists on the release commit, but
+  `docs/NPM_PUBLISHING.md` still said the tag predates the preflight script.
+- [x] RED: packaging guard now rejects stale publish-runbook copy that says the
+  release tag predates `scripts/npm-publish-preflight.mjs`.
+- [x] GREEN: publish runbook now tells operators that `v1.0.0` must point at
+  the commit being published and runs `corepack pnpm npm-publish:preflight`
+  from the tagged checkout.
+- [x] VERIFY: focused npm publishing docs guard, packaging tests, touched-file
+  formatting, typecheck, and diff hygiene.
+
 ## 2026-07-08 PromptLane Benchmark Archive Effectiveness Coverage
 
 - [x] CHECK: `corepack pnpm benchmark -- --json` passed but reported
