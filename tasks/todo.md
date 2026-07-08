@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Package Smoke Start Guide
+
+- [x] CHECK: `smoke:package-install` verified shipped bin help paths but did
+  not execute the first user-facing command, `promptlane start --open-web
+  --json`, from the installed tarball.
+- [x] RED: packaging guard now requires package install smoke to run and
+  validate `promptlane start --open-web --json`, and release stability evidence
+  to mention that first-success check.
+- [x] GREEN: package install smoke parses the installed start guide JSON and
+  verifies setup, coach, and doctor commands are present.
+- [x] VERIFY: focused packaging guards, real package install smoke, typecheck,
+  formatting, and diff hygiene.
+
 ## 2026-07-08 PromptLane Korean README MCP Troubleshooting Parity
 
 - [x] CHECK: English first 3-minute loop tells users to rerun

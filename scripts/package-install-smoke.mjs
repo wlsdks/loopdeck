@@ -34,6 +34,15 @@ try {
       encoding: "utf8",
     });
   }
+  const startGuide = run(
+    join(tempPrefix, "bin", "promptlane"),
+    ["start", "--open-web", "--json"],
+    {
+      env: { ...process.env, HOME: tempHome },
+      encoding: "utf8",
+    },
+  );
+  validateStartGuide(startGuide.stdout);
 
   console.log(
     JSON.stringify(
@@ -42,6 +51,7 @@ try {
         status: "pass",
         tarball: basename(tarballPath),
         bins: ["promptlane", "pl-claude", "pl-codex"],
+        first_success: "promptlane start --open-web --json",
       },
       null,
       2,
@@ -102,4 +112,19 @@ function readTarballName(stdout) {
     throw new Error("npm pack did not return a tarball filename");
   }
   return filename;
+}
+
+function validateStartGuide(stdout) {
+  const parsed = JSON.parse(stdout);
+  const commands = parsed?.steps?.flatMap((step) => step.commands ?? []) ?? [];
+  for (const expectedCommand of [
+    "promptlane setup --profile coach --register-mcp --open-web",
+    "promptlane coach",
+    "promptlane doctor claude-code",
+    "promptlane doctor codex",
+  ]) {
+    if (!commands.includes(expectedCommand)) {
+      throw new Error(`start guide did not include ${expectedCommand}`);
+    }
+  }
 }
