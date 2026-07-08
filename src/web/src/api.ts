@@ -902,6 +902,30 @@ function isContinuationSafetyPasteDestinationBoundaryNote(
   );
 }
 
+function isContinuationSafetyManualSubmissionBoundaryNote(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_manual_submission_boundary_note"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_manual_submission_boundary_note"]
+  >;
+  return (
+    note.label === "Manual submission boundary" &&
+    note.submission ===
+      "operator submits the pasted brief manually in Codex or Claude Code" &&
+    note.not_automated ===
+      "PromptLane does not press enter, click submit, or record submitted state" &&
+    note.reason ===
+      "keeps final agent execution under operator control after paste" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -2859,6 +2883,7 @@ export async function getLoopWorktree(
       continuation_safety_pre_paste_confirmation_note?: unknown;
       continuation_safety_target_agent_check_note?: unknown;
       continuation_safety_paste_destination_boundary_note?: unknown;
+      continuation_safety_manual_submission_boundary_note?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -2923,6 +2948,11 @@ export async function getLoopWorktree(
       undefined &&
       !isContinuationSafetyPasteDestinationBoundaryNote(
         body.data.continuation_safety_paste_destination_boundary_note,
+      )) ||
+    (body.data.continuation_safety_manual_submission_boundary_note !==
+      undefined &&
+      !isContinuationSafetyManualSubmissionBoundaryNote(
+        body.data.continuation_safety_manual_submission_boundary_note,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
