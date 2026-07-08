@@ -5958,12 +5958,14 @@ function apiErrorIssueParamsText(value: unknown): string {
     return "";
   }
   const record = value as {
+    additionalProperty?: unknown;
     missingProperty?: unknown;
     propertyName?: unknown;
   };
   return (
     apiErrorIssuePathText(record.missingProperty) ||
-    apiErrorIssuePathText(record.propertyName)
+    apiErrorIssuePathText(record.propertyName) ||
+    apiErrorIssuePathText(record.additionalProperty)
   );
 }
 
