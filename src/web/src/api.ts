@@ -974,6 +974,30 @@ function isContinuationSafetyPostSubmissionCollectionReminderNote(
   );
 }
 
+function isContinuationSafetyCollectionResultNonPersistenceNote(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_collection_result_non_persistence_note"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_collection_result_non_persistence_note"]
+  >;
+  return (
+    note.label === "Collection result non-persistence" &&
+    note.result_scope ===
+      "collection result is not persisted until the operator records the next explicit loop snapshot" &&
+    note.not_stored ===
+      "PromptLane does not store, sync, or infer collection result state from agent UI activity" &&
+    note.reason ===
+      "keeps collection evidence tied to explicit local snapshot recording" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -2934,6 +2958,7 @@ export async function getLoopWorktree(
       continuation_safety_manual_submission_boundary_note?: unknown;
       continuation_safety_submission_result_non_persistence_note?: unknown;
       continuation_safety_post_submission_collection_reminder_note?: unknown;
+      continuation_safety_collection_result_non_persistence_note?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -3013,6 +3038,11 @@ export async function getLoopWorktree(
       undefined &&
       !isContinuationSafetyPostSubmissionCollectionReminderNote(
         body.data.continuation_safety_post_submission_collection_reminder_note,
+      )) ||
+    (body.data.continuation_safety_collection_result_non_persistence_note !==
+      undefined &&
+      !isContinuationSafetyCollectionResultNonPersistenceNote(
+        body.data.continuation_safety_collection_result_non_persistence_note,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
