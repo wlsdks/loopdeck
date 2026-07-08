@@ -133,6 +133,7 @@ describe("plugin packaging files", () => {
 
     for (const scriptPath of [
       "scripts/pack-dry-run.mjs",
+      "scripts/package-install-smoke.mjs",
       "scripts/npm-publish-preflight.mjs",
       "scripts/mcp-native-dialog-approved.mjs",
       "scripts/ui-patrol.mjs",
@@ -145,11 +146,15 @@ describe("plugin packaging files", () => {
     expect(packageJson.scripts["npm-publish:preflight"]).toBe(
       "node scripts/npm-publish-preflight.mjs",
     );
+    expect(packageJson.scripts["smoke:package-install"]).toBe(
+      "node scripts/package-install-smoke.mjs",
+    );
     const preflightScript = readFileSync(
       join(process.cwd(), "scripts/npm-publish-preflight.mjs"),
       "utf8",
     );
     expect(publishing).toContain("corepack pnpm npm-publish:preflight");
+    expect(publishing).toContain("corepack pnpm smoke:package-install");
     expect(publishing).toContain("does not publish");
     expect(publishing).toContain("--skip-npm");
     for (const command of [
