@@ -4539,6 +4539,9 @@ function parseProjectInstructionReviewResponse(body: {
     files?: unknown;
     checklist?: unknown;
     suggestions?: unknown;
+    markdown?: unknown;
+    prompt_body?: unknown;
+    raw_path?: unknown;
     privacy?: {
       local_only?: unknown;
       external_calls?: unknown;
@@ -4556,6 +4559,9 @@ function parseProjectInstructionReviewResponse(body: {
     !Array.isArray(body.data.files) ||
     !Array.isArray(body.data.checklist) ||
     !Array.isArray(body.data.suggestions) ||
+    body.data.markdown !== undefined ||
+    body.data.prompt_body !== undefined ||
+    body.data.raw_path !== undefined ||
     body.data.privacy?.local_only !== true ||
     body.data.privacy.external_calls !== false ||
     body.data.privacy.stores_file_bodies !== false ||
