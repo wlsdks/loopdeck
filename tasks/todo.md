@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Release Evidence Docs Preflight Guard
+
+- [x] CHECK: `package.json#files` ships release evidence docs, but npm publish
+  preflight did not check the evidence docs backing release stability, local 9.5,
+  product positioning, UI patrol, and Codex/Claude integration readiness.
+- [x] RED: focused preflight and packaging guards required machine-readable
+  checks for the release evidence doc package-file entries.
+- [x] GREEN: npm publish preflight now checks those release evidence docs, and
+  the NPM runbook checklist names the same publish package surface.
+- [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
+  touched-file formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Release Runbook Docs Preflight Guard
 
 - [x] CHECK: `package.json#files` ships release runbooks, but npm publish

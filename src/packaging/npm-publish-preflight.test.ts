@@ -114,6 +114,29 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
+          label:
+            "package files include docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include docs/LOCAL_95_EVIDENCE_2026-07-06.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label:
+            "package files include docs/PRODUCT_POSITIONING_EVIDENCE_2026-07-06.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include docs/UI_PATROL_EVIDENCE_2026-07-06.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label:
+            "package files include docs/CODEX_CLAUDE_LOCAL_INTEGRATION_EVIDENCE_2026-07-06.md",
+          ok: true,
+        }),
+        expect.objectContaining({
           label: "package files include README.md",
           ok: true,
         }),
