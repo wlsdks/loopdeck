@@ -6046,6 +6046,9 @@ function parseAskEventSummaryResponse(body: {
     axis_counts?: unknown;
     average_score?: unknown;
     last_triggered_at?: unknown;
+    markdown?: unknown;
+    prompt_body?: unknown;
+    raw_path?: unknown;
   };
 }): AskEventSummary {
   if (
@@ -6058,7 +6061,10 @@ function parseAskEventSummaryResponse(body: {
     ) ||
     typeof body.data.average_score !== "number" ||
     (body.data.last_triggered_at !== undefined &&
-      typeof body.data.last_triggered_at !== "string")
+      typeof body.data.last_triggered_at !== "string") ||
+    body.data.markdown !== undefined ||
+    body.data.prompt_body !== undefined ||
+    body.data.raw_path !== undefined
   ) {
     throw new Error("Ask event summary unavailable: Invalid response.");
   }
