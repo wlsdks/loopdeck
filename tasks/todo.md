@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Draft Copy Event Contract Error
+
+- [x] CHECK: web API `markPromptImprovementDraftCopied`가
+  `/api/v1/prompts/:id/improvements/:draftId/copy` 성공 응답의 saved draft copy 계약을
+  검증하지 않아 malformed 응답을 `{}` 상태로 detail coach UI에 넘길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed draft copy event body를
+  `Improvement draft copy event failed: Invalid response.`로 reject하도록 요구하게 해 현재
+  `{}` resolve 실패를 확인한다.
+- [x] GREEN: draft copy 응답의 `id`, `prompt_id`, `copied_at` 계약을 확인하고 깨진 성공
+  응답은 raw-free draft copy contract 오류로 중단하도록 고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
+  check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Bookmark Contract Error
 
 - [x] CHECK: web API `setPromptBookmark`가 `/api/v1/prompts/:id/bookmark` 성공 응답의
