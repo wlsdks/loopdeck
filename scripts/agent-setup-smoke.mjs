@@ -168,12 +168,16 @@ function runCli(args) {
 }
 
 function startServer() {
-  const child = spawn(process.execPath, [cliPath, "server", "--data-dir", dataDir], {
-    cwd: repoRoot,
-    encoding: "utf8",
-    env,
-    stdio: ["ignore", "pipe", "pipe"],
-  });
+  const child = spawn(
+    process.execPath,
+    [cliPath, "server", "--data-dir", dataDir],
+    {
+      cwd: repoRoot,
+      encoding: "utf8",
+      env,
+      stdio: ["ignore", "pipe", "pipe"],
+    },
+  );
   child.stderr.on("data", (chunk) => {
     const text = Buffer.from(chunk).toString("utf8").trim();
     if (text) {
@@ -251,7 +255,9 @@ function assertFileExists(path, message) {
 
 function assertIncludes(value, needle) {
   if (!value.includes(needle)) {
-    throw new Error(`Expected output to include ${JSON.stringify(needle)}.\nOutput:\n${value}`);
+    throw new Error(
+      `Expected output to include ${JSON.stringify(needle)}.\nOutput:\n${value}`,
+    );
   }
 }
 

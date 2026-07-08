@@ -66,10 +66,7 @@ type LoopMemoryApprovalRouteStorage = Pick<
 > &
   Pick<LoopMemoryStoragePort, "recordLoopMemory" | "listLoopMemories">;
 
-type LoopReadRouteStorage = Pick<
-  LoopSnapshotStoragePort,
-  "listLoopSnapshots"
-> &
+type LoopReadRouteStorage = Pick<LoopSnapshotStoragePort, "listLoopSnapshots"> &
   Pick<CompactBoundaryStoragePort, "listCompactBoundaries"> &
   Pick<LoopMemoryStoragePort, "listLoopMemories"> &
   Pick<LoopMergeDecisionStoragePort, "listLoopMergeDecisions">;
@@ -112,13 +109,12 @@ export function registerLoopRoutes(
         latest && !hasApprovedMemoryForSnapshot(projectMemories, latest.id)
           ? decideLoopMemoryCandidate(latest)
           : undefined,
-      mergeDecisions:
-        latest
-          ? storage.listLoopMergeDecisions({
-              limit: 3,
-              projectId: latest.project_id,
-            }).items
-          : [],
+      mergeDecisions: latest
+        ? storage.listLoopMergeDecisions({
+            limit: 3,
+            projectId: latest.project_id,
+          }).items
+        : [],
     });
 
     return {
@@ -186,7 +182,10 @@ export function registerLoopRoutes(
     const commandCenter =
       reviewStatus?.activity.command_center ??
       (reviewStatus
-        ? createPromptLaneCommandCenter(reviewStatus.activity.worktrees, mergeDecisions)
+        ? createPromptLaneCommandCenter(
+            reviewStatus.activity.worktrees,
+            mergeDecisions,
+          )
         : undefined);
     const reviewPacket = commandCenter?.review_packet;
     const reviewItem = commandCenter?.review_items.find(
@@ -381,9 +380,7 @@ export function registerLoopRoutes(
                 readiness_summary: readinessSummaryFor(
                   reviewItem.merge_readiness,
                 ),
-                brief_rationale: briefRationaleFor(
-                  reviewItem.merge_readiness,
-                ),
+                brief_rationale: briefRationaleFor(reviewItem.merge_readiness),
                 evidence_count_explanation: evidenceCountExplanationFor(
                   reviewItem.evidence_count,
                 ),
@@ -460,11 +457,10 @@ export function registerLoopRoutes(
           snapshot,
           boundaries,
         ),
-        approvedMemories:
-          storage.listLoopMemories({
-            projectId: snapshot.project_id,
-            limit: 3,
-          }).items,
+        approvedMemories: storage.listLoopMemories({
+          projectId: snapshot.project_id,
+          limit: 3,
+        }).items,
       }),
     };
   });
@@ -494,11 +490,10 @@ export function registerLoopRoutes(
           snapshot,
           boundaries,
         ),
-        approvedMemories:
-          storage.listLoopMemories({
-            projectId: snapshot.project_id,
-            limit: 3,
-          }).items,
+        approvedMemories: storage.listLoopMemories({
+          projectId: snapshot.project_id,
+          limit: 3,
+        }).items,
       }),
     };
   });
@@ -637,8 +632,7 @@ function continuationSafetyOrderingNoteFor(): {
     label: "Safety guidance order",
     first:
       "review the continuation safety guidance before copying or pasting briefs",
-    then:
-      "follow copy, paste, review, collect, privacy, and merge gating notes in order",
+    then: "follow copy, paste, review, collect, privacy, and merge gating notes in order",
     reason:
       "keeps continuation handoff reviewable before any manual agent submission",
     writes_files: false,
@@ -656,7 +650,8 @@ function continuationSafetyNonPersistenceNoteFor(): {
 } {
   return {
     label: "Safety review state",
-    state: "reviewed guidance state is not stored or synchronized by PromptLane",
+    state:
+      "reviewed guidance state is not stored or synchronized by PromptLane",
     reminder:
       "operator re-checks safety guidance each time before manual agent submission",
     reason: "keeps continuation review local to the current operator session",
@@ -736,8 +731,7 @@ function continuationSafetyCopyFeedbackTimeoutNoteFor(): {
   return {
     label: "Copy feedback timeout",
     timeout_scope: "copied feedback clears after a short local timeout",
-    not_state:
-      "timeout does not record review completion or submission state",
+    not_state: "timeout does not record review completion or submission state",
     reason:
       "keeps copied feedback temporary while preserving the manual safety review boundary",
     writes_files: false,
@@ -922,7 +916,8 @@ function continuationSafetyCollectionResultNonPersistenceNoteFor(): {
       "collection result is not persisted until the operator records the next explicit loop snapshot",
     not_stored:
       "PromptLane does not store, sync, or infer collection result state from agent UI activity",
-    reason: "keeps collection evidence tied to explicit local snapshot recording",
+    reason:
+      "keeps collection evidence tied to explicit local snapshot recording",
     writes_files: false,
     external_calls: false,
   };
@@ -938,7 +933,8 @@ function continuationSafetyCollectionRetryBoundaryNoteFor(): {
 } {
   return {
     label: "Collection retry boundary",
-    retry: "operator reruns the explicit loop collection flow when retry is needed",
+    retry:
+      "operator reruns the explicit loop collection flow when retry is needed",
     not_automated:
       "PromptLane does not automatically retry collection commands or hidden recovery actions",
     reason:
@@ -1002,7 +998,8 @@ function continuationSafetyFreshnessResultNonPersistenceNoteFor(): {
       "freshness result stays outside PromptLane until the next explicit loop snapshot",
     not_stored:
       "PromptLane does not detect, store, or sync freshness result state",
-    reason: "keeps freshness evidence tied to explicit local snapshot recording",
+    reason:
+      "keeps freshness evidence tied to explicit local snapshot recording",
     writes_files: false,
     external_calls: false,
   };
@@ -1061,8 +1058,7 @@ function continuationSafetyPreMemoryApprovalFreshnessAdvisoryFor(): {
     advisory: "review freshness uncertainty before approving loop memory",
     not_decision:
       "PromptLane does not approve memory or verify freshness from this note",
-    reason:
-      "keeps memory approval separate from freshness uncertainty review",
+    reason: "keeps memory approval separate from freshness uncertainty review",
     writes_files: false,
     external_calls: false,
   };
@@ -1202,7 +1198,8 @@ function continuationSafetyPostMemoryApprovalRetryFreshnessUncertaintyCollection
   external_calls: false;
 } {
   return {
-    label: "Post-memory-approval retry freshness uncertainty collection reminder",
+    label:
+      "Post-memory-approval retry freshness uncertainty collection reminder",
     reminder:
       "collect a new explicit loop snapshot when post-approval retry freshness is uncertain",
     not_automated:
@@ -2181,7 +2178,8 @@ function briefRationaleFor(
   return {
     label: "Brief rationale",
     merge_readiness: mergeReadiness.status,
-    reason: "selected brief continues a ready worktree after evidence comparison",
+    reason:
+      "selected brief continues a ready worktree after evidence comparison",
     next_action: "copy selected continuation brief",
     merge_gate: mergeReadiness.next_action,
   };

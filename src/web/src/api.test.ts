@@ -346,8 +346,7 @@ describe("web api export client", () => {
               label: "Safety guidance order",
               first:
                 "review the continuation safety guidance before copying or pasting briefs",
-              then:
-                "follow copy, paste, review, collect, privacy, and merge gating notes in order",
+              then: "follow copy, paste, review, collect, privacy, and merge gating notes in order",
               reason:
                 "keeps continuation handoff reviewable before any manual agent submission",
               writes_files: false,
@@ -561,8 +560,7 @@ describe("web api export client", () => {
             },
             continuation_safety_pre_merge_freshness_advisory: {
               label: "Pre-merge freshness advisory",
-              advisory:
-                "review freshness uncertainty before merge decisions",
+              advisory: "review freshness uncertainty before merge decisions",
               not_decision:
                 "PromptLane does not approve merges or verify freshness before merge",
               reason:
@@ -594,8 +592,7 @@ describe("web api export client", () => {
             },
             continuation_safety_post_memory_approval_collection_result_non_persistence_note:
               {
-                label:
-                  "Post-memory-approval collection result non-persistence",
+                label: "Post-memory-approval collection result non-persistence",
                 result_scope:
                   "post-approval collection result stays outside PromptLane until the next explicit loop snapshot",
                 not_stored:
@@ -631,8 +628,7 @@ describe("web api export client", () => {
               },
             continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note:
               {
-                label:
-                  "Post-memory-approval retry evidence freshness boundary",
+                label: "Post-memory-approval retry evidence freshness boundary",
                 review:
                   "operator checks retry evidence freshness against the latest explicit loop snapshot",
                 not_verified:
@@ -1127,7 +1123,8 @@ describe("web api export client", () => {
                 "collect a new loop snapshot after the next agent turn",
               not_memory_approval:
                 "memory approval remains a separate explicit review",
-              not_merge: "merge remains a separate review-before-merge decision",
+              not_merge:
+                "merge remains a separate review-before-merge decision",
               reason:
                 "continuation handoff records the next loop before any memory approval or merge decision",
               writes_files: false,
@@ -1348,8 +1345,10 @@ describe("web api export client", () => {
       },
       copy_side_effects: {
         label: "Copy side effects",
-        clipboard: "copies the selected continuation brief to the local clipboard",
-        ui_feedback: "temporarily marks the selected brief copy button as copied",
+        clipboard:
+          "copies the selected continuation brief to the local clipboard",
+        ui_feedback:
+          "temporarily marks the selected brief copy button as copied",
         does_not:
           "does not write files, execute commands, call external services, submit prompts, or change merge state",
         writes_files: false,
@@ -1359,7 +1358,8 @@ describe("web api export client", () => {
         label: "Continuation safety guidance",
         scope:
           "read-only handoff boundaries for Codex and Claude Code continuation",
-        includes: "copy, paste, review, collect, privacy, and merge gating notes",
+        includes:
+          "copy, paste, review, collect, privacy, and merge gating notes",
         reason:
           "keeps the selected continuation path explicit without automating agents",
         writes_files: false,
@@ -1369,8 +1369,7 @@ describe("web api export client", () => {
         label: "Safety guidance order",
         first:
           "review the continuation safety guidance before copying or pasting briefs",
-        then:
-          "follow copy, paste, review, collect, privacy, and merge gating notes in order",
+        then: "follow copy, paste, review, collect, privacy, and merge gating notes in order",
         reason:
           "keeps continuation handoff reviewable before any manual agent submission",
         writes_files: false,
@@ -1378,10 +1377,12 @@ describe("web api export client", () => {
       },
       continuation_safety_non_persistence_note: {
         label: "Safety review state",
-        state: "reviewed guidance state is not stored or synchronized by PromptLane",
+        state:
+          "reviewed guidance state is not stored or synchronized by PromptLane",
         reminder:
           "operator re-checks safety guidance each time before manual agent submission",
-        reason: "keeps continuation review local to the current operator session",
+        reason:
+          "keeps continuation review local to the current operator session",
         stores_state: false,
         external_calls: false,
       },
@@ -1461,8 +1462,7 @@ describe("web api export client", () => {
           "operator verifies the active Codex or Claude Code request box before paste",
         not_inspection:
           "PromptLane does not inspect agent UI state or target contents",
-        reason:
-          "keeps target selection manual before any continuation handoff",
+        reason: "keeps target selection manual before any continuation handoff",
         writes_files: false,
         external_calls: false,
       },
@@ -1483,7 +1483,8 @@ describe("web api export client", () => {
           "operator submits the pasted brief manually in Codex or Claude Code",
         not_automated:
           "PromptLane does not press enter, click submit, or record submitted state",
-        reason: "keeps final agent execution under operator control after paste",
+        reason:
+          "keeps final agent execution under operator control after paste",
         writes_files: false,
         external_calls: false,
       },
@@ -1537,7 +1538,8 @@ describe("web api export client", () => {
           "retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
         not_stored:
           "PromptLane does not detect, store, or sync retry success or failure state",
-        reason: "keeps retry evidence tied to explicit local snapshot recording",
+        reason:
+          "keeps retry evidence tied to explicit local snapshot recording",
         writes_files: false,
         external_calls: false,
       },
@@ -1547,7 +1549,8 @@ describe("web api export client", () => {
           "operator checks freshness against the latest explicit loop snapshot evidence",
         not_verified:
           "PromptLane does not verify freshness from git status, transcripts, or agent UI activity",
-        reason: "keeps evidence freshness review tied to local snapshot metadata",
+        reason:
+          "keeps evidence freshness review tied to local snapshot metadata",
         writes_files: false,
         external_calls: false,
       },
@@ -1557,7 +1560,8 @@ describe("web api export client", () => {
           "freshness result stays outside PromptLane until the next explicit loop snapshot",
         not_stored:
           "PromptLane does not detect, store, or sync freshness result state",
-        reason: "keeps freshness evidence tied to explicit local snapshot recording",
+        reason:
+          "keeps freshness evidence tied to explicit local snapshot recording",
         writes_files: false,
         external_calls: false,
       },
@@ -1577,7 +1581,8 @@ describe("web api export client", () => {
         advisory: "review freshness uncertainty before merge decisions",
         not_decision:
           "PromptLane does not approve merges or verify freshness before merge",
-        reason: "keeps merge readiness separate from freshness uncertainty review",
+        reason:
+          "keeps merge readiness separate from freshness uncertainty review",
         writes_files: false,
         external_calls: false,
       },
@@ -1586,7 +1591,8 @@ describe("web api export client", () => {
         advisory: "review freshness uncertainty before approving loop memory",
         not_decision:
           "PromptLane does not approve memory or verify freshness from this note",
-        reason: "keeps memory approval separate from freshness uncertainty review",
+        reason:
+          "keeps memory approval separate from freshness uncertainty review",
         writes_files: false,
         external_calls: false,
       },
@@ -1596,7 +1602,8 @@ describe("web api export client", () => {
           "collect a new explicit loop snapshot after approving loop memory",
         not_automated:
           "PromptLane does not start collection from memory approval or approval state changes",
-        reason: "keeps post-approval collection operator-triggered and local-first",
+        reason:
+          "keeps post-approval collection operator-triggered and local-first",
         writes_files: false,
         external_calls: false,
       },
@@ -1612,18 +1619,17 @@ describe("web api export client", () => {
           writes_files: false,
           external_calls: false,
         },
-      continuation_safety_post_memory_approval_collection_retry_boundary_note:
-        {
-          label: "Post-memory-approval collection retry boundary",
-          retry:
-            "operator reruns the explicit post-approval loop collection flow when retry is needed",
-          not_automated:
-            "PromptLane does not automatically retry post-approval collection commands or hidden recovery actions",
-          reason:
-            "keeps post-approval collection retry control local and operator-triggered",
-          writes_files: false,
-          external_calls: false,
-        },
+      continuation_safety_post_memory_approval_collection_retry_boundary_note: {
+        label: "Post-memory-approval collection retry boundary",
+        retry:
+          "operator reruns the explicit post-approval loop collection flow when retry is needed",
+        not_automated:
+          "PromptLane does not automatically retry post-approval collection commands or hidden recovery actions",
+        reason:
+          "keeps post-approval collection retry control local and operator-triggered",
+        writes_files: false,
+        external_calls: false,
+      },
       continuation_safety_post_memory_approval_retry_outcome_non_persistence_note:
         {
           label: "Post-memory-approval retry outcome non-persistence",
@@ -1650,8 +1656,7 @@ describe("web api export client", () => {
         },
       continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note:
         {
-          label:
-            "Post-memory-approval retry freshness result non-persistence",
+          label: "Post-memory-approval retry freshness result non-persistence",
           result_scope:
             "post-approval retry freshness result stays outside PromptLane until the next explicit loop snapshot",
           not_stored:
@@ -1713,397 +1718,397 @@ describe("web api export client", () => {
           writes_files: false,
           external_calls: false,
         },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_uncertainty_reminder:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval collection uncertainty reminder",
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_uncertainty_reminder:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval collection uncertainty reminder",
           reminder:
             "collect a new explicit loop snapshot when renewed-memory-approval collection result is uncertain",
           not_automated:
             "PromptLane does not verify renewed-memory-approval collection result or start collection automatically",
           reason:
             "keeps renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_merge_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval pre-merge freshness advisory",
-        advisory:
-          "review renewed-memory-approval freshness uncertainty before merge decisions",
-        not_decision:
-          "PromptLane does not approve merges or verify renewed-memory-approval freshness before merge",
-        reason:
-          "keeps merge readiness separate from renewed-memory-approval freshness uncertainty review",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_handoff_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval pre-handoff freshness advisory",
-        advisory:
-          "review renewed-memory-approval freshness uncertainty before continuation handoff",
-        not_decision:
-          "PromptLane does not approve handoffs or verify renewed-memory-approval freshness before handoff",
-        reason:
-          "keeps continuation handoff separate from renewed-memory-approval freshness uncertainty review",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_paste_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval pre-paste freshness advisory",
-        advisory:
-          "review renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
-        not_decision:
-          "PromptLane does not approve paste targets or verify renewed-memory-approval freshness before paste",
-        reason:
-          "keeps paste readiness separate from renewed-memory-approval freshness uncertainty review",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_submit_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval pre-submit freshness advisory",
-        advisory:
-          "review renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
-        not_decision:
-          "PromptLane does not approve submissions or verify renewed-memory-approval freshness before submit",
-        reason:
-          "keeps submission readiness separate from renewed-memory-approval freshness uncertainty review",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit freshness advisory",
-        advisory:
-          "collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain",
-        not_automated:
-          "PromptLane does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
-        reason:
-          "keeps post-submit freshness review tied to explicit local snapshot collection",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence",
-        result_scope:
-          "post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
-        not_stored:
-          "PromptLane does not detect, store, or sync post-submit collection result state",
-        reason:
-          "keeps post-submit collection evidence tied to explicit local snapshot recording",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit collection retry boundary",
-        retry:
-          "operator reruns the explicit post-submit loop collection flow when retry is needed",
-        not_automated:
-          "PromptLane does not automatically retry post-submit collection commands or hidden recovery actions",
-        reason:
-          "keeps post-submit collection retry control local and operator-triggered",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_outcome_non_persistence_note:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence",
-        outcome_scope:
-          "post-submit retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
-        not_stored:
-          "PromptLane does not detect, store, or sync post-submit retry success or failure state",
-        reason:
-          "keeps post-submit retry evidence tied to explicit local snapshot recording",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_evidence_freshness_boundary_note:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry evidence freshness boundary",
-        freshness_scope:
-          "operator checks post-submit retry evidence freshness against the latest explicit loop snapshot",
-        not_verified:
-          "PromptLane does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
-        reason:
-          "keeps post-submit retry evidence freshness review tied to local snapshot metadata",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_result_non_persistence_note:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence",
-        result_scope:
-          "post-submit retry freshness result stays outside PromptLane until the next explicit loop snapshot",
-        not_stored:
-          "PromptLane does not detect, store, or sync post-submit retry freshness result state",
-        reason:
-          "keeps post-submit retry freshness evidence tied to explicit local snapshot recording",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_uncertainty_collection_reminder:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry freshness uncertainty collection reminder",
-        collection_trigger:
-          "collect a new explicit loop snapshot when post-submit retry freshness is uncertain",
-        not_automated:
-          "PromptLane does not verify post-submit retry freshness or start collection automatically",
-        reason:
-          "keeps post-submit retry freshness uncertainty resolution operator-triggered and local-first",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_pre_memory_approval_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry pre-memory-approval freshness advisory",
-        advisory:
-          "review post-submit retry freshness uncertainty before approving loop memory again",
-        not_decision:
-          "PromptLane does not approve memory or verify post-submit retry freshness from this advisory",
-        reason:
-          "keeps renewed memory approval separate from post-submit retry freshness uncertainty review",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_reminder:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection reminder",
-        reminder:
-          "collect a new explicit loop snapshot after approving loop memory again after post-submit retry",
-        not_automated:
-          "PromptLane does not start collection from post-submit retry renewed memory approval or hidden approval signals",
-        reason:
-          "keeps post-submit retry renewed-memory-approval collection operator-triggered and local-first",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_result_non_persistence_note:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence",
-        result_scope:
-          "post-submit retry renewed-memory-approval collection result stays outside PromptLane until the next explicit loop snapshot",
-        not_stored:
-          "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
-        reason:
-          "keeps post-submit retry renewed-memory-approval collection evidence tied to explicit local snapshot recording",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_uncertainty_reminder:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection uncertainty reminder",
-        reminder:
-          "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval collection result is uncertain",
-        not_automated:
-          "PromptLane does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
-        reason:
-          "keeps post-submit retry renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence",
-        result_scope:
-          "post-submit retry renewed-memory-approval post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
-        not_stored:
-          "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
-        reason:
-          "keeps post-submit retry renewed-memory-approval post-submit collection evidence tied to explicit local snapshot recording",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection uncertainty reminder",
-        reminder:
-          "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection result is uncertain",
-        not_automated:
-          "PromptLane does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
-        reason:
-          "keeps post-submit retry renewed-memory-approval post-submit collection uncertainty resolution operator-triggered and local-first",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_merge_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-merge freshness advisory",
-        advisory:
-          "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before merge decisions",
-        not_decision:
-          "PromptLane does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
-        reason:
-          "keeps merge readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_handoff_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-handoff freshness advisory",
-        advisory:
-          "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before continuation handoff",
-        not_decision:
-          "PromptLane does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
-        reason:
-          "keeps continuation handoff separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_paste_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-paste freshness advisory",
-        advisory:
-          "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before pasting into Codex or Claude Code",
-        not_decision:
-          "PromptLane does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
-        reason:
-          "keeps paste readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_submit_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-submit freshness advisory",
-        advisory:
-          "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before submitting in Codex or Claude Code",
-        not_decision:
-          "PromptLane does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
-        reason:
-          "keeps submission readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_post_submit_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection post-submit freshness advisory",
-        advisory:
-          "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
-        not_monitored:
-          "PromptLane does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval post-submit collection freshness after submit",
-        reason:
-          "keeps post-submit retry renewed-memory-approval post-submit collection freshness review tied to explicit local snapshot collection",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_result_non_persistence_note:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence",
-        not_stored:
-          "post-submit retry renewed-memory-approval post-submit collection freshness result stays outside PromptLane until the next explicit loop snapshot",
-        not_detected:
-          "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
-        reason:
-          "keeps post-submit retry renewed-memory-approval post-submit collection freshness evidence tied to explicit local snapshot recording",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_uncertainty_collection_reminder:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness uncertainty collection reminder",
-        reminder:
-          "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
-        not_automated:
-          "PromptLane does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically",
-        reason:
-          "keeps post-submit retry renewed-memory-approval post-submit collection freshness uncertainty resolution operator-triggered and local-first",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_merge_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-merge freshness advisory",
-        advisory:
-          "review post-submit retry renewed-memory-approval freshness uncertainty before merge decisions",
-        not_decision:
-          "PromptLane does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
-        reason:
-          "keeps merge readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_handoff_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-handoff freshness advisory",
-        advisory:
-          "review post-submit retry renewed-memory-approval freshness uncertainty before continuation handoff",
-        not_decision:
-          "PromptLane does not approve handoffs or verify post-submit retry renewed-memory-approval freshness before handoff",
-        reason:
-          "keeps continuation handoff separate from post-submit retry renewed-memory-approval freshness uncertainty review",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_paste_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-paste freshness advisory",
-        advisory:
-          "review post-submit retry renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
-        not_decision:
-          "PromptLane does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
-        reason:
-          "keeps paste readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_submit_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-submit freshness advisory",
-        advisory:
-          "review post-submit retry renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
-        not_decision:
-          "PromptLane does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
-        reason:
-          "keeps submission readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
-        writes_files: false,
-        external_calls: false,
-      },
-    continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_freshness_advisory:
-      {
-        label:
-          "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit freshness advisory",
-        advisory:
-          "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain",
-        not_automated:
-          "PromptLane does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
-        reason:
-          "keeps post-submit retry renewed-memory-approval freshness review tied to explicit local snapshot collection",
-        writes_files: false,
-        external_calls: false,
-      },
-    paste_destination: {
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_merge_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval pre-merge freshness advisory",
+          advisory:
+            "review renewed-memory-approval freshness uncertainty before merge decisions",
+          not_decision:
+            "PromptLane does not approve merges or verify renewed-memory-approval freshness before merge",
+          reason:
+            "keeps merge readiness separate from renewed-memory-approval freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_handoff_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval pre-handoff freshness advisory",
+          advisory:
+            "review renewed-memory-approval freshness uncertainty before continuation handoff",
+          not_decision:
+            "PromptLane does not approve handoffs or verify renewed-memory-approval freshness before handoff",
+          reason:
+            "keeps continuation handoff separate from renewed-memory-approval freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_paste_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval pre-paste freshness advisory",
+          advisory:
+            "review renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
+          not_decision:
+            "PromptLane does not approve paste targets or verify renewed-memory-approval freshness before paste",
+          reason:
+            "keeps paste readiness separate from renewed-memory-approval freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_submit_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval pre-submit freshness advisory",
+          advisory:
+            "review renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
+          not_decision:
+            "PromptLane does not approve submissions or verify renewed-memory-approval freshness before submit",
+          reason:
+            "keeps submission readiness separate from renewed-memory-approval freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit freshness advisory",
+          advisory:
+            "collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain",
+          not_automated:
+            "PromptLane does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
+          reason:
+            "keeps post-submit freshness review tied to explicit local snapshot collection",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence",
+          result_scope:
+            "post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
+          not_stored:
+            "PromptLane does not detect, store, or sync post-submit collection result state",
+          reason:
+            "keeps post-submit collection evidence tied to explicit local snapshot recording",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit collection retry boundary",
+          retry:
+            "operator reruns the explicit post-submit loop collection flow when retry is needed",
+          not_automated:
+            "PromptLane does not automatically retry post-submit collection commands or hidden recovery actions",
+          reason:
+            "keeps post-submit collection retry control local and operator-triggered",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_outcome_non_persistence_note:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence",
+          outcome_scope:
+            "post-submit retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
+          not_stored:
+            "PromptLane does not detect, store, or sync post-submit retry success or failure state",
+          reason:
+            "keeps post-submit retry evidence tied to explicit local snapshot recording",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_evidence_freshness_boundary_note:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry evidence freshness boundary",
+          freshness_scope:
+            "operator checks post-submit retry evidence freshness against the latest explicit loop snapshot",
+          not_verified:
+            "PromptLane does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
+          reason:
+            "keeps post-submit retry evidence freshness review tied to local snapshot metadata",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_result_non_persistence_note:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence",
+          result_scope:
+            "post-submit retry freshness result stays outside PromptLane until the next explicit loop snapshot",
+          not_stored:
+            "PromptLane does not detect, store, or sync post-submit retry freshness result state",
+          reason:
+            "keeps post-submit retry freshness evidence tied to explicit local snapshot recording",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_uncertainty_collection_reminder:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry freshness uncertainty collection reminder",
+          collection_trigger:
+            "collect a new explicit loop snapshot when post-submit retry freshness is uncertain",
+          not_automated:
+            "PromptLane does not verify post-submit retry freshness or start collection automatically",
+          reason:
+            "keeps post-submit retry freshness uncertainty resolution operator-triggered and local-first",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_pre_memory_approval_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry pre-memory-approval freshness advisory",
+          advisory:
+            "review post-submit retry freshness uncertainty before approving loop memory again",
+          not_decision:
+            "PromptLane does not approve memory or verify post-submit retry freshness from this advisory",
+          reason:
+            "keeps renewed memory approval separate from post-submit retry freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_reminder:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection reminder",
+          reminder:
+            "collect a new explicit loop snapshot after approving loop memory again after post-submit retry",
+          not_automated:
+            "PromptLane does not start collection from post-submit retry renewed memory approval or hidden approval signals",
+          reason:
+            "keeps post-submit retry renewed-memory-approval collection operator-triggered and local-first",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_result_non_persistence_note:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence",
+          result_scope:
+            "post-submit retry renewed-memory-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+          not_stored:
+            "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
+          reason:
+            "keeps post-submit retry renewed-memory-approval collection evidence tied to explicit local snapshot recording",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_uncertainty_reminder:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection uncertainty reminder",
+          reminder:
+            "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval collection result is uncertain",
+          not_automated:
+            "PromptLane does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
+          reason:
+            "keeps post-submit retry renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence",
+          result_scope:
+            "post-submit retry renewed-memory-approval post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
+          not_stored:
+            "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
+          reason:
+            "keeps post-submit retry renewed-memory-approval post-submit collection evidence tied to explicit local snapshot recording",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection uncertainty reminder",
+          reminder:
+            "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection result is uncertain",
+          not_automated:
+            "PromptLane does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
+          reason:
+            "keeps post-submit retry renewed-memory-approval post-submit collection uncertainty resolution operator-triggered and local-first",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_merge_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-merge freshness advisory",
+          advisory:
+            "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before merge decisions",
+          not_decision:
+            "PromptLane does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
+          reason:
+            "keeps merge readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_handoff_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-handoff freshness advisory",
+          advisory:
+            "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before continuation handoff",
+          not_decision:
+            "PromptLane does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
+          reason:
+            "keeps continuation handoff separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_paste_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-paste freshness advisory",
+          advisory:
+            "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before pasting into Codex or Claude Code",
+          not_decision:
+            "PromptLane does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
+          reason:
+            "keeps paste readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_submit_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-submit freshness advisory",
+          advisory:
+            "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before submitting in Codex or Claude Code",
+          not_decision:
+            "PromptLane does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
+          reason:
+            "keeps submission readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_post_submit_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection post-submit freshness advisory",
+          advisory:
+            "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
+          not_monitored:
+            "PromptLane does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval post-submit collection freshness after submit",
+          reason:
+            "keeps post-submit retry renewed-memory-approval post-submit collection freshness review tied to explicit local snapshot collection",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_result_non_persistence_note:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence",
+          not_stored:
+            "post-submit retry renewed-memory-approval post-submit collection freshness result stays outside PromptLane until the next explicit loop snapshot",
+          not_detected:
+            "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
+          reason:
+            "keeps post-submit retry renewed-memory-approval post-submit collection freshness evidence tied to explicit local snapshot recording",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_uncertainty_collection_reminder:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness uncertainty collection reminder",
+          reminder:
+            "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
+          not_automated:
+            "PromptLane does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically",
+          reason:
+            "keeps post-submit retry renewed-memory-approval post-submit collection freshness uncertainty resolution operator-triggered and local-first",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_merge_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-merge freshness advisory",
+          advisory:
+            "review post-submit retry renewed-memory-approval freshness uncertainty before merge decisions",
+          not_decision:
+            "PromptLane does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
+          reason:
+            "keeps merge readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_handoff_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-handoff freshness advisory",
+          advisory:
+            "review post-submit retry renewed-memory-approval freshness uncertainty before continuation handoff",
+          not_decision:
+            "PromptLane does not approve handoffs or verify post-submit retry renewed-memory-approval freshness before handoff",
+          reason:
+            "keeps continuation handoff separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_paste_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-paste freshness advisory",
+          advisory:
+            "review post-submit retry renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
+          not_decision:
+            "PromptLane does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
+          reason:
+            "keeps paste readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_submit_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-submit freshness advisory",
+          advisory:
+            "review post-submit retry renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
+          not_decision:
+            "PromptLane does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
+          reason:
+            "keeps submission readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
+          writes_files: false,
+          external_calls: false,
+        },
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_freshness_advisory:
+        {
+          label:
+            "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit freshness advisory",
+          advisory:
+            "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain",
+          not_automated:
+            "PromptLane does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
+          reason:
+            "keeps post-submit retry renewed-memory-approval freshness review tied to explicit local snapshot collection",
+          writes_files: false,
+          external_calls: false,
+        },
+      paste_destination: {
         label: "Paste destination",
         targets: ["Codex active request", "Claude Code active request"],
         instruction:
@@ -2130,7 +2135,8 @@ describe("web api export client", () => {
       post_handoff_reminder: {
         label: "Post-handoff reminder",
         collect_next: "collect a new loop snapshot after the next agent turn",
-        not_memory_approval: "memory approval remains a separate explicit review",
+        not_memory_approval:
+          "memory approval remains a separate explicit review",
         not_merge: "merge remains a separate review-before-merge decision",
         reason:
           "continuation handoff records the next loop before any memory approval or merge decision",
@@ -2748,8 +2754,7 @@ describe("web api export client", () => {
               label: "Safety guidance order",
               first:
                 "review the continuation safety guidance before copying or pasting briefs",
-              then:
-                "follow copy, paste, review, collect, privacy, and merge gating notes in order",
+              then: "follow copy, paste, review, collect, privacy, and merge gating notes in order",
               reason:
                 "keeps continuation handoff reviewable before any manual agent submission",
               writes_files: false,
@@ -2908,7 +2913,8 @@ describe("web api export client", () => {
                 "copied state only confirms the brief reached the local clipboard",
               next_step:
                 "return to the safety re-check cue before pasting the copied brief",
-              reason: "copy feedback is not safety approval or agent submission",
+              reason:
+                "copy feedback is not safety approval or agent submission",
               writes_files: false,
               external_calls: true,
             },
@@ -3008,7 +3014,8 @@ describe("web api export client", () => {
             },
             continuation_safety_copy_feedback_timeout_note: {
               label: "Copy feedback timeout",
-              timeout_scope: "copied feedback clears after a short local timeout",
+              timeout_scope:
+                "copied feedback clears after a short local timeout",
               not_state:
                 "timeout does not record review completion or submission state",
               reason:
@@ -3061,7 +3068,8 @@ describe("web api export client", () => {
             continuation_safety_copy_feedback_failure_note: {
               label: "Copy feedback failure",
               failure_scope: "clipboard failure requires a manual retry",
-              not_state: "failure does not submit prompts or store review state",
+              not_state:
+                "failure does not submit prompts or store review state",
               reason:
                 "keeps copy failure handling local to the operator without hidden recovery actions",
               writes_files: false,
@@ -3219,8 +3227,7 @@ describe("web api export client", () => {
               label: "Target-agent check",
               check:
                 "operator verifies the active Codex or Claude Code request box before paste",
-              not_inspection:
-                "PromptLane inspects agent UI state before paste",
+              not_inspection: "PromptLane inspects agent UI state before paste",
               reason:
                 "keeps target selection manual before any continuation handoff",
               writes_files: false,
@@ -3592,7 +3599,8 @@ describe("web api export client", () => {
                 "retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
               not_stored:
                 "PromptLane detects, stores, and syncs retry success or failure state",
-              reason: "keeps retry evidence tied to explicit local snapshot recording",
+              reason:
+                "keeps retry evidence tied to explicit local snapshot recording",
               writes_files: false,
               external_calls: false,
             },
@@ -3644,7 +3652,8 @@ describe("web api export client", () => {
                 "operator checks freshness against the latest explicit loop snapshot evidence",
               not_verified:
                 "PromptLane verifies freshness from git status, transcripts, or agent UI activity",
-              reason: "keeps evidence freshness review tied to local snapshot metadata",
+              reason:
+                "keeps evidence freshness review tied to local snapshot metadata",
               writes_files: false,
               external_calls: false,
             },
@@ -3956,8 +3965,7 @@ describe("web api export client", () => {
             },
             continuation_safety_post_memory_approval_collection_result_non_persistence_note:
               {
-                label:
-                  "Post-memory-approval collection result non-persistence",
+                label: "Post-memory-approval collection result non-persistence",
                 result_scope:
                   "post-approval collection result stays outside PromptLane until the next explicit loop snapshot",
                 not_stored:
@@ -4065,8 +4073,7 @@ describe("web api export client", () => {
             },
             continuation_safety_post_memory_approval_retry_outcome_non_persistence_note:
               {
-                label:
-                  "Post-memory-approval retry outcome non-persistence",
+                label: "Post-memory-approval retry outcome non-persistence",
                 outcome_scope:
                   "post-approval retry outcome stays outside PromptLane until the next explicit loop snapshot",
                 not_stored:
@@ -4120,8 +4127,7 @@ describe("web api export client", () => {
             },
             continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note:
               {
-                label:
-                  "Post-memory-approval retry evidence freshness boundary",
+                label: "Post-memory-approval retry evidence freshness boundary",
                 review:
                   "operator checks retry evidence freshness against the latest explicit loop snapshot",
                 not_verified:
@@ -6266,7 +6272,9 @@ describe("web api export client", () => {
 
     await expect(
       getLoopInstructionPatch({ targetFile: "AGENTS.md" }),
-    ).rejects.toThrow("Loop instruction patch proposal failed: Invalid response.");
+    ).rejects.toThrow(
+      "Loop instruction patch proposal failed: Invalid response.",
+    );
   });
 
   it("reports malformed instruction patch apply gates without returning incomplete approval data", async () => {
@@ -6305,7 +6313,9 @@ describe("web api export client", () => {
 
     await expect(
       getLoopInstructionPatch({ targetFile: "AGENTS.md" }),
-    ).rejects.toThrow("Loop instruction patch proposal failed: Invalid response.");
+    ).rejects.toThrow(
+      "Loop instruction patch proposal failed: Invalid response.",
+    );
   });
 
   it("shares an in-flight csrf session request across parallel API calls", async () => {
@@ -7954,7 +7964,7 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(
         errorResponse(500, {
           detail:
-            "Unexpected setup failure prompt_body=\"summarize my private incident report\"",
+            'Unexpected setup failure prompt_body="summarize my private incident report"',
         }),
       );
     const { getSettings } = await import("./api.js");
@@ -7969,7 +7979,8 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
       .mockResolvedValueOnce(
         errorResponse(500, {
-          detail: "Unexpected setup failure prompt_body=private-incident-summary",
+          detail:
+            "Unexpected setup failure prompt_body=private-incident-summary",
         }),
       );
     const { getSettings } = await import("./api.js");
@@ -9919,7 +9930,7 @@ describe("web api export client", () => {
       savePromptImprovementDraft("prmt_x", {
         draft_text: "Use a more specific goal.",
         analyzer: "promptlane",
-        changed_sections: ["goal"],
+        changed_sections: ["goal_clarity"],
         safety_notes: [],
       }),
     ).rejects.toThrow("Improvement draft save failed: Invalid response.");

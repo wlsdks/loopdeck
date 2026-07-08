@@ -30,7 +30,10 @@ const cliEnv = {
 let serverProcess;
 
 try {
-  assertFileExists(cliPath, "Run `pnpm build` before first coach loop dogfood.");
+  assertFileExists(
+    cliPath,
+    "Run `pnpm build` before first coach loop dogfood.",
+  );
   mkdirSync(projectDir, { recursive: true });
 
   step("init isolated PromptLane archive");
@@ -55,7 +58,11 @@ try {
 
   step("coach --json");
   const coach = parseJson(runCli(["coach", "--data-dir", dataDir, "--json"]));
-  assertEqual(coach.status.status, "ready", "Coach should see captured prompt.");
+  assertEqual(
+    coach.status.status,
+    "ready",
+    "Coach should see captured prompt.",
+  );
   assertEqual(
     coach.status.latest_prompt.tool,
     "codex",
@@ -184,10 +191,14 @@ function runCli(args, options = {}) {
 }
 
 function startServer() {
-  const child = spawn(process.execPath, [cliPath, "server", "--data-dir", dataDir], {
-    env: cliEnv,
-    stdio: ["ignore", "ignore", "pipe"],
-  });
+  const child = spawn(
+    process.execPath,
+    [cliPath, "server", "--data-dir", dataDir],
+    {
+      env: cliEnv,
+      stdio: ["ignore", "ignore", "pipe"],
+    },
+  );
   child.stderr.on("data", (chunk) => {
     const text = Buffer.from(chunk).toString("utf8").trim();
     if (text) console.error(text);

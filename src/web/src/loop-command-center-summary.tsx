@@ -33,9 +33,7 @@ export function LoopCommandCenterSummary({
       <p className="loops-status-line">
         Review packet {commandCenter.review_packet.status}
       </p>
-      <p className="loops-status-line">
-        {commandCenter.review_packet.summary}
-      </p>
+      <p className="loops-status-line">{commandCenter.review_packet.summary}</p>
       <p className="loops-status-line">
         Next {commandCenter.review_packet.next_action}
       </p>
@@ -70,7 +68,9 @@ export function LoopCommandCenterSummary({
           </div>
           <button
             className="loop-copy-button"
-            disabled={!onCopyCommandCenterBrief || busyWorktree === item.worktree}
+            disabled={
+              !onCopyCommandCenterBrief || busyWorktree === item.worktree
+            }
             onClick={() =>
               void onCopyCommandCenterBrief?.({
                 worktree: item.worktree,

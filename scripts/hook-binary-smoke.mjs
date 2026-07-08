@@ -50,7 +50,9 @@ try {
     );
 
     step(`${binary} hook codex fail-open`);
-    assertCleanHookRun(runBinary(binary, ["hook", "codex"], { input: payload }));
+    assertCleanHookRun(
+      runBinary(binary, ["hook", "codex"], { input: payload }),
+    );
   }
 
   console.log("hook binary smoke passed");

@@ -175,9 +175,7 @@ describe("quality 9.5 evidence script", () => {
         }),
       ]),
     );
-    expect(parsed.scorecard_review_candidates).toEqual(
-      [],
-    );
+    expect(parsed.scorecard_review_candidates).toEqual([]);
     expect(parsed.scorecard_review_candidates).not.toEqual(
       expect.arrayContaining([
         expect.objectContaining({

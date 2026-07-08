@@ -209,9 +209,7 @@ describe("source hygiene", () => {
 
     expect(loopsView).not.toContain("continuation_safety_group");
     expect(loopsView).not.toContain("continuation_safety_ordering_note");
-    expect(loopsView).not.toContain(
-      "continuation_safety_non_persistence_note",
-    );
+    expect(loopsView).not.toContain("continuation_safety_non_persistence_note");
     expect(loopsView).not.toContain("continuation_safety_recheck_cue");
     expect(loopsView).not.toContain(
       "continuation_safety_copy_feedback_reminder",

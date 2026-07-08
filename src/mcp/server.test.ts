@@ -59,7 +59,9 @@ describe("MCP stdio server", () => {
     expect(joinedDescriptions).not.toContain("promptlane storage");
     expect(joinedDescriptions).toContain("promptlane MCP tool");
     expect(JSON.stringify(tools)).toContain("PromptLane status preflight");
-    expect(JSON.stringify(tools)).not.toContain("Prompt-memory status preflight");
+    expect(JSON.stringify(tools)).not.toContain(
+      "Prompt-memory status preflight",
+    );
   });
 
   it("declares prompt scoring tools through tools/list", async () => {

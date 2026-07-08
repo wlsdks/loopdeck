@@ -38,7 +38,9 @@ let finalResponse;
 let settled = false;
 
 const timer = setTimeout(() => {
-  finish(new Error("Timed out waiting for approved MCP native dialog dogfood."));
+  finish(
+    new Error("Timed out waiting for approved MCP native dialog dogfood."),
+  );
 }, timeoutMs);
 
 child.stderr.on("data", (chunk) => {

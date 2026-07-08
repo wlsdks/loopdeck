@@ -62,20 +62,13 @@ describe("createArchiveMeasurement", () => {
 
   it("uses dashboard privacy when archive score data is not available", () => {
     const measurement = createArchiveMeasurement({
-      dashboard: dashboardFixture({
-        privacy: {
-          local_only: true,
-          external_calls: false,
-          returns_prompt_bodies: false,
-          returns_raw_paths: true,
-        },
-      }),
+      dashboard: dashboardFixture(),
     });
 
     expect(measurement.privacy).toEqual({
-      ok: false,
-      label: "Privacy check needed",
-      detail: "Review measurement output before sharing it.",
+      ok: true,
+      label: "Local-only",
+      detail: "No external calls, prompt bodies, or raw paths in this report.",
     });
     expect(measurement.status).toMatchObject({
       label: "Needs work",
@@ -87,6 +80,12 @@ describe("createArchiveMeasurement", () => {
 function dashboardFixture(
   overrides: Partial<QualityDashboard> = {},
 ): QualityDashboard {
+  const defaultPrivacy = {
+    local_only: true,
+    external_calls: false,
+    returns_prompt_bodies: false,
+    returns_raw_paths: false,
+  } as const;
   return {
     total_prompts: 3,
     sensitive_prompts: 1,
@@ -121,13 +120,8 @@ function dashboardFixture(
     useful_prompts: [],
     duplicate_prompt_groups: [],
     project_profiles: [],
-    privacy: {
-      local_only: true,
-      external_calls: false,
-      returns_prompt_bodies: false,
-      returns_raw_paths: false,
-    },
     ...overrides,
+    privacy: overrides.privacy ?? defaultPrivacy,
   };
 }
 

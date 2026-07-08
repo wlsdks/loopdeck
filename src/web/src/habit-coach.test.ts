@@ -151,6 +151,12 @@ describe("createPromptHabitCoach", () => {
 function dashboardFixture(
   overrides: Partial<QualityDashboard> = {},
 ): QualityDashboard {
+  const defaultPrivacy = {
+    local_only: true,
+    external_calls: false,
+    returns_prompt_bodies: false,
+    returns_raw_paths: false,
+  } as const;
   return {
     total_prompts: 3,
     sensitive_prompts: 0,
@@ -201,6 +207,7 @@ function dashboardFixture(
     duplicate_prompt_groups: [],
     project_profiles: [],
     ...overrides,
+    privacy: overrides.privacy ?? defaultPrivacy,
   };
 }
 

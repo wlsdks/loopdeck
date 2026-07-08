@@ -114,10 +114,14 @@ try {
 }
 
 function initArchive(dataDir) {
-  const result = spawnSync(process.execPath, [cliPath, "init", "--data-dir", dataDir], {
-    cwd: repoRoot,
-    encoding: "utf8",
-  });
+  const result = spawnSync(
+    process.execPath,
+    [cliPath, "init", "--data-dir", dataDir],
+    {
+      cwd: repoRoot,
+      encoding: "utf8",
+    },
+  );
   if (result.status !== 0) {
     throw new Error(`promptlane init failed:\n${result.stderr}`);
   }
@@ -272,7 +276,14 @@ function buildAnswers(questions) {
   }));
 }
 
-function assertSmokeResult({ initialize, score, improve, applied, recorded, coach }) {
+function assertSmokeResult({
+  initialize,
+  score,
+  improve,
+  applied,
+  recorded,
+  coach,
+}) {
   assertEqual(
     initialize?.result?.serverInfo?.name,
     "promptlane",
@@ -351,7 +362,10 @@ function assertSmokeResult({ initialize, score, improve, applied, recorded, coac
     false,
     "record_clarifications should pass.",
   );
-  assertTruthy(recorded?.draft_id, "record_clarifications should return a draft id.");
+  assertTruthy(
+    recorded?.draft_id,
+    "record_clarifications should return a draft id.",
+  );
   assertEqual(
     recorded?.answers_count,
     2,
@@ -362,7 +376,11 @@ function assertSmokeResult({ initialize, score, improve, applied, recorded, coac
     false,
     "record_clarifications should not return stored prompt bodies.",
   );
-  assertEqual(stderr.trim(), "", "MCP coach loop smoke should not print stderr.");
+  assertEqual(
+    stderr.trim(),
+    "",
+    "MCP coach loop smoke should not print stderr.",
+  );
 }
 
 function assertNoUnsafeCoachBrief(coach) {

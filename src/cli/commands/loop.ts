@@ -403,9 +403,7 @@ export function loopInstructionPatchApplyForCli(
   });
 }
 
-export function loopDecisionRecordForCli(
-  options: LoopCliOptions = {},
-): string {
+export function loopDecisionRecordForCli(options: LoopCliOptions = {}): string {
   const worktree = options.worktree?.trim();
   if (!worktree) {
     throw new UserError("--worktree is required.");
@@ -564,27 +562,21 @@ function formatLoopStatus(status: PromptLaneStatus): string {
     status.activity.command_center?.review_packet.decision_advisory
       ? `review packet advisory ${status.activity.command_center.review_packet.decision_advisory.next_action}`
       : undefined,
-    ...(
-      status.activity.command_center?.review_packet.checklist.map(
-        (item) => `checklist ${item.label} ${item.status}`,
-      ) ?? []
-    ),
-    ...(
-      status.activity.recent_decisions?.map(
-        (decision) =>
-          `recent decision ${decision.worktree} ${decision.decision} ${decision.reason}`,
-      ) ?? []
-    ),
-    ...(
-      status.activity.command_center?.review_items
-        .slice(0, 3)
-        .flatMap((item) => [
-          `review ${item.worktree} ${item.recommendation}`,
-          `merge readiness ${item.worktree} ${item.merge_readiness.status}`,
-          `evidence ${item.worktree} ${item.merge_readiness.evidence} refs ${item.evidence_count}`,
-          `command ${item.continuation_command}`,
-        ]) ?? []
-    ),
+    ...(status.activity.command_center?.review_packet.checklist.map(
+      (item) => `checklist ${item.label} ${item.status}`,
+    ) ?? []),
+    ...(status.activity.recent_decisions?.map(
+      (decision) =>
+        `recent decision ${decision.worktree} ${decision.decision} ${decision.reason}`,
+    ) ?? []),
+    ...(status.activity.command_center?.review_items
+      .slice(0, 3)
+      .flatMap((item) => [
+        `review ${item.worktree} ${item.recommendation}`,
+        `merge readiness ${item.worktree} ${item.merge_readiness.status}`,
+        `evidence ${item.worktree} ${item.merge_readiness.evidence} refs ${item.evidence_count}`,
+        `command ${item.continuation_command}`,
+      ]) ?? []),
     ...status.activity.worktrees
       .slice(0, 3)
       .map(

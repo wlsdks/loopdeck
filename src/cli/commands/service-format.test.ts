@@ -117,8 +117,7 @@ describe("formatServiceCommandJson", () => {
     const json = formatServiceCommandJson({
       ok: false,
       supported: true,
-      error:
-        "Could not find specified service: gui/501/com.promptlane.server",
+      error: "Could not find specified service: gui/501/com.promptlane.server",
     });
     const parsed = JSON.parse(json);
     expect(parsed.ok).toBe(false);

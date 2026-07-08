@@ -40,7 +40,10 @@ export function LoopWorktreeMergeReviewSummary({
         />
         <LoopReviewItem
           footer={`${summary.evidence_count_explanation.count} ${summary.evidence_count_explanation.reason}`}
-          lines={["Evidence guidance", summary.evidence_count_explanation.label]}
+          lines={[
+            "Evidence guidance",
+            summary.evidence_count_explanation.label,
+          ]}
         />
       </div>
       {summary.reviewer_checklist_preview.length > 0 && (

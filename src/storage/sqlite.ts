@@ -31,32 +31,30 @@ import type {
   RedactionPolicy,
 } from "../shared/schema.js";
 import { DAY_MS } from "../shared/time.js";
+import {
+  createExportJobId,
+  createImportJobId,
+  createPromptImprovementDraftId,
+} from "./generated-ids.js";
 import { getPromptLanePaths, supportsPosixMode } from "./paths.js";
 import {
   markPromptImprovementDraftCopied,
   readPromptImprovementDrafts,
 } from "./prompt-improvement-drafts.js";
-import type { AskEventStoragePort, CompactBoundaryStoragePort,
+import { hasLivePrompt } from "./prompt-existence.js";
+import type {
   CreateImportJobInput,
   CreateImportRecordInput,
   CreateExportJobInput,
-  AgentPromptJudgmentStoragePort,
-  CoachFeedbackStoragePort,
   CreatePromptImprovementDraftInput,
   DeletePromptResult,
   DuplicatePromptGroup,
   ExportJob,
   ExportJobStatus,
-  ExportJobStoragePort,
   ImportJob,
   ImportJobListResult,
   ImportRecord,
-  ImportJobStoragePort,
-  JudgeScoreStoragePort,
   ListPromptsOptions,
-  LoopSnapshotStoragePort,
-  LoopMemoryStoragePort,
-  LoopMergeDecisionStoragePort,
   PromptDetail,
   ProjectListResult,
   ProjectInstructionReview,
@@ -69,9 +67,7 @@ import type { AskEventStoragePort, CompactBoundaryStoragePort,
   PromptImprovementDraft,
   PromptListResult,
   PromptQualityDashboard,
-  PromptReadStoragePort,
   PromptSummary,
-  PromptStoragePort,
   PromptUsageEventType,
   PromptUsefulness,
   SearchPromptsOptions,
@@ -79,7 +75,16 @@ import type { AskEventStoragePort, CompactBoundaryStoragePort,
   StorePromptResult,
   UsefulPrompt,
 } from "./ports.js";
-import { parsePromptMarkdown, readPromptMarkdown, writePromptMarkdown } from "./markdown.js";
+import type {
+  AppliedMigration,
+  SqlitePromptStorage,
+  SqlitePromptStorageOptions,
+} from "./sqlite-types.js";
+import {
+  parsePromptMarkdown,
+  readPromptMarkdown,
+  writePromptMarkdown,
+} from "./markdown.js";
 import {
   isExportPreviewCounts,
   parseJson,
@@ -127,44 +132,21 @@ import {
 import { applyMigrations } from "./sqlite-migrations.js";
 import { createProjectKey } from "./project-id.js";
 import { projectLabel } from "./project-label.js";
-import { promptEffectivenessForOutcomes, promptLoopOutcomesForPrompt } from "./prompt-loop-outcomes.js";
+import {
+  promptEffectivenessForOutcomes,
+  promptLoopOutcomesForPrompt,
+} from "./prompt-loop-outcomes.js";
 import * as loopSnapshots from "./loop-snapshots.js";
 import * as compactBoundaries from "./compact-boundaries.js";
 import * as loopMemories from "./loop-memories.js";
 import * as loopDecisions from "./loop-decisions.js";
 
 export type { PromptRow } from "./sqlite-rows.js";
-
-export type SqlitePromptStorageOptions = {
-  dataDir: string;
-  hmacSecret: string;
-  now?: () => Date;
-  experimentalRules?: readonly ExperimentalRuleId[];
-};
-
-export type AppliedMigration = { version: number; name: string };
-export type SqlitePromptStorage = PromptStoragePort &
-  PromptReadStoragePort &
-  ProjectPolicyStoragePort &
-  ProjectInstructionStoragePort &
-  ImportJobStoragePort &
-  ExportJobStoragePort &
-  AgentPromptJudgmentStoragePort &
-  CoachFeedbackStoragePort &
-  JudgeScoreStoragePort &
-  AskEventStoragePort & LoopSnapshotStoragePort & CompactBoundaryStoragePort & LoopMemoryStoragePort & LoopMergeDecisionStoragePort & {
-    close(): void;
-    getAppliedMigrations(): AppliedMigration[];
-    listPromptRows(): PromptRow[];
-    searchPromptIds(query: string): string[];
-    rebuildIndex(options: { redactionMode: RedactionPolicy }): {
-      rebuilt: string[];
-      hashMismatches: string[];
-    };
-    reconcileStorage(): {
-      missingFiles: string[];
-    };
-  };
+export type {
+  AppliedMigration,
+  SqlitePromptStorage,
+  SqlitePromptStorageOptions,
+} from "./sqlite-types.js";
 
 export function createSqlitePromptStorage(
   options: SqlitePromptStorageOptions,
@@ -188,22 +170,41 @@ export function createSqlitePromptStorage(
     },
     getAppliedMigrations() {
       return db
-        .prepare("SELECT version, name FROM schema_migrations ORDER BY version ASC")
+        .prepare(
+          "SELECT version, name FROM schema_migrations ORDER BY version ASC",
+        )
         .all() as AppliedMigration[];
     },
     listPromptRows() {
-      return db.prepare("SELECT * FROM prompts ORDER BY received_at DESC, id DESC").all() as PromptRow[];
+      return db
+        .prepare("SELECT * FROM prompts ORDER BY received_at DESC, id DESC")
+        .all() as PromptRow[];
     },
     createLoopSnapshot: (input) => loopSnapshots.createLoopSnapshot(db, input),
     getLatestLoopSnapshot: () => loopSnapshots.getLatestLoopSnapshot(db),
-    listLoopSnapshots: (options = {}) => loopSnapshots.listLoopSnapshots(db, options),
-    recordLoopOutcome: (snapshotId, outcome) => loopSnapshots.recordLoopOutcome(db, snapshotId, outcome),
-    recordCompactBoundary: (input) => compactBoundaries.recordCompactBoundary(db, input, { hmacSecret: options.hmacSecret, now: options.now?.() ?? new Date() }),
-    listCompactBoundaries: (options = {}) => compactBoundaries.listCompactBoundaries(db, options),
-    recordLoopMemory: (input) => loopMemories.recordLoopMemory(db, input, options.now?.() ?? new Date()),
-    listLoopMemories: (options = {}) => loopMemories.listLoopMemories(db, options),
-    recordLoopMergeDecision: (input) => loopDecisions.recordLoopMergeDecision(db, input, options.now?.() ?? new Date()),
-    listLoopMergeDecisions: (options = {}) => loopDecisions.listLoopMergeDecisions(db, options),
+    listLoopSnapshots: (options = {}) =>
+      loopSnapshots.listLoopSnapshots(db, options),
+    recordLoopOutcome: (snapshotId, outcome) =>
+      loopSnapshots.recordLoopOutcome(db, snapshotId, outcome),
+    recordCompactBoundary: (input) =>
+      compactBoundaries.recordCompactBoundary(db, input, {
+        hmacSecret: options.hmacSecret,
+        now: options.now?.() ?? new Date(),
+      }),
+    listCompactBoundaries: (options = {}) =>
+      compactBoundaries.listCompactBoundaries(db, options),
+    recordLoopMemory: (input) =>
+      loopMemories.recordLoopMemory(db, input, options.now?.() ?? new Date()),
+    listLoopMemories: (options = {}) =>
+      loopMemories.listLoopMemories(db, options),
+    recordLoopMergeDecision: (input) =>
+      loopDecisions.recordLoopMergeDecision(
+        db,
+        input,
+        options.now?.() ?? new Date(),
+      ),
+    listLoopMergeDecisions: (options = {}) =>
+      loopDecisions.listLoopMergeDecisions(db, options),
     listPrompts(options) {
       return listPrompts(db, options);
     },
@@ -959,7 +960,10 @@ function promptLoopOutcomeDetail(
   const effectiveness = promptEffectivenessForOutcomes(loopOutcomes);
 
   return loopOutcomes.length > 0
-    ? { loop_outcomes: loopOutcomes, ...(effectiveness ? { effectiveness } : {}) }
+    ? {
+        loop_outcomes: loopOutcomes,
+        ...(effectiveness ? { effectiveness } : {}),
+      }
     : {};
 }
 
@@ -1446,18 +1450,6 @@ function isTerminalImportJobStatus(status: ImportJob["status"]): boolean {
   );
 }
 
-function createImportJobId(): string {
-  return `imp_${randomUUID().replaceAll("-", "").slice(0, 24)}`;
-}
-
-function createExportJobId(): string {
-  return `exp_${randomUUID().replaceAll("-", "").slice(0, 24)}`;
-}
-
-function createPromptImprovementDraftId(): string {
-  return `impdraft_${randomUUID().replaceAll("-", "").slice(0, 24)}`;
-}
-
 function countImprovementDraftsByPromptIds(
   db: Database.Database,
   promptIds: readonly string[],
@@ -1479,14 +1471,6 @@ function countImprovementDraftsByPromptIds(
     counts.set(row.prompt_id, Number(row.draft_count));
   }
   return counts;
-}
-
-function hasLivePrompt(db: Database.Database, id: string): boolean {
-  return Boolean(
-    db
-      .prepare("SELECT 1 FROM prompts WHERE id = ? AND deleted_at IS NULL")
-      .get(id),
-  );
 }
 
 function readPromptUsefulness(

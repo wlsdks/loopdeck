@@ -20,6 +20,8 @@ import {
 } from "./loop-tool-definitions.js";
 import { PROMPT_EFFECTIVENESS_SCHEMA } from "./prompt-effectiveness-schema.js";
 import { RECORD_CLARIFICATIONS_TOOL_DEFINITION } from "./record-clarifications-tool.js";
+import type { PromptLaneMcpToolDefinition } from "./score-tool-definition-types.js";
+export type { PromptLaneMcpToolDefinition } from "./score-tool-definition-types.js";
 export {
   PREPARE_AGENT_REWRITE_TOOL_DEFINITION,
   RECORD_AGENT_REWRITE_TOOL_DEFINITION,
@@ -28,19 +30,6 @@ export {
   PREPARE_AGENT_JUDGE_BATCH_TOOL_DEFINITION,
   RECORD_AGENT_JUDGMENTS_TOOL_DEFINITION,
 } from "./agent-judge-tool-definitions.js";
-type JsonValue =
-  | string | number | boolean | null | readonly JsonValue[]
-  | { readonly [key: string]: JsonValue };
-
-type JsonObject = { readonly [key: string]: JsonValue };
-
-export type PromptLaneMcpToolDefinition = {
-  readonly name: string;
-  readonly description: string;
-  readonly annotations: JsonObject;
-  readonly inputSchema: JsonObject;
-  readonly outputSchema: JsonObject;
-};
 
 const LOCAL_READ_ONLY_TOOL_ANNOTATIONS = {
   destructiveHint: false,
@@ -853,7 +842,8 @@ export const COACH_PROMPT_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
   },
 } as const;
 
-export const PROMPTLANE_MCP_TOOL_DEFINITIONS: readonly PromptLaneMcpToolDefinition[] = [
+export const PROMPTLANE_MCP_TOOL_DEFINITIONS: readonly PromptLaneMcpToolDefinition[] =
+  [
     GET_PROMPTLANE_STATUS_TOOL_DEFINITION,
     COACH_PROMPT_TOOL_DEFINITION,
     SCORE_PROMPT_TOOL_DEFINITION,
@@ -874,6 +864,7 @@ export const PROMPTLANE_MCP_TOOL_DEFINITIONS: readonly PromptLaneMcpToolDefiniti
     RECORD_AGENT_REWRITE_TOOL_DEFINITION,
     PREPARE_AGENT_JUDGE_BATCH_TOOL_DEFINITION,
     RECORD_AGENT_JUDGMENTS_TOOL_DEFINITION,
-];
+  ];
 
-export const listPromptLaneMcpToolNames = (): string[] => PROMPTLANE_MCP_TOOL_DEFINITIONS.map((tool) => tool.name);
+export const listPromptLaneMcpToolNames = (): string[] =>
+  PROMPTLANE_MCP_TOOL_DEFINITIONS.map((tool) => tool.name);

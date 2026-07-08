@@ -165,7 +165,9 @@ type LoopMergeDecisionRow = {
   privacy_json: string;
 };
 
-function loopMergeDecisionFromRow(row: LoopMergeDecisionRow): LoopMergeDecision {
+function loopMergeDecisionFromRow(
+  row: LoopMergeDecisionRow,
+): LoopMergeDecision {
   return {
     id: row.id,
     snapshot_id: row.snapshot_id,

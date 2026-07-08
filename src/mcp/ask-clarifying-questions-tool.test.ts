@@ -188,7 +188,8 @@ describe("askClarifyingQuestionsTool", () => {
         {
           axis: "goal_clarity",
           ask: "이 작업의 정확한 목표를 한 문장으로 적어주실 수 있나요?",
-          example: "src/server/routes/prompts.ts 의 삭제 API 500 버그를 고쳐주세요.",
+          example:
+            "src/server/routes/prompts.ts 의 삭제 API 500 버그를 고쳐주세요.",
         },
       ],
       runner: async (_command, args) => {

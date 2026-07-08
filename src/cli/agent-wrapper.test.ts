@@ -181,9 +181,12 @@ describe("agent wrapper", () => {
   });
 
   it("routes prompt scoring and improvement through the shared coaching decision module", () => {
-    const source = readFileSync(new URL("./agent-wrapper.ts", import.meta.url), {
-      encoding: "utf8",
-    });
+    const source = readFileSync(
+      new URL("./agent-wrapper.ts", import.meta.url),
+      {
+        encoding: "utf8",
+      },
+    );
 
     expect(source).toContain("decideCoachingAction");
     expect(source).not.toContain("analyzePrompt");

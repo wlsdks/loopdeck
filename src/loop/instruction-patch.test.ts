@@ -109,8 +109,12 @@ describe("proposeInstructionPatchFromMemory", () => {
         },
       });
       expect(JSON.stringify(result)).not.toContain(targetDir);
-      expect(readFileSync(targetPath, "utf8")).toContain("## PromptLane Memories");
-      expect(readFileSync(targetPath, "utf8")).toContain("source_memory: mem_123");
+      expect(readFileSync(targetPath, "utf8")).toContain(
+        "## PromptLane Memories",
+      );
+      expect(readFileSync(targetPath, "utf8")).toContain(
+        "source_memory: mem_123",
+      );
 
       const second = applyInstructionPatchFromMemory({
         memory: loopMemory(),
@@ -120,9 +124,12 @@ describe("proposeInstructionPatchFromMemory", () => {
       });
 
       expect(second.already_present).toBe(true);
-      expect(readFileSync(targetPath, "utf8").match(/source_memory: mem_123/g)).toHaveLength(1);
+      expect(
+        readFileSync(targetPath, "utf8").match(/source_memory: mem_123/g),
+      ).toHaveLength(1);
     } finally {
-      if (existsSync(targetDir)) rmSync(targetDir, { recursive: true, force: true });
+      if (existsSync(targetDir))
+        rmSync(targetDir, { recursive: true, force: true });
     }
   });
 });

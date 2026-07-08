@@ -29,8 +29,6 @@ export function improvementFromSavedDraft(
   };
 }
 
-function currentDraftAnalyzer(
-  analyzer: string,
-): PromptImprovement["analyzer"] {
+function currentDraftAnalyzer(analyzer: string): PromptImprovement["analyzer"] {
   return analyzer === "clarifications-v1" ? analyzer : "local-rules-v1";
 }

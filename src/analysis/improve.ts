@@ -84,11 +84,7 @@ export function improvePrompt(input: ImprovePromptInput): PromptImprovement {
   const improvedPrompt = [
     introFor(language),
     "",
-    ...sections.flatMap((section) => [
-      `## ${section.label}`,
-      section.body,
-      "",
-    ]),
+    ...sections.flatMap((section) => [`## ${section.label}`, section.body, ""]),
   ]
     .join("\n")
     .trim();

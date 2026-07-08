@@ -1,10 +1,6 @@
 export type LoopSnapshotSource = "hook" | "cli" | "mcp" | "service";
 
-export type LoopSnapshotTool =
-  | "codex"
-  | "claude-code"
-  | "gemini"
-  | "unknown";
+export type LoopSnapshotTool = "codex" | "claude-code" | "gemini" | "unknown";
 
 export type LoopOutcomeStatus =
   | "unknown"

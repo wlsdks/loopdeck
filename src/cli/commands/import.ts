@@ -130,7 +130,9 @@ async function importExecuteForCli(options: ImportCliOptions): Promise<string> {
 
   const sourceType = runImportCliInput(
     () =>
-      parseImportSourceType(options.source ?? "manual-jsonl") as ImportSourceType,
+      parseImportSourceType(
+        options.source ?? "manual-jsonl",
+      ) as ImportSourceType,
   );
   const config = loadPromptLaneConfig(options.dataDir);
   const hookAuth = loadHookAuth(options.dataDir);
@@ -177,7 +179,9 @@ function runImportCliInput<T>(callback: () => T): T {
   }
 }
 
-async function runImportCliInputAsync<T>(callback: () => Promise<T>): Promise<T> {
+async function runImportCliInputAsync<T>(
+  callback: () => Promise<T>,
+): Promise<T> {
   try {
     return await callback();
   } catch (error) {
