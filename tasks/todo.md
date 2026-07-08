@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Error Field Detail Redaction
+
+- [x] CHECK: `failApi`가 failed response의 top-level `detail`/`title`/`message`는
+  표시하지만 common `{ error: "..." }` payload는 무시해 settings/session recovery detail이
+  사라질 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 settings failed response `error` field의
+  recovery sentence를 사용자-visible error suffix로 보존하도록 요구하게 해 현재 suffix 누락 실패를 확인한다.
+- [x] GREEN: web API failed response detail assembly가 `error` string도 기존
+  `apiErrorText` sanitizer fallback으로 보내 recovery text를 보존하고 raw-like detail redaction을 유지한다.
+- [x] VERIFY: focused web API failed response detail/redaction tests, implementation
+  format check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Error Issue Detail Redaction
 
 - [x] CHECK: `apiErrorIssueText`가 failed response issue item의 `message`는 처리하지만
