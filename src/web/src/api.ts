@@ -519,6 +519,19 @@ function isLoopStatusActivity(
   );
 }
 
+function isLoopProjectMemory(
+  value: unknown,
+): value is LoopListResponse["status"]["project_memory"] {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const projectMemory = value as LoopListResponse["status"]["project_memory"];
+  return (
+    typeof projectMemory.approved_count === "number" &&
+    typeof projectMemory.included_in_brief === "boolean"
+  );
+}
+
 export type LoopWorktreeResponse = {
   worktree: string;
   session_id?: string;
@@ -2254,6 +2267,7 @@ export async function listLoops(): Promise<LoopListResponse> {
         latest_snapshot?: unknown;
         latest_compact_boundary?: unknown;
         activity?: unknown;
+        project_memory?: unknown;
         privacy?: unknown;
       }
     | undefined;
@@ -2267,6 +2281,7 @@ export async function listLoops(): Promise<LoopListResponse> {
     (status?.latest_compact_boundary !== undefined &&
       !isLoopCompactBoundary(status.latest_compact_boundary)) ||
     !isLoopStatusActivity(status?.activity) ||
+    !isLoopProjectMemory(status?.project_memory) ||
     !isLoopStatusPrivacy(status?.privacy) ||
     !isLoopListPrivacy(body.data.privacy)
   ) {
