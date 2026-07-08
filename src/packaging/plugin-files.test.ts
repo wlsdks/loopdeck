@@ -513,6 +513,28 @@ describe("plugin packaging files", () => {
     }
   });
 
+  it("keeps Korean README MCP troubleshooting aligned with the English first-success path", () => {
+    const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
+    const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
+    const englishFirstLoop = sectionBetween(
+      readme,
+      "## First 3-Minute Coach Loop",
+    );
+    const koreanFirstLoop = sectionBetween(readmeKo, "## 첫 3분 Coach Loop");
+
+    for (const content of [englishFirstLoop, koreanFirstLoop]) {
+      expect(content).toContain(
+        "promptlane setup --profile coach --register-mcp --open-web",
+      );
+      expect(content).toContain("claude mcp add");
+      expect(content).toContain("codex mcp add");
+    }
+    expect(koreanFirstLoop).toContain("MCP 등록이 실패");
+    expect(koreanFirstLoop).toContain("setup");
+    expect(koreanFirstLoop).toContain("먼저");
+    expect(koreanFirstLoop).toContain("고급 troubleshooting");
+  });
+
   it("keeps README release smoke commands on packageManager-pinned pnpm", () => {
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
