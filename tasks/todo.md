@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Loop Worktree Paste Destination Boundary Contract Error
+
+- [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
+  optional `continuation_safety_paste_destination_boundary_note` 계약을 검증하지 않아 paste
+  destination 확인이 active window 검증, target content read, paste success 확인처럼 보이는 guidance를 UI에 넘길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed
+  `continuation_safety_paste_destination_boundary_note.not_verified` body를
+  `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
+  paste destination boundary resolve 실패를 확인한다.
+- [x] GREEN: paste destination boundary label, boundary/not_verified/reason, writes_files,
+  external_calls 계약을 확인하고 깨진 guidance는 raw-free drilldown contract 오류로 중단하도록 고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
+  check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Loop Worktree Target Agent Check Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
