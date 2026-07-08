@@ -729,7 +729,7 @@ Codex, or any MCP client through a stdio MCP server:
 promptlane mcp
 ```
 
-The MCP server exposes twenty tools:
+The MCP server exposes 20 tools:
 
 - `get_promptlane_status`: check whether the local archive is initialized,
   whether prompts have been captured, and which MCP tool to call next.
@@ -769,9 +769,9 @@ The MCP server exposes twenty tools:
   (`prompt_improvement_drafts`). Returns metadata only (`draft_id`,
   `answers_count`, `changed_sections`, …) — the prompt body and the draft
   text are never echoed in the response. Local-only write tool.
-- `get_promptlane_status`: check whether local PromptLane loop snapshots exist and
-  return safe latest-loop metadata plus compact-boundary awareness when a
-  compact happened after the latest snapshot.
+- `get_promptlane_loop_status`: check whether local PromptLane loop snapshots
+  exist and return safe latest-loop metadata plus compact-boundary awareness
+  when a compact happened after the latest snapshot.
 - `prepare_loop_brief`: prepare a copy-ready continuation prompt from the
   latest local PromptLane snapshot, or from the newest snapshot matching optional
   `worktree`, `session_id`, and `branch` filters, without returning prompt
@@ -798,6 +798,12 @@ The MCP server exposes twenty tools:
 - `apply_instruction_patch`: apply the latest approved PromptLane memory to
   `AGENTS.md` or `CLAUDE.md` only when the caller explicitly confirms the file
   write. It is idempotent by source memory id and does not return raw paths.
+- `score_prompt_archive`: score accumulated prompt habits across recent stored
+  prompts and return aggregate score, recurring gaps, a practice plan, a next
+  prompt template, and low-score prompt ids.
+- `review_project_instructions`: review local `AGENTS.md` / `CLAUDE.md`
+  instruction files for the latest or selected project and return score,
+  checklist status, and improvement hints.
 
 The matching local CLI surface is `promptlane loop status`,
 `promptlane loop collect`, `promptlane loop brief`, and
@@ -846,12 +852,6 @@ instructions, transcript bodies, or raw paths.
   Claude Code/Codex/Gemini CLI session can semantically improve the prompt.
 - `record_agent_rewrite`: save that agent-produced rewrite as a redacted
   improvement draft after user approval, without returning the rewrite body.
-- `score_prompt_archive`: score accumulated prompt habits across recent stored
-  prompts and return aggregate score, recurring gaps, a practice plan, a next
-  prompt template, and low-score prompt ids.
-- `review_project_instructions`: review local `AGENTS.md` / `CLAUDE.md`
-  instruction files for the latest or selected project and return score,
-  checklist status, and improvement hints.
 - `prepare_agent_judge_batch`: prepare a bounded, locally redacted prompt
   packet and rubric for the active Claude Code/Codex/Gemini CLI session to
   judge. `promptlane` does not call the provider for you.

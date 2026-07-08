@@ -21,7 +21,7 @@ function sectionBetween(content: string, heading: string): string {
 function markdownListItems(section: string): string[] {
   return section
     .split("\n")
-    .map((line) => line.match(/^- `([^`]+)`$/)?.[1])
+    .map((line) => line.match(/^- `([^`]+)`(?::.*)?$/)?.[1])
     .filter((item): item is string => Boolean(item));
 }
 
@@ -159,6 +159,25 @@ describe("plugin packaging files", () => {
     expect(mcpSection).toContain(
       `This server exposes ${actualTools.length} model-controlled tools:`,
     );
+  });
+
+  it("keeps README MCP tool lists aligned with shipped tool definitions", () => {
+    const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
+    const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
+    const actualTools = listPromptLaneMcpToolNames();
+    const englishSection = sectionBetween(readme, "## MCP Prompt Scoring");
+    const englishTools = markdownListItems(englishSection).filter((item) =>
+      item.includes("_"),
+    );
+
+    expect(new Set(englishTools).size).toBe(englishTools.length);
+    expect(englishTools).toEqual(actualTools);
+    expect(englishSection).toContain(
+      `The MCP server exposes ${actualTools.length} tools:`,
+    );
+    for (const toolName of actualTools) {
+      expect(readmeKo).toContain(`- \`${toolName}\``);
+    }
   });
 
   it("keeps the release checklist aligned with package lifecycle and shipped scripts", () => {
