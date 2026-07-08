@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane NPM Publish Tag Guidance
+
+- [x] CHECK: `v1.0.0` 태그 이후 main이 preflight 추가 커밋으로 이동해,
+  현재 main에서 publish하면 태그 커밋과 package commit이 달라질 수 있다.
+- [x] RED: packaging guard가 NPM publishing runbook과 preflight script에
+  `git checkout v1.0.0` 및 tagged release commit 복구 안내를 요구하게 해 현재
+  안내 누락 실패를 확인한다.
+- [x] GREEN: tag mismatch detail이 tagged release commit과 HEAD 차이를 설명하고
+  `git checkout ${expectedTag}` 또는 version bump/new tag 경로를 안내하게 한다.
+- [x] VERIFY: focused packaging guard, preflight tag-mismatch JSON smoke,
+  implementation format check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane NPM Publish Preflight
 
 - [x] CHECK: 1.0.0 tag 이후 npm publish는 수동 runbook에 의존해 npm auth,
