@@ -168,8 +168,18 @@ describe("plugin packaging files", () => {
     );
     expect(preflightScript).toContain("package is publishable");
     expect(preflightScript).toContain("packageJson.private !== true");
+    expect(preflightScript).toContain("package license is set");
+    expect(preflightScript).toContain('packageJson.license === "MIT"');
+    expect(preflightScript).toContain(
+      "package repository points at GitHub project",
+    );
+    expect(preflightScript).toContain(
+      'packageJson.repository?.url === "https://github.com/wlsdks/promptlane.git"',
+    );
+    expect(preflightScript).toContain("promptlane bin entry is registered");
     expect(publishing).toContain("corepack pnpm npm-publish:preflight");
     expect(publishing).toContain("package is not marked private");
+    expect(publishing).toContain("license, repository, and bin metadata");
     expect(publishing).toContain(
       "corepack pnpm --silent npm-publish:preflight -- --json",
     );

@@ -141,6 +141,7 @@ corepack pnpm smoke:package-install
 
 - [ ] package name is still available or already owned by the maintainer
 - [ ] package is not marked private in `package.json`
+- [ ] license, repository, and bin metadata are present in `package.json`
 - [ ] version in `package.json` is bumped and has never been published
 - [ ] `src/shared/version.ts` `VERSION` matches `package.json#version` (the
       vitest in `src/shared/version.test.ts` enforces this on every run)
