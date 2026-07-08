@@ -62,10 +62,20 @@ corepack pnpm npm-publish:preflight
 npm publish --tag latest
 ```
 
-`v1.0.0` must point at the commit you are publishing. If the newer main commit
-must be published instead, bump the package version, rerun the full release
-gate, and create a new annotated tag. Do not retarget an already pushed public
-release tag without an explicit release decision.
+`v1.0.0` must point at the commit you are publishing.
+
+Before `promptlane@1.0.0` is published, release-candidate polish commits may
+still be included in the first stable release by rerunning the full local
+release gate and refreshing the annotated tag on the verified main commit:
+
+```sh
+git tag -fa v1.0.0 -m "promptlane 1.0.0"
+git push origin v1.0.0 --force
+```
+
+After `promptlane@1.0.0` is published, do not retarget `v1.0.0`; bump the
+package version, rerun the full release gate, and create a new annotated tag
+for the next published release.
 
 Recommended version:
 
