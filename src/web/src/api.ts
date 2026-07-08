@@ -5891,6 +5891,9 @@ export async function getCoachFeedbackSummary(): Promise<CoachFeedbackSummary> {
       not_helpful?: unknown;
       wrong?: unknown;
       helpful_ratio?: unknown;
+      markdown?: unknown;
+      prompt_body?: unknown;
+      raw_path?: unknown;
     };
   };
   if (
@@ -5898,7 +5901,10 @@ export async function getCoachFeedbackSummary(): Promise<CoachFeedbackSummary> {
     typeof body.data.helpful !== "number" ||
     typeof body.data.not_helpful !== "number" ||
     typeof body.data.wrong !== "number" ||
-    typeof body.data.helpful_ratio !== "number"
+    typeof body.data.helpful_ratio !== "number" ||
+    body.data.markdown !== undefined ||
+    body.data.prompt_body !== undefined ||
+    body.data.raw_path !== undefined
   ) {
     throw new Error("Coach feedback summary failed: Invalid response.");
   }
