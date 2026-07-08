@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Error Detail Env Credential Redaction
+
+- [x] CHECK: `sanitizeApiErrorText` raw detail key pattern이 generic `api_key`와
+  provider credential aliases는 redaction하지만 `OPENAI_API_KEY` 같은 env-style
+  provider credential key는 failed response detail에 그대로 남길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 settings failed response detail의
+  `OPENAI_API_KEY: private local provider token.` phrase 전체를
+  `[REDACTED:openai_api_key]`로 redaction하도록 요구하게 해 현재 unsafe env credential
+  detail 노출 실패를 확인한다.
+- [x] GREEN: web API error sanitizer raw detail key pattern을 common provider env keys
+  `OPENAI_API_KEY`/`ANTHROPIC_API_KEY`/`GITHUB_TOKEN`까지 확장한다.
+- [x] VERIFY: focused web API recovery-detail/error redaction tests, implementation
+  format check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Error Detail Quoted Key Redaction
 
 - [x] CHECK: `sanitizeApiErrorText`가 raw detail value quote는 처리하지만
