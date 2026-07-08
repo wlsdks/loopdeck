@@ -25,11 +25,13 @@ export function problem(
   instance?: string,
   errors?: Array<{ field: string; message: string }>,
 ): HttpProblem {
+  const sanitizedDetail = sanitizeProblemText(detail);
+
   return new HttpProblem({
     type: `https://promptlane.local/errors/${toKebabCase(title)}`,
     title,
     status,
-    detail,
+    detail: sanitizedDetail,
     instance: instance ? sanitizeProblemText(instance) : undefined,
     errors: errors?.map((error) => ({
       ...error,

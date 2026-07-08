@@ -61,6 +61,30 @@ describe("redactPrompt", () => {
     );
   });
 
+  it("does not mask bearer token guidance as a credential", () => {
+    const result = redactPrompt(
+      "Missing or invalid bearer token. Reinstall the hook.",
+      "mask",
+    );
+
+    expect(result.stored_text).toContain("bearer token");
+    expect(
+      result.findings.map((finding) => finding.detector_type),
+    ).not.toContain("bearer_token");
+  });
+
+  it("still masks bearer credentials", () => {
+    const rawBearerToken = "Bearer pm_ingest_1234567890abcdef";
+    const result = redactPrompt(`Authorization: ${rawBearerToken}`, "mask");
+
+    expect(result.is_sensitive).toBe(true);
+    expect(result.stored_text).toContain("[REDACTED:bearer_token]");
+    expect(result.stored_text).not.toContain(rawBearerToken);
+    expect(result.findings.map((finding) => finding.detector_type)).toContain(
+      "bearer_token",
+    );
+  });
+
   describe("phone detector — narrow enough to avoid IPv4 / version / timestamp false positives", () => {
     it("does not mask IPv4 addresses as phone", () => {
       for (const sample of [

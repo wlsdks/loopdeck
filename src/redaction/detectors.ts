@@ -16,7 +16,10 @@ const DETECTORS: Detector[] = [
     pattern:
       /-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----/g,
   },
-  { type: "bearer_token", pattern: /\bbearer\s+[a-z0-9._~+/=-]+/gi },
+  {
+    type: "bearer_token",
+    pattern: /\bbearer\s+(?!token\b)[a-z0-9._~+/=-]+/gi,
+  },
   {
     type: "jwt",
     pattern: /\beyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\b/g,
