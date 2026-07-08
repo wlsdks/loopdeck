@@ -7127,6 +7127,61 @@ describe("web api export client", () => {
     );
   });
 
+  it("reports malformed loop activity recent decisions without returning unsafe merge decisions", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            status: {
+              status: "ready",
+              snapshot_count: 1,
+              activity: {
+                active_worktrees: 1,
+                active_sessions: 1,
+                needs_review: true,
+                next_action:
+                  "compare loop snapshots by worktree before merging agent output",
+                recent_decisions: [
+                  {
+                    snapshot_id: "loop_web",
+                    worktree: "agent-loop-worktree",
+                    decision: "auto_merge",
+                    reason: "Unsafe automatic merge decision.",
+                    decided_by: "web",
+                    created_at: "2026-07-04T01:30:00.000Z",
+                  },
+                ],
+                worktrees: [],
+              },
+              project_memory: { approved_count: 0, included_in_brief: false },
+              next_action: "promptlane loop collect",
+              next_actions: [],
+              privacy: {
+                local_only: true,
+                external_calls: false,
+                returns_prompt_bodies: false,
+                returns_raw_paths: false,
+                returns_compact_content: false,
+              },
+            },
+            items: [],
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+              returns_compact_content: false,
+            },
+          },
+        }),
+      );
+    const { listLoops } = await import("./api.js");
+
+    await expect(listLoops()).rejects.toThrow(
+      "Loop list failed: Invalid response.",
+    );
+  });
+
   it("preserves loop brief recovery detail on failed responses", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
