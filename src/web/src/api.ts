@@ -1497,6 +1497,48 @@ export type ProjectSummary = {
   instruction_review?: ProjectInstructionReview;
 };
 
+function parseProjectSummaryResponse(
+  body: {
+    data?: {
+      project_id?: unknown;
+      label?: unknown;
+      path_kind?: unknown;
+      prompt_count?: unknown;
+      sensitive_count?: unknown;
+      quality_gap_rate?: unknown;
+      copied_count?: unknown;
+      bookmarked_count?: unknown;
+      policy?: {
+        capture_disabled?: unknown;
+        analysis_disabled?: unknown;
+        external_analysis_opt_in?: unknown;
+        export_disabled?: unknown;
+        version?: unknown;
+      };
+    };
+  },
+  message: string,
+): ProjectSummary {
+  if (
+    typeof body.data?.project_id !== "string" ||
+    typeof body.data.label !== "string" ||
+    (body.data.path_kind !== "project_root" && body.data.path_kind !== "cwd") ||
+    typeof body.data.prompt_count !== "number" ||
+    typeof body.data.sensitive_count !== "number" ||
+    typeof body.data.quality_gap_rate !== "number" ||
+    typeof body.data.copied_count !== "number" ||
+    typeof body.data.bookmarked_count !== "number" ||
+    typeof body.data.policy?.capture_disabled !== "boolean" ||
+    typeof body.data.policy.analysis_disabled !== "boolean" ||
+    typeof body.data.policy.external_analysis_opt_in !== "boolean" ||
+    typeof body.data.policy.export_disabled !== "boolean" ||
+    typeof body.data.policy.version !== "number"
+  ) {
+    throw new Error(`${message}: Invalid response.`);
+  }
+  return body.data as ProjectSummary;
+}
+
 export type ProjectPolicyPatch = {
   alias?: string | null;
   capture_disabled?: boolean;
@@ -2018,8 +2060,10 @@ export async function updateProjectPolicy(
     await failApi(response, "Project policy update failed");
   }
 
-  const body = (await response.json()) as { data: ProjectSummary };
-  return body.data;
+  const body = (await response.json()) as Parameters<
+    typeof parseProjectSummaryResponse
+  >[0];
+  return parseProjectSummaryResponse(body, "Project policy update failed");
 }
 
 export async function analyzeProjectInstructions(
