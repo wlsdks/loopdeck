@@ -33,6 +33,8 @@ corepack pnpm npm-publish:preflight
 `corepack pnpm npm-publish:preflight` verifies the local tag and `origin` tag
 point at the same release commit after the local tag points at HEAD and is
 annotated.
+When blocked, human output prints a `Blocking checks` section near the top
+before the full check list, followed by a copy-ready `Next action`.
 
 ## Recommended First Stable Publish
 
