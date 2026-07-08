@@ -7060,6 +7060,73 @@ describe("web api export client", () => {
     );
   });
 
+  it("reports malformed loop command-center review packet without returning unsafe merge status", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            status: {
+              status: "ready",
+              snapshot_count: 1,
+              activity: {
+                active_worktrees: 1,
+                active_sessions: 1,
+                needs_review: true,
+                next_action:
+                  "compare loop snapshots by worktree before merging agent output",
+                command_center: {
+                  title: "Multi-worktree review",
+                  primary_action: "review non-passing worktrees before merge",
+                  review_packet: {
+                    title: "Review-before-merge packet",
+                    status: "auto_merge_ready",
+                    summary: "0 ready, 1 needs review, 0 missing evidence",
+                    next_action: "review non-passing worktrees before merge",
+                    ready_count: 0,
+                    needs_review_count: 1,
+                    missing_evidence_count: 0,
+                    actions: ["review outcome before merge"],
+                    checklist: [
+                      {
+                        label: "Review non-passing worktrees before merge",
+                        status: "required",
+                        action: "review outcome before merge",
+                      },
+                    ],
+                  },
+                  review_items: [],
+                },
+                worktrees: [],
+              },
+              project_memory: { approved_count: 0, included_in_brief: false },
+              next_action: "promptlane loop collect",
+              next_actions: [],
+              privacy: {
+                local_only: true,
+                external_calls: false,
+                returns_prompt_bodies: false,
+                returns_raw_paths: false,
+                returns_compact_content: false,
+              },
+            },
+            items: [],
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+              returns_compact_content: false,
+            },
+          },
+        }),
+      );
+    const { listLoops } = await import("./api.js");
+
+    await expect(listLoops()).rejects.toThrow(
+      "Loop list failed: Invalid response.",
+    );
+  });
+
   it("preserves loop brief recovery detail on failed responses", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))

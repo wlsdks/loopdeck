@@ -2180,6 +2180,152 @@ function isLoopActivityWorktree(
   );
 }
 
+function isLoopReviewPacketNextAction(
+  value: unknown,
+): value is
+  | "compare ready evidence before merge"
+  | "review non-passing worktrees before merge"
+  | "record missing evidence before merge" {
+  return (
+    value === "compare ready evidence before merge" ||
+    value === "review non-passing worktrees before merge" ||
+    value === "record missing evidence before merge"
+  );
+}
+
+function isLoopReviewAction(
+  value: unknown,
+): value is
+  | "compare evidence before merge"
+  | "review outcome before merge"
+  | "record loop outcome evidence" {
+  return (
+    value === "compare evidence before merge" ||
+    value === "review outcome before merge" ||
+    value === "record loop outcome evidence"
+  );
+}
+
+type LoopCommandCenter = NonNullable<
+  LoopListResponse["status"]["activity"]["command_center"]
+>;
+type LoopReviewPacket = LoopCommandCenter["review_packet"];
+type LoopReviewChecklistItem = LoopReviewPacket["checklist"][number];
+type LoopDecisionAdvisory = NonNullable<LoopReviewPacket["decision_advisory"]>;
+type LoopCommandCenterReviewItem = LoopCommandCenter["review_items"][number];
+type LoopMergeReadiness = LoopCommandCenterReviewItem["merge_readiness"];
+
+function isLoopReviewChecklistItem(
+  value: unknown,
+): value is LoopReviewChecklistItem {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const item = value as LoopReviewChecklistItem;
+  return (
+    (item.label === "Compare ready evidence before merge" ||
+      item.label === "Review non-passing worktrees before merge" ||
+      item.label === "Record missing evidence before merge") &&
+    item.status === "required" &&
+    isLoopReviewAction(item.action)
+  );
+}
+
+function isLoopDecisionAdvisory(value: unknown): value is LoopDecisionAdvisory {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const advisory = value as LoopDecisionAdvisory;
+  return (
+    typeof advisory.summary === "string" &&
+    (advisory.next_action === "honor recent continue decision before merge" ||
+      advisory.next_action === "honor recent defer decision before merge" ||
+      advisory.next_action === "confirm recent merge decision before merge")
+  );
+}
+
+function isLoopReviewPacket(value: unknown): value is LoopReviewPacket {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const packet = value as LoopReviewPacket;
+  return (
+    packet.title === "Review-before-merge packet" &&
+    (packet.status === "ready" ||
+      packet.status === "needs_review" ||
+      packet.status === "blocked") &&
+    typeof packet.summary === "string" &&
+    isLoopReviewPacketNextAction(packet.next_action) &&
+    (packet.decision_advisory === undefined ||
+      isLoopDecisionAdvisory(packet.decision_advisory)) &&
+    typeof packet.ready_count === "number" &&
+    typeof packet.needs_review_count === "number" &&
+    typeof packet.missing_evidence_count === "number" &&
+    Array.isArray(packet.actions) &&
+    packet.actions.every(isLoopReviewAction) &&
+    Array.isArray(packet.checklist) &&
+    packet.checklist.every(isLoopReviewChecklistItem)
+  );
+}
+
+function isLoopMergeReadiness(value: unknown): value is LoopMergeReadiness {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const readiness = value as LoopMergeReadiness;
+  return (
+    (readiness.status === "ready" ||
+      readiness.status === "needs_review" ||
+      readiness.status === "missing_evidence") &&
+    (readiness.evidence === "evidence present" ||
+      readiness.evidence === "missing evidence") &&
+    isLoopReviewPacketNextAction(readiness.next_action)
+  );
+}
+
+function isLoopCommandCenterReviewItem(
+  value: unknown,
+): value is LoopCommandCenterReviewItem {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const item = value as LoopCommandCenterReviewItem;
+  return (
+    typeof item.worktree === "string" &&
+    (item.branch === undefined || typeof item.branch === "string") &&
+    typeof item.sessions === "number" &&
+    typeof item.snapshots === "number" &&
+    typeof item.latest_snapshot_id === "string" &&
+    typeof item.latest_created_at === "string" &&
+    typeof item.latest_outcome_status === "string" &&
+    typeof item.evidence_count === "number" &&
+    (item.recommendation === "review before merge" ||
+      item.recommendation === "ready for continuation") &&
+    typeof item.continuation_command === "string" &&
+    isLoopMergeReadiness(item.merge_readiness)
+  );
+}
+
+function isLoopCommandCenter(
+  value: unknown,
+): value is NonNullable<
+  LoopListResponse["status"]["activity"]["command_center"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const commandCenter = value as NonNullable<
+    LoopListResponse["status"]["activity"]["command_center"]
+  >;
+  return (
+    commandCenter.title === "Multi-worktree review" &&
+    typeof commandCenter.primary_action === "string" &&
+    isLoopReviewPacket(commandCenter.review_packet) &&
+    Array.isArray(commandCenter.review_items) &&
+    commandCenter.review_items.every(isLoopCommandCenterReviewItem)
+  );
+}
+
 function isLoopStatusActivity(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"] {
@@ -2199,7 +2345,9 @@ function isLoopStatusActivity(
       "compare loop snapshots by worktree before merging agent output" ||
       activity.next_action === "continue current worktree loop") &&
     Array.isArray(activity.worktrees) &&
-    activity.worktrees.every(isLoopActivityWorktree)
+    activity.worktrees.every(isLoopActivityWorktree) &&
+    (activity.command_center === undefined ||
+      isLoopCommandCenter(activity.command_center))
   );
 }
 

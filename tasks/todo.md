@@ -1,5 +1,14 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Loop List Command Center Contract Error
+
+- [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의 optional
+  `status.activity.command_center.review_packet.status` 계약을 검증하지 않아 깨진 merge-review 상태가 loop list UI로 넘어갈 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed command-center `review_packet.status`를
+  `Loop list failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe loop command-center resolve 실패를 확인한다.
+- [x] GREEN: loop command-center review packet, review items, merge readiness 계약을 확인하고 깨진 command-center는 raw-free loop list contract 오류로 중단하도록 고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Uncertainty Reminder Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
