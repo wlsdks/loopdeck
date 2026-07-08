@@ -74,6 +74,18 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
+          label: "package files include CODE_OF_CONDUCT.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include CONTRIBUTING.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include SUPPORT.md",
+          ok: true,
+        }),
+        expect.objectContaining({
           label: "package files include LICENSE",
           ok: true,
         }),
