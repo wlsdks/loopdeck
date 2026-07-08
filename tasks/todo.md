@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Health Raw Contract Error
+
+- [x] CHECK: `getHealth`가 health root 응답의 `ok`/`version`만 검증하고 raw-like
+  `prompt_body`/`raw_path`/`markdown` extra field를 차단하지 않아 setup/status UI state로
+  불필요한 raw prompt data가 넘어갈 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 health response의 `prompt_body` body를
+  `Health check failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe health
+  resolve 실패를 확인한다.
+- [x] GREEN: health parser가 기존 `ok`/`version` 계약을 유지하면서 raw
+  `prompt_body`/`raw_path`/`markdown` fields를 차단한다.
+- [x] VERIFY: focused web API settings/health tests, implementation format check,
+  typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Settings Raw Contract Error
 
 - [x] CHECK: `getSettings`가 settings root 응답의 필수 `redaction_mode`/`server`
