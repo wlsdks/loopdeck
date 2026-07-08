@@ -2663,9 +2663,9 @@ export async function setPromptBookmark(
     await failApi(response, "Bookmark failed");
   }
   const body = (await response.json()) as {
-    data: { usefulness: PromptUsefulness };
+    data?: { usefulness?: unknown };
   };
-  return body.data.usefulness;
+  return parsePromptUsefulnessResponse(body, "Bookmark failed");
 }
 
 export async function getHealth(): Promise<{
