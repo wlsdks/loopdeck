@@ -589,6 +589,10 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
+          label: "real benchmark fixture example is loadable",
+          ok: true,
+        }),
+        expect.objectContaining({
           label: "package manager is pinned",
           ok: true,
         }),

@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Real Fixture Example Preflight Contract
+
+- [x] CHECK: `docs/benchmark-fixtures/real.example.json` is shipped and
+  documented, but npm publish preflight only proved the path/package surface
+  existed instead of proving the example remained loadable and raw-free.
+- [x] RED: focused npm publish preflight test requires a machine-readable
+  `real benchmark fixture example is loadable` check before release.
+- [x] GREEN: npm publish preflight now validates the example JSON shape,
+  consent note, adapter set, safe unique labels, coach cases, and obvious raw
+  token/path patterns before publish.
+- [x] VERIFY: focused preflight tests, preflight JSON, formatting, typecheck,
+  and diff hygiene.
+
 ## 2026-07-09 PromptLane Real Fixture Example Package Docs Guard
 
 - [x] CHECK: `docs/benchmark-fixtures/real.example.json` is now shipped and
