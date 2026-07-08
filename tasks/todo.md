@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Prompt List Contract Error
+
+- [x] CHECK: web API `listPrompts`가 `/api/v1/prompts` 성공 응답의 archive list 계약을
+  검증하지 않아 malformed 응답을 `{}` 상태로 first coach/archive UI에 넘길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed prompt list body를
+  `Prompt list failed: Invalid response.`로 reject하도록 요구하게 해 현재 `{}` resolve
+  실패를 확인했다.
+- [x] GREEN: prompt list 응답의 `items` 배열과 optional `next_cursor` string 계약을
+  확인하고 깨진 성공 응답은 raw-free prompt list contract 오류로 중단하도록 고쳤다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
+  check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Instruction Patch Contract Error
 
 - [x] CHECK: web API `getLoopInstructionPatch`가 `/api/v1/loops/instruction-patch`

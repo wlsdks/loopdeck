@@ -98,6 +98,22 @@ export type PromptListResponse = {
   next_cursor?: string;
 };
 
+function parsePromptListResponse(body: {
+  data?: {
+    items?: unknown;
+    next_cursor?: unknown;
+  };
+}): PromptListResponse {
+  if (
+    !Array.isArray(body.data?.items) ||
+    (body.data.next_cursor !== undefined &&
+      typeof body.data.next_cursor !== "string")
+  ) {
+    throw new Error("Prompt list failed: Invalid response.");
+  }
+  return body.data as PromptListResponse;
+}
+
 export type LoopSummary = {
   id: string;
   created_at: string;
@@ -1642,8 +1658,10 @@ export async function listPrompts(
     await failApi(response, "Prompt list failed");
   }
 
-  const body = (await response.json()) as { data: PromptListResponse };
-  return body.data;
+  const body = (await response.json()) as Parameters<
+    typeof parsePromptListResponse
+  >[0];
+  return parsePromptListResponse(body);
 }
 
 export async function getQualityDashboard(
