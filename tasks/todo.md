@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Selected Loop Brief Boundary Contract Error
+
+- [x] CHECK: web API `getSelectedLoopBrief`가 `/api/v1/loops/brief` 성공 응답의 optional
+  `compact_boundary` contract를 검증하지 않아 malformed compaction boundary를 continuation
+  brief UI에 넘길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed selected loop brief compact boundary body를
+  `Selected loop brief failed: Invalid response.`로 reject하도록 요구하게 해 현재 incomplete
+  boundary resolve 실패를 확인한다.
+- [x] GREEN: selected loop brief compact boundary가 존재할 때 `LoopSummary` compact boundary
+  계약을 만족하는지 확인하고 깨진 boundary는 raw-free selected brief contract 오류로 중단하도록
+  고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
+  check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Loop Instruction Patch Contract Error
 
 - [x] CHECK: web API `getLoopInstructionPatch`가 `/api/v1/loops/instruction-patch` 성공
