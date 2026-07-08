@@ -13,7 +13,7 @@ queue.
 
 ## What We Know Is Done
 
-- Phase 2 product scope is implemented for the local public beta candidate
+- Phase 2 product scope is implemented for the local 1.0.0 stable release candidate
   (see `docs/PRD2_COMPLETION_AUDIT.md`).
 - Per-session 2026-05-08 deliveries: CLI `UserError` discipline (PR #237),
   service CLI plain-text + launchctl error mapping (PR #238), ingest
@@ -32,7 +32,7 @@ queue.
   future storage-backed routes/tools.
 - Dependency security alerts reported on the default branch were cleared by
   updating `fastify`, `vite`, and patched `esbuild`; local `corepack pnpm audit
-  --json` now reports zero vulnerabilities.
+--json` now reports zero vulnerabilities.
 - pnpm build-script approvals now live in `pnpm-workspace.yaml`, matching the
   forward-compatible settings location while keeping the approved build list to
   `better-sqlite3` and `esbuild`.
@@ -258,7 +258,7 @@ Decision:
   native UI automatically.
 - The human `promptlane quality-evidence` summary now renders the current
   complete evidence status directly. `promptlane quality-evidence
-  --operator-brief` prints the current approval status, refusal preflight
+--operator-brief` prints the current approval status, refusal preflight
   command, completion evidence, and guardrails while explicitly not opening a
   native dialog. The refusal preflight command is
   `corepack pnpm dogfood:mcp-native-dialog-refusal`.
@@ -267,7 +267,7 @@ Decision:
   to decide which lower-level evidence keeps an axis below 9.5.
 - PR #478 moved that quality evidence gate onto the installed product CLI. Main
   CI run `28753458359` passed Node 22 and Node 24 after merge, so `promptlane
-  quality-evidence --require-complete` is now a current default-branch release
+quality-evidence --require-complete` is now a current default-branch release
   and goal-completion guard rather than only a repo-local npm script.
 - The earlier GitHub Actions Node 20 runtime annotation and Node 24
   `better-sqlite3` install warning are closed. Keep the release-stability bar
@@ -284,7 +284,7 @@ Decision:
   dogfood is recorded separately and remains explicit-approval-only.
 - After `privacy_raw_free_regression_sweep` became the first
   `recommended_next_slices` item, `corepack pnpm test -- src/security src/hooks
-  src/mcp` was run on current main-derived work and passed with 108 test files
+src/mcp` was run on current main-derived work and passed with 108 test files
   and 833 tests. This refreshes the highest-risk raw-free agent-surface
   evidence without treating native-dialog dogfood as complete.
 - After `codex_claude_setup_smoke_refresh` became the first
@@ -332,7 +332,7 @@ Decision:
   proved this on the default branch.
 - Archive-level effectiveness summary is landed: archive score
   reports now expose `effectiveness_summary` through `promptlane score
-  --json`, human `promptlane score` output, `/api/v1/score`, and MCP
+--json`, human `promptlane score` output, `/api/v1/score`, and MCP
   `score_prompt_archive`, allowing Codex and Claude Code to compare measured vs
   unmeasured prompts, proven/mixed/unproven verdicts, linked outcomes, tests
   run, safe evidence refs, and next action before claiming prompt improvement
@@ -375,7 +375,7 @@ Rationale:
   prove it with audit, install/build/pack, and CI.
 - Release checklists should follow the same package lifecycle contract as
   `docs/NPM_PUBLISHING.md` and `docs/PACKAGE_CONTENTS.md`; avoid allowing
-  public beta gates to drift back to PATH-dependent bare `pnpm` commands.
+  stable release gates to drift back to PATH-dependent bare `pnpm` commands.
 - README contributor gates should follow the same rule: use `corepack pnpm`
   for release/build/package verification, while preserving `promptlane`
   as the compatibility runtime in user-facing command examples.
@@ -550,7 +550,7 @@ Operational checkpoint:
 - Initial `workflow_dispatch` run `28717201110` failed because the GitHub
   runner did not have Playwright Chromium installed.
 - PR #341 added `pnpm exec playwright install chromium` before `pnpm
-  ui-patrol`.
+ui-patrol`.
 - Follow-up `workflow_dispatch` run `28717406758` passed and uploaded 9
   screenshot artifacts.
 - Local `corepack pnpm ui-patrol` on current main after PR #410 passed and

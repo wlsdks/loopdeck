@@ -2,7 +2,9 @@
 
 ## Supported Versions
 
-`promptlane` is currently pre-release software. Security fixes are applied to the main branch until a versioned release policy exists.
+PromptLane 1.0.0 is the current stable release line. Security fixes are applied
+to `main` first, then released as patch versions when a fix affects published
+users.
 
 ## Reporting A Vulnerability
 

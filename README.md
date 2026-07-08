@@ -72,7 +72,8 @@ export.
 
 ## Status
 
-This repository is pre-release software.
+PromptLane 1.0.0 is the first stable public release line for local-first
+Claude Code and Codex prompt memory workflows.
 
 - Claude Code support: MVP path
 - Codex support: beta adapter
@@ -965,7 +966,7 @@ that real user prompt quality is fully solved.
 
 ## Release Smoke
 
-Run the local release smoke before publishing or tagging a beta:
+Run the local release smoke before publishing or tagging a release:
 
 ```sh
 pnpm smoke:release

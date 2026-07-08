@@ -1,6 +1,6 @@
 # Release Checklist
 
-Use this checklist before publishing a public beta or npm package.
+Use this checklist before publishing a stable public release or npm package.
 
 ## Scope
 
@@ -13,7 +13,7 @@ Use this checklist before publishing a public beta or npm package.
 - [ ] README states that browser export is anonymized-only and raw export is not implemented.
 - [ ] README documents Benchmark v1 as a local regression baseline, not a real-user quality proof.
 - [ ] README states that hidden external LLM/provider calls are disabled by
-  default, and optional MCP agent-judge packets require explicit user request.
+      default, and optional MCP agent-judge packets require explicit user request.
 - [ ] README includes a non-affiliation notice for Anthropic and OpenAI.
 - [ ] Codex is clearly labeled beta.
 - [ ] Adapter guide is up to date.
@@ -32,6 +32,7 @@ Use this checklist before publishing a public beta or npm package.
 - [ ] `corepack pnpm evidence:quality -- --require-complete`
 - [ ] `corepack pnpm promptlane quality-evidence --require-complete`
 - [ ] `git diff --check`
+- [ ] After every gate above passes, create and push annotated tag `v1.0.0`.
 
 For machine-readable inspection of the 9.5 quality summary, use
 `corepack pnpm --silent evidence:quality` or

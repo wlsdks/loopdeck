@@ -26,7 +26,7 @@ Core goals:
 - support local recovery through `rebuild-index`
 - keep external transmission disabled by default
 
-Non-goals for the public beta:
+Non-goals for the 1.0.0 release:
 
 - cloud sync
 - team collaboration backend
@@ -221,7 +221,7 @@ Required behavior:
 
 ## 10. Prompt Analysis And Coach
 
-The public beta uses local rule-based analysis.
+The 1.0.0 release uses local rule-based analysis.
 
 Analysis should identify:
 
@@ -264,7 +264,7 @@ Reserved fields:
 
 ## 12. Transcript Import
 
-Import is CLI-centered in the public beta.
+Import is CLI-centered in the 1.0.0 release.
 
 Required behavior:
 
@@ -277,11 +277,11 @@ Required behavior:
 - avoid storing raw source paths, raw prompts, and raw secrets in import job output
 - expose imported-only filters for review
 
-No web upload UI is required for the public beta.
+No web upload UI is required for the 1.0.0 release.
 
 ## 13. Anonymized Export
 
-Public beta export is anonymized-only.
+The 1.0.0 export surface is anonymized-only.
 
 Required behavior:
 
@@ -293,7 +293,7 @@ Required behavior:
 - exclude tokens, raw paths, raw metadata, and raw prompt ids
 - warn about small-set re-identification risk
 
-Raw export is intentionally not implemented for the browser or public beta CLI surface.
+Raw export is intentionally not implemented for the browser or 1.0.0 CLI surface.
 
 ## 14. Privacy And Security Requirements
 
@@ -343,7 +343,7 @@ Benchmark v1 measures:
 
 ## 16. Acceptance Criteria
 
-The public beta is acceptable when:
+The 1.0.0 release is acceptable when:
 
 - a new user can install, set up, and capture the first prompt locally
 - hooks fail open when the server is unavailable

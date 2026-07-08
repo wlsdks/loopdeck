@@ -4,7 +4,8 @@ Date: 2026-05-02
 
 ## Conclusion
 
-The PRD2 core feature set is complete for a local public beta candidate.
+The PRD2 core feature set is complete for a local 1.0.0 stable release
+candidate.
 
 Implemented areas:
 
@@ -19,14 +20,14 @@ The remaining work is not core PRD2 implementation. It is release operations, cr
 
 ## Completion Matrix
 
-| Area | Status | Evidence | Remaining work |
-| --- | --- | --- | --- |
-| Project identity/policy | Complete | `project_policies`, `policy_audit_events`, Projects API, policy UI, capture-disabled ingest/import, browser path masking | Connect analysis/retention/external policy fields when those future execution paths exist |
-| Transcript import | Complete | `import --dry-run`, `--save-job`, `--execute`, `--resume`, `import_records`, imported-only filters | Web import UI/API is not implemented |
-| Prompt Improvement Workspace | Complete | `improvePrompt`, `promptlane improve`, detail UI preview/copy/save, `prompt_improvement_drafts`, benchmark coach metric | Real-user quality evaluation after beta |
-| Import execution/resume hardening | Complete | idempotency keys, resume job, assistant/tool skip, malformed record tolerance, redaction reapplication | Directory/glob import remains intentionally excluded |
-| Anonymized export preset | Complete | CLI/UI preview, `export_jobs`, job execution, anonymization, small-set warning, invalidation | Raw export remains intentionally unsupported |
-| External/tool-assisted analysis | Excluded from PRD2 core | PRD2 shipped without provider clients or hidden network paths; later MCP agent-judge is explicit and user-session mediated | Keep hidden/provider-routed LLM calls out of core |
+| Area                              | Status                  | Evidence                                                                                                                   | Remaining work                                                                            |
+| --------------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Project identity/policy           | Complete                | `project_policies`, `policy_audit_events`, Projects API, policy UI, capture-disabled ingest/import, browser path masking   | Connect analysis/retention/external policy fields when those future execution paths exist |
+| Transcript import                 | Complete                | `import --dry-run`, `--save-job`, `--execute`, `--resume`, `import_records`, imported-only filters                         | Web import UI/API is not implemented                                                      |
+| Prompt Improvement Workspace      | Complete                | `improvePrompt`, `promptlane improve`, detail UI preview/copy/save, `prompt_improvement_drafts`, benchmark coach metric    | Real-user quality evaluation after beta                                                   |
+| Import execution/resume hardening | Complete                | idempotency keys, resume job, assistant/tool skip, malformed record tolerance, redaction reapplication                     | Directory/glob import remains intentionally excluded                                      |
+| Anonymized export preset          | Complete                | CLI/UI preview, `export_jobs`, job execution, anonymization, small-set warning, invalidation                               | Raw export remains intentionally unsupported                                              |
+| External/tool-assisted analysis   | Excluded from PRD2 core | PRD2 shipped without provider clients or hidden network paths; later MCP agent-judge is explicit and user-session mediated | Keep hidden/provider-routed LLM calls out of core                                         |
 
 ## Key Notes
 
@@ -92,7 +93,7 @@ Implemented:
 
 Current boundary:
 
-- raw export is intentionally unsupported for public beta
+- raw export is intentionally unsupported for 1.0.0
 
 ## Security And API Boundary
 
@@ -114,4 +115,6 @@ Partial:
 
 ## Final Judgment
 
-PRD2 implementation and the local public beta release gate are complete. The next release decision should be based on release notes, npm publishing readiness, CI/platform validation, and beta-user feedback collection.
+PRD2 implementation and the local 1.0.0 release gate are complete. The next
+release decision should be based on release notes, npm publishing readiness,
+platform validation, and real-user feedback collection.

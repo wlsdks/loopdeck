@@ -82,16 +82,16 @@ PromptLane is the recommended name because:
 
 Names rejected during this pass:
 
-| Name | Decision | Reason |
-| --- | --- | --- |
-| PromptLane | Reject | Too loop-engineering-first for a prompt improvement product |
-| PromptLane | Reject as product name | Clear but too descriptive; keep as workflow phrase |
-| PromptCraft | Reject | Crowded ecosystem usage and brand ambiguity |
-| PromptDesk | Reject | Existing product/package usage and weaker fit |
-| PromptPilot | Reject | Existing package/project usage and agent-pilot implication |
-| PromptNest | Defer | Good local-memory feel, but weaker improvement/progression signal |
-| Cuebase | Defer | Strong brand feel, but higher explanation cost because it hides prompt intent |
-| Briefsmith | Defer | Good brief-writing feel, but too narrow for archive/scoring/habits |
+| Name        | Decision               | Reason                                                                        |
+| ----------- | ---------------------- | ----------------------------------------------------------------------------- |
+| PromptLane  | Reject                 | Too loop-engineering-first for a prompt improvement product                   |
+| PromptLane  | Reject as product name | Clear but too descriptive; keep as workflow phrase                            |
+| PromptCraft | Reject                 | Crowded ecosystem usage and brand ambiguity                                   |
+| PromptDesk  | Reject                 | Existing product/package usage and weaker fit                                 |
+| PromptPilot | Reject                 | Existing package/project usage and agent-pilot implication                    |
+| PromptNest  | Defer                  | Good local-memory feel, but weaker improvement/progression signal             |
+| Cuebase     | Defer                  | Strong brand feel, but higher explanation cost because it hides prompt intent |
+| Briefsmith  | Defer                  | Good brief-writing feel, but too narrow for archive/scoring/habits            |
 
 ## Product Model
 
@@ -180,23 +180,23 @@ improvement, not a marketing dashboard or an autonomous agent platform.
 
 Keep these stable until explicit migration slices prove otherwise:
 
-| Surface | Current value | Rule |
-| --- | --- | --- |
-| npm package | `promptlane` | Keep |
-| Primary CLI | `promptlane` | Keep |
-| Claude Code slash namespace | `/promptlane:*` | Keep |
-| MCP server name | `promptlane` | Keep |
-| Hook command | `promptlane hook ...` | Keep |
-| Data directory | `~/.promptlane` | Keep |
-| Wrapper bins | `pl-claude`, `pl-codex` | Keep |
+| Surface                     | Current value           | Rule |
+| --------------------------- | ----------------------- | ---- |
+| npm package                 | `promptlane`            | Keep |
+| Primary CLI                 | `promptlane`            | Keep |
+| Claude Code slash namespace | `/promptlane:*`         | Keep |
+| MCP server name             | `promptlane`            | Keep |
+| Hook command                | `promptlane hook ...`   | Keep |
+| Data directory              | `~/.promptlane`         | Keep |
+| Wrapper bins                | `pl-claude`, `pl-codex` | Keep |
 
 Candidate future surfaces:
 
-| Surface | Target | Rule |
-| --- | --- | --- |
-| Product-facing repo | `wlsdks/promptlane` or `wlsdks/prompt-lane` | Dedicated migration slice |
-| Product CLI alias | `promptlane` or `prompt-lane` | Do not add until package/bin migration plan is accepted |
-| Existing `promptlane` alias | Remove or hide from docs | Decide in a separate alias cleanup slice |
+| Surface                     | Target                                      | Rule                                                    |
+| --------------------------- | ------------------------------------------- | ------------------------------------------------------- |
+| Product-facing repo         | `wlsdks/promptlane` or `wlsdks/prompt-lane` | Dedicated migration slice                               |
+| Product CLI alias           | `promptlane` or `prompt-lane`               | Do not add until package/bin migration plan is accepted |
+| Existing `promptlane` alias | Remove or hide from docs                    | Decide in a separate alias cleanup slice                |
 
 Do not use broad search-and-replace. `promptlane` is correct in commands,
 package names, config paths, MCP server names, and slash namespaces.
@@ -348,7 +348,7 @@ Out of scope:
 Goal:
 
 - Decide whether `bin.promptlane` remains as compatibility, is hidden from docs,
-  or is removed before public beta.
+  or is removed before the 1.0.0 release.
 - Retire `/promptlane:*` alias plans unless a concrete user need appears.
 
 Out of scope:
@@ -384,7 +384,7 @@ The repositioning is complete when:
 
 ## Open Questions
 
-1. Whether to remove the `promptlane` CLI alias before public beta or keep it as
+1. Whether to remove the `promptlane` CLI alias before 1.0.0 or keep it as
    a silent compatibility alias until a later breaking change.
 2. Whether `docs/PROMPTLANE.md` should remain as rejected-decision history or be
    deleted after `docs/PROMPTLANE.md` lands.

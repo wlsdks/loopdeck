@@ -17,18 +17,18 @@ The next work should not simply add more analysis features. The strongest improv
 
 ## Current Efficiency Assessment
 
-| Area | Current state | Assessment |
-| --- | --- | --- |
-| Setup/capture | `setup`, service, Claude Code/Codex hooks, doctor, statusline | High |
-| Storage/recovery | Markdown source of truth, SQLite/FTS, `rebuild-index`, hard delete | High |
-| Search/review | list/search/detail, URL filters, snippets, queue navigation | High |
-| Analysis | `local-rules-v1`, checklist, tags, dashboard, project profile | Medium-high |
-| Reuse | copy event, bookmark, reused focus, useful prompt surfaces | Medium-high |
-| Duplicate handling | exact duplicate groups from redacted content hash | Medium |
-| Project control | project policy UI/API for capture/export boundaries | Medium-high |
-| Historical data | CLI transcript import with dry-run/execute/resume | High for power users |
-| External analysis | no hidden/provider-routed calls; explicit MCP agent-judge handoff exists separately | Deferred for core |
-| Release validation | benchmark, browser E2E, release smoke, pack dry-run | High |
+| Area               | Current state                                                                       | Assessment           |
+| ------------------ | ----------------------------------------------------------------------------------- | -------------------- |
+| Setup/capture      | `setup`, service, Claude Code/Codex hooks, doctor, statusline                       | High                 |
+| Storage/recovery   | Markdown source of truth, SQLite/FTS, `rebuild-index`, hard delete                  | High                 |
+| Search/review      | list/search/detail, URL filters, snippets, queue navigation                         | High                 |
+| Analysis           | `local-rules-v1`, checklist, tags, dashboard, project profile                       | Medium-high          |
+| Reuse              | copy event, bookmark, reused focus, useful prompt surfaces                          | Medium-high          |
+| Duplicate handling | exact duplicate groups from redacted content hash                                   | Medium               |
+| Project control    | project policy UI/API for capture/export boundaries                                 | Medium-high          |
+| Historical data    | CLI transcript import with dry-run/execute/resume                                   | High for power users |
+| External analysis  | no hidden/provider-routed calls; explicit MCP agent-judge handoff exists separately | Deferred for core    |
+| Release validation | benchmark, browser E2E, release smoke, pack dry-run                                 | High                 |
 
 ## User Workflow Efficiency
 
@@ -38,7 +38,8 @@ The remaining workflow gap is deeper prompt iteration. The product can propose a
 
 ## Development Efficiency
 
-The implementation is still compact enough for a single TypeScript package. CLI, server, storage, and web are separated well enough for public beta iteration.
+The implementation is still compact enough for a single TypeScript package. CLI,
+server, storage, and web are separated well enough for 1.0.0 release iteration.
 
 Risk areas:
 
@@ -54,14 +55,14 @@ Risk areas:
 
 ## Priority Order
 
-| Priority | Candidate | Value | Risk/cost | Decision |
-| --- | --- | --- | --- | --- |
-| 1 | Project Control Plane | High | Medium | Needed for capture/export/analysis boundaries |
-| 2 | Transcript Import | Very high | High | Gives value from historical prompts |
-| 3 | Prompt Improvement Workspace | High | Medium | Connects memory to better next prompts |
-| 4 | Anonymized Export | Medium | Medium | Useful for review/sharing with privacy constraints |
-| 5 | External LLM Analysis | High | High | Keep hidden/provider-routed calls outside core; allow only explicit redacted handoff |
-| 6 | Semantic Duplicate/Cluster | Medium | High | Defer until local embedding or opt-in approach is clear |
+| Priority | Candidate                    | Value     | Risk/cost | Decision                                                                             |
+| -------- | ---------------------------- | --------- | --------- | ------------------------------------------------------------------------------------ |
+| 1        | Project Control Plane        | High      | Medium    | Needed for capture/export/analysis boundaries                                        |
+| 2        | Transcript Import            | Very high | High      | Gives value from historical prompts                                                  |
+| 3        | Prompt Improvement Workspace | High      | Medium    | Connects memory to better next prompts                                               |
+| 4        | Anonymized Export            | Medium    | Medium    | Useful for review/sharing with privacy constraints                                   |
+| 5        | External LLM Analysis        | High      | High      | Keep hidden/provider-routed calls outside core; allow only explicit redacted handoff |
+| 6        | Semantic Duplicate/Cluster   | Medium    | High      | Defer until local embedding or opt-in approach is clear                              |
 
 ## Development Rules For Future Work
 

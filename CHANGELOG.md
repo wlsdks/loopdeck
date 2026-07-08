@@ -2,12 +2,11 @@
 
 All notable changes to promptlane will be documented in this file.
 
-The format follows a simple reverse-chronological release log. This project is
-currently pre-release, so entries may change before `1.0.0`.
+The format follows a simple reverse-chronological release log.
 
-## 0.1.0-beta.0 - Unreleased
+## 1.0.0 - 2026-07-08
 
-This is the first public beta. The release covers local capture, storage,
+This is the first stable public release. The release covers local capture, storage,
 search, deletion, prompt analysis, project policy, transcript import,
 anonymized export, PromptLane drafts, Prompt Practice workspace, MCP scoring
 tools, benchmark/release validation, and an English/Korean web UI.
@@ -144,7 +143,7 @@ tools, benchmark/release validation, and an English/Korean web UI.
 - Many CLI/MCP/hook errors now end with a working example or a next
   command (import dry-run/execute, export preset, prompts open,
   doctor last-ingest, MCP score/improve/rewrite/judge empty paths,
-  pm-* wrapper `--pc-help`).
+  pm-\* wrapper `--pc-help`).
 
 ### Changed
 
@@ -157,7 +156,7 @@ tools, benchmark/release validation, and an English/Korean web UI.
   JSON-RPC routing so that adding a tool does not touch one large file.
 - Storage boundaries clarified between query/transaction, row contracts, and
   defensive JSON decoding.
-- Solo-maintainer PR rules documented so that public beta merges no longer
+- Solo-maintainer PR rules documented so that stable release merges no longer
   require an external approving review while remaining gated on Node 22 and
   Node 24 CI plus resolved conversations.
 - Prompt-memory product identity statement aligned across docs, CLI help,

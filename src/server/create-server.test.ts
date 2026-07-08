@@ -68,7 +68,7 @@ describe("createServer P2 ingest boundary", () => {
     expect(response.statusCode).toBe(200);
     expect(response.json()).toMatchObject({
       ok: true,
-      version: "0.1.0-beta.0",
+      version: "1.0.0",
     });
   });
 
@@ -657,7 +657,9 @@ describe("createServer P2 ingest boundary", () => {
     expect(serialized).not.toContain(
       "This unrelated project memory should not appear",
     );
-    expect(serialized).not.toContain("Other project decision should not appear");
+    expect(serialized).not.toContain(
+      "Other project decision should not appear",
+    );
   });
 
   it("returns the shared storage capability problem when loop read storage is unavailable", async () => {
@@ -1161,8 +1163,10 @@ describe("createServer P2 ingest boundary", () => {
         },
         copy_side_effects: {
           label: "Copy side effects",
-          clipboard: "copies the selected continuation brief to the local clipboard",
-          ui_feedback: "temporarily marks the selected brief copy button as copied",
+          clipboard:
+            "copies the selected continuation brief to the local clipboard",
+          ui_feedback:
+            "temporarily marks the selected brief copy button as copied",
           does_not:
             "does not write files, execute commands, call external services, submit prompts, or change merge state",
           writes_files: false,
@@ -1183,8 +1187,7 @@ describe("createServer P2 ingest boundary", () => {
           label: "Safety guidance order",
           first:
             "review the continuation safety guidance before copying or pasting briefs",
-          then:
-            "follow copy, paste, review, collect, privacy, and merge gating notes in order",
+          then: "follow copy, paste, review, collect, privacy, and merge gating notes in order",
           reason:
             "keeps continuation handoff reviewable before any manual agent submission",
           writes_files: false,
@@ -1217,8 +1220,7 @@ describe("createServer P2 ingest boundary", () => {
             "copied state only confirms the brief reached the local clipboard",
           next_step:
             "return to the safety re-check cue before pasting the copied brief",
-          reason:
-            "copy feedback is not safety approval or agent submission",
+          reason: "copy feedback is not safety approval or agent submission",
           writes_files: false,
           external_calls: false,
         },
@@ -1245,8 +1247,7 @@ describe("createServer P2 ingest boundary", () => {
         continuation_safety_copy_feedback_failure_note: {
           label: "Copy feedback failure",
           failure_scope: "clipboard failure requires a manual retry",
-          not_state:
-            "failure does not submit prompts or store review state",
+          not_state: "failure does not submit prompts or store review state",
           reason:
             "keeps copy failure handling local to the operator without hidden recovery actions",
           writes_files: false,
@@ -1254,7 +1255,8 @@ describe("createServer P2 ingest boundary", () => {
         },
         continuation_safety_copy_retry_note: {
           label: "Copy retry",
-          retry_scope: "operator manually retries the selected brief copy action",
+          retry_scope:
+            "operator manually retries the selected brief copy action",
           not_automatic:
             "PromptLane does not automatically retry clipboard writes or submit prompts",
           reason:
@@ -1341,7 +1343,8 @@ describe("createServer P2 ingest boundary", () => {
         },
         continuation_safety_collection_retry_boundary_note: {
           label: "Collection retry boundary",
-          retry: "operator reruns the explicit loop collection flow when retry is needed",
+          retry:
+            "operator reruns the explicit loop collection flow when retry is needed",
           not_automated:
             "PromptLane does not automatically retry collection commands or hidden recovery actions",
           reason:
@@ -1395,8 +1398,7 @@ describe("createServer P2 ingest boundary", () => {
         },
         continuation_safety_pre_merge_freshness_advisory: {
           label: "Pre-merge freshness advisory",
-          advisory:
-            "review freshness uncertainty before merge decisions",
+          advisory: "review freshness uncertainty before merge decisions",
           not_decision:
             "PromptLane does not approve merges or verify freshness before merge",
           reason:
@@ -1406,8 +1408,7 @@ describe("createServer P2 ingest boundary", () => {
         },
         continuation_safety_pre_memory_approval_freshness_advisory: {
           label: "Pre-memory-approval freshness advisory",
-          advisory:
-            "review freshness uncertainty before approving loop memory",
+          advisory: "review freshness uncertainty before approving loop memory",
           not_decision:
             "PromptLane does not approve memory or verify freshness from this note",
           reason:
@@ -1839,7 +1840,8 @@ describe("createServer P2 ingest boundary", () => {
         post_handoff_reminder: {
           label: "Post-handoff reminder",
           collect_next: "collect a new loop snapshot after the next agent turn",
-          not_memory_approval: "memory approval remains a separate explicit review",
+          not_memory_approval:
+            "memory approval remains a separate explicit review",
           not_merge: "merge remains a separate review-before-merge decision",
           reason:
             "continuation handoff records the next loop before any memory approval or merge decision",
@@ -2284,7 +2286,8 @@ describe("createServer P2 ingest boundary", () => {
           readiness_summary: {
             label: "Readiness summary",
             status: "ready",
-            reason: "selected worktree has recorded evidence and passing outcome",
+            reason:
+              "selected worktree has recorded evidence and passing outcome",
             next_action: "compare evidence before merge",
           },
           evidence_count_explanation: {

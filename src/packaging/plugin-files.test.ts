@@ -174,6 +174,71 @@ describe("plugin packaging files", () => {
     expect(benchmarkSpec).toContain("Pass threshold");
   });
 
+  it("keeps the public release surface on 1.0.0", () => {
+    const packageJson = JSON.parse(
+      readFileSync(join(process.cwd(), "package.json"), "utf8"),
+    ) as { version: string };
+    const sharedVersion = readFileSync(
+      join(process.cwd(), "src/shared/version.ts"),
+      "utf8",
+    );
+    const claudePlugin = readFileSync(
+      join(process.cwd(), ".claude-plugin/plugin.json"),
+      "utf8",
+    );
+    const claudeMarketplace = readFileSync(
+      join(process.cwd(), ".claude-plugin/marketplace.json"),
+      "utf8",
+    );
+    const changelog = readFileSync(join(process.cwd(), "CHANGELOG.md"), "utf8");
+    const publishing = readFileSync(
+      join(process.cwd(), "docs/NPM_PUBLISHING.md"),
+      "utf8",
+    );
+    const releaseChecklist = readFileSync(
+      join(process.cwd(), "docs/RELEASE_CHECKLIST.md"),
+      "utf8",
+    );
+    const security = readFileSync(join(process.cwd(), "SECURITY.md"), "utf8");
+    const benchmarkSpec = readFileSync(
+      join(process.cwd(), "docs/BENCHMARK_V1.md"),
+      "utf8",
+    );
+    const implementationPlan = readFileSync(
+      join(process.cwd(), "docs/IMPLEMENTATION_PLAN.md"),
+      "utf8",
+    );
+    const releaseStability = readFileSync(
+      join(process.cwd(), "docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md"),
+      "utf8",
+    );
+    const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
+    const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
+
+    expect(packageJson.version).toBe("1.0.0");
+    for (const content of [sharedVersion, claudePlugin, claudeMarketplace]) {
+      expect(content).toContain("1.0.0");
+      expect(content).not.toContain("0.1.0-beta.0");
+    }
+    expect(changelog).toContain("## 1.0.0 - 2026-07-08");
+    expect(changelog).not.toContain("currently pre-release");
+    expect(publishing).toContain("npm publish --tag latest");
+    expect(publishing).toContain("npm install -g promptlane");
+    expect(publishing).toContain('git tag -a v1.0.0 -m "promptlane 1.0.0"');
+    expect(publishing).toContain("git push origin v1.0.0");
+    expect(publishing).not.toContain("promptlane@beta");
+    expect(releaseChecklist).toContain("stable public release");
+    expect(releaseChecklist).toContain("annotated tag `v1.0.0`");
+    expect(security).toContain("PromptLane 1.0.0");
+    expect(benchmarkSpec).toContain('"version": "1.0.0"');
+    expect(implementationPlan).toContain("npm publish --tag latest");
+    expect(releaseStability).toContain("promptlane-1.0.0.tgz");
+    expect(readme).toContain("PromptLane 1.0.0");
+    expect(readme).not.toContain("pre-release software");
+    expect(readmeKo).toContain("PromptLane 1.0.0");
+    expect(readmeKo).not.toContain("pre-release");
+  });
+
   it("keeps the 9.5 ledger tied to effectiveness benchmark evidence", () => {
     const plan = readFileSync(
       join(

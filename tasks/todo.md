@@ -9075,3 +9075,16 @@
       contract.
 - [x] VERIFY: focused dashboard-query/App-adjacent tests, touched TypeScript
       formatting, typecheck, and diff hygiene checks.
+
+## 2026-07-08 PromptLane 1.0.0 Release Surface Prep
+
+- [x] CHECK: git had no release tags, while package/plugin/shared version and
+      publishing docs still pointed at `0.1.0-beta.0` / beta publish flow.
+- [x] RED: add a packaging guard requiring the public release surface to use
+      `1.0.0`, stable changelog copy, `latest` npm publish commands, and
+      annotated `v1.0.0` tag instructions.
+- [x] GREEN: align `package.json`, shared runtime version, Claude plugin
+      manifests, README status copy, changelog, npm publishing runbook, and
+      release checklist with the 1.0.0 stable release target.
+- [x] VERIFY: focused release-surface guard, shared version test, touched-file
+      formatting/type/diff hygiene checks.
