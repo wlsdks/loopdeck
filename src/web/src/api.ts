@@ -5892,8 +5892,9 @@ function apiErrorIssueText(value: unknown): string {
       }
       const record = item as { field?: unknown; message?: unknown };
       const field = apiErrorText(record.field);
-      const message = isRawDetailErrorKey(field)
-        ? `[REDACTED:${field.toLowerCase()}]`
+      const rawFieldKey = rawDetailErrorFieldKey(field);
+      const message = rawFieldKey
+        ? `[REDACTED:${rawFieldKey.toLowerCase()}]`
         : apiErrorText(record.message);
       if (!message) {
         return "";
@@ -5912,8 +5913,12 @@ function apiErrorIssueText(value: unknown): string {
 const RAW_DETAIL_ERROR_KEY_PATTERN =
   "ANTHROPIC_API_KEY|GITHUB_TOKEN|OPENAI_API_KEY|apiKey|api_key|compactSummary|compact_summary|credential|markdown|promptBody|prompt_body|providerCredential|provider_credential|rawPath|raw_path|token|transcript|transcriptBody|transcript_body";
 
-function isRawDetailErrorKey(value: string): boolean {
-  return new RegExp(`^(?:${RAW_DETAIL_ERROR_KEY_PATTERN})$`, "i").test(value);
+function rawDetailErrorFieldKey(value: string): string | null {
+  const match = new RegExp(
+    `(?:^|[^A-Za-z0-9_])(${RAW_DETAIL_ERROR_KEY_PATTERN})(?=$|[^A-Za-z0-9_])`,
+    "i",
+  ).exec(value);
+  return match?.[1] ?? null;
 }
 
 function sanitizeApiErrorText(value: string): string {

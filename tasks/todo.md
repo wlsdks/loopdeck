@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Error Issue Raw Field Path Redaction
+
+- [x] CHECK: `apiErrorIssueText`가 raw issue field exact key는 message body를
+  redaction하지만 `body.prompt_body` 같은 validation field path에서는 raw key segment를
+  인식하지 못해 issue message를 failed response detail에 남길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 settings failed response `errors[]`의
+  `body.prompt_body` issue message를 `[REDACTED:prompt_body]`로 치환하도록 요구하게 해
+  현재 unsafe field-path issue detail 노출 실패를 확인한다.
+- [x] GREEN: web API error issue sanitizer가 field path 안의 raw-detail key segment를
+  찾아 issue message body를 노출하지 않고 key별 redaction token만 반환한다.
+- [x] VERIFY: focused web API issue/error redaction tests, implementation format
+  check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Error Detail Quoted Equals Redaction
 
 - [x] CHECK: `sanitizeApiErrorText`가 quoted raw-detail key의 colon-delimited phrase는
