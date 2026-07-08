@@ -4743,6 +4743,9 @@ function parseExportJobResponse(
       };
       expires_at?: unknown;
       created_at?: unknown;
+      markdown?: unknown;
+      prompt_body?: unknown;
+      raw_path?: unknown;
     };
   },
   message: string,
@@ -4765,7 +4768,10 @@ function parseExportJobResponse(
     body.data.counts.residual_identifier_counts === null ||
     typeof body.data.counts.small_set_warning !== "boolean" ||
     typeof body.data.expires_at !== "string" ||
-    typeof body.data.created_at !== "string"
+    typeof body.data.created_at !== "string" ||
+    body.data.markdown !== undefined ||
+    body.data.prompt_body !== undefined ||
+    body.data.raw_path !== undefined
   ) {
     throw new Error(`${message}: Invalid response.`);
   }

@@ -8450,6 +8450,39 @@ describe("web api export client", () => {
     );
   });
 
+  it("rejects export preview responses that include raw-like job fields", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            id: "exp_abcdef123456",
+            preset: "anonymized_review",
+            status: "previewed",
+            prompt_id_hashes: ["ph_abcdef123456"],
+            project_policy_versions: { proj_abcdef123456: 1 },
+            redaction_version: "mask-v1",
+            counts: {
+              prompt_count: 1,
+              sensitive_count: 1,
+              included_fields: ["masked_prompt", "tags"],
+              excluded_fields: ["cwd", "stable_prompt_id"],
+              residual_identifier_counts: { path: 1 },
+              small_set_warning: true,
+            },
+            expires_at: "2026-05-03T12:00:00.000Z",
+            created_at: "2026-05-02T12:00:00.000Z",
+            raw_path: "/Users/example/private/project",
+          },
+        }),
+      );
+    const { createExportPreview } = await import("./api.js");
+
+    await expect(createExportPreview("anonymized_review")).rejects.toThrow(
+      "Export preview failed: Invalid response.",
+    );
+  });
+
   it("executes anonymized export jobs by job id", async () => {
     const payload: AnonymizedExportPayload = {
       job_id: "exp_abcdef123456",
