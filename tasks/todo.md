@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Benchmark Evidence Text Output
+
+- [x] CHECK: benchmark JSON exposed `evidence_state.release_blocking`, but
+  human text output still showed only `pass` and `next_action`, making it easy
+  for an operator to miss whether a benchmark miss blocks release.
+- [x] RED: focused benchmark fixture test requires a
+  `formatBenchmarkEvidenceStateLines` helper that renders effectiveness,
+  release-blocking, real-fixture requirement, release gate, and trend signal.
+- [x] GREEN: benchmark text output now prints `evidence_*` lines from the same
+  evidence-state contract used by JSON reports, and preflight/docs guard the
+  text-output contract.
+- [x] VERIFY: focused benchmark/preflight tests, benchmark text output,
+  formatting, typecheck, preflight JSON, and diff hygiene.
+
 ## 2026-07-09 PromptLane Benchmark Release Blocking Evidence State
 
 - [x] CHECK: benchmark `evidence_state` distinguished synthetic gate and real

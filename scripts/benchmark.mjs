@@ -17,6 +17,8 @@ import { join, resolve } from "node:path";
 import {
   buildBenchmarkEvidenceState,
   buildNoFixturesReport,
+  formatBenchmarkEvidenceStateLines,
+  formatNoFixturesReportLines,
   loadBenchmarkFixtures,
 } from "./benchmark-fixtures.mjs";
 import {
@@ -76,9 +78,9 @@ if (loadedFixtures.status === "no_fixtures") {
   if (jsonOutput) {
     console.log(JSON.stringify(message, null, 2));
   } else {
-    console.log(`promptlane benchmark ${dataset}`);
-    console.log("status: no_fixtures");
-    console.log(message.detail);
+    for (const line of formatNoFixturesReportLines(message)) {
+      console.log(line);
+    }
   }
   rmSync(tempRoot, { recursive: true, force: true });
   process.exit(0);
@@ -699,6 +701,9 @@ function passes(scores) {
 function printReport(report) {
   console.log(`promptlane benchmark ${report.dataset}`);
   console.log(`pass: ${report.pass ? "yes" : "no"}`);
+  for (const line of formatBenchmarkEvidenceStateLines(report.evidence_state)) {
+    console.log(line);
+  }
   console.log(`next_action: ${report.next_action}`);
   for (const [key, value] of Object.entries(report.scores)) {
     console.log(`${key}: ${value}`);
