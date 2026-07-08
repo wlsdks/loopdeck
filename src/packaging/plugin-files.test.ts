@@ -199,6 +199,19 @@ describe("plugin packaging files", () => {
     expect(preflightScript).toContain('"docs/PACKAGE_CONTENTS.md"');
     expect(preflightScript).toContain('"docs/PRE_PUBLISH_PRIVACY_AUDIT.md"');
     expect(preflightScript).toContain('"docs/RELEASE_CHECKLIST.md"');
+    expect(preflightScript).toContain(
+      '"docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md"',
+    );
+    expect(preflightScript).toContain('"docs/LOCAL_95_EVIDENCE_2026-07-06.md"');
+    expect(preflightScript).toContain(
+      '"docs/PRODUCT_POSITIONING_EVIDENCE_2026-07-06.md"',
+    );
+    expect(preflightScript).toContain(
+      '"docs/UI_PATROL_EVIDENCE_2026-07-06.md"',
+    );
+    expect(preflightScript).toContain(
+      '"docs/CODEX_CLAUDE_LOCAL_INTEGRATION_EVIDENCE_2026-07-06.md"',
+    );
     expect(preflightScript).toContain('"README.ko.md"');
     expect(preflightScript).toContain('"CHANGELOG.md"');
     expect(preflightScript).toContain('"SECURITY.md"');
