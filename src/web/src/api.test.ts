@@ -6341,6 +6341,7 @@ describe("web api export client", () => {
               by_project: [],
             },
             patterns: [],
+            instruction_suggestions: [],
             missing_items: [],
             privacy: {
               local_only: true,
@@ -7109,6 +7110,50 @@ describe("web api export client", () => {
                 total: 1,
                 message: "private-project repeats Goal clarity gaps.",
                 prompt_body: "secret prompt body",
+              },
+            ],
+            missing_items: [],
+            privacy: {
+              local_only: true,
+              external_calls: false,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+            },
+          },
+        }),
+      );
+    const { getQualityDashboard } = await import("./api.js");
+
+    await expect(getQualityDashboard()).rejects.toThrow(
+      "Quality dashboard failed: Invalid response.",
+    );
+  });
+
+  it("reports unsafe quality dashboard instruction suggestions without returning raw paths", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            total_prompts: 1,
+            quality_score: {
+              average: 42,
+              max: 100,
+              band: "needs_work",
+              scored_prompts: 1,
+            },
+            distribution: {
+              by_tool: [],
+              by_project: [],
+            },
+            patterns: [],
+            instruction_suggestions: [
+              {
+                scope: "project",
+                project: "private-project",
+                text: "Add a project instruction candidate.",
+                reason: "Repeated project-specific prompt gap.",
+                raw_path: "/Users/jinan/private-project/AGENTS.md",
               },
             ],
             missing_items: [],

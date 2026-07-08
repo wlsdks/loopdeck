@@ -3759,6 +3759,32 @@ function isQualityDashboardPattern(
   );
 }
 
+function isQualityDashboardInstructionSuggestion(
+  value: unknown,
+): value is QualityDashboard["instruction_suggestions"][number] {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const suggestion =
+    value as QualityDashboard["instruction_suggestions"][number] & {
+      cwd?: unknown;
+      markdown?: unknown;
+      prompt_body?: unknown;
+      raw_path?: unknown;
+    };
+  return (
+    (suggestion.scope === "global" || suggestion.scope === "project") &&
+    (suggestion.project === undefined ||
+      typeof suggestion.project === "string") &&
+    typeof suggestion.text === "string" &&
+    typeof suggestion.reason === "string" &&
+    suggestion.cwd === undefined &&
+    suggestion.markdown === undefined &&
+    suggestion.prompt_body === undefined &&
+    suggestion.raw_path === undefined
+  );
+}
+
 function isArchiveScoreSummary(
   value: unknown,
 ): value is ArchiveScoreReport["archive_score"] {
@@ -4446,6 +4472,7 @@ export async function getQualityDashboard(
       distribution?: unknown;
       missing_items?: unknown;
       patterns?: unknown;
+      instruction_suggestions?: unknown;
       privacy?: unknown;
     };
   };
@@ -4457,6 +4484,10 @@ export async function getQualityDashboard(
     !body.data.missing_items.every(isQualityDashboardMissingItem) ||
     !Array.isArray(body.data.patterns) ||
     !body.data.patterns.every(isQualityDashboardPattern) ||
+    !Array.isArray(body.data.instruction_suggestions) ||
+    !body.data.instruction_suggestions.every(
+      isQualityDashboardInstructionSuggestion,
+    ) ||
     !isQualityDashboardPrivacy(body.data.privacy)
   ) {
     throw new Error("Quality dashboard failed: Invalid response.");
