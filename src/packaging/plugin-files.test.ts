@@ -165,6 +165,10 @@ describe("plugin packaging files", () => {
       "utf8",
     );
     expect(publishing).toContain("corepack pnpm npm-publish:preflight");
+    expect(publishing).toContain(
+      "corepack pnpm --silent npm-publish:preflight -- --json",
+    );
+    expect(publishing).toContain("machine-readable");
     expect(publishing).toContain("corepack pnpm smoke:package-install");
     expect(publishing).toContain("does not publish");
     expect(publishing).toContain("--skip-npm");

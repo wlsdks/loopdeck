@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane NPM Preflight JSON Runbook
+
+- [x] CHECK: `npm-publish:preflight -- --json` through a normal pnpm script
+  prints pnpm script banners before JSON, while `corepack pnpm --silent
+  npm-publish:preflight -- --json` stays machine-parseable.
+- [x] RED: packaging guard now requires `docs/NPM_PUBLISHING.md` to document
+  the silent machine-readable preflight command.
+- [x] GREEN: npm publishing runbook includes the silent JSON preflight command
+  and explains why it is the parseable path.
+- [x] VERIFY: focused publishing guard, real silent JSON preflight, touched-file
+  formatting, typecheck, diff hygiene, and post-merge preflight.
+
 ## 2026-07-08 PromptLane Preflight Tag Mismatch Next Action
 
 - [x] CHECK: tag mismatch detail now includes the unpublished 1.0.0 tag refresh

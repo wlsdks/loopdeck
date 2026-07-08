@@ -53,6 +53,13 @@ For offline or test-only inspection, skip npm registry/auth checks:
 corepack pnpm npm-publish:preflight -- --skip-npm
 ```
 
+For machine-readable preflight output, use the silent pnpm invocation so stdout
+stays parseable JSON even when the preflight blocks:
+
+```sh
+corepack pnpm --silent npm-publish:preflight -- --json
+```
+
 If main has moved past `v1.0.0`, publish from the tagged release commit rather
 than the newer main commit:
 
