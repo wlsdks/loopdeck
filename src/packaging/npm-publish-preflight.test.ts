@@ -6,6 +6,58 @@ import { spawnSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
 
 describe("npm publish preflight", () => {
+  it("uses current preflight guidance when the release tag does not match HEAD", () => {
+    const binDir = mkdtempSync(join(tmpdir(), "promptlane-fake-git-"));
+    const fakeGit = join(binDir, "git");
+    writeFileSync(
+      fakeGit,
+      `#!/usr/bin/env sh
+if [ "$1" = "status" ]; then
+  exit 0
+fi
+if [ "$1" = "rev-parse" ]; then
+  echo "ffffffffffff0000000000000000000000000000"
+  exit 0
+fi
+if [ "$1" = "rev-list" ]; then
+  echo "aaaaaaaaaaaa0000000000000000000000000000"
+  exit 0
+fi
+echo "unexpected git command: $*" >&2
+exit 1
+`,
+      { mode: 0o755 },
+    );
+
+    const result = spawnSync(
+      process.execPath,
+      ["scripts/npm-publish-preflight.mjs", "--json", "--skip-npm"],
+      {
+        cwd: process.cwd(),
+        env: {
+          ...process.env,
+          PATH: `${binDir}:${process.env.PATH ?? ""}`,
+        },
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "pipe"],
+      },
+    );
+
+    expect(result.status).toBe(1);
+    const parsed = JSON.parse(result.stdout) as {
+      checks: Array<{ label: string; ok: boolean; detail?: string }>;
+    };
+    const tagCheck = parsed.checks.find((check) =>
+      check.label.endsWith("tag exists and points at HEAD"),
+    );
+    expect(tagCheck).toMatchObject({ ok: false });
+    expect(tagCheck?.detail).toContain("git checkout v1.0.0");
+    expect(tagCheck?.detail).toContain("tagged checkout");
+    expect(tagCheck?.detail).toContain("corepack pnpm npm-publish:preflight");
+    expect(tagCheck?.detail).not.toContain("manual npm checks");
+    expect(tagCheck?.detail).not.toContain("predates this preflight");
+  });
+
   it("points the operator to npm login when npm auth is the remaining blocker", () => {
     const binDir = mkdtempSync(join(tmpdir(), "promptlane-fake-npm-"));
     const fakeNpm = join(binDir, "npm");

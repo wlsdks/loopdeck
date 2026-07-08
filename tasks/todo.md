@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane NPM Preflight Tag Mismatch Copy
+
+- [x] CHECK: `docs/NPM_PUBLISHING.md` no longer claimed `v1.0.0` predates the
+  preflight script, but `scripts/npm-publish-preflight.mjs` still told tag
+  mismatch users to use manual npm checks if the checkout predates preflight.
+- [x] RED: packaging and fake-git preflight tests now reject
+  `manual npm checks` / `predates this preflight` guidance and require rerunning
+  `corepack pnpm npm-publish:preflight` from the tagged checkout.
+- [x] GREEN: tag mismatch detail now tells operators to checkout the release
+  tag, rerun the current preflight from that tagged checkout, and publish from
+  that commit or bump/create a new tag.
+- [x] VERIFY: focused preflight tests, packaging tests, real post-merge
+  preflight/tag check, touched-file formatting, typecheck, and diff hygiene.
+
 ## 2026-07-08 PromptLane NPM Preflight Auth Next Action
 
 - [x] CHECK: current publish preflight correctly blocks on missing npm auth,

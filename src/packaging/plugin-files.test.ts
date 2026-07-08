@@ -174,7 +174,9 @@ describe("plugin packaging files", () => {
     expect(publishing).not.toContain("Do not expect `corepack pnpm");
     expect(preflightScript).toContain("git checkout ${expectedTag}");
     expect(preflightScript).toContain("tagged release commit");
-    expect(preflightScript).toContain("manual npm checks");
+    expect(preflightScript).toContain("tagged checkout");
+    expect(preflightScript).not.toContain("manual npm checks");
+    expect(preflightScript).not.toContain("predates this preflight");
 
     expect(packageJson.bin.promptlane).toBe("./dist/cli/index.js");
     expect(publishing).toContain("all three bin entries exist after build");
