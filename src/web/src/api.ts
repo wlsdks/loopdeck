@@ -4661,6 +4661,7 @@ function parseProjectSummaryResponse(
         export_disabled?: unknown;
         version?: unknown;
       };
+      instruction_review?: unknown;
     };
   },
   message: string,
@@ -4681,6 +4682,21 @@ function parseProjectSummaryResponse(
     typeof body.data.policy.version !== "number"
   ) {
     throw new Error(`${message}: Invalid response.`);
+  }
+  if (body.data.instruction_review !== undefined) {
+    if (
+      typeof body.data.instruction_review !== "object" ||
+      body.data.instruction_review === null
+    ) {
+      throw new Error(`${message}: Invalid response.`);
+    }
+    try {
+      parseProjectInstructionReviewResponse({
+        data: body.data.instruction_review,
+      });
+    } catch {
+      throw new Error(`${message}: Invalid response.`);
+    }
   }
   return body.data as ProjectSummary;
 }

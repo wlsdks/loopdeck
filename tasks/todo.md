@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Project Summary Instruction Review Contract Error
+
+- [x] CHECK: `parseProjectSummaryResponse`가 optional `instruction_review`를 검증하지
+  않아 Projects list item에 중첩된 raw-like `prompt_body` review가 UI state로 넘어갈
+  수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 project list item의
+  `instruction_review.prompt_body` body를 `Project list failed: Invalid response.`로
+  reject하도록 요구하게 해 현재 unsafe nested review resolve 실패를 확인한다.
+- [x] GREEN: project summary parser가 nested `instruction_review`를 기존 project
+  instruction review parser로 검증하되 project list/update surface 에러 메시지를 유지한다.
+- [x] VERIFY: focused web API project list/instruction tests, implementation format
+  check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Project Instruction Suggestions Contract Error
 
 - [x] CHECK: `parseProjectInstructionReviewResponse`가 `suggestions[]`를 배열인지까지만
