@@ -53,6 +53,22 @@ describe("npm publish preflight", () => {
           label: "pl-codex bin entry is registered",
           ok: true,
         }),
+        expect.objectContaining({
+          label: "package files include dist",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include README.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include LICENSE",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include scripts/npm-publish-preflight.mjs",
+          ok: true,
+        }),
       ]),
     );
   });

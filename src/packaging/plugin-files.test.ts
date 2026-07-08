@@ -183,9 +183,14 @@ describe("plugin packaging files", () => {
     expect(preflightScript).toContain(
       "packageJson.bin?.[binName] === expectedPath",
     );
+    expect(preflightScript).toContain("package files include ${filePath}");
+    expect(preflightScript).toContain('"dist"');
+    expect(preflightScript).toContain('"README.md"');
+    expect(preflightScript).toContain('"LICENSE"');
     expect(publishing).toContain("corepack pnpm npm-publish:preflight");
     expect(publishing).toContain("package is not marked private");
     expect(publishing).toContain("license, repository, and bin metadata");
+    expect(publishing).toContain("package files include `dist`");
     expect(publishing).toContain(
       "corepack pnpm --silent npm-publish:preflight -- --json",
     );
