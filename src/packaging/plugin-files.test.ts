@@ -176,13 +176,19 @@ describe("plugin packaging files", () => {
     expect(preflightScript).toContain(
       'packageJson.repository?.url === "https://github.com/wlsdks/promptlane.git"',
     );
+    expect(preflightScript).toContain(
+      "package homepage points at GitHub project",
+    );
+    expect(preflightScript).toContain("package bugs points at GitHub issues");
+    expect(preflightScript).toContain(
+      "package keywords include public positioning terms",
+    );
+    expect(preflightScript).toContain("package publish access is public");
     expect(preflightScript).toContain('promptlane: "./dist/cli/index.js"');
     expect(preflightScript).toContain('"pl-claude": "./dist/cli/pl-claude.js"');
     expect(preflightScript).toContain('"pl-codex": "./dist/cli/pl-codex.js"');
     expect(preflightScript).toContain("`${binName} bin entry is registered`");
-    expect(preflightScript).toContain(
-      "packageJson.bin?.[binName] === expectedPath",
-    );
+    expect(preflightScript).toContain("registeredPath === expectedPath");
     expect(preflightScript).toContain("package files include ${filePath}");
     expect(preflightScript).toContain('"dist"');
     expect(preflightScript).toContain('".claude-plugin"');
@@ -305,7 +311,13 @@ describe("plugin packaging files", () => {
     expect(preflightScript).toContain('"LICENSE"');
     expect(publishing).toContain("corepack pnpm npm-publish:preflight");
     expect(publishing).toContain("package is not marked private");
-    expect(publishing).toContain("license, repository, and bin metadata");
+    expect(publishing).toContain(
+      "license, repository, homepage, bugs, keywords, publish access, and bin metadata",
+    );
+    expect(publishing).toContain("package publish access is public");
+    expect(publishing).toContain(
+      "package keywords include public positioning terms",
+    );
     expect(publishing).toContain("package files include `dist`");
     expect(publishing).toContain("package files exclude `dist/**/*.map`");
     expect(publishing).toContain(
@@ -799,6 +811,10 @@ describe("plugin packaging files", () => {
         longDescription: string;
       };
     }>("plugins/promptlane/.codex-plugin/plugin.json");
+    const positioningEvidence = readFileSync(
+      join(process.cwd(), "docs/PRODUCT_POSITIONING_EVIDENCE_2026-07-06.md"),
+      "utf8",
+    );
 
     expect(packageJson.name).toBe("promptlane");
     expect(packageJson.bin).toHaveProperty("promptlane");
@@ -836,6 +852,12 @@ describe("plugin packaging files", () => {
     expect(packageJson.devDependencies.react).toBe(
       packageJson.devDependencies["react-dom"],
     );
+    expect(positioningEvidence).toContain(
+      "`package.json#description`, `homepage`, `bugs`, `keywords`, and `publishConfig.access`",
+    );
+    expect(positioningEvidence).toContain("prompt-improvement");
+    expect(positioningEvidence).toContain("local-first");
+    expect(positioningEvidence).toContain("publish access is `public`");
 
     for (const manifest of [claudeManifest, codexManifest]) {
       expect(manifest.name).toBe("promptlane");
