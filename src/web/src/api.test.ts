@@ -7736,6 +7736,58 @@ describe("web api export client", () => {
     );
   });
 
+  it("rejects project list items with raw-like instruction review fields", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            items: [
+              {
+                project_id: "proj_abcdef123456",
+                label: "promptlane",
+                path_kind: "project_root",
+                prompt_count: 1,
+                sensitive_count: 0,
+                quality_gap_rate: 0,
+                copied_count: 0,
+                bookmarked_count: 0,
+                policy: {
+                  capture_disabled: false,
+                  analysis_disabled: false,
+                  external_analysis_opt_in: false,
+                  export_disabled: false,
+                  version: 1,
+                },
+                instruction_review: {
+                  generated_at: "2026-05-03T00:00:00.000Z",
+                  analyzer: "local-project-instructions-v1",
+                  score: { value: 80, max: 100, band: "good" },
+                  files_found: 0,
+                  files: [],
+                  checklist: [],
+                  suggestions: [],
+                  prompt_body: "secret instruction body",
+                  privacy: {
+                    local_only: true,
+                    external_calls: false,
+                    stores_file_bodies: false,
+                    returns_file_bodies: false,
+                    returns_raw_paths: false,
+                  },
+                },
+              },
+            ],
+          },
+        }),
+      );
+    const { listProjects } = await import("./api.js");
+
+    await expect(listProjects()).rejects.toThrow(
+      "Project list failed: Invalid response.",
+    );
+  });
+
   it("reports malformed project policy update responses without returning incomplete project state", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
