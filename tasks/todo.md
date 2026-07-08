@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane NPM Preflight Detail Length
+
+- [x] CHECK: tag mismatch preflight detail used the new tagged-checkout
+  guidance, but the shared detail cap truncated the sentence before
+  `new tag for this commit.`
+- [x] RED: fake-git preflight test now requires the full tag mismatch recovery
+  sentence to include `new tag for this commit.`
+- [x] GREEN: preflight check detail cap increased enough for current release
+  operator guidance while preserving npm token sanitization.
+- [x] VERIFY: focused preflight tests, packaging tests, post-merge preflight
+  checks, touched-file formatting, typecheck, and diff hygiene.
+
 ## 2026-07-08 PromptLane NPM Preflight Tag Mismatch Copy
 
 - [x] CHECK: `docs/NPM_PUBLISHING.md` no longer claimed `v1.0.0` predates the
