@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Server Problem Detail Redaction
+
+- [x] CHECK: server `problem()` factory가 `errors[]`와 `instance`는 redaction하지만
+  top-level `detail`은 그대로 전달해 future route/server error detail이 raw prompt body,
+  local path, provider token을 response payload와 `Error.message`에 남길 수 있다.
+- [x] RED: `src/server/errors.test.ts`가 problem `detail` 안의 `prompt_body=...`,
+  `/Users/...`, `sk-proj-...`를 redaction token으로 치환하고 `Error.message`도 같은
+  raw-free detail을 쓰도록 요구하게 해 현재 raw detail passthrough 실패를 확인한다.
+- [x] GREEN: server problem factory가 `detail`에도 기존 problem text sanitizer를 적용해
+  top-level problem response와 thrown error message를 중앙에서 raw-free로 만든다.
+- [x] GREEN: shared bearer detector가 실제 bearer credential은 계속 마스킹하되
+  사용자 안내 문구의 일반 `bearer token` phrase는 credential로 오탐하지 않게 한다.
+- [x] VERIFY: focused server problem/validation tests, implementation format
+  check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Server Problem Instance Redaction
 
 - [x] CHECK: server `problem()` factory가 `errors[].field/message`는 redaction하지만

@@ -61,4 +61,23 @@ describe("server problem details", () => {
     expect(instance).not.toContain("/Users/example/private-project/raw.md");
     expect(instance).not.toContain("sk-proj-1234567890abcdef");
   });
+
+  it("redacts raw local paths and tokens from problem details", () => {
+    const error = problem(
+      400,
+      "Bad Request",
+      "Invalid prompt_body=private-draft from /Users/example/private-project/raw.md with sk-proj-1234567890abcdef.",
+    );
+
+    expect(error.problem.detail).toContain(
+      "prompt_body=[REDACTED:prompt_body]",
+    );
+    expect(error.problem.detail).toContain("[REDACTED:path]");
+    expect(error.problem.detail).toContain("[REDACTED:api_key]");
+    expect(error.problem.detail).not.toContain(
+      "/Users/example/private-project/raw.md",
+    );
+    expect(error.problem.detail).not.toContain("sk-proj-1234567890abcdef");
+    expect(error.message).toBe(error.problem.detail);
+  });
 });
