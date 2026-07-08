@@ -619,6 +619,28 @@ function isCopySideEffects(
   );
 }
 
+function isContinuationSafetyGroup(
+  value: unknown,
+): value is NonNullable<LoopWorktreeResponse["continuation_safety_group"]> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const group = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_group"]
+  >;
+  return (
+    group.label === "Continuation safety guidance" &&
+    group.scope ===
+      "read-only handoff boundaries for Codex and Claude Code continuation" &&
+    group.includes ===
+      "copy, paste, review, collect, privacy, and merge gating notes" &&
+    group.reason ===
+      "keeps the selected continuation path explicit without automating agents" &&
+    group.writes_files === false &&
+    group.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -2564,6 +2586,7 @@ export async function getLoopWorktree(
       command_distinction?: unknown;
       command_filters?: unknown;
       copy_side_effects?: unknown;
+      continuation_safety_group?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -2581,6 +2604,8 @@ export async function getLoopWorktree(
       !isCommandFilters(body.data.command_filters)) ||
     (body.data.copy_side_effects !== undefined &&
       !isCopySideEffects(body.data.copy_side_effects)) ||
+    (body.data.continuation_safety_group !== undefined &&
+      !isContinuationSafetyGroup(body.data.continuation_safety_group)) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
     !isLoopListPrivacy(body.data.privacy)
