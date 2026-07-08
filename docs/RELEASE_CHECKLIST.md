@@ -70,13 +70,29 @@ Confirm `corepack pnpm pack:dry-run` includes:
 - [ ] `docs/IMPLEMENTATION_PLAN.md`
 - [ ] `docs/ADAPTERS.md`
 - [ ] `docs/PLUGINS.md`
+- [ ] `docs/PROMPTLANE.md`
+- [ ] `docs/PROMPTLANE-RUNTIME-HISTORY.md`
+- [ ] `docs/PROMPTLANE-LEGACY-SURFACES.md`
+- [ ] `docs/LOOP-SNAPSHOT-SCHEMA.md`
+- [ ] `docs/AGENT-HARNESS.md`
+- [ ] `docs/INSTRUCTION-FILES.md`
 - [ ] `docs/BENCHMARK_V1.md`
+- [ ] `docs/benchmark-fixtures/real.example.json`
 - [ ] `docs/FEATURE_AUDIT_2026-05-02.md`
 - [ ] `docs/PRD2_COMPLETION_AUDIT.md`
 - [ ] `docs/NPM_PUBLISHING.md`
 - [ ] `docs/PACKAGE_CONTENTS.md`
 - [ ] `docs/PRE_PUBLISH_PRIVACY_AUDIT.md`
 - [ ] `docs/RELEASE_CHECKLIST.md`
+- [ ] `docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md`
+- [ ] `docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md`
+- [ ] `docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md`
+- [ ] `docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md`
+- [ ] `docs/LOCAL_95_EVIDENCE_2026-07-06.md`
+- [ ] `docs/PRODUCT_POSITIONING_EVIDENCE_2026-07-06.md`
+- [ ] `docs/UI_PATROL_EVIDENCE_2026-07-06.md`
+- [ ] `docs/UI_PATROL_SCHEDULE_READINESS_2026-07-06.md`
+- [ ] `docs/CODEX_CLAUDE_LOCAL_INTEGRATION_EVIDENCE_2026-07-06.md`
 - [ ] `.claude-plugin/` and `commands/` directories
 - [ ] `plugins/` and `integrations/` directories
 - [ ] `scripts/benchmark.mjs`

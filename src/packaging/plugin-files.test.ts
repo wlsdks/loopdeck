@@ -581,6 +581,27 @@ describe("plugin packaging files", () => {
       expect(releaseChecklist).toContain(`\`${scriptPath}\``);
     }
 
+    for (const docPath of [
+      "docs/PROMPTLANE.md",
+      "docs/PROMPTLANE-RUNTIME-HISTORY.md",
+      "docs/PROMPTLANE-LEGACY-SURFACES.md",
+      "docs/LOOP-SNAPSHOT-SCHEMA.md",
+      "docs/AGENT-HARNESS.md",
+      "docs/INSTRUCTION-FILES.md",
+      "docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md",
+      "docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md",
+      "docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md",
+      "docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md",
+      "docs/benchmark-fixtures/real.example.json",
+      "docs/LOCAL_95_EVIDENCE_2026-07-06.md",
+      "docs/PRODUCT_POSITIONING_EVIDENCE_2026-07-06.md",
+      "docs/UI_PATROL_EVIDENCE_2026-07-06.md",
+      "docs/UI_PATROL_SCHEDULE_READINESS_2026-07-06.md",
+      "docs/CODEX_CLAUDE_LOCAL_INTEGRATION_EVIDENCE_2026-07-06.md",
+    ]) {
+      expect(releaseChecklist).toContain(`\`${docPath}\``);
+    }
+
     expect(releaseChecklist).not.toContain("Confirm `pnpm pack:dry-run`");
     expect(releaseSmoke).toContain('"quality-evidence"');
     expect(releaseSmoke).toContain('"--require-complete"');
