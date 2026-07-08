@@ -30,11 +30,7 @@ describe("runSetup", () => {
     const settingsPath = join(dir, ".claude", "settings.json");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    const plistPath = join(
-      dir,
-      "LaunchAgents",
-      "com.promptlane.server.plist",
-    );
+    const plistPath = join(dir, "LaunchAgents", "com.promptlane.server.plist");
 
     const result = runSetup({
       dataDir,
@@ -56,13 +52,9 @@ describe("runSetup", () => {
     expect(readFileSync(settingsPath, "utf8")).toContain(
       "promptlane hook claude-code",
     );
-    expect(readFileSync(hooksPath, "utf8")).toContain(
-      "promptlane hook codex",
-    );
+    expect(readFileSync(hooksPath, "utf8")).toContain("promptlane hook codex");
     expect(readFileSync(configPath, "utf8")).toContain("hooks = true");
-    expect(readFileSync(plistPath, "utf8")).toContain(
-      "com.promptlane.server",
-    );
+    expect(readFileSync(plistPath, "utf8")).toContain("com.promptlane.server");
   });
 
   it("dry-run reports intended work without writing files", () => {
@@ -71,11 +63,7 @@ describe("runSetup", () => {
     const settingsPath = join(dir, ".claude", "settings.json");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    const plistPath = join(
-      dir,
-      "LaunchAgents",
-      "com.promptlane.server.plist",
-    );
+    const plistPath = join(dir, "LaunchAgents", "com.promptlane.server.plist");
 
     const result = runSetup({
       dataDir,

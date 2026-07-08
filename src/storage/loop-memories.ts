@@ -70,14 +70,20 @@ export function recordLoopMemory(
     throw new Error("Loop memory statement must not be empty.");
   }
   if (looksUnsafe(statement)) {
-    throw new Error("Loop memory statement must not include raw paths or secrets.");
+    throw new Error(
+      "Loop memory statement must not include raw paths or secrets.",
+    );
   }
-  const evidenceRefs = input.evidence_refs.map((ref) => ref.trim()).filter(Boolean);
+  const evidenceRefs = input.evidence_refs
+    .map((ref) => ref.trim())
+    .filter(Boolean);
   if (evidenceRefs.length === 0) {
     throw new Error("Loop memory evidence refs must not be empty.");
   }
   if (evidenceRefs.some(looksUnsafe)) {
-    throw new Error("Loop memory evidence refs must not include raw paths or secrets.");
+    throw new Error(
+      "Loop memory evidence refs must not include raw paths or secrets.",
+    );
   }
 
   const memory: LoopMemory = {
@@ -142,7 +148,9 @@ export function listLoopMemories(
   }
 
   const rows = db
-    .prepare("SELECT * FROM loop_memories ORDER BY created_at DESC, id DESC LIMIT ?")
+    .prepare(
+      "SELECT * FROM loop_memories ORDER BY created_at DESC, id DESC LIMIT ?",
+    )
     .all(limit) as LoopMemoryRow[];
 
   return { items: rows.map(loopMemoryFromRow) };

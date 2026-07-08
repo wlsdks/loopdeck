@@ -13,10 +13,8 @@ export function createLoopSnapshotFromPrompts(
   const averagePromptScore =
     input.prompts.length > 0
       ? Math.round(
-          input.prompts.reduce(
-            (sum, prompt) => sum + prompt.quality_score,
-            0,
-          ) / input.prompts.length,
+          input.prompts.reduce((sum, prompt) => sum + prompt.quality_score, 0) /
+            input.prompts.length,
         )
       : undefined;
 
@@ -67,9 +65,7 @@ function inferTool(tools: string[]): LoopSnapshotTool {
   return "unknown";
 }
 
-function topQualityGaps(
-  prompts: Array<{ quality_gaps: string[] }>,
-): string[] {
+function topQualityGaps(prompts: Array<{ quality_gaps: string[] }>): string[] {
   const counts = new Map<string, number>();
   for (const prompt of prompts) {
     for (const gap of prompt.quality_gaps) {

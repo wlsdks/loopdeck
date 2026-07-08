@@ -56,7 +56,9 @@ export function registerLoopScheduleCommand(loop: Command): void {
 
   schedule
     .command("install")
-    .description("Install an explicit LaunchAgent for loop snapshot collection.")
+    .description(
+      "Install an explicit LaunchAgent for loop snapshot collection.",
+    )
     .option("--data-dir <path>", "Override the promptlane data directory.")
     .option(
       "--cwd-prefix <path>",
@@ -345,7 +347,9 @@ function parseIntervalSeconds(value: string | undefined): number {
 function intervalSeconds(value: number | undefined): number {
   const interval = value ?? DEFAULT_INTERVAL_SECONDS;
   if (!Number.isInteger(interval) || interval < 60) {
-    throw new UserError("--interval must be an integer of at least 60 seconds.");
+    throw new UserError(
+      "--interval must be an integer of at least 60 seconds.",
+    );
   }
   return interval;
 }

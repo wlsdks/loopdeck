@@ -226,9 +226,7 @@ export function setupNeedsAttention(
 
 export function formatSetupResult(result: SetupResult): string {
   const lines = [
-    result.dryRun
-      ? "promptlane setup preview"
-      : "promptlane setup complete",
+    result.dryRun ? "promptlane setup preview" : "promptlane setup complete",
     `Profile: ${result.profile}`,
     `Data: ${result.dataDir}`,
     `Tools: ${result.detectedTools.length > 0 ? result.detectedTools.join(", ") : "none detected"}`,

@@ -21,11 +21,7 @@ describe("installService", () => {
   it("writes a macOS LaunchAgent plist with an explicit server command", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
-    const plistPath = join(
-      dir,
-      "LaunchAgents",
-      "com.promptlane.server.plist",
-    );
+    const plistPath = join(dir, "LaunchAgents", "com.promptlane.server.plist");
 
     const result = installService({
       dataDir,
@@ -48,11 +44,7 @@ describe("installService", () => {
 
   it("dry-run reports the plist without writing", () => {
     const dir = createTempDir();
-    const plistPath = join(
-      dir,
-      "LaunchAgents",
-      "com.promptlane.server.plist",
-    );
+    const plistPath = join(dir, "LaunchAgents", "com.promptlane.server.plist");
 
     const result = installService({
       plistPath,

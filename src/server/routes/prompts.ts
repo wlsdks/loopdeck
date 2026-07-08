@@ -47,10 +47,7 @@ type PromptImprovementRouteStorage = PromptReadRouteStorage &
     >
   >;
 
-type AskEventSummaryStorage = Pick<
-  AskEventStoragePort,
-  "getAskEventSummary"
->;
+type AskEventSummaryStorage = Pick<AskEventStoragePort, "getAskEventSummary">;
 
 const ListQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(100).optional(),

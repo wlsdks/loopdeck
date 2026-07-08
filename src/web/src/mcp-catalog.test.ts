@@ -10,6 +10,12 @@ import type { QualityDashboard, SettingsResponse } from "./api.js";
 function dashboardFixture(
   overrides: Partial<QualityDashboard> = {},
 ): QualityDashboard {
+  const defaultPrivacy = {
+    local_only: true,
+    external_calls: false,
+    returns_prompt_bodies: false,
+    returns_raw_paths: false,
+  } as const;
   return {
     distribution: { by_project: [], by_tool: [] },
     duplicate_prompt_groups: [],
@@ -30,6 +36,7 @@ function dashboardFixture(
     trend: { daily: [] },
     useful_prompts: [],
     ...overrides,
+    privacy: overrides.privacy ?? defaultPrivacy,
   };
 }
 

@@ -108,7 +108,9 @@ export function applyInstructionPatchFromMemory(input: {
 
   const targetFile = parseInstructionPatchTarget(input.targetFile);
   const targetPath = join(input.targetDir, targetFile);
-  const existing = existsSync(targetPath) ? readFileSync(targetPath, "utf8") : "";
+  const existing = existsSync(targetPath)
+    ? readFileSync(targetPath, "utf8")
+    : "";
   const sourceMemoryId = safePatchLine(input.memory.id);
   const alreadyPresent = existing.includes(`source_memory: ${sourceMemoryId}`);
 

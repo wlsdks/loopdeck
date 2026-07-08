@@ -183,9 +183,7 @@ describe("prompt CLI commands", () => {
       },
       evidence_refs: ["PR #453", "main CI 28748310489"],
     });
-    expect(JSON.stringify(shown.effectiveness)).not.toContain(
-      "/Users/example",
-    );
+    expect(JSON.stringify(shown.effectiveness)).not.toContain("/Users/example");
   });
 
   it("shows drafts:N suffix on list rows that have saved improvement drafts", async () => {

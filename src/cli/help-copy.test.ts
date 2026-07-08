@@ -32,12 +32,12 @@ describe("CLI help copy", () => {
     const help = createProgram().helpInformation();
 
     expect(help).toContain("Usage: promptlane");
-    expect(help).toContain(
-      "Local-first prompt improvement workspace",
-    );
+    expect(help).toContain("Local-first prompt improvement workspace");
     expect(help).toContain("Codex");
     expect(help).toContain("Claude Code");
-    expect(help).not.toContain("Local-first prompt archive for AI coding tools.");
+    expect(help).not.toContain(
+      "Local-first prompt archive for AI coding tools.",
+    );
   });
 
   it("presents local infrastructure commands as PromptLane surfaces", () => {
@@ -63,7 +63,9 @@ describe("CLI help copy", () => {
     expect(help).toContain("Install the PromptLane status line");
     expect(help).toContain("Uninstall the PromptLane status line");
     expect(help).toContain("Report PromptLane 9.5 quality evidence");
-    expect(help).toContain("Install a login service for the local PromptLane server.");
+    expect(help).toContain(
+      "Install a login service for the local PromptLane server.",
+    );
     expect(help).not.toContain("local promptlane HTTP server");
     expect(help).not.toContain("local promptlane MCP server");
     expect(help).not.toContain("promptlane capture hook");

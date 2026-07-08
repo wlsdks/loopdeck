@@ -434,9 +434,7 @@ describe("prompt read/delete API", () => {
         copied_at: expect.any(String),
       },
     });
-    expect(JSON.stringify(copied.json())).not.toContain(
-      "Fix the beta prompt",
-    );
+    expect(JSON.stringify(copied.json())).not.toContain("Fix the beta prompt");
 
     const detail = await server.inject({
       method: "GET",
@@ -447,9 +445,9 @@ describe("prompt read/delete API", () => {
       },
     });
     expect(
-      detail
-        .json<{ data: { improvement_drafts: Array<{ copied_at?: string }> } }>()
-        .data.improvement_drafts[0]?.copied_at,
+      detail.json<{
+        data: { improvement_drafts: Array<{ copied_at?: string }> };
+      }>().data.improvement_drafts[0]?.copied_at,
     ).toEqual(expect.any(String));
   });
 
@@ -490,7 +488,7 @@ describe("prompt read/delete API", () => {
       instruction_suggestions: expect.any(Array),
       project_profiles: expect.arrayContaining([
         expect.objectContaining({
-          key: "project",
+          label: "project",
           prompt_count: 3,
         }),
       ]),

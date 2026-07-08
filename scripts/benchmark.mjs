@@ -199,8 +199,9 @@ try {
   const coachScore = scorePromptLane();
   const coachPromptActionability = scoreCoachPromptActionability();
   const scoreCalibration = scorePromptQualityCalibration({ list, details });
-  const archiveEffectivenessScore =
-    scoreArchiveEffectiveness(archiveScore.data);
+  const archiveEffectivenessScore = scoreArchiveEffectiveness(
+    archiveScore.data,
+  );
   const analyticsScore = scoreAnalytics(dashboard.data);
   const privacyLeakCount = countPrivacyLeaks({
     list,

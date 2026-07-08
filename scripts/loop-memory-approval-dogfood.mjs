@@ -310,11 +310,15 @@ function startServer() {
 }
 
 function startMcpServer() {
-  const child = spawn(process.execPath, [cliPath, "mcp", "--data-dir", dataDir], {
-    cwd: projectDir,
-    env: cliEnv,
-    stdio: ["pipe", "pipe", "pipe"],
-  });
+  const child = spawn(
+    process.execPath,
+    [cliPath, "mcp", "--data-dir", dataDir],
+    {
+      cwd: projectDir,
+      env: cliEnv,
+      stdio: ["pipe", "pipe", "pipe"],
+    },
+  );
   child.stderr.on("data", (chunk) => {
     mcpStderr += chunk.toString("utf8");
   });
@@ -348,7 +352,9 @@ function mcpRequest(method, params) {
   return new Promise((resolveRequest, reject) => {
     const timer = setTimeout(() => {
       mcpWaiters.delete(id);
-      reject(new Error(`Timed out waiting for ${method}.\nstderr:\n${mcpStderr}`));
+      reject(
+        new Error(`Timed out waiting for ${method}.\nstderr:\n${mcpStderr}`),
+      );
     }, timeoutMs);
     mcpWaiters.set(id, { resolve: resolveRequest, reject, timer });
     mcpProcess.stdin.write(

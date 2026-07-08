@@ -114,7 +114,9 @@ function safeOutcomeSummary(summary: string): string {
 function approvedMemoryLines(
   memories: readonly LoopBriefApprovedMemory[],
 ): string[] {
-  const safeMemories = memories.filter((memory) => !looksUnsafe(memory.statement));
+  const safeMemories = memories.filter(
+    (memory) => !looksUnsafe(memory.statement),
+  );
   if (safeMemories.length === 0) return [];
 
   return [

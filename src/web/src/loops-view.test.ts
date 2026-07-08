@@ -118,7 +118,9 @@ describe("LoopsView", () => {
     expect(html).toContain("Next copy selected session and branch brief");
     expect(html).toContain("Selected snapshot age");
     expect(html).toContain("older_than_latest");
-    expect(html).toContain("another loop snapshot was recorded after this selection");
+    expect(html).toContain(
+      "another loop snapshot was recorded after this selection",
+    );
     expect(html).toContain("Next refresh selected worktree before merging");
     expect(html).toContain("Selected brief action");
     expect(html).toContain("copy selected continuation brief");
@@ -130,7 +132,9 @@ describe("LoopsView", () => {
     );
     expect(html).toContain("No file writes or external calls");
     expect(html).toContain("Command distinction");
-    expect(html).toContain("continue the selected worktree/session/branch filters");
+    expect(html).toContain(
+      "continue the selected worktree/session/branch filters",
+    );
     expect(html).toContain(
       "copy the review packet command-center hint for merge review",
     );
@@ -208,7 +212,9 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "copy feedback is not safety approval or agent submission",
     );
-    expect(html).toContain("No copy feedback reminder writes or external calls");
+    expect(html).toContain(
+      "No copy feedback reminder writes or external calls",
+    );
     expect(html).toContain("Copy feedback accessibility");
     expect(html).toContain("selected brief copy button label remains stable");
     expect(html).toContain(
@@ -217,9 +223,13 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "keeps copy feedback clear without implying safety approval or changing layout",
     );
-    expect(html).toContain("No accessibility feedback writes or external calls");
+    expect(html).toContain(
+      "No accessibility feedback writes or external calls",
+    );
     expect(html).toContain("Copy feedback timeout");
-    expect(html).toContain("copied feedback clears after a short local timeout");
+    expect(html).toContain(
+      "copied feedback clears after a short local timeout",
+    );
     expect(html).toContain(
       "timeout does not record review completion or submission state",
     );
@@ -257,7 +267,9 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "keeps the final handoff check manual before Codex or Claude Code receives the brief",
     );
-    expect(html).toContain("No pre-paste confirmation writes or external calls");
+    expect(html).toContain(
+      "No pre-paste confirmation writes or external calls",
+    );
     expect(html).toContain("Target-agent check");
     expect(html).toContain(
       "operator verifies the active Codex or Claude Code request box before paste",
@@ -355,7 +367,9 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "keeps retry evidence tied to explicit local snapshot recording",
     );
-    expect(html).toContain("No retry outcome persistence writes or external calls");
+    expect(html).toContain(
+      "No retry outcome persistence writes or external calls",
+    );
     expect(html).toContain("Collection evidence freshness boundary");
     expect(html).toContain(
       "operator checks freshness against the latest explicit loop snapshot evidence",
@@ -366,7 +380,9 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "keeps evidence freshness review tied to local snapshot metadata",
     );
-    expect(html).toContain("No freshness verification writes or external calls");
+    expect(html).toContain(
+      "No freshness verification writes or external calls",
+    );
     expect(html).toContain("Freshness result non-persistence");
     expect(html).toContain(
       "freshness result stays outside PromptLane until the next explicit loop snapshot",
@@ -377,7 +393,9 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "keeps freshness evidence tied to explicit local snapshot recording",
     );
-    expect(html).toContain("No freshness result persistence writes or external calls");
+    expect(html).toContain(
+      "No freshness result persistence writes or external calls",
+    );
     expect(html).toContain("Freshness uncertainty collection reminder");
     expect(html).toContain(
       "collect a new explicit loop snapshot when evidence freshness is uncertain",
@@ -388,7 +406,9 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "keeps freshness uncertainty resolution operator-triggered and local-first",
     );
-    expect(html).toContain("No freshness uncertainty collection writes or external calls");
+    expect(html).toContain(
+      "No freshness uncertainty collection writes or external calls",
+    );
     expect(html).toContain("Pre-merge freshness advisory");
     expect(html).toContain(
       "review freshness uncertainty before merge decisions",
@@ -441,9 +461,7 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "No post-memory-approval collection result persistence writes or external calls",
     );
-    expect(html).toContain(
-      "Post-memory-approval collection retry boundary",
-    );
+    expect(html).toContain("Post-memory-approval collection retry boundary");
     expect(html).toContain(
       "operator reruns the explicit post-approval loop collection flow when retry is needed",
     );
@@ -1020,7 +1038,9 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "keeps PromptLane as the local handoff source while the user controls submission",
     );
-    expect(html).toContain("No automatic submission, file writes, or external calls");
+    expect(html).toContain(
+      "No automatic submission, file writes, or external calls",
+    );
     expect(html).toContain("Continuation handoff checklist");
     expect(html).toContain("copy selected continuation brief");
     expect(html).toContain("paste into Codex or Claude Code active request");
@@ -1056,7 +1076,9 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "PromptLane records explicit loop snapshots instead of importing agent transcripts",
     );
-    expect(html).toContain("No transcript storage, file writes, or external calls");
+    expect(html).toContain(
+      "No transcript storage, file writes, or external calls",
+    );
     expect(html).toContain("Privacy boundary");
     expect(html).toContain(
       "stores loop metadata in the local database and Markdown archive only",
@@ -1072,13 +1094,13 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "operator reviews the copied continuation brief before submitting",
     );
-    expect(html).toContain(
-      "submission remains manual in Codex or Claude Code",
-    );
+    expect(html).toContain("submission remains manual in Codex or Claude Code");
     expect(html).toContain(
       "does not auto-submit prompts, execute commands, write files, or change merge state",
     );
-    expect(html).toContain("No automatic submission, file writes, or external calls");
+    expect(html).toContain(
+      "No automatic submission, file writes, or external calls",
+    );
     expect(html).toContain("Collection responsibility");
     expect(html).toContain(
       "operator collects the next loop snapshot after the agent turn",
@@ -1089,7 +1111,9 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "does not watch transcripts, scrape agent UI, or collect in the background",
     );
-    expect(html).toContain("No automatic collection, file writes, or external calls");
+    expect(html).toContain(
+      "No automatic collection, file writes, or external calls",
+    );
     expect(html).toContain("Pre-merge advisory");
     expect(html).toContain(
       "hold merge decisions until the next loop snapshot is collected and reviewed",
@@ -1100,7 +1124,9 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "memory approval remains separate from merge readiness",
     );
-    expect(html).toContain("No merge decision writes, file writes, or external calls");
+    expect(html).toContain(
+      "No merge decision writes, file writes, or external calls",
+    );
     expect(html).toContain("Post-collection review");
     expect(html).toContain(
       "review the collected loop snapshot quality and evidence before approval",
@@ -1111,7 +1137,9 @@ describe("LoopsView", () => {
     expect(html).toContain(
       "merge readiness can be reconsidered after post-collection review",
     );
-    expect(html).toContain("No memory writes, merge decision writes, or external calls");
+    expect(html).toContain(
+      "No memory writes, merge decision writes, or external calls",
+    );
     expect(html).toContain("Continuation guidance");
     expect(html).toContain('class="loop-detail-section"');
     expect(html).toContain('class="loop-detail-section-title"');
@@ -1152,7 +1180,9 @@ describe("LoopsView", () => {
       "promptlane loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
     );
     expect(html).toContain("Missing evidence");
-    expect(html).toContain("latest selected worktree outcome has no evidence refs");
+    expect(html).toContain(
+      "latest selected worktree outcome has no evidence refs",
+    );
     expect(html).toContain("record loop outcome evidence");
     expect(html).toContain("loop_web");
     expect(html).toContain("passed");
@@ -1385,7 +1415,8 @@ function loopWorktree(): LoopWorktreeResponse {
     },
     copy_side_effects: {
       label: "Copy side effects",
-      clipboard: "copies the selected continuation brief to the local clipboard",
+      clipboard:
+        "copies the selected continuation brief to the local clipboard",
       ui_feedback: "temporarily marks the selected brief copy button as copied",
       does_not:
         "does not write files, execute commands, call external services, submit prompts, or change merge state",
@@ -1406,8 +1437,7 @@ function loopWorktree(): LoopWorktreeResponse {
       label: "Safety guidance order",
       first:
         "review the continuation safety guidance before copying or pasting briefs",
-      then:
-        "follow copy, paste, review, collect, privacy, and merge gating notes in order",
+      then: "follow copy, paste, review, collect, privacy, and merge gating notes in order",
       reason:
         "keeps continuation handoff reviewable before any manual agent submission",
       writes_files: false,
@@ -1415,7 +1445,8 @@ function loopWorktree(): LoopWorktreeResponse {
     },
     continuation_safety_non_persistence_note: {
       label: "Safety review state",
-      state: "reviewed guidance state is not stored or synchronized by PromptLane",
+      state:
+        "reviewed guidance state is not stored or synchronized by PromptLane",
       reminder:
         "operator re-checks safety guidance each time before manual agent submission",
       reason: "keeps continuation review local to the current operator session",
@@ -1540,7 +1571,8 @@ function loopWorktree(): LoopWorktreeResponse {
         "collect the next loop snapshot explicitly after the agent response is ready",
       not_background:
         "PromptLane does not start collection from submission, transcript changes, or agent UI activity",
-      reason: "keeps post-submission collection operator-triggered and local-first",
+      reason:
+        "keeps post-submission collection operator-triggered and local-first",
       writes_files: false,
       external_calls: false,
     },
@@ -1550,13 +1582,15 @@ function loopWorktree(): LoopWorktreeResponse {
         "collection result is not persisted until the operator records the next explicit loop snapshot",
       not_stored:
         "PromptLane does not store, sync, or infer collection result state from agent UI activity",
-      reason: "keeps collection evidence tied to explicit local snapshot recording",
+      reason:
+        "keeps collection evidence tied to explicit local snapshot recording",
       writes_files: false,
       external_calls: false,
     },
     continuation_safety_collection_retry_boundary_note: {
       label: "Collection retry boundary",
-      retry: "operator reruns the explicit loop collection flow when retry is needed",
+      retry:
+        "operator reruns the explicit loop collection flow when retry is needed",
       not_automated:
         "PromptLane does not automatically retry collection commands or hidden recovery actions",
       reason:
@@ -1590,7 +1624,8 @@ function loopWorktree(): LoopWorktreeResponse {
         "freshness result stays outside PromptLane until the next explicit loop snapshot",
       not_stored:
         "PromptLane does not detect, store, or sync freshness result state",
-      reason: "keeps freshness evidence tied to explicit local snapshot recording",
+      reason:
+        "keeps freshness evidence tied to explicit local snapshot recording",
       writes_files: false,
       external_calls: false,
     },
@@ -1610,7 +1645,8 @@ function loopWorktree(): LoopWorktreeResponse {
       advisory: "review freshness uncertainty before merge decisions",
       not_decision:
         "PromptLane does not approve merges or verify freshness before merge",
-      reason: "keeps merge readiness separate from freshness uncertainty review",
+      reason:
+        "keeps merge readiness separate from freshness uncertainty review",
       writes_files: false,
       external_calls: false,
     },
@@ -1619,16 +1655,19 @@ function loopWorktree(): LoopWorktreeResponse {
       advisory: "review freshness uncertainty before approving loop memory",
       not_decision:
         "PromptLane does not approve memory or verify freshness from this note",
-      reason: "keeps memory approval separate from freshness uncertainty review",
+      reason:
+        "keeps memory approval separate from freshness uncertainty review",
       writes_files: false,
       external_calls: false,
     },
     continuation_safety_post_memory_approval_collection_reminder: {
       label: "Post-memory-approval collection reminder",
-      reminder: "collect a new explicit loop snapshot after approving loop memory",
+      reminder:
+        "collect a new explicit loop snapshot after approving loop memory",
       not_automated:
         "PromptLane does not start collection from memory approval or approval state changes",
-      reason: "keeps post-approval collection operator-triggered and local-first",
+      reason:
+        "keeps post-approval collection operator-triggered and local-first",
       writes_files: false,
       external_calls: false,
     },

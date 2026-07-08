@@ -160,7 +160,9 @@ export type LoopSnapshotStoragePort = {
 
 export type CompactBoundaryStoragePort = {
   recordCompactBoundary(input: RecordCompactBoundaryInput): CompactBoundary;
-  listCompactBoundaries(options?: { limit?: number }): CompactBoundaryListResult;
+  listCompactBoundaries(options?: {
+    limit?: number;
+  }): CompactBoundaryListResult;
 };
 
 export type LoopMemoryStoragePort = {

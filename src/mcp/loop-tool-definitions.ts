@@ -280,10 +280,7 @@ export const GET_PROMPTLANE_LOOP_STATUS_TOOL_DEFINITION: PromptLaneMcpToolDefini
                       evidence_count: { type: "integer", minimum: 0 },
                       recommendation: {
                         type: "string",
-                        enum: [
-                          "review before merge",
-                          "ready for continuation",
-                        ],
+                        enum: ["review before merge", "ready for continuation"],
                       },
                       continuation_command: { type: "string" },
                       merge_readiness: {
@@ -375,85 +372,84 @@ export const GET_PROMPTLANE_LOOP_STATUS_TOOL_DEFINITION: PromptLaneMcpToolDefini
     },
   } as const;
 
-export const PREPARE_LOOP_BRIEF_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
-  {
-    name: "prepare_loop_brief",
-    description:
-      "Prepare a copy-ready continuation prompt from a local PromptLane snapshot. Use this when Codex or Claude Code is resuming an agent loop, handing off work across sessions/worktrees, or needs the next prompt after `promptlane loop collect`. Omit filters for the latest snapshot, or pass worktree/session/branch filters to continue a selected loop. This is read-only and never auto-submits the prompt. It returns prompt ids and loop metadata only, never prompt bodies, raw paths, secrets, transcripts, or external LLM results.",
-    annotations: {
-      ...LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS,
-      title: "Prepare PromptLane continuation brief",
+export const PREPARE_LOOP_BRIEF_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
+  name: "prepare_loop_brief",
+  description:
+    "Prepare a copy-ready continuation prompt from a local PromptLane snapshot. Use this when Codex or Claude Code is resuming an agent loop, handing off work across sessions/worktrees, or needs the next prompt after `promptlane loop collect`. Omit filters for the latest snapshot, or pass worktree/session/branch filters to continue a selected loop. This is read-only and never auto-submits the prompt. It returns prompt ids and loop metadata only, never prompt bodies, raw paths, secrets, transcripts, or external LLM results.",
+  annotations: {
+    ...LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS,
+    title: "Prepare PromptLane continuation brief",
+  },
+  inputSchema: {
+    type: "object",
+    properties: {
+      latest: {
+        type: "boolean",
+        description:
+          "Use the latest local loop snapshot when no worktree/session/branch filter is provided. Defaults to true.",
+      },
+      worktree: {
+        type: "string",
+        description:
+          "Optional safe worktree label. Selects the newest matching local loop snapshot.",
+      },
+      session_id: {
+        type: "string",
+        description:
+          "Optional agent session id. Selects the newest matching local loop snapshot.",
+      },
+      branch: {
+        type: "string",
+        description:
+          "Optional branch label. Selects the newest matching local loop snapshot.",
+      },
     },
-    inputSchema: {
-      type: "object",
-      properties: {
-        latest: {
-          type: "boolean",
-          description:
-            "Use the latest local loop snapshot when no worktree/session/branch filter is provided. Defaults to true.",
+    additionalProperties: false,
+  },
+  outputSchema: {
+    type: "object",
+    properties: {
+      source: { enum: ["latest", "selected"] },
+      selection: {
+        type: "object",
+        properties: {
+          worktree: { type: "string" },
+          session_id: { type: "string" },
+          branch: { type: "string" },
         },
-        worktree: {
-          type: "string",
-          description:
-            "Optional safe worktree label. Selects the newest matching local loop snapshot.",
-        },
-        session_id: {
-          type: "string",
-          description:
-            "Optional agent session id. Selects the newest matching local loop snapshot.",
-        },
-        branch: {
-          type: "string",
-          description:
-            "Optional branch label. Selects the newest matching local loop snapshot.",
+        additionalProperties: false,
+      },
+      snapshot_id: { type: "string" },
+      title: { type: "string" },
+      prompt: { type: "string" },
+      next_action: { type: "string" },
+      privacy: {
+        ...LOOP_TOOL_PRIVACY_SCHEMA,
+        required: [...LOOP_TOOL_PRIVACY_SCHEMA.required, "auto_submits"],
+        properties: {
+          ...LOOP_TOOL_PRIVACY_SCHEMA.properties,
+          auto_submits: { const: false },
         },
       },
-      additionalProperties: false,
+      is_error: TOOL_ERROR_OUTPUT_SCHEMA.properties.is_error,
+      error_code: TOOL_ERROR_OUTPUT_SCHEMA.properties.error_code,
+      message: TOOL_ERROR_OUTPUT_SCHEMA.properties.message,
     },
-    outputSchema: {
-      type: "object",
-      properties: {
-        source: { enum: ["latest", "selected"] },
-        selection: {
-          type: "object",
-          properties: {
-            worktree: { type: "string" },
-            session_id: { type: "string" },
-            branch: { type: "string" },
-          },
-          additionalProperties: false,
-        },
-        snapshot_id: { type: "string" },
-        title: { type: "string" },
-        prompt: { type: "string" },
-        next_action: { type: "string" },
-        privacy: {
-          ...LOOP_TOOL_PRIVACY_SCHEMA,
-          required: [...LOOP_TOOL_PRIVACY_SCHEMA.required, "auto_submits"],
-          properties: {
-            ...LOOP_TOOL_PRIVACY_SCHEMA.properties,
-            auto_submits: { const: false },
-          },
-        },
-        is_error: TOOL_ERROR_OUTPUT_SCHEMA.properties.is_error,
-        error_code: TOOL_ERROR_OUTPUT_SCHEMA.properties.error_code,
-        message: TOOL_ERROR_OUTPUT_SCHEMA.properties.message,
+    oneOf: [
+      {
+        required: [
+          "source",
+          "snapshot_id",
+          "title",
+          "prompt",
+          "next_action",
+          "privacy",
+        ],
       },
-      oneOf: [
-        {
-          required: [
-            "source",
-            "snapshot_id",
-            "title",
-            "prompt",
-            "next_action",
-            "privacy",
-          ],
-        },
-        TOOL_ERROR_OUTPUT_SCHEMA,
-      ],
-    },
-  } as const;
+      TOOL_ERROR_OUTPUT_SCHEMA,
+    ],
+  },
+} as const;
 
 export const RECORD_LOOP_OUTCOME_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
   {
@@ -610,83 +606,82 @@ export const PROPOSE_LOOP_MEMORY_CANDIDATE_TOOL_DEFINITION: PromptLaneMcpToolDef
     },
   } as const;
 
-export const RECORD_LOOP_MEMORY_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
-  {
-    name: "record_loop_memory",
-    description:
-      "Record a user-approved PromptLane memory from the latest eligible loop outcome. This writes only the approved candidate statement and safe evidence refs into local PromptLane storage; it never writes AGENTS.md, CLAUDE.md, project docs, prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
-    annotations: {
-      ...LOCAL_LOOP_WRITE_TOOL_ANNOTATIONS,
-      title: "Record approved PromptLane memory",
+export const RECORD_LOOP_MEMORY_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
+  name: "record_loop_memory",
+  description:
+    "Record a user-approved PromptLane memory from the latest eligible loop outcome. This writes only the approved candidate statement and safe evidence refs into local PromptLane storage; it never writes AGENTS.md, CLAUDE.md, project docs, prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
+  annotations: {
+    ...LOCAL_LOOP_WRITE_TOOL_ANNOTATIONS,
+    title: "Record approved PromptLane memory",
+  },
+  inputSchema: {
+    type: "object",
+    required: ["approved_by"],
+    properties: {
+      latest: {
+        type: "boolean",
+        description:
+          "Use the latest local loop snapshot. Defaults to true; no other selection mode exists yet.",
+      },
+      approved_by: {
+        type: "string",
+        description:
+          "Actor label for the approval, for example user or maintainer. Must not be empty.",
+      },
     },
-    inputSchema: {
-      type: "object",
-      required: ["approved_by"],
-      properties: {
-        latest: {
-          type: "boolean",
-          description:
-            "Use the latest local loop snapshot. Defaults to true; no other selection mode exists yet.",
-        },
-        approved_by: {
-          type: "string",
-          description:
-            "Actor label for the approval, for example user or maintainer. Must not be empty.",
+    additionalProperties: false,
+  },
+  outputSchema: {
+    type: "object",
+    properties: {
+      recorded: { const: true },
+      memory: {
+        type: "object",
+        properties: {
+          id: { type: "string" },
+          snapshot_id: { type: "string" },
+          title: { type: "string" },
+          statement: { type: "string" },
+          evidence_refs: { type: "array", items: { type: "string" } },
+          approved_by: { type: "string" },
+          created_at: { type: "string" },
         },
       },
-      additionalProperties: false,
-    },
-    outputSchema: {
-      type: "object",
-      properties: {
-        recorded: { const: true },
-        memory: {
-          type: "object",
-          properties: {
-            id: { type: "string" },
-            snapshot_id: { type: "string" },
-            title: { type: "string" },
-            statement: { type: "string" },
-            evidence_refs: { type: "array", items: { type: "string" } },
-            approved_by: { type: "string" },
-            created_at: { type: "string" },
-          },
+      next_action: { type: "string" },
+      next_actions: { type: "array", items: { type: "string" } },
+      privacy: {
+        ...LOOP_TOOL_PRIVACY_SCHEMA,
+        required: [
+          ...LOOP_TOOL_PRIVACY_SCHEMA.required,
+          "stores_prompt_bodies",
+          "stores_raw_paths",
+          "writes_instruction_files",
+        ],
+        properties: {
+          ...LOOP_TOOL_PRIVACY_SCHEMA.properties,
+          stores_prompt_bodies: { const: false },
+          stores_raw_paths: { const: false },
+          writes_instruction_files: { const: false },
         },
-        next_action: { type: "string" },
-        next_actions: { type: "array", items: { type: "string" } },
-        privacy: {
-          ...LOOP_TOOL_PRIVACY_SCHEMA,
-          required: [
-            ...LOOP_TOOL_PRIVACY_SCHEMA.required,
-            "stores_prompt_bodies",
-            "stores_raw_paths",
-            "writes_instruction_files",
-          ],
-          properties: {
-            ...LOOP_TOOL_PRIVACY_SCHEMA.properties,
-            stores_prompt_bodies: { const: false },
-            stores_raw_paths: { const: false },
-            writes_instruction_files: { const: false },
-          },
-        },
-        is_error: TOOL_ERROR_OUTPUT_SCHEMA.properties.is_error,
-        error_code: TOOL_ERROR_OUTPUT_SCHEMA.properties.error_code,
-        message: TOOL_ERROR_OUTPUT_SCHEMA.properties.message,
       },
-      oneOf: [
-        {
-          required: [
-            "recorded",
-            "memory",
-            "next_action",
-            "next_actions",
-            "privacy",
-          ],
-        },
-        TOOL_ERROR_OUTPUT_SCHEMA,
-      ],
+      is_error: TOOL_ERROR_OUTPUT_SCHEMA.properties.is_error,
+      error_code: TOOL_ERROR_OUTPUT_SCHEMA.properties.error_code,
+      message: TOOL_ERROR_OUTPUT_SCHEMA.properties.message,
     },
-  } as const;
+    oneOf: [
+      {
+        required: [
+          "recorded",
+          "memory",
+          "next_action",
+          "next_actions",
+          "privacy",
+        ],
+      },
+      TOOL_ERROR_OUTPUT_SCHEMA,
+    ],
+  },
+} as const;
 
 export const PROPOSE_INSTRUCTION_PATCH_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
   {

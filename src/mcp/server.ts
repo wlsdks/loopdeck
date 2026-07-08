@@ -148,10 +148,7 @@ type PromptLaneToolHandler = (
 
 const PROMPTLANE_MCP_TOOL_HANDLERS: Record<string, PromptLaneToolHandler> = {
   [GET_PROMPTLANE_STATUS_TOOL_DEFINITION.name]: (args, options) =>
-    getPromptLaneStatusTool(
-      args as GetPromptLaneStatusToolArguments,
-      options,
-    ),
+    getPromptLaneStatusTool(args as GetPromptLaneStatusToolArguments, options),
   [COACH_PROMPT_TOOL_DEFINITION.name]: (args, options) =>
     coachPromptTool(args as CoachPromptToolArguments, options),
   [SCORE_PROMPT_TOOL_DEFINITION.name]: (args, options) =>

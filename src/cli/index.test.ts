@@ -119,14 +119,7 @@ describe("runCli error handling", () => {
     const missingFile = join(createTempDir(), "missing.jsonl");
 
     const exitCode = await runCli(
-      [
-        "node",
-        "promptlane",
-        "import",
-        "--dry-run",
-        "--file",
-        missingFile,
-      ],
+      ["node", "promptlane", "import", "--dry-run", "--file", missingFile],
       { stderr: stderr.stream },
     );
 

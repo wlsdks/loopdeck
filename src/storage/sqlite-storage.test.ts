@@ -252,8 +252,7 @@ describe("SQLite prompt storage", () => {
       {
         snapshot_id: "loop_prompt_detail_effectiveness",
         status: "passed",
-        summary:
-          "Finished [REDACTED:path] with [REDACTED:api_key].",
+        summary: "Finished [REDACTED:path] with [REDACTED:api_key].",
         evidence_refs: ["PR #453", "main CI 28748310489"],
         tests_run: 5,
       },
@@ -389,10 +388,7 @@ describe("SQLite prompt storage", () => {
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
-      now: nextDate([
-        "2026-07-04T02:00:00.000Z",
-        "2026-07-04T02:01:00.000Z",
-      ]),
+      now: nextDate(["2026-07-04T02:00:00.000Z", "2026-07-04T02:01:00.000Z"]),
     });
     storage.createLoopSnapshot(
       loopSnapshot({
@@ -487,7 +483,9 @@ describe("SQLite prompt storage", () => {
         evidence_refs: ["/Users/example/private-project/result.log"],
         approved_by: "user",
       }),
-    ).toThrow("Loop memory evidence refs must not include raw paths or secrets.");
+    ).toThrow(
+      "Loop memory evidence refs must not include raw paths or secrets.",
+    );
     expect(storage.listLoopMemories({ limit: 10 }).items).toHaveLength(0);
 
     storage.close();

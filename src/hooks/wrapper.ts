@@ -177,10 +177,12 @@ function recordCompactBoundaryFromHook(
     storage.recordCompactBoundary({
       tool,
       event_name: payload.hook_event_name,
-      trigger: typeof payload.trigger === "string" ? payload.trigger : undefined,
+      trigger:
+        typeof payload.trigger === "string" ? payload.trigger : undefined,
       session_id:
         typeof payload.session_id === "string" ? payload.session_id : undefined,
-      turn_id: typeof payload.turn_id === "string" ? payload.turn_id : undefined,
+      turn_id:
+        typeof payload.turn_id === "string" ? payload.turn_id : undefined,
       cwd,
       content: readCompactBoundaryContent(payload),
     });
@@ -243,7 +245,9 @@ function isStopHookPayload(
   );
 }
 
-function readCompactBoundaryContent(payload: CompactHookPayload): string | undefined {
+function readCompactBoundaryContent(
+  payload: CompactHookPayload,
+): string | undefined {
   if (typeof payload.compact_summary === "string") {
     return payload.compact_summary;
   }

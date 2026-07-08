@@ -90,9 +90,9 @@ describe("routing", () => {
 
   it("writes stable loop worktree URLs", () => {
     expect(pathForView({ name: "loops" })).toBe("/loops");
-    expect(pathForView({ name: "loops", worktree: "agent loop/worktree" })).toBe(
-      "/loops?worktree=agent+loop%2Fworktree",
-    );
+    expect(
+      pathForView({ name: "loops", worktree: "agent loop/worktree" }),
+    ).toBe("/loops?worktree=agent+loop%2Fworktree");
     expect(
       pathForView({
         branch: "feature/branch-filter",
