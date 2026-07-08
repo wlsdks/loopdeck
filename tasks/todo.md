@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Quality Evidence Release Warnings
+
+- [x] CHECK: `quality-evidence` returned `status: complete` with no
+  `release_warnings` while `docs/benchmark-fixtures/real.json` was absent,
+  making it too easy to confuse local 9.5 release evidence with real-user
+  effectiveness trend proof.
+- [x] RED: focused quality-evidence CLI test requires JSON and human output to
+  include a non-blocking `real benchmark fixtures are missing` release warning.
+- [x] GREEN: quality evidence now keeps `complete` status for the local release
+  gate while exposing a release warning that real-user effectiveness trends
+  must not be claimed until consent-bearing redacted real fixtures are collected
+  and run.
+- [x] VERIFY: focused quality-evidence/packaging tests, quality JSON/text
+  smoke, formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane Quality Evidence Silent Benchmark Gate
 
 - [x] CHECK: `corepack pnpm --silent evidence:quality` still emitted release

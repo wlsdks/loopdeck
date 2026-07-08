@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -105,6 +105,7 @@ const releaseGate = [
     purpose: "Reject whitespace and patch hygiene regressions.",
   },
 ];
+const releaseWarnings = releaseWarningsForLocalEvidence();
 
 const summary = {
   check: "promptlane_95_quality",
@@ -120,6 +121,7 @@ const summary = {
   },
   blockers,
   recommended_next_slices: recommendedNextSlicesValue,
+  release_warnings: releaseWarnings,
   release_gate: releaseGate,
   ...(nextRecheckUtc ? { next_recheck_utc: nextRecheckUtc } : {}),
   next_action:
@@ -158,6 +160,20 @@ function parseArgs(argv) {
 
 function readPackageFile(relativePath) {
   return readFileSync(join(packageRoot, relativePath), "utf8");
+}
+
+function releaseWarningsForLocalEvidence() {
+  if (existsSync(join(packageRoot, "docs/benchmark-fixtures/real.json"))) {
+    return [];
+  }
+
+  return [
+    {
+      label: "real benchmark fixtures are missing",
+      detail:
+        "docs/benchmark-fixtures/real.json is absent; quality evidence is complete for the local release gate, but do not claim real-user effectiveness trends until consent-bearing redacted real fixtures are collected and run with corepack pnpm benchmark -- --fixture-set real.",
+    },
+  ];
 }
 
 function readNativeDialogEvidence() {

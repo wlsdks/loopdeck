@@ -48,6 +48,10 @@ type QualityEvidenceSummary = {
     command: string;
     purpose: string;
   }>;
+  release_warnings?: Array<{
+    label: string;
+    detail: string;
+  }>;
   evidence?: {
     native_dialog_approved_dogfood?: {
       status: string;
@@ -186,6 +190,12 @@ function formatSummary(summary: QualityEvidenceSummary): string {
           (step) => `- ${step.command} - ${step.purpose}`,
         )
       : ["- none"];
+  const releaseWarningRows =
+    summary.release_warnings && summary.release_warnings.length > 0
+      ? summary.release_warnings.map(
+          (warning) => `- ${warning.label}: ${warning.detail}`,
+        )
+      : ["- none"];
 
   return [
     "PromptLane 9.5 quality evidence",
@@ -210,6 +220,9 @@ function formatSummary(summary: QualityEvidenceSummary): string {
     "",
     "Recommended next slices",
     ...recommendedRows,
+    "",
+    "Release warnings",
+    ...releaseWarningRows,
     "",
     "Release gate",
     ...releaseGateRows,
