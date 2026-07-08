@@ -830,6 +830,30 @@ function isContinuationSafetyCopyRetryNote(
   );
 }
 
+function isContinuationSafetyPrePasteConfirmationNote(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_pre_paste_confirmation_note"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_pre_paste_confirmation_note"]
+  >;
+  return (
+    note.label === "Pre-paste confirmation" &&
+    note.confirmation ===
+      "operator confirms the copied brief and target agent request before paste" &&
+    note.not_submission ===
+      "confirmation does not submit prompts or approve safety review" &&
+    note.reason ===
+      "keeps the final handoff check manual before Codex or Claude Code receives the brief" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -2784,6 +2808,7 @@ export async function getLoopWorktree(
       continuation_safety_copy_feedback_timeout_note?: unknown;
       continuation_safety_copy_feedback_failure_note?: unknown;
       continuation_safety_copy_retry_note?: unknown;
+      continuation_safety_pre_paste_confirmation_note?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -2835,6 +2860,10 @@ export async function getLoopWorktree(
     (body.data.continuation_safety_copy_retry_note !== undefined &&
       !isContinuationSafetyCopyRetryNote(
         body.data.continuation_safety_copy_retry_note,
+      )) ||
+    (body.data.continuation_safety_pre_paste_confirmation_note !== undefined &&
+      !isContinuationSafetyPrePasteConfirmationNote(
+        body.data.continuation_safety_pre_paste_confirmation_note,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
