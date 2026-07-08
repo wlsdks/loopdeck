@@ -183,7 +183,7 @@ describe("quality-evidence CLI command", () => {
         purpose: "Verify the npm package contents and lifecycle wrapper.",
       },
       {
-        command: "corepack pnpm benchmark -- --json",
+        command: "corepack pnpm --silent benchmark -- --json",
         purpose: "Verify local benchmark and privacy leak counters.",
       },
       {
@@ -292,6 +292,12 @@ describe("quality-evidence CLI command", () => {
     );
     expect(text).toContain(
       "- corepack pnpm evidence:quality -- --require-complete - Fail closed unless all 9.5 quality evidence remains complete.",
+    );
+    expect(text).toContain(
+      "- corepack pnpm --silent benchmark -- --json - Verify local benchmark and privacy leak counters.",
+    );
+    expect(text).not.toContain(
+      "- corepack pnpm benchmark -- --json - Verify local benchmark and privacy leak counters.",
     );
     expect(text).toContain(
       "- corepack pnpm promptlane quality-evidence --require-complete - Verify the built product CLI exposes the same complete quality evidence.",

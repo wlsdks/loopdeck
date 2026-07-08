@@ -76,7 +76,7 @@ const releaseGate = [
     purpose: "Verify the npm package contents and lifecycle wrapper.",
   },
   {
-    command: "corepack pnpm benchmark -- --json",
+    command: "corepack pnpm --silent benchmark -- --json",
     purpose: "Verify local benchmark and privacy leak counters.",
   },
   {
