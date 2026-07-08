@@ -27,9 +27,12 @@ If Codex is installed, also run:
 
 ```bash
 promptlane doctor codex
+promptlane doctor codex --json
 ```
 
 Report whether the local server is reachable, the hook is installed, and the
-MCP command access is registered. `doctor` may use read-only `mcp list`
-fallbacks when config-file detection is inconclusive. Do not print raw prompt
-bodies or raw hook payloads.
+MCP command access is registered. In JSON output, report top-level
+`status: ready` or `status: needs_attention` instead of recomputing readiness
+from nested booleans. `doctor` may use read-only `mcp list` fallbacks when
+config-file detection is inconclusive. Do not print raw prompt bodies or raw
+hook payloads.

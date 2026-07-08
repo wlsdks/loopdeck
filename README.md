@@ -174,10 +174,14 @@ Codex currently exposes marketplace management through `codex plugin marketplace
 ```sh
 promptlane doctor claude-code
 promptlane doctor codex
+promptlane doctor codex --json
 promptlane statusline claude-code
 promptlane buddy --once
 promptlane coach
 ```
+
+For automation, `doctor --json` includes top-level `status` as `ready` or
+`needs_attention` so scripts do not need to recompute nested readiness checks.
 
 Open the local archive:
 

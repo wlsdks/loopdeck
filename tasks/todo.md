@@ -1,5 +1,16 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Doctor JSON Status Docs
+
+- [x] CHECK: doctor JSON now exposes top-level `status`, but README and
+  Claude command docs did not tell operators or agents to use it.
+- [x] RED: packaging docs guard requires capture/status docs to mention
+  `promptlane doctor codex --json` and `status: ready|needs_attention`.
+- [x] GREEN: README, Korean README, and `/promptlane:status` command docs now
+  document the JSON status contract.
+- [x] VERIFY: focused packaging docs test, touched-file formatting, typecheck,
+  and diff hygiene.
+
 ## 2026-07-09 PromptLane Doctor JSON Status
 
 - [x] CHECK: human doctor output printed `Status: ready/needs attention`, but
