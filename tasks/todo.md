@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Benchmark Release Blocking Evidence State
+
+- [x] CHECK: benchmark `evidence_state` distinguished synthetic gate and real
+  trend meanings, but did not expose whether a failed result should block
+  release automation.
+- [x] RED: focused benchmark fixture test requires `release_blocking` on every
+  evidence state and a synthetic threshold miss to report
+  `regression_gate_failed` with `release_blocking: true`.
+- [x] GREEN: benchmark evidence states now mark synthetic failures as
+  release-blocking while keeping real trend misses and missing real fixtures
+  non-blocking soft evidence signals.
+- [x] VERIFY: focused benchmark/preflight tests, real no-fixtures JSON,
+  formatting, typecheck, preflight JSON, and diff hygiene.
+
 ## 2026-07-09 PromptLane Benchmark Ready Evidence State
 
 - [x] CHECK: missing real fixtures exposed `evidence_state`, but ready

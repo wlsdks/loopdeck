@@ -35,9 +35,10 @@ regression gate is green while still requiring real fixtures before claiming
 real-world effectiveness; real fixture runs stay soft trend signals.
 Full JSON reports include `evidence_state` so automation can distinguish a
 synthetic regression pass from real-world effectiveness evidence. Synthetic
-passes report `regression_gate_passed_not_real_world_proof`; real fixture
-passes report `trend_healthy`; real fixture threshold misses report
-`trend_needs_review`.
+passes report `regression_gate_passed_not_real_world_proof`; synthetic
+threshold misses report `regression_gate_failed` with `release_blocking: true`;
+real fixture passes report `trend_healthy`; real fixture threshold misses
+report `trend_needs_review` with `release_blocking: false`.
 When `--fixture-set real` has no local `real.json`, JSON output also includes
 `evidence_state.effectiveness: "unproven"` and `requires_real_fixtures: true`
 so release automation cannot confuse a missing real corpus with proof of
@@ -267,6 +268,7 @@ Pass thresholds:
   "pass": true,
   "evidence_state": {
     "effectiveness": "regression_gate_passed_not_real_world_proof",
+    "release_blocking": false,
     "requires_real_fixtures": true,
     "release_gate": "synthetic",
     "trend_signal": "real"
@@ -346,6 +348,7 @@ about the missing evidence:
   "status": "no_fixtures",
   "evidence_state": {
     "effectiveness": "unproven",
+    "release_blocking": false,
     "requires_real_fixtures": true,
     "release_gate": "synthetic",
     "trend_signal": "real"
