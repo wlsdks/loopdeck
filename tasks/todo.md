@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Project Instruction Suggestions Contract Error
+
+- [x] CHECK: `parseProjectInstructionReviewResponse`가 `suggestions[]`를 배열인지까지만
+  검증하고 string item 계약을 확인하지 않아 raw-like `prompt_body` object가
+  instruction suggestion UI state로 넘어갈 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 project instruction analysis
+  `suggestions[].prompt_body` object를 `Project instruction analysis failed:
+  Invalid response.`로 reject하도록 요구하게 해 현재 unsafe suggestion resolve 실패를
+  확인한다.
+- [x] GREEN: project instruction suggestions parser가 모든 item을 string으로
+  제한해 raw-like object와 깨진 suggestion shape를 차단한다.
+- [x] VERIFY: focused web API project instruction test, implementation format check,
+  typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Project Instruction Checklist Raw Contract Error
 
 - [x] CHECK: `parseProjectInstructionReviewResponse`가 `checklist[]`를 배열인지까지만

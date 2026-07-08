@@ -4611,6 +4611,9 @@ function parseProjectInstructionReviewResponse(body: {
         (item as { raw_path?: unknown }).raw_path === undefined,
     ) ||
     !Array.isArray(body.data.suggestions) ||
+    !body.data.suggestions.every(
+      (suggestion) => typeof suggestion === "string",
+    ) ||
     body.data.markdown !== undefined ||
     body.data.prompt_body !== undefined ||
     body.data.raw_path !== undefined ||
