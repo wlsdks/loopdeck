@@ -155,6 +155,7 @@ export function formatNoFixturesReportLines(report) {
     `promptlane benchmark ${report.dataset}`,
     "status: no_fixtures",
     ...formatBenchmarkEvidenceStateLines(report.evidence_state),
+    `next_action: ${report.next_action}`,
     report.detail,
   ];
 }

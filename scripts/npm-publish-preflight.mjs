@@ -782,6 +782,7 @@ function benchmarkEvidenceStateReportContractIsDocumented() {
     "trend_needs_review",
     "release_blocking",
     "evidence_release_blocking",
+    "next_action",
     "requires_real_fixtures",
     "release_gate",
     "synthetic",

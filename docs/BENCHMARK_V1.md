@@ -42,7 +42,9 @@ report `trend_needs_review` with `release_blocking: false`.
 Human text output, including missing-real-fixtures output, prints the same
 evidence state as `evidence_*` lines, including
 `evidence_release_blocking`, so operators do not need JSON parsing to see
-whether a benchmark miss blocks release.
+whether a benchmark miss blocks release. Missing-real-fixtures text output also
+prints `next_action` so the operator sees the copy/setup step without switching
+to JSON.
 When `--fixture-set real` has no local `real.json`, JSON output also includes
 `evidence_state.effectiveness: "unproven"` and `requires_real_fixtures: true`
 so release automation cannot confuse a missing real corpus with proof of
