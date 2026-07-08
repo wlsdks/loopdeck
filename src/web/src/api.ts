@@ -4339,6 +4339,7 @@ export async function getArchiveScoreReport(): Promise<ArchiveScoreReport> {
 
   const body = (await response.json()) as {
     data?: {
+      generated_at?: unknown;
       archive_score?: unknown;
       distribution?: unknown;
       top_gaps?: unknown;
@@ -4347,10 +4348,12 @@ export async function getArchiveScoreReport(): Promise<ArchiveScoreReport> {
       effectiveness_summary?: unknown;
       filters?: unknown;
       next_prompt_template?: unknown;
+      has_more?: unknown;
       privacy?: unknown;
     };
   };
   if (
+    typeof body.data?.generated_at !== "string" ||
     !isArchiveScoreSummary(body.data?.archive_score) ||
     !isArchiveScoreDistribution(body.data.distribution) ||
     !Array.isArray(body.data.top_gaps) ||
@@ -4362,6 +4365,7 @@ export async function getArchiveScoreReport(): Promise<ArchiveScoreReport> {
     !isArchiveEffectivenessSummary(body.data.effectiveness_summary) ||
     !isArchiveScoreFilters(body.data.filters) ||
     !isRawFreeArchiveText(body.data.next_prompt_template) ||
+    typeof body.data.has_more !== "boolean" ||
     !isArchiveScorePrivacy(body.data.privacy)
   ) {
     throw new Error("Archive score report failed: Invalid response.");
