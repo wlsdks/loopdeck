@@ -8541,6 +8541,28 @@ describe("web api export client", () => {
     );
   });
 
+  it("reports unsafe coach feedback summary responses without returning raw path fields", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            total: 4,
+            helpful: 3,
+            not_helpful: 1,
+            wrong: 0,
+            helpful_ratio: 0.75,
+            raw_path: "/Users/jinan/private-project",
+          },
+        }),
+      );
+    const { getCoachFeedbackSummary } = await import("./api.js");
+
+    await expect(getCoachFeedbackSummary()).rejects.toThrow(
+      "Coach feedback summary failed: Invalid response.",
+    );
+  });
+
   it("posts coach feedback with CSRF for a specific prompt id", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
