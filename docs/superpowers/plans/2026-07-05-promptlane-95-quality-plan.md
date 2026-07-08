@@ -20,7 +20,7 @@
 | Setup, doctor, and MCP smoke      | 9.5/10                              | 9.5 bar: setup and doctor smoke proves capture readiness; MCP smoke proves score/improve/clarify/record loop; failure states produce raw-free recovery actions instead of generic errors.                                             | smoke:agent-setup, smoke:mcp-coach-loop, storage_unavailable tests, package checks.                                                                 |
 | Loop memory and continuation      | 9.5/10                              | 9.5 bar: collect, brief, outcome, memory candidate, memory approval, instruction patch proposal, and apply gate are proven through CLI and MCP with evidence-first rules and no automatic instruction writes.                         | Loop unit tests, storage evidence guards, dogfood:first-coach-loop, dogfood:loop-memory-approval, prompt-linked outcome evidence.                   |
 | Web UI and operational evidence   | 9.5/10                              | 9.5 bar: archive, detail, coach, saved draft reuse, settings, loops, exports, projects, and mobile layout have local screenshots or browser assertions without depending on hosted CI.                                                | corepack pnpm ui-patrol, dogfood:web-user-flow, browser E2E, screenshot artifacts, in-app Browser audit.                                            |
-| Release stability                 | 9.5/10                              | 9.5 bar: local supported-node gate, pack dry-run, release smoke, first coach loop dogfood, package contents, dependency audit, and release checklist all agree on shipped files and commands.                                         | Local release gate, corepack pnpm pack:dry-run, smoke:release, dogfood:first-coach-loop, dogfood:loop-memory-approval, docs/RELEASE_CHECKLIST.md.   |
+| Release stability                 | 9.5/10                              | 9.5 bar: local supported-node gate, pack dry-run, release smoke, package install smoke, first coach loop dogfood, package contents, dependency audit, and release checklist all agree on shipped files and commands.                 | Local release gate, corepack pnpm pack:dry-run, smoke:release, smoke:package-install, dogfood:first-coach-loop, dogfood:loop-memory-approval, docs/RELEASE_CHECKLIST.md. |
 
 ## Evidence Progress Ledger
 
@@ -124,8 +124,8 @@ dogfood:web-user-flow` passed after main CI run `28750766036`, proving the
 - PR #464 added the release-stability evidence document and package manifest
   guards. The local release gate now owns release stability evidence: focused tests,
   `corepack pnpm test`, `corepack pnpm lint`, `corepack pnpm build`,
-  `corepack pnpm pack:dry-run`, `smoke:release`, and package manifest guards
-  prove the shipped files and commands.
+  `corepack pnpm pack:dry-run`, `smoke:release`, `smoke:package-install`, and
+  package manifest guards prove the shipped files and commands.
 - General test CI and scheduled UI patrol workflows were removed by maintainer
   decision. Do not reintroduce GitHub Actions workflows as a release-stability
   or web-operations requirement without a dedicated product decision; local
@@ -233,6 +233,7 @@ dogfood:web-user-flow` passed after main CI run `28750766036`, proving the
   `corepack pnpm lint`, `corepack pnpm build`,
   `corepack pnpm pack:dry-run`, `corepack pnpm benchmark -- --json`,
   `corepack pnpm e2e:browser`, `corepack pnpm smoke:release`,
+  `corepack pnpm smoke:package-install`,
   `corepack pnpm evidence:quality -- --require-complete`,
   `corepack pnpm promptlane quality-evidence --require-complete`, and
   `git diff --check`.
