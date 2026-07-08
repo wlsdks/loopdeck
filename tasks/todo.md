@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Release Runbook Docs Preflight Guard
+
+- [x] CHECK: `package.json#files` ships release runbooks, but npm publish
+  preflight did not check the operator docs that explain package contents,
+  privacy audit, release checklist, and npm publish flow.
+- [x] RED: focused preflight and packaging guards required machine-readable
+  checks for `docs/NPM_PUBLISHING.md`, `docs/PACKAGE_CONTENTS.md`,
+  `docs/PRE_PUBLISH_PRIVACY_AUDIT.md`, and `docs/RELEASE_CHECKLIST.md`.
+- [x] GREEN: npm publish preflight now checks those release runbooks, and the
+  NPM runbook checklist names the same publish package surface.
+- [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
+  touched-file formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Integration Docs Preflight Guard
 
 - [x] CHECK: `package.json#files` ships core PromptLane integration docs, but

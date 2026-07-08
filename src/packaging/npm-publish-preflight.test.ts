@@ -98,6 +98,22 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
+          label: "package files include docs/NPM_PUBLISHING.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include docs/PACKAGE_CONTENTS.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include docs/PRE_PUBLISH_PRIVACY_AUDIT.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include docs/RELEASE_CHECKLIST.md",
+          ok: true,
+        }),
+        expect.objectContaining({
           label: "package files include README.md",
           ok: true,
         }),
