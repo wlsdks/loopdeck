@@ -5858,6 +5858,7 @@ async function failApi(response: Response, label: string): Promise<never> {
       detail?: unknown;
       title?: unknown;
       message?: unknown;
+      error?: unknown;
       errors?: unknown;
       issues?: unknown;
     };
@@ -5866,7 +5867,8 @@ async function failApi(response: Response, label: string): Promise<never> {
     detail =
       apiErrorText(body.detail) ||
       apiErrorText(body.title) ||
-      apiErrorText(body.message);
+      apiErrorText(body.message) ||
+      apiErrorText(body.error);
     if (detail && issueDetail) {
       detail = `${detail} ${issueDetail}`;
     } else {
