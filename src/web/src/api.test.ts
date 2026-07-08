@@ -6438,6 +6438,39 @@ describe("web api export client", () => {
     );
   });
 
+  it("reports unsafe archive score summaries without returning prompt bodies", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            archive_score: {
+              average: 42,
+              max: 100,
+              band: "fair",
+              scored_prompts: 1,
+              total_prompts: 1,
+              prompt_body: "secret prompt body",
+            },
+            top_gaps: [],
+            practice_plan: [],
+            low_score_prompts: [],
+            privacy: {
+              local_only: true,
+              external_calls: false,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+            },
+          },
+        }),
+      );
+    const { getArchiveScoreReport } = await import("./api.js");
+
+    await expect(getArchiveScoreReport()).rejects.toThrow(
+      "Archive score report failed: Invalid response.",
+    );
+  });
+
   it("reports unsafe archive score practice plan items without returning prompt bodies", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
