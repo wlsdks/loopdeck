@@ -7956,6 +7956,27 @@ describe("web api export client", () => {
     );
   });
 
+  it("redacts raw field-array issue messages from failed response errors", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        errorResponse(422, {
+          detail: "The request payload is invalid.",
+          errors: [
+            {
+              field: ["body", "prompt_body"],
+              message: "private setup prompt from the user request",
+            },
+          ],
+        }),
+      );
+    const { getSettings } = await import("./api.js");
+
+    await expect(getSettings()).rejects.toThrow(
+      "Settings failed (422): The request payload is invalid. body.prompt_body: [REDACTED:prompt_body]",
+    );
+  });
+
   it("redacts raw path-array issue messages from failed response errors", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
