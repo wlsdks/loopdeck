@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Product Docs Preflight Guard
+
+- [x] CHECK: release checklist requires product, architecture, technical,
+  benchmark, and audit docs to ship in the npm package, but npm publish
+  preflight did not check that product-doc package surface.
+- [x] RED: focused preflight and packaging guards required machine-readable
+  checks for the release checklist's product and architecture doc entries.
+- [x] GREEN: npm publish preflight now checks those product docs as
+  package-file entries before publish.
+- [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
+  touched-file formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Local Verification Scripts Preflight Guard
 
 - [x] CHECK: `package.json#files` and release/package contents docs ship local
