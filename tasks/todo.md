@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Real Fixture Example Package Docs Guard
+
+- [x] CHECK: `docs/benchmark-fixtures/real.example.json` is now shipped and
+  checked by package/preflight allowlists, but the human package contents and
+  npm publishing runbook still did not name that new package surface.
+- [x] RED: focused packaging docs test requires both `docs/NPM_PUBLISHING.md`
+  and `docs/PACKAGE_CONTENTS.md` to mention the real fixture example path and
+  its copyable raw-free template role.
+- [x] GREEN: package contents and npm publishing docs now describe the shipped
+  real benchmark fixture template while keeping operator-owned `real.json`
+  local.
+- [x] VERIFY: focused packaging docs test, formatting, preflight JSON, and diff
+  hygiene.
+
 ## 2026-07-09 PromptLane Real Benchmark Fixture Example
 
 - [x] CHECK: the real benchmark loader and spec require consent-bearing
