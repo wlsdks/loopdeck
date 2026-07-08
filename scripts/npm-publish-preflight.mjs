@@ -403,6 +403,11 @@ check(
   privacyAuditMirrorsRuntimeTokenDetectors(),
   "docs/PRE_PUBLISH_PRIVACY_AUDIT.md should include the token families guarded by src/redaction/detectors.ts",
 );
+check(
+  "pre-publish privacy audit mirrors runtime path detectors",
+  privacyAuditMirrorsRuntimePathDetectors(),
+  "docs/PRE_PUBLISH_PRIVACY_AUDIT.md should include the local path families guarded by src/redaction/detectors.ts",
+);
 
 if (!options.skipGitClean) {
   const status = run("git", ["status", "--porcelain"]);
@@ -609,6 +614,23 @@ function privacyAuditMirrorsRuntimeTokenDetectors() {
       "(?:postgres|postgresql|mysql|mongodb|redis)://",
     ],
     ["hooks\\.", "https://hooks\\."],
+  ];
+
+  return requiredMirrors.every(
+    ([sourceSnippet, auditSnippet]) =>
+      detectorSource.includes(sourceSnippet) &&
+      privacyAudit.includes(auditSnippet),
+  );
+}
+
+function privacyAuditMirrorsRuntimePathDetectors() {
+  const detectorSource = readText("src/redaction/detectors.ts");
+  const privacyAudit = readText("docs/PRE_PUBLISH_PRIVACY_AUDIT.md");
+  const requiredMirrors = [
+    [
+      "Users|home|private|tmp|var|opt|workspace|Volumes",
+      "(?:Users|home|private|tmp|var|opt|workspace|Volumes)",
+    ],
   ];
 
   return requiredMirrors.every(
