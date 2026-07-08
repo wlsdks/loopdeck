@@ -115,7 +115,11 @@ function isPromptSummary(value: unknown): value is PromptSummary {
   if (typeof value !== "object" || value === null) {
     return false;
   }
-  const prompt = value as PromptSummary;
+  const prompt = value as PromptSummary & {
+    markdown?: unknown;
+    prompt_body?: unknown;
+    raw_path?: unknown;
+  };
   return (
     typeof prompt.id === "string" &&
     typeof prompt.tool === "string" &&
@@ -136,7 +140,10 @@ function isPromptSummary(value: unknown): value is PromptSummary {
     typeof prompt.quality_score === "number" &&
     typeof prompt.quality_score_band === "string" &&
     isPromptUsefulness(prompt.usefulness) &&
-    typeof prompt.duplicate_count === "number"
+    typeof prompt.duplicate_count === "number" &&
+    prompt.markdown === undefined &&
+    prompt.prompt_body === undefined &&
+    prompt.raw_path === undefined
   );
 }
 
@@ -230,6 +237,7 @@ function parsePromptListResponse(body: {
 }): PromptListResponse {
   if (
     !Array.isArray(body.data?.items) ||
+    !body.data.items.every(isPromptSummary) ||
     (body.data.next_cursor !== undefined &&
       typeof body.data.next_cursor !== "string")
   ) {

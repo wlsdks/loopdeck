@@ -7591,6 +7591,50 @@ describe("web api export client", () => {
     );
   });
 
+  it("reports unsafe prompt list items without returning prompt bodies", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            items: [
+              {
+                id: "prmt_list",
+                tool: "codex",
+                source_event: "UserPromptSubmit",
+                session_id: "session-1",
+                cwd: "private-project",
+                created_at: "2026-07-04T01:00:00.000Z",
+                received_at: "2026-07-04T01:00:00.000Z",
+                snippet: "redacted prompt summary",
+                prompt_length: 20,
+                is_sensitive: false,
+                excluded_from_analysis: false,
+                redaction_policy: "mask",
+                adapter_version: "test",
+                index_status: "indexed",
+                tags: ["review"],
+                quality_gaps: [],
+                quality_score: 42,
+                quality_score_band: "needs_work",
+                usefulness: {
+                  copied_count: 0,
+                  bookmarked: false,
+                },
+                duplicate_count: 0,
+                prompt_body: "secret prompt body",
+              },
+            ],
+          },
+        }),
+      );
+    const { listPrompts } = await import("./api.js");
+
+    await expect(listPrompts({})).rejects.toThrow(
+      "Prompt list failed: Invalid response.",
+    );
+  });
+
   it("preserves session bootstrap recovery detail on failed responses", async () => {
     fetchMock.mockResolvedValueOnce(
       errorResponse(401, {
