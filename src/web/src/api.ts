@@ -111,15 +111,17 @@ function isPromptUsefulness(value: unknown): value is PromptUsefulness {
   );
 }
 
-function isPromptSummary(value: unknown): value is PromptSummary {
+type PromptSummaryRawFields = {
+  markdown?: unknown;
+  prompt_body?: unknown;
+  raw_path?: unknown;
+};
+
+function isPromptSummaryCore(value: unknown): value is PromptSummary {
   if (typeof value !== "object" || value === null) {
     return false;
   }
-  const prompt = value as PromptSummary & {
-    markdown?: unknown;
-    prompt_body?: unknown;
-    raw_path?: unknown;
-  };
+  const prompt = value as PromptSummary;
   return (
     typeof prompt.id === "string" &&
     typeof prompt.tool === "string" &&
@@ -140,11 +142,28 @@ function isPromptSummary(value: unknown): value is PromptSummary {
     typeof prompt.quality_score === "number" &&
     typeof prompt.quality_score_band === "string" &&
     isPromptUsefulness(prompt.usefulness) &&
-    typeof prompt.duplicate_count === "number" &&
+    typeof prompt.duplicate_count === "number"
+  );
+}
+
+function isPromptSummary(value: unknown): value is PromptSummary {
+  if (!isPromptSummaryCore(value)) {
+    return false;
+  }
+  const prompt = value as PromptSummaryRawFields;
+  return (
     prompt.markdown === undefined &&
     prompt.prompt_body === undefined &&
     prompt.raw_path === undefined
   );
+}
+
+function isPromptDetailSummary(value: unknown): value is PromptSummary {
+  if (!isPromptSummaryCore(value)) {
+    return false;
+  }
+  const prompt = value as PromptSummaryRawFields;
+  return prompt.prompt_body === undefined && prompt.raw_path === undefined;
 }
 
 function parsePromptDetailResponse(body: { data?: unknown }): PromptDetail {
@@ -154,7 +173,7 @@ function parsePromptDetailResponse(body: { data?: unknown }): PromptDetail {
       ? (detail as PromptDetail)
       : undefined;
   if (
-    !isPromptSummary(detail) ||
+    !isPromptDetailSummary(detail) ||
     promptDetail === undefined ||
     typeof promptDetail.markdown !== "string" ||
     !Array.isArray(promptDetail.improvement_drafts) ||

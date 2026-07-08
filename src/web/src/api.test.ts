@@ -8672,6 +8672,49 @@ describe("web api export client", () => {
     );
   });
 
+  it("parses prompt detail responses with markdown without treating them as unsafe list summaries", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            id: "prmt_detail",
+            tool: "codex",
+            source_event: "UserPromptSubmit",
+            session_id: "session-1",
+            cwd: "private-project",
+            created_at: "2026-07-04T01:00:00.000Z",
+            received_at: "2026-07-04T01:00:00.000Z",
+            snippet: "redacted prompt summary",
+            prompt_length: 20,
+            is_sensitive: false,
+            excluded_from_analysis: false,
+            redaction_policy: "mask",
+            adapter_version: "test",
+            index_status: "indexed",
+            tags: ["review"],
+            quality_gaps: [],
+            quality_score: 42,
+            quality_score_band: "needs_work",
+            usefulness: {
+              copied_count: 0,
+              bookmarked: false,
+            },
+            duplicate_count: 0,
+            markdown: "# Prompt\n\nRedacted prompt archive.",
+            improvement_drafts: [],
+          },
+        }),
+      );
+    const { getPrompt } = await import("./api.js");
+
+    await expect(getPrompt("prmt_detail")).resolves.toMatchObject({
+      id: "prmt_detail",
+      markdown: "# Prompt\n\nRedacted prompt archive.",
+      improvement_drafts: [],
+    });
+  });
+
   it("reports malformed improvement draft save responses without returning incomplete draft data", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
