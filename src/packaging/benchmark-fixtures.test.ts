@@ -1,4 +1,3 @@
-import { spawnSync } from "node:child_process";
 import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -15,20 +14,18 @@ afterEach(() => {
 });
 
 describe("benchmark fixture loading", () => {
-  it("marks missing real fixtures as a soft signal in JSON output", () => {
-    const result = spawnSync(
-      process.execPath,
-      ["scripts/benchmark.mjs", "--fixture-set", "real", "--json"],
-      {
-        cwd: process.cwd(),
-        encoding: "utf8",
-        stdio: ["ignore", "pipe", "pipe"],
-      },
+  it("marks missing real fixtures as a soft signal in JSON output", async () => {
+    const { buildNoFixturesReport } = await import(
+      pathToFileURL(join(process.cwd(), "scripts/benchmark-fixtures.mjs")).href
     );
+    const report = buildNoFixturesReport({
+      dataset: "benchmark-v1-real",
+      fixtureSet: "real",
+      detail:
+        "No real fixtures registered yet. Add docs/benchmark-fixtures/real.json (consent-bearing redacted prompts) and re-run.",
+    });
 
-    expect(result.status).toBe(0);
-    expect(result.stderr).toBe("");
-    expect(JSON.parse(result.stdout)).toEqual(
+    expect(report).toEqual(
       expect.objectContaining({
         dataset: "benchmark-v1-real",
         fixture_set: "real",

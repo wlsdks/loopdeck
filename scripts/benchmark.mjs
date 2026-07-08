@@ -14,7 +14,10 @@ import net from "node:net";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
-import { loadBenchmarkFixtures } from "./benchmark-fixtures.mjs";
+import {
+  buildNoFixturesReport,
+  loadBenchmarkFixtures,
+} from "./benchmark-fixtures.mjs";
 import {
   analyzePrompt,
   EXPERIMENTAL_RULE_IDS,
@@ -64,13 +67,11 @@ const thresholds = {
 };
 
 if (loadedFixtures.status === "no_fixtures") {
-  const message = {
+  const message = buildNoFixturesReport({
     dataset,
-    fixture_set: fixtureSet,
-    soft_signal: true,
-    status: "no_fixtures",
+    fixtureSet,
     detail: loadedFixtures.detail,
-  };
+  });
   if (jsonOutput) {
     console.log(JSON.stringify(message, null, 2));
   } else {
