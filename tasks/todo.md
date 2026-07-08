@@ -1,5 +1,16 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Pre-Publish Privacy Audit Path Detector Guard
+
+- [x] CHECK: pre-publish privacy audit now mirrors token detectors, but did
+  not yet guard the runtime local-path detector family.
+- [x] RED: focused npm publish preflight test requires a machine-readable
+  privacy-audit path detector mirror check.
+- [x] GREEN: npm publish preflight now checks the audit document includes the
+  local path families guarded by `src/redaction/detectors.ts`.
+- [x] VERIFY: focused preflight/package tests, skip-npm preflight JSON,
+  formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane Pre-Publish Privacy Audit Detector Guard
 
 - [x] CHECK: pre-publish privacy audit says its grep pattern should mirror
