@@ -461,6 +461,21 @@ function isLoopStatusPrivacy(
   );
 }
 
+function isLoopListPrivacy(
+  value: unknown,
+): value is LoopListResponse["privacy"] {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const privacy = value as LoopListResponse["privacy"];
+  return (
+    privacy.local_only === true &&
+    privacy.returns_prompt_bodies === false &&
+    privacy.returns_raw_paths === false &&
+    privacy.returns_compact_content === false
+  );
+}
+
 export type LoopWorktreeResponse = {
   worktree: string;
   session_id?: string;
@@ -2189,7 +2204,7 @@ export async function listLoops(): Promise<LoopListResponse> {
   }
 
   const body = (await response.json()) as {
-    data?: { status?: unknown; items?: unknown };
+    data?: { status?: unknown; items?: unknown; privacy?: unknown };
   };
   const status = body.data?.status as
     | {
@@ -2207,7 +2222,8 @@ export async function listLoops(): Promise<LoopListResponse> {
       !isLoopSummary(status.latest_snapshot)) ||
     (status?.latest_compact_boundary !== undefined &&
       !isLoopCompactBoundary(status.latest_compact_boundary)) ||
-    !isLoopStatusPrivacy(status?.privacy)
+    !isLoopStatusPrivacy(status?.privacy) ||
+    !isLoopListPrivacy(body.data.privacy)
   ) {
     throw new Error("Loop list failed: Invalid response.");
   }
