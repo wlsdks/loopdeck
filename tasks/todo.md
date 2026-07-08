@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Loop Worktree Snapshot Age Contract Error
+
+- [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
+  optional `snapshot_age` 계약을 검증하지 않아 stale/latest 판단이나 refresh guidance가 깨진
+  drilldown state를 UI에 넘길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed `snapshot_age.next_action` body를
+  `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재
+  incomplete snapshot age resolve 실패를 확인한다.
+- [x] GREEN: snapshot age label, timestamp string, status/reason/next_action 계약을 확인하고
+  깨진 age guidance는 raw-free drilldown contract 오류로 중단하도록 고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
+  check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Loop Worktree Copy Side Effects Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
