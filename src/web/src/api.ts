@@ -192,6 +192,16 @@ function parsePromptImprovementDraftResponse(body: {
   return draft;
 }
 
+function parsePromptUsefulnessResponse(
+  body: { data?: { usefulness?: unknown } },
+  message: string,
+): PromptUsefulness {
+  if (!isPromptUsefulness(body.data?.usefulness)) {
+    throw new Error(`${message}: Invalid response.`);
+  }
+  return body.data.usefulness;
+}
+
 function parsePromptListResponse(body: {
   data?: {
     items?: unknown;
@@ -2571,9 +2581,9 @@ export async function recordPromptCopied(
     await failApi(response, "Prompt event failed");
   }
   const body = (await response.json()) as {
-    data: { usefulness: PromptUsefulness };
+    data?: { usefulness?: unknown };
   };
-  return body.data.usefulness;
+  return parsePromptUsefulnessResponse(body, "Prompt event failed");
 }
 
 export async function savePromptImprovementDraft(
