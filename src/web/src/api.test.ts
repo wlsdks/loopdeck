@@ -2623,6 +2623,17 @@ describe("web api export client", () => {
     );
   });
 
+  it("reports malformed project policy update responses without returning incomplete project state", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(jsonResponse({ data: {} }));
+    const { updateProjectPolicy } = await import("./api.js");
+
+    await expect(
+      updateProjectPolicy("proj_abcdef123456", { capture_disabled: true }),
+    ).rejects.toThrow("Project policy update failed: Invalid response.");
+  });
+
   it("preserves settings recovery detail on failed responses", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
