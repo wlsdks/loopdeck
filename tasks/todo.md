@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Built Asset Preflight Guard
+
+- [x] CHECK: release checklist requires built package assets under `dist/cli`,
+  `dist/server`, and `dist/web`, but npm publish preflight only checked the
+  top-level `dist` entry and CLI bin targets.
+- [x] RED: focused npm publish preflight test required machine-readable built
+  asset directory checks for CLI, server, and web output.
+- [x] GREEN: npm publish preflight now checks the built CLI, server, and web
+  asset directories before publish.
+- [x] VERIFY: focused preflight test, skip-npm preflight JSON, formatting,
+  typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Lifecycle Script Preflight Guard
 
 - [x] CHECK: package lifecycle scripts `prepack` and `prepare` rebuild the
