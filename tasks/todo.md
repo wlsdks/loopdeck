@@ -1,5 +1,16 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Preflight Inspection Warnings
+
+- [x] CHECK: inspection runs now reported `publish_ready: false`, but
+  `blocking_checks: []` could still be misread by weak automation.
+- [x] RED: focused preflight test requires top-level `inspection_warnings`
+  naming skipped release checks and the no-skip rerun command.
+- [x] GREEN: npm publish preflight now emits structured inspection warnings in
+  JSON and human output when skip flags are used.
+- [x] VERIFY: focused preflight tests, inspection JSON/human smoke,
+  formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Preflight Inspection Status
 
 - [x] CHECK: `--skip-npm`/`--skip-git-*` inspection runs could pass with

@@ -28,10 +28,18 @@ describe("npm publish preflight", () => {
       status: string;
       publish_ready: boolean;
       next_action: string;
+      inspection_warnings: Array<{ label: string; detail: string }>;
       checks: Array<{ label: string; ok: boolean }>;
     };
     expect(parsed.status).toBe("inspection");
     expect(parsed.publish_ready).toBe(false);
+    expect(parsed.inspection_warnings).toEqual([
+      {
+        label: "release checks were skipped",
+        detail:
+          "Skipped --skip-npm, --skip-git-clean, --skip-git-tag; rerun corepack pnpm npm-publish:preflight without skip flags before publishing.",
+      },
+    ]);
     expect(parsed.next_action).toContain(
       "Rerun corepack pnpm npm-publish:preflight without --skip-npm",
     );
