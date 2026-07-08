@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Package Files Preflight Guard
+
+- [x] CHECK: npm publish preflight only checked that
+  `scripts/npm-publish-preflight.mjs` was in `package.json#files`, but did not
+  directly check core publish allowlist entries like `dist`, `README.md`, and
+  `LICENSE`.
+- [x] RED: focused preflight and packaging guards required machine-readable
+  checks for the core package files.
+- [x] GREEN: npm publish preflight now iterates core package file entries and
+  emits `package files include ...` checks; the NPM runbook checklist documents
+  the same publish surface.
+- [x] VERIFY: focused preflight/packaging tests, touched-file formatting,
+  typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM All Bins Preflight Guard
 
 - [x] CHECK: npm publish preflight checked only `bin.promptlane`, while

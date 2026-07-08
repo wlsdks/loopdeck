@@ -42,11 +42,17 @@ check(
     "node scripts/npm-publish-preflight.mjs",
   packageJson.scripts?.["npm-publish:preflight"],
 );
-check(
-  "publish preflight script is included in package files",
-  Array.isArray(packageJson.files) &&
-    packageJson.files.includes("scripts/npm-publish-preflight.mjs"),
-);
+for (const filePath of [
+  "dist",
+  "README.md",
+  "LICENSE",
+  "scripts/npm-publish-preflight.mjs",
+]) {
+  check(
+    `package files include ${filePath}`,
+    Array.isArray(packageJson.files) && packageJson.files.includes(filePath),
+  );
+}
 
 if (!options.skipGitClean) {
   const status = run("git", ["status", "--porcelain"]);
