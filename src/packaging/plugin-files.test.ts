@@ -330,6 +330,12 @@ describe("plugin packaging files", () => {
     );
     expect(publishing).toContain("machine-readable");
     expect(publishing).toContain("corepack pnpm smoke:package-install");
+    expect(publishing).toContain(
+      "verifies the installed `promptlane start --open-web --json` first-success guide",
+    );
+    expect(publishing).toContain(
+      "verifies the installed `promptlane quality-evidence --require-complete` release gate",
+    );
     expect(publishing).toContain("does not publish");
     expect(publishing).toContain("--skip-npm");
     for (const command of [
