@@ -29,6 +29,7 @@ Use this checklist before publishing a stable public release or npm package.
 - [ ] `corepack pnpm benchmark -- --json`
 - [ ] `corepack pnpm e2e:browser`
 - [ ] `corepack pnpm smoke:release`
+- [ ] `corepack pnpm smoke:package-install`
 - [ ] `corepack pnpm evidence:quality -- --require-complete`
 - [ ] `corepack pnpm promptlane quality-evidence --require-complete`
 - [ ] `corepack pnpm npm-publish:preflight`
@@ -79,6 +80,7 @@ Confirm `corepack pnpm pack:dry-run` includes:
 - [ ] `scripts/mcp-native-dialog-preflight.mjs`
 - [ ] `scripts/quality-95-evidence.mjs`
 - [ ] `scripts/npm-publish-preflight.mjs`
+- [ ] `scripts/package-install-smoke.mjs`
 - [ ] `scripts/pack-dry-run.mjs`
 - [ ] `scripts/quality-gate.mjs`
 - [ ] `scripts/release-smoke.mjs`

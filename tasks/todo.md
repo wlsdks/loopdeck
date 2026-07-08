@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Package Install Smoke Gate
+
+- [x] CHECK: 수동 npm tarball install smoke는 통과했지만 runbook 명령이
+  shell detail에 취약해 반복 release gate로 쓰기 어렵다.
+- [x] RED: packaging guard가 `smoke:package-install` 스크립트 등록,
+  shipped script 포함, npm publishing runbook 사용을 요구하고 현재
+  `scripts/package-install-smoke.mjs` 누락으로 실패한다.
+- [x] GREEN: build, pack, isolated global install, three bin help checks를
+  수행하는 package install smoke script를 추가하고 release docs를 정리한다.
+- [x] VERIFY: focused packaging guard, package install smoke, touched-file
+  formatting, diff hygiene, publish preflight 상태를 확인한다.
+
 ## 2026-07-08 PromptLane NPM Preflight Detail Length
 
 - [x] CHECK: tag mismatch preflight detail used the new tagged-checkout

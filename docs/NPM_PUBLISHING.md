@@ -104,27 +104,18 @@ corepack pnpm benchmark -- --json
 corepack pnpm e2e:browser
 corepack pnpm smoke:release
 corepack pnpm pack:dry-run
+corepack pnpm smoke:package-install
 corepack pnpm evidence:quality -- --require-complete
 corepack pnpm promptlane quality-evidence --require-complete
 corepack pnpm npm-publish:preflight
 git diff --check
 ```
 
-Recommended additional package smoke (uses the pack output filename
-instead of hardcoding the version so this stays correct after bumps). Build
-first and use `--ignore-scripts` for the npm pack calls so lifecycle logs do
-not contaminate the JSON output:
+The package install smoke builds, packs with `--ignore-scripts`, installs the
+tarball into an isolated npm prefix, and runs all shipped bin help commands:
 
 ```sh
-corepack pnpm build
-npm pack --dry-run --ignore-scripts
-TARBALL="$(npm pack --json --ignore-scripts | node -e 'process.stdin.on("data",d=>{const j=JSON.parse(d);console.log(j[0].filename)})')"
-TMP_HOME="$(mktemp -d)"
-TMP_PREFIX="$(mktemp -d)"
-HOME="$TMP_HOME" npm install -g --prefix "$TMP_PREFIX" "./$TARBALL"
-"$TMP_PREFIX/bin/promptlane" --help
-"$TMP_PREFIX/bin/pl-claude" --pc-help
-"$TMP_PREFIX/bin/pl-codex" --pc-help
+corepack pnpm smoke:package-install
 ```
 
 ## Publish Checklist
