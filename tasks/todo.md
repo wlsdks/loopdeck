@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Community Docs Preflight Guard
+
+- [x] CHECK: `package.json#files` ships community support documents, but npm
+  publish preflight did not check `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, or
+  `SUPPORT.md` before publish.
+- [x] RED: focused preflight and packaging guards required machine-readable
+  checks for those community doc package-file entries.
+- [x] GREEN: npm publish preflight now checks the community docs, and the NPM
+  runbook checklist groups them under public docs.
+- [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
+  touched-file formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Public Docs Preflight Guard
 
 - [x] CHECK: NPM publishing checklist requires English/Korean README and
