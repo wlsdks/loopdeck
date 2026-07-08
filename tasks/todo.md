@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Error Issues Array Redaction
+
+- [x] CHECK: `failApi`가 failed response의 `errors[]`만 issue detail로 읽고
+  Zod-style `issues[]`는 무시해 validation recovery detail이 사라질 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 settings failed response `issues[]`의
+  `path: ["body", "prompt_body"]`를 `body.prompt_body` field로 표시하면서 message body를
+  `[REDACTED:prompt_body]`로 치환하도록 요구하게 해 현재 `issues[]` detail 누락 실패를 확인한다.
+- [x] GREEN: web API failed response detail assembly가 `errors[]`가 없을 때
+  `issues[]`도 기존 issue sanitizer로 보내 raw-detail key segment별 message redaction을 적용한다.
+- [x] VERIFY: focused web API issue/error redaction tests, implementation format
+  check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Error Issue Source Pointer Redaction
 
 - [x] CHECK: `apiErrorIssueText`가 validation `errors[]`의 direct 위치 키와 AJV
