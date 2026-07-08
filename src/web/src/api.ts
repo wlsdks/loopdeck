@@ -5168,6 +5168,9 @@ export async function getSettings(): Promise<SettingsResponse> {
 
   const body = (await response.json()) as {
     data?: {
+      markdown?: unknown;
+      prompt_body?: unknown;
+      raw_path?: unknown;
       redaction_mode?: unknown;
       server?: { host?: unknown; port?: unknown };
     };
@@ -5175,7 +5178,10 @@ export async function getSettings(): Promise<SettingsResponse> {
   if (
     typeof body.data?.redaction_mode !== "string" ||
     typeof body.data.server?.host !== "string" ||
-    typeof body.data.server.port !== "number"
+    typeof body.data.server.port !== "number" ||
+    body.data.markdown !== undefined ||
+    body.data.prompt_body !== undefined ||
+    body.data.raw_path !== undefined
   ) {
     throw new Error("Settings failed: Invalid response.");
   }

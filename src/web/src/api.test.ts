@@ -7862,6 +7862,30 @@ describe("web api export client", () => {
     );
   });
 
+  it("rejects settings responses that include raw-like fields", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            data_dir: "/Users/example/.promptlane",
+            excluded_project_roots: [],
+            redaction_mode: "mask",
+            server: {
+              host: "127.0.0.1",
+              port: 4317,
+            },
+            prompt_body: "secret setup prompt",
+          },
+        }),
+      );
+    const { getSettings } = await import("./api.js");
+
+    await expect(getSettings()).rejects.toThrow(
+      "Settings failed: Invalid response.",
+    );
+  });
+
   it("preserves health check recovery detail on failed responses", async () => {
     fetchMock.mockResolvedValueOnce(
       errorResponse(503, {
