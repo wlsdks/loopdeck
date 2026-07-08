@@ -712,6 +712,30 @@ function isContinuationSafetyRecheckCue(
   );
 }
 
+function isContinuationSafetyCopyFeedbackReminder(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_copy_feedback_reminder"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const reminder = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_copy_feedback_reminder"]
+  >;
+  return (
+    reminder.label === "Copy feedback reminder" &&
+    reminder.feedback_scope ===
+      "copied state only confirms the brief reached the local clipboard" &&
+    reminder.next_step ===
+      "return to the safety re-check cue before pasting the copied brief" &&
+    reminder.reason ===
+      "copy feedback is not safety approval or agent submission" &&
+    reminder.writes_files === false &&
+    reminder.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -2661,6 +2685,7 @@ export async function getLoopWorktree(
       continuation_safety_ordering_note?: unknown;
       continuation_safety_non_persistence_note?: unknown;
       continuation_safety_recheck_cue?: unknown;
+      continuation_safety_copy_feedback_reminder?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -2691,6 +2716,10 @@ export async function getLoopWorktree(
     (body.data.continuation_safety_recheck_cue !== undefined &&
       !isContinuationSafetyRecheckCue(
         body.data.continuation_safety_recheck_cue,
+      )) ||
+    (body.data.continuation_safety_copy_feedback_reminder !== undefined &&
+      !isContinuationSafetyCopyFeedbackReminder(
+        body.data.continuation_safety_copy_feedback_reminder,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
