@@ -340,6 +340,10 @@ describe("plugin packaging files", () => {
     expect(releaseChecklist).toContain(
       "wrapper strips pnpm-only npm env before `npm pack`",
     );
+    expect(releaseChecklist).toContain(
+      "`corepack pnpm --silent npm-publish:preflight -- --json`",
+    );
+    expect(releaseChecklist).toContain("machine-readable");
 
     for (const scriptPath of packageJson.files.filter(
       (filePath) =>

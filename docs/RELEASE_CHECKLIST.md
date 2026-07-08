@@ -41,6 +41,11 @@ For machine-readable inspection of the 9.5 quality summary, use
 `node scripts/quality-95-evidence.mjs`; plain `corepack pnpm evidence:quality`
 may include package-manager execution banners around stdout.
 
+For machine-readable npm publish preflight output, use
+`corepack pnpm --silent npm-publish:preflight -- --json`; plain
+`corepack pnpm npm-publish:preflight -- --json` may include package-manager
+execution banners around stdout.
+
 ## Package Contents
 
 Confirm `corepack pnpm pack:dry-run` includes:

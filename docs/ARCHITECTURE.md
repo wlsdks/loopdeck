@@ -243,3 +243,7 @@ corepack pnpm evidence:quality -- --require-complete
 corepack pnpm promptlane quality-evidence --require-complete
 git diff --check
 ```
+
+`corepack pnpm smoke:package-install` also verifies the installed
+`promptlane start --open-web --json` first-success guide from an isolated npm
+prefix.
