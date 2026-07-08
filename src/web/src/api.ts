@@ -532,6 +532,27 @@ function isLoopProjectMemory(
   );
 }
 
+function isLoopMemoryCandidate(
+  value: unknown,
+): value is NonNullable<LoopListResponse["status"]["memory_candidate"]> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const candidate = value as NonNullable<
+    LoopListResponse["status"]["memory_candidate"]
+  >;
+  return (
+    typeof candidate.eligible === "boolean" &&
+    (candidate.reason === "passed_with_evidence" ||
+      candidate.reason === "outcome_not_passed" ||
+      candidate.reason === "missing_evidence" ||
+      candidate.reason === "missing_summary" ||
+      candidate.reason === "unsafe_summary") &&
+    (candidate.next_action === "promptlane loop memory-approve" ||
+      candidate.next_action === "promptlane loop memory-candidate")
+  );
+}
+
 export type LoopWorktreeResponse = {
   worktree: string;
   session_id?: string;
@@ -2268,6 +2289,7 @@ export async function listLoops(): Promise<LoopListResponse> {
         latest_compact_boundary?: unknown;
         activity?: unknown;
         project_memory?: unknown;
+        memory_candidate?: unknown;
         privacy?: unknown;
       }
     | undefined;
@@ -2282,6 +2304,8 @@ export async function listLoops(): Promise<LoopListResponse> {
       !isLoopCompactBoundary(status.latest_compact_boundary)) ||
     !isLoopStatusActivity(status?.activity) ||
     !isLoopProjectMemory(status?.project_memory) ||
+    (status?.memory_candidate !== undefined &&
+      !isLoopMemoryCandidate(status.memory_candidate)) ||
     !isLoopStatusPrivacy(status?.privacy) ||
     !isLoopListPrivacy(body.data.privacy)
   ) {
