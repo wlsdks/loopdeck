@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Bookmark Contract Error
+
+- [x] CHECK: web API `setPromptBookmark`가 `/api/v1/prompts/:id/bookmark` 성공 응답의
+  prompt usefulness/reuse 계약을 검증하지 않아 malformed 응답을 `undefined` 또는 `{}` 상태로
+  archive/detail UI에 넘길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed bookmark body를
+  `Bookmark failed: Invalid response.`로 reject하도록 요구하게 해 현재 깨진 성공 응답이
+  reject되지 않는 실패를 확인한다.
+- [x] GREEN: bookmark 응답의 usefulness copied/bookmark 필드 계약을 확인하고 깨진 성공
+  응답은 raw-free bookmark contract 오류로 중단하도록 고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
+  check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Prompt Copy Event Contract Error
 
 - [x] CHECK: web API `recordPromptCopied`가 `/api/v1/prompts/:id/events` 성공 응답의

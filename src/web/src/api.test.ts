@@ -3017,6 +3017,17 @@ describe("web api export client", () => {
     );
   });
 
+  it("reports malformed bookmark responses without returning incomplete reuse state", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(jsonResponse({ data: {} }));
+    const { setPromptBookmark } = await import("./api.js");
+
+    await expect(setPromptBookmark("prmt_x", true)).rejects.toThrow(
+      "Bookmark failed: Invalid response.",
+    );
+  });
+
   it("uses the response title when detail is blank", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
