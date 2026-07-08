@@ -3668,6 +3668,32 @@ function isQualityDashboardScore(
   );
 }
 
+function isQualityDashboardMissingItem(
+  value: unknown,
+): value is QualityDashboard["missing_items"][number] {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const item = value as QualityDashboard["missing_items"][number] & {
+    cwd?: unknown;
+    markdown?: unknown;
+    prompt_body?: unknown;
+    raw_path?: unknown;
+  };
+  return (
+    typeof item.key === "string" &&
+    typeof item.label === "string" &&
+    typeof item.missing === "number" &&
+    typeof item.weak === "number" &&
+    typeof item.total === "number" &&
+    typeof item.rate === "number" &&
+    item.cwd === undefined &&
+    item.markdown === undefined &&
+    item.prompt_body === undefined &&
+    item.raw_path === undefined
+  );
+}
+
 function isArchiveScoreSummary(
   value: unknown,
 ): value is ArchiveScoreReport["archive_score"] {
@@ -4360,6 +4386,7 @@ export async function getQualityDashboard(
     typeof body.data?.total_prompts !== "number" ||
     !isQualityDashboardScore(body.data.quality_score) ||
     !Array.isArray(body.data.missing_items) ||
+    !body.data.missing_items.every(isQualityDashboardMissingItem) ||
     !isQualityDashboardPrivacy(body.data.privacy)
   ) {
     throw new Error("Quality dashboard failed: Invalid response.");
