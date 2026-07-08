@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Installed Quality Evidence Smoke
+
+- [x] CHECK: `smoke:package-install` installs the tarball and checks first-run
+  guidance, but it still does not prove the installed package can run the
+  release-gate `promptlane quality-evidence --require-complete` command away
+  from the repository working directory.
+- [x] RED: packaging guard requires the package install smoke to execute the
+  installed quality-evidence gate from an isolated cwd and requires release
+  stability evidence to mention that installed gate.
+- [x] GREEN: package install smoke runs installed bin checks from the isolated
+  HOME/prefix context, validates quality evidence output, and records the
+  installed release-gate command in smoke JSON.
+- [x] VERIFY: focused packaging guard, real package install smoke, typecheck,
+  formatting, diff hygiene, and npm publish preflight.
+
 ## 2026-07-08 PromptLane Package Smoke Start Guide
 
 - [x] CHECK: `smoke:package-install` verified shipped bin help paths but did

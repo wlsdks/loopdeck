@@ -30,6 +30,7 @@ try {
     ["pl-codex", ["--pc-help"]],
   ]) {
     run(join(tempPrefix, "bin", binName), args, {
+      cwd: tempHome,
       env: { ...process.env, HOME: tempHome },
       encoding: "utf8",
     });
@@ -38,11 +39,22 @@ try {
     join(tempPrefix, "bin", "promptlane"),
     ["start", "--open-web", "--json"],
     {
+      cwd: tempHome,
       env: { ...process.env, HOME: tempHome },
       encoding: "utf8",
     },
   );
   validateStartGuide(startGuide.stdout);
+  const qualityEvidence = run(
+    join(tempPrefix, "bin", "promptlane"),
+    ["quality-evidence", "--require-complete"],
+    {
+      cwd: tempHome,
+      env: { ...process.env, HOME: tempHome },
+      encoding: "utf8",
+    },
+  );
+  validateQualityEvidence(qualityEvidence.stdout);
 
   console.log(
     JSON.stringify(
@@ -52,6 +64,7 @@ try {
         tarball: basename(tarballPath),
         bins: ["promptlane", "pl-claude", "pl-codex"],
         first_success: "promptlane start --open-web --json",
+        release_gate: "promptlane quality-evidence --require-complete",
       },
       null,
       2,
@@ -82,7 +95,7 @@ function sanitizedNpmEnv(env) {
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
-    cwd: repoRoot,
+    cwd: options.cwd ?? repoRoot,
     env: options.env,
     encoding: options.encoding,
     stdio: options.encoding ? ["ignore", "pipe", "pipe"] : "inherit",
@@ -125,6 +138,21 @@ function validateStartGuide(stdout) {
   ]) {
     if (!commands.includes(expectedCommand)) {
       throw new Error(`start guide did not include ${expectedCommand}`);
+    }
+  }
+}
+
+function validateQualityEvidence(stdout) {
+  for (const expectedText of [
+    "PromptLane 9.5 quality evidence",
+    "Status: complete",
+    "corepack pnpm smoke:package-install",
+    "corepack pnpm promptlane quality-evidence --require-complete",
+  ]) {
+    if (!stdout.includes(expectedText)) {
+      throw new Error(
+        `quality evidence output did not include ${expectedText}`,
+      );
     }
   }
 }

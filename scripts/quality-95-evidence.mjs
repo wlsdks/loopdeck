@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 import { readFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
+const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const planPath =
   "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md";
 const nativeDialogAuditPath = "docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md";
@@ -153,10 +156,14 @@ function parseArgs(argv) {
   return parsed;
 }
 
+function readPackageFile(relativePath) {
+  return readFileSync(join(packageRoot, relativePath), "utf8");
+}
+
 function readNativeDialogEvidence() {
   let audit = "";
   try {
-    audit = readFileSync(nativeDialogAuditPath, "utf8");
+    audit = readPackageFile(nativeDialogAuditPath);
   } catch {
     return {
       check: "native_dialog_approved_dogfood",
@@ -185,7 +192,7 @@ function readNativeDialogEvidence() {
 }
 
 function readScorecardAxes() {
-  const plan = readFileSync(planPath, "utf8");
+  const plan = readPackageFile(planPath);
   return plan
     .split("\n")
     .filter((line) => line.startsWith("| ") && line.includes(" | "))
@@ -208,37 +215,27 @@ function readCompletedEvidence() {
   let codexClaudeEvidence = "";
   let nativeDialogAudit = "";
   try {
-    plan = readFileSync(planPath, "utf8");
-    localEvidence = readFileSync(
-      "docs/LOCAL_95_EVIDENCE_2026-07-06.md",
-      "utf8",
-    );
-    productEvidence = readFileSync(
+    plan = readPackageFile(planPath);
+    localEvidence = readPackageFile("docs/LOCAL_95_EVIDENCE_2026-07-06.md");
+    productEvidence = readPackageFile(
       "docs/PRODUCT_POSITIONING_EVIDENCE_2026-07-06.md",
-      "utf8",
     );
-    promptlane = readFileSync("docs/PROMPTLANE.md", "utf8");
-    readme = readFileSync("README.md", "utf8");
-    packageJson = readFileSync("package.json", "utf8");
-    codexPlugin = readFileSync(
+    promptlane = readPackageFile("docs/PROMPTLANE.md");
+    readme = readPackageFile("README.md");
+    packageJson = readPackageFile("package.json");
+    codexPlugin = readPackageFile(
       "plugins/promptlane/.codex-plugin/plugin.json",
-      "utf8",
     );
-    claudePlugin = readFileSync(".claude-plugin/plugin.json", "utf8");
-    claudeMarketplace = readFileSync(".claude-plugin/marketplace.json", "utf8");
-    uiPatrolEvidence = readFileSync(
-      "docs/UI_PATROL_EVIDENCE_2026-07-06.md",
-      "utf8",
-    );
-    uiPatrolReadiness = readFileSync(
+    claudePlugin = readPackageFile(".claude-plugin/plugin.json");
+    claudeMarketplace = readPackageFile(".claude-plugin/marketplace.json");
+    uiPatrolEvidence = readPackageFile("docs/UI_PATROL_EVIDENCE_2026-07-06.md");
+    uiPatrolReadiness = readPackageFile(
       "docs/UI_PATROL_SCHEDULE_READINESS_2026-07-06.md",
-      "utf8",
     );
-    codexClaudeEvidence = readFileSync(
+    codexClaudeEvidence = readPackageFile(
       "docs/CODEX_CLAUDE_LOCAL_INTEGRATION_EVIDENCE_2026-07-06.md",
-      "utf8",
     );
-    nativeDialogAudit = readFileSync(nativeDialogAuditPath, "utf8");
+    nativeDialogAudit = readPackageFile(nativeDialogAuditPath);
   } catch {
     return {
       product_positioning_metadata_alignment: false,
