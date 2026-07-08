@@ -998,6 +998,30 @@ function isContinuationSafetyCollectionResultNonPersistenceNote(
   );
 }
 
+function isContinuationSafetyCollectionRetryBoundaryNote(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_collection_retry_boundary_note"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_collection_retry_boundary_note"]
+  >;
+  return (
+    note.label === "Collection retry boundary" &&
+    note.retry ===
+      "operator reruns the explicit loop collection flow when retry is needed" &&
+    note.not_automated ===
+      "PromptLane does not automatically retry collection commands or hidden recovery actions" &&
+    note.reason ===
+      "keeps retry control local and operator-triggered after collection uncertainty" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -2959,6 +2983,7 @@ export async function getLoopWorktree(
       continuation_safety_submission_result_non_persistence_note?: unknown;
       continuation_safety_post_submission_collection_reminder_note?: unknown;
       continuation_safety_collection_result_non_persistence_note?: unknown;
+      continuation_safety_collection_retry_boundary_note?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -3043,6 +3068,11 @@ export async function getLoopWorktree(
       undefined &&
       !isContinuationSafetyCollectionResultNonPersistenceNote(
         body.data.continuation_safety_collection_result_non_persistence_note,
+      )) ||
+    (body.data.continuation_safety_collection_retry_boundary_note !==
+      undefined &&
+      !isContinuationSafetyCollectionRetryBoundaryNote(
+        body.data.continuation_safety_collection_retry_boundary_note,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
