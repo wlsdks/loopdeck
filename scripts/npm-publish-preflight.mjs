@@ -216,6 +216,7 @@ for (const filePath of [
   "SUPPORT.md",
   "scripts/npm-publish-preflight.mjs",
   "scripts/benchmark.mjs",
+  "scripts/benchmark-fixtures.mjs",
   "scripts/agent-setup-smoke.mjs",
   "scripts/browser-e2e.mjs",
   "scripts/first-coach-loop-dogfood.mjs",

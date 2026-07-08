@@ -31,6 +31,30 @@ The command builds the production app first, creates an isolated temporary data 
 
 The JSON report includes `fixture_set` and `soft_signal` fields so consumers can filter.
 
+`docs/benchmark-fixtures/real.json` must use this raw-free shape:
+
+```json
+{
+  "fixtures": [
+    {
+      "label": "real_release_review",
+      "adapter": "codex",
+      "query": "release readiness review",
+      "prompt": "Review the redacted release readiness notes and return the next verification step."
+    }
+  ],
+  "coach_cases": [
+    "Improve this redacted prompt with verification criteria."
+  ]
+}
+```
+
+Each fixture needs `label`, `adapter`, `query`, and `prompt`. `adapter` must be
+`codex` or `claude-code`. Real fixtures are consent-bearing soft signals only:
+redact secrets, tokens, and absolute local paths before writing the file. The
+loader rejects obvious `sk-...`, `npm_...`, `/Users/...`, and `/home/...`
+values so the benchmark does not ingest private raw text by accident.
+
 ## Principles
 
 - Use synthetic fixture prompts only.
