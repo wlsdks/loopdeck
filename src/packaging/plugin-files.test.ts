@@ -195,6 +195,16 @@ describe("plugin packaging files", () => {
     expect(preflightScript).toContain('"docs/PLUGINS.md"');
     expect(preflightScript).toContain('"docs/ADAPTERS.md"');
     expect(preflightScript).toContain('"docs/LOOP-SNAPSHOT-SCHEMA.md"');
+    expect(preflightScript).toContain('"docs/PRD.md"');
+    expect(preflightScript).toContain('"docs/PRD_PHASE2.md"');
+    expect(preflightScript).toContain('"docs/ARCHITECTURE.md"');
+    expect(preflightScript).toContain('"docs/EFFICIENCY_REVIEW.md"');
+    expect(preflightScript).toContain('"docs/LEGAL_USAGE_GUIDE.md"');
+    expect(preflightScript).toContain('"docs/TECH_SPEC.md"');
+    expect(preflightScript).toContain('"docs/IMPLEMENTATION_PLAN.md"');
+    expect(preflightScript).toContain('"docs/BENCHMARK_V1.md"');
+    expect(preflightScript).toContain('"docs/FEATURE_AUDIT_2026-05-02.md"');
+    expect(preflightScript).toContain('"docs/PRD2_COMPLETION_AUDIT.md"');
     expect(preflightScript).toContain('"docs/NPM_PUBLISHING.md"');
     expect(preflightScript).toContain('"docs/PACKAGE_CONTENTS.md"');
     expect(preflightScript).toContain('"docs/PRE_PUBLISH_PRIVACY_AUDIT.md"');

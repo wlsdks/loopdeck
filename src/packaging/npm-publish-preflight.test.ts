@@ -98,6 +98,46 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
+          label: "package files include docs/PRD.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include docs/PRD_PHASE2.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include docs/ARCHITECTURE.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include docs/EFFICIENCY_REVIEW.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include docs/LEGAL_USAGE_GUIDE.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include docs/TECH_SPEC.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include docs/IMPLEMENTATION_PLAN.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include docs/BENCHMARK_V1.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include docs/FEATURE_AUDIT_2026-05-02.md",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package files include docs/PRD2_COMPLETION_AUDIT.md",
+          ok: true,
+        }),
+        expect.objectContaining({
           label: "package files include docs/NPM_PUBLISHING.md",
           ok: true,
         }),
