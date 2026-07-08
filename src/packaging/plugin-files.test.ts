@@ -178,6 +178,11 @@ describe("plugin packaging files", () => {
     expect(publishing).toContain("Do not treat older `npm whoami`");
     expect(publishing).toContain("npm whoami");
     expect(publishing).toContain("npm view promptlane versions --json");
+    expect(publishing).toContain(
+      "promptlane setup --profile coach --register-mcp --open-web",
+    );
+    expect(publishing).toContain("promptlane coach");
+    expect(publishing).not.toContain("\npromptlane setup\n");
     expect(publishing).not.toContain("## Current Readiness");
     expect(publishing).not.toContain("# stark97");
     expect(publishing).not.toContain("# E404 Not Found");
