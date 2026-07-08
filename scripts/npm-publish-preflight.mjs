@@ -167,7 +167,7 @@ function check(label, ok, detail = "") {
   checks.push({
     label,
     ok: Boolean(ok),
-    ...(detail ? { detail: String(detail).slice(0, 240) } : {}),
+    ...(detail ? { detail: String(detail).slice(0, 500) } : {}),
   });
 }
 
