@@ -209,7 +209,7 @@ function tagMismatchDetail({ expectedTag, head, tagTarget, tagError }) {
   if (tagError) {
     return `${expectedTag} is missing. Run the full release gate, then create the annotated tag before publishing.`;
   }
-  return `tagged release commit ${tagTarget.slice(0, 12)} does not match HEAD ${head.slice(0, 12)}; run git checkout ${expectedTag}, rerun corepack pnpm npm-publish:preflight from the tagged checkout, then publish from that commit, or bump version and create a new tag for this commit.`;
+  return `tagged release commit ${tagTarget.slice(0, 12)} does not match HEAD ${head.slice(0, 12)}; run git checkout ${expectedTag}, rerun corepack pnpm npm-publish:preflight from the tagged checkout, then publish from that commit. If promptlane@${version} is unpublished and HEAD is the intended release, rerun the full gate, then git tag -fa ${expectedTag}. If promptlane@${version} is already published, bump version and create a new tag.`;
 }
 
 function formatSummary(summary) {
