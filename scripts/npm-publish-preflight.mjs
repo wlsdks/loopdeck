@@ -539,6 +539,7 @@ const summary = {
     git_tag: options.skipGitTag,
   },
   inspection_warnings: inspectionWarnings(skippedReleaseChecks),
+  release_warnings: releaseWarnings(),
   blocking_checks: blockingChecks,
   checks,
   recovery_commands: recoveryCommands({ passed, checks }),
@@ -1004,6 +1005,16 @@ function inspectionWarnings(skippedReleaseChecks) {
   ];
 }
 
+function releaseWarnings() {
+  return [
+    {
+      label: "benchmark is synthetic regression evidence",
+      detail:
+        "corepack pnpm --silent benchmark -- --json must pass before publish, but a synthetic pass is not real-world effectiveness proof; collect docs/benchmark-fixtures/real.json before claiming real-user prompt quality trends.",
+    },
+  ];
+}
+
 function nextAction({ passed, checks, skippedReleaseChecks = [] }) {
   if (passed) {
     if (skippedReleaseChecks.length) {
@@ -1126,6 +1137,9 @@ function formatSummary(summary) {
   const inspectionWarnings = summary.inspection_warnings.map(
     (item) => `- ${item.label}${item.detail ? ` (${item.detail})` : ""}`,
   );
+  const releaseWarnings = summary.release_warnings.map(
+    (item) => `- ${item.label}${item.detail ? ` (${item.detail})` : ""}`,
+  );
   return [
     "PromptLane npm publish preflight",
     `Status: ${summary.status}`,
@@ -1136,6 +1150,9 @@ function formatSummary(summary) {
       : []),
     ...(inspectionWarnings.length
       ? ["", "Inspection warnings", ...inspectionWarnings]
+      : []),
+    ...(releaseWarnings.length
+      ? ["", "Release warnings", ...releaseWarnings]
       : []),
     ...(summary.recovery_commands.length
       ? [

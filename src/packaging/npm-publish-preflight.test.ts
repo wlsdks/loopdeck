@@ -29,6 +29,7 @@ describe("npm publish preflight", () => {
       publish_ready: boolean;
       next_action: string;
       inspection_warnings: Array<{ label: string; detail: string }>;
+      release_warnings: Array<{ label: string; detail: string }>;
       checks: Array<{ label: string; ok: boolean }>;
     };
     expect(parsed.status).toBe("inspection");
@@ -38,6 +39,13 @@ describe("npm publish preflight", () => {
         label: "release checks were skipped",
         detail:
           "Skipped --skip-npm, --skip-git-clean, --skip-git-tag; rerun corepack pnpm npm-publish:preflight without skip flags before publishing.",
+      },
+    ]);
+    expect(parsed.release_warnings).toEqual([
+      {
+        label: "benchmark is synthetic regression evidence",
+        detail:
+          "corepack pnpm --silent benchmark -- --json must pass before publish, but a synthetic pass is not real-world effectiveness proof; collect docs/benchmark-fixtures/real.json before claiming real-user prompt quality trends.",
       },
     ]);
     expect(parsed.next_action).toContain(
@@ -934,6 +942,12 @@ exit 1
     expect(result.status).toBe(1);
     expect(result.stdout).toContain(
       "Blocking checks\n- npm authentication is available",
+    );
+    expect(result.stdout).toContain(
+      "Release warnings\n- benchmark is synthetic regression evidence",
+    );
+    expect(result.stdout).toContain(
+      "a synthetic pass is not real-world effectiveness proof",
     );
     expect(result.stdout).toContain(
       "Recovery commands\n- npm login\n- corepack pnpm npm-publish:preflight",
