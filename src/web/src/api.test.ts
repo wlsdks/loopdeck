@@ -3028,6 +3028,17 @@ describe("web api export client", () => {
     );
   });
 
+  it("reports malformed improvement draft copy event responses without returning incomplete copy state", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(jsonResponse({ data: {} }));
+    const { markPromptImprovementDraftCopied } = await import("./api.js");
+
+    await expect(
+      markPromptImprovementDraftCopied("prmt_x", "draft_x"),
+    ).rejects.toThrow("Improvement draft copy event failed: Invalid response.");
+  });
+
   it("uses the response title when detail is blank", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))

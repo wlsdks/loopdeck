@@ -202,6 +202,26 @@ function parsePromptUsefulnessResponse(
   return body.data.usefulness;
 }
 
+function parsePromptImprovementDraftCopyResponse(body: {
+  data?: {
+    id?: unknown;
+    prompt_id?: unknown;
+    copied_at?: unknown;
+  };
+}): Pick<PromptImprovementDraft, "id" | "prompt_id" | "copied_at"> {
+  if (
+    typeof body.data?.id !== "string" ||
+    typeof body.data.prompt_id !== "string" ||
+    typeof body.data.copied_at !== "string"
+  ) {
+    throw new Error("Improvement draft copy event failed: Invalid response.");
+  }
+  return body.data as Pick<
+    PromptImprovementDraft,
+    "id" | "prompt_id" | "copied_at"
+  >;
+}
+
 function parsePromptListResponse(body: {
   data?: {
     items?: unknown;
@@ -2636,10 +2656,10 @@ export async function markPromptImprovementDraftCopied(
   if (!response.ok) {
     await failApi(response, "Improvement draft copy event failed");
   }
-  const body = (await response.json()) as {
-    data: Pick<PromptImprovementDraft, "id" | "prompt_id" | "copied_at">;
-  };
-  return body.data;
+  const body = (await response.json()) as Parameters<
+    typeof parsePromptImprovementDraftCopyResponse
+  >[0];
+  return parsePromptImprovementDraftCopyResponse(body);
 }
 
 export async function setPromptBookmark(
