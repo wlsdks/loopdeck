@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Prompt Detail Effectiveness Contract Error
+
+- [x] CHECK: `parsePromptDetailResponse`가 optional `effectiveness`를 object인지까지만
+  검증해 깨진 effectiveness summary나 raw path-like evidence ref가 prompt detail
+  effectiveness 데이터로 넘어갈 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 prompt detail 내부 raw path-like
+  `effectiveness.evidence_refs[]` body를 `Prompt not found: Invalid response.`로
+  reject하도록 요구하게 해 현재 unsafe detail resolve 실패를 확인한다.
+- [x] GREEN: prompt detail parser가 effectiveness verdict/summary/calibration/
+  evidence_refs 계약을 확인하고 raw `prompt_body`/`raw_path`/`markdown` fields 및
+  raw path-like evidence refs를 차단한다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff
+  whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Prompt Detail Loop Outcomes Contract Error
 
 - [x] CHECK: `parsePromptDetailResponse`가 optional `loop_outcomes[]`를 배열인지까지만

@@ -186,8 +186,7 @@ function parsePromptDetailResponse(body: { data?: unknown }): PromptDetail {
       (!Array.isArray(promptDetail.loop_outcomes) ||
         !promptDetail.loop_outcomes.every(isPromptLoopOutcomeEvidence))) ||
     (promptDetail.effectiveness !== undefined &&
-      (typeof promptDetail.effectiveness !== "object" ||
-        promptDetail.effectiveness === null))
+      !isPromptEffectiveness(promptDetail.effectiveness))
   ) {
     throw new Error("Prompt not found: Invalid response.");
   }
@@ -299,6 +298,44 @@ function isPromptLoopOutcomeEvidence(
     outcome.markdown === undefined &&
     outcome.prompt_body === undefined &&
     outcome.raw_path === undefined
+  );
+}
+
+function isPromptEffectiveness(value: unknown): value is PromptEffectiveness {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const effectiveness = value as PromptEffectiveness & PromptSummaryRawFields;
+  return (
+    (effectiveness.verdict === "proven" ||
+      effectiveness.verdict === "mixed" ||
+      effectiveness.verdict === "unproven") &&
+    typeof effectiveness.summary === "string" &&
+    isPromptEffectivenessCalibration(effectiveness.calibration) &&
+    Array.isArray(effectiveness.evidence_refs) &&
+    effectiveness.evidence_refs.every(isRawFreeArchiveText) &&
+    effectiveness.markdown === undefined &&
+    effectiveness.prompt_body === undefined &&
+    effectiveness.raw_path === undefined
+  );
+}
+
+function isPromptEffectivenessCalibration(
+  value: unknown,
+): value is PromptEffectiveness["calibration"] {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const calibration = value as PromptEffectiveness["calibration"] &
+    PromptSummaryRawFields;
+  return (
+    typeof calibration.linked_outcomes === "number" &&
+    typeof calibration.passing_outcomes === "number" &&
+    typeof calibration.failing_outcomes === "number" &&
+    typeof calibration.total_tests_run === "number" &&
+    calibration.markdown === undefined &&
+    calibration.prompt_body === undefined &&
+    calibration.raw_path === undefined
   );
 }
 
