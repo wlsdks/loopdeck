@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Command Docs Canonical CLI
+
+- [x] CHECK: Claude command docs checked `command -v promptlane` twice and
+  repeated the same Claude doctor command, making setup/status instructions
+  look generated instead of intentional.
+- [x] RED: packaging docs guard rejects duplicate canonical CLI checks,
+  product-name alias wording, and repeated `doctor claude-code` commands.
+- [x] GREEN: setup/status command docs now use only the canonical
+  `promptlane` command and one Claude doctor invocation.
+- [x] VERIFY: focused command-doc packaging test, touched-file formatting,
+  typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane Doctor JSON Status Docs
 
 - [x] CHECK: doctor JSON now exposes top-level `status`, but README and

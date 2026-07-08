@@ -8,17 +8,15 @@ allowed-tools: Bash
 First check that the CLI is installed:
 
 ```bash
-command -v promptlane || command -v promptlane
+command -v promptlane
 ```
 
-If this returns nothing, report that the plugin is installed but neither the
-`promptlane` CLI nor the `promptlane` alias is on `PATH` yet.
+If this returns nothing, report that the plugin is installed but the
+`promptlane` CLI is not on `PATH` yet.
 
-Run the `promptlane` commands by default. If only the product-name alias is
-available, use the matching `promptlane` command:
+Run the canonical `promptlane` commands:
 
 ```bash
-promptlane doctor claude-code
 promptlane doctor claude-code
 promptlane statusline claude-code
 ```

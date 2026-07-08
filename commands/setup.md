@@ -8,7 +8,7 @@ allowed-tools: Bash, Read, AskUserQuestion
 First check that the CLI is installed:
 
 ```bash
-command -v promptlane || command -v promptlane
+command -v promptlane
 ```
 
 If this returns nothing, stop and tell the user to install the CLI first. After
@@ -33,16 +33,13 @@ this is the preferred path because it avoids relying on a global
 `promptlane` binary in PATH. Use `pnpm setup` when the user just wants
 "make it work"; only fall back to the explicit `promptlane setup ...`
 invocations below when the user wants a different profile or a dry-run preview.
-The `promptlane` CLI alias points at the same binary and can be used for manual
-terminal workflows, but Claude Code slash commands remain under
-`/promptlane:*` during the migration.
+Claude Code slash commands remain under `/promptlane:*` during the
+compatibility window.
 
 For the lowest-friction setup with the explicit invocation, preview the
 coach profile first:
 
 ```bash
-promptlane setup --profile coach --register-mcp --dry-run
-# or, with the product-name CLI alias:
 promptlane setup --profile coach --register-mcp --dry-run
 ```
 
@@ -65,8 +62,6 @@ promptlane setup --profile coach --register-mcp --open-web --dry-run
 If the user approves, run:
 
 ```bash
-promptlane setup --profile coach --register-mcp
-# or:
 promptlane setup --profile coach --register-mcp
 ```
 

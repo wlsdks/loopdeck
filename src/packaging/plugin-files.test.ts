@@ -1078,12 +1078,22 @@ describe("plugin packaging files", () => {
     expect(setup).toContain(
       "promptlane setup --profile coach --register-mcp --dry-run",
     );
-    expect(setup).toContain("command -v promptlane || command -v promptlane");
-    expect(setup).toContain("promptlane setup --profile coach --register-mcp");
+    expect(setup).toContain("command -v promptlane");
+    expect(setup).not.toContain(
+      "command -v promptlane || command -v promptlane",
+    );
+    expect(setup).not.toContain("product-name CLI alias");
     expect(setup).toContain("promptlane setup --profile coach --register-mcp");
     expect(setup).toContain("promptlane statusline claude-code");
     expect(status).toContain("promptlane doctor claude-code");
-    expect(status).toContain("promptlane doctor claude-code");
+    expect(status).not.toContain(
+      "promptlane doctor claude-code\npromptlane doctor claude-code",
+    );
+    expect(status).toContain("command -v promptlane");
+    expect(status).not.toContain(
+      "command -v promptlane || command -v promptlane",
+    );
+    expect(status).not.toContain("product-name alias");
     expect(status).toContain("promptlane doctor codex --json");
     expect(status).toContain("status: ready");
     expect(status).toContain("status: needs_attention");
