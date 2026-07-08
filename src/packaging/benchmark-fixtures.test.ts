@@ -142,4 +142,42 @@ describe("benchmark fixture loading", () => {
       }),
     ).toThrow("real fixture 0 label must be redacted");
   });
+
+  it("rejects real fixtures with macOS volume and Windows user paths", async () => {
+    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
+    mkdirSync(fixtureDir, { recursive: true });
+    writeFileSync(
+      join(fixtureDir, "real.json"),
+      `${JSON.stringify(
+        {
+          fixtures: [
+            {
+              label: "real_release_review",
+              adapter: "codex",
+              query: "release readiness",
+              prompt:
+                "Review /Volumes/private-drive/project/release.md and return the next verification step.",
+            },
+          ],
+          coach_cases: [
+            String.raw`Improve C:\Users\example\project\prompt.md with verification criteria.`,
+          ],
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    const { loadBenchmarkFixtures } = await import(
+      pathToFileURL(join(process.cwd(), "scripts/benchmark-fixtures.mjs")).href
+    );
+
+    expect(() =>
+      loadBenchmarkFixtures({
+        fixtureSet: "real",
+        repoRoot: tempRoot,
+      }),
+    ).toThrow("real fixture 0 prompt must be redacted");
+  });
 });

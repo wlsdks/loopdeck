@@ -139,6 +139,8 @@ function assertRedactedText(value, label) {
     /\bnpm_[A-Za-z0-9]{24,}\b/,
     /\/Users\/[^/\s]+/,
     /\/home\/[^/\s]+/,
+    /\/Volumes\/[^/\s]+/,
+    /[A-Za-z]:\\Users\\[^\\\s]+/,
   ];
   if (forbidden.some((pattern) => pattern.test(value))) {
     throw new Error(`${label} must be redacted before benchmark ingestion.`);

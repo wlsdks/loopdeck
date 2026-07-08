@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Benchmark Absolute Path Redaction
+
+- [x] CHECK: real benchmark fixtures rejected `/Users/...` and `/home/...`,
+  but did not reject macOS `/Volumes/...` paths or Windows `C:\Users\...`
+  paths before ingestion/reporting.
+- [x] RED: focused benchmark fixture loader test requires macOS volume paths
+  and Windows user paths to be rejected.
+- [x] GREEN: benchmark real fixture raw-free detector now rejects
+  `/Volumes/...` and Windows user paths, and the benchmark spec documents
+  those examples.
+- [x] VERIFY: focused fixture/package tests, real no-fixtures soft exit,
+  formatting, typecheck, preflight JSON, and diff hygiene.
+
 ## 2026-07-09 PromptLane Benchmark Real Fixture Label Redaction
 
 - [x] CHECK: real benchmark fixtures reject raw secrets/paths in queries,
