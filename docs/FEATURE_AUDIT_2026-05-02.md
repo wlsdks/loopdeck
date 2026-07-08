@@ -4,7 +4,8 @@ Date: 2026-05-02
 
 ## Conclusion
 
-The PRD2 core feature set is implemented. Based on the local verification gates, this repository is a public beta release candidate.
+The PRD2 core feature set is implemented. Based on the local verification gates,
+this repository is a 1.0.0 stable release candidate.
 
 The product identity is:
 
@@ -14,26 +15,26 @@ In practical terms, `promptlane` is a developer tool that records prompts entere
 
 ## Verification Gates
 
-| Gate | Result | Coverage |
-| --- | --- | --- |
-| CLI help surface | Passed | Built CLI exposes the expected commands and subcommand help |
-| `pnpm test` | Passed | 31 test files, 140 tests |
-| `pnpm benchmark -- --json` | Passed | privacy, retrieval, coach, analytics, and latency thresholds |
-| `pnpm e2e:browser` | Passed | archive, detail, coach, projects, export, mobile overflow |
-| `pnpm smoke:release` | Passed | isolated build, CLI, server, storage, web, rebuild, delete, import, export smoke |
+| Gate                       | Result | Coverage                                                                         |
+| -------------------------- | ------ | -------------------------------------------------------------------------------- |
+| CLI help surface           | Passed | Built CLI exposes the expected commands and subcommand help                      |
+| `pnpm test`                | Passed | 31 test files, 140 tests                                                         |
+| `pnpm benchmark -- --json` | Passed | privacy, retrieval, coach, analytics, and latency thresholds                     |
+| `pnpm e2e:browser`         | Passed | archive, detail, coach, projects, export, mobile overflow                        |
+| `pnpm smoke:release`       | Passed | isolated build, CLI, server, storage, web, rebuild, delete, import, export smoke |
 
 Benchmark v1 result from the audit run:
 
-| Metric | Result |
-| --- | ---: |
-| `privacy_leak_count` | 0 |
-| `retrieval_top3` | 1 |
-| `coach_gap_fix_rate` | 1 |
-| `analytics_score` | 1 |
-| `ingest_p95_ms` | 11 |
-| `search_p95_ms` | 2 |
-| `dashboard_ms` | 9 |
-| `export_ms` | 14 |
+| Metric               | Result |
+| -------------------- | -----: |
+| `privacy_leak_count` |      0 |
+| `retrieval_top3`     |      1 |
+| `coach_gap_fix_rate` |      1 |
+| `analytics_score`    |      1 |
+| `ingest_p95_ms`      |     11 |
+| `search_p95_ms`      |      2 |
+| `dashboard_ms`       |      9 |
+| `export_ms`          |     14 |
 
 ## Feature Inventory
 
@@ -62,7 +63,7 @@ Storage and safety:
 
 Verdict:
 
-- complete for public beta local setup and capture readiness
+- complete for 1.0.0 local setup and capture readiness
 
 ### 2. Prompt Capture And Storage
 
@@ -248,7 +249,7 @@ Verification:
 
 Verdict:
 
-- core public beta UI is functional
+- core 1.0.0 UI is functional
 
 ### 10. Privacy And Local-First Security
 
@@ -319,7 +320,7 @@ Verdict:
 ## Recommended Next Steps
 
 1. Write release notes.
-2. Decide whether to tag and publish the public beta.
+2. Decide whether to tag and publish 1.0.0.
 3. Lock Node 22/24 release gates in GitHub Actions.
 4. Expand macOS/Windows/Linux arm64 smoke coverage.
 5. Design beta feedback collection for PromptLane quality.

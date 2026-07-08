@@ -202,7 +202,7 @@ Pass thresholds:
 
 ```json
 {
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0",
   "dataset": "benchmark-v1",
   "pass": true,
   "scores": {
@@ -271,4 +271,4 @@ Pass thresholds:
 - cross-platform performance comparison
 - long-term retention analysis
 
-Those items should become opt-in benchmarks after the public beta.
+Those items should become opt-in benchmarks after the 1.0.0 opening release.

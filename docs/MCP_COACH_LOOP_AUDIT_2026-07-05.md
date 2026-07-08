@@ -44,7 +44,7 @@ Observed MCP server identity:
 ```json
 {
   "name": "promptlane",
-  "version": "0.1.0-beta.0"
+  "version": "1.0.0"
 }
 ```
 

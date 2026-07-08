@@ -20,32 +20,33 @@ npm view promptlane version
 
 That result means the package has not been published to the public npm registry at the time of the check. It is not a reservation. The name can still be taken by someone else before the first publish.
 
-## Recommended First Publish
+## Recommended First Stable Publish
 
-Use a beta prerelease first:
+Publish 1.0.0 to the default `latest` npm dist-tag after the full local release
+gate passes:
 
 ```sh
-npm publish --tag beta
+npm publish --tag latest
 ```
 
 Recommended version:
 
 ```json
 {
-  "version": "0.1.0-beta.0"
+  "version": "1.0.0"
 }
 ```
 
-Why `--tag beta`:
+Why `--tag latest`:
 
-- users must intentionally install the beta tag
-- `npm install -g promptlane@beta` gets the prerelease
-- the `latest` tag remains unused until the package is stable enough
+- this is the first stable release target
+- `npm install -g promptlane` gets the stable release
+- future prereleases can still use `--tag beta` or another explicit tag
 
 ## Install Commands After Publish
 
 ```sh
-npm install -g promptlane@beta
+npm install -g promptlane
 promptlane setup
 promptlane doctor claude-code
 promptlane doctor codex
@@ -104,7 +105,8 @@ HOME="$TMP_HOME" npm install -g --prefix "$TMP_PREFIX" "./$TARBALL"
 - [ ] pre-publish privacy audit (`docs/PRE_PUBLISH_PRIVACY_AUDIT.md`) passes
 - [ ] npm account is authenticated
 - [ ] 2FA/OTP requirement is available if npm asks for it
-- [ ] publish uses `--tag beta` for the first prerelease
+- [ ] publish uses `--tag latest` for the first stable release
+- [ ] annotated git tag `v1.0.0` is created only after the local release gate passes
 
 ## Do Not Publish Yet If
 
@@ -120,7 +122,9 @@ HOME="$TMP_HOME" npm install -g --prefix "$TMP_PREFIX" "./$TARBALL"
 npm whoami
 npm view promptlane version
 npm access list packages stark97 --json
-npm publish --tag beta
+npm publish --tag latest
 npm dist-tag ls promptlane
 npm view promptlane versions --json
+git tag -a v1.0.0 -m "promptlane 1.0.0"
+git push origin v1.0.0
 ```

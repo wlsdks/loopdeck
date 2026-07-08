@@ -1,6 +1,6 @@
 {
   "name": "promptlane",
-  "version": "0.1.0-beta.0",
+  "version": "1.0.0",
   "description": "PromptLane local-first prompt improvement workspace for Codex, Claude Code, and long-running coding-agent work.",
   "type": "module",
   "license": "MIT",

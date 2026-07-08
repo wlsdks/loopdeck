@@ -32,7 +32,7 @@ The implementation records prompts from supported AI coding tools, redacts sensi
 | Validation      | Zod                              | runtime schema validation                          |
 | Testing         | Vitest                           | TypeScript unit/integration tests                  |
 
-Unsupported for the public beta:
+Unsupported for the 1.0.0 release:
 
 - Electron shell
 - cloud sync
@@ -172,8 +172,8 @@ Hard delete removes:
     a redacted improvement draft without returning the rewrite body or storing
     the original prompt body.
 11. Archive scoring reads recent prompt summaries from SQLite and returns an
-   aggregate score, distribution, recurring quality gaps, practice plan, next
-   prompt template, and low-score prompt ids without prompt bodies or raw paths.
+    aggregate score, distribution, recurring quality gaps, practice plan, next
+    prompt template, and low-score prompt ids without prompt bodies or raw paths.
 12. Project instruction review reads local project metadata from SQLite, can
     rescan `AGENTS.md` / `CLAUDE.md`, and returns checklist metadata without
     instruction file bodies or raw paths.
@@ -444,7 +444,7 @@ git diff --check
 
 ## 15. Release Boundary
 
-The public beta can claim:
+The 1.0.0 release can claim:
 
 - local-first prompt archive
 - Claude Code MVP support
@@ -459,7 +459,7 @@ The public beta can claim:
 - local benchmark and release smoke
 - opt-in MCP agent-judge packet and judgment metadata storage
 
-The public beta must not claim:
+The 1.0.0 release must not claim:
 
 - full secret-proof redaction
 - provider-hosted or hidden external LLM analysis

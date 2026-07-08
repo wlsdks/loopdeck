@@ -65,7 +65,8 @@ promptlane doctor codex
 
 ## 상태
 
-이 저장소는 pre-release 소프트웨어입니다.
+PromptLane 1.0.0은 local-first Claude Code 및 Codex prompt memory workflow를
+위한 첫 stable public release 라인입니다.
 
 - Claude Code 지원: MVP 경로
 - Codex 지원: beta adapter
@@ -682,7 +683,7 @@ benchmark는 synthetic fixture만 사용합니다. 실제 사용자 prompt 품�
 
 ## Release Smoke
 
-beta publish 또는 tag 전 release smoke를 실행하세요.
+release publish 또는 tag 전 release smoke를 실행하세요.
 
 ```sh
 pnpm smoke:release
