@@ -341,6 +341,12 @@ describe("plugin packaging files", () => {
       "wrapper strips pnpm-only npm env before `npm pack`",
     );
     expect(releaseChecklist).toContain(
+      "Create or refresh annotated tag `v1.0.0` before `corepack pnpm npm-publish:preflight`",
+    );
+    expect(releaseChecklist).not.toContain(
+      "After every gate above passes, create and push annotated tag `v1.0.0`.",
+    );
+    expect(releaseChecklist).toContain(
       "`corepack pnpm --silent npm-publish:preflight -- --json`",
     );
     expect(releaseChecklist).toContain("machine-readable");
