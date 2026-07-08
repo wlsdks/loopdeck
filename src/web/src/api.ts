@@ -6383,8 +6383,20 @@ export async function getHealth(): Promise<{
     await failApi(response, "Health check failed");
   }
 
-  const body = (await response.json()) as { ok?: unknown; version?: unknown };
-  if (typeof body.ok !== "boolean" || typeof body.version !== "string") {
+  const body = (await response.json()) as {
+    markdown?: unknown;
+    ok?: unknown;
+    prompt_body?: unknown;
+    raw_path?: unknown;
+    version?: unknown;
+  };
+  if (
+    typeof body.ok !== "boolean" ||
+    typeof body.version !== "string" ||
+    body.markdown !== undefined ||
+    body.prompt_body !== undefined ||
+    body.raw_path !== undefined
+  ) {
     throw new Error("Health check failed: Invalid response.");
   }
   return { ok: body.ok, version: body.version };

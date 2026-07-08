@@ -7909,6 +7909,21 @@ describe("web api export client", () => {
     );
   });
 
+  it("rejects health responses that include raw-like fields", async () => {
+    fetchMock.mockResolvedValueOnce(
+      jsonResponse({
+        ok: true,
+        version: "0.0.0-test",
+        prompt_body: "secret setup prompt",
+      }),
+    );
+    const { getHealth } = await import("./api.js");
+
+    await expect(getHealth()).rejects.toThrow(
+      "Health check failed: Invalid response.",
+    );
+  });
+
   it("preserves loop list recovery detail on failed responses", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
