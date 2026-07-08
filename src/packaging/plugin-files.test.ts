@@ -803,6 +803,9 @@ describe("plugin packaging files", () => {
     for (const content of [englishCaptureSection, koreanCaptureSection]) {
       expect(content).toContain("promptlane doctor claude-code");
       expect(content).toContain("promptlane doctor codex");
+      expect(content).toContain("promptlane doctor codex --json");
+      expect(content).toContain("status");
+      expect(content).toContain("needs_attention");
       expect(content).toContain("promptlane statusline claude-code");
       expect(content).toContain("promptlane buddy --once");
       expect(content).toContain("promptlane coach");
@@ -1081,6 +1084,9 @@ describe("plugin packaging files", () => {
     expect(setup).toContain("promptlane statusline claude-code");
     expect(status).toContain("promptlane doctor claude-code");
     expect(status).toContain("promptlane doctor claude-code");
+    expect(status).toContain("promptlane doctor codex --json");
+    expect(status).toContain("status: ready");
+    expect(status).toContain("status: needs_attention");
     expect(status).toContain("promptlane statusline claude-code");
     expect(buddy).toContain("promptlane buddy");
     expect(buddy).toContain("promptlane buddy --json");

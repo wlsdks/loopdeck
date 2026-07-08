@@ -173,10 +173,15 @@ Codex는 marketplace 관리를 `codex plugin marketplace add/upgrade/remove`로 
 ```sh
 promptlane doctor claude-code
 promptlane doctor codex
+promptlane doctor codex --json
 promptlane statusline claude-code
 promptlane buddy --once
 promptlane coach
 ```
+
+자동화에서는 `doctor --json`의 top-level `status`가 `ready` 또는
+`needs_attention`으로 나오므로 nested readiness check를 다시 계산하지 않아도
+됩니다.
 
 로컬 archive 열기:
 
