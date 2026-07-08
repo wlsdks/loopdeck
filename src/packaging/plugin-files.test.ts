@@ -130,6 +130,10 @@ describe("plugin packaging files", () => {
       join(process.cwd(), "docs/NPM_PUBLISHING.md"),
       "utf8",
     );
+    const packageInstallSmoke = readFileSync(
+      join(process.cwd(), "scripts/package-install-smoke.mjs"),
+      "utf8",
+    );
 
     for (const scriptPath of [
       "scripts/pack-dry-run.mjs",
@@ -149,6 +153,8 @@ describe("plugin packaging files", () => {
     expect(packageJson.scripts["smoke:package-install"]).toBe(
       "node scripts/package-install-smoke.mjs",
     );
+    expect(packageInstallSmoke).toContain('"start", "--open-web", "--json"');
+    expect(packageInstallSmoke).toContain("validateStartGuide");
     const preflightScript = readFileSync(
       join(process.cwd(), "scripts/npm-publish-preflight.mjs"),
       "utf8",
@@ -285,6 +291,7 @@ describe("plugin packaging files", () => {
       "corepack pnpm e2e:browser",
       "corepack pnpm smoke:release",
       "corepack pnpm smoke:package-install",
+      "promptlane start --open-web --json",
       "corepack pnpm evidence:quality -- --require-complete",
       "corepack pnpm promptlane quality-evidence --require-complete",
       "git diff --check",
