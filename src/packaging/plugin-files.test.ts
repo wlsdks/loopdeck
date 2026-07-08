@@ -276,6 +276,7 @@ describe("plugin packaging files", () => {
     expect(preflightScript).toContain('"CONTRIBUTING.md"');
     expect(preflightScript).toContain('"SUPPORT.md"');
     expect(preflightScript).toContain('"scripts/benchmark.mjs"');
+    expect(preflightScript).toContain('"scripts/benchmark-fixtures.mjs"');
     expect(preflightScript).toContain('"scripts/agent-setup-smoke.mjs"');
     expect(preflightScript).toContain('"scripts/browser-e2e.mjs"');
     expect(preflightScript).toContain('"scripts/first-coach-loop-dogfood.mjs"');
@@ -529,6 +530,10 @@ describe("plugin packaging files", () => {
       join(process.cwd(), "scripts/benchmark.mjs"),
       "utf8",
     );
+    const benchmarkFixtures = readFileSync(
+      join(process.cwd(), "scripts/benchmark-fixtures.mjs"),
+      "utf8",
+    );
     const benchmarkSpec = readFileSync(
       join(process.cwd(), "docs/BENCHMARK_V1.md"),
       "utf8",
@@ -540,6 +545,15 @@ describe("plugin packaging files", () => {
       expect(content).toContain("effectiveness_summary");
       expect(content).toContain("linked_outcomes");
     }
+    for (const content of [benchmarkFixtures, benchmarkSpec]) {
+      expect(content).toContain("docs/benchmark-fixtures/real.json");
+    }
+    expect(benchmark).toContain("loadBenchmarkFixtures");
+    expect(benchmarkSpec).toContain('"fixtures"');
+    expect(benchmarkSpec).toContain('"coach_cases"');
+    expect(benchmarkSpec).toContain("adapter");
+    expect(benchmarkSpec).toContain("label");
+    expect(benchmarkSpec).toContain("query");
     expect(benchmarkSpec).toContain("Prompt Effectiveness Evidence");
     expect(benchmarkSpec).toContain("Pass threshold");
     expect(benchmarkSpec.toLowerCase().replace(/\s+/g, " ")).toContain(

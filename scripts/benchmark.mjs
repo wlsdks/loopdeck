@@ -14,6 +14,7 @@ import net from "node:net";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
+import { loadBenchmarkFixtures } from "./benchmark-fixtures.mjs";
 import {
   analyzePrompt,
   EXPERIMENTAL_RULE_IDS,
@@ -34,6 +35,14 @@ const rawSecret = "sk-proj-benchmark1234567890abcdef";
 const fixtureSet = parseFixtureSet(process.argv);
 const dataset = fixtureSet === "real" ? "benchmark-v1-real" : "benchmark-v1";
 const jsonOutput = process.argv.includes("--json");
+const loadedFixtures = loadBenchmarkFixtures({
+  fixtureSet,
+  repoRoot,
+  rawPathPrefix,
+  rawSecret,
+});
+const fixtures = loadedFixtures.fixtures;
+const coachCases = loadedFixtures.coachCases;
 const cliEnv = {
   ...process.env,
   HOME: homeDir,
@@ -54,68 +63,22 @@ const thresholds = {
   export_ms: 1000,
 };
 
-const fixtures = [
-  {
-    label: "secret_bugfix",
-    adapter: "claude-code",
-    query: "token pnpm test",
-    prompt: `Fix ${rawPathPrefix}/benchmark-project/src/secret.ts with token ${rawSecret}. Run pnpm test.`,
-  },
-  {
-    label: "export_ui",
-    adapter: "codex",
-    query: "export layout markdown",
-    prompt: `Review ${rawPathPrefix}/benchmark-project/src/web/App.tsx export layout and return Markdown summary.`,
-  },
-  {
-    label: "database_migration",
-    adapter: "claude-code",
-    query: "sqlite migration",
-    prompt:
-      "Add SQLite migration for prompt_improvement_drafts. Include rollback notes and verification criteria: pnpm test.",
-  },
-  {
-    label: "vague_prompt",
-    adapter: "codex",
-    query: "make better",
-    prompt: "Make this better",
-  },
-  {
-    label: "release_docs",
-    adapter: "claude-code",
-    query: "release checklist docs",
-    prompt:
-      "Update release checklist docs for benchmark workflow. Output a concise Markdown summary.",
-  },
-];
-const coachCases = [
-  "Make this better",
-  `Fix ${rawPathPrefix}/benchmark-project/src/secret.ts with token ${rawSecret}.`,
-  "Review export UI.",
-  "Check the DB part",
-  "Fix the tests",
-];
-
-if (fixtureSet === "real") {
-  const realFixturesPath = join(repoRoot, "docs/benchmark-fixtures/real.json");
-  if (!existsSync(realFixturesPath)) {
-    const message = {
-      dataset,
-      fixture_set: fixtureSet,
-      status: "no_fixtures",
-      detail:
-        "No real fixtures registered yet. Add docs/benchmark-fixtures/real.json (consent-bearing redacted prompts) and re-run.",
-    };
-    if (jsonOutput) {
-      console.log(JSON.stringify(message, null, 2));
-    } else {
-      console.log(`promptlane benchmark ${dataset}`);
-      console.log("status: no_fixtures");
-      console.log(message.detail);
-    }
-    rmSync(tempRoot, { recursive: true, force: true });
-    process.exit(0);
+if (loadedFixtures.status === "no_fixtures") {
+  const message = {
+    dataset,
+    fixture_set: fixtureSet,
+    status: "no_fixtures",
+    detail: loadedFixtures.detail,
+  };
+  if (jsonOutput) {
+    console.log(JSON.stringify(message, null, 2));
+  } else {
+    console.log(`promptlane benchmark ${dataset}`);
+    console.log("status: no_fixtures");
+    console.log(message.detail);
   }
+  rmSync(tempRoot, { recursive: true, force: true });
+  process.exit(0);
 }
 
 let serverProcess;
@@ -150,7 +113,9 @@ try {
       await apiGet(serverBaseUrl, auth.app_token, `/api/v1/prompts/${item.id}`),
     );
   }
-  seedArchiveEffectivenessOutcome(fixtureIds.get("database_migration"));
+  seedArchiveEffectivenessOutcome(
+    fixtureIds.get("database_migration") ?? fixtureIds.values().next().value,
+  );
   const archiveScore = await apiGet(
     serverBaseUrl,
     auth.app_token,

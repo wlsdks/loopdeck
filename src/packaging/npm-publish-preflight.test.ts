@@ -502,6 +502,10 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
+          label: "package files include scripts/benchmark-fixtures.mjs",
+          ok: true,
+        }),
+        expect.objectContaining({
           label: "package files include scripts/agent-setup-smoke.mjs",
           ok: true,
         }),

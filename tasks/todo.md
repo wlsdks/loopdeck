@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Benchmark Real Fixture Loader
+
+- [x] CHECK: `docs/BENCHMARK_V1.md` says `--fixture-set real` reads
+  `docs/benchmark-fixtures/real.json`, but the benchmark only checked file
+  existence and still used the synthetic fixtures.
+- [x] RED: focused benchmark fixture loader test requires consent-bearing
+  redacted real fixtures to replace the synthetic prompt and coach cases.
+- [x] GREEN: benchmark fixtures now load through a shared helper, validate
+  `codex`/`claude-code` real fixture schema, reject obvious raw secrets/paths,
+  and keep the existing synthetic benchmark as the hard gate.
+- [x] VERIFY: focused fixture/preflight/package tests, synthetic benchmark,
+  real no-fixtures soft exit, formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Plugin Docs Preflight Guard
 
 - [x] CHECK: npm publish preflight checks plugin manifests and files, but
