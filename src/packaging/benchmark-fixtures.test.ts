@@ -37,6 +37,12 @@ describe("benchmark fixture loading", () => {
         fixture_set: "real",
         soft_signal: true,
         status: "no_fixtures",
+        evidence_state: {
+          effectiveness: "unproven",
+          requires_real_fixtures: true,
+          release_gate: "synthetic",
+          trend_signal: "real",
+        },
         next_action:
           "Add consent-bearing redacted real fixtures before using real benchmark trends.",
       }),
