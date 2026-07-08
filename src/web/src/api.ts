@@ -5951,6 +5951,14 @@ function sanitizeApiErrorText(value: string): string {
     )
     .replace(
       new RegExp(
+        `\\b(${rawDetailKey})\\s*=\\s*(?!["'\`])([^.;)}\\]\\r\\n]+)([.;)}\\]]?)`,
+        "gi",
+      ),
+      (_match, key: string, _value: string, terminator: string) =>
+        `${key}=[REDACTED:${key.toLowerCase()}]${terminator}`,
+    )
+    .replace(
+      new RegExp(
         `\\b(${rawDetailKey})\\s*([:=])\\s*(?!["'\`]|\\[REDACTED:)([^\\s,;)}\\]]+)`,
         "gi",
       ),
