@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Package Contents Script List
+
+- [x] CHECK: `docs/PACKAGE_CONTENTS.md` shipped script 목록에서 일부 release
+  scripts가 한 줄에 몰려 있어 1.0.0 공개 전 tarball 리뷰와 drift 검토가
+  어렵다.
+- [x] RED: packaging guard가 `package.json#files`에 실리는 핵심 검증
+  script마다 package contents 문서의 독립 markdown list item을 요구하도록
+  실패를 확인했다.
+- [x] GREEN: local verification scripts 섹션을 script별 list item으로 정리해
+  package contents 문서가 release review checklist처럼 읽히게 했다.
+- [x] VERIFY: focused packaging guard, touched-file formatting, typecheck, and
+  diff hygiene.
+
 ## 2026-07-08 PromptLane Release Checklist Tag Order
 
 - [x] CHECK: release checklist told operators to run
