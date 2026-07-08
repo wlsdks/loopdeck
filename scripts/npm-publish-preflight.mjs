@@ -420,6 +420,12 @@ check(
   privacyAuditMirrorsRuntimePathDetectors(),
   "docs/PRE_PUBLISH_PRIVACY_AUDIT.md should include the local path families guarded by src/redaction/detectors.ts",
 );
+const realFixtureExample = validateRealBenchmarkFixtureExample();
+check(
+  "real benchmark fixture example is loadable",
+  realFixtureExample.ok,
+  realFixtureExample.detail,
+);
 
 if (!options.skipGitClean) {
   const status = run("git", ["status", "--porcelain"]);
@@ -728,6 +734,96 @@ function privacyAuditMirrorsRuntimePathDetectors() {
       detectorSource.includes(sourceSnippet) &&
       privacyAudit.includes(auditSnippet),
   );
+}
+
+function validateRealBenchmarkFixtureExample() {
+  let parsed;
+  try {
+    parsed = readJson("docs/benchmark-fixtures/real.example.json");
+  } catch {
+    return {
+      ok: false,
+      detail: "docs/benchmark-fixtures/real.example.json must be valid JSON",
+    };
+  }
+
+  const invalidReason = realFixtureExampleInvalidReason(parsed);
+  return invalidReason
+    ? { ok: false, detail: invalidReason }
+    : {
+        ok: true,
+        detail:
+          "docs/benchmark-fixtures/real.example.json is a raw-free loadable real fixture template",
+      };
+}
+
+function realFixtureExampleInvalidReason(parsed) {
+  if (
+    typeof parsed?.consent_note !== "string" ||
+    parsed.consent_note.trim().length === 0
+  ) {
+    return "real fixture example must include consent_note";
+  }
+  if (containsRawBenchmarkFixtureText(parsed.consent_note)) {
+    return "real fixture example consent_note must be raw-free";
+  }
+  if (!Array.isArray(parsed.fixtures) || parsed.fixtures.length === 0) {
+    return "real fixture example must include non-empty fixtures";
+  }
+  if (!Array.isArray(parsed.coach_cases) || parsed.coach_cases.length === 0) {
+    return "real fixture example must include non-empty coach_cases";
+  }
+
+  const seenLabels = new Set();
+  for (const [index, fixture] of parsed.fixtures.entries()) {
+    const label = readFixtureString(fixture, "label");
+    const adapter = readFixtureString(fixture, "adapter");
+    const query = readFixtureString(fixture, "query");
+    const prompt = readFixtureString(fixture, "prompt");
+    if (!label || !adapter || !query || !prompt) {
+      return `real fixture example fixture ${index} must include label, adapter, query, and prompt`;
+    }
+    if (!["claude-code", "codex"].includes(adapter)) {
+      return `real fixture example fixture ${index} adapter must be claude-code or codex`;
+    }
+    if (!/^[a-z0-9][a-z0-9_-]{0,63}$/.test(label)) {
+      return `real fixture example fixture ${index} label must be safe`;
+    }
+    if (seenLabels.has(label)) {
+      return `real fixture example label must be unique: ${label}`;
+    }
+    seenLabels.add(label);
+    if ([label, query, prompt].some(containsRawBenchmarkFixtureText)) {
+      return `real fixture example fixture ${index} must be raw-free`;
+    }
+  }
+
+  for (const [index, coachCase] of parsed.coach_cases.entries()) {
+    if (typeof coachCase !== "string" || coachCase.trim().length === 0) {
+      return `real fixture example coach case ${index} must be a non-empty string`;
+    }
+    if (containsRawBenchmarkFixtureText(coachCase)) {
+      return `real fixture example coach case ${index} must be raw-free`;
+    }
+  }
+
+  return "";
+}
+
+function readFixtureString(fixture, field) {
+  const value = fixture?.[field];
+  return typeof value === "string" && value.trim().length > 0 ? value : "";
+}
+
+function containsRawBenchmarkFixtureText(value) {
+  return [
+    /\bsk-[A-Za-z0-9_-]{12,}\b/,
+    /\bnpm_[A-Za-z0-9]{24,}\b/,
+    /\/Users\/[^/\s]+/,
+    /\/home\/[^/\s]+/,
+    /\/Volumes\/[^/\s]+/,
+    /[A-Za-z]:\\Users\\[^\\\s]+/,
+  ].some((pattern) => pattern.test(value));
 }
 
 function run(command, args) {
