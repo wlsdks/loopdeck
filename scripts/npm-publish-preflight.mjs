@@ -55,7 +55,10 @@ check(
 for (const filePath of [
   "dist",
   "README.md",
+  "README.ko.md",
+  "CHANGELOG.md",
   "LICENSE",
+  "SECURITY.md",
   "scripts/npm-publish-preflight.mjs",
   "scripts/pack-dry-run.mjs",
   "scripts/package-install-smoke.mjs",
