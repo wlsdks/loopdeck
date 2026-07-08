@@ -426,6 +426,11 @@ check(
   realFixtureExample.ok,
   realFixtureExample.detail,
 );
+check(
+  "real benchmark missing-fixtures evidence state is documented",
+  realBenchmarkMissingFixturesEvidenceStateIsDocumented(),
+  "scripts/benchmark-fixtures.mjs and docs/BENCHMARK_V1.md must preserve missing real fixture evidence_state",
+);
 
 if (!options.skipGitClean) {
   const status = run("git", ["status", "--porcelain"]);
@@ -733,6 +738,25 @@ function privacyAuditMirrorsRuntimePathDetectors() {
     ([sourceSnippet, auditSnippet]) =>
       detectorSource.includes(sourceSnippet) &&
       privacyAudit.includes(auditSnippet),
+  );
+}
+
+function realBenchmarkMissingFixturesEvidenceStateIsDocumented() {
+  const benchmarkFixtures = readText("scripts/benchmark-fixtures.mjs");
+  const benchmarkSpec = readText("docs/BENCHMARK_V1.md");
+  const requiredSnippets = [
+    "evidence_state",
+    "effectiveness",
+    "unproven",
+    "requires_real_fixtures",
+    "release_gate",
+    "synthetic",
+    "trend_signal",
+    "real",
+  ];
+
+  return [benchmarkFixtures, benchmarkSpec].every((content) =>
+    requiredSnippets.every((snippet) => content.includes(snippet)),
   );
 }
 
