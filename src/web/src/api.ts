@@ -476,6 +476,34 @@ function isLoopListPrivacy(
   );
 }
 
+function isLoopWorktreeSelectionScope(
+  value: unknown,
+): value is LoopWorktreeResponse["selection_scope"] {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const scope = value as LoopWorktreeResponse["selection_scope"];
+  const filters = JSON.stringify(scope.filters);
+  return (
+    scope.label === "Selection scope" &&
+    (filters === JSON.stringify(["worktree"]) ||
+      filters === JSON.stringify(["worktree", "session"]) ||
+      filters === JSON.stringify(["worktree", "branch"]) ||
+      filters === JSON.stringify(["worktree", "session", "branch"])) &&
+    (scope.reason === "showing latest snapshots for selected worktree" ||
+      scope.reason ===
+        "showing snapshots filtered by selected worktree and session" ||
+      scope.reason ===
+        "showing snapshots filtered by selected worktree and branch" ||
+      scope.reason ===
+        "showing snapshots filtered by selected worktree, session, and branch") &&
+    (scope.next_action === "copy selected worktree brief" ||
+      scope.next_action === "copy selected session brief" ||
+      scope.next_action === "copy selected branch brief" ||
+      scope.next_action === "copy selected session and branch brief")
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -2422,8 +2450,7 @@ export async function getLoopWorktree(
   };
   if (
     typeof body.data?.worktree !== "string" ||
-    typeof body.data.selection_scope !== "object" ||
-    body.data.selection_scope === null ||
+    !isLoopWorktreeSelectionScope(body.data.selection_scope) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
     !isLoopListPrivacy(body.data.privacy)
