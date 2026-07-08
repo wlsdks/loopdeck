@@ -155,6 +155,11 @@ describe("plugin packaging files", () => {
     );
     expect(packageInstallSmoke).toContain('"start", "--open-web", "--json"');
     expect(packageInstallSmoke).toContain("validateStartGuide");
+    expect(packageInstallSmoke).toContain(
+      '"quality-evidence", "--require-complete"',
+    );
+    expect(packageInstallSmoke).toContain("validateQualityEvidence");
+    expect(packageInstallSmoke).toContain("cwd: tempHome");
     const preflightScript = readFileSync(
       join(process.cwd(), "scripts/npm-publish-preflight.mjs"),
       "utf8",
@@ -1818,6 +1823,7 @@ describe("plugin packaging files", () => {
       "corepack pnpm smoke:package-install",
       "corepack pnpm evidence:quality -- --require-complete",
       "corepack pnpm promptlane quality-evidence --require-complete",
+      "installed `promptlane quality-evidence --require-complete`",
       "expected shipped files",
       "quality evidence CLI gate",
       "git diff --check",
