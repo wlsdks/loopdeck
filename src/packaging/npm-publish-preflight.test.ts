@@ -861,6 +861,56 @@ exit 1
     expect(parsed.next_action).toContain("npm publish --tag latest");
   });
 
+  it("summarizes blocking checks near the top of human preflight output", () => {
+    const binDir = mkdtempSync(join(tmpdir(), "promptlane-fake-npm-"));
+    const fakeNpm = join(binDir, "npm");
+    writeFileSync(
+      fakeNpm,
+      `#!/usr/bin/env sh
+if [ "$1" = "whoami" ]; then
+  echo "npm ERR! code E401" >&2
+  exit 1
+fi
+if [ "$1" = "view" ]; then
+  echo "npm ERR! code E404" >&2
+  exit 1
+fi
+echo "unexpected npm command: $*" >&2
+exit 1
+`,
+      { mode: 0o755 },
+    );
+
+    const result = spawnSync(
+      process.execPath,
+      [
+        "scripts/npm-publish-preflight.mjs",
+        "--skip-git-clean",
+        "--skip-git-tag",
+      ],
+      {
+        cwd: process.cwd(),
+        env: {
+          ...process.env,
+          PATH: `${binDir}:${process.env.PATH ?? ""}`,
+        },
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "pipe"],
+      },
+    );
+
+    expect(result.status).toBe(1);
+    expect(result.stdout).toContain(
+      "Blocking checks\n- npm authentication is available",
+    );
+    expect(result.stdout.indexOf("Blocking checks")).toBeLessThan(
+      result.stdout.indexOf("Checks"),
+    );
+    expect(result.stdout).toContain(
+      "Next action: Run npm login, rerun corepack pnpm npm-publish:preflight",
+    );
+  });
+
   it("tells the operator to bump version instead of retargeting v1.0.0 after publish", () => {
     const binDir = mkdtempSync(join(tmpdir(), "promptlane-fake-npm-"));
     const fakeNpm = join(binDir, "npm");

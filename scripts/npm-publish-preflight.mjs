@@ -1065,11 +1065,17 @@ function originTagMismatchDetail({
 }
 
 function formatSummary(summary) {
+  const blockingChecks = summary.checks
+    .filter((item) => !item.ok)
+    .map((item) => `- ${item.label}`);
   return [
     "PromptLane npm publish preflight",
     `Status: ${summary.status}`,
     `Package: ${summary.package}@${summary.version}`,
     `Expected tag: ${summary.expected_tag}`,
+    ...(blockingChecks.length
+      ? ["", "Blocking checks", ...blockingChecks]
+      : []),
     "",
     "Checks",
     ...summary.checks.map(

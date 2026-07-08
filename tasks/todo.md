@@ -1,5 +1,16 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Preflight Blocking Summary
+
+- [x] CHECK: npm publish preflight human output had a copy-ready next action,
+  but the failed check was buried near the bottom of a long pass list.
+- [x] RED: focused preflight test requires a `Blocking checks` section near
+  the top of human output when npm auth is the remaining blocker.
+- [x] GREEN: human preflight output now prints failed check labels before the
+  full check list while keeping the detailed check list and next action.
+- [x] VERIFY: focused preflight test, human preflight output, formatting,
+  typecheck, preflight JSON, and diff hygiene.
+
 ## 2026-07-09 PromptLane Benchmark No-Fixtures Text Next Action
 
 - [x] CHECK: missing-real-fixtures benchmark text output showed evidence
