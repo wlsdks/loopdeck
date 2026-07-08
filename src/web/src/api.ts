@@ -3629,6 +3629,31 @@ function isArchiveScorePrivacy(
   );
 }
 
+function isArchiveScoreSummary(
+  value: unknown,
+): value is ArchiveScoreReport["archive_score"] {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const score = value as ArchiveScoreReport["archive_score"] & {
+    cwd?: unknown;
+    markdown?: unknown;
+    prompt_body?: unknown;
+    raw_path?: unknown;
+  };
+  return (
+    typeof score.average === "number" &&
+    score.max === 100 &&
+    typeof score.band === "string" &&
+    typeof score.scored_prompts === "number" &&
+    typeof score.total_prompts === "number" &&
+    score.cwd === undefined &&
+    score.markdown === undefined &&
+    score.prompt_body === undefined &&
+    score.raw_path === undefined
+  );
+}
+
 function isArchivePromptScoreSummary(
   value: unknown,
 ): value is ArchivePromptScoreSummary {
@@ -4203,8 +4228,7 @@ export async function getArchiveScoreReport(): Promise<ArchiveScoreReport> {
     };
   };
   if (
-    typeof body.data?.archive_score !== "object" ||
-    body.data.archive_score === null ||
+    !isArchiveScoreSummary(body.data?.archive_score) ||
     !Array.isArray(body.data.top_gaps) ||
     !body.data.top_gaps.every(isArchiveTopGapItem) ||
     !Array.isArray(body.data.practice_plan) ||
