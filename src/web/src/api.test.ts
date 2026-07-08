@@ -9103,6 +9103,29 @@ describe("web api export client", () => {
     );
   });
 
+  it("reports unsafe ask event summary responses without returning raw prompt fields", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            total_count: 3,
+            recent_count: 2,
+            axis_counts: {
+              goal_clarity: 2,
+            },
+            average_score: 52,
+            prompt_body: "secret prompt body",
+          },
+        }),
+      );
+    const { getAskEventSummary } = await import("./api.js");
+
+    await expect(getAskEventSummary(7)).rejects.toThrow(
+      "Ask event summary unavailable: Invalid response.",
+    );
+  });
+
   it("uses the response title when detail is blank", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
