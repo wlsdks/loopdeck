@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Loop Status Activity Contract Error
+
+- [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의
+  `status.activity` core contract를 검증하지 않아 malformed activity counters/flags를
+  loop status UI에 넘길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 `active_worktrees: "1"`인
+  `status.activity` body를 `Loop list failed: Invalid response.`로 reject하도록 요구하게 해
+  현재 malformed activity resolve 실패를 확인한다.
+- [x] GREEN: loop status activity의 active worktrees/sessions, review flag, next action,
+  worktree list shape를 확인하고 깨진 activity block은 raw-free loop list contract 오류로
+  중단하도록 고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
+  check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Loop List Privacy Contract Error
 
 - [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의 top-level

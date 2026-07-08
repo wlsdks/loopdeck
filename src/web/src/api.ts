@@ -476,6 +476,28 @@ function isLoopListPrivacy(
   );
 }
 
+function isLoopStatusActivity(
+  value: unknown,
+): value is LoopListResponse["status"]["activity"] {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const activity = value as LoopListResponse["status"]["activity"];
+  return (
+    typeof activity.active_worktrees === "number" &&
+    typeof activity.active_sessions === "number" &&
+    (activity.latest_branch === undefined ||
+      typeof activity.latest_branch === "string") &&
+    (activity.latest_worktree === undefined ||
+      typeof activity.latest_worktree === "string") &&
+    typeof activity.needs_review === "boolean" &&
+    (activity.next_action ===
+      "compare loop snapshots by worktree before merging agent output" ||
+      activity.next_action === "continue current worktree loop") &&
+    Array.isArray(activity.worktrees)
+  );
+}
+
 export type LoopWorktreeResponse = {
   worktree: string;
   session_id?: string;
@@ -2210,6 +2232,7 @@ export async function listLoops(): Promise<LoopListResponse> {
     | {
         latest_snapshot?: unknown;
         latest_compact_boundary?: unknown;
+        activity?: unknown;
         privacy?: unknown;
       }
     | undefined;
@@ -2222,6 +2245,7 @@ export async function listLoops(): Promise<LoopListResponse> {
       !isLoopSummary(status.latest_snapshot)) ||
     (status?.latest_compact_boundary !== undefined &&
       !isLoopCompactBoundary(status.latest_compact_boundary)) ||
+    !isLoopStatusActivity(status?.activity) ||
     !isLoopStatusPrivacy(status?.privacy) ||
     !isLoopListPrivacy(body.data.privacy)
   ) {
