@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Benchmark Evidence State Preflight Guard
+
+- [x] CHECK: missing real benchmark fixtures now report structured
+  `evidence_state`, but npm publish preflight did not yet guard that the
+  script and benchmark spec preserve the contract.
+- [x] RED: focused npm publish preflight test requires a machine-readable
+  `real benchmark missing-fixtures evidence state is documented` check.
+- [x] GREEN: npm publish preflight now verifies both
+  `scripts/benchmark-fixtures.mjs` and `docs/BENCHMARK_V1.md` retain the
+  missing-real-fixture evidence-state fields.
+- [x] VERIFY: focused preflight test, preflight JSON, formatting, typecheck,
+  and diff hygiene.
+
 ## 2026-07-09 PromptLane Missing Real Benchmark Evidence State
 
 - [x] CHECK: real benchmark no-fixtures JSON reported a soft `status` and

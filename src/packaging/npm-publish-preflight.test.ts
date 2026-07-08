@@ -593,6 +593,10 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
+          label: "real benchmark missing-fixtures evidence state is documented",
+          ok: true,
+        }),
+        expect.objectContaining({
           label: "package manager is pinned",
           ok: true,
         }),
