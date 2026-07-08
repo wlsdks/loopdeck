@@ -1,5 +1,14 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Quality Dashboard Recent Summary Contract Error
+
+- [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의
+  `sensitive_prompts`/`sensitive_ratio`/`recent` 집계 계약을 검증하지 않아 raw path-like field나 깨진 dashboard metric summary가 UI 데이터로 넘어갈 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed recent summary `raw_path`
+  body를 `Quality dashboard failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe recent summary resolve 실패를 확인한다.
+- [x] GREEN: sensitive count/ratio와 recent last_7_days/last_30_days 계약을 확인하고 raw body/path-like extra fields는 raw-free quality dashboard contract 오류로 중단하도록 고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Quality Dashboard Project Profiles Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의

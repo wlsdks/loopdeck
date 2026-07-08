@@ -3668,6 +3668,28 @@ function isQualityDashboardScore(
   );
 }
 
+function isQualityDashboardRecent(
+  value: unknown,
+): value is QualityDashboard["recent"] {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const recent = value as QualityDashboard["recent"] & {
+    cwd?: unknown;
+    markdown?: unknown;
+    prompt_body?: unknown;
+    raw_path?: unknown;
+  };
+  return (
+    typeof recent.last_7_days === "number" &&
+    typeof recent.last_30_days === "number" &&
+    recent.cwd === undefined &&
+    recent.markdown === undefined &&
+    recent.prompt_body === undefined &&
+    recent.raw_path === undefined
+  );
+}
+
 function isQualityDashboardDistribution(
   value: unknown,
 ): value is QualityDashboard["distribution"] {
@@ -4611,6 +4633,9 @@ export async function getQualityDashboard(
   const body = (await response.json()) as {
     data?: {
       total_prompts?: unknown;
+      sensitive_prompts?: unknown;
+      sensitive_ratio?: unknown;
+      recent?: unknown;
       quality_score?: unknown;
       distribution?: unknown;
       missing_items?: unknown;
@@ -4624,6 +4649,9 @@ export async function getQualityDashboard(
   };
   if (
     typeof body.data?.total_prompts !== "number" ||
+    typeof body.data.sensitive_prompts !== "number" ||
+    typeof body.data.sensitive_ratio !== "number" ||
+    !isQualityDashboardRecent(body.data.recent) ||
     !isQualityDashboardScore(body.data.quality_score) ||
     !isQualityDashboardDistribution(body.data.distribution) ||
     !Array.isArray(body.data.missing_items) ||
