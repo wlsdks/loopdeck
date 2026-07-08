@@ -1,5 +1,14 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Loop List Recent Decisions Contract Error
+
+- [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의 optional
+  `status.activity.recent_decisions[].decision` 계약을 검증하지 않아 깨진 merge/continue/defer 상태가 loop list UI로 넘어갈 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed recent decision `decision` 값을
+  `Loop list failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe recent decision resolve 실패를 확인한다.
+- [x] GREEN: recent decision snapshot/worktree/decision/reason/decided_by/created_at 계약을 확인하고 깨진 recent decision은 raw-free loop list contract 오류로 중단하도록 고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Loop List Command Center Contract Error
 
 - [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의 optional

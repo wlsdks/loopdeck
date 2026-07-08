@@ -2180,6 +2180,29 @@ function isLoopActivityWorktree(
   );
 }
 
+function isLoopRecentDecision(
+  value: unknown,
+): value is NonNullable<
+  LoopListResponse["status"]["activity"]["recent_decisions"]
+>[number] {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const decision = value as NonNullable<
+    LoopListResponse["status"]["activity"]["recent_decisions"]
+  >[number];
+  return (
+    typeof decision.snapshot_id === "string" &&
+    typeof decision.worktree === "string" &&
+    (decision.decision === "merge" ||
+      decision.decision === "continue" ||
+      decision.decision === "defer") &&
+    typeof decision.reason === "string" &&
+    typeof decision.decided_by === "string" &&
+    typeof decision.created_at === "string"
+  );
+}
+
 function isLoopReviewPacketNextAction(
   value: unknown,
 ): value is
@@ -2344,6 +2367,9 @@ function isLoopStatusActivity(
     (activity.next_action ===
       "compare loop snapshots by worktree before merging agent output" ||
       activity.next_action === "continue current worktree loop") &&
+    (activity.recent_decisions === undefined ||
+      (Array.isArray(activity.recent_decisions) &&
+        activity.recent_decisions.every(isLoopRecentDecision))) &&
     Array.isArray(activity.worktrees) &&
     activity.worktrees.every(isLoopActivityWorktree) &&
     (activity.command_center === undefined ||
