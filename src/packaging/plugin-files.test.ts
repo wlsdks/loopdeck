@@ -185,6 +185,9 @@ describe("plugin packaging files", () => {
     );
     expect(preflightScript).toContain("package files include ${filePath}");
     expect(preflightScript).toContain('"dist"');
+    expect(preflightScript).toContain('"README.ko.md"');
+    expect(preflightScript).toContain('"CHANGELOG.md"');
+    expect(preflightScript).toContain('"SECURITY.md"');
     expect(preflightScript).toContain('"scripts/pack-dry-run.mjs"');
     expect(preflightScript).toContain('"scripts/package-install-smoke.mjs"');
     expect(preflightScript).toContain('"scripts/quality-gate.mjs"');

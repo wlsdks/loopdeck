@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Public Docs Preflight Guard
+
+- [x] CHECK: NPM publishing checklist requires English/Korean README and
+  public release documentation, but npm publish preflight only checked
+  `README.md` and `LICENSE`.
+- [x] RED: focused preflight and packaging guards required machine-readable
+  checks for `README.ko.md`, `CHANGELOG.md`, and `SECURITY.md` package-file
+  entries.
+- [x] GREEN: npm publish preflight now checks those public docs, and the NPM
+  runbook checklist names the same publish package surface.
+- [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
+  touched-file formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Release Scripts Preflight Guard
 
 - [x] CHECK: release checklist and package contents require core release
