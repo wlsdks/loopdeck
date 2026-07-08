@@ -345,6 +345,8 @@ describe("plugin packaging files", () => {
       "corepack pnpm --silent npm-publish:preflight -- --json",
     );
     expect(publishing).toContain("machine-readable");
+    expect(publishing).toContain("publish_command");
+    expect(publishing).toContain('publish_command: "npm publish --tag latest"');
     expect(publishing).toContain("corepack pnpm smoke:package-install");
     expect(publishing).toContain(
       "verifies the installed `promptlane start --open-web --json` first-success guide",

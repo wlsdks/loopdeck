@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Publish Command Handoff
+
+- [x] CHECK: `npm-publish:preflight` already exposes `publish_ready` and
+  `next_action`, but JSON did not provide a dedicated copy-ready publish command
+  field for the fully ready state.
+- [x] RED: focused preflight test simulates passing npm/git state and requires
+  `publish_command: "npm publish --tag latest"` only when every release
+  preflight passes.
+- [x] GREEN: preflight JSON now emits `publish_command` only for
+  `publish_ready: true`; inspection and npm-auth-blocked states keep it absent.
+- [x] VERIFY: focused preflight tests, packaging docs guard, formatting, live
+  blocked preflight smoke, and diff hygiene.
+
 ## 2026-07-09 PromptLane Quality Evidence Release Warning Docs
 
 - [x] CHECK: `quality-evidence` now emits `release_warnings`, but

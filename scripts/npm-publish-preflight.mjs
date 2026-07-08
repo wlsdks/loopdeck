@@ -541,6 +541,7 @@ const summary = {
   inspection_warnings: inspectionWarnings(skippedReleaseChecks),
   release_warnings: releaseWarnings(),
   blocking_checks: blockingChecks,
+  ...(publishReady ? { publish_command: "npm publish --tag latest" } : {}),
   checks,
   recovery_commands: recoveryCommands({ passed, checks }),
   next_action: nextAction({ passed, checks, skippedReleaseChecks }),
@@ -1175,6 +1176,9 @@ function formatSummary(summary) {
           "Recovery commands",
           ...summary.recovery_commands.map((command) => `- ${command}`),
         ]
+      : []),
+    ...(summary.publish_command
+      ? ["", `Publish command: ${summary.publish_command}`]
       : []),
     "",
     "Checks",
