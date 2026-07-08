@@ -3817,6 +3817,58 @@ function isQualityDashboardUsefulPrompt(
   );
 }
 
+function isQualityDashboardDuplicatePromptGroup(
+  value: unknown,
+): value is QualityDashboard["duplicate_prompt_groups"][number] {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const group = value as QualityDashboard["duplicate_prompt_groups"][number] & {
+    markdown?: unknown;
+    prompt_body?: unknown;
+    raw_path?: unknown;
+  };
+  return (
+    typeof group.group_id === "string" &&
+    typeof group.count === "number" &&
+    typeof group.latest_received_at === "string" &&
+    Array.isArray(group.projects) &&
+    group.projects.every((project) => typeof project === "string") &&
+    Array.isArray(group.prompts) &&
+    group.prompts.every(isQualityDashboardDuplicatePrompt) &&
+    group.markdown === undefined &&
+    group.prompt_body === undefined &&
+    group.raw_path === undefined
+  );
+}
+
+function isQualityDashboardDuplicatePrompt(
+  value: unknown,
+): value is QualityDashboard["duplicate_prompt_groups"][number]["prompts"][number] {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const prompt =
+    value as QualityDashboard["duplicate_prompt_groups"][number]["prompts"][number] & {
+      markdown?: unknown;
+      prompt_body?: unknown;
+      raw_path?: unknown;
+    };
+  return (
+    typeof prompt.id === "string" &&
+    typeof prompt.tool === "string" &&
+    typeof prompt.cwd === "string" &&
+    typeof prompt.received_at === "string" &&
+    Array.isArray(prompt.tags) &&
+    prompt.tags.every((tag) => typeof tag === "string") &&
+    Array.isArray(prompt.quality_gaps) &&
+    prompt.quality_gaps.every((gap) => typeof gap === "string") &&
+    prompt.markdown === undefined &&
+    prompt.prompt_body === undefined &&
+    prompt.raw_path === undefined
+  );
+}
+
 function isArchiveScoreSummary(
   value: unknown,
 ): value is ArchiveScoreReport["archive_score"] {
@@ -4506,6 +4558,7 @@ export async function getQualityDashboard(
       patterns?: unknown;
       instruction_suggestions?: unknown;
       useful_prompts?: unknown;
+      duplicate_prompt_groups?: unknown;
       privacy?: unknown;
     };
   };
@@ -4523,6 +4576,10 @@ export async function getQualityDashboard(
     ) ||
     !Array.isArray(body.data.useful_prompts) ||
     !body.data.useful_prompts.every(isQualityDashboardUsefulPrompt) ||
+    !Array.isArray(body.data.duplicate_prompt_groups) ||
+    !body.data.duplicate_prompt_groups.every(
+      isQualityDashboardDuplicatePromptGroup,
+    ) ||
     !isQualityDashboardPrivacy(body.data.privacy)
   ) {
     throw new Error("Quality dashboard failed: Invalid response.");

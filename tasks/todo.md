@@ -1,5 +1,14 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Quality Dashboard Duplicate Groups Contract Error
+
+- [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의
+  `duplicate_prompt_groups[]`와 nested `prompts[]` item 계약을 검증하지 않아 raw prompt body나 깨진 duplicate prompt summary가 dashboard UI 데이터로 넘어갈 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed duplicate group nested prompt `prompt_body`
+  body를 `Quality dashboard failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe duplicate group resolve 실패를 확인한다.
+- [x] GREEN: duplicate group group_id/count/latest_received_at/projects/prompts 계약과 nested prompt id/tool/cwd/received_at/tags/gaps 계약을 확인하고 raw body/path-like extra fields는 raw-free quality dashboard contract 오류로 중단하도록 고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Quality Dashboard Useful Prompts Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의
