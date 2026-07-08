@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Changelog Local Gate
+
+- [x] CHECK: public CHANGELOG still claimed a GitHub Actions CI matrix on every
+  push/PR, while current release policy removed general PR/main CI and uses the
+  local release gate as the authoritative release signal.
+- [x] RED: packaging guard now rejects stale CHANGELOG GitHub Actions CI claims
+  and requires the local release gate wording.
+- [x] GREEN: CHANGELOG validation/packaging notes now describe local gates,
+  quality evidence, smoke checks, and `git diff --check` instead of removed CI.
+- [x] VERIFY: focused public release surface guard, formatting, live
+  preflight/quality smoke, and diff hygiene.
+
 ## 2026-07-09 PromptLane Release Checklist Planning Docs
 
 - [x] CHECK: `package.json#files` ships PromptLane compatibility plans, 9.5

@@ -759,6 +759,14 @@ describe("plugin packaging files", () => {
     }
     expect(changelog).toContain("## 1.0.0 - 2026-07-08");
     expect(changelog).not.toContain("currently pre-release");
+    expect(changelog).toContain(
+      "General PR/main test CI and scheduled UI patrol workflows are removed",
+    );
+    expect(changelog).toContain(
+      "local release gate is the authoritative release and merge signal",
+    );
+    expect(changelog).not.toContain("GitHub Actions CI matrix");
+    expect(changelog).not.toContain("on every push to");
     expect(publishing).toContain("npm publish --tag latest");
     expect(publishing).toContain("npm install -g promptlane");
     expect(publishing).toContain('git tag -fa v1.0.0 -m "promptlane 1.0.0"');
