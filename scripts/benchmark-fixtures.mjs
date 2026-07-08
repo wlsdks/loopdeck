@@ -102,6 +102,7 @@ export function buildBenchmarkEvidenceState({ fixtureSet, status, pass }) {
   if (fixtureSet === "real" && status === "ready") {
     return {
       effectiveness: pass ? "trend_healthy" : "trend_needs_review",
+      release_blocking: false,
       requires_real_fixtures: false,
       release_gate: "synthetic",
       trend_signal: "real",
@@ -111,6 +112,17 @@ export function buildBenchmarkEvidenceState({ fixtureSet, status, pass }) {
   if (fixtureSet === "synthetic" && pass) {
     return {
       effectiveness: "regression_gate_passed_not_real_world_proof",
+      release_blocking: false,
+      requires_real_fixtures: true,
+      release_gate: "synthetic",
+      trend_signal: "real",
+    };
+  }
+
+  if (fixtureSet === "synthetic" && status === "ready" && pass === false) {
+    return {
+      effectiveness: "regression_gate_failed",
+      release_blocking: true,
       requires_real_fixtures: true,
       release_gate: "synthetic",
       trend_signal: "real",
@@ -119,6 +131,7 @@ export function buildBenchmarkEvidenceState({ fixtureSet, status, pass }) {
 
   return {
     effectiveness: "unproven",
+    release_blocking: false,
     requires_real_fixtures: true,
     release_gate: "synthetic",
     trend_signal: "real",

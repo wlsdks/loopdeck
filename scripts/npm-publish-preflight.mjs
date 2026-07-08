@@ -775,8 +775,10 @@ function benchmarkEvidenceStateReportContractIsDocumented() {
   ];
   const semanticSnippets = [
     "regression_gate_passed_not_real_world_proof",
+    "regression_gate_failed",
     "trend_healthy",
     "trend_needs_review",
+    "release_blocking",
     "requires_real_fixtures",
     "release_gate",
     "synthetic",

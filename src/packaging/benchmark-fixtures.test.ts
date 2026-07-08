@@ -39,6 +39,7 @@ describe("benchmark fixture loading", () => {
         status: "no_fixtures",
         evidence_state: {
           effectiveness: "unproven",
+          release_blocking: false,
           requires_real_fixtures: true,
           release_gate: "synthetic",
           trend_signal: "real",
@@ -62,6 +63,7 @@ describe("benchmark fixture loading", () => {
       }),
     ).toEqual({
       effectiveness: "regression_gate_passed_not_real_world_proof",
+      release_blocking: false,
       requires_real_fixtures: true,
       release_gate: "synthetic",
       trend_signal: "real",
@@ -74,6 +76,7 @@ describe("benchmark fixture loading", () => {
       }),
     ).toEqual({
       effectiveness: "trend_healthy",
+      release_blocking: false,
       requires_real_fixtures: false,
       release_gate: "synthetic",
       trend_signal: "real",
@@ -86,7 +89,21 @@ describe("benchmark fixture loading", () => {
       }),
     ).toEqual({
       effectiveness: "trend_needs_review",
+      release_blocking: false,
       requires_real_fixtures: false,
+      release_gate: "synthetic",
+      trend_signal: "real",
+    });
+    expect(
+      buildBenchmarkEvidenceState({
+        fixtureSet: "synthetic",
+        status: "ready",
+        pass: false,
+      }),
+    ).toEqual({
+      effectiveness: "regression_gate_failed",
+      release_blocking: true,
+      requires_real_fixtures: true,
       release_gate: "synthetic",
       trend_signal: "real",
     });
