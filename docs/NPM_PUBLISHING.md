@@ -85,7 +85,8 @@ Why `--tag latest`:
 
 ```sh
 npm install -g promptlane
-promptlane setup
+promptlane setup --profile coach --register-mcp --open-web
+promptlane coach
 promptlane doctor claude-code
 promptlane doctor codex
 promptlane server

@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane NPM Post-Publish First Run Guide
+
+- [x] CHECK: README first-success path uses
+  `promptlane setup --profile coach --register-mcp --open-web` plus
+  `promptlane coach`, but `docs/NPM_PUBLISHING.md` still told post-publish
+  users to run bare `promptlane setup`.
+- [x] RED: packaging guard now requires the npm publishing runbook to include
+  the full setup/open-web/coach path and reject the bare setup command.
+- [x] GREEN: npm publishing install-after-publish commands now match the
+  verified first-success path.
+- [x] VERIFY: focused packaging guard, typecheck, touched-file formatting,
+  skip-npm preflight after commit, and diff hygiene.
+
 ## 2026-07-08 PromptLane Installed Quality Evidence Smoke
 
 - [x] CHECK: `smoke:package-install` installs the tarball and checks first-run
