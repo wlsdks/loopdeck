@@ -46,11 +46,35 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
+          label: "promptlane bin target exists",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "promptlane bin target is executable",
+          ok: true,
+        }),
+        expect.objectContaining({
           label: "pl-claude bin entry is registered",
           ok: true,
         }),
         expect.objectContaining({
+          label: "pl-claude bin target exists",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "pl-claude bin target is executable",
+          ok: true,
+        }),
+        expect.objectContaining({
           label: "pl-codex bin entry is registered",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "pl-codex bin target exists",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "pl-codex bin target is executable",
           ok: true,
         }),
         expect.objectContaining({

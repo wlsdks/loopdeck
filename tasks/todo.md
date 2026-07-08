@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Bin Target Preflight Guard
+
+- [x] CHECK: npm publish preflight checked bin metadata registration, but did
+  not fail closed if built bin target files were missing or non-executable
+  before publish.
+- [x] RED: focused preflight JSON test required bin target existence and
+  executable checks for `promptlane`, `pl-claude`, and `pl-codex`.
+- [x] GREEN: npm publish preflight now checks each registered bin target exists
+  and is executable before publish.
+- [x] VERIFY: focused preflight tests, skip-npm preflight JSON, code formatting,
+  typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Package Entry Existence Preflight Guard
 
 - [x] CHECK: npm publish preflight checked that source-controlled package
