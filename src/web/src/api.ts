@@ -854,6 +854,30 @@ function isContinuationSafetyPrePasteConfirmationNote(
   );
 }
 
+function isContinuationSafetyTargetAgentCheckNote(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_target_agent_check_note"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_target_agent_check_note"]
+  >;
+  return (
+    note.label === "Target-agent check" &&
+    note.check ===
+      "operator verifies the active Codex or Claude Code request box before paste" &&
+    note.not_inspection ===
+      "PromptLane does not inspect agent UI state or target contents" &&
+    note.reason ===
+      "keeps target selection manual before any continuation handoff" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -2809,6 +2833,7 @@ export async function getLoopWorktree(
       continuation_safety_copy_feedback_failure_note?: unknown;
       continuation_safety_copy_retry_note?: unknown;
       continuation_safety_pre_paste_confirmation_note?: unknown;
+      continuation_safety_target_agent_check_note?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -2864,6 +2889,10 @@ export async function getLoopWorktree(
     (body.data.continuation_safety_pre_paste_confirmation_note !== undefined &&
       !isContinuationSafetyPrePasteConfirmationNote(
         body.data.continuation_safety_pre_paste_confirmation_note,
+      )) ||
+    (body.data.continuation_safety_target_agent_check_note !== undefined &&
+      !isContinuationSafetyTargetAgentCheckNote(
+        body.data.continuation_safety_target_agent_check_note,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
