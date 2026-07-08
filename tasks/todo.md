@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Loop Worktree Selection Scope Contract Error
+
+- [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
+  `selection_scope`를 객체 여부만 검증해 malformed filter/reason/action을 selected
+  worktree drilldown UI에 넘길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed worktree `selection_scope.filters` body를
+  `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재
+  incomplete selection scope resolve 실패를 확인한다.
+- [x] GREEN: selection scope label, allowed filter tuple, reason, next action 계약을 확인하고
+  깨진 scope는 raw-free drilldown contract 오류로 중단하도록 고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
+  check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Loop Worktree Privacy Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
