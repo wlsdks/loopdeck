@@ -81,6 +81,16 @@ export function loadBenchmarkFixtures({
   };
 }
 
+export function buildNoFixturesReport({ dataset, fixtureSet, detail }) {
+  return {
+    dataset,
+    fixture_set: fixtureSet,
+    soft_signal: true,
+    status: "no_fixtures",
+    detail,
+  };
+}
+
 function parseRealFixtures(parsed) {
   if (!Array.isArray(parsed?.fixtures) || parsed.fixtures.length === 0) {
     throw new Error(

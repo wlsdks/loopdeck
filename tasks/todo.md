@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Benchmark No-Fixtures Contract Helper
+
+- [x] CHECK: no-fixtures JSON contract coverage spawned `benchmark.mjs` against
+  the current repo, so adding `docs/benchmark-fixtures/real.json` later would
+  make the test stop exercising the missing-fixture branch.
+- [x] RED: focused benchmark fixture test requires a no-fixtures report builder
+  that returns the `soft_signal: true` contract without depending on repo file
+  absence.
+- [x] GREEN: no-fixtures report shape now lives in `benchmark-fixtures.mjs`,
+  and `benchmark.mjs` uses that helper for the real missing-fixture branch.
+- [x] VERIFY: focused fixture/package tests, real no-fixtures soft exit,
+  formatting, typecheck, preflight JSON, and diff hygiene.
+
 ## 2026-07-09 PromptLane Benchmark No-Fixtures Soft Signal
 
 - [x] CHECK: `docs/BENCHMARK_V1.md` says benchmark JSON includes
