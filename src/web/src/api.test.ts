@@ -239,6 +239,34 @@ describe("web api export client", () => {
     ).rejects.toThrow("Selected loop brief failed: Invalid response.");
   });
 
+  it("reports malformed selected loop brief compact boundaries without returning incomplete continuation data", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            title: "Continue agent loop loop_web",
+            source_snapshot_id: "loop_web",
+            prompt: "worktree: agent-loop-worktree",
+            compact_boundary: {
+              event_name: "PostCompact",
+              after_latest_snapshot: true,
+            },
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+            },
+          },
+        }),
+      );
+    const { getSelectedLoopBrief } = await import("./api.js");
+
+    await expect(
+      getSelectedLoopBrief({ worktree: "agent-loop-worktree" }),
+    ).rejects.toThrow("Selected loop brief failed: Invalid response.");
+  });
+
   it("gets a worktree drilldown without raw prompt or compact content", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))

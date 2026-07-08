@@ -1336,6 +1336,7 @@ function parseLoopBriefResponse(
       title?: unknown;
       prompt?: unknown;
       source_snapshot_id?: unknown;
+      compact_boundary?: unknown;
       privacy?: {
         local_only?: unknown;
         returns_prompt_bodies?: unknown;
@@ -1349,6 +1350,8 @@ function parseLoopBriefResponse(
     typeof body.data?.title !== "string" ||
     typeof body.data.prompt !== "string" ||
     typeof body.data.source_snapshot_id !== "string" ||
+    (body.data.compact_boundary !== undefined &&
+      !isLoopCompactBoundary(body.data.compact_boundary)) ||
     body.data.privacy?.local_only !== true ||
     body.data.privacy.returns_prompt_bodies !== false ||
     body.data.privacy.returns_raw_paths !== false
