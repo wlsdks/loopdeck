@@ -500,6 +500,25 @@ function isLoopWorktreeSelectionScope(
   );
 }
 
+function isLoopWorktreeSnapshotAge(
+  value: unknown,
+): value is NonNullable<LoopWorktreeResponse["snapshot_age"]> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const age = value as NonNullable<LoopWorktreeResponse["snapshot_age"]>;
+  return (
+    age.label === "Selected snapshot age" &&
+    typeof age.latest_selected_created_at === "string" &&
+    (age.status === "latest" || age.status === "older_than_latest") &&
+    (age.reason === "selected snapshot is the latest recorded loop snapshot" ||
+      age.reason ===
+        "another loop snapshot was recorded after this selection") &&
+    (age.next_action === "copy selected worktree brief" ||
+      age.next_action === "refresh selected worktree before merging")
+  );
+}
+
 function isSelectedCommandFilterTuple(value: unknown): boolean {
   const filters = JSON.stringify(value);
   return (
@@ -2540,6 +2559,7 @@ export async function getLoopWorktree(
     data?: {
       worktree?: unknown;
       selection_scope?: unknown;
+      snapshot_age?: unknown;
       selected_brief_action?: unknown;
       command_distinction?: unknown;
       command_filters?: unknown;
@@ -2551,6 +2571,8 @@ export async function getLoopWorktree(
   if (
     typeof body.data?.worktree !== "string" ||
     !isLoopWorktreeSelectionScope(body.data.selection_scope) ||
+    (body.data.snapshot_age !== undefined &&
+      !isLoopWorktreeSnapshotAge(body.data.snapshot_age)) ||
     (body.data.selected_brief_action !== undefined &&
       !isSelectedBriefAction(body.data.selected_brief_action)) ||
     (body.data.command_distinction !== undefined &&
