@@ -2,23 +2,33 @@
 
 Date: 2026-05-02
 
-## Current Readiness
+## Live Readiness Checks
 
-The local environment is authenticated to npm as:
+Do not treat older `npm whoami` or registry lookup notes as publish approval.
+Run these checks in the same shell and checkout that will run `npm publish`:
 
 ```sh
 npm whoami
-# stark97
+npm view promptlane versions --json
 ```
 
-The unscoped package name currently appears available:
+Latest local observation on 2026-07-08:
+
+- `npm whoami` returned `E401 Unauthorized`, so this machine was not ready to
+  publish without npm login.
+- `npm view promptlane versions --json` returned `E404 Not Found`, so the
+  package name still appeared unpublished at that moment.
+
+Both results can change. Treat them as a dated operator note only, not as a
+release gate substitute.
+
+The preflight command repeats those checks before publish and fails closed when
+auth is missing, the package version already exists, the worktree is dirty, or
+the expected release tag does not point at the current commit:
 
 ```sh
-npm view promptlane version
-# E404 Not Found
+corepack pnpm npm-publish:preflight
 ```
-
-That result means the package has not been published to the public npm registry at the time of the check. It is not a reservation. The name can still be taken by someone else before the first publish.
 
 ## Recommended First Stable Publish
 
@@ -157,7 +167,7 @@ HOME="$TMP_HOME" npm install -g --prefix "$TMP_PREFIX" "./$TARBALL"
 ```sh
 npm whoami
 npm view promptlane version
-npm access list packages stark97 --json
+npm access list packages "$(npm whoami)" --json
 npm publish --tag latest
 npm dist-tag ls promptlane
 npm view promptlane versions --json

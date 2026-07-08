@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane NPM Publishing Live Readiness
+
+- [x] CHECK: `docs/NPM_PUBLISHING.md` still presented a 2026-05-02
+  `npm whoami` and E404 lookup as current readiness, while live checks on
+  2026-07-08 returned `npm whoami` `E401 Unauthorized` and `promptlane`
+  registry lookup `E404 Not Found`.
+- [x] RED: packaging guard requires the runbook to use `## Live Readiness Checks`,
+  warn against treating older `npm whoami` notes as publish approval, include
+  live npm auth/version commands, and remove stale fixed output examples.
+- [x] GREEN: NPM publishing runbook now records dated live observations only as
+  operator notes and routes publish approval through same-checkout preflight.
+- [x] VERIFY: focused packaging guard, implementation format check, typecheck,
+  and diff whitespace check.
+
 ## 2026-07-08 PromptLane NPM Publish Tag Guidance
 
 - [x] CHECK: `v1.0.0` 태그 이후 main이 preflight 추가 커밋으로 이동해,

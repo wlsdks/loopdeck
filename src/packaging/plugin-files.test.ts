@@ -123,6 +123,13 @@ describe("plugin packaging files", () => {
     expect(publishing).toContain("corepack pnpm npm-publish:preflight");
     expect(publishing).toContain("does not publish");
     expect(publishing).toContain("--skip-npm");
+    expect(publishing).toContain("## Live Readiness Checks");
+    expect(publishing).toContain("Do not treat older `npm whoami`");
+    expect(publishing).toContain("npm whoami");
+    expect(publishing).toContain("npm view promptlane versions --json");
+    expect(publishing).not.toContain("## Current Readiness");
+    expect(publishing).not.toContain("# stark97");
+    expect(publishing).not.toContain("# E404 Not Found");
     expect(publishing).toContain("git checkout v1.0.0");
     expect(publishing).toContain("If main has moved past `v1.0.0`");
     expect(publishing).toContain(
