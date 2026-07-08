@@ -333,6 +333,13 @@ describe("plugin packaging files", () => {
       "package keywords include public positioning terms",
     );
     expect(publishing).toContain("package files include `dist`");
+    expect(publishing).toContain("docs/benchmark-fixtures/real.example.json");
+    expect(packageContents).toContain(
+      "docs/benchmark-fixtures/real.example.json",
+    );
+    expect(packageContents.replace(/\s+/g, " ")).toContain(
+      "copyable raw-free template for consent-bearing real benchmark fixtures",
+    );
     expect(publishing).toContain("package files exclude `dist/**/*.map`");
     expect(publishing).toContain(
       "corepack pnpm --silent npm-publish:preflight -- --json",

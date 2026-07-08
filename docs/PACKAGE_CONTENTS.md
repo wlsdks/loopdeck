@@ -58,6 +58,10 @@ The npm package intentionally includes:
   - includes `docs/superpowers/plans/2026-07-04-promptlane-deprecation-readiness.md`
     so future rename work has release-note, support, rollback, and upgrade-smoke
     gates before any old id is deprecated
+  - includes `docs/benchmark-fixtures/real.example.json` as a copyable raw-free
+    template for consent-bearing real benchmark fixtures; local
+    `docs/benchmark-fixtures/real.json` remains operator-owned and is not
+    shipped
 - Claude Code plugin artifacts under `.claude-plugin`, `commands`, and
   `integrations/claude-code`
 - Codex plugin artifacts under `plugins/promptlane`
