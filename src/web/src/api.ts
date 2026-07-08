@@ -395,12 +395,18 @@ function parsePromptImprovementDraftCopyResponse(body: {
     id?: unknown;
     prompt_id?: unknown;
     copied_at?: unknown;
+    markdown?: unknown;
+    prompt_body?: unknown;
+    raw_path?: unknown;
   };
 }): Pick<PromptImprovementDraft, "id" | "prompt_id" | "copied_at"> {
   if (
     typeof body.data?.id !== "string" ||
     typeof body.data.prompt_id !== "string" ||
-    typeof body.data.copied_at !== "string"
+    typeof body.data.copied_at !== "string" ||
+    body.data.markdown !== undefined ||
+    body.data.prompt_body !== undefined ||
+    body.data.raw_path !== undefined
   ) {
     throw new Error("Improvement draft copy event failed: Invalid response.");
   }
