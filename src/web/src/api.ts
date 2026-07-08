@@ -1535,6 +1535,31 @@ function isContinuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPreSubm
   );
 }
 
+function isContinuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitFreshnessAdvisory(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory"]
+  >;
+  return (
+    note.label ===
+      "Post-memory-approval retry renewed-memory-approval post-submit freshness advisory" &&
+    note.advisory ===
+      "collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain" &&
+    note.not_automated ===
+      "PromptLane does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit" &&
+    note.reason ===
+      "keeps post-submit freshness review tied to explicit local snapshot collection" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -3518,6 +3543,7 @@ export async function getLoopWorktree(
       continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_handoff_freshness_advisory?: unknown;
       continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_paste_freshness_advisory?: unknown;
       continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_submit_freshness_advisory?: unknown;
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -3741,6 +3767,13 @@ export async function getLoopWorktree(
       !isContinuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPreSubmitFreshnessAdvisory(
         body.data
           .continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_submit_freshness_advisory,
+      )) ||
+    (body.data
+      .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory !==
+      undefined &&
+      !isContinuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitFreshnessAdvisory(
+        body.data
+          .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
