@@ -1,5 +1,14 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Archive Score Next Prompt Template Contract Error
+
+- [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의
+  `next_prompt_template` 계약을 검증하지 않아 raw path-like text가 copy-ready archive score guidance로 넘어갈 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 raw-path 포함 `next_prompt_template`
+  body를 `Archive score report failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe template resolve 실패를 확인한다.
+- [x] GREEN: next_prompt_template string 계약과 raw path-like substring 차단을 확인해 raw-free archive score contract 오류로 중단하도록 고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Archive Score Filters Contract Error
 
 - [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의

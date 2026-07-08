@@ -3845,6 +3845,14 @@ function isOptionalString(value: unknown): value is string | undefined {
   return value === undefined || typeof value === "string";
 }
 
+function isRawFreeArchiveText(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    !value.includes("/Users/") &&
+    !value.includes("\\Users\\")
+  );
+}
+
 export type ProjectPolicy = {
   capture_disabled: boolean;
   analysis_disabled: boolean;
@@ -4338,6 +4346,7 @@ export async function getArchiveScoreReport(): Promise<ArchiveScoreReport> {
       low_score_prompts?: unknown;
       effectiveness_summary?: unknown;
       filters?: unknown;
+      next_prompt_template?: unknown;
       privacy?: unknown;
     };
   };
@@ -4352,6 +4361,7 @@ export async function getArchiveScoreReport(): Promise<ArchiveScoreReport> {
     !body.data.low_score_prompts.every(isArchivePromptScoreSummary) ||
     !isArchiveEffectivenessSummary(body.data.effectiveness_summary) ||
     !isArchiveScoreFilters(body.data.filters) ||
+    !isRawFreeArchiveText(body.data.next_prompt_template) ||
     !isArchiveScorePrivacy(body.data.privacy)
   ) {
     throw new Error("Archive score report failed: Invalid response.");
