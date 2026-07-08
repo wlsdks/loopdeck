@@ -151,6 +151,7 @@ describe("plugin packaging files", () => {
     expect(packageJson.scripts["npm-publish:preflight"]).toBe(
       "node scripts/npm-publish-preflight.mjs",
     );
+    expect(packageJson).not.toHaveProperty("private", true);
     expect(packageJson.scripts["smoke:package-install"]).toBe(
       "node scripts/package-install-smoke.mjs",
     );
@@ -165,7 +166,10 @@ describe("plugin packaging files", () => {
       join(process.cwd(), "scripts/npm-publish-preflight.mjs"),
       "utf8",
     );
+    expect(preflightScript).toContain("package is publishable");
+    expect(preflightScript).toContain("packageJson.private !== true");
     expect(publishing).toContain("corepack pnpm npm-publish:preflight");
+    expect(publishing).toContain("package is not marked private");
     expect(publishing).toContain(
       "corepack pnpm --silent npm-publish:preflight -- --json",
     );
