@@ -109,6 +109,52 @@ describe("benchmark fixture loading", () => {
     });
   });
 
+  it("formats benchmark evidence state for human text output", async () => {
+    const { formatBenchmarkEvidenceStateLines } = await import(
+      pathToFileURL(join(process.cwd(), "scripts/benchmark-fixtures.mjs")).href
+    );
+
+    expect(
+      formatBenchmarkEvidenceStateLines({
+        effectiveness: "regression_gate_failed",
+        release_blocking: true,
+        requires_real_fixtures: true,
+        release_gate: "synthetic",
+        trend_signal: "real",
+      }),
+    ).toEqual([
+      "evidence_effectiveness: regression_gate_failed",
+      "evidence_release_blocking: yes",
+      "evidence_requires_real_fixtures: yes",
+      "evidence_release_gate: synthetic",
+      "evidence_trend_signal: real",
+    ]);
+  });
+
+  it("formats missing real fixture reports with evidence state for human text output", async () => {
+    const { buildNoFixturesReport, formatNoFixturesReportLines } = await import(
+      pathToFileURL(join(process.cwd(), "scripts/benchmark-fixtures.mjs")).href
+    );
+
+    const report = buildNoFixturesReport({
+      dataset: "benchmark-v1-real",
+      fixtureSet: "real",
+      detail:
+        "No real fixtures registered yet. Add docs/benchmark-fixtures/real.json (consent-bearing redacted prompts) and re-run.",
+    });
+
+    expect(formatNoFixturesReportLines(report)).toEqual([
+      "promptlane benchmark benchmark-v1-real",
+      "status: no_fixtures",
+      "evidence_effectiveness: unproven",
+      "evidence_release_blocking: no",
+      "evidence_requires_real_fixtures: yes",
+      "evidence_release_gate: synthetic",
+      "evidence_trend_signal: real",
+      "No real fixtures registered yet. Add docs/benchmark-fixtures/real.json (consent-bearing redacted prompts) and re-run.",
+    ]);
+  });
+
   it("loads consent-bearing redacted real fixtures instead of synthetic fixtures", async () => {
     tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
     const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");

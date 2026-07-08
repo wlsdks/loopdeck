@@ -771,6 +771,8 @@ function benchmarkEvidenceStateReportContractIsDocumented() {
   const benchmarkSpec = readText("docs/BENCHMARK_V1.md");
   const implementationSnippets = [
     "buildBenchmarkEvidenceState",
+    "formatBenchmarkEvidenceStateLines",
+    "formatNoFixturesReportLines",
     "evidence_state",
   ];
   const semanticSnippets = [
@@ -779,6 +781,7 @@ function benchmarkEvidenceStateReportContractIsDocumented() {
     "trend_healthy",
     "trend_needs_review",
     "release_blocking",
+    "evidence_release_blocking",
     "requires_real_fixtures",
     "release_gate",
     "synthetic",

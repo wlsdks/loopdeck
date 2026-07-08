@@ -39,6 +39,10 @@ passes report `regression_gate_passed_not_real_world_proof`; synthetic
 threshold misses report `regression_gate_failed` with `release_blocking: true`;
 real fixture passes report `trend_healthy`; real fixture threshold misses
 report `trend_needs_review` with `release_blocking: false`.
+Human text output, including missing-real-fixtures output, prints the same
+evidence state as `evidence_*` lines, including
+`evidence_release_blocking`, so operators do not need JSON parsing to see
+whether a benchmark miss blocks release.
 When `--fixture-set real` has no local `real.json`, JSON output also includes
 `evidence_state.effectiveness: "unproven"` and `requires_real_fixtures: true`
 so release automation cannot confuse a missing real corpus with proof of

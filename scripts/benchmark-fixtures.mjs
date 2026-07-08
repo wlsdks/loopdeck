@@ -138,6 +138,27 @@ export function buildBenchmarkEvidenceState({ fixtureSet, status, pass }) {
   };
 }
 
+export function formatBenchmarkEvidenceStateLines(evidenceState) {
+  return [
+    `evidence_effectiveness: ${evidenceState.effectiveness}`,
+    `evidence_release_blocking: ${evidenceState.release_blocking ? "yes" : "no"}`,
+    `evidence_requires_real_fixtures: ${
+      evidenceState.requires_real_fixtures ? "yes" : "no"
+    }`,
+    `evidence_release_gate: ${evidenceState.release_gate}`,
+    `evidence_trend_signal: ${evidenceState.trend_signal}`,
+  ];
+}
+
+export function formatNoFixturesReportLines(report) {
+  return [
+    `promptlane benchmark ${report.dataset}`,
+    "status: no_fixtures",
+    ...formatBenchmarkEvidenceStateLines(report.evidence_state),
+    report.detail,
+  ];
+}
+
 function parseConsentNote(parsed) {
   const consentNote = parsed?.consent_note;
   if (typeof consentNote !== "string" || consentNote.trim().length === 0) {
