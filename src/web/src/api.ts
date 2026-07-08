@@ -238,6 +238,16 @@ function parsePromptListResponse(body: {
   return body.data as PromptListResponse;
 }
 
+function parsePromptSummaryArrayResponse(
+  body: { data?: unknown },
+  message: string,
+): PromptSummary[] {
+  if (!Array.isArray(body.data) || !body.data.every(isPromptSummary)) {
+    throw new Error(`${message}: Invalid response.`);
+  }
+  return body.data;
+}
+
 export type LoopSummary = {
   id: string;
   created_at: string;
@@ -2562,8 +2572,10 @@ export async function getSimilarPrompts(
     await failApi(response, "Similar prompts unavailable");
   }
 
-  const body = (await response.json()) as { data: PromptSummary[] };
-  return body.data;
+  const body = (await response.json()) as Parameters<
+    typeof parsePromptSummaryArrayResponse
+  >[0];
+  return parsePromptSummaryArrayResponse(body, "Similar prompts unavailable");
 }
 
 export async function deletePrompt(id: string): Promise<void> {
