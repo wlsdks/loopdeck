@@ -1360,6 +1360,31 @@ function isContinuationSafetyPostMemoryApprovalRetryPreMemoryApprovalFreshnessAd
   );
 }
 
+function isContinuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalCollectionReminder(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_reminder"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_reminder"]
+  >;
+  return (
+    note.label ===
+      "Post-memory-approval retry renewed-memory-approval collection reminder" &&
+    note.reminder ===
+      "collect a new explicit loop snapshot after approving loop memory again" &&
+    note.not_automated ===
+      "PromptLane does not start collection from renewed memory approval or approval state changes" &&
+    note.reason ===
+      "keeps renewed-memory-approval collection operator-triggered and local-first" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -3336,6 +3361,7 @@ export async function getLoopWorktree(
       continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note?: unknown;
       continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder?: unknown;
       continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory?: unknown;
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_reminder?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -3510,6 +3536,13 @@ export async function getLoopWorktree(
       !isContinuationSafetyPostMemoryApprovalRetryPreMemoryApprovalFreshnessAdvisory(
         body.data
           .continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory,
+      )) ||
+    (body.data
+      .continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_reminder !==
+      undefined &&
+      !isContinuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalCollectionReminder(
+        body.data
+          .continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_reminder,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
