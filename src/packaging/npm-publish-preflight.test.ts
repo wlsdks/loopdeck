@@ -158,6 +158,18 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
+          label: "built CLI assets exist",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "built server assets exist",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "built web assets exist",
+          ok: true,
+        }),
+        expect.objectContaining({
           label: "package files include .claude-plugin",
           ok: true,
         }),

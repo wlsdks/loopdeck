@@ -243,6 +243,13 @@ for (const filePath of [
     );
   }
 }
+for (const [label, filePath] of [
+  ["built CLI assets exist", "dist/cli"],
+  ["built server assets exist", "dist/server"],
+  ["built web assets exist", "dist/web"],
+]) {
+  check(label, isDirectoryPath(filePath), filePath);
+}
 check(
   "package files exclude dist/**/*.map",
   Array.isArray(packageJson.files) &&
@@ -337,6 +344,14 @@ function packagePath(path) {
 function isExecutablePath(path) {
   try {
     return Boolean(statSync(packagePath(path)).mode & 0o111);
+  } catch {
+    return false;
+  }
+}
+
+function isDirectoryPath(path) {
+  try {
+    return statSync(packagePath(path)).isDirectory();
   } catch {
     return false;
   }
