@@ -399,6 +399,52 @@ export type LoopListResponse = {
   };
 };
 
+function isLoopCompactBoundary(
+  value: unknown,
+): value is NonNullable<LoopSummary["compact_boundary"]> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const boundary = value as NonNullable<LoopSummary["compact_boundary"]>;
+  return (
+    typeof boundary.id === "string" &&
+    typeof boundary.created_at === "string" &&
+    typeof boundary.tool === "string" &&
+    (boundary.event_name === "PreCompact" ||
+      boundary.event_name === "PostCompact") &&
+    (boundary.trigger === "manual" ||
+      boundary.trigger === "auto" ||
+      boundary.trigger === "unknown") &&
+    (boundary.content_hash === undefined ||
+      typeof boundary.content_hash === "string") &&
+    boundary.after_latest_snapshot === true
+  );
+}
+
+function isLoopSummary(value: unknown): value is LoopSummary {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const loop = value as LoopSummary;
+  return (
+    typeof loop.id === "string" &&
+    typeof loop.created_at === "string" &&
+    typeof loop.tool === "string" &&
+    typeof loop.source === "string" &&
+    typeof loop.project === "string" &&
+    (loop.branch === undefined || typeof loop.branch === "string") &&
+    (loop.worktree === undefined || typeof loop.worktree === "string") &&
+    typeof loop.prompt_count === "number" &&
+    (loop.average_prompt_score === undefined ||
+      typeof loop.average_prompt_score === "number") &&
+    Array.isArray(loop.top_gaps) &&
+    loop.top_gaps.every((gap) => typeof gap === "string") &&
+    typeof loop.outcome_status === "string" &&
+    (loop.compact_boundary === undefined ||
+      isLoopCompactBoundary(loop.compact_boundary))
+  );
+}
+
 export type LoopWorktreeResponse = {
   worktree: string;
   session_id?: string;
@@ -2132,7 +2178,8 @@ export async function listLoops(): Promise<LoopListResponse> {
   if (
     typeof body.data?.status !== "object" ||
     body.data.status === null ||
-    !Array.isArray(body.data.items)
+    !Array.isArray(body.data.items) ||
+    !body.data.items.every(isLoopSummary)
   ) {
     throw new Error("Loop list failed: Invalid response.");
   }
