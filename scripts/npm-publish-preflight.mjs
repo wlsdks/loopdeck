@@ -518,6 +518,12 @@ if (!options.skipNpm) {
 }
 
 const passed = checks.every((item) => item.ok);
+const blockingChecks = checks
+  .filter((item) => !item.ok)
+  .map((item) => ({
+    label: item.label,
+    ...(item.detail ? { detail: item.detail } : {}),
+  }));
 const summary = {
   check: "npm_publish_preflight",
   package: packageName,
@@ -529,6 +535,7 @@ const summary = {
     git_clean: options.skipGitClean,
     git_tag: options.skipGitTag,
   },
+  blocking_checks: blockingChecks,
   checks,
   next_action: nextAction({ passed, checks }),
 };
@@ -1065,9 +1072,9 @@ function originTagMismatchDetail({
 }
 
 function formatSummary(summary) {
-  const blockingChecks = summary.checks
-    .filter((item) => !item.ok)
-    .map((item) => `- ${item.label}`);
+  const blockingChecks = summary.blocking_checks.map(
+    (item) => `- ${item.label}`,
+  );
   return [
     "PromptLane npm publish preflight",
     `Status: ${summary.status}`,
