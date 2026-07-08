@@ -55,10 +55,18 @@ promptlane coach
 ```sh
 promptlane doctor claude-code
 promptlane doctor codex
-# MCP 등록이 실패한 경우:
-# claude mcp add --transport stdio promptlane -- promptlane mcp
-# codex mcp add promptlane -- promptlane mcp
 ```
+
+MCP 등록이 실패했다면 먼저 one-command setup을 다시 실행하세요.
+
+```sh
+promptlane setup --profile coach --register-mcp --open-web
+```
+
+수동 `claude mcp add` / `codex mcp add` 명령은 고급 troubleshooting에만
+사용하세요. `setup --register-mcp`는 현재 CLI entrypoint를 사용하므로 더
+안전합니다. clone한 checkout에서는 절대 Node + `dist/` 경로를 등록해 Codex가
+전역 `promptlane` PATH에 의존하지 않게 합니다.
 
 로컬 archive는 dashboard, 검색, history review, export가 필요할 때만
 열면 됩니다.

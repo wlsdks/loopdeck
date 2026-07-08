@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Korean README MCP Troubleshooting Parity
+
+- [x] CHECK: English first 3-minute loop tells users to rerun
+  `setup --register-mcp` before manual MCP commands, while Korean README showed
+  manual `mcp add` comments directly in the doctor block.
+- [x] RED: README guard now requires the Korean first 3-minute section to say
+  MCP failure should rerun setup first and leave manual MCP commands as advanced
+  troubleshooting.
+- [x] GREEN: README.ko first 3-minute troubleshooting now mirrors the English
+  order and explains why setup registration is preferred.
+- [x] VERIFY: focused README guards, pack dry-run, formatting, and diff hygiene.
+
 ## 2026-07-08 PromptLane Korean README First Capture Parity
 
 - [x] CHECK: Korean README Codex quick start omitted `--open-web`, and Capture
