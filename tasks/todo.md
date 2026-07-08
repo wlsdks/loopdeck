@@ -1,5 +1,21 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane NPM Preflight Auth Next Action
+
+- [x] CHECK: current publish preflight correctly blocks on missing npm auth,
+  but its `next_action` was the generic "Fix blocked checks before publishing."
+  even when npm authentication is the only remaining blocker.
+- [x] RED: added a fake-npm preflight test that isolates the npm auth failure
+  path and requires `npm login`, rerunning
+  `corepack pnpm npm-publish:preflight`, and `npm publish --tag latest` in the
+  JSON `next_action`.
+- [x] GREEN: preflight now derives `next_action` from failed check labels and
+  gives a publish-specific operator action for npm auth and already-published
+  version blockers.
+- [x] VERIFY: focused npm preflight test, packaging tests, post-merge
+  skip-npm preflight/tag check, touched-file formatting, typecheck, and diff
+  hygiene.
+
 ## 2026-07-08 PromptLane NPM Publish Runbook Current Tag
 
 - [x] CHECK: `v1.0.0` now points at current main and

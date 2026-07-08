@@ -85,9 +85,7 @@ const summary = {
     git_tag: options.skipGitTag,
   },
   checks,
-  next_action: passed
-    ? "Run npm publish --tag latest only if the full release gate has passed."
-    : "Fix blocked checks before publishing.",
+  next_action: nextAction({ passed, checks }),
 };
 
 if (options.json) {
@@ -171,6 +169,31 @@ function check(label, ok, detail = "") {
     ok: Boolean(ok),
     ...(detail ? { detail: String(detail).slice(0, 240) } : {}),
   });
+}
+
+function nextAction({ passed, checks }) {
+  if (passed) {
+    return "Run npm publish --tag latest only if the full release gate has passed.";
+  }
+
+  const failedLabels = checks
+    .filter((item) => !item.ok)
+    .map((item) => item.label);
+  if (
+    failedLabels.length === 1 &&
+    failedLabels[0] === "npm authentication is available"
+  ) {
+    return "Run npm login, rerun corepack pnpm npm-publish:preflight, then run npm publish --tag latest only after the full release gate has passed.";
+  }
+
+  if (
+    failedLabels.length === 1 &&
+    failedLabels[0].endsWith("has not already been published")
+  ) {
+    return "Bump package.json and src/shared/version.ts, create a new release tag, then rerun the full release gate.";
+  }
+
+  return "Fix blocked checks before publishing.";
 }
 
 function sanitizeNpmDetail(value) {
