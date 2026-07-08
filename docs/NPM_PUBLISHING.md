@@ -136,7 +136,9 @@ git diff --check
 ```
 
 The package install smoke builds, packs with `--ignore-scripts`, installs the
-tarball into an isolated npm prefix, and runs all shipped bin help commands:
+tarball into an isolated npm prefix, runs all shipped bin help commands,
+verifies the installed `promptlane start --open-web --json` first-success guide,
+and verifies the installed `promptlane quality-evidence --require-complete` release gate:
 
 ```sh
 corepack pnpm smoke:package-install

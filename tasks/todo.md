@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Package Install Smoke Runbook Guard
+
+- [x] CHECK: `smoke:package-install` verifies shipped bin help, installed
+  `promptlane start --open-web --json`, and installed
+  `promptlane quality-evidence --require-complete`, but the npm publishing
+  runbook only described bin help commands.
+- [x] RED: focused packaging guard requires the npm publishing runbook to
+  document the installed first-success guide and installed quality-evidence
+  release gate checks.
+- [x] GREEN: npm publishing runbook now describes the full package install
+  smoke coverage.
+- [x] VERIFY: focused packaging guard, package install smoke, preflight JSON,
+  formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Runbook Node Range Guard
 
 - [x] CHECK: `package.json#engines.node` supports `>=22.12 <25` and current
