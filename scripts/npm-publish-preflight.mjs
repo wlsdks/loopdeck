@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const repoRoot = resolve(new URL("..", import.meta.url).pathname);
@@ -35,10 +35,21 @@ for (const [binName, expectedPath] of Object.entries({
   "pl-claude": "./dist/cli/pl-claude.js",
   "pl-codex": "./dist/cli/pl-codex.js",
 })) {
+  const registeredPath = packageJson.bin?.[binName];
   check(
     `${binName} bin entry is registered`,
-    packageJson.bin?.[binName] === expectedPath,
-    packageJson.bin?.[binName],
+    registeredPath === expectedPath,
+    registeredPath,
+  );
+  check(
+    `${binName} bin target exists`,
+    registeredPath === expectedPath && existsSync(packagePath(expectedPath)),
+    expectedPath,
+  );
+  check(
+    `${binName} bin target is executable`,
+    registeredPath === expectedPath && isExecutablePath(expectedPath),
+    expectedPath,
   );
 }
 check(
@@ -220,6 +231,18 @@ function parseArgs(args) {
 
 function readJson(path) {
   return JSON.parse(readFileSync(join(repoRoot, path), "utf8"));
+}
+
+function packagePath(path) {
+  return join(repoRoot, path.startsWith("./") ? path.slice(2) : path);
+}
+
+function isExecutablePath(path) {
+  try {
+    return Boolean(statSync(packagePath(path)).mode & 0o111);
+  } catch {
+    return false;
+  }
 }
 
 function requiresSourceControlledEntry(filePath) {
