@@ -1,5 +1,14 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Archive Score Metadata Contract Error
+
+- [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의
+  `generated_at`/`has_more` metadata 계약을 검증하지 않아 깨진 freshness/pagination state가 archive score UI 데이터로 넘어갈 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed metadata `has_more`
+  body를 `Archive score report failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe metadata resolve 실패를 확인한다.
+- [x] GREEN: generated_at string, has_more boolean 계약을 확인해 깨진 archive score metadata는 contract 오류로 중단하도록 고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Archive Score Next Prompt Template Contract Error
 
 - [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의
