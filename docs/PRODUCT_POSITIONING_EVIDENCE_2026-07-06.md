@@ -5,13 +5,13 @@ positioning 9.5 quality bar.
 
 ## Metadata Evidence
 
-| Surface | Evidence |
-| --- | --- |
-| GitHub repository | `wlsdks/promptlane` description is `PromptLane local-first prompt improvement workspace for Codex, Claude Code, and long-running coding-agent work.` |
-| GitHub topics | Includes `promptlane`, `prompt-improvement`, `meta-prompting`, `local-first`, `codex`, `claude-code`, `loop-engineering`, `mcp`, and `worktrees`. |
-| npm package metadata | `package.json#description` uses PromptLane positioning while package name remains `promptlane` for compatibility. |
-| Codex plugin metadata | `plugins/promptlane/.codex-plugin/plugin.json` uses `displayName: PromptLane` and PromptLane-first descriptions. |
-| Claude plugin metadata | `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` use PromptLane-first descriptions. |
+| Surface                | Evidence                                                                                                                                                                                                                                                                             |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| GitHub repository      | `wlsdks/promptlane` description is `PromptLane local-first prompt improvement workspace for Codex, Claude Code, and long-running coding-agent work.`                                                                                                                                 |
+| GitHub topics          | Includes `promptlane`, `prompt-improvement`, `meta-prompting`, `local-first`, `codex`, `claude-code`, `loop-engineering`, `mcp`, and `worktrees`.                                                                                                                                    |
+| npm package metadata   | `package.json#description`, `homepage`, `bugs`, `keywords`, and `publishConfig.access` use PromptLane public package positioning while package name remains `promptlane` for compatibility; keywords include `prompt-improvement` and `local-first`, and publish access is `public`. |
+| Codex plugin metadata  | `plugins/promptlane/.codex-plugin/plugin.json` uses `displayName: PromptLane` and PromptLane-first descriptions.                                                                                                                                                                     |
+| Claude plugin metadata | `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` use PromptLane-first descriptions.                                                                                                                                                                                |
 
 ## Product Contract Evidence
 

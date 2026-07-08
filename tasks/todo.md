@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Public Metadata Docs Guard
+
+- [x] CHECK: `package.json` and npm publish preflight now guard public npm
+  metadata, but the publish runbook and product positioning evidence still
+  described only the older package metadata surface.
+- [x] RED: focused packaging docs tests required the publish checklist and
+  product positioning evidence to name homepage, bugs, keywords, and public
+  publish access.
+- [x] GREEN: npm publishing docs and product positioning evidence now document
+  the same public package metadata that preflight checks.
+- [x] VERIFY: focused packaging docs tests, formatting, typecheck, and diff
+  hygiene.
+
 ## 2026-07-09 PromptLane NPM Public Metadata Preflight Guard
 
 - [x] CHECK: product positioning evidence references npm package metadata, but

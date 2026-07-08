@@ -142,7 +142,8 @@ corepack pnpm smoke:package-install
 - [ ] package name is still available or already owned by the maintainer
 - [ ] package is not marked private in `package.json`
 - [ ] package manager is pinned to `pnpm@10.18.0`, and Node engine remains `>=22.12 <25`
-- [ ] license, repository, and bin metadata are present in `package.json`
+- [ ] license, repository, homepage, bugs, keywords, publish access, and bin metadata are present in `package.json`
+- [ ] `corepack pnpm npm-publish:preflight` reports `package publish access is public` and `package keywords include public positioning terms`
 - [ ] package files include `dist`, Claude/Codex integration surfaces (`.claude-plugin`, `commands`, `plugins`, `integrations`), core integration docs (`docs/PROMPTLANE.md`, `docs/AGENT-HARNESS.md`, `docs/INSTRUCTION-FILES.md`, `docs/PLUGINS.md`, `docs/ADAPTERS.md`, `docs/LOOP-SNAPSHOT-SCHEMA.md`), release runbooks (`docs/NPM_PUBLISHING.md`, `docs/PACKAGE_CONTENTS.md`, `docs/PRE_PUBLISH_PRIVACY_AUDIT.md`, `docs/RELEASE_CHECKLIST.md`), release evidence docs, public docs (`README.md`, `README.ko.md`, `CHANGELOG.md`, `LICENSE`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SUPPORT.md`), the npm publish preflight script, and core release verification scripts
 - [ ] package files exclude `dist/**/*.map`
 - [ ] version in `package.json` is bumped and has never been published
