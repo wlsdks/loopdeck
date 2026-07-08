@@ -7899,6 +7899,22 @@ describe("web api export client", () => {
     );
   });
 
+  it("preserves settings recovery detail from real failed text responses", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        new Response(
+          "Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+          { status: 401 },
+        ),
+      );
+    const { getSettings } = await import("./api.js");
+
+    await expect(getSettings()).rejects.toThrow(
+      "Settings failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+    );
+  });
+
   it("redacts raw-like prompt details from failed response messages", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))

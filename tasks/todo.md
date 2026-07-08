@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Real Text Response Error Detail
+
+- [x] CHECK: `failApi`가 JSON parse 실패 후 같은 `Response`에서 `text()`를 읽어
+  mock text response는 통과하지만 실제 Fetch `Response`에서는 body가 이미 소비되어 text/plain
+  recovery detail이 사라질 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 실제 `new Response(text, { status: 401 })` 기반
+  settings failed response의 recovery sentence를 사용자-visible error suffix로 보존하도록 요구하게 해
+  현재 suffix 누락 실패를 확인한다.
+- [x] GREEN: web API failed response detail assembly가 JSON parse 전에 `response.clone()`
+  fallback을 준비하고 parse 실패 시 clone에서 text를 읽어 기존 `apiErrorText` sanitizer를 거쳐 표시한다.
+- [x] VERIFY: focused web API failed response detail/redaction tests, implementation
+  format check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Text Error Detail Redaction
 
 - [x] CHECK: `failApi`가 failed response를 JSON으로만 읽고 parse 실패 시 body text를
