@@ -6343,6 +6343,7 @@ describe("web api export client", () => {
             patterns: [],
             instruction_suggestions: [],
             useful_prompts: [],
+            duplicate_prompt_groups: [],
             missing_items: [],
             privacy: {
               local_only: true,
@@ -7204,6 +7205,62 @@ describe("web api export client", () => {
                 tags: ["review"],
                 quality_gaps: [],
                 prompt_body: "secret prompt body",
+              },
+            ],
+            missing_items: [],
+            privacy: {
+              local_only: true,
+              external_calls: false,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+            },
+          },
+        }),
+      );
+    const { getQualityDashboard } = await import("./api.js");
+
+    await expect(getQualityDashboard()).rejects.toThrow(
+      "Quality dashboard failed: Invalid response.",
+    );
+  });
+
+  it("reports unsafe quality dashboard duplicate groups without returning prompt bodies", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            total_prompts: 1,
+            quality_score: {
+              average: 42,
+              max: 100,
+              band: "needs_work",
+              scored_prompts: 1,
+            },
+            distribution: {
+              by_tool: [],
+              by_project: [],
+            },
+            patterns: [],
+            instruction_suggestions: [],
+            useful_prompts: [],
+            duplicate_prompt_groups: [
+              {
+                group_id: "dupe_1",
+                count: 1,
+                latest_received_at: "2026-07-04T01:00:00.000Z",
+                projects: ["private-project"],
+                prompts: [
+                  {
+                    id: "prmt_duplicate",
+                    tool: "codex",
+                    cwd: "private-project",
+                    received_at: "2026-07-04T01:00:00.000Z",
+                    tags: ["review"],
+                    quality_gaps: [],
+                    prompt_body: "secret prompt body",
+                  },
+                ],
               },
             ],
             missing_items: [],
