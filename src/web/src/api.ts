@@ -783,6 +783,29 @@ function isContinuationSafetyCopyFeedbackTimeoutNote(
   );
 }
 
+function isContinuationSafetyCopyFeedbackFailureNote(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_copy_feedback_failure_note"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_copy_feedback_failure_note"]
+  >;
+  return (
+    note.label === "Copy feedback failure" &&
+    note.failure_scope === "clipboard failure requires a manual retry" &&
+    note.not_state ===
+      "failure does not submit prompts or store review state" &&
+    note.reason ===
+      "keeps copy failure handling local to the operator without hidden recovery actions" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -2735,6 +2758,7 @@ export async function getLoopWorktree(
       continuation_safety_copy_feedback_reminder?: unknown;
       continuation_safety_copy_feedback_accessibility_note?: unknown;
       continuation_safety_copy_feedback_timeout_note?: unknown;
+      continuation_safety_copy_feedback_failure_note?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -2778,6 +2802,10 @@ export async function getLoopWorktree(
     (body.data.continuation_safety_copy_feedback_timeout_note !== undefined &&
       !isContinuationSafetyCopyFeedbackTimeoutNote(
         body.data.continuation_safety_copy_feedback_timeout_note,
+      )) ||
+    (body.data.continuation_safety_copy_feedback_failure_note !== undefined &&
+      !isContinuationSafetyCopyFeedbackFailureNote(
+        body.data.continuation_safety_copy_feedback_failure_note,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||

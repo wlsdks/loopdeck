@@ -3045,6 +3045,57 @@ describe("web api export client", () => {
     );
   });
 
+  it("reports malformed loop worktree copy feedback failure without returning unsafe guidance", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            worktree: "agent-loop-worktree",
+            selection_scope: {
+              label: "Selection scope",
+              filters: ["worktree"],
+              reason: "showing latest snapshots for selected worktree",
+              next_action: "copy selected worktree brief",
+            },
+            continuation_safety_copy_feedback_failure_note: {
+              label: "Copy feedback failure",
+              failure_scope: "clipboard failure requires a manual retry",
+              not_state: "failure does not submit prompts or store review state",
+              reason:
+                "keeps copy failure handling local to the operator without hidden recovery actions",
+              writes_files: false,
+              external_calls: true,
+            },
+            items: [
+              {
+                id: "loop_web",
+                created_at: "2026-07-04T01:00:00.000Z",
+                tool: "codex",
+                source: "cli",
+                project: "private-project",
+                worktree: "agent-loop-worktree",
+                prompt_count: 2,
+                top_gaps: ["Goal clarity"],
+                outcome_status: "passed",
+              },
+            ],
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+              returns_compact_content: false,
+            },
+          },
+        }),
+      );
+    const { getLoopWorktree } = await import("./api.js");
+
+    await expect(getLoopWorktree("agent-loop-worktree")).rejects.toThrow(
+      "Loop worktree drilldown failed: Invalid response.",
+    );
+  });
+
   it("approves the latest eligible loop memory candidate with csrf", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
