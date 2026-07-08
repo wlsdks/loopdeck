@@ -736,6 +736,29 @@ function isContinuationSafetyCopyFeedbackReminder(
   );
 }
 
+function isContinuationSafetyCopyFeedbackAccessibilityNote(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_copy_feedback_accessibility_note"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_copy_feedback_accessibility_note"]
+  >;
+  return (
+    note.label === "Copy feedback accessibility" &&
+    note.visible_label === "selected brief copy button label remains stable" &&
+    note.assistive_feedback ===
+      "copied status belongs in accessible feedback instead of replacing the visible command" &&
+    note.reason ===
+      "keeps copy feedback clear without implying safety approval or changing layout" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -2686,6 +2709,7 @@ export async function getLoopWorktree(
       continuation_safety_non_persistence_note?: unknown;
       continuation_safety_recheck_cue?: unknown;
       continuation_safety_copy_feedback_reminder?: unknown;
+      continuation_safety_copy_feedback_accessibility_note?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -2720,6 +2744,11 @@ export async function getLoopWorktree(
     (body.data.continuation_safety_copy_feedback_reminder !== undefined &&
       !isContinuationSafetyCopyFeedbackReminder(
         body.data.continuation_safety_copy_feedback_reminder,
+      )) ||
+    (body.data.continuation_safety_copy_feedback_accessibility_note !==
+      undefined &&
+      !isContinuationSafetyCopyFeedbackAccessibilityNote(
+        body.data.continuation_safety_copy_feedback_accessibility_note,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
