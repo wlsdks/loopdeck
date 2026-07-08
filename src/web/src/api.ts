@@ -5920,6 +5920,11 @@ function apiErrorIssueText(value: unknown): string {
 
 function apiErrorIssuePathText(value: unknown): string {
   if (typeof value === "string") {
+    if (
+      /^\/(?:Users|home|private|tmp|var|opt|workspace|Volumes)\//i.test(value)
+    ) {
+      return apiErrorText(value);
+    }
     return apiErrorText(
       value
         .split("/")

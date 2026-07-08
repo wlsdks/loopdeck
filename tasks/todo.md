@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Error Issue Local Path String Redaction
+
+- [x] CHECK: `apiErrorIssuePathText`가 string `path` 값을 JSON Pointer처럼 slash split해
+  `/Users/...` local path를 `Users...` dot path로 바꾸면서 existing path redaction을 우회할 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 settings failed response `errors[]`의 raw local
+  path string을 `[REDACTED:path]` field로 표시하도록 요구하게 해 현재 unsafe path-field
+  detail 노출 실패를 확인한다.
+- [x] GREEN: web API error issue path sanitizer가 known local absolute path prefix는
+  JSON Pointer 정규화 전에 기존 API error text sanitizer로 보내 raw path를 redaction한다.
+- [x] VERIFY: focused web API issue/error redaction tests, implementation format
+  check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Error Issue Instance Path Redaction
 
 - [x] CHECK: `apiErrorIssueText`가 validation `errors[]`의 `field`와 `path`는
