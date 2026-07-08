@@ -67,7 +67,8 @@ corepack pnpm npm-publish:preflight -- --skip-npm
 
 Skip flags are inspection-only. If any release check is skipped and every
 executed check passes, JSON output reports `status: "inspection"` and
-`publish_ready: false`; rerun without skip flags before publishing.
+`publish_ready: false`, plus `inspection_warnings` naming the skipped checks;
+rerun without skip flags before publishing.
 
 For machine-readable preflight output, use the silent pnpm invocation so stdout
 stays parseable JSON even when the preflight blocks:

@@ -538,6 +538,7 @@ const summary = {
     git_clean: options.skipGitClean,
     git_tag: options.skipGitTag,
   },
+  inspection_warnings: inspectionWarnings(skippedReleaseChecks),
   blocking_checks: blockingChecks,
   checks,
   recovery_commands: recoveryCommands({ passed, checks }),
@@ -990,6 +991,19 @@ function skippedReleaseCheckFlags({ skipNpm, skipGitClean, skipGitTag }) {
   ];
 }
 
+function inspectionWarnings(skippedReleaseChecks) {
+  if (skippedReleaseChecks.length === 0) {
+    return [];
+  }
+
+  return [
+    {
+      label: "release checks were skipped",
+      detail: `Skipped ${skippedReleaseChecks.join(", ")}; rerun corepack pnpm npm-publish:preflight without skip flags before publishing.`,
+    },
+  ];
+}
+
 function nextAction({ passed, checks, skippedReleaseChecks = [] }) {
   if (passed) {
     if (skippedReleaseChecks.length) {
@@ -1109,6 +1123,9 @@ function formatSummary(summary) {
   const blockingChecks = summary.blocking_checks.map(
     (item) => `- ${item.label}`,
   );
+  const inspectionWarnings = summary.inspection_warnings.map(
+    (item) => `- ${item.label}${item.detail ? ` (${item.detail})` : ""}`,
+  );
   return [
     "PromptLane npm publish preflight",
     `Status: ${summary.status}`,
@@ -1116,6 +1133,9 @@ function formatSummary(summary) {
     `Expected tag: ${summary.expected_tag}`,
     ...(blockingChecks.length
       ? ["", "Blocking checks", ...blockingChecks]
+      : []),
+    ...(inspectionWarnings.length
+      ? ["", "Inspection warnings", ...inspectionWarnings]
       : []),
     ...(summary.recovery_commands.length
       ? [
