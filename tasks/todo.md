@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Project Instruction Review Raw Contract Error
+
+- [x] CHECK: `parseProjectInstructionReviewResponse`가 privacy flags를 확인하면서도
+  root `data`의 raw-like `prompt_body`/`raw_path`/`markdown` extra field를 차단하지
+  않아 instruction analysis UI state로 file body-like data가 넘어갈 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 project instruction analysis response의
+  `prompt_body` body를 `Project instruction analysis failed: Invalid response.`로
+  reject하도록 요구하게 해 현재 unsafe instruction review resolve 실패를 확인한다.
+- [x] GREEN: project instruction review parser가 score/files/checklist/suggestions/
+  privacy 계약을 유지하면서 raw `prompt_body`/`raw_path`/`markdown` fields를 차단한다.
+- [x] VERIFY: focused web API project instruction test, implementation format check,
+  typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Import Dry-Run Root Raw Contract Error
 
 - [x] CHECK: `parseImportDryRunResponse`가 import dry-run root `data`의 필수
