@@ -788,7 +788,10 @@ exit 1
       fakeNpm,
       `#!/usr/bin/env sh
 if [ "$1" = "whoami" ]; then
+  echo 'npm warn Unknown env config "reporter". This will stop working in the next major version of npm.' >&2
   echo "npm ERR! code E401" >&2
+  echo "npm ERR! token npm_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL" >&2
+  echo "npm ERR! A complete log of this run can be found in: /Users/jinan/.npm/_logs/debug.log" >&2
   exit 1
 fi
 if [ "$1" = "view" ]; then
@@ -824,16 +827,22 @@ exit 1
     const parsed = JSON.parse(result.stdout) as {
       status: string;
       next_action: string;
-      checks: Array<{ label: string; ok: boolean }>;
+      checks: Array<{ label: string; ok: boolean; detail?: string }>;
     };
     expect(parsed.status).toBe("blocked");
-    expect(parsed.checks).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          label: "npm authentication is available",
-          ok: false,
-        }),
-      ]),
+    const authCheck = parsed.checks.find(
+      (check) => check.label === "npm authentication is available",
+    );
+    expect(authCheck).toMatchObject({ ok: false });
+    expect(authCheck?.detail).toContain("npm whoami failed");
+    expect(authCheck?.detail).toContain("npm login");
+    expect(authCheck?.detail).toContain("npm ERR! code E401");
+    expect(authCheck?.detail).toContain("[REDACTED:npm_token]");
+    expect(authCheck?.detail).toContain("[REDACTED:local_path]");
+    expect(authCheck?.detail).not.toContain("Unknown env config");
+    expect(authCheck?.detail).not.toContain("/Users/jinan");
+    expect(authCheck?.detail).not.toContain(
+      "npm_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL",
     );
     expect(parsed.next_action).toContain("npm login");
     expect(parsed.next_action).toContain("corepack pnpm npm-publish:preflight");

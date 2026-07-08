@@ -483,9 +483,11 @@ if (!options.skipGitTag) {
 
 if (!options.skipNpm) {
   const whoami = run("npm", ["whoami"]);
+  const npmAuthOk = whoami.status === 0 && whoami.stdout.trim().length > 0;
   check(
     "npm authentication is available",
-    whoami.status === 0 && whoami.stdout.trim().length > 0,
+    npmAuthOk,
+    npmAuthDetail({ result: whoami, ok: npmAuthOk }),
   );
 
   const viewVersions = run("npm", ["view", packageName, "versions", "--json"]);
@@ -773,6 +775,20 @@ function parseNpmVersions(result) {
   }
 }
 
+function npmAuthDetail({ result, ok }) {
+  if (ok) {
+    return "npm whoami returned an authenticated username";
+  }
+
+  const detail = sanitizeNpmDetail(`${result.stdout}\n${result.stderr}`);
+  return [
+    "npm whoami failed; run npm login, then rerun corepack pnpm npm-publish:preflight",
+    detail,
+  ]
+    .filter(Boolean)
+    .join(". ");
+}
+
 function check(label, ok, detail = "") {
   checks.push({
     label,
@@ -830,8 +846,20 @@ function nextAction({ passed, checks }) {
 function sanitizeNpmDetail(value) {
   return value
     .replace(/npm_[A-Za-z0-9]{36,}/g, "[REDACTED:npm_token]")
+    .replace(
+      /(?:\/Users|\/home|\/private|\/tmp|\/var|\/opt|\/workspace|\/Volumes)\/\S+/g,
+      "[REDACTED:local_path]",
+    )
+    .replace(/[A-Za-z]:\\Users\\\S+/g, "[REDACTED:local_path]")
     .split("\n")
-    .filter(Boolean)
+    .filter((line) => {
+      const trimmed = line.trim();
+      return (
+        trimmed.length > 0 &&
+        !trimmed.includes("Unknown env config") &&
+        !trimmed.includes("This will stop working in the next major version")
+      );
+    })
     .slice(0, 3)
     .join(" ");
 }

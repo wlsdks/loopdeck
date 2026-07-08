@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Auth Detail Preflight Guard
+
+- [x] CHECK: final npm publish preflight can be blocked only by npm auth, but
+  the failed auth check did not include raw-free recovery detail for operators
+  or automation.
+- [x] RED: focused npm publish preflight test requires the npm auth check to
+  include sanitized `npm whoami` failure detail and `npm login` recovery
+  guidance without leaking an npm token or raw local npm debug-log path.
+- [x] GREEN: npm publish preflight now attaches sanitized npm auth detail to
+  the machine-readable check output while filtering package-manager config
+  noise and raw local paths.
+- [x] VERIFY: focused preflight test, skip-git-clean/current preflight JSON,
+  formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Secret Glob Files Preflight Guard
 
 - [x] CHECK: package contents docs exclude environment files, SQLite databases,
