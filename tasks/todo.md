@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Metadata Preflight Guard
+
+- [x] CHECK: `package.json` has stable release metadata for license,
+  repository, and `bin.promptlane`, but `scripts/npm-publish-preflight.mjs` did
+  not include those checks in the single publish gate.
+- [x] RED: preflight JSON test and packaging guard now require package metadata
+  checks for MIT license, GitHub repository, and the `promptlane` bin entry.
+- [x] GREEN: npm publish preflight now emits metadata checks, and the NPM
+  runbook checklist mentions license, repository, and bin metadata.
+- [x] VERIFY: focused preflight/packaging tests, touched-file formatting,
+  typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Private Publish Guard
 
 - [x] CHECK: `scripts/npm-publish-preflight.mjs` checked version, scripts,

@@ -6,7 +6,7 @@ import { spawnSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
 
 describe("npm publish preflight", () => {
-  it("includes the package publishability guard in machine-readable output", () => {
+  it("includes package publishability and metadata guards in machine-readable output", () => {
     const result = spawnSync(
       process.execPath,
       [
@@ -31,6 +31,18 @@ describe("npm publish preflight", () => {
       expect.arrayContaining([
         expect.objectContaining({
           label: "package is publishable",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package license is set",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package repository points at GitHub project",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "promptlane bin entry is registered",
           ok: true,
         }),
       ]),

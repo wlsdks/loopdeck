@@ -14,6 +14,17 @@ const checks = [];
 check("package version exists", Boolean(version));
 check("package name is promptlane", packageName === "promptlane", packageName);
 check("package is publishable", packageJson.private !== true);
+check("package license is set", packageJson.license === "MIT");
+check(
+  "package repository points at GitHub project",
+  packageJson.repository?.url === "https://github.com/wlsdks/promptlane.git",
+  packageJson.repository?.url,
+);
+check(
+  "promptlane bin entry is registered",
+  packageJson.bin?.promptlane === "./dist/cli/index.js",
+  packageJson.bin?.promptlane,
+);
 check(
   "shared VERSION matches package.json",
   readSharedVersion() === version,
