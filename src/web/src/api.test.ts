@@ -37,6 +37,7 @@ describe("web api export client", () => {
                     latest_snapshot_id: "loop_web",
                     latest_created_at: "2026-07-04T01:00:00.000Z",
                     latest_outcome_status: "unknown",
+                    evidence_count: 1,
                   },
                 ],
               },
@@ -2935,6 +2936,60 @@ describe("web api export client", () => {
                 needs_review: false,
                 next_action: "continue current worktree loop",
                 worktrees: [],
+              },
+              project_memory: { approved_count: 0, included_in_brief: false },
+              next_action: "promptlane loop collect",
+              next_actions: [],
+              privacy: {
+                local_only: true,
+                external_calls: false,
+                returns_prompt_bodies: false,
+                returns_raw_paths: false,
+                returns_compact_content: false,
+              },
+            },
+            items: [],
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+              returns_compact_content: false,
+            },
+          },
+        }),
+      );
+    const { listLoops } = await import("./api.js");
+
+    await expect(listLoops()).rejects.toThrow(
+      "Loop list failed: Invalid response.",
+    );
+  });
+
+  it("reports malformed loop activity worktrees without returning incomplete worktree counters", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            status: {
+              status: "ready",
+              snapshot_count: 1,
+              activity: {
+                active_worktrees: 1,
+                active_sessions: 1,
+                needs_review: false,
+                next_action: "continue current worktree loop",
+                worktrees: [
+                  {
+                    worktree: "feature-loop",
+                    sessions: "1",
+                    snapshots: 2,
+                    latest_snapshot_id: "loop_abcdef123456",
+                    latest_created_at: "2026-07-08T01:00:00.000Z",
+                    latest_outcome_status: "passed",
+                    evidence_count: 1,
+                  },
+                ],
               },
               project_memory: { approved_count: 0, included_in_brief: false },
               next_action: "promptlane loop collect",

@@ -476,6 +476,26 @@ function isLoopListPrivacy(
   );
 }
 
+function isLoopActivityWorktree(
+  value: unknown,
+): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const worktree =
+    value as LoopListResponse["status"]["activity"]["worktrees"][number];
+  return (
+    typeof worktree.worktree === "string" &&
+    (worktree.branch === undefined || typeof worktree.branch === "string") &&
+    typeof worktree.sessions === "number" &&
+    typeof worktree.snapshots === "number" &&
+    typeof worktree.latest_snapshot_id === "string" &&
+    typeof worktree.latest_created_at === "string" &&
+    typeof worktree.latest_outcome_status === "string" &&
+    typeof worktree.evidence_count === "number"
+  );
+}
+
 function isLoopStatusActivity(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"] {
@@ -494,7 +514,8 @@ function isLoopStatusActivity(
     (activity.next_action ===
       "compare loop snapshots by worktree before merging agent output" ||
       activity.next_action === "continue current worktree loop") &&
-    Array.isArray(activity.worktrees)
+    Array.isArray(activity.worktrees) &&
+    activity.worktrees.every(isLoopActivityWorktree)
   );
 }
 
