@@ -85,6 +85,10 @@ const releaseGate = [
     purpose: "Exercise isolated local release smoke coverage.",
   },
   {
+    command: "corepack pnpm smoke:package-install",
+    purpose: "Install the packed tarball and verify all shipped bins.",
+  },
+  {
     command: "corepack pnpm evidence:quality -- --require-complete",
     purpose: "Fail closed unless all 9.5 quality evidence remains complete.",
   },

@@ -271,6 +271,7 @@ describe("plugin packaging files", () => {
       "corepack pnpm benchmark -- --json",
       "corepack pnpm e2e:browser",
       "corepack pnpm smoke:release",
+      "corepack pnpm smoke:package-install",
     ]) {
       expect(releaseChecklist).toContain(`\`${command}\``);
     }
@@ -283,6 +284,7 @@ describe("plugin packaging files", () => {
       "corepack pnpm benchmark -- --json",
       "corepack pnpm e2e:browser",
       "corepack pnpm smoke:release",
+      "corepack pnpm smoke:package-install",
       "corepack pnpm evidence:quality -- --require-complete",
       "corepack pnpm promptlane quality-evidence --require-complete",
       "git diff --check",
@@ -1374,6 +1376,7 @@ describe("plugin packaging files", () => {
       expect(content).toContain("corepack pnpm benchmark -- --json");
       expect(content).toContain("corepack pnpm e2e:browser");
       expect(content).toContain("corepack pnpm smoke:release");
+      expect(content).toContain("corepack pnpm smoke:package-install");
       expect(content).toContain(
         "corepack pnpm promptlane quality-evidence --require-complete",
       );
@@ -1701,6 +1704,7 @@ describe("plugin packaging files", () => {
       "corepack pnpm benchmark -- --json",
       "corepack pnpm e2e:browser",
       "corepack pnpm smoke:release",
+      "corepack pnpm smoke:package-install",
       "corepack pnpm evidence:quality -- --require-complete",
       "corepack pnpm promptlane quality-evidence --require-complete",
       "quality evidence CLI gate",

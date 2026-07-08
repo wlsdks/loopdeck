@@ -227,6 +227,14 @@ describe("quality 9.5 evidence script", () => {
       ]),
     );
     expect(parsed).not.toHaveProperty("next_recheck_utc");
+    expect(parsed.release_gate).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          command: "corepack pnpm smoke:package-install",
+          purpose: "Install the packed tarball and verify all shipped bins.",
+        }),
+      ]),
+    );
     expect(result.stdout).not.toContain(process.cwd());
   });
 

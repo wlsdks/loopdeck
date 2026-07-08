@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Quality Evidence Package Install Gate
+
+- [x] CHECK: `docs/NPM_PUBLISHING.md`와 release checklist에는
+  `smoke:package-install`이 추가됐지만 `quality-evidence` JSON release gate,
+  Architecture, 9.5 plan/backlog/release evidence는 아직 이전 gate를 말했다.
+- [x] RED: quality evidence script/CLI tests가 release gate에
+  `corepack pnpm smoke:package-install`과 bin install purpose를 요구하고
+  현재 JSON 누락으로 실패한다.
+- [x] GREEN: `scripts/quality-95-evidence.mjs` release gate와 관련 문서
+  표면을 package install smoke까지 포함하도록 정렬했다.
+- [x] VERIFY: focused quality evidence tests, packaging drift guards, actual
+  quality evidence CLI output, typecheck, formatting, diff hygiene를 확인한다.
+
 ## 2026-07-08 PromptLane Package Install Smoke Gate
 
 - [x] CHECK: 수동 npm tarball install smoke는 통과했지만 runbook 명령이
