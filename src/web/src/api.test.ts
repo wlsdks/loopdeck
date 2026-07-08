@@ -9102,6 +9102,26 @@ describe("web api export client", () => {
     ).rejects.toThrow("Improvement draft copy event failed: Invalid response.");
   });
 
+  it("reports unsafe improvement draft copy event responses without returning raw copy fields", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            id: "draft_x",
+            prompt_id: "prmt_x",
+            copied_at: "2026-05-04T00:00:00.000Z",
+            prompt_body: "secret prompt body",
+          },
+        }),
+      );
+    const { markPromptImprovementDraftCopied } = await import("./api.js");
+
+    await expect(
+      markPromptImprovementDraftCopied("prmt_x", "draft_x"),
+    ).rejects.toThrow("Improvement draft copy event failed: Invalid response.");
+  });
+
   it("reports malformed similar prompts responses without returning incomplete reuse candidates", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
