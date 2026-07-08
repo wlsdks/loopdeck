@@ -42,6 +42,22 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
+          label: "package homepage points at GitHub project",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package bugs points at GitHub issues",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package keywords include public positioning terms",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "package publish access is public",
+          ok: true,
+        }),
+        expect.objectContaining({
           label: "promptlane bin entry is registered",
           ok: true,
         }),

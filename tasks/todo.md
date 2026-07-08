@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Public Metadata Preflight Guard
+
+- [x] CHECK: product positioning evidence references npm package metadata, but
+  npm publish preflight did not fail closed if public npm metadata such as
+  homepage, bugs, keywords, or publish access drifted before publish.
+- [x] RED: focused preflight and packaging tests required homepage, bugs,
+  public positioning keywords, and public publish access.
+- [x] GREEN: `package.json` now carries those public npm metadata fields, and
+  npm publish preflight checks them before publish.
+- [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON, code
+  formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Release Script Preflight Guard
 
 - [x] CHECK: npm publish preflight checked its own script registration, but did

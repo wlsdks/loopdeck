@@ -771,6 +771,10 @@ describe("plugin packaging files", () => {
     const packageJson = readJson<{
       name: string;
       description: string;
+      homepage: string;
+      bugs: { url: string };
+      keywords: string[];
+      publishConfig: { access: string };
       repository: { url: string };
       bin: Record<string, string>;
       engines: { node: string };
@@ -806,6 +810,22 @@ describe("plugin packaging files", () => {
     expect(packageJson.repository.url).toBe(
       "https://github.com/wlsdks/promptlane.git",
     );
+    expect(packageJson.homepage).toBe("https://github.com/wlsdks/promptlane");
+    expect(packageJson.bugs.url).toBe(
+      "https://github.com/wlsdks/promptlane/issues",
+    );
+    expect(packageJson.keywords).toEqual(
+      expect.arrayContaining([
+        "promptlane",
+        "prompt-improvement",
+        "local-first",
+        "codex",
+        "claude-code",
+        "mcp",
+        "worktrees",
+      ]),
+    );
+    expect(packageJson.publishConfig.access).toBe("public");
     expect(packageJson.engines.node).toBe(">=22.12 <25");
     expect(readFileSync(join(process.cwd(), "README.md"), "utf8")).toContain(
       "Node.js `>=22.12 <25`",
