@@ -1022,6 +1022,30 @@ function isContinuationSafetyCollectionRetryBoundaryNote(
   );
 }
 
+function isContinuationSafetyRetryOutcomeNonPersistenceNote(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_retry_outcome_non_persistence_note"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_retry_outcome_non_persistence_note"]
+  >;
+  return (
+    note.label === "Retry outcome non-persistence" &&
+    note.outcome_scope ===
+      "retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot" &&
+    note.not_stored ===
+      "PromptLane does not detect, store, or sync retry success or failure state" &&
+    note.reason ===
+      "keeps retry evidence tied to explicit local snapshot recording" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -2984,6 +3008,7 @@ export async function getLoopWorktree(
       continuation_safety_post_submission_collection_reminder_note?: unknown;
       continuation_safety_collection_result_non_persistence_note?: unknown;
       continuation_safety_collection_retry_boundary_note?: unknown;
+      continuation_safety_retry_outcome_non_persistence_note?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -3073,6 +3098,11 @@ export async function getLoopWorktree(
       undefined &&
       !isContinuationSafetyCollectionRetryBoundaryNote(
         body.data.continuation_safety_collection_retry_boundary_note,
+      )) ||
+    (body.data.continuation_safety_retry_outcome_non_persistence_note !==
+      undefined &&
+      !isContinuationSafetyRetryOutcomeNonPersistenceNote(
+        body.data.continuation_safety_retry_outcome_non_persistence_note,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
