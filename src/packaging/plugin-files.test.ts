@@ -107,9 +107,17 @@ describe("plugin packaging files", () => {
     expect(packageJson.scripts["npm-publish:preflight"]).toBe(
       "node scripts/npm-publish-preflight.mjs",
     );
+    const preflightScript = readFileSync(
+      join(process.cwd(), "scripts/npm-publish-preflight.mjs"),
+      "utf8",
+    );
     expect(publishing).toContain("corepack pnpm npm-publish:preflight");
     expect(publishing).toContain("does not publish");
     expect(publishing).toContain("--skip-npm");
+    expect(publishing).toContain("git checkout v1.0.0");
+    expect(publishing).toContain("If main has moved past `v1.0.0`");
+    expect(preflightScript).toContain("git checkout ${expectedTag}");
+    expect(preflightScript).toContain("tagged release commit");
 
     expect(packageJson.bin.promptlane).toBe("./dist/cli/index.js");
     expect(publishing).toContain("all three bin entries exist after build");

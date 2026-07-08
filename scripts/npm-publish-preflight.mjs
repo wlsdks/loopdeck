@@ -38,12 +38,21 @@ if (!options.skipGitClean) {
 if (!options.skipGitTag) {
   const head = run("git", ["rev-parse", "HEAD"]);
   const tagTarget = run("git", ["rev-list", "-n", "1", expectedTag]);
+  const tagMatchesHead =
+    head.status === 0 &&
+    tagTarget.status === 0 &&
+    head.stdout.trim() === tagTarget.stdout.trim();
   check(
     `${expectedTag} tag exists and points at HEAD`,
-    head.status === 0 &&
-      tagTarget.status === 0 &&
-      head.stdout.trim() === tagTarget.stdout.trim(),
-    tagTarget.stderr.trim() || tagTarget.stdout.trim(),
+    tagMatchesHead,
+    tagMatchesHead
+      ? "tagged release commit matches HEAD"
+      : tagMismatchDetail({
+          expectedTag,
+          head: head.stdout.trim(),
+          tagTarget: tagTarget.stdout.trim(),
+          tagError: tagTarget.stderr.trim(),
+        }),
   );
 }
 
@@ -171,6 +180,13 @@ function sanitizeNpmDetail(value) {
     .filter(Boolean)
     .slice(0, 3)
     .join(" ");
+}
+
+function tagMismatchDetail({ expectedTag, head, tagTarget, tagError }) {
+  if (tagError) {
+    return `${expectedTag} is missing. Run the full release gate, then create the annotated tag before publishing.`;
+  }
+  return `tagged release commit ${tagTarget.slice(0, 12)} does not match HEAD ${head.slice(0, 12)}; run git checkout ${expectedTag} before publishing, or bump version and create a new tag for this commit.`;
 }
 
 function formatSummary(summary) {

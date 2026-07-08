@@ -43,6 +43,19 @@ For offline or test-only inspection, skip npm registry/auth checks:
 corepack pnpm npm-publish:preflight -- --skip-npm
 ```
 
+If main has moved past `v1.0.0`, publish from the tagged release commit rather
+than the newer main commit:
+
+```sh
+git checkout v1.0.0
+corepack pnpm npm-publish:preflight
+npm publish --tag latest
+```
+
+If the newer main commit must be published instead, bump the package version,
+rerun the full release gate, and create a new annotated tag. Do not retarget an
+already pushed public release tag without an explicit release decision.
+
 Recommended version:
 
 ```json
