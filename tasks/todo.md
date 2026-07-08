@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Quality Evidence Silent Benchmark Gate
+
+- [x] CHECK: `corepack pnpm --silent evidence:quality` still emitted release
+  gate command `corepack pnpm benchmark -- --json`, while release runbooks use
+  the parseable `corepack pnpm --silent benchmark -- --json` form.
+- [x] RED: focused quality-evidence CLI test requires JSON and text release
+  gate output to use the silent benchmark command and reject the non-silent
+  command.
+- [x] GREEN: quality evidence release gate now emits the silent benchmark
+  command, and packaging guard keeps the script aligned with release evidence
+  docs.
+- [x] VERIFY: focused quality-evidence/packaging tests, quality JSON smoke,
+  formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane Preflight Real Fixture Warning
 
 - [x] CHECK: npm publish preflight warned that synthetic benchmark evidence is

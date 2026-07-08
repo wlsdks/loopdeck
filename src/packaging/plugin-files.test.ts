@@ -2153,6 +2153,10 @@ describe("plugin packaging files", () => {
     expect(packageJson.files).toContain(releaseEvidencePath);
     expect(existsSync(releaseEvidenceFile)).toBe(true);
     const releaseEvidence = readFileSync(releaseEvidenceFile, "utf8");
+    const qualityEvidenceScript = readFileSync(
+      join(process.cwd(), "scripts/quality-95-evidence.mjs"),
+      "utf8",
+    );
 
     for (const currentEvidence of [
       "PR #425",
@@ -2194,6 +2198,12 @@ describe("plugin packaging files", () => {
     ]) {
       expect(releaseEvidence).toContain(releaseEvidenceText);
     }
+    expect(qualityEvidenceScript).toContain(
+      'command: "corepack pnpm --silent benchmark -- --json"',
+    );
+    expect(qualityEvidenceScript).not.toContain(
+      'command: "corepack pnpm benchmark -- --json"',
+    );
 
     for (const staleReleaseEvidence of [
       "operator-approved blocker",
