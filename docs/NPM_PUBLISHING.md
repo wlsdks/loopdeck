@@ -48,9 +48,16 @@ than the newer main commit:
 
 ```sh
 git checkout v1.0.0
-corepack pnpm npm-publish:preflight
+npm whoami
+npm view promptlane versions --json
 npm publish --tag latest
 ```
+
+The existing `v1.0.0` tag predates `scripts/npm-publish-preflight.mjs`.
+Do not expect `corepack pnpm npm-publish:preflight` to exist after `git checkout v1.0.0`.
+Use the manual npm auth/version checks above on that checkout. Future release
+tags created after the preflight script lands should run
+`corepack pnpm npm-publish:preflight` on the release commit before publishing.
 
 If the newer main commit must be published instead, bump the package version,
 rerun the full release gate, and create a new annotated tag. Do not retarget an

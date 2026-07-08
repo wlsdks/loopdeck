@@ -116,8 +116,15 @@ describe("plugin packaging files", () => {
     expect(publishing).toContain("--skip-npm");
     expect(publishing).toContain("git checkout v1.0.0");
     expect(publishing).toContain("If main has moved past `v1.0.0`");
+    expect(publishing).toContain(
+      "The existing `v1.0.0` tag predates `scripts/npm-publish-preflight.mjs`",
+    );
+    expect(publishing).toContain(
+      "Do not expect `corepack pnpm npm-publish:preflight` to exist after `git checkout v1.0.0`.",
+    );
     expect(preflightScript).toContain("git checkout ${expectedTag}");
     expect(preflightScript).toContain("tagged release commit");
+    expect(preflightScript).toContain("manual npm checks");
 
     expect(packageJson.bin.promptlane).toBe("./dist/cli/index.js");
     expect(publishing).toContain("all three bin entries exist after build");
