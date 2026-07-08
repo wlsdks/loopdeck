@@ -3733,6 +3733,32 @@ function isQualityDashboardMissingItem(
   );
 }
 
+function isQualityDashboardPattern(
+  value: unknown,
+): value is QualityDashboard["patterns"][number] {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const pattern = value as QualityDashboard["patterns"][number] & {
+    cwd?: unknown;
+    markdown?: unknown;
+    prompt_body?: unknown;
+    raw_path?: unknown;
+  };
+  return (
+    typeof pattern.project === "string" &&
+    typeof pattern.item_key === "string" &&
+    typeof pattern.label === "string" &&
+    typeof pattern.count === "number" &&
+    typeof pattern.total === "number" &&
+    typeof pattern.message === "string" &&
+    pattern.cwd === undefined &&
+    pattern.markdown === undefined &&
+    pattern.prompt_body === undefined &&
+    pattern.raw_path === undefined
+  );
+}
+
 function isArchiveScoreSummary(
   value: unknown,
 ): value is ArchiveScoreReport["archive_score"] {
@@ -4419,6 +4445,7 @@ export async function getQualityDashboard(
       quality_score?: unknown;
       distribution?: unknown;
       missing_items?: unknown;
+      patterns?: unknown;
       privacy?: unknown;
     };
   };
@@ -4428,6 +4455,8 @@ export async function getQualityDashboard(
     !isQualityDashboardDistribution(body.data.distribution) ||
     !Array.isArray(body.data.missing_items) ||
     !body.data.missing_items.every(isQualityDashboardMissingItem) ||
+    !Array.isArray(body.data.patterns) ||
+    !body.data.patterns.every(isQualityDashboardPattern) ||
     !isQualityDashboardPrivacy(body.data.privacy)
   ) {
     throw new Error("Quality dashboard failed: Invalid response.");

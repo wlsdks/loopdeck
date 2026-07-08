@@ -6340,6 +6340,7 @@ describe("web api export client", () => {
               by_tool: [],
               by_project: [],
             },
+            patterns: [],
             missing_items: [],
             privacy: {
               local_only: true,
@@ -7065,6 +7066,51 @@ describe("web api export client", () => {
                 },
               ],
             },
+            missing_items: [],
+            privacy: {
+              local_only: true,
+              external_calls: false,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+            },
+          },
+        }),
+      );
+    const { getQualityDashboard } = await import("./api.js");
+
+    await expect(getQualityDashboard()).rejects.toThrow(
+      "Quality dashboard failed: Invalid response.",
+    );
+  });
+
+  it("reports unsafe quality dashboard patterns without returning prompt bodies", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            total_prompts: 1,
+            quality_score: {
+              average: 42,
+              max: 100,
+              band: "needs_work",
+              scored_prompts: 1,
+            },
+            distribution: {
+              by_tool: [],
+              by_project: [],
+            },
+            patterns: [
+              {
+                project: "private-project",
+                item_key: "goal_clarity",
+                label: "Goal clarity",
+                count: 1,
+                total: 1,
+                message: "private-project repeats Goal clarity gaps.",
+                prompt_body: "secret prompt body",
+              },
+            ],
             missing_items: [],
             privacy: {
               local_only: true,
