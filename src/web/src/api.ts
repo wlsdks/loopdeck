@@ -1068,6 +1068,56 @@ export type LoopMemoryApprovalResult = {
   };
 };
 
+function parseLoopMemoryApprovalResponse(
+  body: {
+    data?: {
+      recorded?: unknown;
+      memory?: {
+        id?: unknown;
+        snapshot_id?: unknown;
+        evidence_refs?: unknown;
+        privacy?: {
+          local_only?: unknown;
+          stores_prompt_bodies?: unknown;
+          stores_raw_paths?: unknown;
+          writes_instruction_files?: unknown;
+          external_calls?: unknown;
+        };
+      };
+      next_actions?: unknown;
+      privacy?: {
+        local_only?: unknown;
+        returns_prompt_bodies?: unknown;
+        returns_raw_paths?: unknown;
+        writes_instruction_files?: unknown;
+        external_calls?: unknown;
+      };
+    };
+  },
+  message: string,
+): LoopMemoryApprovalResult {
+  if (
+    body.data?.recorded !== true ||
+    typeof body.data.memory?.id !== "string" ||
+    typeof body.data.memory.snapshot_id !== "string" ||
+    !Array.isArray(body.data.memory.evidence_refs) ||
+    body.data.memory.privacy?.local_only !== true ||
+    body.data.memory.privacy.stores_prompt_bodies !== false ||
+    body.data.memory.privacy.stores_raw_paths !== false ||
+    body.data.memory.privacy.writes_instruction_files !== false ||
+    body.data.memory.privacy.external_calls !== false ||
+    !Array.isArray(body.data.next_actions) ||
+    body.data.privacy?.local_only !== true ||
+    body.data.privacy.returns_prompt_bodies !== false ||
+    body.data.privacy.returns_raw_paths !== false ||
+    body.data.privacy.writes_instruction_files !== false ||
+    body.data.privacy.external_calls !== false
+  ) {
+    throw new Error(`${message}: Invalid response.`);
+  }
+  return body.data as LoopMemoryApprovalResult;
+}
+
 export type LoopInstructionPatchProposal = {
   target_file: "AGENTS.md" | "CLAUDE.md";
   patch_kind: "append_section";
@@ -1780,8 +1830,10 @@ export async function approveLoopMemory(
     await failApi(response, "Loop memory approval failed");
   }
 
-  const body = (await response.json()) as { data: LoopMemoryApprovalResult };
-  return body.data;
+  const body = (await response.json()) as Parameters<
+    typeof parseLoopMemoryApprovalResponse
+  >[0];
+  return parseLoopMemoryApprovalResponse(body, "Loop memory approval failed");
 }
 
 export async function getLoopInstructionPatch(
