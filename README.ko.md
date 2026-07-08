@@ -604,7 +604,7 @@ privacy/safety, 보고 규칙을 보는 deterministic local rubric입니다.
 promptlane mcp
 ```
 
-MCP server는 스무 개의 tool을 제공합니다.
+MCP server는 20개의 tool을 제공합니다.
 
 - `get_promptlane_status`: 로컬 archive가 초기화되었는지, prompt가 캡처되었는지, 다음에 어떤 MCP tool을 호출하면 좋은지 확인합니다.
 - `coach_prompt`: Claude Code/Codex 안에서 로컬 readiness, 최신 prompt 점수, 승인형 rewrite, 누적 습관, 프로젝트 규칙, 다음 요청 가이드를 한 번에 받습니다.
@@ -613,10 +613,17 @@ MCP server는 스무 개의 tool을 제공합니다.
 - `apply_clarifications`: 사용자가 직접 답한 답변(각 항목은 `origin: "user"` 필수)을 받아 최종 승인용 draft를 합성합니다. agent가 자기 ask UI로 답을 모은 뒤 호출합니다.
 - `ask_clarifying_questions`: promptlane가 ask-then-apply 흐름 자체를 주도합니다. 클라이언트가 elicitation capability를 광고하면(Claude Code 2.1.76+) MCP `elicitation/create`로 직접 사용자에게 묻고 final draft를 합성하며, 미지원 / 거부 / 타임아웃 시 clarifying_questions metadata로 fallback합니다. rewrite를 자동 제출하지 않습니다. 비대화형 Claude Code print 실행(`claude -p`)에서는 MCP tool routing이 성공해도 사용자가 답하지 않으면 `interaction_status: declined`가 반환될 수 있습니다. 이 경우 실패로 보지 말고 반환된 `clarifying_questions`를 agent의 native ask UI로 다시 물은 뒤, 먼저 `apply_clarifications`로 최종 승인용 draft를 채팅에 보여주고, 사용자가 저장도 원할 때만 `record_clarifications`를 호출합니다.
 - `record_clarifications`: 사용자가 답한 verbatim 답변과 합성된 최종 draft를 prompt id에 묶어 로컬 archive(`prompt_improvement_drafts`)에 영구 저장합니다. 응답에는 metadata(`draft_id`, `answers_count`, `changed_sections` 등)만 들어가고 prompt body나 draft 본문은 echo하지 않습니다.
-- `prepare_agent_rewrite`: 현재 Claude Code/Codex/Gemini CLI 세션이 의미론적으로 더 좋은 prompt를 만들 수 있도록, 하나의 redacted prompt packet, 로컬 점수 metadata, 로컬 baseline draft, rewrite contract를 준비합니다.
-- `record_agent_rewrite`: 사용자가 승인한 agent rewrite를 redacted improvement draft로 저장하고, rewrite 본문은 반환하지 않습니다.
+- `get_promptlane_loop_status`: 로컬 loop snapshot 존재 여부, 최신 loop metadata, compact-boundary 상태를 prompt body/raw path 없이 확인합니다.
+- `prepare_loop_brief`: 최신 snapshot 또는 선택한 `worktree`, `session_id`, `branch`에 맞는 snapshot에서 copy-ready continuation prompt를 준비합니다.
+- `record_loop_outcome`: 사용자가 승인한 loop outcome metadata와 evidence ref만 저장하고 prompt body/raw path는 저장하지 않습니다.
+- `propose_loop_memory_candidate`: 검증된 loop outcome이 사용자 승인 memory 후보가 될 만큼 evidence-backed인지 판단합니다. 이 단계는 read-only입니다.
+- `record_loop_memory`: 사용자가 승인한 PromptLane memory를 로컬 storage에 기록합니다. instruction file은 쓰지 않습니다.
+- `propose_instruction_patch`: 최신 승인 memory를 `AGENTS.md` 또는 `CLAUDE.md`에 반영하는 review-only patch와 explicit apply gate를 반환합니다.
+- `apply_instruction_patch`: caller가 명시적으로 확인한 경우에만 instruction patch를 적용하며, source memory id 기준으로 idempotent합니다.
 - `score_prompt_archive`: 최근 저장 prompt 전체를 대상으로 누적 prompt 습관을 점수화하고, 평균 점수, 반복 부족 항목, practice plan, 다음 prompt template, 낮은 점수 prompt id를 반환합니다.
 - `review_project_instructions`: 최신 또는 선택한 프로젝트의 `AGENTS.md` / `CLAUDE.md` 규칙 파일을 리뷰하고 점수, checklist 상태, 개선 힌트를 반환합니다.
+- `prepare_agent_rewrite`: 현재 Claude Code/Codex/Gemini CLI 세션이 의미론적으로 더 좋은 prompt를 만들 수 있도록, 하나의 redacted prompt packet, 로컬 점수 metadata, 로컬 baseline draft, rewrite contract를 준비합니다.
+- `record_agent_rewrite`: 사용자가 승인한 agent rewrite를 redacted improvement draft로 저장하고, rewrite 본문은 반환하지 않습니다.
 - `prepare_agent_judge_batch`: 현재 Claude Code/Codex/Gemini CLI 세션이 직접 LLM judge로 평가할 수 있도록, bounded redacted prompt packet과 rubric을 준비합니다. `promptlane`가 provider를 대신 호출하지 않습니다.
 - `record_agent_judgments`: 현재 agent 세션이 만든 advisory score와 제안을 prompt body/raw path 없이 저장합니다.
 
