@@ -1118,6 +1118,29 @@ function isContinuationSafetyFreshnessUncertaintyCollectionReminder(
   );
 }
 
+function isContinuationSafetyPreMergeFreshnessAdvisory(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_pre_merge_freshness_advisory"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_pre_merge_freshness_advisory"]
+  >;
+  return (
+    note.label === "Pre-merge freshness advisory" &&
+    note.advisory === "review freshness uncertainty before merge decisions" &&
+    note.not_decision ===
+      "PromptLane does not approve merges or verify freshness before merge" &&
+    note.reason ===
+      "keeps merge readiness separate from freshness uncertainty review" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -3084,6 +3107,7 @@ export async function getLoopWorktree(
       continuation_safety_collection_evidence_freshness_boundary_note?: unknown;
       continuation_safety_freshness_result_non_persistence_note?: unknown;
       continuation_safety_freshness_uncertainty_collection_reminder?: unknown;
+      continuation_safety_pre_merge_freshness_advisory?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -3195,6 +3219,10 @@ export async function getLoopWorktree(
       undefined &&
       !isContinuationSafetyFreshnessUncertaintyCollectionReminder(
         body.data.continuation_safety_freshness_uncertainty_collection_reminder,
+      )) ||
+    (body.data.continuation_safety_pre_merge_freshness_advisory !== undefined &&
+      !isContinuationSafetyPreMergeFreshnessAdvisory(
+        body.data.continuation_safety_pre_merge_freshness_advisory,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
