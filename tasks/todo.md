@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Local-Only Files Preflight Guard
+
+- [x] CHECK: release checklist says package dry-run must exclude source, CI,
+  dependency, coverage, and runtime data entries, but npm publish preflight did
+  not guard `package.json#files` against those local-only entries.
+- [x] RED: focused npm publish preflight test requires a machine-readable
+  local-only package-files exclusion check.
+- [x] GREEN: npm publish preflight now fails closed if `package.json#files`
+  includes source, tests, CI, dependency, coverage, Codex config, or local
+  PromptLane/legacy runtime data entries.
+- [x] VERIFY: focused preflight/package tests, skip-npm preflight JSON,
+  formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane Pre-Publish Privacy Audit Path Detector Guard
 
 - [x] CHECK: pre-publish privacy audit now mirrors token detectors, but did

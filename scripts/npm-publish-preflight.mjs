@@ -399,6 +399,11 @@ check(
     packageJson.files.includes("!dist/**/*.map"),
 );
 check(
+  "package files exclude local-only source and runtime entries",
+  packageFilesExcludeLocalOnlyEntries(),
+  localOnlyPackageFilesDetail(),
+);
+check(
   "pre-publish privacy audit mirrors runtime token detectors",
   privacyAuditMirrorsRuntimeTokenDetectors(),
   "docs/PRE_PUBLISH_PRIVACY_AUDIT.md should include the token families guarded by src/redaction/detectors.ts",
@@ -595,6 +600,45 @@ function normalizeWhitespace(value) {
 function readSharedVersion() {
   const source = readFileSync(join(repoRoot, "src/shared/version.ts"), "utf8");
   return source.match(/VERSION\s*=\s*"([^"]+)"/)?.[1];
+}
+
+function packageFilesExcludeLocalOnlyEntries() {
+  return localOnlyPackageFileEntries().length === 0;
+}
+
+function localOnlyPackageFilesDetail() {
+  const blockedEntries = localOnlyPackageFileEntries();
+  return blockedEntries.length
+    ? `local-only entries must not ship: ${blockedEntries.join(", ")}`
+    : "package files omit source, tests, CI, dependency, coverage, and runtime data entries";
+}
+
+function localOnlyPackageFileEntries() {
+  if (!Array.isArray(packageJson.files)) {
+    return ["package.json#files is not an array"];
+  }
+  const blockedPrefixes = [
+    "src",
+    "tests",
+    "test",
+    ".github",
+    "node_modules",
+    "coverage",
+    ".codex",
+    ".promptlane",
+    ".prompt-memory",
+    ".prompt-coach",
+    "promptlane-data",
+    "prompt-memory-data",
+    "prompt-coach-data",
+  ];
+
+  return packageJson.files.filter((entry) => {
+    const normalized = String(entry).replace(/^\.\//, "").replace(/\/+$/, "");
+    return blockedPrefixes.some(
+      (prefix) => normalized === prefix || normalized.startsWith(`${prefix}/`),
+    );
+  });
 }
 
 function privacyAuditMirrorsRuntimeTokenDetectors() {
