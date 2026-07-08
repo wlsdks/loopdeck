@@ -2990,6 +2990,22 @@ describe("web api export client", () => {
     );
   });
 
+  it("reports malformed improvement draft save responses without returning incomplete draft data", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(jsonResponse({ data: {} }));
+    const { savePromptImprovementDraft } = await import("./api.js");
+
+    await expect(
+      savePromptImprovementDraft("prmt_x", {
+        draft_text: "Use a more specific goal.",
+        analyzer: "promptlane",
+        changed_sections: ["goal"],
+        safety_notes: [],
+      }),
+    ).rejects.toThrow("Improvement draft save failed: Invalid response.");
+  });
+
   it("uses the response title when detail is blank", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
