@@ -9064,3 +9064,14 @@
       delete through that hook-owned refresh boundary.
 - [x] VERIFY: focused dashboard-query/App-adjacent tests, touched TypeScript
       formatting, typecheck, and diff hygiene checks.
+
+## 2026-07-08 Single Delete Summary Refresh Hook Boundary
+
+- [x] CHECK: single prompt delete still refreshed dashboard/archive summaries by
+      directly wiring dashboard API calls and setters inside `App.tsx`, even
+      after bulk delete moved to the hook-owned refresh boundary.
+- [x] GREEN: route single prompt delete through `useDashboardQuery`
+      `refreshSummaries()` so delete mutations use the same summary refresh
+      contract.
+- [x] VERIFY: focused dashboard-query/App-adjacent tests, touched TypeScript
+      formatting, typecheck, and diff hygiene checks.

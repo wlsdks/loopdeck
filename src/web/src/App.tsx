@@ -399,12 +399,7 @@ export function App() {
     setPendingDelete(undefined);
     navigate({ name: "list" });
     await refreshList(filters, { replace: true });
-    void getQualityDashboard()
-      .then(setDashboard)
-      .catch(() => undefined);
-    void getArchiveScoreReport()
-      .then(setArchiveScore)
-      .catch(() => undefined);
+    void refreshSummaries();
   }
 
   function updateFilters(next: Partial<PromptFilters>): void {
