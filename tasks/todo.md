@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Prompt Detail Markdown Contract Regression
+
+- [x] CHECK: `parsePromptDetailResponse`가 `PromptDetail`의 필수 `markdown`
+  field를 허용하기 전에 `isPromptSummary`를 호출하면서 prompt list용 raw-free
+  summary guard 때문에 정상 prompt detail 응답까지 reject할 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 valid prompt detail response with
+  `markdown`을 `getPrompt`로 resolve해야 한다고 요구하게 해 현재 markdown
+  contract regression 실패를 확인한다.
+- [x] GREEN: prompt list item에는 `markdown`을 계속 금지하되 prompt detail
+  parser는 summary core 계약과 detail-only `markdown` 계약을 분리해 정상 detail
+  응답을 허용하고 raw `prompt_body`/`raw_path`는 계속 차단한다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff
+  whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Prompt List Root Raw Contract Error
 
 - [x] CHECK: web API `listPrompts`가 `/api/v1/prompts` 성공 응답의 root
