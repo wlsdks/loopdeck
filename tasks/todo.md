@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Benchmark Script Preflight Guard
+
+- [x] CHECK: release checklist requires Benchmark v1 and browser E2E before
+  publish, but npm publish preflight did not fail closed if the package script
+  wrappers for those release-gate commands drifted.
+- [x] RED: focused npm publish preflight test required machine-readable
+  `benchmark` and `e2e:browser` package script registration checks.
+- [x] GREEN: npm publish preflight now checks both release-gate package script
+  wrappers before publish.
+- [x] VERIFY: focused preflight test, skip-npm preflight JSON, formatting,
+  typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Description Preflight Guard
 
 - [x] CHECK: `package.json#description` is the product positioning source for

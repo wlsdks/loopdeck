@@ -106,6 +106,14 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
+          label: "benchmark package script is registered",
+          ok: true,
+        }),
+        expect.objectContaining({
+          label: "browser e2e package script is registered",
+          ok: true,
+        }),
+        expect.objectContaining({
           label: "release smoke package script is registered",
           ok: true,
         }),
