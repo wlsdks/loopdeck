@@ -30,6 +30,36 @@ check(
   packageJson.repository?.url === "https://github.com/wlsdks/promptlane.git",
   packageJson.repository?.url,
 );
+check(
+  "package homepage points at GitHub project",
+  packageJson.homepage === "https://github.com/wlsdks/promptlane",
+  packageJson.homepage,
+);
+check(
+  "package bugs points at GitHub issues",
+  packageJson.bugs?.url === "https://github.com/wlsdks/promptlane/issues",
+  packageJson.bugs?.url,
+);
+check(
+  "package keywords include public positioning terms",
+  hasKeywords([
+    "promptlane",
+    "prompt-improvement",
+    "local-first",
+    "codex",
+    "claude-code",
+    "mcp",
+    "worktrees",
+  ]),
+  Array.isArray(packageJson.keywords)
+    ? packageJson.keywords.join(", ")
+    : packageJson.keywords,
+);
+check(
+  "package publish access is public",
+  packageJson.publishConfig?.access === "public",
+  packageJson.publishConfig?.access,
+);
 for (const [binName, expectedPath] of Object.entries({
   promptlane: "./dist/cli/index.js",
   "pl-claude": "./dist/cli/pl-claude.js",
@@ -280,6 +310,13 @@ function isExecutablePath(path) {
 
 function requiresSourceControlledEntry(filePath) {
   return filePath !== "dist" && !filePath.startsWith("!");
+}
+
+function hasKeywords(expectedKeywords) {
+  return (
+    Array.isArray(packageJson.keywords) &&
+    expectedKeywords.every((keyword) => packageJson.keywords.includes(keyword))
+  );
 }
 
 function readSharedVersion() {

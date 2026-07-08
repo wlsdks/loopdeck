@@ -8,6 +8,22 @@
     "type": "git",
     "url": "https://github.com/wlsdks/promptlane.git"
   },
+  "homepage": "https://github.com/wlsdks/promptlane",
+  "bugs": {
+    "url": "https://github.com/wlsdks/promptlane/issues"
+  },
+  "keywords": [
+    "promptlane",
+    "prompt-improvement",
+    "local-first",
+    "codex",
+    "claude-code",
+    "mcp",
+    "worktrees"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "packageManager": "pnpm@10.18.0",
   "engines": {
     "node": ">=22.12 <25"
