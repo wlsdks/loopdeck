@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Release Checklist Package Docs
+
+- [x] CHECK: live preflight is blocked only by npm auth, but
+  `docs/RELEASE_CHECKLIST.md` package contents lagged behind the public product,
+  integration, benchmark fixture, and release evidence docs shipped by
+  `package.json#files`.
+- [x] RED: packaging guard requires release checklist package contents to include
+  PromptLane product contract docs, agent harness docs, loop snapshot schema,
+  dogfood evidence, real benchmark fixture template, and current release evidence
+  docs.
+- [x] GREEN: release checklist now lists the shipped public docs needed for a
+  manual package-content review before 1.0.0 publish.
+- [x] VERIFY: focused release checklist guard, formatting, live preflight smoke,
+  and diff hygiene.
+
 ## 2026-07-09 PromptLane Publish Command Handoff
 
 - [x] CHECK: `npm-publish:preflight` already exposes `publish_ready` and
