@@ -88,6 +88,12 @@ export function buildNoFixturesReport({ dataset, fixtureSet, detail }) {
     fixture_set: fixtureSet,
     soft_signal: true,
     status: "no_fixtures",
+    evidence_state: {
+      effectiveness: "unproven",
+      requires_real_fixtures: true,
+      release_gate: "synthetic",
+      trend_signal: "real",
+    },
     detail,
     next_action:
       "Add consent-bearing redacted real fixtures before using real benchmark trends.",

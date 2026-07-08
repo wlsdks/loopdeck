@@ -33,6 +33,10 @@ The JSON report includes `fixture_set` and `soft_signal` fields so consumers can
 It also includes a top-level `next_action`: synthetic passes say the local
 regression gate is green while still requiring real fixtures before claiming
 real-world effectiveness; real fixture runs stay soft trend signals.
+When `--fixture-set real` has no local `real.json`, JSON output also includes
+`evidence_state.effectiveness: "unproven"` and `requires_real_fixtures: true`
+so release automation cannot confuse a missing real corpus with proof of
+real-world usefulness.
 
 `docs/benchmark-fixtures/real.json` must use this raw-free shape:
 
@@ -317,6 +321,25 @@ Pass thresholds:
     "dashboard_ms": 500,
     "export_ms": 1000
   }
+}
+```
+
+Missing real fixture output is intentionally a soft signal, but it is explicit
+about the missing evidence:
+
+```json
+{
+  "dataset": "benchmark-v1-real",
+  "fixture_set": "real",
+  "soft_signal": true,
+  "status": "no_fixtures",
+  "evidence_state": {
+    "effectiveness": "unproven",
+    "requires_real_fixtures": true,
+    "release_gate": "synthetic",
+    "trend_signal": "real"
+  },
+  "next_action": "Add consent-bearing redacted real fixtures before using real benchmark trends."
 }
 ```
 

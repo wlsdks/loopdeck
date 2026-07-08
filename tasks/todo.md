@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Missing Real Benchmark Evidence State
+
+- [x] CHECK: real benchmark no-fixtures JSON reported a soft `status` and
+  `next_action`, but did not expose a structured evidence state that release
+  automation could use to avoid overstating real-world effectiveness.
+- [x] RED: focused benchmark fixture test requires missing real fixtures to
+  report `evidence_state.effectiveness: "unproven"` and
+  `requires_real_fixtures: true`.
+- [x] GREEN: no-fixtures real benchmark reports now include structured
+  effectiveness evidence state while keeping synthetic as the hard release
+  gate and real as the trend signal.
+- [x] VERIFY: focused benchmark fixture test, real no-fixtures JSON,
+  formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane Real Fixture Example Preflight Contract
 
 - [x] CHECK: `docs/benchmark-fixtures/real.example.json` is shipped and
