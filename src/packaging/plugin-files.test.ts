@@ -145,6 +145,7 @@ describe("plugin packaging files", () => {
     ]) {
       expect(packageJson.files).toContain(scriptPath);
       expect(packageContents).toContain(scriptPath);
+      expect(packageContents).toContain(`- \`${scriptPath}\``);
     }
 
     expect(packageJson.scripts["npm-publish:preflight"]).toBe(

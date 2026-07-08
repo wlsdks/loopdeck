@@ -61,17 +61,24 @@ The npm package intentionally includes:
 - Claude Code plugin artifacts under `.claude-plugin`, `commands`, and
   `integrations/claude-code`
 - Codex plugin artifacts under `plugins/promptlane`
-- local verification scripts: `scripts/benchmark.mjs`,
-  `scripts/agent-setup-smoke.mjs`, `scripts/browser-e2e.mjs`,
-  `scripts/first-coach-loop-dogfood.mjs`,
-  `scripts/loop-memory-approval-dogfood.mjs`,
-  `scripts/hook-binary-smoke.mjs`, `scripts/mcp-coach-loop-smoke.mjs`,
-  `scripts/mcp-elicitation-smoke.mjs`,
-  `scripts/mcp-native-dialog-approved.mjs`,
-  `scripts/mcp-native-dialog-preflight.mjs`,
-  `scripts/quality-95-evidence.mjs`, `scripts/npm-publish-preflight.mjs`,
-  `scripts/package-install-smoke.mjs`, `scripts/pack-dry-run.mjs`, `scripts/quality-gate.mjs`, `scripts/release-smoke.mjs`,
-  and `scripts/ui-patrol.mjs`
+- local verification scripts:
+  - `scripts/benchmark.mjs`
+  - `scripts/agent-setup-smoke.mjs`
+  - `scripts/browser-e2e.mjs`
+  - `scripts/first-coach-loop-dogfood.mjs`
+  - `scripts/loop-memory-approval-dogfood.mjs`
+  - `scripts/hook-binary-smoke.mjs`
+  - `scripts/mcp-coach-loop-smoke.mjs`
+  - `scripts/mcp-elicitation-smoke.mjs`
+  - `scripts/mcp-native-dialog-approved.mjs`
+  - `scripts/mcp-native-dialog-preflight.mjs`
+  - `scripts/quality-95-evidence.mjs`
+  - `scripts/npm-publish-preflight.mjs`
+  - `scripts/package-install-smoke.mjs`
+  - `scripts/pack-dry-run.mjs`
+  - `scripts/quality-gate.mjs`
+  - `scripts/release-smoke.mjs`
+  - `scripts/ui-patrol.mjs`
 
 ## Excluded
 
