@@ -69,6 +69,10 @@ describe("npm publish preflight", () => {
           label: "package files include scripts/npm-publish-preflight.mjs",
           ok: true,
         }),
+        expect.objectContaining({
+          label: "package files exclude dist/**/*.map",
+          ok: true,
+        }),
       ]),
     );
   });

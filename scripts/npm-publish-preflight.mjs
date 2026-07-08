@@ -53,6 +53,11 @@ for (const filePath of [
     Array.isArray(packageJson.files) && packageJson.files.includes(filePath),
   );
 }
+check(
+  "package files exclude dist/**/*.map",
+  Array.isArray(packageJson.files) &&
+    packageJson.files.includes("!dist/**/*.map"),
+);
 
 if (!options.skipGitClean) {
   const status = run("git", ["status", "--porcelain"]);
