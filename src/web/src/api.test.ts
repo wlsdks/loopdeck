@@ -6344,6 +6344,7 @@ describe("web api export client", () => {
             instruction_suggestions: [],
             useful_prompts: [],
             duplicate_prompt_groups: [],
+            project_profiles: [],
             missing_items: [],
             privacy: {
               local_only: true,
@@ -7261,6 +7262,64 @@ describe("web api export client", () => {
                     prompt_body: "secret prompt body",
                   },
                 ],
+              },
+            ],
+            missing_items: [],
+            privacy: {
+              local_only: true,
+              external_calls: false,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+            },
+          },
+        }),
+      );
+    const { getQualityDashboard } = await import("./api.js");
+
+    await expect(getQualityDashboard()).rejects.toThrow(
+      "Quality dashboard failed: Invalid response.",
+    );
+  });
+
+  it("reports unsafe quality dashboard project profiles without returning raw paths", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            total_prompts: 1,
+            quality_score: {
+              average: 42,
+              max: 100,
+              band: "needs_work",
+              scored_prompts: 1,
+            },
+            distribution: {
+              by_tool: [],
+              by_project: [],
+            },
+            patterns: [],
+            instruction_suggestions: [],
+            useful_prompts: [],
+            duplicate_prompt_groups: [],
+            project_profiles: [
+              {
+                key: "proj_private",
+                label: "private-project",
+                prompt_count: 1,
+                quality_gap_count: 1,
+                quality_gap_rate: 1,
+                average_quality_score: 42,
+                sensitive_count: 0,
+                copied_count: 1,
+                bookmarked_count: 0,
+                latest_received_at: "2026-07-04T01:00:00.000Z",
+                top_gap: {
+                  key: "goal_clarity",
+                  label: "Goal clarity",
+                  count: 1,
+                  raw_path: "/Users/jinan/private-project",
+                },
               },
             ],
             missing_items: [],

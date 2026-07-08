@@ -3869,6 +3869,65 @@ function isQualityDashboardDuplicatePrompt(
   );
 }
 
+function isQualityDashboardProjectProfile(
+  value: unknown,
+): value is QualityDashboard["project_profiles"][number] {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const profile = value as QualityDashboard["project_profiles"][number] & {
+    cwd?: unknown;
+    markdown?: unknown;
+    prompt_body?: unknown;
+    raw_path?: unknown;
+  };
+  return (
+    typeof profile.key === "string" &&
+    typeof profile.label === "string" &&
+    typeof profile.prompt_count === "number" &&
+    typeof profile.quality_gap_count === "number" &&
+    typeof profile.quality_gap_rate === "number" &&
+    typeof profile.average_quality_score === "number" &&
+    typeof profile.sensitive_count === "number" &&
+    typeof profile.copied_count === "number" &&
+    typeof profile.bookmarked_count === "number" &&
+    typeof profile.latest_received_at === "string" &&
+    (profile.top_gap === undefined ||
+      isQualityDashboardProjectTopGap(profile.top_gap)) &&
+    profile.cwd === undefined &&
+    profile.markdown === undefined &&
+    profile.prompt_body === undefined &&
+    profile.raw_path === undefined
+  );
+}
+
+function isQualityDashboardProjectTopGap(
+  value: unknown,
+): value is NonNullable<
+  QualityDashboard["project_profiles"][number]["top_gap"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const topGap = value as NonNullable<
+    QualityDashboard["project_profiles"][number]["top_gap"]
+  > & {
+    cwd?: unknown;
+    markdown?: unknown;
+    prompt_body?: unknown;
+    raw_path?: unknown;
+  };
+  return (
+    typeof topGap.key === "string" &&
+    typeof topGap.label === "string" &&
+    typeof topGap.count === "number" &&
+    topGap.cwd === undefined &&
+    topGap.markdown === undefined &&
+    topGap.prompt_body === undefined &&
+    topGap.raw_path === undefined
+  );
+}
+
 function isArchiveScoreSummary(
   value: unknown,
 ): value is ArchiveScoreReport["archive_score"] {
@@ -4559,6 +4618,7 @@ export async function getQualityDashboard(
       instruction_suggestions?: unknown;
       useful_prompts?: unknown;
       duplicate_prompt_groups?: unknown;
+      project_profiles?: unknown;
       privacy?: unknown;
     };
   };
@@ -4580,6 +4640,8 @@ export async function getQualityDashboard(
     !body.data.duplicate_prompt_groups.every(
       isQualityDashboardDuplicatePromptGroup,
     ) ||
+    !Array.isArray(body.data.project_profiles) ||
+    !body.data.project_profiles.every(isQualityDashboardProjectProfile) ||
     !isQualityDashboardPrivacy(body.data.privacy)
   ) {
     throw new Error("Quality dashboard failed: Invalid response.");
