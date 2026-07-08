@@ -464,6 +464,21 @@ describe("plugin packaging files", () => {
     }
   });
 
+  it("keeps Korean README local development setup aligned with the English quick start", () => {
+    const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
+    const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
+
+    for (const content of [readme, readmeKo]) {
+      expect(content).toContain("pnpm install");
+      expect(content).toContain("pnpm setup");
+      expect(content).toContain("prepare");
+      expect(content).toContain(
+        "pnpm promptlane setup --profile coach --register-mcp --open-web",
+      );
+    }
+    expect(readmeKo).not.toContain("pnpm build\n```");
+  });
+
   it("keeps README release smoke commands on packageManager-pinned pnpm", () => {
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");

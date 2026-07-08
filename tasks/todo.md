@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Korean README Dev Setup Parity
+
+- [x] CHECK: English README local development quick start uses `pnpm install`
+  plus `pnpm setup` and explains the `prepare` build lifecycle, but
+  README.ko still stopped at `pnpm build`.
+- [x] RED: packaging guard now requires both English and Korean README to
+  document `pnpm setup`, `prepare`, and the full
+  `pnpm promptlane setup --profile coach --register-mcp --open-web` alias.
+- [x] GREEN: README.ko local development setup now matches the English
+  install/setup path and explains the prepare lifecycle.
+- [x] VERIFY: focused README guards, pack dry-run, formatting, and diff hygiene.
+
 ## 2026-07-08 PromptLane Public Release Gate Docs
 
 - [x] CHECK: `docs/IMPLEMENTATION_PLAN.md`, `docs/TECH_SPEC.md`, `docs/PRD.md`

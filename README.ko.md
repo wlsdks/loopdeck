@@ -118,9 +118,18 @@ npm install -g promptlane
 ```sh
 git clone https://github.com/wlsdks/promptlane.git
 cd promptlane
-pnpm install
-pnpm build
+pnpm install   # prepare lifecycle이 dist도 함께 build합니다
+pnpm setup     # Claude Code + Codex hook, MCP, status line, service를 설치합니다
 ```
+
+`pnpm install`은 `prepare` lifecycle을 통해 `pnpm build`를 실행하므로, fresh
+checkout도 install이 끝나면 동작하는 `dist/`를 갖습니다.
+
+`pnpm setup`은
+`pnpm promptlane setup --profile coach --register-mcp --open-web`의 alias입니다.
+감지된 agent(Claude Code와 Codex)를 연결하고, MCP server를 절대 경로로
+등록하며, Claude Code status line을 설치하고, 세션 시작 시 로컬 server가
+준비되도록 합니다.
 
 ### 2. Claude Code Marketplace 추가
 
