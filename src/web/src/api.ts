@@ -1165,6 +1165,30 @@ function isContinuationSafetyPreMemoryApprovalFreshnessAdvisory(
   );
 }
 
+function isContinuationSafetyPostMemoryApprovalCollectionReminder(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_post_memory_approval_collection_reminder"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_post_memory_approval_collection_reminder"]
+  >;
+  return (
+    note.label === "Post-memory-approval collection reminder" &&
+    note.reminder ===
+      "collect a new explicit loop snapshot after approving loop memory" &&
+    note.not_automated ===
+      "PromptLane does not start collection from memory approval or approval state changes" &&
+    note.reason ===
+      "keeps post-approval collection operator-triggered and local-first" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -3133,6 +3157,7 @@ export async function getLoopWorktree(
       continuation_safety_freshness_uncertainty_collection_reminder?: unknown;
       continuation_safety_pre_merge_freshness_advisory?: unknown;
       continuation_safety_pre_memory_approval_freshness_advisory?: unknown;
+      continuation_safety_post_memory_approval_collection_reminder?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -3253,6 +3278,11 @@ export async function getLoopWorktree(
       undefined &&
       !isContinuationSafetyPreMemoryApprovalFreshnessAdvisory(
         body.data.continuation_safety_pre_memory_approval_freshness_advisory,
+      )) ||
+    (body.data.continuation_safety_post_memory_approval_collection_reminder !==
+      undefined &&
+      !isContinuationSafetyPostMemoryApprovalCollectionReminder(
+        body.data.continuation_safety_post_memory_approval_collection_reminder,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
