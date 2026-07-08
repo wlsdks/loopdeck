@@ -2201,6 +2201,14 @@ describe("plugin packaging files", () => {
     expect(qualityEvidenceScript).toContain(
       'command: "corepack pnpm --silent benchmark -- --json"',
     );
+    expect(qualityEvidenceScript).toContain("release_warnings");
+    expect(qualityEvidenceScript).toContain("releaseWarningsForLocalEvidence");
+    expect(qualityEvidenceScript).toContain(
+      "real benchmark fixtures are missing",
+    );
+    expect(qualityEvidenceScript).toContain(
+      "do not claim real-user effectiveness trends",
+    );
     expect(qualityEvidenceScript).not.toContain(
       'command: "corepack pnpm benchmark -- --json"',
     );

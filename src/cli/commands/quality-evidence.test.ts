@@ -53,6 +53,10 @@ describe("quality-evidence CLI command", () => {
         command: string;
         purpose: string;
       }>;
+      release_warnings: Array<{
+        label: string;
+        detail: string;
+      }>;
       next_recheck_utc?: string;
     };
 
@@ -161,6 +165,13 @@ describe("quality-evidence CLI command", () => {
       preconditions: [],
     });
     expect(parsed.recommended_next_slices).toEqual([]);
+    expect(parsed.release_warnings).toEqual([
+      {
+        label: "real benchmark fixtures are missing",
+        detail:
+          "docs/benchmark-fixtures/real.json is absent; quality evidence is complete for the local release gate, but do not claim real-user effectiveness trends until consent-bearing redacted real fixtures are collected and run with corepack pnpm benchmark -- --fixture-set real.",
+      },
+    ]);
     expect(parsed.release_gate).toEqual([
       {
         command: "corepack pnpm format",
@@ -283,6 +294,11 @@ describe("quality-evidence CLI command", () => {
     expect(text).toContain("native_dialog_approved_dogfood");
     expect(text).toContain("Recommended next slices");
     expect(text).toContain("- none");
+    expect(text).toContain("Release warnings");
+    expect(text).toContain("- real benchmark fixtures are missing");
+    expect(text).toContain(
+      "do not claim real-user effectiveness trends until consent-bearing redacted real fixtures are collected",
+    );
     expect(text).toContain("Release gate");
     expect(text).toContain(
       "- corepack pnpm test - Run the full unit and integration test suite.",
