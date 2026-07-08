@@ -5859,8 +5859,10 @@ async function failApi(response: Response, label: string): Promise<never> {
       title?: unknown;
       message?: unknown;
       errors?: unknown;
+      issues?: unknown;
     };
-    const issueDetail = apiErrorIssueText(body.errors);
+    const issueDetail =
+      apiErrorIssueText(body.errors) || apiErrorIssueText(body.issues);
     detail =
       apiErrorText(body.detail) ||
       apiErrorText(body.title) ||
