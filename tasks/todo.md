@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Preflight JSON Blocking Checks
+
+- [x] CHECK: human npm publish preflight output now summarized failed checks,
+  but JSON consumers still had to filter the long `checks` array to find
+  blockers.
+- [x] RED: focused npm auth blocker test requires top-level
+  `blocking_checks` with failed labels and sanitized details.
+- [x] GREEN: npm publish preflight summary now emits `blocking_checks` in JSON
+  and reuses the same list for human `Blocking checks` output.
+- [x] VERIFY: focused preflight test, human/JSON preflight output,
+  formatting, typecheck, preflight JSON, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Preflight Blocking Summary
 
 - [x] CHECK: npm publish preflight human output had a copy-ready next action,

@@ -839,6 +839,7 @@ exit 1
     const parsed = JSON.parse(result.stdout) as {
       status: string;
       next_action: string;
+      blocking_checks: Array<{ label: string; detail?: string }>;
       checks: Array<{ label: string; ok: boolean; detail?: string }>;
     };
     expect(parsed.status).toBe("blocked");
@@ -856,6 +857,12 @@ exit 1
     expect(authCheck?.detail).not.toContain(
       "npm_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL",
     );
+    expect(parsed.blocking_checks).toEqual([
+      expect.objectContaining({
+        label: "npm authentication is available",
+        detail: expect.stringContaining("npm login"),
+      }),
+    ]);
     expect(parsed.next_action).toContain("npm login");
     expect(parsed.next_action).toContain("corepack pnpm npm-publish:preflight");
     expect(parsed.next_action).toContain("npm publish --tag latest");
