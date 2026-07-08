@@ -151,6 +151,7 @@ describe("benchmark fixture loading", () => {
       "evidence_requires_real_fixtures: yes",
       "evidence_release_gate: synthetic",
       "evidence_trend_signal: real",
+      "next_action: Add consent-bearing redacted real fixtures before using real benchmark trends.",
       "No real fixtures registered yet. Add docs/benchmark-fixtures/real.json (consent-bearing redacted prompts) and re-run.",
     ]);
   });

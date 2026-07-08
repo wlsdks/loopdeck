@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Benchmark No-Fixtures Text Next Action
+
+- [x] CHECK: missing-real-fixtures benchmark text output showed evidence
+  state, but did not print the JSON `next_action`, so operators using plain
+  text still had to infer the copy/setup step.
+- [x] RED: focused benchmark fixture formatter test requires
+  `formatNoFixturesReportLines` to include a `next_action:` line.
+- [x] GREEN: no-fixtures text output now includes the same next action as JSON,
+  and the benchmark spec/preflight guard preserve that text contract.
+- [x] VERIFY: focused benchmark/preflight tests, benchmark text output,
+  formatting, typecheck, preflight JSON, and diff hygiene.
+
 ## 2026-07-09 PromptLane Benchmark Evidence Text Output
 
 - [x] CHECK: benchmark JSON exposed `evidence_state.release_blocking`, but
