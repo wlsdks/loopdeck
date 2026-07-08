@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane NPM Private Publish Guard
+
+- [x] CHECK: `scripts/npm-publish-preflight.mjs` checked version, scripts,
+  files, git state, tag state, npm auth, and unpublished package state, but did
+  not explicitly fail closed if `package.json#private` became `true`.
+- [x] RED: packaging guard required a `package is publishable` preflight check
+  backed by `packageJson.private !== true`.
+- [x] GREEN: npm publish preflight now emits a `package is publishable` check,
+  the NPM runbook checklist calls out the private flag, and a focused preflight
+  test covers the machine-readable check.
+- [x] VERIFY: focused packaging/preflight tests, touched-file formatting,
+  typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane NPM Useful Commands Tag Refresh
 
 - [x] CHECK: `docs/NPM_PUBLISHING.md`의 Useful NPM Commands 섹션이 여전히

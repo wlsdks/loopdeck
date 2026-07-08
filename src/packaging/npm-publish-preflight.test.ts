@@ -6,6 +6,37 @@ import { spawnSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
 
 describe("npm publish preflight", () => {
+  it("includes the package publishability guard in machine-readable output", () => {
+    const result = spawnSync(
+      process.execPath,
+      [
+        "scripts/npm-publish-preflight.mjs",
+        "--json",
+        "--skip-npm",
+        "--skip-git-clean",
+        "--skip-git-tag",
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "pipe"],
+      },
+    );
+
+    expect(result.status).toBe(0);
+    const parsed = JSON.parse(result.stdout) as {
+      checks: Array<{ label: string; ok: boolean }>;
+    };
+    expect(parsed.checks).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          label: "package is publishable",
+          ok: true,
+        }),
+      ]),
+    );
+  });
+
   it("uses current preflight guidance when the release tag does not match HEAD", () => {
     const binDir = mkdtempSync(join(tmpdir(), "promptlane-fake-git-"));
     const fakeGit = join(binDir, "git");

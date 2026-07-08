@@ -13,6 +13,7 @@ const checks = [];
 
 check("package version exists", Boolean(version));
 check("package name is promptlane", packageName === "promptlane", packageName);
+check("package is publishable", packageJson.private !== true);
 check(
   "shared VERSION matches package.json",
   readSharedVersion() === version,
