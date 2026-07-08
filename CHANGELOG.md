@@ -103,11 +103,13 @@ tools, benchmark/release validation, and an English/Korean web UI.
   marketplace install guide, package contents check, and pre-publish privacy
   audit.
 - Vitest gate enforcing that `src/shared/version.ts` `VERSION` matches
-  `package.json#version`, so a one-sided release bump fails CI.
-- GitHub Actions CI matrix on Node 22 and 24 running `pnpm test`,
-  `pnpm lint`, `pnpm build`, and `pnpm pack:dry-run` on every push to
-  `main` and pull request, matching the `test (22)` / `test (24)` merge
-  gate referenced by `CLAUDE.md` and the project rules.
+  `package.json#version`, so a one-sided release bump fails locally.
+- General PR/main test CI and scheduled UI patrol workflows are removed. The
+  local release gate is the authoritative release and merge signal:
+  `corepack pnpm format`, `corepack pnpm test`, `corepack pnpm lint`,
+  `corepack pnpm build`, `corepack pnpm pack:dry-run`,
+  `corepack pnpm --silent benchmark -- --json`, browser E2E, release/package
+  smoke, complete quality evidence, and `git diff --check`.
 
 #### Korean coverage end-to-end
 
