@@ -2325,6 +2325,17 @@ describe("web api export client", () => {
     expect(JSON.stringify(result)).not.toContain("sk-proj-secret");
   });
 
+  it("reports malformed loop memory approval responses without returning incomplete durable memory data", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(jsonResponse({ data: {} }));
+    const { approveLoopMemory } = await import("./api.js");
+
+    await expect(approveLoopMemory({ approvedBy: "web" })).rejects.toThrow(
+      "Loop memory approval failed: Invalid response.",
+    );
+  });
+
   it("gets a review-only instruction patch proposal for the latest approved loop memory", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
