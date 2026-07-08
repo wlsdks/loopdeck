@@ -926,6 +926,30 @@ function isContinuationSafetyManualSubmissionBoundaryNote(
   );
 }
 
+function isContinuationSafetySubmissionResultNonPersistenceNote(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_submission_result_non_persistence_note"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_submission_result_non_persistence_note"]
+  >;
+  return (
+    note.label === "Submission result non-persistence" &&
+    note.result_scope ===
+      "agent response and submission result stay outside PromptLane until the next explicit loop snapshot" &&
+    note.not_stored ===
+      "PromptLane does not detect, store, or sync submitted state after handoff" &&
+    note.reason ===
+      "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -2884,6 +2908,7 @@ export async function getLoopWorktree(
       continuation_safety_target_agent_check_note?: unknown;
       continuation_safety_paste_destination_boundary_note?: unknown;
       continuation_safety_manual_submission_boundary_note?: unknown;
+      continuation_safety_submission_result_non_persistence_note?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -2953,6 +2978,11 @@ export async function getLoopWorktree(
       undefined &&
       !isContinuationSafetyManualSubmissionBoundaryNote(
         body.data.continuation_safety_manual_submission_boundary_note,
+      )) ||
+    (body.data.continuation_safety_submission_result_non_persistence_note !==
+      undefined &&
+      !isContinuationSafetySubmissionResultNonPersistenceNote(
+        body.data.continuation_safety_submission_result_non_persistence_note,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
