@@ -5853,6 +5853,8 @@ export async function getLoopInstructionPatch(
 
 async function failApi(response: Response, label: string): Promise<never> {
   let detail = "";
+  const textResponse =
+    typeof response.clone === "function" ? response.clone() : response;
   try {
     const body = (await response.json()) as {
       detail?: unknown;
@@ -5877,7 +5879,7 @@ async function failApi(response: Response, label: string): Promise<never> {
     }
   } catch {
     try {
-      detail = apiErrorText(await response.text());
+      detail = apiErrorText(await textResponse.text());
     } catch {
       // body may not be readable, that is fine.
     }
