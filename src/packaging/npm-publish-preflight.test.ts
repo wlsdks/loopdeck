@@ -27,6 +27,7 @@ describe("npm publish preflight", () => {
     const parsed = JSON.parse(result.stdout) as {
       status: string;
       publish_ready: boolean;
+      publish_command?: string;
       next_action: string;
       inspection_warnings: Array<{ label: string; detail: string }>;
       release_warnings: Array<{ label: string; detail: string }>;
@@ -34,6 +35,7 @@ describe("npm publish preflight", () => {
     };
     expect(parsed.status).toBe("inspection");
     expect(parsed.publish_ready).toBe(false);
+    expect(parsed.publish_command).toBeUndefined();
     expect(parsed.inspection_warnings).toEqual([
       {
         label: "release checks were skipped",
@@ -825,6 +827,83 @@ exit 1
     expect(parsed.next_action).toContain("git push origin v1.0.0 --force");
   });
 
+  it("emits the publish command only when every release preflight passes", () => {
+    const binDir = mkdtempSync(join(tmpdir(), "promptlane-ready-tools-"));
+    const fakeNpm = join(binDir, "npm");
+    const fakeGit = join(binDir, "git");
+    writeFileSync(
+      fakeNpm,
+      `#!/usr/bin/env sh
+if [ "$1" = "whoami" ]; then
+  echo "wlsdks"
+  exit 0
+fi
+if [ "$1" = "view" ]; then
+  printf '%s\n' '[]'
+  exit 0
+fi
+echo "unexpected npm command: $*" >&2
+exit 1
+`,
+      { mode: 0o755 },
+    );
+    writeFileSync(
+      fakeGit,
+      `#!/usr/bin/env sh
+if [ "$1" = "status" ]; then
+  exit 0
+fi
+if [ "$1" = "rev-parse" ]; then
+  echo "1111111111111111111111111111111111111111"
+  exit 0
+fi
+if [ "$1" = "rev-list" ]; then
+  echo "1111111111111111111111111111111111111111"
+  exit 0
+fi
+if [ "$1" = "cat-file" ]; then
+  echo "tag"
+  exit 0
+fi
+if [ "$1" = "ls-remote" ]; then
+  printf '%s\t%s\n' "1111111111111111111111111111111111111111" "refs/tags/v1.0.0^{}"
+  exit 0
+fi
+echo "unexpected git command: $*" >&2
+exit 1
+`,
+      { mode: 0o755 },
+    );
+
+    const result = spawnSync(
+      process.execPath,
+      ["scripts/npm-publish-preflight.mjs", "--json"],
+      {
+        cwd: process.cwd(),
+        env: {
+          ...process.env,
+          PATH: `${binDir}:${process.env.PATH ?? ""}`,
+        },
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "pipe"],
+      },
+    );
+
+    expect(result.status).toBe(0);
+    const parsed = JSON.parse(result.stdout) as {
+      status: string;
+      publish_ready: boolean;
+      publish_command?: string;
+      recovery_commands: string[];
+      next_action: string;
+    };
+    expect(parsed.status).toBe("ready");
+    expect(parsed.publish_ready).toBe(true);
+    expect(parsed.publish_command).toBe("npm publish --tag latest");
+    expect(parsed.recovery_commands).toEqual([]);
+    expect(parsed.next_action).toContain("npm publish --tag latest");
+  });
+
   it("points the operator to npm login when npm auth is the remaining blocker", () => {
     const binDir = mkdtempSync(join(tmpdir(), "promptlane-fake-npm-"));
     const fakeNpm = join(binDir, "npm");
@@ -870,12 +949,14 @@ exit 1
     expect(result.status).toBe(1);
     const parsed = JSON.parse(result.stdout) as {
       status: string;
+      publish_command?: string;
       next_action: string;
       blocking_checks: Array<{ label: string; detail?: string }>;
       recovery_commands: string[];
       checks: Array<{ label: string; ok: boolean; detail?: string }>;
     };
     expect(parsed.status).toBe("blocked");
+    expect(parsed.publish_command).toBeUndefined();
     const authCheck = parsed.checks.find(
       (check) => check.label === "npm authentication is available",
     );
