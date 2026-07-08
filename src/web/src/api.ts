@@ -578,6 +578,28 @@ function isCommandFilters(
   );
 }
 
+function isCopySideEffects(
+  value: unknown,
+): value is NonNullable<LoopWorktreeResponse["copy_side_effects"]> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const sideEffects = value as NonNullable<
+    LoopWorktreeResponse["copy_side_effects"]
+  >;
+  return (
+    sideEffects.label === "Copy side effects" &&
+    sideEffects.clipboard ===
+      "copies the selected continuation brief to the local clipboard" &&
+    sideEffects.ui_feedback ===
+      "temporarily marks the selected brief copy button as copied" &&
+    sideEffects.does_not ===
+      "does not write files, execute commands, call external services, submit prompts, or change merge state" &&
+    sideEffects.writes_files === false &&
+    sideEffects.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -2521,6 +2543,7 @@ export async function getLoopWorktree(
       selected_brief_action?: unknown;
       command_distinction?: unknown;
       command_filters?: unknown;
+      copy_side_effects?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -2534,6 +2557,8 @@ export async function getLoopWorktree(
       !isCommandDistinction(body.data.command_distinction)) ||
     (body.data.command_filters !== undefined &&
       !isCommandFilters(body.data.command_filters)) ||
+    (body.data.copy_side_effects !== undefined &&
+      !isCopySideEffects(body.data.copy_side_effects)) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
     !isLoopListPrivacy(body.data.privacy)
