@@ -364,6 +364,11 @@ describe("plugin packaging files", () => {
     expect(publishing).toContain("Do not treat older `npm whoami`");
     expect(publishing).toContain("npm whoami");
     expect(publishing).toContain("npm view promptlane versions --json");
+    expect(publishing).toContain("Release warnings");
+    expect(publishing).toContain(
+      "synthetic pass is not real-world effectiveness proof",
+    );
+    expect(publishing).toContain("docs/benchmark-fixtures/real.json");
     expect(publishing).toContain(
       "promptlane setup --profile coach --register-mcp --open-web",
     );
@@ -416,6 +421,13 @@ describe("plugin packaging files", () => {
       "${expectedTag} origin tag matches local release tag",
     );
     expect(preflightScript).toContain("git push origin ${expectedTag} --force");
+    expect(preflightScript).toContain("release_warnings");
+    expect(preflightScript).toContain(
+      "benchmark is synthetic regression evidence",
+    );
+    expect(preflightScript).toContain(
+      "a synthetic pass is not real-world effectiveness proof",
+    );
     expect(preflightScript).not.toContain("manual npm checks");
     expect(preflightScript).not.toContain("predates this preflight");
 

@@ -41,6 +41,11 @@ When the only blocker is npm authentication, JSON output also includes
 `recovery_commands` with `npm login` and the preflight recheck command; it does
 not include `npm publish --tag latest` because publish still requires a fresh
 passing preflight.
+Human and JSON output also include `Release warnings`. The current warning says
+the required `corepack pnpm --silent benchmark -- --json` pass is synthetic
+regression evidence: a synthetic pass is not real-world effectiveness proof, and
+operators should collect `docs/benchmark-fixtures/real.json` before claiming
+real-user prompt quality trends.
 
 ## Recommended First Stable Publish
 

@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Preflight Effectiveness Warning
+
+- [x] CHECK: current benchmark JSON passes the synthetic release regression
+  gate, but still reports `regression_gate_passed_not_real_world_proof` and
+  says to collect real fixtures before claiming real-world effectiveness.
+- [x] RED: focused preflight tests require top-level `release_warnings` and
+  human `Release warnings` output for synthetic benchmark evidence limits;
+  packaging guard requires the npm publishing runbook to document the same
+  warning.
+- [x] GREEN: npm publish preflight now emits a non-blocking release warning
+  that synthetic benchmark pass is not real-user proof, and the publishing
+  runbook documents the warning and real-fixture path.
+- [x] VERIFY: focused preflight/packaging tests, benchmark JSON smoke,
+  formatting, typecheck, and diff hygiene.
+
 ## 2026-07-09 PromptLane Active Slash Namespace Docs
 
 - [x] CHECK: active README/PLUGINS text described `/promptlane:*` as
