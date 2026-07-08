@@ -1585,6 +1585,31 @@ function isContinuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSub
   );
 }
 
+function isContinuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitCollectionRetryBoundaryNote(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note"]
+  >;
+  return (
+    note.label ===
+      "Post-memory-approval retry renewed-memory-approval post-submit collection retry boundary" &&
+    note.retry ===
+      "operator reruns the explicit post-submit loop collection flow when retry is needed" &&
+    note.not_automated ===
+      "PromptLane does not automatically retry post-submit collection commands or hidden recovery actions" &&
+    note.reason ===
+      "keeps post-submit collection retry control local and operator-triggered" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -3570,6 +3595,7 @@ export async function getLoopWorktree(
       continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_submit_freshness_advisory?: unknown;
       continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory?: unknown;
       continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note?: unknown;
+      continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -3807,6 +3833,13 @@ export async function getLoopWorktree(
       !isContinuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitCollectionResultNonPersistenceNote(
         body.data
           .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note,
+      )) ||
+    (body.data
+      .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note !==
+      undefined &&
+      !isContinuationSafetyPostMemoryApprovalRetryRenewedMemoryApprovalPostSubmitCollectionRetryBoundaryNote(
+        body.data
+          .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
