@@ -1046,6 +1046,30 @@ function isContinuationSafetyRetryOutcomeNonPersistenceNote(
   );
 }
 
+function isContinuationSafetyCollectionEvidenceFreshnessBoundaryNote(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_collection_evidence_freshness_boundary_note"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_collection_evidence_freshness_boundary_note"]
+  >;
+  return (
+    note.label === "Collection evidence freshness boundary" &&
+    note.freshness_check ===
+      "operator checks freshness against the latest explicit loop snapshot evidence" &&
+    note.not_verified ===
+      "PromptLane does not verify freshness from git status, transcripts, or agent UI activity" &&
+    note.reason ===
+      "keeps evidence freshness review tied to local snapshot metadata" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -3009,6 +3033,7 @@ export async function getLoopWorktree(
       continuation_safety_collection_result_non_persistence_note?: unknown;
       continuation_safety_collection_retry_boundary_note?: unknown;
       continuation_safety_retry_outcome_non_persistence_note?: unknown;
+      continuation_safety_collection_evidence_freshness_boundary_note?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -3103,6 +3128,13 @@ export async function getLoopWorktree(
       undefined &&
       !isContinuationSafetyRetryOutcomeNonPersistenceNote(
         body.data.continuation_safety_retry_outcome_non_persistence_note,
+      )) ||
+    (body.data
+      .continuation_safety_collection_evidence_freshness_boundary_note !==
+      undefined &&
+      !isContinuationSafetyCollectionEvidenceFreshnessBoundaryNote(
+        body.data
+          .continuation_safety_collection_evidence_freshness_boundary_note,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
