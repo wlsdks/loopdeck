@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Release Checklist Preflight JSON
+
+- [x] CHECK: NPM publishing runbook documents the silent machine-readable
+  preflight JSON command, but the release checklist only documented silent
+  quality evidence JSON. Focused guard also exposed that Architecture omitted
+  the installed `promptlane start --open-web --json` package-smoke path.
+- [x] RED: packaging guard requires `docs/RELEASE_CHECKLIST.md` to mention
+  `corepack pnpm --silent npm-publish:preflight -- --json` and still requires
+  Architecture to mention the installed start guide path.
+- [x] GREEN: release checklist now documents the parseable npm preflight JSON
+  command, and Architecture records that package install smoke verifies the
+  installed start guide.
+- [x] VERIFY: focused packaging guards, touched-file formatting, typecheck,
+  diff hygiene, and post-merge preflight.
+
 ## 2026-07-08 PromptLane NPM Preflight JSON Runbook
 
 - [x] CHECK: `npm-publish:preflight -- --json` through a normal pnpm script
