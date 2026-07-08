@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Release Checklist Tag Order
+
+- [x] CHECK: release checklist told operators to run
+  `corepack pnpm npm-publish:preflight` before creating the `v1.0.0` tag, but
+  the preflight itself fails unless `v1.0.0` already points at HEAD.
+- [x] RED: packaging guard now requires the release checklist to create or
+  refresh `v1.0.0` before `corepack pnpm npm-publish:preflight` and rejects the
+  old after-every-gate tag wording.
+- [x] GREEN: release checklist now places tag creation/refresh before the npm
+  publish preflight and distinguishes unpublished 1.0.0 tag refresh from
+  post-publish version bump.
+- [x] VERIFY: focused release checklist guard, touched-file formatting,
+  typecheck, diff hygiene, and post-merge preflight.
+
 ## 2026-07-08 PromptLane Release Checklist Preflight JSON
 
 - [x] CHECK: NPM publishing runbook documents the silent machine-readable

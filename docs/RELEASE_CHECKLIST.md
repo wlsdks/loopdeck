@@ -32,9 +32,14 @@ Use this checklist before publishing a stable public release or npm package.
 - [ ] `corepack pnpm smoke:package-install`
 - [ ] `corepack pnpm evidence:quality -- --require-complete`
 - [ ] `corepack pnpm promptlane quality-evidence --require-complete`
+- [ ] Create or refresh annotated tag `v1.0.0` before `corepack pnpm npm-publish:preflight`.
 - [ ] `corepack pnpm npm-publish:preflight`
 - [ ] `git diff --check`
-- [ ] After every gate above passes, create and push annotated tag `v1.0.0`.
+
+Before `promptlane@1.0.0` is published, the tag may be refreshed after the full
+local gate confirms the intended release commit. After `promptlane@1.0.0` is
+published, do not retarget `v1.0.0`; bump the package version and create a new
+tag.
 
 For machine-readable inspection of the 9.5 quality summary, use
 `corepack pnpm --silent evidence:quality` or
