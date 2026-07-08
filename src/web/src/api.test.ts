@@ -3039,6 +3039,17 @@ describe("web api export client", () => {
     ).rejects.toThrow("Improvement draft copy event failed: Invalid response.");
   });
 
+  it("reports malformed similar prompts responses without returning incomplete reuse candidates", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(jsonResponse({ data: {} }));
+    const { getSimilarPrompts } = await import("./api.js");
+
+    await expect(getSimilarPrompts("prmt_x")).rejects.toThrow(
+      "Similar prompts unavailable: Invalid response.",
+    );
+  });
+
   it("uses the response title when detail is blank", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))

@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Similar Prompts Contract Error
+
+- [x] CHECK: web API `getSimilarPrompts`가 `/api/v1/prompts/:id/similar` 성공 응답의
+  prompt summary 배열 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 reuse candidates
+  UI에 넘길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed similar prompts body를
+  `Similar prompts unavailable: Invalid response.`로 reject하도록 요구하게 해 현재 `{}`
+  resolve 실패를 확인한다.
+- [x] GREEN: similar prompts 응답이 prompt summary 배열인지 확인하고 깨진 성공 응답은
+  raw-free similar prompts contract 오류로 중단하도록 고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
+  check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Draft Copy Event Contract Error
 
 - [x] CHECK: web API `markPromptImprovementDraftCopied`가
