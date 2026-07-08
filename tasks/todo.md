@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Error Detail Equals Raw Redaction
+
+- [x] CHECK: `sanitizeApiErrorText`가 colon-delimited raw phrases는 redaction하지만
+  `OPENAI_API_KEY = private local provider token.` 같은 equals-delimited phrase는
+  단일 토큰 fallback으로 첫 토큰만 redaction하고 tail을 failed response detail에 남길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 settings failed response detail의
+  `OPENAI_API_KEY = private local provider token.` phrase 전체를
+  `OPENAI_API_KEY=[REDACTED:openai_api_key]`로 redaction하도록 요구하게 해 현재 unsafe
+  equals-delimited credential tail 노출 실패를 확인한다.
+- [x] GREEN: web API error sanitizer가 equals-delimited raw-detail phrase도 문장
+  구분자 전까지 key별 redaction한다.
+- [x] VERIFY: focused web API recovery-detail/error redaction tests, implementation
+  format check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Error Detail Env Credential Redaction
 
 - [x] CHECK: `sanitizeApiErrorText` raw detail key pattern이 generic `api_key`와
