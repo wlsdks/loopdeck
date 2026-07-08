@@ -5898,6 +5898,7 @@ function apiErrorIssueText(value: unknown): string {
       };
       const field =
         apiErrorText(record.field) ||
+        apiErrorIssuePathText(record.field) ||
         apiErrorIssuePathText(record.path) ||
         apiErrorIssuePathText(record.instancePath);
       const rawFieldKey = rawDetailErrorFieldKey(field);
