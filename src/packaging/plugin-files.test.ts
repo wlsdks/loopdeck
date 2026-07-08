@@ -195,6 +195,10 @@ describe("plugin packaging files", () => {
     expect(preflightScript).toContain('"docs/PLUGINS.md"');
     expect(preflightScript).toContain('"docs/ADAPTERS.md"');
     expect(preflightScript).toContain('"docs/LOOP-SNAPSHOT-SCHEMA.md"');
+    expect(preflightScript).toContain('"docs/NPM_PUBLISHING.md"');
+    expect(preflightScript).toContain('"docs/PACKAGE_CONTENTS.md"');
+    expect(preflightScript).toContain('"docs/PRE_PUBLISH_PRIVACY_AUDIT.md"');
+    expect(preflightScript).toContain('"docs/RELEASE_CHECKLIST.md"');
     expect(preflightScript).toContain('"README.ko.md"');
     expect(preflightScript).toContain('"CHANGELOG.md"');
     expect(preflightScript).toContain('"SECURITY.md"');
