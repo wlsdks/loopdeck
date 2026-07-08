@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Pre-Publish Tag Refresh Policy
+
+- [x] CHECK: `docs/NPM_PUBLISHING.md` still implied that a newer main commit
+  after `v1.0.0` should publish from the old tag or bump, while current 1.0.0
+  release-candidate polishing needs a clear pre-publish tag refresh policy.
+- [x] RED: packaging guard now requires separate policy for refreshing
+  `v1.0.0` before `promptlane@1.0.0` is published and bumping after it is
+  published.
+- [x] GREEN: npm publishing runbook documents `git tag -fa v1.0.0` only for
+  unpublished 1.0.0 release-candidate refreshes and forbids retargeting after
+  publication.
+- [x] VERIFY: focused packaging guard, touched-file formatting, typecheck,
+  diff hygiene, and post-merge preflight.
+
 ## 2026-07-08 PromptLane NPM Post-Publish First Run Guide
 
 - [x] CHECK: README first-success path uses

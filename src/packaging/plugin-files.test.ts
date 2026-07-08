@@ -191,6 +191,13 @@ describe("plugin packaging files", () => {
     expect(publishing).toContain(
       "`v1.0.0` must point at the commit you are publishing",
     );
+    expect(publishing).toContain("Before `promptlane@1.0.0` is published");
+    expect(publishing).toContain("git tag -fa v1.0.0");
+    expect(publishing).toContain("After `promptlane@1.0.0` is published");
+    expect(publishing).toMatch(/bump the\s+package version/);
+    expect(publishing).not.toContain(
+      "If the newer main commit must be published instead, bump the package version",
+    );
     expect(publishing).not.toContain("tag predates");
     expect(publishing).not.toContain("Do not expect `corepack pnpm");
     expect(preflightScript).toContain("git checkout ${expectedTag}");
