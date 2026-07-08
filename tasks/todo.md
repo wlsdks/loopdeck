@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Improvement Draft Contract Error
+
+- [x] CHECK: web API `savePromptImprovementDraft`가
+  `/api/v1/prompts/:id/improvements` 성공 응답의 first coach draft 계약을 검증하지 않아
+  malformed 응답을 `{}` 상태로 draft UI에 넘길 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed improvement draft save body를
+  `Improvement draft save failed: Invalid response.`로 reject하도록 요구하게 해 현재 `{}`
+  resolve 실패를 확인한다.
+- [x] GREEN: improvement draft 응답의 id, prompt id, draft text, analyzer,
+  changed sections, safety notes, redaction/local draft fields 계약을 확인하고 깨진 성공
+  응답은 raw-free draft contract 오류로 중단하도록 고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
+  check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Prompt Detail Contract Error
 
 - [x] CHECK: web API `getPrompt`가 `/api/v1/prompts/:id` 성공 응답의 prompt detail

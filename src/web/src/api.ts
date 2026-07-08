@@ -168,6 +168,30 @@ function parsePromptDetailResponse(body: { data?: unknown }): PromptDetail {
   return promptDetail;
 }
 
+function parsePromptImprovementDraftResponse(body: {
+  data?: unknown;
+}): PromptImprovementDraft {
+  const draft = body.data as PromptImprovementDraft | undefined;
+  if (
+    typeof draft !== "object" ||
+    draft === null ||
+    typeof draft.id !== "string" ||
+    typeof draft.prompt_id !== "string" ||
+    typeof draft.draft_text !== "string" ||
+    typeof draft.analyzer !== "string" ||
+    !Array.isArray(draft.changed_sections) ||
+    !Array.isArray(draft.safety_notes) ||
+    typeof draft.is_sensitive !== "boolean" ||
+    draft.redaction_policy !== "mask" ||
+    typeof draft.created_at !== "string" ||
+    (draft.copied_at !== undefined && typeof draft.copied_at !== "string") ||
+    (draft.accepted_at !== undefined && typeof draft.accepted_at !== "string")
+  ) {
+    throw new Error("Improvement draft save failed: Invalid response.");
+  }
+  return draft;
+}
+
 function parsePromptListResponse(body: {
   data?: {
     items?: unknown;
@@ -2578,8 +2602,10 @@ export async function savePromptImprovementDraft(
   if (!response.ok) {
     await failApi(response, "Improvement draft save failed");
   }
-  const body = (await response.json()) as { data: PromptImprovementDraft };
-  return body.data;
+  const body = (await response.json()) as Parameters<
+    typeof parsePromptImprovementDraftResponse
+  >[0];
+  return parsePromptImprovementDraftResponse(body);
 }
 
 export async function markPromptImprovementDraftCopied(
