@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Preflight Tag Refresh Guidance
+
+- [x] CHECK: `docs/NPM_PUBLISHING.md` now distinguishes unpublished 1.0.0 tag
+  refresh from post-publish version bump, but `npm-publish:preflight` tag
+  mismatch output still told operators only to publish from the old tag or bump.
+- [x] RED: fake-git preflight test and packaging guard now require tag mismatch
+  detail to mention unpublished `promptlane@1.0.0` tag refresh and
+  already-published version bump.
+- [x] GREEN: preflight tag mismatch detail includes the tagged-checkout path,
+  `git tag -fa v1.0.0` for unpublished intended-release HEAD, and version bump
+  for already-published versions.
+- [x] VERIFY: focused preflight/packaging guards, touched-file formatting,
+  typecheck, diff hygiene, and post-merge preflight.
+
 ## 2026-07-08 PromptLane Pre-Publish Tag Refresh Policy
 
 - [x] CHECK: `docs/NPM_PUBLISHING.md` still implied that a newer main commit

@@ -54,7 +54,12 @@ exit 1
     expect(tagCheck?.detail).toContain("git checkout v1.0.0");
     expect(tagCheck?.detail).toContain("tagged checkout");
     expect(tagCheck?.detail).toContain("corepack pnpm npm-publish:preflight");
-    expect(tagCheck?.detail).toContain("new tag for this commit.");
+    expect(tagCheck?.detail).toContain("If promptlane@1.0.0 is unpublished");
+    expect(tagCheck?.detail).toContain("git tag -fa v1.0.0");
+    expect(tagCheck?.detail).toContain(
+      "If promptlane@1.0.0 is already published",
+    );
+    expect(tagCheck?.detail).toContain("bump version and create a new tag");
     expect(tagCheck?.detail).not.toContain("manual npm checks");
     expect(tagCheck?.detail).not.toContain("predates this preflight");
   });

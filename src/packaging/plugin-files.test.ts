@@ -203,6 +203,13 @@ describe("plugin packaging files", () => {
     expect(preflightScript).toContain("git checkout ${expectedTag}");
     expect(preflightScript).toContain("tagged release commit");
     expect(preflightScript).toContain("tagged checkout");
+    expect(preflightScript).toContain(
+      "If promptlane@${version} is unpublished",
+    );
+    expect(preflightScript).toContain("git tag -fa ${expectedTag}");
+    expect(preflightScript).toContain(
+      "If promptlane@${version} is already published",
+    );
     expect(preflightScript).not.toContain("manual npm checks");
     expect(preflightScript).not.toContain("predates this preflight");
 
