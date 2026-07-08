@@ -2541,6 +2541,17 @@ describe("web api export client", () => {
     );
   });
 
+  it("reports malformed prompt list responses without returning incomplete archive data", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(jsonResponse({ data: {} }));
+    const { listPrompts } = await import("./api.js");
+
+    await expect(listPrompts({})).rejects.toThrow(
+      "Prompt list failed: Invalid response.",
+    );
+  });
+
   it("preserves session bootstrap recovery detail on failed responses", async () => {
     fetchMock.mockResolvedValueOnce(
       errorResponse(401, {
