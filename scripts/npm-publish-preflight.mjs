@@ -106,6 +106,16 @@ for (const [label, scriptName, expectedCommand] of [
     "node scripts/pack-dry-run.mjs",
   ],
   [
+    "benchmark package script is registered",
+    "benchmark",
+    "corepack pnpm build && node scripts/benchmark.mjs",
+  ],
+  [
+    "browser e2e package script is registered",
+    "e2e:browser",
+    "corepack pnpm build && node scripts/browser-e2e.mjs",
+  ],
+  [
     "release smoke package script is registered",
     "smoke:release",
     "corepack pnpm build && node scripts/release-smoke.mjs",
