@@ -878,6 +878,30 @@ function isContinuationSafetyTargetAgentCheckNote(
   );
 }
 
+function isContinuationSafetyPasteDestinationBoundaryNote(
+  value: unknown,
+): value is NonNullable<
+  LoopWorktreeResponse["continuation_safety_paste_destination_boundary_note"]
+> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const note = value as NonNullable<
+    LoopWorktreeResponse["continuation_safety_paste_destination_boundary_note"]
+  >;
+  return (
+    note.label === "Paste destination boundary" &&
+    note.boundary ===
+      "paste destination is a manual operator choice in Codex or Claude Code" &&
+    note.not_verified ===
+      "PromptLane does not verify active windows, target contents, or paste success" &&
+    note.reason ===
+      "keeps destination verification outside PromptLane automation before submission" &&
+    note.writes_files === false &&
+    note.external_calls === false
+  );
+}
+
 function isLoopActivityWorktree(
   value: unknown,
 ): value is LoopListResponse["status"]["activity"]["worktrees"][number] {
@@ -2834,6 +2858,7 @@ export async function getLoopWorktree(
       continuation_safety_copy_retry_note?: unknown;
       continuation_safety_pre_paste_confirmation_note?: unknown;
       continuation_safety_target_agent_check_note?: unknown;
+      continuation_safety_paste_destination_boundary_note?: unknown;
       items?: unknown;
       privacy?: unknown;
     };
@@ -2893,6 +2918,11 @@ export async function getLoopWorktree(
     (body.data.continuation_safety_target_agent_check_note !== undefined &&
       !isContinuationSafetyTargetAgentCheckNote(
         body.data.continuation_safety_target_agent_check_note,
+      )) ||
+    (body.data.continuation_safety_paste_destination_boundary_note !==
+      undefined &&
+      !isContinuationSafetyPasteDestinationBoundaryNote(
+        body.data.continuation_safety_paste_destination_boundary_note,
       )) ||
     !Array.isArray(body.data.items) ||
     !body.data.items.every(isLoopSummary) ||
