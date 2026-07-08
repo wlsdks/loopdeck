@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Error Issue Raw Field Redaction
+
+- [x] CHECK: `apiErrorIssueText`가 `errors[]`의 `field`와 `message`를 따로 sanitize한 뒤
+  합치기 때문에 `field: "compact_summary"`, `message: "<raw text>"` 형태에서는 raw
+  message가 failed response issue detail에 그대로 남을 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 settings failed response `errors[]`의
+  `compact_summary` issue message를 `[REDACTED:compact_summary]`로 치환하도록 요구하게 해
+  현재 unsafe issue detail 노출 실패를 확인한다.
+- [x] GREEN: issue field가 raw detail key이면 issue message body를 노출하지 않고
+  key별 redaction token만 반환한다.
+- [x] VERIFY: focused web API recovery-detail/error redaction tests, implementation
+  format check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Error Detail Compact Raw Redaction
 
 - [x] CHECK: `sanitizeApiErrorText`가 prompt/path/markdown raw-like keys는 redaction하지만

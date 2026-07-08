@@ -5892,7 +5892,9 @@ function apiErrorIssueText(value: unknown): string {
       }
       const record = item as { field?: unknown; message?: unknown };
       const field = apiErrorText(record.field);
-      const message = apiErrorText(record.message);
+      const message = isRawDetailErrorKey(field)
+        ? `[REDACTED:${field.toLowerCase()}]`
+        : apiErrorText(record.message);
       if (!message) {
         return "";
       }
@@ -5909,6 +5911,10 @@ function apiErrorIssueText(value: unknown): string {
 
 const RAW_DETAIL_ERROR_KEY_PATTERN =
   "compact_summary|markdown|prompt_body|raw_path|transcript|transcript_body";
+
+function isRawDetailErrorKey(value: string): boolean {
+  return new RegExp(`^(?:${RAW_DETAIL_ERROR_KEY_PATTERN})$`, "i").test(value);
+}
 
 function sanitizeApiErrorText(value: string): string {
   const rawDetailKey = RAW_DETAIL_ERROR_KEY_PATTERN;
