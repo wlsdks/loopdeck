@@ -3644,6 +3644,26 @@ function isQualityDashboardPrivacy(
   );
 }
 
+function isRawFreeQualityDashboardRoot(
+  value: unknown,
+): value is Partial<QualityDashboard> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const dashboard = value as Partial<QualityDashboard> & {
+    cwd?: unknown;
+    markdown?: unknown;
+    prompt_body?: unknown;
+    raw_path?: unknown;
+  };
+  return (
+    dashboard.cwd === undefined &&
+    dashboard.markdown === undefined &&
+    dashboard.prompt_body === undefined &&
+    dashboard.raw_path === undefined
+  );
+}
+
 function isQualityDashboardScore(
   value: unknown,
 ): value is QualityDashboard["quality_score"] {
@@ -4698,6 +4718,7 @@ export async function getQualityDashboard(
   };
   if (
     typeof body.data?.total_prompts !== "number" ||
+    !isRawFreeQualityDashboardRoot(body.data) ||
     typeof body.data.sensitive_prompts !== "number" ||
     typeof body.data.sensitive_ratio !== "number" ||
     !isQualityDashboardRecent(body.data.recent) ||

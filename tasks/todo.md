@@ -1,5 +1,14 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Quality Dashboard Root Raw Contract Error
+
+- [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의 root
+  `data` 객체 raw-free 계약을 검증하지 않아 top-level raw prompt body/path-like field가 dashboard UI 데이터로 넘어갈 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 malformed dashboard root `prompt_body`
+  body를 `Quality dashboard failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe root resolve 실패를 확인한다.
+- [x] GREEN: quality dashboard root object에서 raw body/path-like extra fields를 차단해 하위 validator를 우회한 raw-free contract 오류도 중단하도록 고친다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Quality Dashboard Trend Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의
