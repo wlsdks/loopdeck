@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-08 PromptLane Web Coach Feedback Raw Contract Error
+
+- [x] CHECK: `parseCoachFeedbackEntryResponse`가 feedback entry 필수 field만
+  검증하고 raw-like `prompt_body`/`raw_path`/`markdown` extra field를 차단하지 않아
+  prompt detail feedback state로 raw prompt data가 넘어갈 수 있다.
+- [x] RED: `src/web/src/api.test.ts`가 coach feedback response의
+  `prompt_body` body를 `Coach feedback failed: Invalid response.`로 reject하도록
+  요구하게 해 현재 unsafe feedback resolve 실패를 확인한다.
+- [x] GREEN: coach feedback entry parser가 id/prompt_id/rating/created_at 계약을
+  유지하면서 raw `prompt_body`/`raw_path`/`markdown` fields를 차단한다.
+- [x] VERIFY: focused web API test, implementation format check, typecheck, diff
+  whitespace check를 실행한다.
+
 ## 2026-07-08 PromptLane Web Prompt Detail Effectiveness Contract Error
 
 - [x] CHECK: `parsePromptDetailResponse`가 optional `effectiveness`를 object인지까지만
