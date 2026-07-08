@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane README Full Release Gate
+
+- [x] CHECK: README/README.ko Development sections said "full local gate" but
+  listed only format/test/lint/build/pack, while `quality-evidence` and release
+  docs require benchmark, browser e2e, release/package smoke, quality evidence,
+  and `git diff --check`.
+- [x] RED: packaging guard now requires both READMEs to include the complete
+  local release gate command set.
+- [x] GREEN: English and Korean README Development sections now list the full
+  local release gate used before publish/goal-completion claims.
+- [x] VERIFY: focused README gate guard, formatting, live preflight/quality
+  smoke, and diff hygiene.
+
 ## 2026-07-09 PromptLane Changelog Local Gate
 
 - [x] CHECK: public CHANGELOG still claimed a GitHub Actions CI matrix on every
