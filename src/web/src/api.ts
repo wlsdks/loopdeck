@@ -5847,6 +5847,9 @@ function parseCoachFeedbackEntryResponse(body: {
     prompt_id?: unknown;
     rating?: unknown;
     created_at?: unknown;
+    markdown?: unknown;
+    prompt_body?: unknown;
+    raw_path?: unknown;
   };
 }): CoachFeedbackEntry {
   if (
@@ -5855,7 +5858,10 @@ function parseCoachFeedbackEntryResponse(body: {
     (body.data.rating !== "helpful" &&
       body.data.rating !== "not_helpful" &&
       body.data.rating !== "wrong") ||
-    typeof body.data.created_at !== "string"
+    typeof body.data.created_at !== "string" ||
+    body.data.markdown !== undefined ||
+    body.data.prompt_body !== undefined ||
+    body.data.raw_path !== undefined
   ) {
     throw new Error("Coach feedback failed: Invalid response.");
   }
