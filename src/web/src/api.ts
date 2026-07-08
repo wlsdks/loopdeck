@@ -5890,8 +5890,13 @@ function apiErrorIssueText(value: unknown): string {
       if (!item || typeof item !== "object") {
         return "";
       }
-      const record = item as { field?: unknown; message?: unknown };
-      const field = apiErrorText(record.field);
+      const record = item as {
+        field?: unknown;
+        message?: unknown;
+        path?: unknown;
+      };
+      const field =
+        apiErrorText(record.field) || apiErrorIssuePathText(record.path);
       const rawFieldKey = rawDetailErrorFieldKey(field);
       const message = rawFieldKey
         ? `[REDACTED:${rawFieldKey.toLowerCase()}]`
@@ -5908,6 +5913,23 @@ function apiErrorIssueText(value: unknown): string {
     visibleIssues.push(`${remaining} more error(s).`);
   }
   return visibleIssues.join(" ");
+}
+
+function apiErrorIssuePathText(value: unknown): string {
+  if (typeof value === "string") {
+    return apiErrorText(value);
+  }
+  if (!Array.isArray(value)) {
+    return "";
+  }
+  const segments = value
+    .map((segment) =>
+      typeof segment === "string" || typeof segment === "number"
+        ? String(segment)
+        : "",
+    )
+    .filter(Boolean);
+  return apiErrorText(segments.join("."));
 }
 
 const RAW_DETAIL_ERROR_KEY_PATTERN =
