@@ -55,6 +55,8 @@ corepack pnpm dogfood:loop-memory-approval
 corepack pnpm promptlane loop status
 corepack pnpm promptlane loop collect
 corepack pnpm promptlane loop brief
+corepack pnpm promptlane loop outcome --status passed --summary "Focused checks passed." --evidence-ref "test:focused"
+corepack pnpm promptlane loop memory-candidate
 ```
 
 Acceptance criteria:

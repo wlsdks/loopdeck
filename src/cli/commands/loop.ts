@@ -17,6 +17,7 @@ import {
   decideLoopMemoryCandidate,
   type LoopMemoryCandidateDecision,
 } from "../../loop/memory-candidate.js";
+import { parseLoopOutcomeInput } from "../../loop/outcome.js";
 import {
   hasLoopSnapshotSelection,
   loopBriefNoSnapshotCliMessage,
@@ -53,6 +54,11 @@ type LoopCliOptions = {
   decidedBy?: string;
   decision?: string;
   reason?: string;
+  status?: string;
+  summary?: string;
+  evidenceRef?: string[];
+  evidenceRefs?: string[];
+  snapshotId?: string;
 };
 
 export function registerLoopCommand(program: Command): void {
@@ -105,6 +111,30 @@ export function registerLoopCommand(program: Command): void {
     )
     .action((options: LoopCliOptions) => {
       console.log(loopBriefForCli(options));
+    });
+
+  loop
+    .command("outcome")
+    .description("Record a privacy-safe outcome on a local loop snapshot.")
+    .requiredOption(
+      "--status <status>",
+      "Outcome status (unknown, in_progress, passed, failed, blocked, or abandoned).",
+    )
+    .requiredOption("--summary <summary>", "Privacy-safe outcome summary.")
+    .option(
+      "--evidence-ref <ref>",
+      "Privacy-safe evidence label; repeat for multiple labels.",
+      collectOptionValue,
+      [],
+    )
+    .option("--snapshot-id <id>", "Select a loop snapshot by id.")
+    .option("--worktree <name>", "Select the newest snapshot for a worktree.")
+    .option("--session <id>", "Select the newest snapshot for a session.")
+    .option("--branch <name>", "Select the newest snapshot for a branch.")
+    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--json", "Print JSON.")
+    .action((options: LoopCliOptions) => {
+      console.log(loopOutcomeForCli(options));
     });
 
   loop
@@ -280,6 +310,72 @@ export function loopBriefForCli(options: LoopCliOptions = {}): string {
     return options.json
       ? JSON.stringify(brief, null, 2)
       : `${brief.title}\n\n${brief.prompt}`;
+  });
+}
+
+export function loopOutcomeForCli(options: LoopCliOptions = {}): string {
+  const parsed = parseLoopOutcomeInput({
+    status: options.status,
+    summary: options.summary,
+    evidenceRefs: options.evidenceRefs ?? options.evidenceRef,
+  });
+  if (!parsed.ok) {
+    throw new UserError(parsed.message);
+  }
+
+  return withStorage(options.dataDir, (storage) => {
+    const selection = {
+      worktree: options.worktree,
+      sessionId: options.session,
+      branch: options.branch,
+    };
+    const hasSelection = hasLoopSnapshotSelection(selection);
+    if (options.snapshotId && hasSelection) {
+      throw new UserError(
+        "Use either --snapshot-id or worktree/session/branch filters, not both.",
+      );
+    }
+
+    const snapshots = storage.listLoopSnapshots({ limit: 100 }).items;
+    const snapshot = options.snapshotId
+      ? snapshots.find((candidate) => candidate.id === options.snapshotId)
+      : hasSelection
+        ? selectLoopSnapshot(snapshots, selection)
+        : snapshots.at(0);
+    if (!snapshot) {
+      throw new UserError(
+        hasSelection
+          ? selectedLoopSnapshotNotFoundMessage(selection)
+          : "No loop snapshot found. Run `promptlane loop collect` before recording an outcome.",
+      );
+    }
+
+    const recorded = storage.recordLoopOutcome(snapshot.id, parsed.outcome);
+    if (!recorded) {
+      throw new UserError("Loop snapshot not found.");
+    }
+
+    const result = {
+      recorded: true as const,
+      snapshot_id: recorded.id,
+      outcome: recorded.outcome,
+      next_action: "review the outcome before approving durable memory",
+      next_actions: [
+        "promptlane loop memory-candidate",
+        "promptlane loop brief",
+      ],
+      privacy: {
+        local_only: true as const,
+        external_calls: false as const,
+        stores_prompt_bodies: false as const,
+        stores_raw_paths: false as const,
+        auto_approves_memory: false as const,
+      },
+    };
+
+    return options.json
+      ? JSON.stringify(result, null, 2)
+      : formatLoopOutcome(result);
   });
 }
 
@@ -500,6 +596,10 @@ function parseLimit(value: string | number | undefined): number {
   return Math.min(parsed, 100);
 }
 
+function collectOptionValue(value: string, previous: string[]): string[] {
+  return [...previous, value];
+}
+
 function parseSource(value: string | undefined): LoopSnapshotSource {
   if (value === undefined || value === "cli") return "cli";
   if (value === "service") return "service";
@@ -633,6 +733,26 @@ function formatLoopMemoryCandidate(
   ]
     .filter((line): line is string => line !== undefined)
     .join("\n");
+}
+
+function formatLoopOutcome(result: {
+  snapshot_id: string;
+  outcome: LoopSnapshot["outcome"];
+  next_action: string;
+  next_actions: string[];
+}): string {
+  return [
+    "Loop outcome recorded",
+    `snapshot ${result.snapshot_id}`,
+    `status ${result.outcome.status}`,
+    `summary ${result.outcome.summary}`,
+    `evidence ${result.outcome.evidence_refs.join(", ") || "none"}`,
+    "",
+    `Next: ${result.next_action}`,
+    ...result.next_actions.map((action) => `- ${action}`),
+    "",
+    "Privacy: local-only, no prompt bodies, no raw paths, no external calls, no automatic memory approval.",
+  ].join("\n");
 }
 
 function formatLoopMemoryApproval(result: {

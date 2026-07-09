@@ -162,6 +162,7 @@ Snapshots may store:
 ### CLI
 
 `promptlane loop status`, `loop collect`, and `loop brief` may read snapshots.
+`promptlane loop outcome` may update one latest or explicitly selected snapshot.
 
 CLI output must:
 
@@ -221,6 +222,11 @@ Hook/service collection must:
 Evidence refs are local review hints. They should be safe labels such as test
 names, command names, PR numbers, or artifact ids. Do not store full logs, raw
 paths, transcript excerpts, or secrets as evidence refs.
+
+The shared outcome validator runs at CLI/MCP entrypoints and again at the
+storage boundary. It requires an allowed status and non-empty summary, trims
+and deduplicates evidence refs, and rejects secret-looking values or raw local
+paths before SQLite persistence.
 
 ## Memory And Instruction Patch Relation
 

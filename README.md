@@ -821,9 +821,22 @@ The MCP server exposes 20 tools:
   checklist status, and improvement hints.
 
 The matching local CLI surface is `promptlane loop status`,
-`promptlane loop collect`, `promptlane loop brief`, and
-`promptlane loop memory-candidate`; approved memories are recorded with
-`promptlane loop memory-approve`. `promptlane loop brief` accepts optional
+`promptlane loop collect`, `promptlane loop brief`, `promptlane loop outcome`,
+and `promptlane loop memory-candidate`; approved memories are recorded with
+`promptlane loop memory-approve`. Record a verified result before proposing a
+memory:
+
+```sh
+promptlane loop outcome --status passed --summary "Focused checks passed." \
+  --evidence-ref "test:focused" --evidence-ref "build:pnpm-build"
+promptlane loop memory-candidate
+promptlane loop memory-approve --approved-by user
+```
+
+Outcome summaries and evidence refs are trimmed, deduplicated, and rejected
+before persistence when they contain secrets or raw local paths. The outcome
+command defaults to the latest snapshot and accepts `--snapshot-id` or optional
+`--worktree`, `--session`, and `--branch` selectors. `promptlane loop brief` accepts optional
 `--worktree`, `--session`, and `--branch` filters so a continuation prompt can
 resume the same worktree/session/branch selected in the Loops view instead of
 falling back to the global latest snapshot. Use

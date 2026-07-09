@@ -119,6 +119,46 @@ try {
     "Loop snapshot output must not expose the raw dogfood secret.",
   );
 
+  step("loop outcome --json");
+  const outcome = parseJson(
+    runCli([
+      "loop",
+      "outcome",
+      "--data-dir",
+      dataDir,
+      "--snapshot-id",
+      snapshot.id,
+      "--status",
+      "passed",
+      "--summary",
+      "Focused first-loop checks passed.",
+      "--evidence-ref",
+      "test:first-coach-loop-dogfood",
+      "--json",
+    ]),
+  );
+  assertEqual(outcome.recorded, true, "Loop outcome should be recorded.");
+  assertEqual(
+    outcome.outcome.status,
+    "passed",
+    "Loop outcome should preserve the passed status.",
+  );
+  assertNotIncludes(
+    JSON.stringify(outcome),
+    projectDir,
+    "Loop outcome output must not expose the raw project path.",
+  );
+
+  step("loop memory-candidate --json");
+  const memoryCandidate = parseJson(
+    runCli(["loop", "memory-candidate", "--data-dir", dataDir, "--json"]),
+  );
+  assertEqual(
+    memoryCandidate.eligible,
+    true,
+    "Passed outcome with safe evidence should be memory-eligible.",
+  );
+
   step("loop brief --json");
   const brief = parseJson(
     runCli([

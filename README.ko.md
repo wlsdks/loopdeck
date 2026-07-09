@@ -662,6 +662,19 @@ MCP server는 20개의 tool을 제공합니다.
 - `prepare_agent_judge_batch`: 현재 Claude Code/Codex/Gemini CLI 세션이 직접 LLM judge로 평가할 수 있도록, bounded redacted prompt packet과 rubric을 준비합니다. `promptlane`가 provider를 대신 호출하지 않습니다.
 - `record_agent_judgments`: 현재 agent 세션이 만든 advisory score와 제안을 prompt body/raw path 없이 저장합니다.
 
+CLI만 사용하는 경우에도 검증 결과를 기록한 뒤 승인형 memory 흐름을 이어갈 수 있습니다.
+
+```sh
+promptlane loop outcome --status passed --summary "Focused checks passed." \
+  --evidence-ref "test:focused" --evidence-ref "build:pnpm-build"
+promptlane loop memory-candidate
+promptlane loop memory-approve --approved-by user
+```
+
+`loop outcome`은 기본적으로 최신 snapshot을 사용하며 `--snapshot-id` 또는
+`--worktree`, `--session`, `--branch` 선택자를 지원합니다. summary와 evidence
+ref에 secret 또는 raw local path가 있으면 SQLite에 쓰기 전에 거부합니다.
+
 읽기 tool은 local-only로 동작하고 구조화 JSON metadata에 대한 MCP
 `outputSchema`와 text JSON fallback을 함께 제공합니다.
 `record_agent_rewrite`와 `record_agent_judgments`는 non-destructive write tool입니다.

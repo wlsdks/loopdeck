@@ -17,6 +17,7 @@ import {
   loopDecisionRecordForCli,
   loopMemoryApproveForCli,
   loopMemoryCandidateForCli,
+  loopOutcomeForCli,
   loopStatusForCli,
 } from "./loop.js";
 
@@ -76,6 +77,104 @@ describe("loop CLI command", () => {
     expect(text).toContain("Privacy: local-only");
     expect(text).not.toContain("Make this better");
     expect(text).not.toContain("/Users/example");
+  });
+
+  it("records a passed outcome on the latest snapshot for CLI-only memory flow", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    const snapshot = JSON.parse(
+      loopCollectForCli({
+        dataDir,
+        json: true,
+        cwdPrefix: "/Users/example/private-project",
+        now: new Date("2026-07-04T01:00:00.000Z"),
+        cwd: "/Users/example/private-project",
+      }),
+    ) as { id: string };
+
+    const json = loopOutcomeForCli({
+      dataDir,
+      json: true,
+      status: "passed",
+      summary: "Focused CLI tests passed.",
+      evidenceRefs: ["test:loop-cli", "build:pnpm-build"],
+    });
+
+    expect(JSON.parse(json)).toMatchObject({
+      recorded: true,
+      snapshot_id: snapshot.id,
+      outcome: {
+        status: "passed",
+        summary: "Focused CLI tests passed.",
+        evidence_refs: ["test:loop-cli", "build:pnpm-build"],
+      },
+      next_actions: [
+        "promptlane loop memory-candidate",
+        "promptlane loop brief",
+      ],
+      privacy: {
+        local_only: true,
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+      },
+    });
+    expect(json).not.toContain("/Users/example");
+  });
+
+  it("records an outcome on a selected worktree without updating the latest snapshot", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    const selected = JSON.parse(
+      loopCollectForCli({
+        dataDir,
+        json: true,
+        cwdPrefix: "/Users/example/private-project",
+        now: new Date("2026-07-04T01:00:00.000Z"),
+        cwd: "/Users/example/private-project",
+        worktree: "primary-worktree",
+      }),
+    ) as { id: string };
+    seedNewerOtherWorktreeSnapshot(dataDir);
+
+    const result = JSON.parse(
+      loopOutcomeForCli({
+        dataDir,
+        json: true,
+        status: "passed",
+        summary: "Selected worktree checks passed.",
+        evidenceRefs: ["test:selected-worktree"],
+        worktree: "primary-worktree",
+      }),
+    ) as { snapshot_id: string };
+
+    expect(result.snapshot_id).toBe(selected.id);
+    const init = initializePromptLane({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: init.hookAuth.web_session_secret,
+    });
+    try {
+      expect(storage.getLatestLoopSnapshot()?.id).toBe(
+        "loop_newer_other_worktree",
+      );
+      expect(storage.getLatestLoopSnapshot()?.outcome.summary).toBe(
+        "Other worktree has a newer snapshot.",
+      );
+    } finally {
+      storage.close();
+    }
+  });
+
+  it("rejects unsafe outcome text before opening storage", () => {
+    expect(() =>
+      loopOutcomeForCli({
+        dataDir: "/Users/example/should-not-open",
+        status: "passed",
+        summary: "Read /Users/example/private/result.log.",
+      }),
+    ).toThrow(
+      "Loop outcome summary and evidence refs must not include secrets or raw local paths.",
+    );
   });
 
   it("collects a cron-safe service loop snapshot without prompt bodies or raw paths", async () => {
