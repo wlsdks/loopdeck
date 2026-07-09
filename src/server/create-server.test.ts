@@ -2419,6 +2419,110 @@ describe("createServer P2 ingest boundary", () => {
     expect(serialized).not.toContain("sk-proj-secret");
   });
 
+  it("records a privacy-safe outcome for an exact loop snapshot behind csrf", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(loopSnapshot());
+    const server = createTestServer({ storage });
+    const session = await server.inject({
+      method: "GET",
+      url: "/api/v1/session",
+      headers: { host: "127.0.0.1:17373" },
+    });
+    const cookie = String(session.headers["set-cookie"]);
+    const csrfToken = session.json<{ data: { csrf_token: string } }>().data
+      .csrf_token;
+
+    const noCsrf = await server.inject({
+      method: "POST",
+      url: "/api/v1/loops/loop_web/outcome",
+      headers: { host: "127.0.0.1:17373", cookie },
+      payload: {
+        status: "passed",
+        summary: "Focused web checks passed.",
+        evidence_refs: ["test:web-loops"],
+      },
+    });
+    expect(noCsrf.statusCode).toBe(403);
+
+    const recorded = await server.inject({
+      method: "POST",
+      url: "/api/v1/loops/loop_web/outcome",
+      headers: {
+        host: "127.0.0.1:17373",
+        cookie,
+        "x-csrf-token": csrfToken,
+      },
+      payload: {
+        status: "passed",
+        summary: "  Focused web checks passed.  ",
+        evidence_refs: [" test:web-loops ", "commit:abc1234"],
+      },
+    });
+
+    expect(recorded.statusCode).toBe(200);
+    expect(recorded.json()).toMatchObject({
+      data: {
+        recorded: true,
+        snapshot_id: "loop_web",
+        outcome: {
+          status: "passed",
+          summary: "Focused web checks passed.",
+          evidence_refs: ["test:web-loops", "commit:abc1234"],
+        },
+        next_actions: [
+          "promptlane loop memory-candidate",
+          "promptlane loop brief",
+        ],
+        privacy: {
+          local_only: true,
+          returns_prompt_bodies: false,
+          returns_raw_paths: false,
+          external_calls: false,
+          auto_approves_memory: false,
+        },
+      },
+    });
+    expect(storage.loopSnapshots[0]?.outcome.status).toBe("passed");
+  });
+
+  it("rejects unsafe web loop outcomes without echoing private input", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(loopSnapshot());
+    const server = createTestServer({ storage });
+    const session = await server.inject({
+      method: "GET",
+      url: "/api/v1/session",
+      headers: { host: "127.0.0.1:17373" },
+    });
+    const cookie = String(session.headers["set-cookie"]);
+    const csrfToken = session.json<{ data: { csrf_token: string } }>().data
+      .csrf_token;
+
+    const response = await server.inject({
+      method: "POST",
+      url: "/api/v1/loops/loop_web/outcome",
+      headers: {
+        host: "127.0.0.1:17373",
+        cookie,
+        "x-csrf-token": csrfToken,
+      },
+      payload: {
+        status: "passed",
+        summary: "Read /Users/example/private/result.log.",
+        evidence_refs: ["token:sk-proj-abcdefghijklmnop"],
+      },
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toMatchObject({
+      detail:
+        "Loop outcome summary and evidence refs must not include secrets or raw local paths.",
+    });
+    expect(response.body).not.toContain("/Users/example");
+    expect(response.body).not.toContain("sk-proj");
+    expect(storage.loopSnapshots[0]?.outcome.status).toBe("unknown");
+  });
+
   it("returns the shared storage capability problem when loop memory approval storage is unavailable", async () => {
     const storage = createMemoryStorage();
     delete (storage as Partial<typeof storage>).listLoopMemories;
@@ -4049,6 +4153,12 @@ function createMemoryStorage() {
     },
     getLatestLoopSnapshot() {
       return loopSnapshots.at(0);
+    },
+    recordLoopOutcome(snapshotId: string, outcome: LoopSnapshot["outcome"]) {
+      const index = loopSnapshots.findIndex((item) => item.id === snapshotId);
+      if (index < 0) return undefined;
+      loopSnapshots[index] = { ...loopSnapshots[index]!, outcome };
+      return loopSnapshots[index];
     },
     listCompactBoundaries() {
       return { items: compactBoundaries };

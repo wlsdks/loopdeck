@@ -57,6 +57,26 @@ describe("LoopsView", () => {
     expect(html).not.toContain("/Users/example");
   });
 
+  it("renders a compact outcome form for the selected worktree snapshot", () => {
+    const html = renderToStaticMarkup(
+      createElement(LoopsView, {
+        loading: false,
+        loops: loopList(),
+        worktreeDetail: loopWorktree(),
+        onRecordOutcome: async () => undefined,
+      }),
+    );
+
+    expect(html).toContain("Record outcome");
+    expect(html).toContain('name="outcome-status"');
+    expect(html).toContain('name="outcome-summary"');
+    expect(html).toContain('name="outcome-evidence"');
+    expect(html).toContain("Safe labels separated by commas");
+    expect(html).toContain("Save outcome");
+    expect(html).toContain("No automatic memory approval");
+    expect(html).not.toContain("/Users/example");
+  });
+
   it("renders empty loop first-value next steps before the collect command", () => {
     const firstScoreAction =
       "Capture one Codex or Claude Code prompt, then run promptlane coach to confirm the first score.";

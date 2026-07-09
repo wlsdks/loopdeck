@@ -96,4 +96,47 @@ describe("localizeElement", () => {
       "로컬 전용입니다. 프롬프트 본문, raw path, compact summary는 여기에 표시하지 않습니다.",
     );
   });
+
+  it("translates loop outcome controls and safety copy", () => {
+    const titleNode = {
+      nodeValue: "Record outcome",
+      parentElement: { closest: () => undefined },
+    };
+    const statusNode = {
+      nodeValue: "In progress",
+      parentElement: { closest: () => undefined },
+    };
+    const safetyNode = {
+      nodeValue: "Local only · No automatic memory approval",
+      parentElement: { closest: () => undefined },
+    };
+    const input = {
+      getAttribute: (name: string) =>
+        name === "placeholder" ? "Safe labels separated by commas" : null,
+      setAttribute: vi.fn(),
+    };
+    const nodes = [titleNode, statusNode, safetyNode];
+    const root = {
+      querySelectorAll: () => [input],
+    } as unknown as HTMLElement;
+    vi.stubGlobal("NodeFilter", { SHOW_TEXT: 4 });
+    vi.stubGlobal("document", {
+      createTreeWalker: () => {
+        let index = 0;
+        return {
+          nextNode: () => nodes[index++] ?? null,
+        };
+      },
+    });
+
+    localizeElement(root, "ko");
+
+    expect(titleNode.nodeValue).toBe("결과 기록");
+    expect(statusNode.nodeValue).toBe("진행 중");
+    expect(safetyNode.nodeValue).toBe("로컬 전용 · 메모리 자동 승인 없음");
+    expect(input.setAttribute).toHaveBeenCalledWith(
+      "placeholder",
+      "쉼표로 구분한 안전한 라벨",
+    );
+  });
 });

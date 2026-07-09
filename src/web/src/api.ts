@@ -3464,6 +3464,73 @@ export type LoopMemoryApprovalResult = {
   };
 };
 
+export type LoopOutcomeStatus =
+  | "unknown"
+  | "in_progress"
+  | "passed"
+  | "failed"
+  | "blocked"
+  | "abandoned";
+
+export type LoopOutcomeRecordResult = {
+  recorded: true;
+  snapshot_id: string;
+  outcome: {
+    status: LoopOutcomeStatus;
+    summary: string;
+    evidence_refs: string[];
+  };
+  next_actions: string[];
+  privacy: {
+    local_only: true;
+    returns_prompt_bodies: false;
+    returns_raw_paths: false;
+    external_calls: false;
+    auto_approves_memory: false;
+  };
+};
+
+function parseLoopOutcomeRecordResponse(
+  body: { data?: unknown },
+  message: string,
+): LoopOutcomeRecordResult {
+  const data = body.data as Partial<LoopOutcomeRecordResult> | undefined;
+  const outcome = data?.outcome;
+  const privacy = data?.privacy;
+  if (
+    data?.recorded !== true ||
+    typeof data.snapshot_id !== "string" ||
+    !outcome ||
+    !isLoopOutcomeStatus(outcome.status) ||
+    typeof outcome.summary !== "string" ||
+    !Array.isArray(outcome.evidence_refs) ||
+    !outcome.evidence_refs.every(
+      (reference) => typeof reference === "string",
+    ) ||
+    !Array.isArray(data.next_actions) ||
+    !data.next_actions.every((action) => typeof action === "string") ||
+    privacy?.local_only !== true ||
+    privacy.returns_prompt_bodies !== false ||
+    privacy.returns_raw_paths !== false ||
+    privacy.external_calls !== false ||
+    privacy.auto_approves_memory !== false
+  ) {
+    throw new Error(`${message}: Invalid response.`);
+  }
+  return data as LoopOutcomeRecordResult;
+}
+
+function isLoopOutcomeStatus(value: unknown): value is LoopOutcomeStatus {
+  return (
+    value === "unknown" ||
+    value === "in_progress" ||
+    value === "passed" ||
+    value === "failed" ||
+    value === "blocked" ||
+    value === "abandoned"
+  );
+}
+
 function parseLoopMemoryApprovalResponse(
   body: {
     data?: {
@@ -5820,6 +5887,40 @@ export async function approveLoopMemory(
     typeof parseLoopMemoryApprovalResponse
   >[0];
   return parseLoopMemoryApprovalResponse(body, "Loop memory approval failed");
+}
+
+export async function recordLoopOutcome(
+  snapshotId: string,
+  input: {
+    status: LoopOutcomeStatus;
+    summary: string;
+    evidenceRefs: string[];
+  },
+): Promise<LoopOutcomeRecordResult> {
+  await ensureSession();
+  const response = await fetch(
+    `/api/v1/loops/${encodeURIComponent(snapshotId)}/outcome`,
+    {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "content-type": "application/json",
+        "x-csrf-token": csrfToken ?? "",
+      },
+      body: JSON.stringify({
+        status: input.status,
+        summary: input.summary,
+        evidence_refs: input.evidenceRefs,
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    await failApi(response, "Loop outcome recording failed");
+  }
+
+  const body = (await response.json()) as { data?: unknown };
+  return parseLoopOutcomeRecordResponse(body, "Loop outcome recording failed");
 }
 
 export async function getLoopInstructionPatch(

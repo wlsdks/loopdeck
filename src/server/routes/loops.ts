@@ -16,6 +16,7 @@ import {
   toPromptLaneStatusSnapshot,
 } from "../../loop/status.js";
 import { decideLoopMemoryCandidate } from "../../loop/memory-candidate.js";
+import { parseLoopOutcomeInput } from "../../loop/outcome.js";
 import {
   hasLoopSnapshotSelection,
   loopBriefNoSnapshotCliMessage,
@@ -66,6 +67,11 @@ type LoopMemoryApprovalRouteStorage = Pick<
 > &
   Pick<LoopMemoryStoragePort, "recordLoopMemory" | "listLoopMemories">;
 
+type LoopOutcomeRouteStorage = Pick<
+  LoopSnapshotStoragePort,
+  "recordLoopOutcome"
+>;
+
 type LoopReadRouteStorage = Pick<LoopSnapshotStoragePort, "listLoopSnapshots"> &
   Pick<CompactBoundaryStoragePort, "listCompactBoundaries"> &
   Pick<LoopMemoryStoragePort, "listLoopMemories"> &
@@ -73,6 +79,12 @@ type LoopReadRouteStorage = Pick<LoopSnapshotStoragePort, "listLoopSnapshots"> &
 
 const LoopMemoryApprovalBodySchema = z.object({
   approved_by: z.string().trim().min(1).max(80).optional(),
+});
+
+const LoopOutcomeBodySchema = z.object({
+  status: z.string(),
+  summary: z.string().max(1_000),
+  evidence_refs: z.array(z.string().max(200)).max(20).optional(),
 });
 
 const LoopBriefSelectionQuerySchema = z.object({
@@ -520,6 +532,45 @@ export function registerLoopRoutes(
 
     return {
       data: proposeInstructionPatchFromMemory({ memory, targetFile }),
+    };
+  });
+
+  server.post("/api/v1/loops/:id/outcome", async (request) => {
+    requireAppAccess(request, options.auth, { csrf: true });
+    const storage = requireLoopOutcomeStorage(options.storage, request.url);
+    const params = request.params as { id: string };
+    const body = LoopOutcomeBodySchema.parse(request.body ?? {});
+    const parsed = parseLoopOutcomeInput({
+      status: body.status,
+      summary: body.summary,
+      evidenceRefs: body.evidence_refs,
+    });
+    if (!parsed.ok) {
+      throw problem(400, "Bad Request", parsed.message, request.url);
+    }
+
+    const snapshot = storage.recordLoopOutcome(params.id, parsed.outcome);
+    if (!snapshot) {
+      throw problem(404, "Not Found", "Loop snapshot not found.", request.url);
+    }
+
+    return {
+      data: {
+        recorded: true as const,
+        snapshot_id: snapshot.id,
+        outcome: snapshot.outcome,
+        next_actions: [
+          "promptlane loop memory-candidate",
+          "promptlane loop brief",
+        ],
+        privacy: {
+          local_only: true as const,
+          returns_prompt_bodies: false as const,
+          returns_raw_paths: false as const,
+          external_calls: false as const,
+          auto_approves_memory: false as const,
+        },
+      },
     };
   });
 
@@ -2220,6 +2271,16 @@ function requireLoopMemoryApprovalStorage(
     ["getLatestLoopSnapshot", "recordLoopMemory", "listLoopMemories"],
     { label: "Loop memory approval storage", instance },
   );
+}
+
+function requireLoopOutcomeStorage(
+  storage: LoopRouteOptions["storage"],
+  instance: string,
+): LoopOutcomeRouteStorage {
+  return requireStorageCapabilities(storage, ["recordLoopOutcome"], {
+    label: "Loop outcome storage",
+    instance,
+  });
 }
 
 function hasApprovedMemoryForSnapshot(

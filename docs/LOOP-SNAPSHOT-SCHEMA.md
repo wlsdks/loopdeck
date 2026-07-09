@@ -186,13 +186,16 @@ MCP output must:
 ### Web API And UI
 
 The web Loops surface may show snapshot metadata, status summaries, command
-center groupings, and review packets.
+center groupings, review packets, and an explicit selected-snapshot outcome
+form.
 
 Web output must:
 
 - exclude raw prompt bodies and raw paths
 - not expose compact summary text or transcript content
 - not perform automatic merge, branch checkout, or instruction-file writes
+- require CSRF and shared privacy validation before recording an outcome
+- not approve loop memory as a side effect of outcome recording
 - fetch continuation briefs through explicit user action
 
 ### Hooks And Service Collection

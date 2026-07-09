@@ -8,6 +8,7 @@ import type {
 import { getLoopInstructionPatch } from "./api.js";
 import { LoopActivitySummary } from "./loop-activity-summary.js";
 import { LoopInstructionPatchPanel } from "./loop-instruction-patch-panel.js";
+import { LoopOutcomeForm, type LoopOutcomeInput } from "./loop-outcome-form.js";
 import { LoopRows, LoopWorktreeDetailRows } from "./loop-rows.js";
 import { LoopSelectedBriefAction } from "./loop-selected-brief-action.js";
 import { LoopEmptyState, LoopLoadingState } from "./loop-shell-states.js";
@@ -29,6 +30,7 @@ export function LoopsView({
   onApproveMemoryCandidate,
   onCopyCommandCenterBrief,
   onCopySelectedBrief,
+  onRecordOutcome,
   onSelectWorktree,
   worktreeDetail,
 }: {
@@ -39,6 +41,10 @@ export function LoopsView({
     selection: CommandCenterBriefSelection,
   ) => Promise<void>;
   onCopySelectedBrief?: (detail: LoopWorktreeResponse) => Promise<void>;
+  onRecordOutcome?: (
+    snapshotId: string,
+    input: LoopOutcomeInput,
+  ) => Promise<void>;
   onSelectWorktree?: (worktree: string) => Promise<void>;
   worktreeDetail?: LoopWorktreeResponse;
 }) {
@@ -158,6 +164,13 @@ export function LoopsView({
         <div className="loop-table panel">
           <div className="loop-worktree-detail">
             <LoopWorktreeDetailHeader worktreeDetail={worktreeDetail} />
+            {onRecordOutcome && worktreeDetail.items[0] && (
+              <LoopOutcomeForm
+                currentStatus={worktreeDetail.items[0].outcome_status}
+                onRecord={onRecordOutcome}
+                snapshotId={worktreeDetail.items[0].id}
+              />
+            )}
             <LoopWorktreeSelectedBriefGuidance worktreeDetail={worktreeDetail}>
               <LoopWorktreeContinuationSafetyItems
                 worktreeDetail={worktreeDetail}
