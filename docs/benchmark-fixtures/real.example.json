@@ -6,7 +6,13 @@
       "label": "real_release_review",
       "adapter": "codex",
       "query": "release readiness review",
-      "prompt": "Review the redacted release readiness notes and return the next verification step."
+      "prompt": "Review the redacted release readiness notes and return the next verification step.",
+      "outcome": {
+        "status": "passed",
+        "summary": "Replace with the redacted result of this agent loop.",
+        "evidence_refs": ["test:replace-with-safe-evidence"],
+        "tests_run": 1
+      }
     },
     {
       "label": "real_claude_setup",

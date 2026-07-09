@@ -711,12 +711,14 @@ describe("plugin packaging files", () => {
       expect(content).toContain("archive_effectiveness_score");
       expect(content).toContain("archive_effectiveness_coverage");
       expect(content).toContain("effectiveness_summary");
+      expect(content).toContain("outcome_provenance");
       expect(content).toContain("linked_outcomes");
     }
     for (const content of [benchmarkFixtures, benchmarkSpec]) {
       expect(content).toContain("docs/benchmark-fixtures/real.json");
       expect(content).toContain("consent_note");
       expect(content).toContain("template_only");
+      expect(content).toContain("requires_real_outcomes");
     }
     expect(benchmarkSpec).toContain(
       "docs/benchmark-fixtures/real.example.json",
@@ -724,7 +726,10 @@ describe("plugin packaging files", () => {
     expect(realFixtureExample).toContain("consent_note");
     expect(realFixtureExample).toContain('"template_only": true');
     expect(realFixtureExample).toContain("real_release_review");
+    expect(realFixtureExample).toContain('"outcome"');
+    expect(realFixtureExample).toContain('"evidence_refs"');
     expect(benchmark).toContain("loadBenchmarkFixtures");
+    expect(benchmark).toContain("effectiveness remains unproven");
     expect(benchmarkRunner).toContain("corepack");
     expect(benchmarkRunner).toContain("pnpm");
     expect(benchmarkRunner).toContain("build");
@@ -808,8 +813,10 @@ describe("plugin packaging files", () => {
     expect(packageInstallSmoke).toContain('"init-fixture"');
     expect(packageInstallSmoke).toContain("validateBenchmarkFixtureTemplate");
     expect(packageInstallSmoke).toContain("parsed?.template_only !== true");
+    expect(packageInstallSmoke).toContain("outcome.evidence_refs");
     expect(packageInstallSmoke).toContain('status !== "no_fixtures"');
     expect(packageInstallSmoke).toContain('effectiveness !== "unproven"');
+    expect(packageInstallSmoke).toContain("requires_real_outcomes !== true");
   });
 
   it("keeps the public release surface on 1.0.0", () => {

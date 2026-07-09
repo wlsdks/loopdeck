@@ -65,7 +65,7 @@ The npm package intentionally includes:
     `promptlane benchmark --fixture-set real --fixture-file` remains
     operator-owned and is not shipped; installed users can create the starter
     shape with `promptlane benchmark init-fixture --output` and must replace
-    every example before setting `template_only` to `false`
+    every example and outcome before setting `template_only` to `false`
 - Claude Code plugin artifacts under `.claude-plugin`, `commands`, and
   `integrations/claude-code`
 - Codex plugin artifacts under `plugins/promptlane`

@@ -174,6 +174,8 @@ dogfood:web-user-flow` passed after main CI run `28750766036`, proving the
   `promptlane benchmark init-fixture --output "$FIXTURE_FILE"`, replacing all
   examples, updating `consent_note`, setting `template_only` to `false`, and with
   `promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"`.
+  Real prompts without operator-confirmed `passed` or `failed` outcomes remain
+  `unproven`; synthetic outcome seeds are not real effectiveness evidence.
 - `web_user_flow_current_main_evidence` was dogfooded after becoming the first
   recommendation: `corepack pnpm dogfood:web-user-flow` completed with
   `browser e2e passed` on current main. This refreshes local web workflow

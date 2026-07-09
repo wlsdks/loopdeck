@@ -52,7 +52,8 @@ repository maintainers may collect consent-bearing redacted fixtures in
 shape in an operator-owned local file by running
 `promptlane benchmark init-fixture --output "$FIXTURE_FILE"`, replacing
 every example with consent-bearing redacted fixtures, updating `consent_note`,
-setting `template_only` to `false`, and then running
+adding operator-confirmed `passed` or `failed` outcome metadata with safe
+evidence refs, setting `template_only` to `false`, and then running
 `promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"`
 before claiming real-user prompt quality trends.
 If that file is absent, preflight adds a separate `real benchmark fixtures are

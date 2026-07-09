@@ -16,6 +16,7 @@ import { join, resolve } from "node:path";
 
 import {
   buildBenchmarkEvidenceState,
+  buildBenchmarkOutcomeSeeds,
   buildNoFixturesReport,
   formatBenchmarkEvidenceStateLines,
   formatNoFixturesReportLines,
@@ -120,9 +121,16 @@ try {
       await apiGet(serverBaseUrl, auth.app_token, `/api/v1/prompts/${item.id}`),
     );
   }
-  seedArchiveEffectivenessOutcome(
-    fixtureIds.get("database_migration") ?? fixtureIds.values().next().value,
-  );
+  const outcomeSeeds = buildBenchmarkOutcomeSeeds({
+    fixtureSet,
+    fixtures,
+    fixtureIds,
+    syntheticUnsafeEvidenceRefs: [
+      `${rawPathPrefix}/benchmark-project/private.txt`,
+      rawSecret,
+    ],
+  });
+  seedArchiveEffectivenessOutcomes(outcomeSeeds);
   const archiveScore = await apiGet(
     serverBaseUrl,
     auth.app_token,
@@ -216,18 +224,30 @@ try {
       fixtureSet,
       status: "ready",
       pass,
+      outcomeCount: fixtureSet === "real" ? outcomeSeeds.length : 0,
     }),
-    next_action: benchmarkNextAction({ fixtureSet, pass }),
+    next_action: benchmarkNextAction({
+      fixtureSet,
+      pass,
+      outcomeCount: fixtureSet === "real" ? outcomeSeeds.length : 0,
+    }),
     scores,
     thresholds,
     counts: {
       prompts: fixtures.length,
       retrieval_cases: fixtures.length,
       coach_cases: coachCases.length,
+      outcome_cases: outcomeSeeds.length,
     },
     details: {
       retrieval_cases: retrievalCases,
       archive_effectiveness: archiveScore.data.effectiveness_summary,
+      outcome_provenance:
+        fixtureSet === "real"
+          ? outcomeSeeds.length > 0
+            ? "operator_confirmed_fixture_metadata"
+            : "none"
+          : "synthetic_regression_seed",
       experimental_rules_ab: experimentalComparison,
     },
   };
@@ -241,7 +261,9 @@ try {
   if (!report.pass) {
     if (fixtureSet === "real") {
       console.warn(
-        "warning: real fixture set failed thresholds — exiting 0 (soft signal). Synthetic remains the hard gate.",
+        outcomeSeeds.length === 0
+          ? "warning: real prompts ran without operator outcome metadata — effectiveness remains unproven."
+          : "warning: real fixture set failed thresholds — exiting 0 (soft signal). Synthetic remains the hard gate.",
       );
     } else {
       process.exitCode = 1;
@@ -425,11 +447,10 @@ function scorePromptQualityCalibration({ list, details }) {
   return roundScore(checks.filter(Boolean).length / checks.length);
 }
 
-function seedArchiveEffectivenessOutcome(promptId) {
-  assert(promptId, "Benchmark effectiveness fixture prompt id is missing.");
+function seedArchiveEffectivenessOutcomes(seeds) {
   const db = new Database(join(dataDir, "promptlane.sqlite"));
   try {
-    db.prepare(
+    const insert = db.prepare(
       `
       INSERT INTO loop_snapshots (
         id,
@@ -451,46 +472,47 @@ function seedArchiveEffectivenessOutcome(promptId) {
         privacy_json
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
-    ).run(
-      "loop_benchmark_effectiveness",
-      new Date().toISOString(),
-      "codex",
-      "mcp",
-      "benchmark-loop",
-      null,
-      "benchmark-project",
-      "proj_benchmark",
-      null,
-      "codex/benchmark-effectiveness",
-      "benchmark-effectiveness",
-      JSON.stringify([promptId]),
-      JSON.stringify({ prompts: 1, tests_run: 3 }),
-      JSON.stringify({
-        average_prompt_score: 80,
-        top_gaps: ["verification_criteria"],
-        unresolved_questions: [],
-      }),
-      JSON.stringify({
-        status: "passed",
-        summary: "benchmark effectiveness outcome passed",
-        evidence_refs: [
-          "benchmark:effectiveness",
-          "corepack pnpm benchmark",
-          `${rawPathPrefix}/benchmark-project/private.txt`,
-          rawSecret,
-        ],
-      }),
-      JSON.stringify({
-        generated: true,
-        prompt_id: promptId,
-        summary: "Continue from benchmark effectiveness evidence.",
-      }),
-      JSON.stringify({
-        stores_prompt_bodies: false,
-        stores_raw_paths: false,
-        local_only: true,
-      }),
     );
+    for (const seed of seeds) {
+      assert(
+        seed.promptId,
+        "Benchmark effectiveness fixture prompt id is missing.",
+      );
+      insert.run(
+        `loop_benchmark_effectiveness_${seed.label}`,
+        new Date().toISOString(),
+        seed.tool,
+        "mcp",
+        `benchmark-${seed.label}`,
+        null,
+        "benchmark-project",
+        "proj_benchmark",
+        null,
+        `benchmark/${seed.label}`,
+        seed.label,
+        JSON.stringify([seed.promptId]),
+        JSON.stringify({
+          prompts: 1,
+          tests_run: seed.outcome.tests_run,
+        }),
+        JSON.stringify({
+          average_prompt_score: 80,
+          top_gaps: ["verification_criteria"],
+          unresolved_questions: [],
+        }),
+        JSON.stringify(seed.outcome),
+        JSON.stringify({
+          generated: true,
+          prompt_id: seed.promptId,
+          summary: "Continue from benchmark effectiveness evidence.",
+        }),
+        JSON.stringify({
+          stores_prompt_bodies: false,
+          stores_raw_paths: false,
+          local_only: true,
+        }),
+      );
+    }
   } finally {
     db.close();
   }
@@ -745,8 +767,11 @@ function printReport(report) {
   }
 }
 
-function benchmarkNextAction({ fixtureSet, pass }) {
+function benchmarkNextAction({ fixtureSet, pass, outcomeCount }) {
   if (fixtureSet === "real") {
+    if (outcomeCount === 0) {
+      return "Real prompts were benchmarked, but effectiveness is unproven; add operator-confirmed passed or failed outcome metadata before comparing usefulness trends.";
+    }
     return pass
       ? "Real fixture soft signal is healthy; compare trends, but keep synthetic benchmark as the release gate."
       : "Real fixture soft signal missed thresholds; inspect trends and fixture quality before changing the hard release gate.";

@@ -195,6 +195,9 @@ function validateBenchmarkEvidence(stdout) {
   if (parsed?.evidence_state?.requires_real_fixtures !== true) {
     throw new Error("installed benchmark did not require real fixtures");
   }
+  if (parsed?.evidence_state?.requires_real_outcomes !== true) {
+    throw new Error("installed benchmark did not require real outcomes");
+  }
 }
 
 function validateBenchmarkFixtureTemplate(stdout, fixtureFile) {
@@ -212,6 +215,18 @@ function validateBenchmarkFixtureTemplate(stdout, fixtureFile) {
   }
   if (!Array.isArray(parsed?.fixtures) || parsed.fixtures.length === 0) {
     throw new Error("installed fixture init omitted benchmark fixtures");
+  }
+  const outcome = parsed.fixtures.find((fixture) => fixture?.outcome)?.outcome;
+  if (
+    !outcome ||
+    !["passed", "failed"].includes(outcome.status) ||
+    !Array.isArray(outcome.evidence_refs) ||
+    outcome.evidence_refs.length === 0 ||
+    !Number.isInteger(outcome.tests_run)
+  ) {
+    throw new Error(
+      "installed fixture init omitted benchmark outcome guidance",
+    );
   }
   if (!Array.isArray(parsed?.coach_cases) || parsed.coach_cases.length === 0) {
     throw new Error("installed fixture init omitted coach cases");

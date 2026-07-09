@@ -20,6 +20,7 @@ This benchmark is intentionally local-only. It does not call an external LLM jud
 promptlane benchmark --json
 promptlane benchmark init-fixture --output "$FIXTURE_FILE"
 # Replace every example with consent-bearing redacted fixtures.
+# Add passed or failed outcome metadata with safe evidence refs.
 # Set template_only to false after confirming the fixture is ready.
 promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"
 
@@ -45,8 +46,9 @@ create the starter shape with
 creates parent directories, writes the shipped template with private file
 permissions, refuses to overwrite an existing file, and never prints the local
 path. The generated file starts with `template_only: true` and cannot run as
-real evidence. Replace every example, update `consent_note`, and set
-`template_only` to `false` before passing the file to `--fixture-set real`;
+real evidence. Replace every example, update `consent_note`, add any available
+operator-confirmed outcome metadata, and set `template_only` to `false` before
+passing the file to `--fixture-set real`;
 the synthetic release gate remains deterministic.
 
 The JSON report includes `fixture_set` and `soft_signal` fields so consumers can filter.
@@ -57,8 +59,10 @@ Full JSON reports include `evidence_state` so automation can distinguish a
 synthetic regression pass from real-world effectiveness evidence. Synthetic
 passes report `regression_gate_passed_not_real_world_proof`; synthetic
 threshold misses report `regression_gate_failed` with `release_blocking: true`;
-real fixture passes report `trend_healthy`; real fixture threshold misses
-report `trend_needs_review` with `release_blocking: false`.
+real fixture passes with at least one operator-confirmed outcome report
+`trend_healthy`; threshold misses report `trend_needs_review` with
+`release_blocking: false`. A real prompt corpus without outcome metadata stays
+`unproven` with `requires_real_outcomes: true` even when runtime metrics pass.
 Human text output, including missing-real-fixtures output, prints the same
 evidence state as `evidence_*` lines, including
 `evidence_release_blocking`, so operators do not need JSON parsing to see
@@ -81,7 +85,13 @@ real-world usefulness.
       "label": "real_release_review",
       "adapter": "codex",
       "query": "release readiness review",
-      "prompt": "Review the redacted release readiness notes and return the next verification step."
+      "prompt": "Review the redacted release readiness notes and return the next verification step.",
+      "outcome": {
+        "status": "passed",
+        "summary": "The redacted release review completed with focused checks.",
+        "evidence_refs": ["test:release-smoke", "commit:abc1234"],
+        "tests_run": 4
+      }
     }
   ],
   "coach_cases": ["Improve this redacted prompt with verification criteria."]
@@ -101,7 +111,8 @@ cp docs/benchmark-fixtures/real.example.json docs/benchmark-fixtures/real.json
 ```
 
 Then replace the example prompts with consent-bearing redacted prompts, update
-`consent_note`, and set `template_only` to `false` before using
+`consent_note`, replace example outcomes with operator-confirmed results, and
+set `template_only` to `false` before using
 `--fixture-set real` as a trend signal. The loader rejects a missing or true
 `template_only` value before it reads any fixture prompt.
 
@@ -112,10 +123,18 @@ lowercase letter or digit and then use only lowercase letters, digits, `_`, or
 `-` with a maximum length of 64 characters. `adapter` must be `codex` or
 `claude-code`. Real fixtures are consent-bearing soft signals only:
 redact secrets, tokens, and absolute local paths from fixture labels, queries,
-prompts, coach cases, and `consent_note` before writing the file. The loader
+prompts, coach cases, outcomes, evidence refs, and `consent_note` before writing
+the file. An optional `outcome` must use completed status `passed` or `failed`,
+a non-empty redacted summary and `evidence_refs`, and a non-negative integer
+`tests_run`. Fixtures without outcomes still exercise real-corpus retrieval,
+coaching, privacy, and runtime behavior, but cannot prove usefulness. The loader
 rejects obvious `sk-...`, `npm_...`, `/Users/...`, `/home/...`,
 `/Volumes/...`, and `C:\Users\...` values so the benchmark does not ingest
 private raw text by accident.
+
+`details.outcome_provenance` is `synthetic_regression_seed` for the hard
+synthetic gate, `operator_confirmed_fixture_metadata` when at least one real
+fixture supplies an outcome, and `none` for an outcome-free real corpus.
 
 ## Principles
 
@@ -123,6 +142,7 @@ private raw text by accident.
   redacted real fixtures only for the opt-in soft trend signal.
 - Do not include raw secrets, raw absolute paths, or sensitive prompt text in the report.
 - Treat v1 as a regression baseline, not a proof of real-user product-market fit.
+- Never substitute a synthetic outcome for real-corpus effectiveness evidence.
 - Compare trend and regression across versions rather than treating the absolute score as final quality.
 
 ## Metrics
@@ -305,6 +325,7 @@ Pass thresholds:
     "effectiveness": "regression_gate_passed_not_real_world_proof",
     "release_blocking": false,
     "requires_real_fixtures": true,
+    "requires_real_outcomes": true,
     "release_gate": "synthetic",
     "trend_signal": "real"
   },
@@ -343,6 +364,7 @@ Pass thresholds:
       ],
       "next_action": "Link recent prompts to loop outcomes before claiming archive-wide effectiveness."
     },
+    "outcome_provenance": "synthetic_regression_seed",
     "experimental_rules_ab": {
       "verification_v2": {
         "cases": 10,
@@ -385,6 +407,7 @@ about the missing evidence:
     "effectiveness": "unproven",
     "release_blocking": false,
     "requires_real_fixtures": true,
+    "requires_real_outcomes": true,
     "release_gate": "synthetic",
     "trend_signal": "real"
   },
@@ -394,7 +417,7 @@ about the missing evidence:
 
 ## v1 Exclusions
 
-- real user archive evaluation
+- automatic real user archive ingestion
 - external LLM-as-judge
 - semantic search quality
 - cross-platform performance comparison
