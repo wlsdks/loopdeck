@@ -500,6 +500,25 @@ describe("plugin packaging files", () => {
     );
   });
 
+  it("keeps PLUGINS setup path safe before npm publish", () => {
+    const plugins = readFileSync(
+      join(process.cwd(), "docs/PLUGINS.md"),
+      "utf8",
+    );
+    const normalizedPlugins = plugins.replace(/\s+/g, " ");
+
+    expect(plugins).toContain("After the npm package is published");
+    expect(plugins).toContain("npm install -g promptlane");
+    expect(normalizedPlugins).toContain(
+      "If `promptlane` is not available yet because the npm package has not been published",
+    );
+    expect(plugins).toContain(
+      "git clone https://github.com/wlsdks/promptlane.git",
+    );
+    expect(plugins).toContain("pnpm install");
+    expect(plugins).toContain("pnpm setup");
+  });
+
   it("keeps README MCP tool lists aligned with shipped tool definitions", () => {
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
