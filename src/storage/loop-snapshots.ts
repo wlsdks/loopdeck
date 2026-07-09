@@ -1,5 +1,6 @@
 import type Database from "better-sqlite3";
 
+import { parseLoopOutcomeInput } from "../loop/outcome.js";
 import type { LoopSnapshot } from "../loop/types.js";
 import type { LoopOutcomeUpdate, LoopSnapshotListResult } from "./ports.js";
 
@@ -83,9 +84,18 @@ export function recordLoopOutcome(
   snapshotId: string,
   outcome: LoopOutcomeUpdate,
 ): LoopSnapshot | undefined {
+  const parsed = parseLoopOutcomeInput({
+    status: outcome.status,
+    summary: outcome.summary,
+    evidenceRefs: outcome.evidence_refs,
+  });
+  if (!parsed.ok) {
+    throw new Error(parsed.message);
+  }
+
   const result = db
     .prepare("UPDATE loop_snapshots SET outcome_json = ? WHERE id = ?")
-    .run(JSON.stringify(outcome), snapshotId);
+    .run(JSON.stringify(parsed.outcome), snapshotId);
 
   if (result.changes === 0) {
     return undefined;

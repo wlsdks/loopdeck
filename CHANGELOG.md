@@ -76,6 +76,8 @@ tools, benchmark/release validation, and an English/Korean web UI.
 #### MCP and agent workflows
 
 - Local stdio MCP server (`promptlane mcp`) with prompt scoring tools.
+- `promptlane loop outcome` for recording a privacy-validated result on the
+  latest or selected snapshot before proposing or approving durable memory.
 - Agent prompt wrappers, agent-assisted rewrite workflow, and
   agent-mediated judge tools for explicit redacted-packet handoff.
 - Prompt rewrite guard that prevents silent prompt resubmission.

@@ -195,6 +195,50 @@ describe("SQLite prompt storage", () => {
     storage.close();
   });
 
+  it("rejects unsafe loop outcomes before updating SQLite", () => {
+    const dataDir = createTempDir();
+    initializePromptLane({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+    });
+    storage.createLoopSnapshot({
+      id: "loop_unsafe_outcome",
+      created_at: "2026-07-04T01:00:00.000Z",
+      tool: "codex",
+      source: "cli",
+      cwd_label: "private-project",
+      project_id: "proj_outcome",
+      prompt_ids: [],
+      event_counts: { prompts: 0 },
+      quality: { top_gaps: [], unresolved_questions: [] },
+      outcome: {
+        status: "unknown",
+        summary: "Awaiting outcome.",
+        evidence_refs: [],
+      },
+      next_brief: { generated: false, summary: "Collect more evidence." },
+      privacy: {
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        local_only: true,
+      },
+    });
+
+    expect(() =>
+      storage.recordLoopOutcome("loop_unsafe_outcome", {
+        status: "passed",
+        summary: "Stored at /Users/example/private/result.log.",
+        evidence_refs: ["token:sk-proj-abcdefghijklmnop"],
+      }),
+    ).toThrow(
+      "Loop outcome summary and evidence refs must not include secrets or raw local paths.",
+    );
+    expect(storage.getLatestLoopSnapshot()?.outcome.status).toBe("unknown");
+
+    storage.close();
+  });
+
   it("includes raw-free loop outcome evidence on prompt details", async () => {
     const dataDir = createTempDir();
     initializePromptLane({ dataDir });

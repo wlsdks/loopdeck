@@ -408,6 +408,27 @@ describe("PromptLane MCP tools", () => {
     expect(serialized).not.toContain("/Users/example");
   });
 
+  it("rejects unsafe loop outcome text before storage", () => {
+    const dataDir = seedLoopSnapshot();
+
+    const result = recordLoopOutcomeTool(
+      {
+        snapshot_id: "loop_mcp",
+        status: "passed",
+        summary: "Private result at /Users/example/project/result.log.",
+        evidence_refs: ["token:sk-proj-abcdefghijklmnop"],
+      },
+      { dataDir },
+    );
+
+    expect(result).toEqual({
+      is_error: true,
+      error_code: "invalid_input",
+      message:
+        "Loop outcome summary and evidence refs must not include secrets or raw local paths.",
+    });
+  });
+
   it("guides first-time outcome recording through prompt capture before collect", () => {
     const dataDir = createTempDir();
     initializePromptLane({ dataDir });
@@ -665,7 +686,7 @@ describe("PromptLane MCP tools", () => {
     expect(result).toEqual({
       is_error: true,
       error_code: "invalid_input",
-      message: "`summary` must not be empty.",
+      message: "Loop outcome summary must not be empty.",
     });
   });
 });

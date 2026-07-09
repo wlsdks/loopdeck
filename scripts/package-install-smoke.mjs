@@ -35,6 +35,18 @@ try {
       encoding: "utf8",
     });
   }
+  const loopHelp = run(
+    join(tempPrefix, "bin", "promptlane"),
+    ["loop", "--help"],
+    {
+      cwd: tempHome,
+      env: { ...process.env, HOME: tempHome },
+      encoding: "utf8",
+    },
+  );
+  if (!loopHelp.stdout.includes("outcome")) {
+    throw new Error("installed loop CLI did not expose outcome recording");
+  }
   const startGuide = run(
     join(tempPrefix, "bin", "promptlane"),
     ["start", "--open-web", "--json"],

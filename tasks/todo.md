@@ -1,5 +1,21 @@
 # 작업 계획
 
+## 2026-07-10 PromptLane Loop Outcome CLI And Privacy Guard
+
+- [x] CHECK: CLI can collect/brief/approve memory but cannot record the passed
+  outcome required by memory approval; MCP/storage also accept raw outcome text
+  without write-time validation.
+- [x] RED: shared domain tests require allowed statuses, non-empty summaries,
+  trimmed safe evidence refs, and rejection of secrets/raw local paths.
+- [x] GREEN: storage rejects unsafe outcome persistence and MCP maps validation
+  failures to raw-free `invalid_input` results.
+- [x] RED: CLI tests require latest and selected snapshot outcome recording,
+  JSON/text output, actionable memory/brief next steps, and no path disclosure.
+- [x] GREEN: `promptlane loop outcome` reuses the shared validator and existing
+  snapshot selection semantics without auto-approving memory.
+- [x] VERIFY: focused loop/storage/MCP/CLI/packaging tests, type/quality/format,
+  live CLI workflow, package smoke, dry-run, and diff hygiene.
+
 ## 2026-07-10 PromptLane Baseline Diagnostic Output
 
 - [x] CHECK: incompatible or malformed baseline errors are safe internally but

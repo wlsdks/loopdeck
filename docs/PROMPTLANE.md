@@ -87,7 +87,8 @@ Success criteria:
 
 Goal: recurring lessons become durable only after approval.
 
-1. A loop outcome is recorded with passing status and safe evidence refs.
+1. A loop outcome is recorded with passing status and safe evidence refs through
+   `promptlane loop outcome` or `record_loop_outcome`.
 2. PromptLane proposes a memory candidate.
 3. The user approves the memory.
 4. PromptLane can propose an AGENTS.md or CLAUDE.md patch.
@@ -96,6 +97,7 @@ Goal: recurring lessons become durable only after approval.
 Success criteria:
 
 - failed or unevidenced loops are not accepted as durable memory
+- secrets and raw local paths are rejected before outcome persistence
 - memory approval does not write instruction files
 - instruction patch proposal is reviewable and idempotent
 - applying a patch requires explicit confirmation

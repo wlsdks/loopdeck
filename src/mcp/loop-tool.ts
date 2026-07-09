@@ -9,6 +9,7 @@ import {
   proposeInstructionPatchFromMemory,
 } from "../loop/instruction-patch.js";
 import { decideLoopMemoryCandidate } from "../loop/memory-candidate.js";
+import { parseLoopOutcomeInput } from "../loop/outcome.js";
 import {
   hasLoopSnapshotSelection,
   loopBriefNoSnapshotMcpMessage,
@@ -203,10 +204,13 @@ export function recordLoopOutcomeTool(
   args: RecordLoopOutcomeToolArguments,
   options: ScorePromptToolOptions = {},
 ): RecordLoopOutcomeToolResult {
-  const summary = typeof args.summary === "string" ? args.summary.trim() : "";
-
-  if (!summary) {
-    return loopToolError("invalid_input", "`summary` must not be empty.");
+  const parsed = parseLoopOutcomeInput({
+    status: args.status,
+    summary: args.summary,
+    evidenceRefs: args.evidence_refs,
+  });
+  if (!parsed.ok) {
+    return loopToolError("invalid_input", parsed.message);
   }
 
   if (args.snapshot_id && args.latest === true) {
@@ -235,11 +239,7 @@ export function recordLoopOutcomeTool(
         );
       }
 
-      const snapshot = storage.recordLoopOutcome(snapshotId, {
-        status: args.status,
-        summary,
-        evidence_refs: args.evidence_refs ?? [],
-      });
+      const snapshot = storage.recordLoopOutcome(snapshotId, parsed.outcome);
 
       if (!snapshot) {
         return loopToolError(

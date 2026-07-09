@@ -3376,7 +3376,18 @@ describe("plugin packaging files", () => {
     expect(smoke).toContain("hook codex");
     expect(smoke).toContain("coach --json");
     expect(smoke).toContain("loop collect --json");
+    expect(smoke).toContain("loop outcome --json");
+    expect(smoke).toContain("loop memory-candidate --json");
     expect(smoke).toContain("loop brief --json");
+    expect(
+      readFileSync(join(process.cwd(), "src/cli/commands/loop.ts"), "utf8"),
+    ).toContain('.command("outcome")');
+    expect(
+      readFileSync(
+        join(process.cwd(), "scripts/package-install-smoke.mjs"),
+        "utf8",
+      ),
+    ).toContain('includes("outcome")');
     expect(smoke).toContain("PROMPTLANE_FIRST_LOOP_SECRET");
     expect(smoke).toContain("assertNotIncludes");
     expect(smoke).toContain("first coach loop dogfood passed");
