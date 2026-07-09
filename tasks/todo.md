@@ -1,5 +1,21 @@
 # 작업 계획
 
+## 2026-07-10 PromptLane Baseline Diagnostic Output
+
+- [x] CHECK: incompatible or malformed baseline errors are safe internally but
+  become a generic `failed before producing a report` message in the installed
+  CLI because benchmark stderr is intentionally hidden.
+- [x] RED: comparison tests require raw-free `incompatible` reason codes for
+  corpus mismatch and non-numeric score reports instead of thrown content.
+- [x] GREEN: runtime JSON/text returns the current snapshot plus a structured
+  baseline recovery action while preserving a nonzero exit code.
+- [x] RED: CLI/package tests require incompatible comparison output to remain
+  visible without exposing fixture or baseline paths.
+- [x] GREEN: malformed, mismatched, and valid baselines have distinct safe
+  statuses and installed smoke coverage.
+- [x] VERIFY: focused comparison/CLI/packaging tests, static gates, live
+  malformed/mismatched baseline checks, package smoke, dry-run, diff hygiene.
+
 ## 2026-07-10 PromptLane Benchmark Baseline Comparison
 
 - [x] CHECK: a single real benchmark run currently reports `trend_healthy`

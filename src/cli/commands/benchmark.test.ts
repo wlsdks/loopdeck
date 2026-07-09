@@ -197,6 +197,38 @@ describe("benchmark CLI command", () => {
     ]);
   });
 
+  it("returns a structured incompatible report while preserving failure exit status", () => {
+    const previousExitCode = process.exitCode;
+    process.exitCode = undefined;
+    const runBenchmark = vi.fn(() => ({
+      status: 1,
+      stdout: JSON.stringify({
+        fixture_set: "real",
+        comparison: {
+          status: "incompatible",
+          reason: "fixture_set_or_corpus_mismatch",
+        },
+      }),
+      stderr: "private baseline path must stay hidden",
+    }));
+
+    try {
+      const output = benchmarkForCli(
+        { fixtureSet: "real", baselineFile: "/tmp/private-baseline.json" },
+        runBenchmark,
+      );
+      expect(JSON.parse(output).comparison).toEqual({
+        status: "incompatible",
+        reason: "fixture_set_or_corpus_mismatch",
+      });
+      expect(output).not.toContain("private-baseline");
+      expect(output).not.toContain("private baseline path");
+      expect(process.exitCode).toBe(1);
+    } finally {
+      process.exitCode = previousExitCode;
+    }
+  });
+
   it("reports a missing operator fixture without exposing its local path", () => {
     const fixtureFile = join(
       tmpdir(),

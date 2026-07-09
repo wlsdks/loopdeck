@@ -30,9 +30,10 @@ export function compareBenchmarkReports({ current, baseline }) {
     typeof baseline?.corpus_fingerprint !== "string" ||
     baseline.corpus_fingerprint !== current?.corpus_fingerprint
   ) {
-    throw new Error(
-      "Benchmark baseline must use the same fixture set and corpus.",
-    );
+    return incompatibleBenchmarkComparison({
+      corpusFingerprint: current?.corpus_fingerprint,
+      reason: "fixture_set_or_corpus_mismatch",
+    });
   }
   if (
     typeof current?.scores !== "object" ||
@@ -40,9 +41,10 @@ export function compareBenchmarkReports({ current, baseline }) {
     typeof baseline?.scores !== "object" ||
     baseline.scores === null
   ) {
-    throw new Error(
-      "Benchmark baseline must contain comparable numeric scores.",
-    );
+    return incompatibleBenchmarkComparison({
+      corpusFingerprint: current?.corpus_fingerprint,
+      reason: "non_numeric_scores",
+    });
   }
 
   const metrics = {};
@@ -52,9 +54,10 @@ export function compareBenchmarkReports({ current, baseline }) {
   for (const [metric, currentValue] of Object.entries(current.scores)) {
     const baselineValue = baseline.scores[metric];
     if (!Number.isFinite(currentValue) || !Number.isFinite(baselineValue)) {
-      throw new Error(
-        "Benchmark baseline must contain comparable numeric scores.",
-      );
+      return incompatibleBenchmarkComparison({
+        corpusFingerprint: current.corpus_fingerprint,
+        reason: "non_numeric_scores",
+      });
     }
     const direction = metricDirection(metric);
     const delta = roundScore(currentValue - baselineValue);
@@ -88,6 +91,21 @@ export function compareBenchmarkReports({ current, baseline }) {
     improvements: improvements.sort(),
     regressions: regressions.sort(),
     unchanged: unchanged.sort(),
+  };
+}
+
+export function incompatibleBenchmarkComparison({ corpusFingerprint, reason }) {
+  return {
+    status: "incompatible",
+    reason,
+    corpus_fingerprint:
+      typeof corpusFingerprint === "string"
+        ? corpusFingerprint
+        : "corpus_unknown",
+    metrics: {},
+    improvements: [],
+    regressions: [],
+    unchanged: [],
   };
 }
 
