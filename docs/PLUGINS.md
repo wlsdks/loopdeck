@@ -19,7 +19,23 @@ login services, or start a background server. `promptlane setup` is the
 consent step that performs those local changes.
 
 The plugin package is therefore discovery and convenience, not hidden
-installation. Users who want active prompt coaching should still run:
+installation. After the npm package is published, install the CLI first:
+
+```sh
+npm install -g promptlane
+```
+
+If `promptlane` is not available yet because the npm package has not been
+published, use a local checkout first:
+
+```sh
+git clone https://github.com/wlsdks/promptlane.git
+cd promptlane
+pnpm install
+pnpm setup
+```
+
+Users who want active prompt coaching should then run:
 
 ```sh
 promptlane start

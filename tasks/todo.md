@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Plugin Docs Publish-Pending Install
+
+- [x] CHECK: `docs/PLUGINS.md` setup section still told active coaching users
+  to run global `promptlane` commands before showing a complete npm-unpublished
+  local checkout path.
+- [x] RED: packaging guard requires `docs/PLUGINS.md` to separate post-publish
+  global install from pre-publish local checkout setup.
+- [x] GREEN: `docs/PLUGINS.md` shows npm install after publish and
+  `git clone`/`pnpm install`/`pnpm setup` before global CLI availability.
+- [x] VERIFY: focused PLUGINS guard, formatting, live preflight/quality smoke,
+  npm registry status, and diff hygiene.
+
 ## 2026-07-09 PromptLane Command Docs Publish-Pending CLI
 
 - [x] CHECK: Claude slash command docs for setup/status could tell users the
