@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-10 PromptLane Web Loop Outcome Recording
+
+- [x] CHECK: the Loops web view can approve eligible memory but cannot record
+  the prerequisite outcome, forcing web users into CLI or MCP.
+- [x] RED: server route tests require CSRF, exact snapshot selection, shared
+  privacy validation, and raw-free errors.
+- [x] GREEN: a focused Fastify outcome route reuses the loop outcome domain
+  validator and storage port without auto-approving memory.
+- [x] RED: browser API and Loops UI tests require a compact selected-snapshot
+  status/summary/evidence form and validated local-only response.
+- [x] GREEN: recording refreshes list and selected worktree state while keeping
+  prompt bodies, raw paths, external calls, and automatic memory writes out.
+- [x] VERIFY: focused server/API/UI/i18n tests, lint/build, browser
+  desktop/mobile checks, package smoke/dry-run, and diff hygiene.
+
 ## 2026-07-10 PromptLane Loop Outcome CLI And Privacy Guard
 
 - [x] CHECK: CLI can collect/brief/approve memory but cannot record the passed

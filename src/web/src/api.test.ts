@@ -6163,6 +6163,96 @@ describe("web api export client", () => {
     );
   });
 
+  it("records a loop outcome with csrf and validates the raw-free response", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            recorded: true,
+            snapshot_id: "loop_web",
+            outcome: {
+              status: "passed",
+              summary: "Focused web checks passed.",
+              evidence_refs: ["test:web-loops"],
+            },
+            next_actions: [
+              "promptlane loop memory-candidate",
+              "promptlane loop brief",
+            ],
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+              external_calls: false,
+              auto_approves_memory: false,
+            },
+          },
+        }),
+      );
+    const { recordLoopOutcome } = await import("./api.js");
+
+    const result = await recordLoopOutcome("loop_web", {
+      status: "passed",
+      summary: "Focused web checks passed.",
+      evidenceRefs: ["test:web-loops"],
+    });
+
+    expect(result.recorded).toBe(true);
+    expect(fetchMock).toHaveBeenLastCalledWith(
+      "/api/v1/loops/loop_web/outcome",
+      {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "content-type": "application/json",
+          "x-csrf-token": "csrf-1",
+        },
+        body: JSON.stringify({
+          status: "passed",
+          summary: "Focused web checks passed.",
+          evidence_refs: ["test:web-loops"],
+        }),
+      },
+    );
+    expect(JSON.stringify(result)).not.toContain("/Users/example");
+  });
+
+  it("rejects malformed loop outcome responses", async () => {
+    fetchMock
+      .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          data: {
+            recorded: true,
+            snapshot_id: "loop_web",
+            outcome: {
+              status: "private-status",
+              summary: "Focused web checks passed.",
+              evidence_refs: ["test:web-loops"],
+            },
+            next_actions: [],
+            privacy: {
+              local_only: true,
+              returns_prompt_bodies: false,
+              returns_raw_paths: false,
+              external_calls: false,
+              auto_approves_memory: false,
+            },
+          },
+        }),
+      );
+    const { recordLoopOutcome } = await import("./api.js");
+
+    await expect(
+      recordLoopOutcome("loop_web", {
+        status: "passed",
+        summary: "Focused web checks passed.",
+        evidenceRefs: ["test:web-loops"],
+      }),
+    ).rejects.toThrow("Loop outcome recording failed: Invalid response.");
+  });
+
   it("reports malformed loop memory approval metadata without returning incomplete durable memory data", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))

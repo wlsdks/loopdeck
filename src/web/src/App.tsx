@@ -39,6 +39,7 @@ import {
   listProjects,
   listPrompts,
   markPromptImprovementDraftCopied,
+  recordLoopOutcome,
   recordPromptCopied,
   savePromptImprovementDraft,
   setPromptBookmark,
@@ -340,6 +341,31 @@ export function App() {
       setLoops(nextLoops);
     } catch (error) {
       setError(errorMessageOrDefault(error, "Could not approve loop memory."));
+    }
+  }
+
+  async function recordSelectedLoopOutcome(
+    snapshotId: string,
+    input: Parameters<typeof recordLoopOutcome>[1],
+  ): Promise<void> {
+    setError(undefined);
+    try {
+      await recordLoopOutcome(snapshotId, input);
+      await Promise.all([
+        listLoops().then(setLoops),
+        loopWorktree
+          ? openLoopWorktree({
+              worktree: loopWorktree.worktree,
+              ...(loopWorktree.session_id
+                ? { session: loopWorktree.session_id }
+                : {}),
+              ...(loopWorktree.branch ? { branch: loopWorktree.branch } : {}),
+            })
+          : Promise.resolve(),
+      ]);
+    } catch (error) {
+      setError(errorMessageOrDefault(error, "Could not record loop outcome."));
+      throw error;
     }
   }
 
@@ -1037,6 +1063,9 @@ export function App() {
               copyCommandCenterLoopBrief(selection)
             }
             onCopySelectedBrief={(detail) => copySelectedLoopBrief(detail)}
+            onRecordOutcome={(snapshotId, input) =>
+              recordSelectedLoopOutcome(snapshotId, input)
+            }
             onSelectWorktree={(worktree) => openLoopWorktree({ worktree })}
             worktreeDetail={loopWorktree}
           />
