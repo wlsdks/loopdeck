@@ -734,6 +734,9 @@ soft trend signal입니다. 어느 결과도 단독으로 실제 사용자 promp
 완전히 해결했다는 주장은 아닙니다. 실제 outcome이 없는 real prompt는
 `unproven`으로 남습니다. fixture contract는
 `docs/BENCHMARK_V1.md`의 `template_only` 확인 절차를 참고하세요.
+real 실행은 synthetic 점수 calibration과 score delivery integrity를
+분리하며, 효용 추세를 healthy로 판단하려면 `outcome_pass_rate`를
+충족해야 합니다.
 
 ## Release Smoke
 

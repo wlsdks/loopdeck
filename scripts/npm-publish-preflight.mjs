@@ -219,6 +219,7 @@ for (const filePath of [
   "scripts/benchmark.mjs",
   "scripts/benchmark-runner.mjs",
   "scripts/benchmark-fixtures.mjs",
+  "scripts/benchmark-scores.mjs",
   "scripts/agent-setup-smoke.mjs",
   "scripts/browser-e2e.mjs",
   "scripts/first-coach-loop-dogfood.mjs",
@@ -783,6 +784,7 @@ function realBenchmarkMissingFixturesEvidenceStateIsDocumented() {
 function benchmarkEvidenceStateReportContractIsDocumented() {
   const benchmark = readText("scripts/benchmark.mjs");
   const benchmarkFixtures = readText("scripts/benchmark-fixtures.mjs");
+  const benchmarkScores = readText("scripts/benchmark-scores.mjs");
   const benchmarkSpec = readText("docs/BENCHMARK_V1.md");
   const implementationSnippets = [
     "buildBenchmarkEvidenceState",
@@ -814,7 +816,12 @@ function benchmarkEvidenceStateReportContractIsDocumented() {
       semanticSnippets.every((snippet) => content.includes(snippet)),
     ) &&
     benchmark.includes("outcome_provenance") &&
-    benchmarkSpec.includes("outcome_provenance")
+    benchmarkSpec.includes("outcome_provenance") &&
+    benchmark.includes("outcome_pass_rate") &&
+    benchmarkSpec.includes("outcome_pass_rate") &&
+    benchmarkScores.includes("scoreOutcomePassRate") &&
+    benchmarkScores.includes("real_corpus_delivery_integrity") &&
+    benchmarkScores.includes("synthetic_score_calibration")
   );
 }
 

@@ -63,6 +63,11 @@ real fixture passes with at least one operator-confirmed outcome report
 `trend_healthy`; threshold misses report `trend_needs_review` with
 `release_blocking: false`. A real prompt corpus without outcome metadata stays
 `unproven` with `requires_real_outcomes: true` even when runtime metrics pass.
+The report keeps prompt scoring honest by naming its active profile:
+`synthetic_score_calibration` uses labeled low/spread fixtures, while
+`real_corpus_delivery_integrity` checks that every real prompt receives a
+bounded score consistently across list and detail surfaces without inventing
+calibration labels for operator data.
 Human text output, including missing-real-fixtures output, prints the same
 evidence state as `evidence_*` lines, including
 `evidence_release_blocking`, so operators do not need JSON parsing to see
@@ -248,6 +253,14 @@ Pass threshold:
 
 - `>= 0.8`
 
+Synthetic runs use the `synthetic_score_calibration` profile and require the
+known vague prompt to score low plus a meaningful score spread. Real runs use
+`real_corpus_delivery_integrity`: all fixture prompts must be scored from
+`0-100`, and list/detail values and bands must match. This avoids failing a
+real corpus merely because it does not contain the synthetic phrase or score
+distribution. The active profile and named checks are returned in
+`details.prompt_quality`.
+
 ### 7. Prompt Effectiveness Evidence
 
 Checks:
@@ -261,11 +274,13 @@ Metric:
 
 - `archive_effectiveness_score`
 - `archive_effectiveness_coverage`
+- `outcome_pass_rate`
 
 Pass threshold:
 
 - `>= 0.8`
 - coverage `>= 0.2` for the synthetic smoke corpus
+- passed outcomes / linked outcomes `>= 0.8`
 
 `archive_effectiveness_score` checks whether linked loop-outcome evidence is
 safe and usable once present. `archive_effectiveness_coverage` reports the
@@ -273,6 +288,9 @@ share of benchmark prompts with linked outcome evidence. Benchmark coverage is
 a measurement-depth signal, not a claim of archive-wide proof; low coverage
 means the benchmark can prove the mechanism works without proving most prompts
 have outcome-backed effectiveness yet.
+`outcome_pass_rate` measures the actual share of linked outcomes that passed;
+it is separate from evidence-shape checks so a well-formed failed outcome does
+not become a healthy usefulness trend.
 
 ### 8. Experimental Rules A/B Lift
 
@@ -338,6 +356,7 @@ Pass thresholds:
     "prompt_quality_score_calibration": 1,
     "archive_effectiveness_score": 1,
     "archive_effectiveness_coverage": 0.2,
+    "outcome_pass_rate": 1,
     "analytics_score": 1,
     "ingest_p95_ms": 21,
     "search_p95_ms": 8,
@@ -345,6 +364,17 @@ Pass thresholds:
     "export_ms": 16
   },
   "details": {
+    "prompt_quality": {
+      "score": 1,
+      "profile": "synthetic_score_calibration",
+      "checks": {
+        "all_prompts_scored": true,
+        "scores_in_range": true,
+        "list_detail_consistent": true,
+        "vague_prompt_scores_low": true,
+        "score_spread_is_calibrated": true
+      }
+    },
     "archive_effectiveness": {
       "measured_prompts": 1,
       "unmeasured_prompts": 4,
@@ -385,6 +415,7 @@ Pass thresholds:
     "prompt_quality_score_calibration": 0.8,
     "archive_effectiveness_score": 0.8,
     "archive_effectiveness_coverage": 0.2,
+    "outcome_pass_rate": 0.8,
     "analytics_score": 0.75,
     "ingest_p95_ms": 500,
     "search_p95_ms": 250,
