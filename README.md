@@ -975,6 +975,7 @@ score calibration, analytics, and latency:
 promptlane benchmark --json
 promptlane benchmark init-fixture --output "$FIXTURE_FILE"
 # Replace every example with consent-bearing redacted fixtures.
+# Add passed or failed outcome metadata with safe evidence refs.
 # Set template_only to false after confirming the fixture is ready.
 promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"
 
@@ -985,7 +986,8 @@ corepack pnpm --silent benchmark -- --json
 The default synthetic fixture set is the deterministic local regression gate.
 The real fixture set is an opt-in soft trend signal for consent-bearing,
 redacted prompts stored in an operator-owned local file. Neither signal alone
-is a claim that real user prompt quality is fully solved. See
+is a claim that real user prompt quality is fully solved. Real prompts without
+operator-confirmed outcomes remain `unproven`. See
 `docs/BENCHMARK_V1.md` for the `template_only` confirmation contract.
 
 ## Release Smoke

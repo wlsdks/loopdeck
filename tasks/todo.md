@@ -1,5 +1,21 @@
 # 작업 계획
 
+## 2026-07-10 PromptLane Real Benchmark Outcome Evidence
+
+- [x] CHECK: real fixture runs currently seed an internal synthetic passed
+  outcome, so archive effectiveness can look positive without operator outcome
+  evidence.
+- [x] RED: fixture tests require optional operator-confirmed `passed` or
+  `failed` outcome metadata with tests and raw-free evidence refs.
+- [x] GREEN: the real fixture loader preserves valid outcome metadata and
+  rejects unsafe or incomplete outcome evidence before ingest.
+- [x] RED: evidence-state tests keep outcome-free real corpora `unproven`
+  instead of reporting a healthy effectiveness trend.
+- [x] GREEN: synthetic runs retain deterministic seeded evidence while real
+  runs seed only fixture-provided outcomes and report their provenance/count.
+- [x] VERIFY: focused benchmark/CLI/packaging tests, type/quality/format gates,
+  installed package smoke, package dry-run, and diff hygiene.
+
 ## 2026-07-10 PromptLane Real Benchmark Template Confirmation
 
 - [x] CHECK: the shipped real fixture example is currently runnable unchanged,

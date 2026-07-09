@@ -98,6 +98,8 @@ tools, benchmark/release validation, and an English/Korean web UI.
   `benchmark init-fixture` setup for the shipped private-permission template.
   Generated and shipped templates now remain non-runnable until the operator
   replaces every example and explicitly sets `template_only` to `false`.
+  Real benchmark runs now derive effectiveness only from operator-confirmed
+  outcome metadata; prompt-only corpora remain explicitly unproven.
 - Local benchmark v1 with privacy, retrieval, coach, analytics, and latency
   thresholds (`pnpm benchmark`, `pnpm benchmark -- --json`).
 - Browser E2E smoke covering archive, detail, coach, projects, export, and

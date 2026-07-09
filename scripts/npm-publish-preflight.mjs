@@ -768,6 +768,7 @@ function realBenchmarkMissingFixturesEvidenceStateIsDocumented() {
     "effectiveness",
     "unproven",
     "requires_real_fixtures",
+    "requires_real_outcomes",
     "release_gate",
     "synthetic",
     "trend_signal",
@@ -798,6 +799,7 @@ function benchmarkEvidenceStateReportContractIsDocumented() {
     "evidence_release_blocking",
     "next_action",
     "requires_real_fixtures",
+    "requires_real_outcomes",
     "release_gate",
     "synthetic",
     "trend_signal",
@@ -810,7 +812,9 @@ function benchmarkEvidenceStateReportContractIsDocumented() {
     ) &&
     [benchmarkFixtures, benchmarkSpec].every((content) =>
       semanticSnippets.every((snippet) => content.includes(snippet)),
-    )
+    ) &&
+    benchmark.includes("outcome_provenance") &&
+    benchmarkSpec.includes("outcome_provenance")
   );
 }
 
@@ -856,6 +860,7 @@ function realFixtureExampleInvalidReason(parsed) {
   }
 
   const seenLabels = new Set();
+  let outcomeExamples = 0;
   for (const [index, fixture] of parsed.fixtures.entries()) {
     const label = readFixtureString(fixture, "label");
     const adapter = readFixtureString(fixture, "adapter");
@@ -877,6 +882,17 @@ function realFixtureExampleInvalidReason(parsed) {
     if ([label, query, prompt].some(containsRawBenchmarkFixtureText)) {
       return `real fixture example fixture ${index} must be raw-free`;
     }
+    if (fixture.outcome !== undefined) {
+      outcomeExamples += 1;
+      const outcomeInvalidReason = realFixtureOutcomeInvalidReason(
+        fixture.outcome,
+        index,
+      );
+      if (outcomeInvalidReason) return outcomeInvalidReason;
+    }
+  }
+  if (outcomeExamples === 0) {
+    return "real fixture example must include operator outcome metadata";
   }
 
   for (const [index, coachCase] of parsed.coach_cases.entries()) {
@@ -888,6 +904,42 @@ function realFixtureExampleInvalidReason(parsed) {
     }
   }
 
+  return "";
+}
+
+function realFixtureOutcomeInvalidReason(outcome, fixtureIndex) {
+  if (
+    typeof outcome !== "object" ||
+    outcome === null ||
+    Array.isArray(outcome)
+  ) {
+    return `real fixture example fixture ${fixtureIndex} outcome must be an object`;
+  }
+  if (outcome.status !== "passed" && outcome.status !== "failed") {
+    return `real fixture example fixture ${fixtureIndex} outcome status must be passed or failed`;
+  }
+  if (
+    typeof outcome.summary !== "string" ||
+    outcome.summary.trim().length === 0 ||
+    containsRawBenchmarkFixtureText(outcome.summary)
+  ) {
+    return `real fixture example fixture ${fixtureIndex} outcome summary must be raw-free`;
+  }
+  if (
+    !Array.isArray(outcome.evidence_refs) ||
+    outcome.evidence_refs.length === 0 ||
+    outcome.evidence_refs.some(
+      (ref) =>
+        typeof ref !== "string" ||
+        ref.trim().length === 0 ||
+        containsRawBenchmarkFixtureText(ref),
+    )
+  ) {
+    return `real fixture example fixture ${fixtureIndex} outcome evidence_refs must be raw-free`;
+  }
+  if (!Number.isInteger(outcome.tests_run) || outcome.tests_run < 0) {
+    return `real fixture example fixture ${fixtureIndex} outcome tests_run must be a non-negative integer`;
+  }
   return "";
 }
 
@@ -1014,7 +1066,7 @@ function releaseWarnings() {
     {
       label: "benchmark is synthetic regression evidence",
       detail:
-        'corepack pnpm --silent benchmark -- --json must pass before publish, but a synthetic pass is not real-world effectiveness proof. Create an operator-owned template with promptlane benchmark init-fixture --output "$FIXTURE_FILE", replace every example with consent-bearing redacted fixtures, update consent_note, set template_only to false, then run promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" before claiming real-user prompt quality trends.',
+        'corepack pnpm --silent benchmark -- --json must pass before publish, but a synthetic pass is not real-world effectiveness proof. Create an operator-owned template with promptlane benchmark init-fixture --output "$FIXTURE_FILE", replace every example with consent-bearing redacted fixtures, add operator-confirmed passed or failed outcome metadata with safe evidence refs, update consent_note, set template_only to false, then run promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" before claiming real-user prompt quality trends.',
     },
     ...realBenchmarkFixtureWarnings(),
   ];
@@ -1029,7 +1081,7 @@ function realBenchmarkFixtureWarnings() {
     {
       label: "real benchmark fixtures are missing",
       detail:
-        'docs/benchmark-fixtures/real.json is absent; publish can proceed after release gates pass, but do not claim real-user effectiveness trends. Create an operator-owned template with promptlane benchmark init-fixture --output "$FIXTURE_FILE", replace every example with consent-bearing redacted fixtures, update consent_note, set template_only to false, then run promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE".',
+        'docs/benchmark-fixtures/real.json is absent; publish can proceed after release gates pass, but do not claim real-user effectiveness trends. Create an operator-owned template with promptlane benchmark init-fixture --output "$FIXTURE_FILE", replace every example with consent-bearing redacted fixtures, add operator-confirmed passed or failed outcome metadata with safe evidence refs, update consent_note, set template_only to false, then run promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE".',
     },
   ];
 }

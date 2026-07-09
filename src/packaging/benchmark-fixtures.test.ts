@@ -42,6 +42,7 @@ describe("benchmark fixture loading", () => {
           effectiveness: "unproven",
           release_blocking: false,
           requires_real_fixtures: true,
+          requires_real_outcomes: true,
           release_gate: "synthetic",
           trend_signal: "real",
         },
@@ -66,6 +67,7 @@ describe("benchmark fixture loading", () => {
       effectiveness: "regression_gate_passed_not_real_world_proof",
       release_blocking: false,
       requires_real_fixtures: true,
+      requires_real_outcomes: true,
       release_gate: "synthetic",
       trend_signal: "real",
     });
@@ -74,11 +76,13 @@ describe("benchmark fixture loading", () => {
         fixtureSet: "real",
         status: "ready",
         pass: true,
+        outcomeCount: 1,
       }),
     ).toEqual({
       effectiveness: "trend_healthy",
       release_blocking: false,
       requires_real_fixtures: false,
+      requires_real_outcomes: false,
       release_gate: "synthetic",
       trend_signal: "real",
     });
@@ -87,11 +91,13 @@ describe("benchmark fixture loading", () => {
         fixtureSet: "real",
         status: "ready",
         pass: false,
+        outcomeCount: 1,
       }),
     ).toEqual({
       effectiveness: "trend_needs_review",
       release_blocking: false,
       requires_real_fixtures: false,
+      requires_real_outcomes: false,
       release_gate: "synthetic",
       trend_signal: "real",
     });
@@ -105,6 +111,23 @@ describe("benchmark fixture loading", () => {
       effectiveness: "regression_gate_failed",
       release_blocking: true,
       requires_real_fixtures: true,
+      requires_real_outcomes: true,
+      release_gate: "synthetic",
+      trend_signal: "real",
+    });
+
+    expect(
+      buildBenchmarkEvidenceState({
+        fixtureSet: "real",
+        status: "ready",
+        pass: true,
+        outcomeCount: 0,
+      }),
+    ).toEqual({
+      effectiveness: "unproven",
+      release_blocking: false,
+      requires_real_fixtures: false,
+      requires_real_outcomes: true,
       release_gate: "synthetic",
       trend_signal: "real",
     });
@@ -120,6 +143,7 @@ describe("benchmark fixture loading", () => {
         effectiveness: "regression_gate_failed",
         release_blocking: true,
         requires_real_fixtures: true,
+        requires_real_outcomes: true,
         release_gate: "synthetic",
         trend_signal: "real",
       }),
@@ -127,6 +151,7 @@ describe("benchmark fixture loading", () => {
       "evidence_effectiveness: regression_gate_failed",
       "evidence_release_blocking: yes",
       "evidence_requires_real_fixtures: yes",
+      "evidence_requires_real_outcomes: yes",
       "evidence_release_gate: synthetic",
       "evidence_trend_signal: real",
     ]);
@@ -150,6 +175,7 @@ describe("benchmark fixture loading", () => {
       "evidence_effectiveness: unproven",
       "evidence_release_blocking: no",
       "evidence_requires_real_fixtures: yes",
+      "evidence_requires_real_outcomes: yes",
       "evidence_release_gate: synthetic",
       "evidence_trend_signal: real",
       "next_action: Add consent-bearing redacted real fixtures before using real benchmark trends.",
@@ -210,6 +236,146 @@ describe("benchmark fixture loading", () => {
     ]);
     expect(loaded.coachCases).toEqual([
       "Improve this redacted prompt with verification criteria.",
+    ]);
+  });
+
+  it("preserves operator-confirmed raw-free outcomes for real effectiveness evidence", async () => {
+    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
+    mkdirSync(fixtureDir, { recursive: true });
+    writeFileSync(
+      join(fixtureDir, "real.json"),
+      `${JSON.stringify(
+        {
+          template_only: false,
+          consent_note: "Operator-confirmed redacted benchmark corpus.",
+          fixtures: [
+            {
+              label: "real_release_review",
+              adapter: "codex",
+              query: "release readiness review",
+              prompt: "Review the redacted release readiness notes.",
+              outcome: {
+                status: "passed",
+                summary: "The release review completed with focused checks.",
+                evidence_refs: ["test:release-smoke", "commit:abc1234"],
+                tests_run: 4,
+              },
+            },
+          ],
+          coach_cases: [
+            "Improve this redacted prompt with verification criteria.",
+          ],
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    const { loadBenchmarkFixtures } = await import(
+      pathToFileURL(join(process.cwd(), "scripts/benchmark-fixtures.mjs")).href
+    );
+    const loaded = loadBenchmarkFixtures({
+      fixtureSet: "real",
+      repoRoot: tempRoot,
+    });
+
+    expect(loaded.fixtures[0]?.outcome).toEqual({
+      status: "passed",
+      summary: "The release review completed with focused checks.",
+      evidence_refs: ["test:release-smoke", "commit:abc1234"],
+      tests_run: 4,
+    });
+  });
+
+  it("rejects unsafe real outcome evidence without echoing private content", async () => {
+    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
+    mkdirSync(fixtureDir, { recursive: true });
+    writeFileSync(
+      join(fixtureDir, "real.json"),
+      `${JSON.stringify(
+        {
+          template_only: false,
+          consent_note: "Operator-confirmed redacted benchmark corpus.",
+          fixtures: [
+            {
+              label: "real_release_review",
+              adapter: "codex",
+              query: "release readiness review",
+              prompt: "Review the redacted release readiness notes.",
+              outcome: {
+                status: "passed",
+                summary: "Private result from /Users/example/project.",
+                evidence_refs: ["test:release-smoke"],
+                tests_run: 4,
+              },
+            },
+          ],
+          coach_cases: [
+            "Improve this redacted prompt with verification criteria.",
+          ],
+        },
+        null,
+        2,
+      )}\n`,
+    );
+
+    const { loadBenchmarkFixtures } = await import(
+      pathToFileURL(join(process.cwd(), "scripts/benchmark-fixtures.mjs")).href
+    );
+    expect(() =>
+      loadBenchmarkFixtures({ fixtureSet: "real", repoRoot: tempRoot }),
+    ).toThrow(
+      "real fixture 0 outcome summary must be redacted before benchmark ingestion.",
+    );
+  });
+
+  it("never substitutes synthetic passed evidence for real benchmark outcomes", async () => {
+    const { buildBenchmarkOutcomeSeeds } = await import(
+      pathToFileURL(join(process.cwd(), "scripts/benchmark-fixtures.mjs")).href
+    );
+    const fixtureIds = new Map([
+      ["real_without_outcome", "prompt-real-one"],
+      ["real_with_outcome", "prompt-real-two"],
+    ]);
+    const fixtures = [
+      {
+        label: "real_without_outcome",
+        adapter: "codex",
+        query: "first query",
+        prompt: "First redacted prompt.",
+      },
+      {
+        label: "real_with_outcome",
+        adapter: "claude-code",
+        query: "second query",
+        prompt: "Second redacted prompt.",
+        outcome: {
+          status: "failed",
+          summary: "The requested verification did not pass.",
+          evidence_refs: ["test:focused-check"],
+          tests_run: 2,
+        },
+      },
+    ];
+
+    expect(
+      buildBenchmarkOutcomeSeeds({
+        fixtureSet: "real",
+        fixtures: [fixtures[0]],
+        fixtureIds,
+      }),
+    ).toEqual([]);
+    expect(
+      buildBenchmarkOutcomeSeeds({ fixtureSet: "real", fixtures, fixtureIds }),
+    ).toEqual([
+      {
+        promptId: "prompt-real-two",
+        label: "real_with_outcome",
+        tool: "claude-code",
+        outcome: fixtures[1]?.outcome,
+      },
     ]);
   });
 

@@ -116,12 +116,71 @@ export function buildNoFixturesReport({ dataset, fixtureSet, detail }) {
   };
 }
 
-export function buildBenchmarkEvidenceState({ fixtureSet, status, pass }) {
-  if (fixtureSet === "real" && status === "ready") {
+export function buildBenchmarkOutcomeSeeds({
+  fixtureSet,
+  fixtures,
+  fixtureIds,
+  syntheticUnsafeEvidenceRefs = [],
+}) {
+  if (fixtureSet === "real") {
+    return fixtures
+      .filter((fixture) => fixture.outcome !== undefined)
+      .map((fixture) => ({
+        promptId: fixtureIds.get(fixture.label),
+        label: fixture.label,
+        tool: fixture.adapter,
+        outcome: fixture.outcome,
+      }))
+      .filter((seed) => typeof seed.promptId === "string");
+  }
+
+  const fixture =
+    fixtures.find((candidate) => candidate.label === "database_migration") ??
+    fixtures[0];
+  const promptId = fixture ? fixtureIds.get(fixture.label) : undefined;
+  if (!fixture || typeof promptId !== "string") return [];
+  return [
+    {
+      promptId,
+      label: fixture.label,
+      tool: fixture.adapter,
+      outcome: {
+        status: "passed",
+        summary: "benchmark effectiveness outcome passed",
+        evidence_refs: [
+          "benchmark:effectiveness",
+          "corepack pnpm benchmark",
+          ...syntheticUnsafeEvidenceRefs,
+        ],
+        tests_run: 3,
+      },
+    },
+  ];
+}
+
+export function buildBenchmarkEvidenceState({
+  fixtureSet,
+  status,
+  pass,
+  outcomeCount = 0,
+}) {
+  if (fixtureSet === "real" && status === "ready" && outcomeCount > 0) {
     return {
       effectiveness: pass ? "trend_healthy" : "trend_needs_review",
       release_blocking: false,
       requires_real_fixtures: false,
+      requires_real_outcomes: false,
+      release_gate: "synthetic",
+      trend_signal: "real",
+    };
+  }
+
+  if (fixtureSet === "real" && status === "ready") {
+    return {
+      effectiveness: "unproven",
+      release_blocking: false,
+      requires_real_fixtures: false,
+      requires_real_outcomes: true,
       release_gate: "synthetic",
       trend_signal: "real",
     };
@@ -132,6 +191,7 @@ export function buildBenchmarkEvidenceState({ fixtureSet, status, pass }) {
       effectiveness: "regression_gate_passed_not_real_world_proof",
       release_blocking: false,
       requires_real_fixtures: true,
+      requires_real_outcomes: true,
       release_gate: "synthetic",
       trend_signal: "real",
     };
@@ -142,6 +202,7 @@ export function buildBenchmarkEvidenceState({ fixtureSet, status, pass }) {
       effectiveness: "regression_gate_failed",
       release_blocking: true,
       requires_real_fixtures: true,
+      requires_real_outcomes: true,
       release_gate: "synthetic",
       trend_signal: "real",
     };
@@ -151,6 +212,7 @@ export function buildBenchmarkEvidenceState({ fixtureSet, status, pass }) {
     effectiveness: "unproven",
     release_blocking: false,
     requires_real_fixtures: true,
+    requires_real_outcomes: true,
     release_gate: "synthetic",
     trend_signal: "real",
   };
@@ -162,6 +224,9 @@ export function formatBenchmarkEvidenceStateLines(evidenceState) {
     `evidence_release_blocking: ${evidenceState.release_blocking ? "yes" : "no"}`,
     `evidence_requires_real_fixtures: ${
       evidenceState.requires_real_fixtures ? "yes" : "no"
+    }`,
+    `evidence_requires_real_outcomes: ${
+      evidenceState.requires_real_outcomes ? "yes" : "no"
     }`,
     `evidence_release_gate: ${evidenceState.release_gate}`,
     `evidence_trend_signal: ${evidenceState.trend_signal}`,
@@ -203,6 +268,9 @@ function parseRealFixtures(parsed) {
       adapter: readRequiredString(fixture, "adapter", index),
       query: readRequiredString(fixture, "query", index),
       prompt: readRequiredString(fixture, "prompt", index),
+      ...(fixture?.outcome === undefined
+        ? {}
+        : { outcome: parseRealOutcome(fixture.outcome, index) }),
     };
     if (!VALID_ADAPTERS.has(normalized.adapter)) {
       throw new Error(
@@ -219,6 +287,57 @@ function parseRealFixtures(parsed) {
     seenLabels.add(normalized.label);
     return normalized;
   });
+}
+
+function parseRealOutcome(value, fixtureIndex) {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw new Error(`real fixture ${fixtureIndex} outcome must be an object.`);
+  }
+  const status = value.status;
+  if (status !== "passed" && status !== "failed") {
+    throw new Error(
+      `real fixture ${fixtureIndex} outcome status must be passed or failed.`,
+    );
+  }
+  const summary = readOutcomeString(value.summary, "summary", fixtureIndex);
+  assertRedactedText(summary, `real fixture ${fixtureIndex} outcome summary`);
+  if (!Array.isArray(value.evidence_refs) || value.evidence_refs.length === 0) {
+    throw new Error(
+      `real fixture ${fixtureIndex} outcome evidence_refs must be a non-empty array.`,
+    );
+  }
+  const evidenceRefs = value.evidence_refs.map((ref, evidenceIndex) => {
+    if (typeof ref !== "string" || ref.trim().length === 0) {
+      throw new Error(
+        `real fixture ${fixtureIndex} outcome evidence_ref ${evidenceIndex} must be a non-empty string.`,
+      );
+    }
+    assertRedactedText(
+      ref,
+      `real fixture ${fixtureIndex} outcome evidence_ref ${evidenceIndex}`,
+    );
+    return ref.trim();
+  });
+  if (!Number.isInteger(value.tests_run) || value.tests_run < 0) {
+    throw new Error(
+      `real fixture ${fixtureIndex} outcome tests_run must be a non-negative integer.`,
+    );
+  }
+  return {
+    status,
+    summary,
+    evidence_refs: evidenceRefs,
+    tests_run: value.tests_run,
+  };
+}
+
+function readOutcomeString(value, field, fixtureIndex) {
+  if (typeof value !== "string" || value.trim().length === 0) {
+    throw new Error(
+      `real fixture ${fixtureIndex} outcome ${field} must be a non-empty string.`,
+    );
+  }
+  return value.trim();
 }
 
 function parseRealCoachCases(parsed) {
