@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-09 PromptLane Implementation Plan Release Gate
+
+- [x] CHECK: `docs/IMPLEMENTATION_PLAN.md` still omitted `format`, listed
+  `pack:dry-run` after smoke commands, and told maintainers to run the full
+  release gate on Node 22 even though `package.json#engines.node` is
+  `>=22.12 <25`.
+- [x] RED: packaging guard requires the shipped implementation plan's default
+  local release gate to match the current ordered release gate and reject the
+  stale Node 22-only publish instruction.
+- [x] GREEN: implementation plan uses the package engine range and current
+  release-gate order.
+- [x] VERIFY: focused public release surface guard, formatting, live
+  preflight/quality smoke, npm registry status, and diff hygiene.
+
 ## 2026-07-09 PromptLane Local 9.5 Evidence Current State
 
 - [x] CHECK: `docs/LOCAL_95_EVIDENCE_2026-07-06.md` still said

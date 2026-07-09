@@ -821,9 +821,32 @@ describe("plugin packaging files", () => {
     expect(implementationPlan).toContain(
       "create or refresh the annotated git tag before npm publish preflight",
     );
+    expect(implementationPlan).toContain(
+      "package.json#engines.node (`>=22.12 <25`)",
+    );
+    expect(implementationPlan).not.toContain(
+      "run the full release gate on Node 22",
+    );
     expect(implementationPlan).not.toContain(
       "create the annotated git tag only after the full local release gate passes",
     );
+    const implementationReleaseGate = firstShellCodeBlock(
+      sectionBetween(implementationPlan, "Default local release gate:"),
+    );
+    expect(implementationReleaseGate).toEqual([
+      "corepack pnpm format",
+      "corepack pnpm test",
+      "corepack pnpm lint",
+      "corepack pnpm build",
+      "corepack pnpm pack:dry-run",
+      "corepack pnpm --silent benchmark -- --json",
+      "corepack pnpm e2e:browser",
+      "corepack pnpm smoke:release",
+      "corepack pnpm smoke:package-install",
+      "corepack pnpm evidence:quality -- --require-complete",
+      "corepack pnpm promptlane quality-evidence --require-complete",
+      "git diff --check",
+    ]);
     for (const content of [implementationPlan, prd, techSpec]) {
       for (const command of [
         "corepack pnpm test",

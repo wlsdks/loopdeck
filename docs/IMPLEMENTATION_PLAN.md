@@ -80,14 +80,15 @@ The beta is implementation-complete when:
 Default local release gate:
 
 ```sh
+corepack pnpm format
 corepack pnpm test
 corepack pnpm lint
 corepack pnpm build
+corepack pnpm pack:dry-run
 corepack pnpm --silent benchmark -- --json
 corepack pnpm e2e:browser
 corepack pnpm smoke:release
 corepack pnpm smoke:package-install
-corepack pnpm pack:dry-run
 corepack pnpm evidence:quality -- --require-complete
 corepack pnpm promptlane quality-evidence --require-complete
 git diff --check
@@ -150,7 +151,8 @@ Web screens:
 Before the first stable npm publish:
 
 - keep package version aligned at `1.0.0`
-- run the full release gate on Node 22
+- run the full release gate on a Node.js version that satisfies
+  package.json#engines.node (`>=22.12 <25`)
 - ensure `corepack pnpm pack:dry-run` includes built CLI/server/web files
 - check that `dist/cli/index.js` is executable
 - verify `npm whoami`
