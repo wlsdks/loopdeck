@@ -229,7 +229,9 @@ Decision:
   `real benchmark fixtures are missing` keeps `quality-evidence` complete for
   the local release gate while warning agents.
   Important: do not claim real-user effectiveness trends until consent-bearing
-  redacted real fixtures are collected and run.
+  redacted real fixtures are collected in an operator-owned local file and run
+  with
+  `promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"`.
   That local scorecard review is now applied for the five non-external
   candidates: local-first privacy boundary, setup/doctor/MCP smoke, loop memory
   and continuation, web UI and operational evidence, and release stability are

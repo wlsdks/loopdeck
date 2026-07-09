@@ -47,12 +47,12 @@ describe("npm publish preflight", () => {
       {
         label: "benchmark is synthetic regression evidence",
         detail:
-          "corepack pnpm --silent benchmark -- --json must pass before publish, but a synthetic pass is not real-world effectiveness proof; collect docs/benchmark-fixtures/real.json before claiming real-user prompt quality trends.",
+          'corepack pnpm --silent benchmark -- --json must pass before publish, but a synthetic pass is not real-world effectiveness proof; collect consent-bearing redacted fixtures in an operator-owned local file and run promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" before claiming real-user prompt quality trends.',
       },
       {
         label: "real benchmark fixtures are missing",
         detail:
-          "docs/benchmark-fixtures/real.json is absent; publish can proceed after release gates pass, but do not claim real-user effectiveness trends until consent-bearing redacted real fixtures are collected and run with corepack pnpm benchmark -- --fixture-set real.",
+          'docs/benchmark-fixtures/real.json is absent; publish can proceed after release gates pass, but do not claim real-user effectiveness trends until consent-bearing redacted fixtures are collected in an operator-owned local file and run with promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE".',
       },
     ]);
     expect(parsed.next_action).toContain(
@@ -1038,6 +1038,9 @@ exit 1
     expect(result.stdout).toContain("- real benchmark fixtures are missing");
     expect(result.stdout).toContain(
       "do not claim real-user effectiveness trends",
+    );
+    expect(result.stdout).toContain(
+      'promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"',
     );
     expect(result.stdout).toContain(
       "Recovery commands\n- npm login\n- corepack pnpm npm-publish:preflight",

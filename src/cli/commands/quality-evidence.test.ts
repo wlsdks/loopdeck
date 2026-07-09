@@ -169,7 +169,7 @@ describe("quality-evidence CLI command", () => {
       {
         label: "real benchmark fixtures are missing",
         detail:
-          "docs/benchmark-fixtures/real.json is absent; quality evidence is complete for the local release gate, but do not claim real-user effectiveness trends until consent-bearing redacted real fixtures are collected and run with corepack pnpm benchmark -- --fixture-set real.",
+          'docs/benchmark-fixtures/real.json is absent; quality evidence is complete for the local release gate, but do not claim real-user effectiveness trends until consent-bearing redacted fixtures are collected in an operator-owned local file and run with promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE".',
       },
     ]);
     expect(parsed.release_gate).toEqual([
@@ -297,7 +297,10 @@ describe("quality-evidence CLI command", () => {
     expect(text).toContain("Release warnings");
     expect(text).toContain("- real benchmark fixtures are missing");
     expect(text).toContain(
-      "do not claim real-user effectiveness trends until consent-bearing redacted real fixtures are collected",
+      "do not claim real-user effectiveness trends until consent-bearing redacted fixtures are collected in an operator-owned local file",
+    );
+    expect(text).toContain(
+      'promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"',
     );
     expect(text).toContain("Release gate");
     expect(text).toContain(
