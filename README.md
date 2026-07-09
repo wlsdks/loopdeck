@@ -989,6 +989,9 @@ redacted prompts stored in an operator-owned local file. Neither signal alone
 is a claim that real user prompt quality is fully solved. Real prompts without
 operator-confirmed outcomes remain `unproven`. See
 `docs/BENCHMARK_V1.md` for the `template_only` confirmation contract.
+Real runs report score delivery integrity separately from synthetic score
+calibration and require `outcome_pass_rate` before calling a usefulness trend
+healthy.
 
 ## Release Smoke
 

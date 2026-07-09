@@ -73,6 +73,7 @@ The npm package intentionally includes:
   - `scripts/benchmark.mjs`
   - `scripts/benchmark-runner.mjs`
   - `scripts/benchmark-fixtures.mjs`
+  - `scripts/benchmark-scores.mjs`
   - `scripts/agent-setup-smoke.mjs`
   - `scripts/browser-e2e.mjs`
   - `scripts/first-coach-loop-dogfood.mjs`

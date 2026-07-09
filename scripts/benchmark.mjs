@@ -23,6 +23,11 @@ import {
   loadBenchmarkFixtures,
 } from "./benchmark-fixtures.mjs";
 import {
+  scoreArchiveEffectivenessEvidence,
+  scoreOutcomePassRate,
+  scorePromptQualityEvidence,
+} from "./benchmark-scores.mjs";
+import {
   analyzePrompt,
   EXPERIMENTAL_RULE_IDS,
 } from "../dist/analysis/analyze.js";
@@ -65,6 +70,7 @@ const thresholds = {
   prompt_quality_score_calibration: 0.8,
   archive_effectiveness_score: 0.8,
   archive_effectiveness_coverage: 0.2,
+  outcome_pass_rate: 0.8,
   analytics_score: 0.75,
   ingest_p95_ms: 500,
   search_p95_ms: 250,
@@ -179,12 +185,24 @@ try {
 
   const coachScore = scorePromptLane();
   const coachPromptActionability = scoreCoachPromptActionability();
-  const scoreCalibration = scorePromptQualityCalibration({ list, details });
-  const archiveEffectivenessScore = scoreArchiveEffectiveness(
-    archiveScore.data,
-  );
+  const promptQualityEvidence = scorePromptQualityEvidence({
+    fixtureSet,
+    listItems: list.data.items,
+    detailItems: details.map((detail) => detail.data),
+    fixtureCount: fixtures.length,
+  });
+  const scoreCalibration = promptQualityEvidence.score;
+  const archiveEffectivenessScore = scoreArchiveEffectivenessEvidence({
+    fixtureSet,
+    report: archiveScore.data,
+    fixtureCount: fixtures.length,
+    forbiddenValues: [rawSecret, rawPathPrefix],
+  });
   const archiveEffectivenessCoverage = scoreArchiveEffectivenessCoverage(
     archiveScore.data,
+  );
+  const outcomePassRate = scoreOutcomePassRate(
+    archiveScore.data.effectiveness_summary,
   );
   const analyticsScore = scoreAnalytics(dashboard.data);
   const privacyLeakCount = countPrivacyLeaks({
@@ -204,6 +222,7 @@ try {
     prompt_quality_score_calibration: scoreCalibration,
     archive_effectiveness_score: archiveEffectivenessScore,
     archive_effectiveness_coverage: archiveEffectivenessCoverage,
+    outcome_pass_rate: outcomePassRate,
     analytics_score: analyticsScore,
     ingest_p95_ms: Math.round(p95(ingestDurations)),
     search_p95_ms: Math.round(p95(searchDurations)),
@@ -242,6 +261,7 @@ try {
     details: {
       retrieval_cases: retrievalCases,
       archive_effectiveness: archiveScore.data.effectiveness_summary,
+      prompt_quality: promptQualityEvidence,
       outcome_provenance:
         fixtureSet === "real"
           ? outcomeSeeds.length > 0
@@ -395,56 +415,9 @@ function scoreAnalytics(dashboard) {
   return roundScore(checks.filter(Boolean).length / checks.length);
 }
 
-function scoreArchiveEffectiveness(report) {
-  const summary = report.effectiveness_summary;
-  const serialized = JSON.stringify(summary);
-  const checks = [
-    summary.measured_prompts >= 1,
-    summary.unmeasured_prompts === fixtures.length - summary.measured_prompts,
-    summary.verdicts.proven >= 1,
-    summary.calibration.linked_outcomes >= 1,
-    summary.calibration.passing_outcomes >= 1,
-    summary.calibration.total_tests_run >= 1,
-    summary.top_evidence_refs.includes("benchmark:effectiveness"),
-    typeof summary.next_action === "string" && summary.next_action.length > 20,
-    !serialized.includes(rawSecret) && !serialized.includes(rawPathPrefix),
-  ];
-  return roundScore(checks.filter(Boolean).length / checks.length);
-}
-
 function scoreArchiveEffectivenessCoverage(report) {
   const summary = report.effectiveness_summary;
   return roundScore(summary.measured_prompts / fixtures.length);
-}
-
-function scorePromptQualityCalibration({ list, details }) {
-  const listItems = list.data.items;
-  const detailItems = details.map((detail) => detail.data);
-  const scores = detailItems
-    .map((detail) => detail.analysis?.quality_score?.value)
-    .filter((value) => typeof value === "number");
-  const vagueId = listItems.find((item) =>
-    item.snippet.includes("Make this better"),
-  )?.id;
-  const vagueScore = detailItems.find((item) => item.id === vagueId)?.analysis
-    ?.quality_score?.value;
-  const listScoresMatchDetails = listItems.every((item) => {
-    const detail = detailItems.find((candidate) => candidate.id === item.id);
-    return (
-      detail &&
-      item.quality_score === detail.analysis?.quality_score?.value &&
-      item.quality_score_band === detail.analysis?.quality_score?.band
-    );
-  });
-  const checks = [
-    scores.length === fixtures.length,
-    scores.every((score) => score >= 0 && score <= 100),
-    listScoresMatchDetails,
-    typeof vagueScore === "number" && vagueScore <= 20,
-    Math.max(...scores) - Math.min(...scores) >= 50,
-  ];
-
-  return roundScore(checks.filter(Boolean).length / checks.length);
 }
 
 function seedArchiveEffectivenessOutcomes(seeds) {
@@ -732,6 +705,7 @@ function passes(scores) {
       thresholds.archive_effectiveness_score &&
     scores.archive_effectiveness_coverage >=
       thresholds.archive_effectiveness_coverage &&
+    scores.outcome_pass_rate >= thresholds.outcome_pass_rate &&
     scores.analytics_score >= thresholds.analytics_score &&
     scores.ingest_p95_ms <= thresholds.ingest_p95_ms &&
     scores.search_p95_ms <= thresholds.search_p95_ms &&

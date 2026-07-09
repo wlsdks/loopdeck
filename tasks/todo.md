@@ -1,5 +1,22 @@
 # 작업 계획
 
+## 2026-07-10 PromptLane Real Benchmark Scoring Profile
+
+- [x] CHECK: real benchmark score calibration still requires the synthetic
+  `Make this better` fixture and a 50-point spread, causing a structural 0.6
+  score on valid real corpora.
+- [x] RED: pure score tests distinguish synthetic calibration from real-corpus
+  score delivery integrity without weakening the synthetic hard gate.
+- [x] GREEN: benchmark reports the active prompt-quality scoring profile and
+  uses only applicable checks for each fixture set.
+- [x] RED: outcome evidence tests require an explicit pass-rate score rather
+  than inferring usefulness from evidence-shape checks alone.
+- [x] GREEN: real effectiveness uses operator evidence refs and
+  `outcome_pass_rate`; synthetic keeps its deterministic benchmark ref check.
+- [x] VERIFY: focused score/fixture/packaging tests, type/quality/format gates,
+  synthetic hard benchmark, real passed/failed/no-outcome runs, package smoke,
+  dry-run, and diff hygiene.
+
 ## 2026-07-10 PromptLane Real Benchmark Outcome Evidence
 
 - [x] CHECK: real fixture runs currently seed an internal synthetic passed

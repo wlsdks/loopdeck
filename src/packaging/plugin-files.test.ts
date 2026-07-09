@@ -296,6 +296,7 @@ describe("plugin packaging files", () => {
     expect(preflightScript).toContain('"scripts/benchmark.mjs"');
     expect(preflightScript).toContain('"scripts/benchmark-runner.mjs"');
     expect(preflightScript).toContain('"scripts/benchmark-fixtures.mjs"');
+    expect(preflightScript).toContain('"scripts/benchmark-scores.mjs"');
     expect(preflightScript).toContain('"scripts/agent-setup-smoke.mjs"');
     expect(preflightScript).toContain('"scripts/browser-e2e.mjs"');
     expect(preflightScript).toContain('"scripts/first-coach-loop-dogfood.mjs"');
@@ -697,6 +698,10 @@ describe("plugin packaging files", () => {
       join(process.cwd(), "scripts/benchmark-fixtures.mjs"),
       "utf8",
     );
+    const benchmarkScores = readFileSync(
+      join(process.cwd(), "scripts/benchmark-scores.mjs"),
+      "utf8",
+    );
     const benchmarkSpec = readFileSync(
       join(process.cwd(), "docs/BENCHMARK_V1.md"),
       "utf8",
@@ -710,9 +715,9 @@ describe("plugin packaging files", () => {
       expect(content).toContain("next_action");
       expect(content).toContain("archive_effectiveness_score");
       expect(content).toContain("archive_effectiveness_coverage");
+      expect(content).toContain("outcome_pass_rate");
       expect(content).toContain("effectiveness_summary");
       expect(content).toContain("outcome_provenance");
-      expect(content).toContain("linked_outcomes");
     }
     for (const content of [benchmarkFixtures, benchmarkSpec]) {
       expect(content).toContain("docs/benchmark-fixtures/real.json");
@@ -729,6 +734,13 @@ describe("plugin packaging files", () => {
     expect(realFixtureExample).toContain('"outcome"');
     expect(realFixtureExample).toContain('"evidence_refs"');
     expect(benchmark).toContain("loadBenchmarkFixtures");
+    expect(benchmark).toContain("scorePromptQualityEvidence");
+    expect(benchmarkScores).toContain("real_corpus_delivery_integrity");
+    expect(benchmarkScores).toContain("synthetic_score_calibration");
+    expect(benchmarkScores).toContain("linked_outcomes");
+    expect(benchmarkSpec).toContain("linked_outcomes");
+    expect(benchmarkSpec).toContain("real_corpus_delivery_integrity");
+    expect(benchmarkSpec).toContain("synthetic_score_calibration");
     expect(benchmark).toContain("effectiveness remains unproven");
     expect(benchmarkRunner).toContain("corepack");
     expect(benchmarkRunner).toContain("pnpm");
