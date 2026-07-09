@@ -761,6 +761,21 @@ describe("plugin packaging files", () => {
     );
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
+    const publishing = readFileSync(
+      join(process.cwd(), "docs/NPM_PUBLISHING.md"),
+      "utf8",
+    );
+    const backlog = readFileSync(
+      join(process.cwd(), "docs/NEXT_BACKLOG.md"),
+      "utf8",
+    );
+    const qualityPlan = readFileSync(
+      join(
+        process.cwd(),
+        "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
+      ),
+      "utf8",
+    );
     const packageInstallSmoke = readFileSync(
       join(process.cwd(), "scripts/package-install-smoke.mjs"),
       "utf8",
@@ -770,6 +785,15 @@ describe("plugin packaging files", () => {
     expect(benchmarkCommand).toContain('.command("benchmark")');
     for (const content of [benchmarkSpec, readme, readmeKo]) {
       expect(content).toContain("promptlane benchmark --json");
+    }
+    for (const content of [
+      benchmarkSpec,
+      readme,
+      readmeKo,
+      publishing,
+      backlog,
+      qualityPlan,
+    ]) {
       expect(content).toContain(
         'promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"',
       );

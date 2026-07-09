@@ -1,5 +1,22 @@
 # 작업 계획
 
+## 2026-07-10 PromptLane Installed Benchmark Warning Handoff
+
+- [x] CHECK: live quality evidence and npm publish preflight still tell users
+  only to create repository-local `docs/benchmark-fixtures/real.json` and run
+  pnpm, even though the installed CLI now accepts operator-owned fixture files.
+- [x] RED: quality-evidence JSON and text require the copy-ready installed
+  `promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"`
+  recovery command without weakening the unproven-effectiveness warning.
+- [x] GREEN: quality-evidence warning points installed users to the public CLI
+  while preserving the synthetic-vs-real evidence boundary.
+- [x] RED: npm preflight release warnings require the same installed CLI
+  handoff for real-world effectiveness evidence.
+- [x] GREEN: preflight warnings preserve release readiness semantics and expose
+  the installed recovery path.
+- [x] VERIFY: focused quality/preflight/packaging tests, formatting, live JSON
+  smoke, npm registry/preflight state, and diff hygiene.
+
 ## 2026-07-10 PromptLane Installed Benchmark CLI
 
 - [x] CHECK: the benchmark scripts ship in the npm package, but installed users
