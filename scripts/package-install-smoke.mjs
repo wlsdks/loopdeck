@@ -105,8 +105,74 @@ try {
     },
   );
   validateBenchmarkComparison(comparisonEvidence.stdout, baselineFile);
+  const malformedBaselineFile = join(
+    tempHome,
+    "promptlane-malformed-baseline.json",
+  );
+  writeFileSync(malformedBaselineFile, '{"invalid":', { mode: 0o600 });
+  const malformedComparison = run(
+    join(tempPrefix, "bin", "promptlane"),
+    [
+      "benchmark",
+      "--fixture-set",
+      "real",
+      "--fixture-file",
+      fixtureFile,
+      "--baseline-file",
+      malformedBaselineFile,
+      "--json",
+    ],
+    {
+      cwd: tempHome,
+      env: { ...process.env, HOME: tempHome },
+      encoding: "utf8",
+      expectedStatus: 1,
+    },
+  );
+  validateBenchmarkIncompatible(
+    malformedComparison.stdout,
+    malformedBaselineFile,
+    "unreadable_or_invalid_json",
+  );
+  const mismatchedBaselineFile = join(
+    tempHome,
+    "promptlane-mismatched-baseline.json",
+  );
+  const mismatchedBaseline = JSON.parse(baselineEvidence.stdout);
+  mismatchedBaseline.corpus_fingerprint = "corpus_mismatch";
+  writeFileSync(
+    mismatchedBaselineFile,
+    `${JSON.stringify(mismatchedBaseline, null, 2)}\n`,
+    { mode: 0o600 },
+  );
+  const mismatchedComparison = run(
+    join(tempPrefix, "bin", "promptlane"),
+    [
+      "benchmark",
+      "--fixture-set",
+      "real",
+      "--fixture-file",
+      fixtureFile,
+      "--baseline-file",
+      mismatchedBaselineFile,
+      "--json",
+    ],
+    {
+      cwd: tempHome,
+      env: { ...process.env, HOME: tempHome },
+      encoding: "utf8",
+      expectedStatus: 1,
+    },
+  );
+  validateBenchmarkIncompatible(
+    mismatchedComparison.stdout,
+    mismatchedBaselineFile,
+    "fixture_set_or_corpus_mismatch",
+  );
   rmSync(fixtureFile, { force: true });
   rmSync(baselineFile, { force: true });
+  rmSync(malformedBaselineFile, { force: true });
+  rmSync(mismatchedBaselineFile, { force: true });
   const benchmarkEvidence = run(
     join(tempPrefix, "bin", "promptlane"),
     ["benchmark", "--fixture-set", "real", "--json"],
@@ -172,7 +238,8 @@ function run(command, args, options = {}) {
     throw result.error;
   }
 
-  if (result.status !== 0) {
+  const expectedStatus = options.expectedStatus ?? 0;
+  if (result.status !== expectedStatus) {
     if (options.encoding) {
       process.stderr.write(result.stdout ?? "");
       process.stderr.write(result.stderr ?? "");
@@ -316,5 +383,23 @@ function validateBenchmarkComparison(stdout, baselineFile) {
   }
   if (typeof parsed?.corpus_fingerprint !== "string") {
     throw new Error("installed benchmark omitted the corpus fingerprint");
+  }
+}
+
+function validateBenchmarkIncompatible(stdout, baselineFile, expectedReason) {
+  if (stdout.includes(baselineFile)) {
+    throw new Error(
+      "installed incompatible comparison exposed a baseline path",
+    );
+  }
+  const parsed = JSON.parse(stdout);
+  if (parsed?.comparison?.status !== "incompatible") {
+    throw new Error("installed benchmark omitted incompatible status");
+  }
+  if (parsed?.comparison?.reason !== expectedReason) {
+    throw new Error("installed benchmark returned the wrong safe reason code");
+  }
+  if (parsed?.evidence_state?.requires_baseline !== true) {
+    throw new Error("installed incompatible comparison accepted its baseline");
   }
 }

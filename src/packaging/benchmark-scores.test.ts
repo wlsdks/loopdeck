@@ -234,11 +234,33 @@ describe("benchmark scoring profiles", () => {
       regressions: ["outcome_pass_rate"],
       unchanged: [],
     });
-    expect(() =>
+    expect(
       compareBenchmarkReports({
         current,
         baseline: { ...baseline, corpus_fingerprint: "corpus_other" },
       }),
-    ).toThrow("Benchmark baseline must use the same fixture set and corpus.");
+    ).toEqual({
+      status: "incompatible",
+      reason: "fixture_set_or_corpus_mismatch",
+      corpus_fingerprint: "corpus_1234567890abcdef",
+      metrics: {},
+      improvements: [],
+      regressions: [],
+      unchanged: [],
+    });
+    expect(
+      compareBenchmarkReports({
+        current,
+        baseline: { ...baseline, scores: { retrieval_top3: "private value" } },
+      }),
+    ).toEqual({
+      status: "incompatible",
+      reason: "non_numeric_scores",
+      corpus_fingerprint: "corpus_1234567890abcdef",
+      metrics: {},
+      improvements: [],
+      regressions: [],
+      unchanged: [],
+    });
   });
 });

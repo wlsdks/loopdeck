@@ -833,6 +833,10 @@ describe("plugin packaging files", () => {
     expect(packageInstallSmoke).toContain("parsed?.template_only !== true");
     expect(packageInstallSmoke).toContain("outcome.evidence_refs");
     expect(packageInstallSmoke).toContain('"--baseline-file"');
+    expect(packageInstallSmoke).toContain("validateBenchmarkIncompatible");
+    expect(benchmarkSpec).toContain("fixture_set_or_corpus_mismatch");
+    expect(benchmarkSpec).toContain("unreadable_or_invalid_json");
+    expect(benchmarkSpec).toContain("non_numeric_scores");
     expect(packageInstallSmoke).toContain('status !== "no_fixtures"');
     expect(packageInstallSmoke).toContain('effectiveness !== "unproven"');
     expect(packageInstallSmoke).toContain("requires_real_outcomes !== true");

@@ -25,6 +25,7 @@ import {
 import {
   benchmarkCorpusFingerprint,
   compareBenchmarkReports,
+  incompatibleBenchmarkComparison,
   scoreArchiveEffectivenessEvidence,
   scoreOutcomePassRate,
   scorePromptQualityEvidence,
@@ -97,7 +98,7 @@ if (loadedFixtures.status === "no_fixtures") {
   process.exit(0);
 }
 
-const baselineReport = readBenchmarkBaseline(process.argv);
+const baselineInput = readBenchmarkBaseline(process.argv);
 const corpusFingerprint = benchmarkCorpusFingerprint({
   fixtureSet,
   fixtures,
@@ -240,22 +241,28 @@ try {
   };
   const experimentalComparison = scoreExperimentalRulesAB();
   const pass = passes(scores);
-  const comparison = baselineReport
-    ? compareBenchmarkReports({
-        current: {
-          fixture_set: fixtureSet,
-          corpus_fingerprint: corpusFingerprint,
-          scores,
-        },
-        baseline: baselineReport,
-      })
-    : {
-        status: "not_requested",
-        corpus_fingerprint: corpusFingerprint,
-        improvements: [],
-        regressions: [],
-        unchanged: [],
-      };
+  const comparison =
+    baselineInput.status === "loaded"
+      ? compareBenchmarkReports({
+          current: {
+            fixture_set: fixtureSet,
+            corpus_fingerprint: corpusFingerprint,
+            scores,
+          },
+          baseline: baselineInput.report,
+        })
+      : baselineInput.status === "invalid"
+        ? incompatibleBenchmarkComparison({
+            corpusFingerprint,
+            reason: baselineInput.reason,
+          })
+        : {
+            status: "not_requested",
+            corpus_fingerprint: corpusFingerprint,
+            improvements: [],
+            regressions: [],
+            unchanged: [],
+          };
 
   const report = {
     version: packageJson.version,
@@ -308,7 +315,9 @@ try {
     printReport(report);
   }
 
-  if (!report.pass) {
+  if (comparison.status === "incompatible") {
+    process.exitCode = 1;
+  } else if (!report.pass) {
     if (fixtureSet === "real") {
       console.warn(
         outcomeSeeds.length === 0
@@ -760,6 +769,9 @@ function printReport(report) {
       `comparison_improvements: ${report.comparison.improvements.join(", ") || "none"}`,
     );
   }
+  if (report.comparison.status === "incompatible") {
+    console.log(`comparison_reason: ${report.comparison.reason}`);
+  }
   for (const [key, value] of Object.entries(report.scores)) {
     console.log(`${key}: ${value}`);
   }
@@ -782,6 +794,9 @@ function printReport(report) {
 
 function benchmarkNextAction({ fixtureSet, pass, outcomeCount, comparison }) {
   if (fixtureSet === "real") {
+    if (comparison.status === "incompatible") {
+      return `Baseline comparison is incompatible (${comparison.reason}); use a valid prior PromptLane report from the same fixture set and corpus fingerprint.`;
+    }
     if (outcomeCount === 0) {
       return "Real prompts were benchmarked, but effectiveness is unproven; add operator-confirmed passed or failed outcome metadata before comparing usefulness trends.";
     }
@@ -804,14 +819,20 @@ function benchmarkNextAction({ fixtureSet, pass, outcomeCount, comparison }) {
 }
 
 function readBenchmarkBaseline(argv) {
-  const baselinePath = parseOptionalPath(argv, "--baseline-file");
-  if (!baselinePath) return undefined;
+  let baselinePath;
   try {
-    return JSON.parse(readFileSync(baselinePath, "utf8"));
+    baselinePath = parseOptionalPath(argv, "--baseline-file");
   } catch {
-    throw new Error(
-      "Benchmark baseline file must contain valid PromptLane benchmark JSON.",
-    );
+    return { status: "invalid", reason: "baseline_argument_missing" };
+  }
+  if (!baselinePath) return { status: "not_requested" };
+  try {
+    return {
+      status: "loaded",
+      report: JSON.parse(readFileSync(baselinePath, "utf8")),
+    };
+  } catch {
+    return { status: "invalid", reason: "unreadable_or_invalid_json" };
   }
 }
 

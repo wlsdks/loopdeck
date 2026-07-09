@@ -156,7 +156,12 @@ so a later result for the same prompts can be compared. Prompt text and local
 paths are never returned through the fingerprint or comparison result.
 
 The baseline must have the same fixture set and corpus fingerprint. Mismatches
-fail with a generic raw-free error. Score metrics use their natural direction:
+return a raw-free `comparison.status: "incompatible"`, reason
+`fixture_set_or_corpus_mismatch`, and exit code `1`. Unreadable or malformed
+JSON uses reason `unreadable_or_invalid_json`; missing/non-numeric score fields
+use `non_numeric_scores`. The current snapshot remains available in stdout for
+diagnosis, but an incompatible baseline cannot produce a trend. Score metrics
+use their natural direction:
 quality/coverage/pass-rate scores are higher-is-better, while privacy leaks and
 latencies are lower-is-better. Score changes up to `0.01`, and latency changes
 up to the greater of `5ms` or `10%`, are treated as noise and reported as
