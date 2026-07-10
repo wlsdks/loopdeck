@@ -42,6 +42,12 @@ describe("createBenchmarkCandidateReport", () => {
         },
       ],
       excluded_unsafe_candidates: 0,
+      diagnostics: {
+        completed_snapshots: 2,
+        attributed_snapshots: 2,
+        evidence_complete_snapshots: 2,
+        safe_snapshots: 2,
+      },
       has_more: true,
       scope: {
         scanned_snapshots: 2,
@@ -60,10 +66,63 @@ describe("createBenchmarkCandidateReport", () => {
     expect(JSON.stringify(report)).not.toContain("outcome passed");
   });
 
-  it("excludes unattributed, incomplete, and unsafe outcomes", () => {
+  it("distinguishes archives without completed outcomes", () => {
     const report = createBenchmarkCandidateReport([
-      snapshot({ id: "loop_unattributed", usedPromptIds: [] }),
       snapshot({ id: "loop_in_progress", status: "in_progress" }),
+    ]);
+
+    expect(report).toMatchObject({
+      status: "no_completed_outcomes",
+      candidate_count: 0,
+      diagnostics: {
+        completed_snapshots: 0,
+        attributed_snapshots: 0,
+        evidence_complete_snapshots: 0,
+        safe_snapshots: 0,
+      },
+      next_action:
+        "Run promptlane loop status, then record the latest snapshot outcome after a verifiable checkpoint.",
+    });
+  });
+
+  it("distinguishes completed outcomes without explicit improvement attribution", () => {
+    expect(
+      createBenchmarkCandidateReport([
+        snapshot({ id: "loop_unattributed", usedPromptIds: [] }),
+      ]),
+    ).toMatchObject({
+      status: "no_attributed_outcomes",
+      diagnostics: {
+        completed_snapshots: 1,
+        attributed_snapshots: 0,
+        evidence_complete_snapshots: 0,
+        safe_snapshots: 0,
+      },
+      next_action:
+        "Record improvement attribution only if a PromptLane improvement was actually used; otherwise collect another verified loop.",
+    });
+  });
+
+  it("distinguishes attributed outcomes with incomplete evidence", () => {
+    expect(
+      createBenchmarkCandidateReport([
+        snapshot({ id: "loop_incomplete", evidenceRefs: [] }),
+      ]),
+    ).toMatchObject({
+      status: "incomplete_outcome_evidence",
+      diagnostics: {
+        completed_snapshots: 1,
+        attributed_snapshots: 1,
+        evidence_complete_snapshots: 0,
+        safe_snapshots: 0,
+      },
+      next_action:
+        "Record at least one privacy-safe evidence ref on an attributed passed or failed outcome.",
+    });
+  });
+
+  it("distinguishes attributed outcomes whose evidence is unsafe", () => {
+    const report = createBenchmarkCandidateReport([
       snapshot({
         evidenceRefs: ["/Users/example/private/result.log"],
         id: "loop_unsafe",
@@ -71,13 +130,16 @@ describe("createBenchmarkCandidateReport", () => {
     ]);
 
     expect(report).toMatchObject({
-      status: "no_attributed_outcomes",
-      candidate_count: 0,
-      candidates: [],
+      status: "unsafe_outcome_evidence",
       excluded_unsafe_candidates: 1,
-      has_more: false,
+      diagnostics: {
+        completed_snapshots: 1,
+        attributed_snapshots: 1,
+        evidence_complete_snapshots: 1,
+        safe_snapshots: 0,
+      },
       next_action:
-        "Record a passed or failed loop outcome with safe evidence and explicitly selected PromptLane improvement ids.",
+        "Replace sensitive outcome evidence with privacy-safe labels before preparing a benchmark fixture.",
     });
     expect(JSON.stringify(report)).not.toContain("/Users/example");
   });

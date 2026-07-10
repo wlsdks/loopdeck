@@ -835,10 +835,20 @@ describe("plugin packaging files", () => {
     expect(benchmarkCommand).toContain('"--report-file <path>"');
     expect(benchmarkCommand).toContain('.command("prepare-fixture")');
     expect(benchmarkCommand).toContain('.command("candidates")');
+    for (const status of [
+      "no_completed_outcomes",
+      "no_attributed_outcomes",
+      "incomplete_outcome_evidence",
+      "unsafe_outcome_evidence",
+    ]) {
+      expect(benchmarkCommand).toContain("report.diagnostics");
+      expect(benchmarkSpec).toContain(status);
+    }
     for (const content of [benchmarkSpec, readme, readmeKo]) {
       expect(content).toContain("promptlane benchmark --json");
       expect(content).toContain("promptlane benchmark candidates --json");
       expect(content).toContain("promptlane benchmark prepare-fixture");
+      expect(content).toContain("body-free");
       expect(content).toContain(
         'promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT"',
       );

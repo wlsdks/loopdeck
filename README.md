@@ -1034,7 +1034,10 @@ operator-confirmed outcomes remain `unproven`. See
 Run `promptlane benchmark candidates --json` first to inspect body-free prompt
 ids backed by explicitly attributed completed outcomes. Candidate discovery is
 local-only, scans at most the latest 100 loop snapshots, and returns no prompt
-bodies, raw paths, outcome summaries, or evidence references.
+bodies, raw paths, outcome summaries, or evidence references. Its body-free
+readiness counts distinguish missing completed outcomes, attribution, complete
+evidence, and safe evidence instead of collapsing every empty result into one
+reason.
 `prepare-fixture` is the preferred archive-backed path: it reads only repeated
 `--prompt-id` selections after `--confirm-consent`, rechecks prompt and outcome
 evidence for sensitive values, includes only explicitly attributed completed

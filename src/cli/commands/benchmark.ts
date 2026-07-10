@@ -457,6 +457,7 @@ function formatBenchmarkCandidates(report: BenchmarkCandidateReport): string {
   const lines = [
     `benchmark candidates: ${report.status}`,
     `candidates ${report.candidate_count}; showing ${report.candidates.length}; scanned snapshots ${report.scope.scanned_snapshots}/${report.scope.snapshot_limit}`,
+    `readiness completed ${report.diagnostics.completed_snapshots}; attributed ${report.diagnostics.attributed_snapshots}; evidence complete ${report.diagnostics.evidence_complete_snapshots}; safe ${report.diagnostics.safe_snapshots}`,
   ];
   for (const candidate of report.candidates) {
     lines.push(
