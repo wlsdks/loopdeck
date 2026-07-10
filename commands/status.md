@@ -45,7 +45,8 @@ promptlane doctor codex --json
 
 Report whether the local server is reachable, the hook is installed, and the
 MCP command access is registered. In JSON output, report top-level
-`status: ready` or `status: needs_attention` instead of recomputing readiness
-from nested booleans. `doctor` may use read-only `mcp list` fallbacks when
-config-file detection is inconclusive. Do not print raw prompt bodies or raw
-hook payloads.
+`status: ready`, `status: unverified`, or `status: needs_attention` instead of
+recomputing readiness from nested booleans. Treat `unverified` as a prompt to
+send one new agent request and rerun doctor, not as a hard command failure.
+`doctor` may use read-only `mcp list` fallbacks when config-file detection is
+inconclusive. Do not print raw prompt bodies or raw hook payloads.

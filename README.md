@@ -192,8 +192,10 @@ promptlane buddy --once
 promptlane coach
 ```
 
-For automation, `doctor --json` includes top-level `status` as `ready` or
-`needs_attention` so scripts do not need to recompute nested readiness checks.
+For automation, `doctor --json` includes top-level `status` as `ready`,
+`unverified`, or `needs_attention`. `ready` requires a successful hook delivery
+within the last hour; `unverified` means setup is configured but hook runtime
+evidence is missing or stale and does not produce a hard CLI failure.
 
 Open the local archive:
 

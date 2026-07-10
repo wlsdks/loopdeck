@@ -124,8 +124,13 @@ describe("doctorClaudeCode", () => {
 
     const output = formatDoctorResult("claude-code", result);
 
-    expect(result.status).toBe("ready");
-    expect(output).toContain("Status: ready");
+    expect(result.status).toBe("unverified");
+    expect(result.ingest).toEqual({
+      ok: true,
+      verified: false,
+      state: "never",
+    });
+    expect(output).toContain("Status: unverified");
     expect(output).toContain(
       "Send one Codex or Claude Code prompt, then run promptlane coach.",
     );
@@ -172,6 +177,7 @@ describe("doctorClaudeCode", () => {
       settingsPath,
       mcpConfigPath: join(dir, "claude.json"),
       checkServer: async () => true,
+      commandRunner: () => ({ status: 1 }),
     };
     const result = await doctorClaudeCode(options);
 
@@ -328,20 +334,75 @@ describe("doctorCodex", () => {
       configPath,
       `${readFileSync(configPath, "utf8")}\n[mcp_servers.promptlane]\ncommand = "promptlane"\nargs = ["mcp"]\n`,
     );
+    writeLastHookStatus(dataDir, {
+      ok: true,
+      status: 200,
+      checked_at: "2026-07-10T01:30:00.000Z",
+    });
 
     const result = await doctorCodex({
       dataDir,
       hooksPath,
       configPath,
       checkServer: async () => true,
+      now: () => new Date("2026-07-10T02:00:00.000Z"),
     });
 
     expect(result.status).toBe("ready");
+    expect(result.ingest).toEqual({
+      ok: true,
+      verified: true,
+      state: "recent",
+      age_seconds: 1800,
+    });
     expect(result.settings.ok).toBe(true);
     expect(result.settings.hookInstalled).toBe(true);
     expect(result.settings.codexHooksEnabled).toBe(true);
     expect(result.mcp.registered).toBe(true);
     expect(result.settings.duplicateHooks).toBe(false);
+  });
+
+  it("marks a stale successful Codex hook delivery as unverified", async () => {
+    const dir = createTempDir();
+    const dataDir = join(dir, "data");
+    const hooksPath = join(dir, ".codex", "hooks.json");
+    const configPath = join(dir, ".codex", "config.toml");
+    initializePromptLane({ dataDir });
+    installCodexHook({ dataDir, hooksPath, configPath });
+    writeFileSync(
+      configPath,
+      `${readFileSync(configPath, "utf8")}\n[mcp_servers.promptlane]\ncommand = "promptlane"\nargs = ["mcp"]\n`,
+    );
+    writeLastHookStatus(dataDir, {
+      ok: true,
+      status: 200,
+      checked_at: "2026-07-10T00:00:00.000Z",
+    });
+
+    const result = await doctorCodex({
+      dataDir,
+      hooksPath,
+      configPath,
+      checkServer: async () => true,
+      now: () => new Date("2026-07-10T02:00:00.000Z"),
+    });
+    const output = formatDoctorResult("codex", result);
+
+    expect(result.status).toBe("unverified");
+    expect(result.ingest).toEqual({
+      ok: true,
+      verified: false,
+      state: "stale",
+      age_seconds: 7200,
+    });
+    expect(output).toContain("Status: unverified");
+    expect(output).toContain("Last ingest check: stale");
+    expect(result.next_actions).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("Send one new Codex prompt"),
+        expect.stringContaining("inspect hook trust"),
+      ]),
+    );
   });
 
   it("marks Codex doctor as needs attention when MCP is not registered", async () => {
@@ -485,6 +546,7 @@ describe("doctorCodex", () => {
       hooksPath,
       configPath,
       checkServer: async () => true,
+      commandRunner: () => ({ status: 1 }),
     };
     const result = await doctorCodex(options);
     const output = formatDoctorResult("codex", result, options);

@@ -10982,3 +10982,12 @@
       explicit hook tool/session metadata for empty snapshots.
 - [x] VERIFY: Run focused storage/loop/hook/privacy tests, build, package smoke,
       and live isolated hook checks before retagging `v1.0.0`.
+
+## 2026-07-10 Doctor Hook Runtime Verification
+
+- [x] RED: Distinguish configured-but-never-seen, stale successful, recent
+      successful, and failed hook delivery in doctor JSON and text output.
+- [x] GREEN: Report `unverified` without a hard CLI failure until a recent
+      successful hook delivery proves the configured runtime path.
+- [x] VERIFY: Run focused doctor/hook/privacy/package checks and live Codex
+      doctor verification before retagging `v1.0.0`.
