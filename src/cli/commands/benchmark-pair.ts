@@ -8,7 +8,12 @@ import {
   createPairedRealBenchmarkFixture,
   validateRealBenchmarkConsentNote,
 } from "../../analysis/benchmark-fixture.js";
+import {
+  createBenchmarkPairCandidateReport,
+  type BenchmarkPairCandidateReport,
+} from "../../analysis/benchmark-pair-candidates.js";
 import { loadHookAuth, loadPromptLaneConfig } from "../../config/config.js";
+import type { LoopSnapshot } from "../../loop/types.js";
 import type { PromptDetail } from "../../storage/ports.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import { UserError } from "../user-error.js";
@@ -40,7 +45,31 @@ type BenchmarkPromptReader = (
   dataDir?: string,
 ) => PromptDetail[];
 
+type BenchmarkPairCandidateOptions = {
+  dataDir?: string;
+  json?: boolean;
+  limit?: string;
+};
+
+type BenchmarkSnapshotReader = (dataDir?: string) => LoopSnapshot[];
+
 export function registerBenchmarkPairCommand(benchmarkCommand: Command): void {
+  benchmarkCommand
+    .command("pair-candidates")
+    .description(
+      "List body-free baseline and PromptLane candidates for matched effectiveness pairs.",
+    )
+    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--limit <count>", "Maximum candidates per group.", "20")
+    .option("--json", "Print JSON.")
+    .action((_options: BenchmarkPairCandidateOptions, command: Command) => {
+      console.log(
+        benchmarkPairCandidatesForCli(
+          command.optsWithGlobals() as BenchmarkPairCandidateOptions,
+        ),
+      );
+    });
+
   benchmarkCommand
     .command("prepare-pair")
     .description(
@@ -97,6 +126,20 @@ export function registerBenchmarkPairCommand(benchmarkCommand: Command): void {
         }),
       );
     });
+}
+
+export function benchmarkPairCandidatesForCli(
+  options: BenchmarkPairCandidateOptions = {},
+  readSnapshots: BenchmarkSnapshotReader = readBenchmarkSnapshots,
+): string {
+  const limit = parseCandidateLimit(options.limit);
+  const report = createBenchmarkPairCandidateReport(
+    readSnapshots(options.dataDir),
+    limit,
+  );
+  return options.json
+    ? JSON.stringify(report, null, 2)
+    : formatPairCandidates(report);
 }
 
 export function preparePairedBenchmarkFixtureForCli(
@@ -213,6 +256,59 @@ function readBenchmarkPrompts(
   } finally {
     storage.close();
   }
+}
+
+function readBenchmarkSnapshots(dataDir?: string): LoopSnapshot[] {
+  const config = loadPromptLaneConfig(dataDir);
+  const auth = loadHookAuth(dataDir);
+  const storage = createSqlitePromptStorage({
+    dataDir: config.data_dir,
+    hmacSecret: auth.web_session_secret,
+  });
+  try {
+    return storage.listLoopSnapshots({ limit: 100 }).items;
+  } finally {
+    storage.close();
+  }
+}
+
+function formatPairCandidates(report: BenchmarkPairCandidateReport): string {
+  const lines = [
+    `benchmark pair-candidates: ${report.status}`,
+    `baseline candidates ${report.baseline_candidate_count}; showing ${report.baseline_candidates.length}`,
+    `PromptLane candidates ${report.promptlane_candidate_count}; showing ${report.promptlane_candidates.length}`,
+    `readiness completed ${report.diagnostics.completed_snapshots}; baseline ${report.diagnostics.baseline_snapshots}; PromptLane ${report.diagnostics.promptlane_snapshots}; evidence complete ${report.diagnostics.evidence_complete_snapshots}; safe ${report.diagnostics.safe_snapshots}`,
+  ];
+  for (const candidate of report.baseline_candidates) {
+    lines.push(
+      `- baseline ${candidate.prompt_id} ${candidate.outcome_status}; tests ${candidate.tests_run}; evidence refs ${candidate.evidence_ref_count}`,
+    );
+  }
+  for (const candidate of report.promptlane_candidates) {
+    lines.push(
+      `- PromptLane ${candidate.prompt_id} ${candidate.outcome_status}; tests ${candidate.tests_run}; evidence refs ${candidate.evidence_ref_count}`,
+    );
+  }
+  if (report.excluded_unsafe_candidates > 0) {
+    lines.push(
+      `excluded unsafe candidates ${report.excluded_unsafe_candidates}`,
+    );
+  }
+  lines.push(`Next: ${report.next_action}`);
+  lines.push(
+    "Privacy: local-only; no prompt bodies, snapshot ids, raw paths, outcome summaries, or evidence refs",
+  );
+  return lines.join("\n");
+}
+
+function parseCandidateLimit(value: string | undefined): number {
+  const parsed = Number(value ?? 20);
+  if (!Number.isInteger(parsed) || parsed < 1 || parsed > 100) {
+    throw new UserError(
+      "benchmark pair-candidates --limit must be from 1 to 100.",
+    );
+  }
+  return parsed;
 }
 
 function normalizedOptionValues(values: string[] | undefined): string[] {

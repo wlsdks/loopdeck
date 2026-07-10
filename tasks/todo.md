@@ -11033,3 +11033,19 @@
 - [x] VERIFY: Run focused model/CLI/privacy/package tests, built CLI help and
       paired fixture smoke, lint/build/pack, and diff hygiene before retagging
       `v1.0.0`.
+
+## 2026-07-10 Paired Benchmark Candidate Discovery
+
+- [x] CHECK: `prepare-pair` can build a study fixture, but existing `benchmark
+      candidates` returns attributed treatment ids only and does not identify
+      explicit no-improvement baseline candidates.
+- [x] RED: Define bounded body-free baseline/treatment candidate groups,
+      readiness statuses, deduplication, unsafe exclusion, and no mixed-loop
+      baseline inference.
+- [x] GREEN: Add `benchmark pair-candidates` JSON/text output using latest-first
+      loop outcome metadata without prompt bodies, snapshot ids, summaries,
+      evidence refs, or paths.
+- [x] ALIGN: Route ready guidance to repeated `prepare-pair` options and verify
+      the command in installed help and public benchmark docs.
+- [x] VERIFY: Run focused candidate/CLI/privacy/package tests, built CLI/live
+      diagnostics, lint/build/pack, and diff hygiene before retagging `v1.0.0`.

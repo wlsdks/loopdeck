@@ -169,7 +169,7 @@ function releaseWarningsForLocalEvidence() {
     {
       label: "paired effectiveness not evaluated",
       detail:
-        "A single attributed outcome or a same-corpus version trend does not prove PromptLane helped. Use promptlane benchmark prepare-pair with reviewed baseline and PromptLane prompt ids, collect at least three matched effect_pair cases, and inspect details.paired_effectiveness; the report remains observational and causal_claim stays false.",
+        "A single attributed outcome or a same-corpus version trend does not prove PromptLane helped. Run promptlane benchmark pair-candidates --json, use prepare-pair with reviewed equivalent baseline and PromptLane ids, collect at least three matched effect_pair cases, and inspect details.paired_effectiveness; the report remains observational and causal_claim stays false.",
     },
     {
       label: "live agent runtime not evaluated",

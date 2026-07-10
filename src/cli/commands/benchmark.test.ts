@@ -481,6 +481,35 @@ describe("benchmark CLI command", () => {
             "node",
             "promptlane",
             "benchmark",
+            "pair-candidates",
+            "--data-dir",
+            dataDir,
+            "--json",
+          ],
+          { stderr },
+        ),
+      ).toBe(0);
+      expect(
+        JSON.parse(String(consoleLog.mock.calls.at(-1)?.[0])),
+      ).toMatchObject({
+        status: "ready",
+        baseline_candidates: [{ prompt_id: baselineStored.id }],
+        promptlane_candidates: [{ prompt_id: stored.id }],
+        privacy: {
+          returns_prompt_bodies: false,
+          returns_snapshot_ids: false,
+          returns_outcome_summaries: false,
+          returns_evidence_refs: false,
+        },
+      });
+
+      consoleLog.mockClear();
+      expect(
+        await runCli(
+          [
+            "node",
+            "promptlane",
+            "benchmark",
             "prepare-pair",
             "--data-dir",
             dataDir,
