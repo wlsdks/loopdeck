@@ -93,12 +93,22 @@ A first real, operator-reviewed Codex pair was then collected for the task
 | Baseline | PASS | The live Codex session called the requested PromptLane MCP tool and received `ready`. |
 | PromptLane treatment | FAIL | The generated stored-prompt rewrite replaced the concrete MCP goal with a placeholder referring to the stored request's target. The live Codex session returned a final response but made zero PromptLane MCP calls. |
 
-The real-fixture benchmark reported:
+A second pair covered a different task type, a read-only repository release
+audit that had to compare the `v1.0.0` target with `main` and report whether the
+worktree was clean:
 
-- `pair_count: 1` and `status: insufficient_pairs`;
+| Condition | Outcome | Observation |
+| --- | --- | --- |
+| Baseline | PASS | Six command events produced the correct shared commit, equality decision, and clean-worktree result. |
+| PromptLane treatment | FAIL | The adopted draft again contained a stored-request placeholder. It produced 42 command events, investigated unrelated rewrite code and tests, and omitted the required tag, clean-worktree, and expected-SHA results. |
+
+The combined two-pair real-fixture benchmark reported:
+
+- `pair_count: 2` and `status: insufficient_pairs`;
 - baseline pass rate `1.0`, PromptLane pass rate `0.0`;
-- one `regressed` transition;
-- treatment adoption `1/1`, because the generated draft was actually submitted;
+- two `regressed` transitions;
+- treatment adoption `2/2`, because both generated drafts were actually
+  submitted;
 - `causal_claim: false` and a non-release-blocking soft-signal failure;
 - privacy leak count `0`.
 
@@ -136,7 +146,7 @@ Required before closing validation:
    without retargeting the tag.
 4. Run a clean registry-install first-value smoke and record elapsed time and
    recovery observations.
-5. Continue from 1/10 matched pairs using explicit operator review, and cover
+5. Continue from 2/10 matched pairs using explicit operator review, and cover
    at least three task types.
 6. Recruit three independent users; do not replace their evidence with
    synthetic fixtures or maintainer-only dogfood.

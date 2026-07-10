@@ -50,11 +50,13 @@ ledger is `docs/PUBLIC_LAUNCH_VALIDATION_2026-07-10.md`.
 - The local tarball clean-install and first-success smoke passed.
 - npm publication and the GitHub Release are still absent. npm publish
   preflight is blocked only by interactive npm authentication.
-- Real usefulness remains unproven. The first of 10 required matched pairs
-  regressed: a stored-prompt rewrite lost the concrete MCP target and the
-  treatment made zero required tool calls after the baseline passed. Continue
-  across three task types and three independent-user install/first-value runs
-  before large feature work.
+- Real usefulness remains unproven. The first 2 of 10 required matched pairs
+  both regressed across MCP-tool-use and repository-audit tasks: stored-prompt
+  rewrites lost the concrete target after both baselines passed. The second
+  treatment expanded from 6 baseline command events to 42 unrelated command
+  events while omitting every required result. Continue across at least one
+  more task type and three independent-user install/first-value runs before
+  large feature work.
 - Keep direct-text local improvement. Treat stored-prompt rewrite target
   preservation as a 1.0.x change-or-remove candidate; do not promote that
   surface from a single negative observation or claim it is reliable.
