@@ -65,6 +65,8 @@ Acceptance criteria:
 
 - Hook failures are fail-open.
 - Hook output is raw-free.
+- Doctor reports `ready` only after a successful hook delivery within the last
+  hour; configured setups without recent runtime proof report `unverified`.
 - MCP status and brief tools return structured, local-only data.
 - `get_benchmark_candidates` returns bounded body-free readiness diagnostics
   so Codex and Claude Code can guide real fixture preparation without reading

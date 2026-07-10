@@ -485,6 +485,10 @@ Completed:
   documented current session id, preserves known hook metadata for an empty
   session, and skips malformed sessionless collection instead of reusing stale
   prompts from the same cwd
+- doctor hook runtime verification: configured integrations without a
+  successful hook delivery in the last hour report `unverified`, recent
+  delivery reports `ready`, and known delivery/setup failures remain
+  `needs_attention`
 
 Next work should come from fresh user-flow evidence, a real MCP tool/schema
 change, or explicit operator-approved dogfood.

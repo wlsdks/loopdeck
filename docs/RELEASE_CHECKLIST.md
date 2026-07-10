@@ -144,6 +144,8 @@ Confirm `corepack pnpm pack:dry-run` excludes:
 - [ ] `/api/v1/health` returns only `ok`, `version`, and a per-boot UUID
   `instance_id`; it does not return `data_dir` or any raw filesystem path.
 - [ ] Hook wrappers record `last_ingest_status` even when `postPayload` throws, so `doctor` can surface the failure.
+- [ ] `doctor --json` distinguishes recent `ready`, stale/never-seen
+      `unverified`, and hard-failure `needs_attention` hook states.
 - [ ] Adapter idempotency keys normalize the upstream `session_id` before hashing (Claude Code parity with Codex).
 - [ ] Invalid payload values are not echoed in error responses.
 - [ ] Hook wrappers fail open and do not write prompt text to stdout/stderr.

@@ -1183,6 +1183,7 @@ describe("plugin packaging files", () => {
       expect(content).toContain("promptlane doctor codex");
       expect(content).toContain("promptlane doctor codex --json");
       expect(content).toContain("status");
+      expect(content).toContain("unverified");
       expect(content).toContain("needs_attention");
       expect(content).toContain("promptlane statusline claude-code");
       expect(content).toContain("promptlane buddy --once");
@@ -1484,6 +1485,7 @@ describe("plugin packaging files", () => {
     expect(status).not.toContain("product-name alias");
     expect(status).toContain("promptlane doctor codex --json");
     expect(status).toContain("status: ready");
+    expect(status).toContain("status: unverified");
     expect(status).toContain("status: needs_attention");
     expect(status).toContain("promptlane statusline claude-code");
     expect(buddy).toContain("promptlane buddy");

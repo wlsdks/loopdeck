@@ -191,9 +191,10 @@ promptlane buddy --once
 promptlane coach
 ```
 
-자동화에서는 `doctor --json`의 top-level `status`가 `ready` 또는
-`needs_attention`으로 나오므로 nested readiness check를 다시 계산하지 않아도
-됩니다.
+자동화에서는 `doctor --json`의 top-level `status`가 `ready`, `unverified`,
+또는 `needs_attention`으로 나옵니다. `ready`는 최근 1시간 안의 성공한 hook
+delivery가 필요합니다. `unverified`는 설정은 정상이지만 hook runtime evidence가
+없거나 오래된 상태이며 hard CLI failure를 만들지 않습니다.
 
 로컬 archive 열기:
 

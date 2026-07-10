@@ -24,6 +24,7 @@ import {
   type AgentTool,
 } from "../agent-access.js";
 import { UserError } from "../user-error.js";
+import { HOUR_MS } from "../../shared/time.js";
 
 export type DoctorCommandRunner = (
   command: string,
@@ -41,6 +42,7 @@ export type DoctorClaudeCodeOptions = {
   mcpConfigPath?: string;
   commandRunner?: DoctorCommandRunner;
   checkServer?: () => Promise<boolean>;
+  now?: () => Date;
   json?: boolean;
 };
 
@@ -53,14 +55,22 @@ export type DoctorCodexOptions = {
   mcpConfigPath?: string;
   commandRunner?: DoctorCommandRunner;
   checkServer?: () => Promise<boolean>;
+  now?: () => Date;
   json?: boolean;
+};
+
+export type DoctorIngestStatus = {
+  ok: boolean;
+  verified: boolean;
+  state: "recent" | "stale" | "never" | "failed";
+  age_seconds?: number;
 };
 
 export type DoctorClaudeCodeResult = {
   status: DoctorStatus;
   server: { ok: boolean };
   token: { ok: boolean };
-  ingest: { ok: boolean };
+  ingest: DoctorIngestStatus;
   settings: {
     ok: boolean;
     invalid: boolean;
@@ -75,7 +85,7 @@ export type DoctorCodexResult = {
   status: DoctorStatus;
   server: { ok: boolean };
   token: { ok: boolean };
-  ingest: { ok: boolean };
+  ingest: DoctorIngestStatus;
   settings: {
     ok: boolean;
     invalid: boolean;
@@ -94,7 +104,7 @@ type DoctorResultWithoutNextActions =
   | Omit<DoctorClaudeCodeResult, "next_actions" | "status">
   | Omit<DoctorCodexResult, "next_actions" | "status">;
 
-type DoctorStatus = "ready" | "needs_attention";
+type DoctorStatus = "ready" | "unverified" | "needs_attention";
 type DoctorReadinessInput = Pick<
   DoctorClaudeCodeResult | DoctorCodexResult,
   "server" | "token" | "ingest" | "settings" | "mcp"
@@ -181,12 +191,12 @@ export function formatDoctorResult(
   const status = doctorStatus(result);
   const lines = [
     `promptlane doctor: ${tool}`,
-    `Status: ${status === "ready" ? "ready" : "needs attention"}`,
+    `Status: ${formatDoctorStatus(status)}`,
     "",
     "Checks:",
     `- Local server: ${result.server.ok ? "ok" : "not reachable"}`,
     `- Local ingest token: ${result.token.ok ? "ok" : "missing"}`,
-    `- Last ingest check: ${result.ingest.ok ? "ok" : "failed"}`,
+    `- Last ingest check: ${formatIngestState(result.ingest)}`,
     settings,
     `- MCP command access: ${result.mcp.registered ? "registered" : "not detected"}`,
   ];
@@ -211,6 +221,16 @@ export function formatDoctorResult(
   return lines.join("\n");
 }
 
+function formatDoctorStatus(status: DoctorStatus): string {
+  if (status === "needs_attention") return "needs attention";
+  return status;
+}
+
+function formatIngestState(ingest: DoctorIngestStatus): string {
+  if (ingest.state === "never") return "not yet verified";
+  return ingest.state;
+}
+
 function formatClaudeSettings(result: DoctorClaudeCodeResult): string {
   if (result.settings.invalid) return "- Claude Code settings: invalid JSON";
   return `- Claude Code hook: ${result.settings.hookInstalled ? "installed" : "missing"}`;
@@ -229,13 +249,14 @@ function formatCodexSettings(result: DoctorCodexResult): string {
 }
 
 function doctorStatus(result: DoctorReadinessInput): DoctorStatus {
-  return result.server.ok &&
+  const configured =
+    result.server.ok &&
     result.token.ok &&
     result.ingest.ok &&
     result.settings.ok &&
-    result.mcp.registered
-    ? "ready"
-    : "needs_attention";
+    result.mcp.registered;
+  if (!configured) return "needs_attention";
+  return result.ingest.verified ? "ready" : "unverified";
 }
 
 function doctorNextSteps(
@@ -265,6 +286,17 @@ function doctorNextSteps(
     !result.lastIngestStatus
   ) {
     steps.push(FIRST_PROMPT_NEXT_STEP);
+  }
+  if (result.ingest.state === "stale") {
+    const label = tool === "codex" ? "Codex" : "Claude Code";
+    steps.push(
+      `Send one new ${label} prompt, then rerun promptlane doctor ${tool}.`,
+    );
+    steps.push(
+      tool === "codex"
+        ? "If the Last ingest timestamp does not refresh, restart Codex and inspect hook trust with /hooks."
+        : "If the Last ingest timestamp does not refresh, restart Claude Code and inspect the installed hook status.",
+    );
   }
   if (!result.mcp.registered) {
     steps.push(`Register MCP: ${mcpRegistrationCommand(tool)}.`);
@@ -324,7 +356,7 @@ export async function doctorClaudeCode(
   const result = {
     server: { ok: await inspectServer(options) },
     token: { ok: inspectToken(options.dataDir) },
-    ingest: inspectIngest(lastIngestStatus),
+    ingest: inspectIngest(lastIngestStatus, options.now?.() ?? new Date()),
     settings,
     mcp: {
       registered: inspectMcpRegistration({
@@ -356,7 +388,7 @@ export async function doctorCodex(
   const result = {
     server: { ok: await inspectServer(options) },
     token: { ok: inspectToken(options.dataDir) },
-    ingest: inspectIngest(lastIngestStatus),
+    ingest: inspectIngest(lastIngestStatus, options.now?.() ?? new Date()),
     settings,
     mcp: {
       registered: inspectMcpRegistration({
@@ -376,10 +408,37 @@ export async function doctorCodex(
   };
 }
 
-function inspectIngest(lastIngestStatus: LastHookStatus | undefined): {
-  ok: boolean;
-} {
-  return { ok: lastIngestStatus?.ok ?? true };
+function inspectIngest(
+  lastIngestStatus: LastHookStatus | undefined,
+  now: Date,
+): DoctorIngestStatus {
+  if (!lastIngestStatus) {
+    return { ok: true, verified: false, state: "never" };
+  }
+  if (!lastIngestStatus.ok) {
+    return { ok: false, verified: false, state: "failed" };
+  }
+
+  const checkedAt = Date.parse(lastIngestStatus.checked_at);
+  if (!Number.isFinite(checkedAt)) {
+    return { ok: true, verified: false, state: "stale" };
+  }
+  const ageMs = Math.max(0, now.getTime() - checkedAt);
+  const ageSeconds = Math.floor(ageMs / 1000);
+  if (ageMs <= HOUR_MS) {
+    return {
+      ok: true,
+      verified: true,
+      state: "recent",
+      age_seconds: ageSeconds,
+    };
+  }
+  return {
+    ok: true,
+    verified: false,
+    state: "stale",
+    age_seconds: ageSeconds,
+  };
 }
 
 function inspectToken(dataDir?: string): boolean {
