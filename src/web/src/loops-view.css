@@ -139,6 +139,48 @@
   outline-offset: 1px;
 }
 
+.loop-improvement-attribution {
+  border: 0;
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+}
+
+.loop-improvement-attribution legend {
+  color: var(--pm-text-muted);
+  font-size: 12px;
+  line-height: 18px;
+  padding: 0;
+}
+
+.loop-improvement-attribution > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.loop-improvement-attribution label {
+  align-items: center;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 6px;
+  display: inline-flex;
+  gap: 6px;
+  min-width: 0;
+  padding: 6px 8px;
+}
+
+.loop-improvement-attribution input {
+  accent-color: var(--pm-accent);
+  margin: 0;
+}
+
+.loop-improvement-attribution code {
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
 .loop-detail-section {
   background: var(--color-overlay-1);
   border: 1px solid var(--color-border-soft);

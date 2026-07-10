@@ -16,11 +16,15 @@ export function LoopWorktreeOutcomePanel({
   return (
     <LoopOutcomeForm
       currentStatus={snapshot.outcome_status}
+      initialUsedImprovementPromptIds={
+        snapshot.used_improvement_prompt_ids ?? []
+      }
       initialApprovalAvailable={detail.memory_candidate?.eligible === true}
       key={snapshot.id}
       memoryApproved={detail.memory_approved === true}
       onApprove={onApprove}
       onRecord={onRecord}
+      promptIds={Array.from(new Set(snapshot.prompt_ids ?? []))}
       snapshotId={snapshot.id}
     />
   );

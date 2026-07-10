@@ -494,6 +494,12 @@ try {
     selectedMemorySnapshot.id,
     "Selected worktree detail should resolve the exact browser fixture.",
   );
+  assert(
+    selectedMemoryDetail.data?.items?.[0]?.prompt_ids?.includes(
+      selectedMemorySnapshot.prompt_ids[0],
+    ),
+    "Selected worktree detail should expose its safe prompt ids for explicit improvement attribution.",
+  );
   assertEqual(
     selectedMemoryDetail.data?.memory_candidate?.eligible,
     true,
@@ -503,6 +509,38 @@ try {
     name: /Approve selected memory|선택 메모리 승인/,
   });
   await selectedMemoryApprovalButton.waitFor();
+  const attributedPromptId = selectedMemorySnapshot.prompt_ids[0];
+  assert(
+    typeof attributedPromptId === "string",
+    "Selected memory fixture should include a prompt id for attribution.",
+  );
+  await page.getByRole("checkbox", { name: attributedPromptId }).check();
+  await page
+    .getByRole("textbox", { name: "Summary" })
+    .fill(
+      "Selected browser worktree checks passed with the PromptLane improvement.",
+    );
+  await page
+    .getByRole("textbox", { name: "Evidence" })
+    .fill("test:browser-selected-memory-attribution");
+  await page.getByRole("button", { name: "Save outcome" }).click();
+  await page
+    .locator(".loop-outcome-statuses")
+    .getByText("Recorded", { exact: true })
+    .waitFor();
+  assert(
+    readUsedImprovementPromptIds(selectedMemorySnapshot.id).includes(
+      attributedPromptId,
+    ),
+    "Web outcome recording should persist the checked PromptLane improvement attribution.",
+  );
+  await page.reload();
+  await page.getByRole("heading", { name: "Loops", level: 1 }).waitFor();
+  assertEqual(
+    await page.getByRole("checkbox", { name: attributedPromptId }).isChecked(),
+    true,
+    "Web outcome attribution should remain selected after a page reload.",
+  );
   await assertText(
     page,
     "browser-newer-unrelated",
@@ -764,6 +802,22 @@ function seedSelectedMemoryWorktrees() {
   }
 
   return { ...selected, worktree_label: "browser-selected-memory" };
+}
+
+function readUsedImprovementPromptIds(snapshotId) {
+  const db = new Database(join(dataDir, "promptlane.sqlite"));
+  try {
+    const row = db
+      .prepare("SELECT outcome_json FROM loop_snapshots WHERE id = ?")
+      .get(snapshotId);
+    if (!row) return [];
+    const outcome = JSON.parse(row.outcome_json);
+    return Array.isArray(outcome.used_improvement_prompt_ids)
+      ? outcome.used_improvement_prompt_ids
+      : [];
+  } finally {
+    db.close();
+  }
 }
 
 function runCli(args) {

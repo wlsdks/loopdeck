@@ -7,21 +7,26 @@ export type LoopOutcomeInput = {
   status: LoopOutcomeStatus;
   summary: string;
   evidenceRefs: string[];
+  usedImprovementPromptIds: string[];
 };
 
 export function LoopOutcomeForm({
   currentStatus,
+  initialUsedImprovementPromptIds = [],
   initialApprovalAvailable = false,
   memoryApproved = false,
   onApprove,
   onRecord,
+  promptIds,
   snapshotId,
 }: {
   currentStatus: string;
+  initialUsedImprovementPromptIds?: string[];
   initialApprovalAvailable?: boolean;
   memoryApproved?: boolean;
   onApprove?: (snapshotId: string) => Promise<void>;
   onRecord: (snapshotId: string, input: LoopOutcomeInput) => Promise<void>;
+  promptIds: string[];
   snapshotId: string;
 }) {
   const [status, setStatus] = useState<LoopOutcomeStatus>(
@@ -29,6 +34,9 @@ export function LoopOutcomeForm({
   );
   const [summary, setSummary] = useState("");
   const [evidence, setEvidence] = useState("");
+  const [usedImprovementPromptIds, setUsedImprovementPromptIds] = useState<
+    string[]
+  >(initialUsedImprovementPromptIds);
   const [busy, setBusy] = useState(false);
   const [recorded, setRecorded] = useState(false);
   const [approvalAvailable, setApprovalAvailable] = useState(
@@ -49,6 +57,7 @@ export function LoopOutcomeForm({
           .split(",")
           .map((reference) => reference.trim())
           .filter(Boolean),
+        usedImprovementPromptIds,
       });
       setRecorded(true);
       setApprovalAvailable(status === "passed");
@@ -130,6 +139,30 @@ export function LoopOutcomeForm({
           />
         </label>
       </div>
+      {promptIds.length > 0 && (
+        <fieldset className="loop-improvement-attribution">
+          <legend>PromptLane improvements used</legend>
+          <div>
+            {promptIds.map((promptId) => (
+              <label key={promptId}>
+                <input
+                  checked={usedImprovementPromptIds.includes(promptId)}
+                  name={`used-improvement-${promptId}`}
+                  onChange={(event) =>
+                    setUsedImprovementPromptIds((current) =>
+                      event.target.checked
+                        ? [...current, promptId]
+                        : current.filter((value) => value !== promptId),
+                    )
+                  }
+                  type="checkbox"
+                />
+                <code>{promptId}</code>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      )}
       <div className="loop-outcome-actions">
         <button className="loop-copy-button" disabled={busy} type="submit">
           <Save aria-hidden="true" size={15} />
