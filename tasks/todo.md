@@ -11066,3 +11066,30 @@
 - [x] VERIFY: Run focused registry/tool/server/privacy/package tests, stdio
       smoke, lint/build/pack, and live MCP registration checks before retagging
       `v1.0.0`.
+
+## 2026-07-10 Public Launch And Usefulness Validation
+
+- [x] AUDIT: Confirm `main`, the annotated local `v1.0.0` tag, and the remote
+      tag resolve to commit `106bbf899d8243f31e122a7496208b144bedc869`.
+- [x] AUDIT: Confirm `promptlane@1.0.0` is absent from npm and GitHub has no
+      `v1.0.0` Release; do not describe the product as publicly launched.
+- [x] VERIFY: Run real installed Codex and Claude Code prompts that each ingest
+      successfully and call `get_promptlane_status`; both MCP calls returned
+      `ready`, and both live doctors reported recent ingest and `ready`.
+- [x] VERIFY: Run the local tarball `smoke:package-install`; isolated install,
+      three packaged binaries, and the installed first-success path passed.
+- [x] RECORD: Add `docs/PUBLIC_LAUNCH_VALIDATION_2026-07-10.md` with current
+      evidence, environment friction, blockers, and non-causal interpretation.
+- [ ] AUTH: Complete interactive `npm login`; current preflight passes every
+      check except npm authentication (`E401`).
+- [ ] RELEASE: Run the full local release gate once immediately before publish,
+      rerun npm preflight, publish `promptlane@1.0.0`, and create the GitHub
+      Release from the same immutable `v1.0.0` tag.
+- [ ] POST-PUBLISH: Repeat clean install from the npm registry and record
+      install failures, elapsed first-value time, and recovery steps.
+- [ ] VALIDATE: Collect at least 10 operator-reviewed matched pairs across at
+      least three task types. Current real pair count is zero.
+- [ ] VALIDATE: Have at least three external or independent users complete
+      installation and first value; do not substitute maintainer dogfood.
+- [ ] DECIDE: Rewrite the 1.0.x backlog from keep/change/remove evidence and
+      reduce scope if usefulness remains unsupported.

@@ -1,6 +1,6 @@
 # Next Backlog
 
-Last updated: 2026-07-08
+Last updated: 2026-07-10
 
 This is the prioritized "what to pick up next" list after the PromptLane
 repositioning and architecture decision pass. It is intentionally short. The PRD itself
@@ -41,6 +41,20 @@ queue.
   loop memory storage guards, and focused Codex/Claude Code setup smoke.
 
 ## Current Priority Decision
+
+Public-launch validation now overrides feature expansion. The live evidence
+ledger is `docs/PUBLIC_LAUNCH_VALIDATION_2026-07-10.md`.
+
+- Real Codex and Claude Code prompt ingest, PromptLane MCP calls, and recent
+  doctor readiness passed on 2026-07-10.
+- The local tarball clean-install and first-success smoke passed.
+- npm publication and the GitHub Release are still absent. npm publish
+  preflight is blocked only by interactive npm authentication.
+- Real usefulness remains unproven: the current paired-effectiveness report has
+  zero collected pairs. Collect 10 matched pairs across three task types and
+  three independent-user install/first-value runs before large feature work.
+- Never retarget `v1.0.0`; publish and release only the commit already named by
+  that immutable tag.
 
 After the PromptLane product contract and first-screen metadata are aligned, the
 next implementation work should favor reliability and agent-loop continuity
