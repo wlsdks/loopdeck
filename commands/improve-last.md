@@ -33,7 +33,7 @@ local heuristic. In that case, present these two options verbatim:
 Prefer the MCP tool when it is available:
 
 ```text
-promptlane:improve_prompt latest=true
+promptlane:improve_prompt latest=true rewrite=true
 ```
 
 Return the approval-ready draft, the changed sections, and the safety notes.
@@ -42,7 +42,7 @@ Make it clear that the draft is copy-based and must not be auto-submitted.
 If MCP is not configured, use the privacy-safe CLI fallback:
 
 ```bash
-promptlane improve --latest --json
+promptlane improve --latest --rewrite --json
 ```
 
 ## 2b. Agent mode

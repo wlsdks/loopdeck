@@ -797,8 +797,10 @@ describe("MCP stdio server", () => {
           },
         ],
         structuredContent: expect.objectContaining({
-          improved_prompt: expect.stringContaining("Please work from"),
-          requires_user_approval: true,
+          mode: "diagnose",
+          improved_prompt:
+            "Review src/mcp/server.ts, run pnpm test, and return a Markdown summary.",
+          requires_user_approval: false,
           privacy: expect.objectContaining({
             external_calls: false,
             returns_stored_prompt_body: false,

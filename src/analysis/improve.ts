@@ -11,6 +11,7 @@ export type ImprovePromptInput = {
   createdAt: string;
   language?: "en" | "ko";
   source?: "direct" | "stored";
+  rewrite?: boolean;
 };
 
 export type ClarifyingAnswerSchema = {
@@ -26,8 +27,8 @@ export type ClarifyingQuestion = {
 };
 
 export type PromptImprovement = {
-  mode: "copy" | "saved-draft";
-  requires_user_approval: true;
+  mode: "diagnose" | "copy" | "saved-draft";
+  requires_user_approval: boolean;
   summary: string;
   improved_prompt: string;
   expected_impact: {
@@ -77,6 +78,35 @@ export function improvePrompt(input: ImprovePromptInput): PromptImprovement {
   const changedSections = analysis.checklist
     .filter((item) => item.status !== "good")
     .map((item) => item.key);
+  if (input.rewrite === false) {
+    return {
+      mode: "diagnose",
+      requires_user_approval: false,
+      summary:
+        language === "ko"
+          ? "원문은 변경하지 않고 부족한 항목과 확인 질문만 정리했습니다."
+          : "Kept the prompt unchanged and returned only its gaps and clarification questions.",
+      improved_prompt: sanitizedPrompt,
+      expected_impact: {
+        original_score: analysis.quality_score.value,
+        improved_score: analysis.quality_score.value,
+        delta: 0,
+        changed_axis_count: changedSections.length,
+      },
+      changed_sections: changedSections,
+      clarifying_questions: buildClarifyingQuestions(
+        analysis.checklist,
+        language,
+      ),
+      safety_notes: buildSafetyNotes(
+        input.prompt,
+        redaction.is_sensitive,
+        language,
+      ),
+      created_at: input.createdAt,
+      analyzer: "local-rules-v1",
+    };
+  }
   if (changedSections.length === 0) {
     return {
       mode: "copy",

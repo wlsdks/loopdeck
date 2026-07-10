@@ -337,19 +337,19 @@ describe("scorePromptTool", () => {
 });
 
 describe("improvePromptTool", () => {
-  it("returns an approval-ready draft for direct prompt text without storing input", () => {
+  it("returns diagnosis only for direct prompt text by default", () => {
     const result = improvePromptTool({
       prompt: "Make this better with token sk-proj-1234567890abcdef",
     });
     const serialized = JSON.stringify(result);
 
     expect(result.source).toBe("text");
-    expect(result.requires_user_approval).toBe(true);
-    expect(result.expected_impact.improved_score).toBeGreaterThan(
-      result.expected_impact.original_score,
+    expect(result.mode).toBe("diagnose");
+    expect(result.requires_user_approval).toBe(false);
+    expect(result.expected_impact.delta).toBe(0);
+    expect(result.improved_prompt).toBe(
+      "Make this better with token sensitive content",
     );
-    expect(result.expected_impact.delta).toBeGreaterThan(0);
-    expect(result.improved_prompt).toContain("Please work from");
     expect(result.privacy).toEqual({
       local_only: true,
       stores_input: false,
@@ -359,7 +359,30 @@ describe("improvePromptTool", () => {
     expect(serialized).not.toContain("sk-proj-1234567890abcdef");
   });
 
-  it("refuses a stored rewrite when no concrete target can be recovered safely", async () => {
+  it("returns a full direct draft only with rewrite=true", () => {
+    const result = improvePromptTool({
+      prompt: "Make this better",
+      rewrite: true,
+    });
+
+    expect(result.mode).toBe("copy");
+    expect(result.requires_user_approval).toBe(true);
+    expect(result.expected_impact.delta).toBeGreaterThan(0);
+    expect(result.improved_prompt).toContain("Verification");
+  });
+
+  it("reports an explicit no-op when diagnosis finds no questions", () => {
+    const result = improvePromptTool({
+      prompt:
+        "Refactor src/auth.ts to OAuth 2.0 because legacy sessions expire early. Change only src/auth.ts, run pnpm test, and return a Markdown summary.",
+    });
+
+    expect(result.mode).toBe("diagnose");
+    expect(result.clarifying_questions).toEqual([]);
+    expect(result.next_action).toContain("No rewrite was generated");
+  });
+
+  it("returns a body-free diagnosis for a stored prompt without a concrete target", async () => {
     const dataDir = createTempDir();
     const init = initializePromptLane({ dataDir });
     const storage = createSqlitePromptStorage({
@@ -377,13 +400,20 @@ describe("improvePromptTool", () => {
     const result = improvePromptTool({ latest: true }, { dataDir });
     const serialized = JSON.stringify(result);
 
-    expect(result).toMatchObject({
+    expect(result.mode).toBe("diagnose");
+    expect(result.improved_prompt).toBe("");
+    expect(result.clarifying_questions.length).toBeGreaterThan(0);
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("/Users/example");
+
+    const rewriteResult = improvePromptTool(
+      { latest: true, rewrite: true },
+      { dataDir },
+    );
+    expect(rewriteResult).toMatchObject({
       is_error: true,
       error_code: "target_unavailable",
     });
-    expect(result.message).toContain("prompt");
-    expect(serialized).not.toContain("Make this better");
-    expect(serialized).not.toContain("/Users/example");
   });
 
   it("improves stored prompts from the redacted archive body instead of the generic analysis summary", async () => {
@@ -403,7 +433,10 @@ describe("improvePromptTool", () => {
     );
     storage.close();
 
-    const result = improvePromptTool({ latest: true }, { dataDir });
+    const result = improvePromptTool(
+      { latest: true, rewrite: true },
+      { dataDir },
+    );
     const serialized = JSON.stringify(result);
 
     expect(result.source).toBe("latest");
@@ -471,7 +504,7 @@ describe("improvePromptTool", () => {
     }
   });
 
-  it("does not route acknowledgment-like prompts through the ask-first next_action", () => {
+  it("returns an explicit diagnosis no-op for acknowledgment-like prompts", () => {
     const result = improvePromptTool({
       prompt: "그래! 이 작업을 진행해주고 끝나면 그 다음 단계도 마저 작업해줘",
       language: "ko",
@@ -481,11 +514,11 @@ describe("improvePromptTool", () => {
       throw new Error("improvePromptTool returned an error");
     }
 
-    expect(result.next_action).toContain("Review the draft");
+    expect(result.next_action).toContain("No rewrite was generated");
     expect(result.next_action).not.toContain("Ask the user");
   });
 
-  it("returns an empty clarifying_questions list and the original next_action for strong prompts", () => {
+  it("returns an empty question list and diagnosis no-op for strong prompts", () => {
     const result = improvePromptTool({
       prompt:
         "Because the export review is unclear, inspect src/web/src/App.tsx only, run pnpm test, and return a Markdown summary.",
@@ -496,7 +529,7 @@ describe("improvePromptTool", () => {
     }
 
     expect(result.clarifying_questions).toEqual([]);
-    expect(result.next_action).toContain("Review the draft");
+    expect(result.next_action).toContain("No rewrite was generated");
     expect(result.next_action).not.toContain("Ask the user");
   });
 });
@@ -976,8 +1009,8 @@ describe("coachPromptTool", () => {
     );
     expect(result.improvement).toEqual(
       expect.objectContaining({
-        requires_user_approval: true,
-        mode: "copy",
+        requires_user_approval: false,
+        mode: "diagnose",
       }),
     );
     expect(result.archive).toEqual(
@@ -1137,7 +1170,7 @@ describe("coachPromptTool", () => {
     expect(serialized).not.toContain("sk-proj-1234567890abcdef");
   });
 
-  it("does not fabricate a coach rewrite when the latest prompt has no recoverable target", async () => {
+  it("returns coach questions without fabricating a stored rewrite", async () => {
     const dataDir = createTempDir();
     const init = initializePromptLane({ dataDir });
     const storage = createSqlitePromptStorage({
@@ -1159,10 +1192,12 @@ describe("coachPromptTool", () => {
 
     expect(result.improvement).toBeDefined();
     expect(result.improvement).toMatchObject({
-      is_error: true,
-      error_code: "target_unavailable",
+      mode: "diagnose",
+      improved_prompt: "",
     });
-    expect(JSON.stringify(result.improvement)).not.toContain("improved_prompt");
+    expect(JSON.stringify(result.improvement)).not.toContain(
+      "Make this better",
+    );
   });
 
   it("does not rewrite an acknowledgment-like latest prompt without its prior target", async () => {
@@ -1187,10 +1222,10 @@ describe("coachPromptTool", () => {
 
     expect(result.improvement).toBeDefined();
     expect(result.improvement).toMatchObject({
-      is_error: true,
-      error_code: "target_unavailable",
+      mode: "diagnose",
+      improved_prompt: "",
     });
-    expect(JSON.stringify(result.improvement)).not.toContain("improved_prompt");
+    expect(JSON.stringify(result.improvement)).not.toContain("그래!");
   });
 });
 

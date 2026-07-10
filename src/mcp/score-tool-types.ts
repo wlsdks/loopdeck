@@ -19,6 +19,7 @@ export type ImprovePromptToolArguments = {
   prompt_id?: string;
   latest?: boolean;
   language?: "en" | "ko";
+  rewrite?: boolean;
 };
 
 export type ScorePromptToolOptions = {

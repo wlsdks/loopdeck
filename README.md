@@ -8,8 +8,8 @@
   Markdown + SQLite archive — nothing leaves your machine.
 - 🧠 Scores each prompt 0–100 across five criteria and tells you which
   axis cost points, so you learn instead of guessing.
-- ✍️ Generates a copy-ready improved draft on demand (English or Korean,
-  auto-detected) without auto-resubmitting anything.
+- ✍️ Diagnoses gaps and asks focused questions by default; generates a
+  copy-ready rewrite only when explicitly requested.
 - 🔁 Reuses approved lessons and loop snapshots when long-running agent work
   needs a better next request.
 
@@ -686,13 +686,15 @@ The web UI exposes only anonymized export. Raw export is not implemented.
 Previewed export jobs expire and are invalidated when the selected prompt set,
 project policy versions, redaction version, or preview counts change.
 
-Generate a copy-based PromptLane improvement draft:
+Diagnose prompt gaps without changing the prompt; add `--rewrite` only when a
+full copy-ready draft is explicitly wanted:
 
 ```sh
 pnpm promptlane coach
 pnpm promptlane coach --json
 pnpm promptlane improve --text "make this request clearer" --json
 pnpm promptlane improve --latest --json
+pnpm promptlane improve --text "make this request clearer" --rewrite --json
 ```
 
 Score accumulated prompt habits without returning prompt bodies:
@@ -761,14 +763,15 @@ The MCP server exposes 22 tools:
 - `get_promptlane_status`: check whether the local archive is initialized,
   whether prompts have been captured, and which MCP tool to call next.
 - `coach_prompt`: run the default one-call agent workflow for Claude Code or
-  Codex: local readiness, latest prompt score, approval-required rewrite,
+  Codex: local readiness, latest prompt score, diagnosis and questions,
   recent habit review, project instruction review, and next request guidance.
 - `score_prompt`: score either direct prompt text, a stored `prompt_id`, or the
   latest stored prompt.
-- `improve_prompt`: generate an approval-ready improved prompt draft for direct
-  prompt text, a stored `prompt_id`, or the latest stored prompt. The result
-  also includes a `clarifying_questions` array (with JSON-Schema-shaped
-  `answer_schema.examples`) the agent should ask the user via its native ask UI.
+- `improve_prompt`: diagnose direct prompt text, a stored `prompt_id`, or the
+  latest stored prompt without rewriting by default. Set `rewrite: true` only
+  after the user explicitly asks for a full draft. The result includes a
+  `clarifying_questions` array (with JSON-Schema-shaped
+  `answer_schema.examples`) the agent should ask via its native ask UI.
 - `apply_clarifications`: take the user's verbatim answers (each must be tagged
   `origin: "user"`) and compose the final approval-ready draft. Use this after
   the agent has collected answers through its own ask UI.

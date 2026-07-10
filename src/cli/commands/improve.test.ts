@@ -27,11 +27,15 @@ describe("improve CLI", () => {
     const help = createProgram().helpInformation();
 
     expect(help).toMatch(
-      /improve \[options\]\s+Generate an approval-ready improved prompt locally\./,
+      /improve \[options\]\s+Diagnose prompt gaps locally; rewrite only when explicitly requested\./,
     );
+    const command = createProgram().commands.find(
+      (candidate) => candidate.name() === "improve",
+    );
+    expect(command?.helpInformation()).toContain("--rewrite");
   });
 
-  it("prints JSON improvement results from text input", () => {
+  it("prints a compact diagnosis from text input by default", () => {
     const output = improvePromptForCli({
       json: true,
       text: "Make this better",
@@ -43,16 +47,34 @@ describe("improve CLI", () => {
         improved_score: number;
         delta: number;
       };
-      requires_user_approval: boolean;
+      mode: string;
+      changed_sections: string[];
+      clarifying_questions: unknown[];
     };
 
-    expect(parsed.requires_user_approval).toBe(true);
-    expect(parsed.expected_impact.improved_score).toBeGreaterThan(
-      parsed.expected_impact.original_score,
-    );
-    expect(parsed.expected_impact.delta).toBeGreaterThan(0);
+    expect(parsed.mode).toBe("diagnose");
+    expect(parsed.improved_prompt).toBe("Make this better");
+    expect(parsed.expected_impact.delta).toBe(0);
+    expect(parsed.changed_sections.length).toBeGreaterThan(0);
+    expect(parsed.clarifying_questions.length).toBeGreaterThan(0);
+  });
+
+  it("generates a full draft only when rewrite is explicitly requested", () => {
+    const parsed = JSON.parse(
+      improvePromptForCli({
+        json: true,
+        text: "Make this better",
+        rewrite: true,
+      }),
+    ) as {
+      mode: string;
+      improved_prompt: string;
+      expected_impact: { delta: number };
+    };
+
+    expect(parsed.mode).toBe("copy");
     expect(parsed.improved_prompt).toContain("Verification");
-    expect(parsed.improved_prompt).toContain("Output");
+    expect(parsed.expected_impact.delta).toBeGreaterThan(0);
   });
 
   it("requires explicit text or stdin", () => {
@@ -137,10 +159,9 @@ describe("improve CLI", () => {
     };
 
     expect(result.source).toBe("latest");
-    expect(result.mode).toBe("copy");
-    expect(result.requires_user_approval).toBe(true);
-    expect(result.improved_prompt).toContain("Verification");
-    expect(result.improved_prompt).toContain("src/server/routes/prompts.ts");
+    expect(result.mode).toBe("diagnose");
+    expect(result.requires_user_approval).toBe(false);
+    expect(result.improved_prompt).toBe("");
     expect(result.privacy.returns_stored_prompt_body).toBe(false);
     expect(json).not.toContain("sk-proj-1234567890abcdef");
     expect(json).not.toContain("/Users/example");

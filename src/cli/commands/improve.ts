@@ -23,6 +23,7 @@ type ImproveCliOptions = {
   text?: string;
   answer?: string[];
   language?: string;
+  rewrite?: boolean;
 };
 
 const VALID_AXES = new Set<PromptQualityCriterion>([
@@ -50,11 +51,17 @@ const AXIS_ALIASES: Record<string, PromptQualityCriterion> = {
 export function registerImproveCommand(program: Command): void {
   program
     .command("improve")
-    .description("Generate an approval-ready improved prompt locally.")
+    .description(
+      "Diagnose prompt gaps locally; rewrite only when explicitly requested.",
+    )
     .option("--data-dir <path>", "Override the promptlane data directory.")
     .option("--text <prompt>", "Prompt text to improve.")
     .option("--stdin", "Read prompt text from stdin.")
     .option("--latest", "Improve the latest stored prompt without printing it.")
+    .option(
+      "--rewrite",
+      "Explicitly generate a full copy-ready rewrite instead of diagnosis only.",
+    )
     .option(
       "--prompt-id <id>",
       "Improve one stored prompt without printing the original prompt body.",
@@ -79,8 +86,11 @@ export function improvePromptForCli(options: ImproveCliOptions): string {
   if (options.latest || options.promptId) {
     const result = improvePromptTool(
       options.latest
-        ? { latest: true }
-        : { prompt_id: options.promptId as string },
+        ? { latest: true, rewrite: options.rewrite === true }
+        : {
+            prompt_id: options.promptId as string,
+            rewrite: options.rewrite === true,
+          },
       { dataDir: options.dataDir },
     );
 
@@ -104,6 +114,7 @@ export function improvePromptForCli(options: ImproveCliOptions): string {
           prompt,
           createdAt: new Date().toISOString(),
           language,
+          rewrite: options.rewrite === true,
         });
 
   return options.json

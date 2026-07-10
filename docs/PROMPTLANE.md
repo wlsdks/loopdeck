@@ -18,7 +18,8 @@ PromptLane starts with prompt improvement:
 - capture prompts from Codex and Claude Code
 - redact and store them locally in Markdown and SQLite
 - score weak requests with a deterministic local rubric
-- generate copy-ready improved prompts
+- diagnose prompt gaps and ask focused questions by default
+- generate copy-ready improved prompts only after explicit rewrite requests
 - review recurring prompt habits
 - reuse strong prompt patterns safely
 
@@ -56,7 +57,8 @@ Goal: a new user sees one useful correction for a real prompt.
 1. Install and run explicit setup.
 2. Send a real Codex or Claude Code prompt.
 3. Run the coach workflow.
-4. Review the score, gaps, and copy-ready improved draft.
+4. Review the score, gaps, and focused questions; request a copy-ready rewrite
+   only when it is actually useful.
 
 Success criteria:
 

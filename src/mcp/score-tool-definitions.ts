@@ -225,10 +225,10 @@ export const SCORE_PROMPT_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
 export const IMPROVE_PROMPT_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
   name: "improve_prompt",
   description:
-    "Generate an approval-ready improved coding prompt draft with PromptLane's local deterministic improver. Use this when the user asks Claude Code or Codex to rewrite, clarify, or upgrade the current request, a pasted prompt, a stored prompt id, or the latest captured prompt before resubmitting it. The tool is copy-based: it never auto-submits the draft, never calls external LLMs, does not store direct prompt input, and does not return the original stored prompt body.",
+    "Diagnose prompt gaps locally without changing the prompt by default. Set rewrite=true only when the user explicitly asks for a full copy-ready rewrite. The tool never auto-submits a draft, never calls external LLMs, does not store direct prompt input, and never returns the original stored prompt body.",
   annotations: {
     ...LOCAL_READ_ONLY_TOOL_ANNOTATIONS,
-    title: "Approval-ready prompt rewrite",
+    title: "Prompt diagnosis and explicit rewrite",
   },
   inputSchema: {
     type: "object",
@@ -254,6 +254,11 @@ export const IMPROVE_PROMPT_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
         description:
           "Language for the improved draft and safety notes. Defaults to en.",
       },
+      rewrite: {
+        type: "boolean",
+        description:
+          "Set true only after the user explicitly requests a full copy-ready rewrite. Defaults to diagnosis-only behavior.",
+      },
     },
     additionalProperties: false,
   },
@@ -266,8 +271,8 @@ export const IMPROVE_PROMPT_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
         type: "string",
         enum: ["direct_prompt", "redacted_stored_prompt"],
       },
-      mode: { const: "copy" },
-      requires_user_approval: { const: true },
+      mode: { type: "string", enum: ["diagnose", "copy"] },
+      requires_user_approval: { type: "boolean" },
       summary: { type: "string" },
       improved_prompt: { type: "string" },
       changed_sections: { type: "array", items: { type: "string" } },

@@ -121,8 +121,9 @@ Use these workflows before sending the user to the web UI:
 - Latest prompt score: call `promptlane:score_prompt` with `latest=true`.
   If MCP is unavailable, run `promptlane score --latest --json`.
 - Latest prompt rewrite: call `promptlane:improve_prompt` with
-  `latest=true`. If MCP is unavailable, run
-  `promptlane improve --latest --json`.
+  `latest=true, rewrite=true` only after the user explicitly requests a full
+  rewrite. If MCP is unavailable, run
+  `promptlane improve --latest --rewrite --json`.
 - Agent-assisted latest prompt rewrite: call
   `promptlane:prepare_agent_rewrite` with `latest=true`, rewrite the returned
   redacted prompt in the active Codex/Claude Code session, ask for approval,
@@ -168,7 +169,8 @@ The MCP tools are:
 - `coach_prompt` for the default one-call Claude Code/Codex prompt coach
   workflow
 - `score_prompt` for one current, pasted, stored, or latest prompt
-- `improve_prompt` for an approval-ready draft the user can copy and resubmit
+- `improve_prompt` for diagnosis by default, or an approval-ready draft when
+  the user explicitly requests `rewrite=true`
 - `prepare_agent_rewrite` for a redacted one-prompt packet the current agent
   session can semantically rewrite
 - `record_agent_rewrite` for saving that agent-produced rewrite as a redacted

@@ -11133,3 +11133,15 @@
 - [x] DECIDE: Record only raw-free aggregate evidence. The pilot supports
       narrowing direct-text rewrite behind no-op/refusal and clarification
       behavior until outcome lift is observed without comparable cost.
+
+## 2026-07-11 Diagnosis-First Remediation
+
+- [x] RED/GREEN: Direct-text CLI defaults to a compact diagnosis that preserves
+      the submitted prompt and exposes only gaps and clarification questions.
+- [x] RED/GREEN: `--rewrite` explicitly opts into the existing full copy-ready
+      rewrite instead of making it the default behavior.
+- [x] RED/GREEN: MCP direct and stored inputs expose the same explicit
+      diagnosis-versus-rewrite boundary without returning stored bodies.
+- [x] VERIFY: Focused analysis/CLI/MCP/packaging tests and type checks passed.
+      Six-input replay preserved every prompt with 138ms mean local diagnosis;
+      this is not a user-answered task-outcome claim.

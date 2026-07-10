@@ -212,6 +212,7 @@ export function improvePromptTool(
         prompt,
         createdAt: (options.now ?? new Date()).toISOString(),
         language: args.language,
+        rewrite: args.rewrite === true,
       }),
     });
   }
@@ -541,7 +542,10 @@ function withStoredPromptImprovement(
         );
       }
 
-      if (!hasConcreteStoredPromptTarget(prompt.markdown)) {
+      if (
+        args.rewrite === true &&
+        !hasConcreteStoredPromptTarget(prompt.markdown)
+      ) {
         return improvementToolError(
           "target_unavailable",
           "The stored prompt has no concrete target that PromptLane can return safely. Pass the original request with the `prompt` argument (or CLI `--text`) before generating a rewrite.",
@@ -553,6 +557,7 @@ function withStoredPromptImprovement(
         createdAt: (options.now ?? new Date()).toISOString(),
         language: args.language,
         source: "stored",
+        rewrite: args.rewrite === true,
       });
       if (improvement.changed_sections.length === 0) {
         return improvementToolError(
@@ -565,7 +570,10 @@ function withStoredPromptImprovement(
         source: args.latest === true ? "latest" : "prompt_id",
         promptId: id,
         decisionPrompt: prompt.snippet,
-        improvement,
+        improvement:
+          improvement.mode === "diagnose"
+            ? { ...improvement, improved_prompt: "" }
+            : improvement,
         rewriteSource: "redacted_stored_prompt",
       });
     } finally {
@@ -592,7 +600,9 @@ function toImprovementToolResult(input: {
   });
   const nextAction = hasQuestions
     ? "Ask the user the listed clarifying_questions through the agent's native ask UI before producing or submitting any rewrite. Wait for the user's own answers; do not guess on their behalf."
-    : "Review the draft, copy it manually, and resubmit it only after user approval.";
+    : input.improvement.mode === "diagnose"
+      ? "No rewrite was generated because the prompt needs no clarification. Continue with the original request."
+      : "Review the draft, copy it manually, and resubmit it only after user approval.";
 
   return {
     ...input.improvement,

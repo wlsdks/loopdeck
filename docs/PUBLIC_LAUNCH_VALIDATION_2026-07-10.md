@@ -178,6 +178,14 @@ does not support a usefulness claim for direct-text rewrite. It supports
 narrowing the product toward no-op/refusal, clarification, and safety checks
 unless a larger task-changing study shows outcome lift without comparable cost.
 
+The follow-up remediation changed CLI and MCP improvement to diagnosis-first:
+the submitted prompt stays unchanged, gaps and at most two questions are
+returned, and a full draft requires explicit `--rewrite` or `rewrite: true`.
+Replaying the same six inputs preserved all six prompt bodies, produced twelve
+questions, and took 828ms total (138ms mean). This is behavior/cost evidence,
+not a new task-outcome study; user-answered clarification pairs are still
+required before claiming usefulness.
+
 Required before closing validation:
 
 - preserve the 10-pair raw-free result and avoid causal claims;
