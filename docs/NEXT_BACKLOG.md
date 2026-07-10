@@ -50,17 +50,23 @@ ledger is `docs/PUBLIC_LAUNCH_VALIDATION_2026-07-10.md`.
 - The local tarball clean-install and first-success smoke passed.
 - npm publication and the GitHub Release are still absent. npm publish
   preflight is blocked only by interactive npm authentication.
-- Real usefulness remains unproven. The first 3 of 10 required matched pairs
-  now cover MCP tool use, repository audit, and code investigation. Aggregate
-  direction is negative: baseline pass rate 100%, PromptLane pass rate 33.3%,
-  two regressions, and one unchanged pass. The direct-text treatment preserved
-  its target but used 32 command events versus 20 for baseline. Continue seven
-  more pairs and three independent-user install/first-value runs before large
-  feature work.
-- Keep direct-text local improvement. Treat stored-prompt rewrite target
-  preservation as a 1.0.x change-or-remove candidate. Treat direct-text
-  verbosity and agent effort as a modify-or-monitor candidate; do not claim
-  either surface improves task success from this small observational sample.
+- Ten matched pairs across ten practical task slices produced a negative
+  observational direction: baseline pass rate 80%, PromptLane pass rate 50%,
+  zero improved transitions, three regressions, five unchanged passes, and two
+  unchanged failures. Treatment adoption was 10/10 and privacy leaks were 0.
+- Keep direct-text local improvement as an opt-in drafting aid, but remove any
+  task-success implication from prompt score gains. No observed pair improved.
+- Change or remove stored-prompt rewriting: two treatments lost the concrete
+  target and regressed after successful baselines.
+- Add a no-op path for already-complete prompts when `changed_sections` is
+  empty instead of wrapping and resubmitting a zero-delta draft.
+- Make read-only diagnostics avoid SQLite permission mutation; both sides of
+  one pair failed on `chmod EPERM` in a read-only Codex sandbox.
+- Monitor and reduce direct-text verbosity/agent effort. Accuracy was often
+  unchanged while command events sometimes increased.
+- Do not add large features before three independent-user install/first-value
+  runs. The ten-pair maintainer sample is non-causal and does not substitute
+  for independent users.
 - Never retarget `v1.0.0`; publish and release only the commit already named by
   that immutable tag.
 

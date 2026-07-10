@@ -85,63 +85,65 @@ explicitly reported:
 - `paired_effectiveness.status: not_collected`;
 - `paired_effectiveness.causal_claim: false`.
 
-A first real, operator-reviewed Codex pair was then collected for the task
-"call `get_promptlane_status` exactly once and report readiness":
+Ten real, operator-reviewed Codex pairs were collected across MCP tool use,
+repository state audit, code investigation, Node/package documentation,
+read-only CLI diagnostics, health privacy, package-content verification,
+Korean localization, doctor readiness, and public-release truth audit.
 
-| Condition | Outcome | Observation |
-| --- | --- | --- |
-| Baseline | PASS | The live Codex session called the requested PromptLane MCP tool and received `ready`. |
-| PromptLane treatment | FAIL | The generated stored-prompt rewrite replaced the concrete MCP goal with a placeholder referring to the stored request's target. The live Codex session returned a final response but made zero PromptLane MCP calls. |
+The combined ten-pair real-fixture benchmark reported:
 
-A second pair covered a different task type, a read-only repository release
-audit that had to compare the `v1.0.0` target with `main` and report whether the
-worktree was clean:
-
-| Condition | Outcome | Observation |
-| --- | --- | --- |
-| Baseline | PASS | Six command events produced the correct shared commit, equality decision, and clean-worktree result. |
-| PromptLane treatment | FAIL | The adopted draft again contained a stored-request placeholder. It produced 42 command events, investigated unrelated rewrite code and tests, and omitted the required tag, clean-worktree, and expected-SHA results. |
-
-A third pair covered code investigation and intentionally used the direct-text
-improvement path instead of the stored-prompt path. Both conditions had to
-identify the exact remote-tag command, parser helper, commit comparison, and
-source lines:
-
-| Condition | Outcome | Observation |
-| --- | --- | --- |
-| Baseline | PASS | It reported every required implementation detail. The first automated verdict was corrected after its evaluator regex omitted the `{` in `^{}`; the answer itself was complete. |
-| PromptLane treatment | PASS | The direct-text draft preserved the script and tag target and reported every required detail. It used 32 command events versus 20 for baseline, so no efficiency improvement was observed. |
-
-The combined three-pair real-fixture benchmark reported:
-
-- `pair_count: 3` and `status: negative_direction`;
-- baseline pass rate `1.0`, PromptLane pass rate `0.333` and observed delta
-  `-0.667`;
-- two `regressed` transitions and one `unchanged_passed` transition;
-- treatment adoption `3/3`, because all generated drafts were actually
+- `pair_count: 10` and `status: negative_direction`;
+- baseline pass rate `0.8`, PromptLane pass rate `0.5`, and observed delta
+  `-0.3`;
+- zero `improved`, three `regressed`, five `unchanged_passed`, and two
+  `unchanged_failed` transitions;
+- treatment adoption `10/10`, because every generated draft was actually
   submitted;
 - `causal_claim: false` and a non-release-blocking soft-signal failure;
 - privacy leak count `0`.
 
+| Pair | Task type | Baseline | PromptLane | Transition |
+| ---: | --- | --- | --- | --- |
+| 1 | MCP status tool use | PASS | FAIL | regressed |
+| 2 | Repository release-state audit | PASS | FAIL | regressed |
+| 3 | Release-tag code investigation | PASS | PASS | unchanged passed |
+| 4 | Node engine/document contract | PASS | PASS | unchanged passed |
+| 5 | Read-only CLI diagnostics | FAIL | FAIL | unchanged failed |
+| 6 | Health API privacy audit | PASS | PASS | unchanged passed |
+| 7 | Source-map packaging contract | FAIL | FAIL | unchanged failed |
+| 8 | Korean language contract | PASS | PASS | unchanged passed |
+| 9 | Doctor readiness contract | PASS | PASS | unchanged passed |
+| 10 | Public-release truth audit | PASS | FAIL | regressed |
+
 The consent-bearing fixture was used locally and removed after measurement
 because it contains prompt text. Only this raw-free aggregate is committed.
 
-This observation does not establish a product-wide negative effect. It does
-establish one concrete limitation: stored-prompt rewrites can lose the actual
-goal when only redacted stored context is available. The one direct-text pair
-preserved its target and passed, but did not improve success or reduce effort.
-Until broader evidence is collected, retain direct-text local improvement but
-do not claim that `improve --prompt-id` reliably preserves a stored prompt's
-task target. Treat that surface as a 1.0.x change-or-remove candidate and treat
-direct-text verbosity/effort as a modify-or-monitor candidate.
+Observed friction and scope decisions:
+
+- Stored-prompt rewrites lost the concrete task target in two pairs and caused
+  both regressions. `improve --prompt-id` is a change-or-remove candidate.
+- Direct-text rewrites preserved the task, but produced no improved transition.
+  They sometimes reduced command events, sometimes matched baseline, and
+  sometimes increased agent exploration. Keep the opt-in surface but remove
+  any implication that a higher prompt score predicts better task success.
+- A low-scored Korean baseline (`55`) already passed; its treatment was scored
+  `100` and also passed with the same command events. Score gain was not an
+  effectiveness gain.
+- A baseline already scored `100` received a zero-delta rewrite anyway; the
+  treatment took longer and failed to establish the required npm state. A
+  no-op recommendation is preferable when `changed_sections` is empty.
+- Both sides of the read-only CLI pair failed because PromptLane attempted
+  `chmod` on its SQLite file inside a read-only Codex sandbox. Read-only
+  diagnostics must not require a metadata write or permission mutation.
+- No privacy leak or data-loss event was observed. Installation and local first
+  value passed, but external-user and registry-install evidence is still absent.
 
 Therefore real-world usefulness remains unproven. No success-rate lift or
 causal claim is permitted yet.
 
 Required before closing validation:
 
-- collect at least 10 operator-reviewed matched baseline/PromptLane pairs;
-- cover at least three task types;
+- preserve the 10-pair raw-free result and avoid causal claims;
 - record success, failure transitions, improvement adoption, time to first
   value, and friction without exposing prompt bodies or raw paths;
 - have at least three external or otherwise independent users complete install
@@ -159,8 +161,5 @@ Required before closing validation:
    without retargeting the tag.
 4. Run a clean registry-install first-value smoke and record elapsed time and
    recovery observations.
-5. Continue from 3/10 matched pairs using explicit operator review. Three task
-   types are now represented; broaden repetitions without turning the small
-   sample into a causal claim.
-6. Recruit three independent users; do not replace their evidence with
+5. Recruit three independent users; do not replace their evidence with
    synthetic fixtures or maintainer-only dogfood.

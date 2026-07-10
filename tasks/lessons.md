@@ -33,3 +33,9 @@
   돌리지 말고, 연관된 focused unit test, smoke, dogfood, `git diff --check`를
   먼저 실행한다. full gate는 release 전, 넓은 공용 경계 변경, 또는 focused
   검증이 충분하지 않을 때만 확장한다.
+
+## 2026-07-10
+
+- 실사용 검증 중에는 pair마다 docs와 커밋을 만들지 않는다. outcome과 fixture는
+  로컬 증거에 누적하고, 목표 표본 수나 명시된 milestone에 도달했을 때만
+  raw-free 결과 보고서와 backlog를 한 번 갱신한다.

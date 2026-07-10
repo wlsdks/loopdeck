@@ -11091,16 +11091,16 @@
       Release from the same immutable `v1.0.0` tag.
 - [ ] POST-PUBLISH: Repeat clean install from the npm registry and record
       install failures, elapsed first-value time, and recovery steps.
-- [ ] VALIDATE: Collect at least 10 operator-reviewed matched pairs across at
-      least three task types. Current real pair count is 3/10 across MCP tool
-      use, repository audit, and code investigation. Aggregate direction is
-      baseline 100% versus PromptLane 33.3%, with two regressions and one
-      unchanged pass. Keep the result non-causal.
-- [x] RECORD: Run three real paired fixtures locally, observe two regressed and
-      one unchanged-pass transition with treatment adoption 3/3 and privacy
-      leaks 0, remove all prompt-bearing fixtures, and commit only the raw-free
-      aggregate.
+- [x] VALIDATE: Collect 10 operator-reviewed matched pairs across at least three
+      task types. The ten-pair aggregate is baseline 80% versus PromptLane 50%,
+      with zero improvements, three regressions, five unchanged passes, two
+      unchanged failures, treatment adoption 10/10, and privacy leaks 0. Keep
+      the result non-causal.
+- [x] RECORD: Remove all prompt-bearing fixtures and commit only the raw-free
+      ten-pair aggregate at the milestone instead of updating docs per pair.
 - [ ] VALIDATE: Have at least three external or independent users complete
       installation and first value; do not substitute maintainer dogfood.
-- [ ] DECIDE: Rewrite the 1.0.x backlog from keep/change/remove evidence and
-      reduce scope if usefulness remains unsupported.
+- [x] DECIDE: Rewrite the 1.0.x backlog from keep/change/remove evidence:
+      retain opt-in direct-text drafting, change/remove stored-prompt rewrite,
+      add zero-delta no-op behavior, fix read-only SQLite permission mutation,
+      and stop implying that score gain proves task success.
