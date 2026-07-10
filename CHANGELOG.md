@@ -123,6 +123,9 @@ tools, benchmark/release validation, and an English/Korean web UI.
   `promptlane benchmark prepare-pair` can create one private fixture containing
   repeated matched pairs from explicitly selected archive prompts after consent
   and attribution checks.
+  `promptlane benchmark pair-candidates` separates body-free no-improvement
+  baseline ids from explicitly attributed PromptLane treatment ids without
+  exposing snapshot or outcome content.
   Real score delivery no longer depends on synthetic vague-prompt/spread
   fixtures, and actual passed outcomes are measured as `outcome_pass_rate`.
   Real evidence now stays a snapshot until `--baseline-file` compares the same

@@ -18,6 +18,7 @@ This benchmark is intentionally local-only. It does not call an external LLM jud
 
 ```sh
 promptlane benchmark --json
+promptlane benchmark pair-candidates --json
 promptlane benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE"
 promptlane benchmark prepare-pair --baseline-prompt-id "$BASELINE_PROMPT_ID" --promptlane-prompt-id "$PROMPTLANE_PROMPT_ID" --pair-id "$PAIR_ID" --query "$MATCH_QUERY" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$PAIR_FIXTURE_FILE"
 promptlane benchmark init-fixture --output "$FIXTURE_FILE"
@@ -51,6 +52,7 @@ prefer the archive-backed command when selected prompts already exist:
 
 ```sh
 promptlane benchmark candidates --json
+promptlane benchmark pair-candidates --json
 
 promptlane benchmark prepare-fixture \
   --prompt-id "$PROMPT_ID" \
@@ -73,6 +75,17 @@ only prompt ids with explicitly attributed, completed, safe outcome evidence.
 It never returns prompt bodies, raw paths, outcome summaries, or evidence
 references. Review the body-free ids locally before selecting prompts and
 confirming consent with `prepare-fixture`.
+
+`benchmark pair-candidates` scans the same bounded local snapshot window but
+returns two separate body-free groups. A completed outcome with no
+`used_improvement_prompt_ids` is a baseline candidate; only explicitly listed
+ids from an attributed outcome are PromptLane candidates. In mixed loops,
+unlisted prompt ids are not inferred as baselines. Latest completed
+classification wins across duplicate prompt ids. The report omits prompt
+bodies, snapshot ids, paths, summaries, and evidence refs, and distinguishes
+`needs_baseline`, `needs_promptlane`, incomplete evidence, and unsafe evidence.
+The operator still reviews task equivalence before passing selected ids to
+`prepare-pair`.
 
 `prepare-pair` is the archive-backed path for before-versus-after evidence.
 The operator explicitly selects two distinct prompt ids after reviewing their

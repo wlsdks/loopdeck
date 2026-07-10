@@ -474,6 +474,11 @@ revalidates redacted evidence, and writes one private no-overwrite fixture from
 one or more ordered option groups. Task
 equivalence and consent remain operator decisions; PromptLane does not infer a
 pair or causal effect.
+`promptlane benchmark pair-candidates --json` now supplies the missing
+selection step: it separates explicit no-improvement baselines from attributed
+PromptLane treatments, suppresses ambiguous mixed-loop ids, and returns no
+snapshot ids or evidence content. Pair equivalence remains an operator review,
+not a heuristic product claim.
 
 Completed:
 

@@ -1027,6 +1027,7 @@ score calibration, analytics, and latency:
 
 ```sh
 promptlane benchmark --json
+promptlane benchmark pair-candidates --json
 promptlane benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE"
 promptlane benchmark prepare-pair --baseline-prompt-id "$BASELINE_PROMPT_ID" --promptlane-prompt-id "$PROMPTLANE_PROMPT_ID" --pair-id "$PAIR_ID" --query "$MATCH_QUERY" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$PAIR_FIXTURE_FILE"
 promptlane benchmark init-fixture --output "$FIXTURE_FILE"
@@ -1068,6 +1069,12 @@ fixture. Repeat the four pair-selection options in matching order to create
 multiple pairs together; prompt reuse and unequal option counts are rejected.
 Collect at least three pairs before interpreting direction. The result remains observational with
 `causal_claim: false`.
+Use `promptlane benchmark pair-candidates --json` first to get separate
+body-free baseline and explicitly attributed PromptLane candidate groups.
+Mixed-loop prompt ids without explicit attribution are not guessed to be
+baselines, and the report omits snapshot ids, bodies, paths, summaries, and
+evidence refs. Candidate discovery does not decide that two tasks are
+equivalent; the operator makes that decision before `prepare-pair`.
 Real runs report score delivery integrity separately from synthetic score
 calibration and require `outcome_pass_rate` before calling a usefulness trend
 healthy.

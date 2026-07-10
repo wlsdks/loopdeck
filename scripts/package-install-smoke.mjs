@@ -108,6 +108,20 @@ try {
     },
   );
   validateQualityEvidence(qualityEvidence.stdout);
+  const pairedCandidatesHelp = run(
+    join(tempPrefix, "bin", "promptlane"),
+    ["benchmark", "pair-candidates", "--help"],
+    {
+      cwd: tempHome,
+      env: { ...process.env, HOME: tempHome },
+      encoding: "utf8",
+    },
+  );
+  for (const option of ["--data-dir", "--limit", "--json"]) {
+    if (!pairedCandidatesHelp.stdout.includes(option)) {
+      throw new Error(`installed benchmark pair-candidates omitted ${option}`);
+    }
+  }
   const pairedFixtureHelp = run(
     join(tempPrefix, "bin", "promptlane"),
     ["benchmark", "prepare-pair", "--help"],
@@ -275,6 +289,8 @@ try {
           "promptlane benchmark prepare-fixture --prompt-id <selected> --confirm-consent --output <operator-owned>",
         paired_fixture_prepare:
           "promptlane benchmark prepare-pair --baseline-prompt-id <baseline> --promptlane-prompt-id <treatment> --confirm-consent --output <operator-owned>",
+        paired_fixture_candidates:
+          "promptlane benchmark pair-candidates --json",
         fixture_candidates: "promptlane benchmark candidates --json",
         effectiveness_signal: "promptlane benchmark --fixture-set real --json",
         trend_comparison:

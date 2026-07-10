@@ -53,6 +53,7 @@ shape in an operator-owned local file by running:
 
 ```sh
 promptlane benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE"
+promptlane benchmark pair-candidates --json
 promptlane benchmark prepare-pair --baseline-prompt-id "$BASELINE_PROMPT_ID" --promptlane-prompt-id "$PROMPTLANE_PROMPT_ID" --pair-id "$PAIR_ID" --query "$MATCH_QUERY" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$PAIR_FIXTURE_FILE"
 ```
 
@@ -60,9 +61,12 @@ promptlane benchmark prepare-pair --baseline-prompt-id "$BASELINE_PROMPT_ID" --p
 explicitly attributed completed outcomes. `prepare-pair` is the paired
 observational path: it requires a completed unattributed baseline and explicitly
 attributed PromptLane treatment from the same tool, writes one private matched
-fixture, and never turns that evidence
-into a causal claim. Repeat the four pair-selection options in matching order
-to put at least three pairs in one fixture without manual JSON merging. For
+fixture, and never turns that evidence into a causal claim. Repeat the four
+pair-selection options in matching order to put at least three pairs in one
+fixture without manual JSON merging. Use `pair-candidates --json` to inspect
+separate body-free baseline and
+PromptLane candidate groups before choosing equivalent tasks; the command does
+not expose snapshot ids or outcome content and does not infer equivalence. For
 manual fixture authoring, run
 `promptlane benchmark init-fixture --output "$FIXTURE_FILE"`, replacing
 every example with consent-bearing redacted fixtures, updating `consent_note`,

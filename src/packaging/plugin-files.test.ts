@@ -855,6 +855,7 @@ describe("plugin packaging files", () => {
     for (const content of [benchmarkSpec, readme, readmeKo]) {
       expect(content).toContain("promptlane benchmark --json");
       expect(content).toContain("promptlane benchmark candidates --json");
+      expect(content).toContain("promptlane benchmark pair-candidates --json");
       expect(content).toContain("promptlane benchmark prepare-fixture");
       expect(content).toContain("promptlane benchmark prepare-pair");
       expect(content).toContain("--baseline-prompt-id");
@@ -891,6 +892,8 @@ describe("plugin packaging files", () => {
     expect(packageInstallSmoke).toContain('"init-fixture"');
     expect(packageInstallSmoke).toContain('"prepare-fixture"');
     expect(packageInstallSmoke).toContain('"prepare-pair"');
+    expect(packageInstallSmoke).toContain('"pair-candidates"');
+    expect(packageInstallSmoke).toContain("paired_fixture_candidates");
     expect(packageInstallSmoke).toContain('"--baseline-prompt-id"');
     expect(packageInstallSmoke).toContain('"--promptlane-prompt-id"');
     expect(packageInstallSmoke).toContain("paired_fixture_prepare");
