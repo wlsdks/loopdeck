@@ -174,6 +174,7 @@ export function scoreArchiveEffectivenessEvidence({
     summary.unmeasured_prompts === fixtureCount - summary.measured_prompts,
     summary.verdicts.proven >= 1,
     summary.calibration.linked_outcomes >= 1,
+    summary.calibration.attributed_outcomes >= 1,
     summary.calibration.passing_outcomes >= 1,
     summary.calibration.total_tests_run >= 1,
     evidenceRefCheck,
@@ -184,11 +185,11 @@ export function scoreArchiveEffectivenessEvidence({
 }
 
 export function scoreOutcomePassRate(effectivenessSummary) {
-  const linked = effectivenessSummary.calibration.linked_outcomes;
-  if (!Number.isFinite(linked) || linked <= 0) return 0;
+  const attributed = effectivenessSummary.calibration.attributed_outcomes;
+  if (!Number.isFinite(attributed) || attributed <= 0) return 0;
   const passed = effectivenessSummary.calibration.passing_outcomes;
   if (!Number.isFinite(passed) || passed < 0) return 0;
-  return roundScore(passed / linked);
+  return roundScore(passed / attributed);
 }
 
 function scoreChecks(checks) {

@@ -116,10 +116,11 @@ Required properties:
 - include clear `next_action` or `next_actions` fields for human approval paths
 - expose `score_prompt effectiveness evidence` for stored prompt ids when linked
   loop outcomes exist, including raw-free verdict, evidence refs, and
-  calibration counts
+  calibration counts; linked outcomes remain unproven until
+  `used_improvement_prompt_ids` explicitly attributes improvement use
 - expose archive-level `effectiveness_summary` through `score_prompt_archive`
   so agents can judge measured vs unmeasured prompts, proven/mixed/unproven
-  counts, linked outcome counts, tests run, safe evidence refs, and next action
+  counts, linked and attributed outcome counts, tests run, safe evidence refs, and next action
   before treating prompt-score improvements as actual workflow improvement
 - route the same archive effectiveness coverage into `coach_prompt` agent
   briefs so the default one-call Codex/Claude Code path tells the agent to

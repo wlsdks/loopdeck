@@ -1,6 +1,9 @@
 import type Database from "better-sqlite3";
 
-import { parseLoopOutcomeInput } from "../loop/outcome.js";
+import {
+  LoopOutcomeAttributionError,
+  parseLoopOutcomeInput,
+} from "../loop/outcome.js";
 import type { LoopSnapshot } from "../loop/types.js";
 import type { LoopOutcomeUpdate, LoopSnapshotListResult } from "./ports.js";
 
@@ -88,18 +91,35 @@ export function recordLoopOutcome(
     status: outcome.status,
     summary: outcome.summary,
     evidenceRefs: outcome.evidence_refs,
+    usedImprovementPromptIds: outcome.used_improvement_prompt_ids,
   });
   if (!parsed.ok) {
     throw new Error(parsed.message);
   }
 
-  const result = db
-    .prepare("UPDATE loop_snapshots SET outcome_json = ? WHERE id = ?")
-    .run(JSON.stringify(parsed.outcome), snapshotId);
+  const existing = db
+    .prepare("SELECT prompt_ids_json FROM loop_snapshots WHERE id = ?")
+    .get(snapshotId) as { prompt_ids_json: string } | undefined;
+  if (!existing) return undefined;
 
-  if (result.changes === 0) {
-    return undefined;
+  const promptIds = JSON.parse(existing.prompt_ids_json) as unknown;
+  const allowedPromptIds = new Set(
+    Array.isArray(promptIds)
+      ? promptIds.filter((value): value is string => typeof value === "string")
+      : [],
+  );
+  if (
+    parsed.outcome.used_improvement_prompt_ids?.some(
+      (promptId) => !allowedPromptIds.has(promptId),
+    )
+  ) {
+    throw new LoopOutcomeAttributionError();
   }
+
+  db.prepare("UPDATE loop_snapshots SET outcome_json = ? WHERE id = ?").run(
+    JSON.stringify(parsed.outcome),
+    snapshotId,
+  );
 
   const row = db
     .prepare("SELECT * FROM loop_snapshots WHERE id = ?")

@@ -62,6 +62,7 @@ type LoopSnapshot = {
       | "abandoned";
     summary: string;
     evidence_refs: string[];
+    used_improvement_prompt_ids?: string[];
   };
   next_brief: {
     generated: boolean;
@@ -81,27 +82,28 @@ document in the same PR when the public schema contract changes.
 
 ## Field Contract
 
-| Field                   | Meaning                                | Privacy rule                                                       |
-| ----------------------- | -------------------------------------- | ------------------------------------------------------------------ |
-| `id`                    | Local snapshot id                      | Safe identifier, no embedded paths or prompt text                  |
-| `created_at`            | ISO timestamp                          | Safe                                                               |
-| `tool`                  | Agent/tool family                      | Use known enum or `unknown`                                        |
-| `source`                | Collection path                        | Use known enum; no command transcript                              |
-| `session_id`            | Safe session label/id when available   | Do not scrape private app state                                    |
-| `thread_id`             | Safe thread label/id when available    | Do not expose private transcript text                              |
-| `cwd_label`             | Human-safe project label               | Label only, not absolute cwd                                       |
-| `project_id`            | Stable local project id                | Derived id, not raw path                                           |
-| `git_root_hash`         | Optional hashed git root               | Hash only                                                          |
-| `branch`                | Branch label when available            | Branch name may be shown; no remote URL                            |
-| `worktree_label`        | Safe worktree label                    | Label only, not worktree path                                      |
-| `prompt_ids`            | References to prompt archive rows      | IDs only                                                           |
-| `event_counts`          | Aggregate counts                       | Counts only                                                        |
-| `quality`               | Prompt score aggregate and gaps        | No prompt body or raw transcript                                   |
-| `outcome.status`        | Human/user-recorded loop outcome state | Enum only                                                          |
-| `outcome.summary`       | Safe local outcome summary             | Must be raw-free before broad status exposure                      |
-| `outcome.evidence_refs` | User-provided evidence references      | Keep out of aggregate status summaries unless explicitly scoped    |
-| `next_brief`            | Continuation brief metadata            | Summary metadata only; generated brief text is returned on request |
-| `privacy`               | Invariant flags                        | Must stay `false`, `false`, `true` respectively                    |
+| Field                                 | Meaning                                                     | Privacy rule                                                       |
+| ------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------ |
+| `id`                                  | Local snapshot id                                           | Safe identifier, no embedded paths or prompt text                  |
+| `created_at`                          | ISO timestamp                                               | Safe                                                               |
+| `tool`                                | Agent/tool family                                           | Use known enum or `unknown`                                        |
+| `source`                              | Collection path                                             | Use known enum; no command transcript                              |
+| `session_id`                          | Safe session label/id when available                        | Do not scrape private app state                                    |
+| `thread_id`                           | Safe thread label/id when available                         | Do not expose private transcript text                              |
+| `cwd_label`                           | Human-safe project label                                    | Label only, not absolute cwd                                       |
+| `project_id`                          | Stable local project id                                     | Derived id, not raw path                                           |
+| `git_root_hash`                       | Optional hashed git root                                    | Hash only                                                          |
+| `branch`                              | Branch label when available                                 | Branch name may be shown; no remote URL                            |
+| `worktree_label`                      | Safe worktree label                                         | Label only, not worktree path                                      |
+| `prompt_ids`                          | References to prompt archive rows                           | IDs only                                                           |
+| `event_counts`                        | Aggregate counts                                            | Counts only                                                        |
+| `quality`                             | Prompt score aggregate and gaps                             | No prompt body or raw transcript                                   |
+| `outcome.status`                      | Human/user-recorded loop outcome state                      | Enum only                                                          |
+| `outcome.summary`                     | Safe local outcome summary                                  | Must be raw-free before broad status exposure                      |
+| `outcome.evidence_refs`               | User-provided evidence references                           | Keep out of aggregate status summaries unless explicitly scoped    |
+| `outcome.used_improvement_prompt_ids` | Prompt ids whose PromptLane improvements were actually used | Optional ids only; every id must belong to `prompt_ids`            |
+| `next_brief`                          | Continuation brief metadata                                 | Summary metadata only; generated brief text is returned on request |
+| `privacy`                             | Invariant flags                                             | Must stay `false`, `false`, `true` respectively                    |
 
 ## SQLite Storage Shape
 
@@ -156,6 +158,7 @@ Snapshots may store:
 - aggregate counts
 - enum status fields
 - safe evidence references when the user provides them for local review
+- prompt ids explicitly confirmed as having their PromptLane improvement used
 
 ## Surface Rules
 

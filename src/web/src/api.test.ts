@@ -6552,6 +6552,7 @@ describe("web api export client", () => {
               },
               calibration: {
                 linked_outcomes: 0,
+                attributed_outcomes: 0,
                 passing_outcomes: 0,
                 failing_outcomes: 0,
                 total_tests_run: 0,

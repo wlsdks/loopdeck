@@ -512,7 +512,14 @@ function seedArchiveEffectivenessOutcomes(seeds) {
           top_gaps: ["verification_criteria"],
           unresolved_questions: [],
         }),
-        JSON.stringify(seed.outcome),
+        JSON.stringify({
+          status: seed.outcome.status,
+          summary: seed.outcome.summary,
+          evidence_refs: seed.outcome.evidence_refs,
+          ...(seed.outcome.improvement_used
+            ? { used_improvement_prompt_ids: [seed.promptId] }
+            : {}),
+        }),
         JSON.stringify({
           generated: true,
           prompt_id: seed.promptId,

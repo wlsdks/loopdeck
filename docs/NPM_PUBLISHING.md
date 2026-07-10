@@ -53,7 +53,8 @@ shape in an operator-owned local file by running
 `promptlane benchmark init-fixture --output "$FIXTURE_FILE"`, replacing
 every example with consent-bearing redacted fixtures, updating `consent_note`,
 adding operator-confirmed `passed` or `failed` outcome metadata with safe
-evidence refs, setting `template_only` to `false`, and then running
+evidence refs, setting `improvement_used` to `true` only when the generated
+improvement was actually used (`false` otherwise), setting `template_only` to `false`, and then running
 `promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"`
 with `--json --report-file "$BASELINE_REPORT"` to save one validated private
 JSON snapshot. A trend claim additionally requires rerunning the same corpus

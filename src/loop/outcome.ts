@@ -14,11 +14,21 @@ type LoopOutcomeInput = {
   status: unknown;
   summary: unknown;
   evidenceRefs?: unknown;
+  usedImprovementPromptIds?: unknown;
 };
 
 type LoopOutcomeInputResult =
   | { ok: true; outcome: LoopSnapshot["outcome"] }
   | { ok: false; message: string };
+
+export class LoopOutcomeAttributionError extends Error {
+  constructor() {
+    super(
+      "Used improvement prompt ids must belong to the selected loop snapshot.",
+    );
+    this.name = "LoopOutcomeAttributionError";
+  }
+}
 
 export function parseLoopOutcomeInput(
   input: LoopOutcomeInput,
@@ -53,9 +63,31 @@ export function parseLoopOutcomeInput(
   const evidenceRefs = Array.from(
     new Set((input.evidenceRefs ?? []).map((reference) => reference.trim())),
   );
-  const containsSensitiveValue = [summary, ...evidenceRefs].some(
-    (value) => detectSensitiveValues(value).length > 0,
+
+  if (
+    input.usedImprovementPromptIds !== undefined &&
+    (!Array.isArray(input.usedImprovementPromptIds) ||
+      input.usedImprovementPromptIds.some(
+        (promptId) =>
+          typeof promptId !== "string" || promptId.trim().length === 0,
+      ))
+  ) {
+    return {
+      ok: false,
+      message: "Used improvement prompt ids must be non-empty strings.",
+    };
+  }
+
+  const usedImprovementPromptIds = Array.from(
+    new Set(
+      (input.usedImprovementPromptIds ?? []).map((promptId) => promptId.trim()),
+    ),
   );
+  const containsSensitiveValue = [
+    summary,
+    ...evidenceRefs,
+    ...usedImprovementPromptIds,
+  ].some((value) => detectSensitiveValues(value).length > 0);
 
   if (containsSensitiveValue) {
     return {
@@ -71,6 +103,9 @@ export function parseLoopOutcomeInput(
       status: input.status,
       summary,
       evidence_refs: evidenceRefs,
+      ...(usedImprovementPromptIds.length > 0
+        ? { used_improvement_prompt_ids: usedImprovementPromptIds }
+        : {}),
     },
   };
 }

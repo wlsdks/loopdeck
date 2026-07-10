@@ -170,6 +170,7 @@ function archiveScoreFixture(): ArchiveScoreReport {
       },
       calibration: {
         linked_outcomes: 1,
+        attributed_outcomes: 1,
         passing_outcomes: 1,
         failing_outcomes: 0,
         total_tests_run: 3,

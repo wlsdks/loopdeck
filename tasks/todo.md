@@ -10882,3 +10882,16 @@
       release checklist with the 1.0.0 stable release target.
 - [x] VERIFY: focused release-surface guard, shared version test, touched-file
       formatting/type/diff hygiene checks.
+
+## 2026-07-10 Prompt Improvement Effect Attribution
+
+- [x] CONTRACT: Separate a linked loop result from evidence that a PromptLane
+      improvement draft was actually used.
+- [x] RED: Require unattributed passing loop outcomes to remain `unproven` and
+      require explicit prompt-id attribution before a `proven` verdict.
+- [x] GREEN: Persist privacy-safe `used_improvement_prompt_ids` through loop
+      outcome CLI, MCP, server, storage, and benchmark fixture paths.
+- [x] ALIGN: Update API/MCP/UI copy, schemas, benchmark checks, and release docs
+      so work outcomes are not presented as causal improvement proof.
+- [x] VERIFY: Run focused storage/loop/MCP/server/CLI/benchmark tests, build,
+      pack, browser evidence, and diff hygiene before retagging `v1.0.0`.

@@ -89,14 +89,16 @@ describe("PromptDetailView", () => {
                 "Expected impact matched the finished implementation and tests.",
               evidence_refs: ["PR #451", "main CI 28748001738"],
               tests_run: 3,
+              improvement_used: true,
             },
           ],
           effectiveness: {
             verdict: "proven",
             summary:
-              "Actual loop evidence passed with 3 tests across 1 linked outcome.",
+              "Attributed improvement evidence passed with 3 tests across 1 outcome.",
             calibration: {
               linked_outcomes: 1,
+              attributed_outcomes: 1,
               passing_outcomes: 1,
               failing_outcomes: 0,
               total_tests_run: 3,
@@ -111,7 +113,7 @@ describe("PromptDetailView", () => {
     expect(html).toContain("Effectiveness");
     expect(html).toContain("Proven");
     expect(html).toContain(
-      "Actual loop evidence passed with 3 tests across 1 linked outcome.",
+      "Attributed improvement evidence passed with 3 tests across 1 outcome.",
     );
     expect(html).toContain("1 passed / 0 failed");
     expect(html).toContain("Outcome evidence");
@@ -148,6 +150,7 @@ describe("PromptDetailView", () => {
               summary: "Browser payload had outcome evidence only.",
               evidence_refs: ["main CI 28748001738"],
               tests_run: 4,
+              improvement_used: false,
             },
           ],
         },
@@ -156,11 +159,11 @@ describe("PromptDetailView", () => {
     );
 
     expect(html).toContain("Effectiveness");
-    expect(html).toContain("Proven");
+    expect(html).toContain("Unproven");
     expect(html).toContain(
-      "Actual loop evidence passed with 4 tests across 1 linked outcome.",
+      "The linked loop passed, but use of this PromptLane improvement was not recorded.",
     );
-    expect(html).toContain("1 passed / 0 failed");
+    expect(html).toContain("0 attributed · 0 passed / 0 failed");
   });
 
   it("renders a manual-copy fallback when draft clipboard copy fails", () => {

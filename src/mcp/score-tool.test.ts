@@ -160,6 +160,7 @@ describe("scorePromptTool", () => {
           "main CI 28749788184",
           "/Users/example/private-project",
         ],
+        used_improvement_prompt_ids: [stored.id],
       },
       next_brief: {
         generated: true,
@@ -183,9 +184,10 @@ describe("scorePromptTool", () => {
       effectiveness: {
         verdict: "proven",
         summary:
-          "Actual loop evidence passed with 4 tests across 1 linked outcome.",
+          "Attributed improvement evidence passed with 4 tests across 1 outcome.",
         calibration: {
           linked_outcomes: 1,
+          attributed_outcomes: 1,
           passing_outcomes: 1,
           failing_outcomes: 0,
           total_tests_run: 4,
@@ -241,7 +243,7 @@ describe("scorePromptTool", () => {
       measured_prompts: 0,
       unmeasured_prompts: 2,
       next_action:
-        "Record loop outcomes to prove whether prompt improvements help.",
+        "Record loop outcomes and identify which PromptLane improvements were actually used.",
     });
     expect(result.privacy).toMatchObject({
       local_only: true,
@@ -1064,6 +1066,7 @@ describe("coachPromptTool", () => {
           "/Users/example/private-project",
           "sk-proj-1234567890abcdef",
         ],
+        used_improvement_prompt_ids: [measured.id],
       },
       next_brief: {
         generated: true,
@@ -1090,6 +1093,7 @@ describe("coachPromptTool", () => {
         unmeasured_prompts: 1,
         calibration: {
           linked_outcomes: 1,
+          attributed_outcomes: 1,
           passing_outcomes: 1,
           total_tests_run: 5,
         },

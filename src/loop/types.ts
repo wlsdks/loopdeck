@@ -39,6 +39,7 @@ export type LoopSnapshot = {
     status: LoopOutcomeStatus;
     summary: string;
     evidence_refs: string[];
+    used_improvement_prompt_ids?: string[];
   };
   next_brief: {
     generated: boolean;

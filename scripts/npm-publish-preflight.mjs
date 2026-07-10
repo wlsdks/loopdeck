@@ -953,6 +953,9 @@ function realFixtureOutcomeInvalidReason(outcome, fixtureIndex) {
   if (!Number.isInteger(outcome.tests_run) || outcome.tests_run < 0) {
     return `real fixture example fixture ${fixtureIndex} outcome tests_run must be a non-negative integer`;
   }
+  if (typeof outcome.improvement_used !== "boolean") {
+    return `real fixture example fixture ${fixtureIndex} outcome improvement_used must be true or false`;
+  }
   return "";
 }
 
@@ -1079,7 +1082,7 @@ function releaseWarnings() {
     {
       label: "benchmark is synthetic regression evidence",
       detail:
-        'corepack pnpm --silent benchmark -- --json must pass before publish, but a synthetic pass is not real-world effectiveness proof. Create an operator-owned template with promptlane benchmark init-fixture --output "$FIXTURE_FILE", replace every example with consent-bearing redacted fixtures, add operator-confirmed passed or failed outcome metadata with safe evidence refs, update consent_note, set template_only to false, save one JSON snapshot with promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT", then rerun with --baseline-file "$BASELINE_REPORT" before claiming real-user prompt quality trends.',
+        'corepack pnpm --silent benchmark -- --json must pass before publish, but a synthetic pass is not real-world effectiveness proof. Create an operator-owned template with promptlane benchmark init-fixture --output "$FIXTURE_FILE", replace every example with consent-bearing redacted fixtures, add operator-confirmed passed or failed outcome metadata with safe evidence refs, set improvement_used true only when the PromptLane improvement was actually used, update consent_note, set template_only to false, save one JSON snapshot with promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT", then rerun with --baseline-file "$BASELINE_REPORT" before claiming real-user prompt quality trends.',
     },
     ...realBenchmarkFixtureWarnings(),
   ];
@@ -1094,7 +1097,7 @@ function realBenchmarkFixtureWarnings() {
     {
       label: "real benchmark fixtures are missing",
       detail:
-        'docs/benchmark-fixtures/real.json is absent; publish can proceed after release gates pass, but do not claim real-user effectiveness trends. Create an operator-owned template with promptlane benchmark init-fixture --output "$FIXTURE_FILE", replace every example with consent-bearing redacted fixtures, add operator-confirmed passed or failed outcome metadata with safe evidence refs, update consent_note, set template_only to false, save one JSON snapshot with promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT", then rerun with --baseline-file "$BASELINE_REPORT".',
+        'docs/benchmark-fixtures/real.json is absent; publish can proceed after release gates pass, but do not claim real-user effectiveness trends. Create an operator-owned template with promptlane benchmark init-fixture --output "$FIXTURE_FILE", replace every example with consent-bearing redacted fixtures, add operator-confirmed passed or failed outcome metadata with safe evidence refs, set improvement_used true only when the PromptLane improvement was actually used, update consent_note, set template_only to false, save one JSON snapshot with promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT", then rerun with --baseline-file "$BASELINE_REPORT".',
     },
   ];
 }

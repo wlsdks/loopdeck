@@ -227,12 +227,12 @@ try {
   );
   await assertText(
     page,
-    "Actual loop evidence passed with 4 tests across 1 linked outcome.",
+    "Attributed improvement evidence passed with 4 tests across 1 outcome.",
     "Detail should show the raw-free effectiveness verdict summary.",
   );
   await assertText(
     page,
-    "1 passed / 0 failed",
+    "1 attributed · 1 passed / 0 failed",
     "Detail should show prompt effectiveness calibration counts.",
   );
   await assertText(
@@ -690,6 +690,7 @@ function insertLoopOutcomeForClaudePrompt() {
           join(rawPathPrefix, "private-project", "secret.txt"),
           rawSecret,
         ],
+        used_improvement_prompt_ids: [row.id],
       }),
       JSON.stringify({
         generated: true,

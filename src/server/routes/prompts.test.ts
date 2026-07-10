@@ -222,6 +222,7 @@ describe("prompt read/delete API", () => {
           "/Users/example/project/secret.txt",
           "sk-proj-1234567890abcdef",
         ],
+        used_improvement_prompt_ids: [ids.beta],
       },
       next_brief: {
         generated: true,
@@ -253,12 +254,14 @@ describe("prompt read/delete API", () => {
           summary: string;
           evidence_refs: string[];
           tests_run?: number;
+          improvement_used: boolean;
         }>;
         effectiveness?: {
           verdict: string;
           summary: string;
           calibration: {
             linked_outcomes: number;
+            attributed_outcomes: number;
             passing_outcomes: number;
             failing_outcomes: number;
             total_tests_run: number;
@@ -275,14 +278,16 @@ describe("prompt read/delete API", () => {
           "Expected impact matched [REDACTED:path] with [REDACTED:api_key].",
         evidence_refs: ["PR #451", "main CI 28748001738"],
         tests_run: 3,
+        improvement_used: true,
       },
     ]);
     expect(body.effectiveness).toEqual({
       verdict: "proven",
       summary:
-        "Actual loop evidence passed with 3 tests across 1 linked outcome.",
+        "Attributed improvement evidence passed with 3 tests across 1 outcome.",
       calibration: {
         linked_outcomes: 1,
+        attributed_outcomes: 1,
         passing_outcomes: 1,
         failing_outcomes: 0,
         total_tests_run: 3,

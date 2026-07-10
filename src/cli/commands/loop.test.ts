@@ -90,7 +90,7 @@ describe("loop CLI command", () => {
         now: new Date("2026-07-04T01:00:00.000Z"),
         cwd: "/Users/example/private-project",
       }),
-    ) as { id: string };
+    ) as { id: string; prompt_ids: string[] };
 
     const json = loopOutcomeForCli({
       dataDir,
@@ -98,6 +98,7 @@ describe("loop CLI command", () => {
       status: "passed",
       summary: "Focused CLI tests passed.",
       evidenceRefs: ["test:loop-cli", "build:pnpm-build"],
+      usedImprovementPromptIds: [snapshot.prompt_ids[0]!],
     });
 
     expect(JSON.parse(json)).toMatchObject({
@@ -107,6 +108,7 @@ describe("loop CLI command", () => {
         status: "passed",
         summary: "Focused CLI tests passed.",
         evidence_refs: ["test:loop-cli", "build:pnpm-build"],
+        used_improvement_prompt_ids: [snapshot.prompt_ids[0]],
       },
       next_actions: [
         "promptlane loop memory-candidate",

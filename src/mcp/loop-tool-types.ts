@@ -24,6 +24,7 @@ export type RecordLoopOutcomeToolArguments = {
   status: LoopOutcomeStatus;
   summary: string;
   evidence_refs?: string[];
+  used_improvement_prompt_ids?: string[];
 };
 
 export type ProposeLoopMemoryCandidateToolArguments = {
@@ -115,6 +116,7 @@ export type RecordLoopOutcomeToolResult =
         status: LoopOutcomeStatus;
         summary: string;
         evidence_refs: string[];
+        used_improvement_prompt_ids?: string[];
       };
       next_action: string;
       privacy: PromptLaneToolPrivacy & {

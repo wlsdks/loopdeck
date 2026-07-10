@@ -105,6 +105,7 @@ real-world usefulness.
       "outcome": {
         "status": "passed",
         "summary": "The redacted release review completed with focused checks.",
+        "improvement_used": true,
         "evidence_refs": ["test:release-smoke", "commit:abc1234"],
         "tests_run": 4
       }
@@ -142,7 +143,9 @@ redact secrets, tokens, and absolute local paths from fixture labels, queries,
 prompts, coach cases, outcomes, evidence refs, and `consent_note` before writing
 the file. An optional `outcome` must use completed status `passed` or `failed`,
 a non-empty redacted summary and `evidence_refs`, and a non-negative integer
-`tests_run`. Fixtures without outcomes still exercise real-corpus retrieval,
+`tests_run`. It must also set `improvement_used` to `true` only when the
+operator confirmed that the PromptLane improvement was used for that loop;
+otherwise it must be `false`. Fixtures without outcomes still exercise real-corpus retrieval,
 coaching, privacy, and runtime behavior, but cannot prove usefulness. The loader
 rejects obvious `sk-...`, `npm_...`, `/Users/...`, `/home/...`,
 `/Volumes/...`, and `C:\Users\...` values so the benchmark does not ingest
@@ -313,15 +316,16 @@ Pass threshold:
 
 - `>= 0.8`
 - coverage `>= 0.2` for the synthetic smoke corpus
-- passed outcomes / linked outcomes `>= 0.8`
+- passed outcomes / explicitly attributed outcomes `>= 0.8`
 
-`archive_effectiveness_score` checks whether linked loop-outcome evidence is
-safe and usable once present. `archive_effectiveness_coverage` reports the
+`archive_effectiveness_score` checks whether explicitly attributed improvement
+evidence is safe and usable once present. A passing linked outcome without
+`improvement_used: true` remains `unproven`. `archive_effectiveness_coverage` reports the
 share of benchmark prompts with linked outcome evidence. Benchmark coverage is
 a measurement-depth signal, not a claim of archive-wide proof; low coverage
 means the benchmark can prove the mechanism works without proving most prompts
 have outcome-backed effectiveness yet.
-`outcome_pass_rate` measures the actual share of linked outcomes that passed;
+`outcome_pass_rate` measures the share of explicitly attributed outcomes that passed;
 it is separate from evidence-shape checks so a well-formed failed outcome does
 not become a healthy usefulness trend.
 
