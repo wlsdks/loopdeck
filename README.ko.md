@@ -671,6 +671,9 @@ MCP server는 20개의 tool을 제공합니다.
 - `record_agent_judgments`: 현재 agent 세션이 만든 advisory score와 제안을 prompt body/raw path 없이 저장합니다.
 
 CLI만 사용하는 경우에도 검증 결과를 기록한 뒤 승인형 memory 흐름을 이어갈 수 있습니다.
+`promptlane loop status`는 최신 snapshot이 `unknown` 또는 `in_progress`이면
+검증 가능한 checkpoint에 도달한 뒤 해당 snapshot id로 outcome을 기록하라고
+안내합니다. 중간 hook snapshot 전체를 outcome backlog로 표시하지 않습니다.
 
 ```sh
 promptlane loop outcome --status passed --summary "Focused checks passed." \

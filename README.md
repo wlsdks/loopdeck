@@ -883,7 +883,11 @@ want an opt-in macOS schedule can preview or install it with
 `promptlane loop schedule uninstall`.
 `loop status` shows snapshot readiness, latest safe metadata, and compact
 refresh guidance without printing prompt bodies, compact summaries, custom
-compact instructions, or raw paths.
+compact instructions, or raw paths. When the latest snapshot is still
+`unknown` or `in_progress`, its structured and plain status output also points
+to that exact snapshot for optional outcome recording after the work reaches a
+verifiable checkpoint. Intermediate hook snapshots are not presented as an
+outcome backlog.
 The web UI also includes a Loops view for local snapshot readiness, recent loop
 metadata, compact refresh markers, and a copy action for the next loop brief.
 When the latest loop has an eligible memory candidate, the Loops summary can

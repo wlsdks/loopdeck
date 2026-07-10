@@ -84,6 +84,40 @@ describe("createPromptLaneStatus", () => {
     expect(status.next_action).toBe("promptlane loop brief");
   });
 
+  it("guides pending latest snapshots to an exact verifiable checkpoint outcome", () => {
+    const status = createPromptLaneStatus({
+      snapshots: [
+        loopSnapshot({
+          id: "loop_pending_checkpoint",
+          outcome: {
+            status: "in_progress",
+            summary: "",
+            evidence_refs: [],
+          },
+        }),
+      ],
+      compactBoundaries: [],
+    });
+    const serialized = JSON.stringify(status);
+
+    expect(status.next_actions).toContain(
+      "When this work reaches a verifiable checkpoint, review snapshot loop_pending_checkpoint in the Loops view or record its outcome with promptlane loop outcome --snapshot-id loop_pending_checkpoint.",
+    );
+    expect(serialized).not.toContain("Make this better");
+    expect(serialized).not.toContain("/Users/example");
+  });
+
+  it("does not request another checkpoint outcome for a completed latest snapshot", () => {
+    const status = createPromptLaneStatus({
+      snapshots: [loopSnapshot()],
+      compactBoundaries: [],
+    });
+
+    expect(status.next_actions).not.toEqual(
+      expect.arrayContaining([expect.stringContaining("record its outcome")]),
+    );
+  });
+
   it("reports project-approved memory availability without memory contents", () => {
     const status = createPromptLaneStatus({
       snapshots: [loopSnapshot()],

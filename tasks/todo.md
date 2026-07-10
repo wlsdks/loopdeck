@@ -10922,3 +10922,14 @@
       status, counts, and safe attribution metadata.
 - [x] VERIFY: Run focused candidate/CLI/privacy/package tests, lint/build/pack,
       and diff hygiene before retagging `v1.0.0`.
+
+## 2026-07-10 Loop Outcome Checkpoint Guidance
+
+- [x] RED: Require pending latest snapshots to expose an exact, raw-free
+      checkpoint outcome action without treating every hook snapshot as backlog.
+- [x] GREEN: Add the shared pending-outcome action to CLI, MCP, and web status
+      responses while leaving completed snapshots unchanged.
+- [x] GREEN: Render structured next actions in plain `loop status` output so
+      the checkpoint workflow is discoverable outside JSON mode.
+- [x] VERIFY: Run focused loop status, CLI, MCP, API, privacy, build, and package
+      checks before retagging `v1.0.0`.

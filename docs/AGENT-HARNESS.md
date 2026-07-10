@@ -66,6 +66,9 @@ Acceptance criteria:
 - Hook failures are fail-open.
 - Hook output is raw-free.
 - MCP status and brief tools return structured, local-only data.
+- Pending latest loop status points to exact-id outcome recording only after a
+  verifiable checkpoint; intermediate hook snapshots are not a required
+  outcome backlog.
 - Worktree awareness is derived from git-safe labels and existing snapshots.
 - No feature reads private Codex databases or raw transcript stores.
 - Any scheduled collection is opt-in and calls explicit `promptlane` commands.
