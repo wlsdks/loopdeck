@@ -10944,3 +10944,12 @@
       PromptLane improvement was actually used; otherwise attribution is omitted.
 - [x] VERIFY: Run focused status/CLI/MCP/API/privacy/package tests, lint, build,
       pack, and live status checks before retagging `v1.0.0`.
+
+## 2026-07-10 Benchmark Readiness Diagnostics
+
+- [x] RED: Distinguish no completed outcomes, no explicit attribution,
+      incomplete evidence, and unsafe evidence without returning content.
+- [x] GREEN: Add bounded snapshot-stage counts and stage-specific next actions
+      to JSON and plain `benchmark candidates` output.
+- [x] VERIFY: Run focused benchmark CLI/model/privacy/package tests, lint,
+      build, pack, and live diagnostics before retagging `v1.0.0`.

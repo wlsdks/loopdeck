@@ -64,6 +64,12 @@ It never returns prompt bodies, raw paths, outcome summaries, or evidence
 references. Review the body-free ids locally before selecting prompts and
 confirming consent with `prepare-fixture`.
 
+The report also exposes body-free stage counts for completed, attributed,
+evidence-complete, and safe snapshots. A non-ready status distinguishes
+`no_completed_outcomes`, `no_attributed_outcomes`,
+`incomplete_outcome_evidence`, and `unsafe_outcome_evidence` so missing real
+effectiveness evidence is not mislabeled as an attribution failure.
+
 The command reads only explicitly selected prompt ids after consent
 confirmation, revalidates redacted prompt and attributed outcome text, includes
 only completed outcomes whose PromptLane improvement use was explicitly

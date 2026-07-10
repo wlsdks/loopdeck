@@ -356,6 +356,9 @@ describe("benchmark CLI command", () => {
     expect(json).not.toContain("private outcome summary");
     expect(json).not.toContain("test:private-ref");
     expect(text).toContain("benchmark candidates: ready");
+    expect(text).toContain(
+      "readiness completed 1; attributed 1; evidence complete 1; safe 1",
+    );
     expect(text).toContain("prmt_candidate passed; tests 2");
     expect(text).toContain(
       "Privacy: local-only; no prompt bodies, raw paths, or evidence refs",

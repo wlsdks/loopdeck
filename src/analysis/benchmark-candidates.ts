@@ -2,10 +2,22 @@ import { detectSensitiveValues } from "../redaction/detectors.js";
 import type { LoopSnapshot } from "../loop/types.js";
 
 export type BenchmarkCandidateReport = {
-  status: "ready" | "no_attributed_outcomes" | "empty_archive";
+  status:
+    | "ready"
+    | "no_completed_outcomes"
+    | "no_attributed_outcomes"
+    | "incomplete_outcome_evidence"
+    | "unsafe_outcome_evidence"
+    | "empty_archive";
   candidate_count: number;
   candidates: BenchmarkCandidate[];
   excluded_unsafe_candidates: number;
+  diagnostics: {
+    completed_snapshots: number;
+    attributed_snapshots: number;
+    evidence_complete_snapshots: number;
+    safe_snapshots: number;
+  };
   has_more: boolean;
   scope: {
     scanned_snapshots: number;
@@ -38,27 +50,38 @@ export function createBenchmarkCandidateReport(
 ): BenchmarkCandidateReport {
   const candidatesByPromptId = new Map<string, BenchmarkCandidate>();
   const unsafePromptIds = new Set<string>();
+  const diagnostics = {
+    completed_snapshots: 0,
+    attributed_snapshots: 0,
+    evidence_complete_snapshots: 0,
+    safe_snapshots: 0,
+  };
+  const scopedSnapshots = snapshots.slice(0, SNAPSHOT_LIMIT);
 
-  for (const snapshot of snapshots.slice(0, SNAPSHOT_LIMIT)) {
+  for (const snapshot of scopedSnapshots) {
     if (
       snapshot.outcome.status !== "passed" &&
       snapshot.outcome.status !== "failed"
     ) {
       continue;
     }
+    diagnostics.completed_snapshots += 1;
     const usedPromptIds = Array.from(
       new Set(snapshot.outcome.used_improvement_prompt_ids ?? []),
     ).filter((promptId) => snapshot.prompt_ids.includes(promptId));
     if (usedPromptIds.length === 0) continue;
+    diagnostics.attributed_snapshots += 1;
 
     const evidenceIsComplete =
       snapshot.outcome.summary.trim().length > 0 &&
       snapshot.outcome.evidence_refs.length > 0;
     if (!evidenceIsComplete) continue;
+    diagnostics.evidence_complete_snapshots += 1;
     const evidenceIsUnsafe = [
       snapshot.outcome.summary,
       ...snapshot.outcome.evidence_refs,
     ].some((value) => detectSensitiveValues(value).length > 0);
+    if (!evidenceIsUnsafe) diagnostics.safe_snapshots += 1;
 
     for (const promptId of usedPromptIds) {
       if (candidatesByPromptId.has(promptId)) continue;
@@ -79,12 +102,11 @@ export function createBenchmarkCandidateReport(
 
   const allCandidates = Array.from(candidatesByPromptId.values());
   const limit = clampLimit(requestedLimit);
-  const status =
-    snapshots.length === 0
-      ? "empty_archive"
-      : allCandidates.length > 0
-        ? "ready"
-        : "no_attributed_outcomes";
+  const status = candidateStatus(
+    scopedSnapshots.length,
+    allCandidates.length,
+    diagnostics,
+  );
 
   return {
     status,
@@ -93,6 +115,7 @@ export function createBenchmarkCandidateReport(
     excluded_unsafe_candidates: Array.from(unsafePromptIds).filter(
       (promptId) => !candidatesByPromptId.has(promptId),
     ).length,
+    diagnostics,
     has_more: allCandidates.length > limit,
     scope: {
       scanned_snapshots: Math.min(snapshots.length, SNAPSHOT_LIMIT),
@@ -109,6 +132,23 @@ export function createBenchmarkCandidateReport(
   };
 }
 
+function candidateStatus(
+  snapshotCount: number,
+  candidateCount: number,
+  diagnostics: BenchmarkCandidateReport["diagnostics"],
+): BenchmarkCandidateReport["status"] {
+  if (snapshotCount === 0) return "empty_archive";
+  if (candidateCount > 0) return "ready";
+  if (diagnostics.completed_snapshots === 0) return "no_completed_outcomes";
+  if (diagnostics.attributed_snapshots === 0) {
+    return "no_attributed_outcomes";
+  }
+  if (diagnostics.evidence_complete_snapshots === 0) {
+    return "incomplete_outcome_evidence";
+  }
+  return "unsafe_outcome_evidence";
+}
+
 function clampLimit(limit: number): number {
   if (!Number.isInteger(limit)) return DEFAULT_CANDIDATE_LIMIT;
   return Math.min(Math.max(limit, 1), 100);
@@ -121,5 +161,14 @@ function nextAction(status: BenchmarkCandidateReport["status"]): string {
   if (status === "empty_archive") {
     return "Collect a loop snapshot after using PromptLane with Codex or Claude Code.";
   }
-  return "Record a passed or failed loop outcome with safe evidence and explicitly selected PromptLane improvement ids.";
+  if (status === "no_completed_outcomes") {
+    return "Run promptlane loop status, then record the latest snapshot outcome after a verifiable checkpoint.";
+  }
+  if (status === "no_attributed_outcomes") {
+    return "Record improvement attribution only if a PromptLane improvement was actually used; otherwise collect another verified loop.";
+  }
+  if (status === "incomplete_outcome_evidence") {
+    return "Record at least one privacy-safe evidence ref on an attributed passed or failed outcome.";
+  }
+  return "Replace sensitive outcome evidence with privacy-safe labels before preparing a benchmark fixture.";
 }
