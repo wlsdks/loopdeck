@@ -54,10 +54,26 @@ and verified:
 - installed benchmark fixture, paired-fixture, candidate, and quality-evidence
   commands.
 
-This proves the pre-publish local tarball path. It does not prove registry
-installation. After npm publication, repeat installation from
-`promptlane@1.0.0` in a new temporary environment and record elapsed time,
-installation failures, first-value time, and recovery steps.
+A separate clean temporary HOME/prefix run installed the same local 1.0.0
+tarball and executed a benign `promptlane improve --text ... --json` request:
+
+| Measurement | Observed result |
+| --- | ---: |
+| Global-prefix install | 13.375 seconds |
+| Improvement command | 0.478 seconds |
+| Install start to first improvement | 13.898 seconds |
+| Local score change | 58 to 100 (+42) |
+
+The command returned a non-empty approval-ready improvement. Installation had
+no failure, so no failure recovery was needed. Both temporary HOME and prefix
+were removed after the run; repeating the install in newly created directories
+is the verified clean retry path. The score delta proves deterministic local
+scoring behavior for this fixture, not real task effectiveness.
+
+This proves the pre-publish local tarball path through an actual improvement
+result. It does not prove registry installation. After npm publication, repeat
+installation from `promptlane@1.0.0` in a new temporary environment and record
+elapsed time, installation failures, first-value time, and recovery steps.
 
 ## Usefulness Evidence
 

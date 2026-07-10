@@ -11078,6 +11078,10 @@
       `ready`, and both live doctors reported recent ingest and `ready`.
 - [x] VERIFY: Run the local tarball `smoke:package-install`; isolated install,
       three packaged binaries, and the installed first-success path passed.
+- [x] MEASURE: In a separate clean HOME/prefix, install the local 1.0.0 tarball
+      and generate a real approval-ready improvement. Install took 13.375s,
+      improvement took 0.478s, and install-to-first-value took 13.898s with no
+      installation failure.
 - [x] RECORD: Add `docs/PUBLIC_LAUNCH_VALIDATION_2026-07-10.md` with current
       evidence, environment friction, blockers, and non-causal interpretation.
 - [ ] AUTH: Complete interactive `npm login`; current preflight passes every
