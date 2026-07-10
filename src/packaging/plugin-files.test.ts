@@ -2355,6 +2355,34 @@ describe("plugin packaging files", () => {
     expect(todoSection).toContain("latest main CI run `28745956945`");
   });
 
+  it("ships exact pending checkpoint outcome guidance without a hook backlog claim", () => {
+    const loopStatus = readFileSync(
+      join(process.cwd(), "src/loop/status.ts"),
+      "utf8",
+    );
+    const loopCommand = readFileSync(
+      join(process.cwd(), "src/cli/commands/loop.ts"),
+      "utf8",
+    );
+    const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
+    const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
+    const snapshotSchema = readFileSync(
+      join(process.cwd(), "docs/LOOP-SNAPSHOT-SCHEMA.md"),
+      "utf8",
+    );
+
+    expect(loopStatus).toContain(
+      "When this work reaches a verifiable checkpoint",
+    );
+    expect(loopStatus).toContain("--snapshot-id");
+    expect(loopCommand).toContain('"Next actions:"');
+    for (const content of [readme, readmeKo]) {
+      expect(content).toContain("promptlane loop status");
+      expect(content).toContain("outcome backlog");
+    }
+    expect(snapshotSchema).toContain("intermediate hook snapshot as backlog");
+  });
+
   it("keeps the Codex duplicate-hook doctor log tied to merged evidence", () => {
     const todo = readFileSync(join(process.cwd(), "tasks/todo.md"), "utf8");
     const todoSection = sectionBetween(

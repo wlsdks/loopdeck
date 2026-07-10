@@ -193,6 +193,7 @@ export function createPromptLaneStatus(input: {
     next_action: nextAction,
     next_actions: nextActionsForStatus({
       hasSnapshots,
+      latest,
       compactBoundary,
       memoryCandidate: input.memoryCandidate,
       activity,
@@ -512,6 +513,7 @@ export function promptlaneStatusPrivacy(): PromptLaneStatusPrivacy {
 
 function nextActionsForStatus(input: {
   hasSnapshots: boolean;
+  latest?: LoopSnapshot;
   compactBoundary?: LoopBriefCompactBoundary;
   memoryCandidate?: Pick<LoopMemoryCandidateDecision, "eligible">;
   activity: PromptLaneStatusActivity;
@@ -525,6 +527,7 @@ function nextActionsForStatus(input: {
 
   if (input.compactBoundary) {
     return withMemoryCandidateAction(input.memoryCandidate, [
+      ...pendingOutcomeActions(input.latest),
       "Run promptlane loop collect again after compaction to refresh the snapshot.",
       "Then use promptlane loop brief or prepare_loop_brief for a continuation prompt.",
     ]);
@@ -532,9 +535,25 @@ function nextActionsForStatus(input: {
 
   return withMemoryCandidateAction(input.memoryCandidate, [
     "Use promptlane loop brief or prepare_loop_brief to get a copy-ready continuation prompt.",
+    ...pendingOutcomeActions(input.latest),
     ...selectedContinuationActions(input.activity),
     "Run promptlane loop collect again after the next agent turn to refresh the snapshot.",
   ]);
+}
+
+function pendingOutcomeActions(snapshot: LoopSnapshot | undefined): string[] {
+  if (
+    !snapshot ||
+    (snapshot.outcome.status !== "unknown" &&
+      snapshot.outcome.status !== "in_progress")
+  ) {
+    return [];
+  }
+
+  const snapshotId = quoteForShell(snapshot.id);
+  return [
+    `When this work reaches a verifiable checkpoint, review snapshot ${snapshotId} in the Loops view or record its outcome with promptlane loop outcome --snapshot-id ${snapshotId}.`,
+  ];
 }
 
 function selectedContinuationActions(

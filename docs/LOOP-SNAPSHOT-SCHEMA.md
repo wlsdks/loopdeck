@@ -173,6 +173,9 @@ CLI output must:
 - keep selected worktree/session/branch filters explicit
 - avoid falling back to unrelated latest snapshots when filters are requested
 - label service-origin snapshots as service-origin
+- guide an `unknown` or `in_progress` latest snapshot to optional exact-id
+  outcome recording after a verifiable checkpoint, without treating every
+  intermediate hook snapshot as backlog
 
 ### MCP
 

@@ -749,6 +749,9 @@ function formatLoopStatus(status: PromptLaneStatus): string {
       ? `compact boundary ${status.latest_compact_boundary.event_name} at ${status.latest_compact_boundary.created_at} (${status.latest_compact_boundary.trigger})`
       : "compact boundary none after latest snapshot",
     "",
+    "Next actions:",
+    ...status.next_actions.map((action) => `- ${action}`),
+    "",
     `Next: ${status.next_action}`,
     "",
     "Privacy: local-only, no prompt bodies, no raw paths.",
