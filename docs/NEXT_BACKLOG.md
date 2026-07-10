@@ -50,16 +50,17 @@ ledger is `docs/PUBLIC_LAUNCH_VALIDATION_2026-07-10.md`.
 - The local tarball clean-install and first-success smoke passed.
 - npm publication and the GitHub Release are still absent. npm publish
   preflight is blocked only by interactive npm authentication.
-- Real usefulness remains unproven. The first 2 of 10 required matched pairs
-  both regressed across MCP-tool-use and repository-audit tasks: stored-prompt
-  rewrites lost the concrete target after both baselines passed. The second
-  treatment expanded from 6 baseline command events to 42 unrelated command
-  events while omitting every required result. Continue across at least one
-  more task type and three independent-user install/first-value runs before
-  large feature work.
+- Real usefulness remains unproven. The first 3 of 10 required matched pairs
+  now cover MCP tool use, repository audit, and code investigation. Aggregate
+  direction is negative: baseline pass rate 100%, PromptLane pass rate 33.3%,
+  two regressions, and one unchanged pass. The direct-text treatment preserved
+  its target but used 32 command events versus 20 for baseline. Continue seven
+  more pairs and three independent-user install/first-value runs before large
+  feature work.
 - Keep direct-text local improvement. Treat stored-prompt rewrite target
-  preservation as a 1.0.x change-or-remove candidate; do not promote that
-  surface from a single negative observation or claim it is reliable.
+  preservation as a 1.0.x change-or-remove candidate. Treat direct-text
+  verbosity and agent effort as a modify-or-monitor candidate; do not claim
+  either surface improves task success from this small observational sample.
 - Never retarget `v1.0.0`; publish and release only the commit already named by
   that immutable tag.
 

@@ -11092,13 +11092,14 @@
 - [ ] POST-PUBLISH: Repeat clean install from the npm registry and record
       install failures, elapsed first-value time, and recovery steps.
 - [ ] VALIDATE: Collect at least 10 operator-reviewed matched pairs across at
-      least three task types. Current real pair count is 2/10 across MCP tool
-      use and repository audit. Both baselines passed and both PromptLane
-      treatments failed after stored rewrites lost the concrete target. Keep
-      the result non-causal.
-- [x] RECORD: Run two real paired fixtures locally, observe two regressed
-      transitions with treatment adoption 2/2 and privacy leaks 0, remove all
-      prompt-bearing fixtures, and commit only the raw-free aggregate.
+      least three task types. Current real pair count is 3/10 across MCP tool
+      use, repository audit, and code investigation. Aggregate direction is
+      baseline 100% versus PromptLane 33.3%, with two regressions and one
+      unchanged pass. Keep the result non-causal.
+- [x] RECORD: Run three real paired fixtures locally, observe two regressed and
+      one unchanged-pass transition with treatment adoption 3/3 and privacy
+      leaks 0, remove all prompt-bearing fixtures, and commit only the raw-free
+      aggregate.
 - [ ] VALIDATE: Have at least three external or independent users complete
       installation and first value; do not substitute maintainer dogfood.
 - [ ] DECIDE: Rewrite the 1.0.x backlog from keep/change/remove evidence and

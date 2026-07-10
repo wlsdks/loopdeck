@@ -102,12 +102,23 @@ worktree was clean:
 | Baseline | PASS | Six command events produced the correct shared commit, equality decision, and clean-worktree result. |
 | PromptLane treatment | FAIL | The adopted draft again contained a stored-request placeholder. It produced 42 command events, investigated unrelated rewrite code and tests, and omitted the required tag, clean-worktree, and expected-SHA results. |
 
-The combined two-pair real-fixture benchmark reported:
+A third pair covered code investigation and intentionally used the direct-text
+improvement path instead of the stored-prompt path. Both conditions had to
+identify the exact remote-tag command, parser helper, commit comparison, and
+source lines:
 
-- `pair_count: 2` and `status: insufficient_pairs`;
-- baseline pass rate `1.0`, PromptLane pass rate `0.0`;
-- two `regressed` transitions;
-- treatment adoption `2/2`, because both generated drafts were actually
+| Condition | Outcome | Observation |
+| --- | --- | --- |
+| Baseline | PASS | It reported every required implementation detail. The first automated verdict was corrected after its evaluator regex omitted the `{` in `^{}`; the answer itself was complete. |
+| PromptLane treatment | PASS | The direct-text draft preserved the script and tag target and reported every required detail. It used 32 command events versus 20 for baseline, so no efficiency improvement was observed. |
+
+The combined three-pair real-fixture benchmark reported:
+
+- `pair_count: 3` and `status: negative_direction`;
+- baseline pass rate `1.0`, PromptLane pass rate `0.333` and observed delta
+  `-0.667`;
+- two `regressed` transitions and one `unchanged_passed` transition;
+- treatment adoption `3/3`, because all generated drafts were actually
   submitted;
 - `causal_claim: false` and a non-release-blocking soft-signal failure;
 - privacy leak count `0`.
@@ -117,10 +128,12 @@ because it contains prompt text. Only this raw-free aggregate is committed.
 
 This observation does not establish a product-wide negative effect. It does
 establish one concrete limitation: stored-prompt rewrites can lose the actual
-goal when only redacted stored context is available. Until broader evidence is
-collected, retain direct-text local improvement but do not claim that
-`improve --prompt-id` reliably preserves a stored prompt's task target. Treat
-that surface as a 1.0.x change-or-remove candidate.
+goal when only redacted stored context is available. The one direct-text pair
+preserved its target and passed, but did not improve success or reduce effort.
+Until broader evidence is collected, retain direct-text local improvement but
+do not claim that `improve --prompt-id` reliably preserves a stored prompt's
+task target. Treat that surface as a 1.0.x change-or-remove candidate and treat
+direct-text verbosity/effort as a modify-or-monitor candidate.
 
 Therefore real-world usefulness remains unproven. No success-rate lift or
 causal claim is permitted yet.
@@ -146,7 +159,8 @@ Required before closing validation:
    without retargeting the tag.
 4. Run a clean registry-install first-value smoke and record elapsed time and
    recovery observations.
-5. Continue from 2/10 matched pairs using explicit operator review, and cover
-   at least three task types.
+5. Continue from 3/10 matched pairs using explicit operator review. Three task
+   types are now represented; broaden repetitions without turning the small
+   sample into a causal claim.
 6. Recruit three independent users; do not replace their evidence with
    synthetic fixtures or maintainer-only dogfood.
