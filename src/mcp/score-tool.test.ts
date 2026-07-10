@@ -359,7 +359,7 @@ describe("improvePromptTool", () => {
     expect(serialized).not.toContain("sk-proj-1234567890abcdef");
   });
 
-  it("improves the latest stored prompt without returning the stored prompt body", async () => {
+  it("refuses a stored rewrite when no concrete target can be recovered safely", async () => {
     const dataDir = createTempDir();
     const init = initializePromptLane({ dataDir });
     const storage = createSqlitePromptStorage({
@@ -377,15 +377,11 @@ describe("improvePromptTool", () => {
     const result = improvePromptTool({ latest: true }, { dataDir });
     const serialized = JSON.stringify(result);
 
-    expect(result.source).toBe("latest");
-    expect(result.prompt_id).toBeTruthy();
-    expect(result.improved_prompt).toContain("Goal");
-    expect(result.privacy).toMatchObject({
-      local_only: true,
-      stores_input: false,
-      external_calls: false,
-      returns_stored_prompt_body: false,
+    expect(result).toMatchObject({
+      is_error: true,
+      error_code: "target_unavailable",
     });
+    expect(result.message).toContain("prompt");
     expect(serialized).not.toContain("Make this better");
     expect(serialized).not.toContain("/Users/example");
   });
@@ -399,7 +395,7 @@ describe("improvePromptTool", () => {
       now: () => new Date("2026-05-03T12:10:00.000Z"),
     });
     const originalPrompt =
-      "Review src/mcp/score-tool.ts because latest prompt rewrite ignores stored content. Keep changes scoped to MCP improve_prompt. Run pnpm vitest run src/mcp/score-tool.test.ts. Return a Markdown summary.";
+      "Review src/mcp/score-tool.ts because latest prompt rewrite ignores stored content. Run pnpm vitest run src/mcp/score-tool.test.ts.";
     await storeClaudePrompt(
       storage,
       originalPrompt,
@@ -422,6 +418,32 @@ describe("improvePromptTool", () => {
     );
     expect(result.rewrite_source).toBe("redacted_stored_prompt");
     expect(serialized).not.toContain("/Users/example");
+  });
+
+  it("returns a body-free no-op for a stored prompt that already needs no improvement", async () => {
+    const dataDir = createTempDir();
+    const init = initializePromptLane({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: init.hookAuth.web_session_secret,
+    });
+    const originalPrompt =
+      "Refactor src/auth.ts to OAuth 2.0 because legacy sessions expire early. Change only src/auth.ts, run pnpm test, and return a Markdown summary.";
+    await storeClaudePrompt(
+      storage,
+      originalPrompt,
+      "2026-05-03T12:09:00.000Z",
+    );
+    storage.close();
+
+    const result = improvePromptTool({ latest: true }, { dataDir });
+    const serialized = JSON.stringify(result);
+
+    expect(result).toMatchObject({
+      is_error: true,
+      error_code: "no_improvement_needed",
+    });
+    expect(serialized).not.toContain(originalPrompt);
   });
 
   it("returns an actionable tool error for ambiguous improvement input", () => {
@@ -1115,7 +1137,7 @@ describe("coachPromptTool", () => {
     expect(serialized).not.toContain("sk-proj-1234567890abcdef");
   });
 
-  it("routes the agent to ask the user when the latest prompt has clarifying_questions", async () => {
+  it("does not fabricate a coach rewrite when the latest prompt has no recoverable target", async () => {
     const dataDir = createTempDir();
     const init = initializePromptLane({ dataDir });
     const storage = createSqlitePromptStorage({
@@ -1136,28 +1158,14 @@ describe("coachPromptTool", () => {
     );
 
     expect(result.improvement).toBeDefined();
-    if (!result.improvement || "is_error" in result.improvement) {
-      throw new Error("coachPromptTool did not produce an improvement");
-    }
-    expect(
-      result.improvement.clarifying_questions.length,
-    ).toBeGreaterThanOrEqual(1);
-    expect(result.agent_brief.next_actions).toEqual(
-      expect.arrayContaining([expect.stringContaining("Ask the user")]),
-    );
-    expect(result.agent_brief.next_actions).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining("ask_clarifying_questions"),
-      ]),
-    );
-    expect(result.agent_brief.next_actions).not.toEqual(
-      expect.arrayContaining([
-        "Use the approval-ready rewrite only after the user explicitly accepts it.",
-      ]),
-    );
+    expect(result.improvement).toMatchObject({
+      is_error: true,
+      error_code: "target_unavailable",
+    });
+    expect(JSON.stringify(result.improvement)).not.toContain("improved_prompt");
   });
 
-  it("does not route acknowledgment-like latest prompts through ask-first coach actions", async () => {
+  it("does not rewrite an acknowledgment-like latest prompt without its prior target", async () => {
     const dataDir = createTempDir();
     const init = initializePromptLane({ dataDir });
     const storage = createSqlitePromptStorage({
@@ -1178,18 +1186,11 @@ describe("coachPromptTool", () => {
     );
 
     expect(result.improvement).toBeDefined();
-    if (!result.improvement || "is_error" in result.improvement) {
-      throw new Error("coachPromptTool did not produce an improvement");
-    }
-    expect(result.improvement.next_action).toContain("Review the draft");
-    expect(result.agent_brief.next_actions).not.toEqual(
-      expect.arrayContaining([expect.stringContaining("Ask the user")]),
-    );
-    expect(result.agent_brief.next_actions).toEqual(
-      expect.arrayContaining([
-        "Use the approval-ready rewrite only after the user explicitly accepts it.",
-      ]),
-    );
+    expect(result.improvement).toMatchObject({
+      is_error: true,
+      error_code: "target_unavailable",
+    });
+    expect(JSON.stringify(result.improvement)).not.toContain("improved_prompt");
   });
 });
 

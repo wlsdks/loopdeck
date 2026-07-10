@@ -376,8 +376,8 @@ describe("applyClarifications", () => {
   });
 });
 
-describe("improvePrompt — Korean template doesn't fabricate certainty about axes that just happen to score well", () => {
-  it("does not echo the raw prompt under ## 목표 when goal_clarity is judged OK (the prompt is already shown under ## 원문)", () => {
+describe("improvePrompt — no-op behavior", () => {
+  it("returns an unchanged prompt when every quality axis is already good", () => {
     const prompt =
       "Refactor authentication module: goal=migrate to OAuth 2.0. Background: legacy session-based. Scope: only auth dir. Output: PR with tests. Verify: pnpm test green.";
 
@@ -388,12 +388,14 @@ describe("improvePrompt — Korean template doesn't fabricate certainty about ax
     });
 
     expect(result.changed_sections).toEqual([]);
-
-    const goalSection = result.improved_prompt
-      .split("\n## ")
-      .find((part) => part.startsWith("목표"));
-    expect(goalSection).toBeDefined();
-    expect(goalSection ?? "").not.toContain("Refactor authentication module");
+    expect(result.improved_prompt).toBe(prompt);
+    expect(result.expected_impact).toMatchObject({
+      delta: 0,
+      changed_axis_count: 0,
+    });
+    expect(result.summary).toBe(
+      "변경할 품질 항목이 없어 원문을 그대로 반환했습니다.",
+    );
   });
 
   it("does not claim '원문에 명시된 검증 명령' when the original prompt provides no concrete command", () => {

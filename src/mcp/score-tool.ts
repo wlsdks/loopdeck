@@ -1,6 +1,10 @@
 import { analyzePrompt } from "../analysis/analyze.js";
 import { createArchiveScoreReport } from "../analysis/archive-score.js";
-import { improvePrompt, type PromptImprovement } from "../analysis/improve.js";
+import {
+  hasConcreteStoredPromptTarget,
+  improvePrompt,
+  type PromptImprovement,
+} from "../analysis/improve.js";
 import { loadHookAuth, loadPromptLaneConfig } from "../config/config.js";
 import type { PromptAnalysisPreview } from "../shared/schema.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
@@ -537,16 +541,31 @@ function withStoredPromptImprovement(
         );
       }
 
+      if (!hasConcreteStoredPromptTarget(prompt.markdown)) {
+        return improvementToolError(
+          "target_unavailable",
+          "The stored prompt has no concrete target that PromptLane can return safely. Pass the original request with the `prompt` argument (or CLI `--text`) before generating a rewrite.",
+        );
+      }
+
+      const improvement = improvePrompt({
+        prompt: prompt.markdown,
+        createdAt: (options.now ?? new Date()).toISOString(),
+        language: args.language,
+        source: "stored",
+      });
+      if (improvement.changed_sections.length === 0) {
+        return improvementToolError(
+          "no_improvement_needed",
+          "The stored prompt already satisfies every local quality check, so PromptLane did not generate or return a replacement body.",
+        );
+      }
+
       return toImprovementToolResult({
         source: args.latest === true ? "latest" : "prompt_id",
         promptId: id,
         decisionPrompt: prompt.snippet,
-        improvement: improvePrompt({
-          prompt: prompt.markdown,
-          createdAt: (options.now ?? new Date()).toISOString(),
-          language: args.language,
-          source: "stored",
-        }),
+        improvement,
         rewriteSource: "redacted_stored_prompt",
       });
     } finally {

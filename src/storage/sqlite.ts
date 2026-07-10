@@ -908,7 +908,10 @@ function isDateOnly(value: string): boolean {
   return /^\d{4}-\d{2}-\d{2}$/.test(value);
 }
 
-function restrictDatabaseFileMode(databasePath: string): void {
+export function restrictDatabaseFileMode(
+  databasePath: string,
+  changeMode: (path: string, mode: number) => void = chmodSync,
+): void {
   if (!supportsPosixMode()) {
     return;
   }
@@ -917,8 +920,8 @@ function restrictDatabaseFileMode(databasePath: string): void {
     `${databasePath}-wal`,
     `${databasePath}-shm`,
   ]) {
-    if (existsSync(path)) {
-      chmodSync(path, 0o600);
+    if (existsSync(path) && (statSync(path).mode & 0o777) !== 0o600) {
+      changeMode(path, 0o600);
     }
   }
 }

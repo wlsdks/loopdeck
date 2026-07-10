@@ -107,7 +107,12 @@ export type ImprovePromptToolResult =
     })
   | {
       is_error: true;
-      error_code: "invalid_input" | "not_found" | "storage_unavailable";
+      error_code:
+        | "invalid_input"
+        | "not_found"
+        | "no_improvement_needed"
+        | "storage_unavailable"
+        | "target_unavailable";
       message: string;
     };
 

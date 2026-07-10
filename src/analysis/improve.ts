@@ -77,6 +77,29 @@ export function improvePrompt(input: ImprovePromptInput): PromptImprovement {
   const changedSections = analysis.checklist
     .filter((item) => item.status !== "good")
     .map((item) => item.key);
+  if (changedSections.length === 0) {
+    return {
+      mode: "copy",
+      requires_user_approval: true,
+      summary: summaryFor(language, true),
+      improved_prompt: sanitizedPrompt,
+      expected_impact: {
+        original_score: analysis.quality_score.value,
+        improved_score: analysis.quality_score.value,
+        delta: 0,
+        changed_axis_count: 0,
+      },
+      changed_sections: [],
+      clarifying_questions: [],
+      safety_notes: buildSafetyNotes(
+        input.prompt,
+        redaction.is_sensitive,
+        language,
+      ),
+      created_at: input.createdAt,
+      analyzer: "local-rules-v1",
+    };
+  }
   const sections =
     source === "stored"
       ? buildStoredSections(sanitizedPrompt, changedSections, language)
@@ -118,6 +141,13 @@ export function improvePrompt(input: ImprovePromptInput): PromptImprovement {
     created_at: input.createdAt,
     analyzer: "local-rules-v1",
   };
+}
+
+export function hasConcreteStoredPromptTarget(prompt: string): boolean {
+  const redaction = redactPrompt(prompt, "mask");
+  return (
+    extractPromptFacts(sanitizePrompt(redaction.stored_text)).targets.length > 0
+  );
 }
 
 const STATUS_PRIORITY: Record<PromptQualityStatus, number> = {
@@ -534,12 +564,12 @@ function unique<T>(values: T[]): T[] {
 function summaryFor(language: "en" | "ko", noChanges: boolean): string {
   if (language === "ko") {
     return noChanges
-      ? "원문 의도를 유지하면서 재입력하기 쉬운 실행 형식으로 정리했습니다."
+      ? "변경할 품질 항목이 없어 원문을 그대로 반환했습니다."
       : "부족한 항목을 보강한 뒤 사용자가 승인해 복사하고 재입력할 수 있게 정리했습니다.";
   }
 
   return noChanges
-    ? "Reformatted the original intent into a clearer request that is easier to reuse."
+    ? "No quality changes were needed, so the original prompt is returned unchanged."
     : "Filled the missing sections so the user can approve, copy, and resubmit the request manually.";
 }
 

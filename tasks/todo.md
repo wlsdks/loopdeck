@@ -11104,3 +11104,17 @@
       retain opt-in direct-text drafting, change/remove stored-prompt rewrite,
       add zero-delta no-op behavior, fix read-only SQLite permission mutation,
       and stop implying that score gain proves task success.
+
+## 2026-07-10 Release Candidate Remediation
+
+- [x] RED/GREEN: Stored-prompt rewrite refuses to fabricate a replacement when
+      no concrete target can be recovered without returning the stored body.
+- [x] RED/GREEN: Zero-delta direct prompts return an unchanged explicit no-op;
+      stored prompts return a body-free `no_improvement_needed` result.
+- [x] RED/GREEN: SQLite permission hardening skips `chmod` when database files
+      are already owner-only, keeping read-only diagnostics usable.
+- [x] VERIFY: Focused analysis, MCP, CLI, statusline, and storage tests pass.
+- [ ] VALIDATE: Re-run the previously regressed or blocked matched-pair cases
+      against this candidate and record the non-causal result.
+- [ ] RELEASE: Preserve the existing `v1.0.0` tag and choose a new candidate
+      version only after remediation evidence is positive.

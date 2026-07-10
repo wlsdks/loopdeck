@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import {
+  chmodSync,
   mkdirSync,
   readFileSync,
   rmSync,
@@ -17,7 +18,10 @@ import type { LoopSnapshot } from "../loop/types.js";
 import { redactPrompt } from "../redaction/redact.js";
 import { createServer } from "../server/create-server.js";
 import { initializePromptLane } from "../config/config.js";
-import { createSqlitePromptStorage } from "./sqlite.js";
+import {
+  createSqlitePromptStorage,
+  restrictDatabaseFileMode,
+} from "./sqlite.js";
 import Database from "better-sqlite3";
 
 const tempDirs: string[] = [];
@@ -32,6 +36,19 @@ afterEach(() => {
 });
 
 describe("SQLite prompt storage", () => {
+  it("does not chmod database files that are already owner-only", () => {
+    const dataDir = createTempDir();
+    const databasePath = join(dataDir, "promptlane.sqlite");
+    writeFileSync(databasePath, "");
+    chmodSync(databasePath, 0o600);
+
+    expect(() =>
+      restrictDatabaseFileMode(databasePath, () => {
+        throw new Error("chmod should not run");
+      }),
+    ).not.toThrow();
+  });
+
   it("records compact boundaries without compact summaries, instructions, or raw paths", () => {
     const dataDir = createTempDir();
     initializePromptLane({ dataDir });

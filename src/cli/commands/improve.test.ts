@@ -116,7 +116,8 @@ describe("improve CLI", () => {
         cwd: "/Users/example/private-project",
         permission_mode: "default",
         hook_event_name: "UserPromptSubmit",
-        prompt: "Make this better with token sk-proj-1234567890abcdef",
+        prompt:
+          "Fix src/server/routes/prompts.ts with token sk-proj-1234567890abcdef",
       },
       new Date("2026-05-03T13:59:00.000Z"),
     );
@@ -139,6 +140,7 @@ describe("improve CLI", () => {
     expect(result.mode).toBe("copy");
     expect(result.requires_user_approval).toBe(true);
     expect(result.improved_prompt).toContain("Verification");
+    expect(result.improved_prompt).toContain("src/server/routes/prompts.ts");
     expect(result.privacy.returns_stored_prompt_body).toBe(false);
     expect(json).not.toContain("sk-proj-1234567890abcdef");
     expect(json).not.toContain("/Users/example");
