@@ -81,12 +81,39 @@ The live synthetic benchmark on 2026-07-10 passed its regression thresholds but
 explicitly reported:
 
 - `evidence_state.effectiveness: regression_gate_passed_not_real_world_proof`;
-- `counts.effect_pairs: 0`;
+- `counts.effect_pairs: 0` for the synthetic fixture;
 - `paired_effectiveness.status: not_collected`;
 - `paired_effectiveness.causal_claim: false`.
 
-Therefore real-world usefulness is unproven. No success-rate lift or causal
-claim is permitted yet.
+A first real, operator-reviewed Codex pair was then collected for the task
+"call `get_promptlane_status` exactly once and report readiness":
+
+| Condition | Outcome | Observation |
+| --- | --- | --- |
+| Baseline | PASS | The live Codex session called the requested PromptLane MCP tool and received `ready`. |
+| PromptLane treatment | FAIL | The generated stored-prompt rewrite replaced the concrete MCP goal with a placeholder referring to the stored request's target. The live Codex session returned a final response but made zero PromptLane MCP calls. |
+
+The real-fixture benchmark reported:
+
+- `pair_count: 1` and `status: insufficient_pairs`;
+- baseline pass rate `1.0`, PromptLane pass rate `0.0`;
+- one `regressed` transition;
+- treatment adoption `1/1`, because the generated draft was actually submitted;
+- `causal_claim: false` and a non-release-blocking soft-signal failure;
+- privacy leak count `0`.
+
+The consent-bearing fixture was used locally and removed after measurement
+because it contains prompt text. Only this raw-free aggregate is committed.
+
+This observation does not establish a product-wide negative effect. It does
+establish one concrete limitation: stored-prompt rewrites can lose the actual
+goal when only redacted stored context is available. Until broader evidence is
+collected, retain direct-text local improvement but do not claim that
+`improve --prompt-id` reliably preserves a stored prompt's task target. Treat
+that surface as a 1.0.x change-or-remove candidate.
+
+Therefore real-world usefulness remains unproven. No success-rate lift or
+causal claim is permitted yet.
 
 Required before closing validation:
 
@@ -109,7 +136,7 @@ Required before closing validation:
    without retargeting the tag.
 4. Run a clean registry-install first-value smoke and record elapsed time and
    recovery observations.
-5. Use `promptlane benchmark pair-candidates --json` and explicit operator
-   review to prepare 10 matched pairs across three task types.
+5. Continue from 1/10 matched pairs using explicit operator review, and cover
+   at least three task types.
 6. Recruit three independent users; do not replace their evidence with
    synthetic fixtures or maintainer-only dogfood.
