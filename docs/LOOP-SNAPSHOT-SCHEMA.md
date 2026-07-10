@@ -200,6 +200,12 @@ Web output must:
 - require CSRF and shared privacy validation before recording an outcome
 - not approve loop memory as a side effect of outcome recording
 - fetch continuation briefs through explicit user action
+- expose only safe prompt ids for explicit improvement-use attribution
+- restore existing attribution after reload so outcome edits do not erase it
+
+The selected-snapshot outcome form submits only prompt ids the operator
+explicitly selected. A linked passing outcome with no selected id remains
+unproven as PromptLane improvement evidence.
 
 ### Hooks And Service Collection
 

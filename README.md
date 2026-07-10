@@ -802,7 +802,8 @@ The MCP server exposes 20 tools:
   PromptLane snapshot without storing prompt bodies or raw paths. Pass
   `used_improvement_prompt_ids` only for snapshot prompts whose PromptLane
   improvements were actually used; linked outcomes without this attribution
-  remain unproven as improvement evidence.
+  remain unproven as improvement evidence. The web Loops outcome form provides
+  the same explicit per-prompt selection and restores recorded selections.
 - `propose_loop_memory_candidate`: decide whether the latest or explicitly
   selected verified loop outcome is safe and evidence-backed enough to become a user-approved memory
   candidate. It is read-only and never writes AGENTS.md, CLAUDE.md, memory

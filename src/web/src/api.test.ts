@@ -1274,6 +1274,8 @@ describe("web api export client", () => {
                 branch: "codex/agent-loop-memory-design",
                 worktree: "agent-loop-worktree",
                 prompt_count: 2,
+                prompt_ids: ["prmt_one", "prmt_two"],
+                used_improvement_prompt_ids: ["prmt_one"],
                 average_prompt_score: 58,
                 top_gaps: ["Goal clarity"],
                 outcome_status: "passed",
@@ -2279,6 +2281,8 @@ describe("web api export client", () => {
           worktree: "agent-loop-worktree",
           branch: "codex/agent-loop-memory-design",
           prompt_count: 2,
+          prompt_ids: ["prmt_one", "prmt_two"],
+          used_improvement_prompt_ids: ["prmt_one"],
           average_prompt_score: 58,
           top_gaps: ["Goal clarity"],
           outcome_status: "passed",
@@ -6232,6 +6236,7 @@ describe("web api export client", () => {
               status: "passed",
               summary: "Focused web checks passed.",
               evidence_refs: ["test:web-loops"],
+              used_improvement_prompt_ids: ["prmt_one"],
             },
             next_actions: [
               "promptlane loop memory-candidate",
@@ -6253,6 +6258,7 @@ describe("web api export client", () => {
       status: "passed",
       summary: "Focused web checks passed.",
       evidenceRefs: ["test:web-loops"],
+      usedImprovementPromptIds: ["prmt_one"],
     });
 
     expect(result.recorded).toBe(true);
@@ -6269,6 +6275,7 @@ describe("web api export client", () => {
           status: "passed",
           summary: "Focused web checks passed.",
           evidence_refs: ["test:web-loops"],
+          used_improvement_prompt_ids: ["prmt_one"],
         }),
       },
     );

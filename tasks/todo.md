@@ -10895,3 +10895,12 @@
       so work outcomes are not presented as causal improvement proof.
 - [x] VERIFY: Run focused storage/loop/MCP/server/CLI/benchmark tests, build,
       pack, browser evidence, and diff hygiene before retagging `v1.0.0`.
+
+## 2026-07-10 Web Improvement Attribution
+
+- [x] RED: Require selected-worktree responses to expose only the snapshot's
+      safe prompt ids and require the web API to submit selected attribution.
+- [x] GREEN: Add prompt-id checkboxes to the selected snapshot outcome form and
+      pass checked ids through the existing raw-free outcome endpoint.
+- [x] VERIFY: Run focused server/API/form tests, browser user-flow evidence,
+      lint/build/pack, and diff hygiene before retagging `v1.0.0`.

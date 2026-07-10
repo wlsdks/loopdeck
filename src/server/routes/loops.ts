@@ -450,6 +450,9 @@ export function registerLoopRoutes(
           : {}),
         items: snapshots.map((snapshot) => ({
           ...toPromptLaneStatusSnapshot(snapshot),
+          prompt_ids: snapshot.prompt_ids,
+          used_improvement_prompt_ids:
+            snapshot.outcome.used_improvement_prompt_ids ?? [],
           compact_boundary: latestCompactBoundaryAfterSnapshot(
             snapshot,
             boundaries,

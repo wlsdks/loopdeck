@@ -465,6 +465,10 @@ Completed:
 - CLI prompt outcome evidence: `promptlane show --json` reads the same
   storage-level `loop_outcomes` contract so agent-native workflows can inspect
   actual outcome evidence alongside the stored prompt metadata
+- web improvement attribution: the selected snapshot outcome form exposes only
+  safe prompt ids, requires explicit per-prompt selection before recording
+  PromptLane improvement use, and restores existing selections after reload so
+  outcome edits do not silently erase attribution
 
 Next work should come from fresh user-flow evidence, a real MCP tool/schema
 change, or explicit operator-approved dogfood.

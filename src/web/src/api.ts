@@ -665,6 +665,28 @@ function isLoopSummary(value: unknown): value is LoopSummary {
   );
 }
 
+function isLoopWorktreeSummary(value: unknown): value is LoopSummary & {
+  prompt_ids?: string[];
+  used_improvement_prompt_ids?: string[];
+} {
+  if (!isLoopSummary(value)) return false;
+  const item = value as {
+    prompt_ids?: unknown;
+    used_improvement_prompt_ids?: unknown;
+  };
+  return (
+    isOptionalStringArray(item.prompt_ids) &&
+    isOptionalStringArray(item.used_improvement_prompt_ids)
+  );
+}
+
+function isOptionalStringArray(value: unknown): boolean {
+  return (
+    value === undefined ||
+    (Array.isArray(value) && value.every((item) => typeof item === "string"))
+  );
+}
+
 function isLoopStatusPrivacy(
   value: unknown,
 ): value is LoopListResponse["status"]["privacy"] {
@@ -3389,7 +3411,12 @@ export type LoopWorktreeResponse = {
       next_action: "record loop outcome evidence";
     };
   };
-  items: LoopSummary[];
+  items: Array<
+    LoopSummary & {
+      prompt_ids?: string[];
+      used_improvement_prompt_ids?: string[];
+    }
+  >;
   privacy: {
     local_only: true;
     returns_prompt_bodies: false;
@@ -3484,6 +3511,7 @@ export type LoopOutcomeRecordResult = {
     status: LoopOutcomeStatus;
     summary: string;
     evidence_refs: string[];
+    used_improvement_prompt_ids?: string[];
   };
   next_actions: string[];
   privacy: {
@@ -3512,6 +3540,11 @@ function parseLoopOutcomeRecordResponse(
     !outcome.evidence_refs.every(
       (reference) => typeof reference === "string",
     ) ||
+    (outcome.used_improvement_prompt_ids !== undefined &&
+      (!Array.isArray(outcome.used_improvement_prompt_ids) ||
+        !outcome.used_improvement_prompt_ids.every(
+          (promptId) => typeof promptId === "string",
+        ))) ||
     !Array.isArray(data.next_actions) ||
     !data.next_actions.every((action) => typeof action === "string") ||
     privacy?.local_only !== true ||
@@ -5868,7 +5901,7 @@ export async function getLoopWorktree(
           .continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_uncertainty_collection_reminder,
       )) ||
     !Array.isArray(body.data.items) ||
-    !body.data.items.every(isLoopSummary) ||
+    !body.data.items.every(isLoopWorktreeSummary) ||
     !isLoopListPrivacy(body.data.privacy)
   ) {
     throw new Error("Loop worktree drilldown failed: Invalid response.");
@@ -5912,6 +5945,7 @@ export async function recordLoopOutcome(
     status: LoopOutcomeStatus;
     summary: string;
     evidenceRefs: string[];
+    usedImprovementPromptIds?: string[];
   },
 ): Promise<LoopOutcomeRecordResult> {
   await ensureSession();
@@ -5928,6 +5962,9 @@ export async function recordLoopOutcome(
         status: input.status,
         summary: input.summary,
         evidence_refs: input.evidenceRefs,
+        ...(input.usedImprovementPromptIds?.length
+          ? { used_improvement_prompt_ids: input.usedImprovementPromptIds }
+          : {}),
       }),
     },
   );

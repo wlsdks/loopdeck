@@ -712,6 +712,7 @@ describe("createServer P2 ingest boundary", () => {
           summary:
             "Keep web, CLI, MCP, and API loop status on the shared model.",
           evidence_refs: ["commit:web"],
+          used_improvement_prompt_ids: ["prmt_two"],
         },
       }),
     );
@@ -736,7 +737,12 @@ describe("createServer P2 ingest boundary", () => {
     const body = response.json<{
       data: {
         worktree: string;
-        items: Array<{ id: string; worktree?: string }>;
+        items: Array<{
+          id: string;
+          prompt_ids: string[];
+          used_improvement_prompt_ids: string[];
+          worktree?: string;
+        }>;
       };
     }>();
     const serialized = JSON.stringify(body);
@@ -746,10 +752,14 @@ describe("createServer P2 ingest boundary", () => {
     expect(body.data.items).toEqual([
       expect.objectContaining({
         id: "loop_web",
+        prompt_ids: ["prmt_one", "prmt_two"],
+        used_improvement_prompt_ids: [],
         worktree: "worktree-web",
       }),
       expect.objectContaining({
         id: "loop_web_second",
+        prompt_ids: ["prmt_one", "prmt_two"],
+        used_improvement_prompt_ids: ["prmt_two"],
         worktree: "worktree-web",
       }),
     ]);
