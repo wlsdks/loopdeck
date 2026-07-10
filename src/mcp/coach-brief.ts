@@ -119,7 +119,7 @@ export function createAgentCoachBrief(input: {
     summary: [
       "This local coach result combines latest prompt scoring, copy-based rewrite, recent habit review, and project instruction review for the agent session.",
       archiveEffectiveness
-        ? `Effectiveness evidence: ${archiveEffectiveness.measured_prompts} measured, ${archiveEffectiveness.unmeasured_prompts} unmeasured, ${archiveEffectiveness.calibration.linked_outcomes} linked outcomes, ${archiveEffectiveness.calibration.total_tests_run} tests run.`
+        ? `Effectiveness evidence: ${archiveEffectiveness.measured_prompts} measured, ${archiveEffectiveness.unmeasured_prompts} unmeasured, ${archiveEffectiveness.calibration.linked_outcomes} linked outcomes, ${archiveEffectiveness.calibration.attributed_outcomes} attributed outcomes, ${archiveEffectiveness.calibration.total_tests_run} tests run.`
         : undefined,
     ]
       .filter(Boolean)

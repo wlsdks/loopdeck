@@ -306,6 +306,7 @@ describe("benchmark fixture loading", () => {
                 summary: "The release review completed with focused checks.",
                 evidence_refs: ["test:release-smoke", "commit:abc1234"],
                 tests_run: 4,
+                improvement_used: true,
               },
             },
           ],
@@ -331,6 +332,7 @@ describe("benchmark fixture loading", () => {
       summary: "The release review completed with focused checks.",
       evidence_refs: ["test:release-smoke", "commit:abc1234"],
       tests_run: 4,
+      improvement_used: true,
     });
   });
 

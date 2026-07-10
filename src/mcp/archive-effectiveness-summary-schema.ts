@@ -24,12 +24,14 @@ export const ARCHIVE_EFFECTIVENESS_SUMMARY_SCHEMA = {
       type: "object",
       required: [
         "linked_outcomes",
+        "attributed_outcomes",
         "passing_outcomes",
         "failing_outcomes",
         "total_tests_run",
       ],
       properties: {
         linked_outcomes: { type: "integer", minimum: 0 },
+        attributed_outcomes: { type: "integer", minimum: 0 },
         passing_outcomes: { type: "integer", minimum: 0 },
         failing_outcomes: { type: "integer", minimum: 0 },
         total_tests_run: { type: "integer", minimum: 0 },

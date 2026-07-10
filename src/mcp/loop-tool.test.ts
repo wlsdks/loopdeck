@@ -382,6 +382,7 @@ describe("PromptLane MCP tools", () => {
         status: "passed",
         summary: "Focused MCP tests and full build passed.",
         evidence_refs: ["test:src/mcp/loop-tool.test.ts", "build:pnpm-build"],
+        used_improvement_prompt_ids: ["prmt_one"],
       },
       { dataDir },
     );
@@ -394,6 +395,7 @@ describe("PromptLane MCP tools", () => {
         status: "passed",
         summary: "Focused MCP tests and full build passed.",
         evidence_refs: ["test:src/mcp/loop-tool.test.ts", "build:pnpm-build"],
+        used_improvement_prompt_ids: ["prmt_one"],
       },
       privacy: {
         local_only: true,
@@ -426,6 +428,28 @@ describe("PromptLane MCP tools", () => {
       error_code: "invalid_input",
       message:
         "Loop outcome summary and evidence refs must not include secrets or raw local paths.",
+    });
+  });
+
+  it("rejects improvement attribution from another snapshot as invalid input", () => {
+    const dataDir = seedLoopSnapshot();
+
+    expect(
+      recordLoopOutcomeTool(
+        {
+          snapshot_id: "loop_mcp",
+          status: "passed",
+          summary: "Focused MCP tests passed.",
+          evidence_refs: ["test:focused"],
+          used_improvement_prompt_ids: ["prmt_other_loop"],
+        },
+        { dataDir },
+      ),
+    ).toEqual({
+      is_error: true,
+      error_code: "invalid_input",
+      message:
+        "Used improvement prompt ids must belong to the selected loop snapshot.",
     });
   });
 

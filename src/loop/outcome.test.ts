@@ -9,6 +9,7 @@ describe("loop outcome input", () => {
         status: "passed",
         summary: "  Focused tests and package smoke passed.  ",
         evidenceRefs: [" test:focused ", "commit:abc1234", "test:focused"],
+        usedImprovementPromptIds: [" prmt_123 ", "prmt_123", "prmt_456"],
       }),
     ).toEqual({
       ok: true,
@@ -16,7 +17,21 @@ describe("loop outcome input", () => {
         status: "passed",
         summary: "Focused tests and package smoke passed.",
         evidence_refs: ["test:focused", "commit:abc1234"],
+        used_improvement_prompt_ids: ["prmt_123", "prmt_456"],
       },
+    });
+  });
+
+  it("rejects invalid improvement attribution ids", () => {
+    expect(
+      parseLoopOutcomeInput({
+        status: "passed",
+        summary: "Focused tests passed.",
+        usedImprovementPromptIds: ["prmt_123", ""],
+      }),
+    ).toEqual({
+      ok: false,
+      message: "Used improvement prompt ids must be non-empty strings.",
     });
   });
 

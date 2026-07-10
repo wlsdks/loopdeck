@@ -141,6 +141,7 @@ describe("prompt CLI commands", () => {
             "main CI 28748310489",
             "/Users/example/project/secret.txt",
           ],
+          used_improvement_prompt_ids: [ids.beta],
         },
         next_brief: {
           generated: true,
@@ -168,15 +169,17 @@ describe("prompt CLI commands", () => {
         summary: "Validated [REDACTED:path]",
         evidence_refs: ["PR #453", "main CI 28748310489"],
         tests_run: 2,
+        improvement_used: true,
       },
     ]);
     expect(JSON.stringify(shown.loop_outcomes)).not.toContain("/Users/example");
     expect(shown.effectiveness).toEqual({
       verdict: "proven",
       summary:
-        "Actual loop evidence passed with 2 tests across 1 linked outcome.",
+        "Attributed improvement evidence passed with 2 tests across 1 outcome.",
       calibration: {
         linked_outcomes: 1,
+        attributed_outcomes: 1,
         passing_outcomes: 1,
         failing_outcomes: 0,
         total_tests_run: 2,

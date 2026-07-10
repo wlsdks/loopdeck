@@ -284,7 +284,12 @@ function LoopOutcomeEvidencePanel({ prompt }: { prompt: PromptDetail }) {
           <li key={outcome.snapshot_id}>
             <div className="loop-outcome-row">
               <strong>{outcome.status}</strong>
-              <span>{outcome.tests_run ?? 0} tests</span>
+              <span>
+                {outcome.tests_run ?? 0} tests ·{" "}
+                {outcome.improvement_used
+                  ? "improvement used"
+                  : "use not recorded"}
+              </span>
             </div>
             <p>{outcome.summary}</p>
             {outcome.evidence_refs.length > 0 && (
@@ -310,15 +315,16 @@ function formatEffectivenessVerdict(
 function formatEffectivenessCalibration(
   calibration: NonNullable<PromptDetail["effectiveness"]>["calibration"],
 ): string {
-  return `${calibration.passing_outcomes} passed / ${calibration.failing_outcomes} failed`;
+  return `${calibration.attributed_outcomes} attributed · ${calibration.passing_outcomes} passed / ${calibration.failing_outcomes} failed`;
 }
 
 function effectivenessFromOutcomes(
   outcomes: NonNullable<PromptDetail["loop_outcomes"]>,
 ): NonNullable<PromptDetail["effectiveness"]> {
-  const failed = outcomes.filter((outcome) => outcome.status === "failed");
-  const passed = outcomes.filter((outcome) => outcome.status === "passed");
-  const testsRun = outcomes.reduce(
+  const attributed = outcomes.filter((outcome) => outcome.improvement_used);
+  const failed = attributed.filter((outcome) => outcome.status === "failed");
+  const passed = attributed.filter((outcome) => outcome.status === "passed");
+  const testsRun = attributed.reduce(
     (total, outcome) => total + (outcome.tests_run ?? 0),
     0,
   );
@@ -336,21 +342,26 @@ function effectivenessFromOutcomes(
         : "has no passing outcome yet";
   const testCopy = testsRun === 1 ? "1 test" : `${testsRun} tests`;
   const outcomeCopy =
-    outcomes.length === 1
-      ? "1 linked outcome"
-      : `${outcomes.length} linked outcomes`;
+    attributed.length === 1 ? "1 outcome" : `${attributed.length} outcomes`;
+  const summary =
+    attributed.length === 0
+      ? outcomes.some((outcome) => outcome.status === "passed")
+        ? "The linked loop passed, but use of this PromptLane improvement was not recorded."
+        : "A loop outcome is linked, but use of this PromptLane improvement was not recorded."
+      : `Attributed improvement evidence ${status} with ${testCopy} across ${outcomeCopy}.`;
 
   return {
     verdict,
-    summary: `Actual loop evidence ${status} with ${testCopy} across ${outcomeCopy}.`,
+    summary,
     calibration: {
       linked_outcomes: outcomes.length,
+      attributed_outcomes: attributed.length,
       passing_outcomes: passed.length,
       failing_outcomes: failed.length,
       total_tests_run: testsRun,
     },
     evidence_refs: Array.from(
-      new Set(outcomes.flatMap((outcome) => outcome.evidence_refs)),
+      new Set(attributed.flatMap((outcome) => outcome.evidence_refs)),
     ).slice(0, 5),
   };
 }

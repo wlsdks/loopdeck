@@ -215,7 +215,7 @@ function formatArchiveScoreReport(report: ArchiveScoreReport): string {
     "Effectiveness evidence",
     `measured ${report.effectiveness_summary.measured_prompts}, unmeasured ${report.effectiveness_summary.unmeasured_prompts}`,
     `verdicts proven ${report.effectiveness_summary.verdicts.proven}, mixed ${report.effectiveness_summary.verdicts.mixed}, unproven ${report.effectiveness_summary.verdicts.unproven}`,
-    `linked outcomes ${report.effectiveness_summary.calibration.linked_outcomes}, passing ${report.effectiveness_summary.calibration.passing_outcomes}, failing ${report.effectiveness_summary.calibration.failing_outcomes}, tests ${report.effectiveness_summary.calibration.total_tests_run}`,
+    `linked outcomes ${report.effectiveness_summary.calibration.linked_outcomes}, attributed ${report.effectiveness_summary.calibration.attributed_outcomes}, passing ${report.effectiveness_summary.calibration.passing_outcomes}, failing ${report.effectiveness_summary.calibration.failing_outcomes}, tests ${report.effectiveness_summary.calibration.total_tests_run}`,
     `Next action: ${report.effectiveness_summary.next_action}`,
     "",
     "Next prompt template",

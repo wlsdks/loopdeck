@@ -17,6 +17,9 @@ export function promptLoopOutcomesForPrompt(
       status: snapshot.outcome.status,
       summary: redactOutcomeEvidenceText(snapshot.outcome.summary),
       evidence_refs: snapshot.outcome.evidence_refs.filter(isSafeEvidenceRef),
+      improvement_used:
+        snapshot.outcome.used_improvement_prompt_ids?.includes(promptId) ??
+        false,
       ...(snapshot.event_counts.tests_run !== undefined
         ? { tests_run: snapshot.event_counts.tests_run }
         : {}),
@@ -33,14 +36,15 @@ export function promptEffectivenessForOutcomes(
 ): PromptEffectiveness | undefined {
   if (outcomes.length === 0) return undefined;
 
-  const passed = outcomes.filter((outcome) => outcome.status === "passed");
-  const failed = outcomes.filter((outcome) => outcome.status === "failed");
-  const testsRun = outcomes.reduce(
+  const attributed = outcomes.filter((outcome) => outcome.improvement_used);
+  const passed = attributed.filter((outcome) => outcome.status === "passed");
+  const failed = attributed.filter((outcome) => outcome.status === "failed");
+  const testsRun = attributed.reduce(
     (total, outcome) => total + (outcome.tests_run ?? 0),
     0,
   );
   const evidenceRefs = uniqueEvidenceRefs(
-    outcomes.flatMap((outcome) => outcome.evidence_refs),
+    attributed.flatMap((outcome) => outcome.evidence_refs),
   );
   const verdict =
     passed.length > 0 && failed.length === 0
@@ -51,9 +55,15 @@ export function promptEffectivenessForOutcomes(
 
   return {
     verdict,
-    summary: effectivenessSummary(verdict, testsRun, outcomes.length),
+    summary: effectivenessSummary(
+      verdict,
+      testsRun,
+      attributed.length,
+      outcomes,
+    ),
     calibration: {
       linked_outcomes: outcomes.length,
+      attributed_outcomes: attributed.length,
       passing_outcomes: passed.length,
       failing_outcomes: failed.length,
       total_tests_run: testsRun,
@@ -81,8 +91,18 @@ function redactOutcomeEvidenceText(value: string): string {
 function effectivenessSummary(
   verdict: PromptEffectiveness["verdict"],
   testsRun: number,
-  outcomeCount: number,
+  attributedOutcomeCount: number,
+  linkedOutcomes: PromptLoopOutcomeEvidence[],
 ): string {
+  if (attributedOutcomeCount === 0) {
+    const linkedPassed = linkedOutcomes.some(
+      (outcome) => outcome.status === "passed",
+    );
+    return linkedPassed
+      ? "The linked loop passed, but use of this PromptLane improvement was not recorded."
+      : "A loop outcome is linked, but use of this PromptLane improvement was not recorded.";
+  }
+
   const status =
     verdict === "proven"
       ? "passed"
@@ -91,9 +111,11 @@ function effectivenessSummary(
         : "has no passing outcome yet";
   const testCopy = testsRun === 1 ? "1 test" : `${testsRun} tests`;
   const outcomeCopy =
-    outcomeCount === 1 ? "1 linked outcome" : `${outcomeCount} linked outcomes`;
+    attributedOutcomeCount === 1
+      ? "1 outcome"
+      : `${attributedOutcomeCount} outcomes`;
 
-  return `Actual loop evidence ${status} with ${testCopy} across ${outcomeCopy}.`;
+  return `Attributed improvement evidence ${status} with ${testCopy} across ${outcomeCopy}.`;
 }
 
 function uniqueEvidenceRefs(refs: string[]): string[] {

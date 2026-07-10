@@ -332,11 +332,13 @@ src/mcp` was run on current main-derived work and passed with 108 test files
 - Prompt-linked outcome evidence, CLI prompt outcome evidence, and Prompt effectiveness verdict
   are landed evidence-quality slices: prompt detail,
   storage `getPrompt()`, `promptlane show --json`, and the web prompt detail
-  now connect `expected_impact` predictions to actual raw-free loop outcomes
-  and an `effectiveness` verdict without treating that as scheduled
+  now connect `expected_impact` predictions to actual raw-free loop outcomes.
+  Improvement effectiveness is only proven when `used_improvement_prompt_ids`
+  explicitly attributes use; an ordinary linked pass remains `unproven`. This
+  avoids treating work success as causal evidence for an unused draft or as scheduled
   `ui-patrol` or native-dialog completion evidence.
 - The effectiveness calibration evidence extends that same raw-free
-  `effectiveness` evidence with linked-outcome, passing-outcome,
+  `effectiveness` evidence with linked-outcome, attributed-outcome, passing-outcome,
   failing-outcome, and total-test counts so users and agents can judge the
   strength of the verdict, not only its label.
 - MCP score_prompt effectiveness evidence is the landed agent-native follow-up:
@@ -361,7 +363,8 @@ src/mcp` was run on current main-derived work and passed with 108 test files
   `archive_effectiveness_score` as a benchmark hard gate, and
   `corepack pnpm --silent benchmark -- --json` reported
   `archive_effectiveness_score: 1`, `privacy_leak_count: 0`, and raw-free
-  `effectiveness_summary` coverage from a linked passed loop outcome. Main CI
+  `effectiveness_summary` coverage from a synthetic explicitly attributed
+  passed outcome. This proves the contract, not real-user effectiveness. Main CI
   run `28751693022` passed `test (22)` and `test (24)` after merge.
 - One-call coach effectiveness guidance is landed:
   `coach_prompt` agent briefs now summarize measured vs unmeasured archive
@@ -442,8 +445,9 @@ Next capability PR:
 ### 2. PromptLane MVP Reliability Slice Status
 
 No immediate MVP reliability slice remains from the current PromptLane product
-contract, but effectiveness work should continue to connect prompt improvement
-predictions to actual loop outcomes instead of adding prediction-only surfaces.
+contract. Effectiveness work must preserve explicit improvement-use attribution
+and should next collect consent-bearing real fixtures instead of adding
+prediction-only surfaces.
 
 Completed:
 

@@ -82,6 +82,7 @@ export type PromptLoopOutcomeEvidence = {
   summary: string;
   evidence_refs: string[];
   tests_run?: number;
+  improvement_used: boolean;
 };
 
 export type PromptEffectiveness = {
@@ -89,6 +90,7 @@ export type PromptEffectiveness = {
   summary: string;
   calibration: {
     linked_outcomes: number;
+    attributed_outcomes: number;
     passing_outcomes: number;
     failing_outcomes: number;
     total_tests_run: number;

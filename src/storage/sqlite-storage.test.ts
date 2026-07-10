@@ -239,6 +239,50 @@ describe("SQLite prompt storage", () => {
     storage.close();
   });
 
+  it("rejects improvement attribution outside the selected snapshot", () => {
+    const dataDir = createTempDir();
+    initializePromptLane({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+    });
+    storage.createLoopSnapshot({
+      id: "loop_attribution_scope",
+      created_at: "2026-07-04T01:00:00.000Z",
+      tool: "codex",
+      source: "cli",
+      cwd_label: "private-project",
+      project_id: "proj_outcome",
+      prompt_ids: ["prmt_allowed"],
+      event_counts: { prompts: 1 },
+      quality: { top_gaps: [], unresolved_questions: [] },
+      outcome: {
+        status: "unknown",
+        summary: "Awaiting outcome.",
+        evidence_refs: [],
+      },
+      next_brief: { generated: false, summary: "Collect more evidence." },
+      privacy: {
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        local_only: true,
+      },
+    });
+
+    expect(() =>
+      storage.recordLoopOutcome("loop_attribution_scope", {
+        status: "passed",
+        summary: "Focused tests passed.",
+        evidence_refs: ["test:focused"],
+        used_improvement_prompt_ids: ["prmt_other_loop"],
+      }),
+    ).toThrow(
+      "Used improvement prompt ids must belong to the selected loop snapshot.",
+    );
+
+    storage.close();
+  });
+
   it("includes raw-free loop outcome evidence on prompt details", async () => {
     const dataDir = createTempDir();
     initializePromptLane({ dataDir });
@@ -299,6 +343,7 @@ describe("SQLite prompt storage", () => {
         summary: "Finished [REDACTED:path] with [REDACTED:api_key].",
         evidence_refs: ["PR #453", "main CI 28748310489"],
         tests_run: 5,
+        improvement_used: false,
       },
     ]);
     const loopOutcomesJson = JSON.stringify(
@@ -310,7 +355,7 @@ describe("SQLite prompt storage", () => {
     storage.close();
   });
 
-  it("summarizes prompt effectiveness from linked loop outcomes", async () => {
+  it("does not claim prompt improvement effectiveness from an unattributed loop outcome", async () => {
     const dataDir = createTempDir();
     initializePromptLane({ dataDir });
     const storage = createSqlitePromptStorage({
@@ -365,19 +410,82 @@ describe("SQLite prompt storage", () => {
     const effectiveness = storage.getPrompt(stored.id)?.effectiveness;
 
     expect(effectiveness).toEqual({
-      verdict: "proven",
+      verdict: "unproven",
       summary:
-        "Actual loop evidence passed with 7 tests across 1 linked outcome.",
+        "The linked loop passed, but use of this PromptLane improvement was not recorded.",
       calibration: {
         linked_outcomes: 1,
-        passing_outcomes: 1,
+        attributed_outcomes: 0,
+        passing_outcomes: 0,
         failing_outcomes: 0,
-        total_tests_run: 7,
+        total_tests_run: 0,
       },
-      evidence_refs: ["PR #455", "main CI 28748664657"],
+      evidence_refs: [],
     });
     expect(JSON.stringify(effectiveness)).not.toContain("/Users/example");
     expect(JSON.stringify(effectiveness)).not.toContain("sk-proj-");
+
+    storage.close();
+  });
+
+  it("proves prompt improvement effectiveness only with explicit prompt attribution", async () => {
+    const dataDir = createTempDir();
+    initializePromptLane({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+      now: () => new Date("2026-07-04T01:00:00.000Z"),
+    });
+    const stored = await storeClaudePrompt(storage, {
+      prompt: "Use the PromptLane improvement and verify the result.",
+      receivedAt: "2026-07-04T01:00:00.000Z",
+    });
+
+    storage.createLoopSnapshot({
+      id: "loop_attributed_prompt_effectiveness",
+      created_at: "2026-07-04T01:05:00.000Z",
+      tool: "codex",
+      source: "mcp",
+      cwd_label: "private-project",
+      project_id: "proj_prompt_effectiveness",
+      prompt_ids: [stored.id],
+      event_counts: { prompts: 1, tests_run: 4 },
+      quality: {
+        average_prompt_score: 88,
+        top_gaps: [],
+        unresolved_questions: [],
+      },
+      outcome: {
+        status: "passed",
+        summary: "The explicitly attributed improvement passed.",
+        evidence_refs: ["test:focused"],
+        used_improvement_prompt_ids: [stored.id],
+      },
+      next_brief: {
+        generated: true,
+        prompt_id: stored.id,
+        summary: "Continue from attributed evidence.",
+      },
+      privacy: {
+        stores_prompt_bodies: false,
+        stores_raw_paths: false,
+        local_only: true,
+      },
+    });
+
+    expect(storage.getPrompt(stored.id)?.effectiveness).toEqual({
+      verdict: "proven",
+      summary:
+        "Attributed improvement evidence passed with 4 tests across 1 outcome.",
+      calibration: {
+        linked_outcomes: 1,
+        attributed_outcomes: 1,
+        passing_outcomes: 1,
+        failing_outcomes: 0,
+        total_tests_run: 4,
+      },
+      evidence_refs: ["test:focused"],
+    });
 
     storage.close();
   });

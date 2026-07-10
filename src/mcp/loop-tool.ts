@@ -9,7 +9,10 @@ import {
   proposeInstructionPatchFromMemory,
 } from "../loop/instruction-patch.js";
 import { decideLoopMemoryCandidate } from "../loop/memory-candidate.js";
-import { parseLoopOutcomeInput } from "../loop/outcome.js";
+import {
+  LoopOutcomeAttributionError,
+  parseLoopOutcomeInput,
+} from "../loop/outcome.js";
 import {
   hasAmbiguousLoopSnapshotTarget,
   hasLoopSnapshotSelection,
@@ -210,6 +213,7 @@ export function recordLoopOutcomeTool(
     status: args.status,
     summary: args.summary,
     evidenceRefs: args.evidence_refs,
+    usedImprovementPromptIds: args.used_improvement_prompt_ids,
   });
   if (!parsed.ok) {
     return loopToolError("invalid_input", parsed.message);
@@ -241,7 +245,15 @@ export function recordLoopOutcomeTool(
         );
       }
 
-      const snapshot = storage.recordLoopOutcome(snapshotId, parsed.outcome);
+      let snapshot;
+      try {
+        snapshot = storage.recordLoopOutcome(snapshotId, parsed.outcome);
+      } catch (error) {
+        if (error instanceof LoopOutcomeAttributionError) {
+          return loopToolError("invalid_input", error.message);
+        }
+        throw error;
+      }
 
       if (!snapshot) {
         return loopToolError(

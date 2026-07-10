@@ -261,6 +261,7 @@ function summarizeEffectiveness(
     },
     calibration: {
       linked_outcomes: 0,
+      attributed_outcomes: 0,
       passing_outcomes: 0,
       failing_outcomes: 0,
       total_tests_run: 0,
@@ -282,6 +283,8 @@ function summarizeEffectiveness(
     summary.verdicts[effectiveness.verdict] += 1;
     summary.calibration.linked_outcomes +=
       effectiveness.calibration.linked_outcomes;
+    summary.calibration.attributed_outcomes +=
+      effectiveness.calibration.attributed_outcomes;
     summary.calibration.passing_outcomes +=
       effectiveness.calibration.passing_outcomes;
     summary.calibration.failing_outcomes +=
@@ -301,7 +304,10 @@ function nextEffectivenessAction(summary: ArchiveEffectivenessSummary): string {
     return "Review mixed outcomes before treating prompt improvements as proven.";
   }
   if (summary.measured_prompts === 0) {
-    return "Record loop outcomes to prove whether prompt improvements help.";
+    return "Record loop outcomes and identify which PromptLane improvements were actually used.";
+  }
+  if (summary.calibration.attributed_outcomes === 0) {
+    return "Record which PromptLane improvements were used before claiming effectiveness.";
   }
   if (summary.unmeasured_prompts > 0) {
     return "Link recent prompts to loop outcomes before claiming archive-wide effectiveness.";
@@ -309,7 +315,7 @@ function nextEffectivenessAction(summary: ArchiveEffectivenessSummary): string {
   if (summary.verdicts.proven > 0) {
     return "Keep using proven prompt patterns and continue collecting outcome evidence.";
   }
-  return "Add passing evidence before treating prompt improvements as effective.";
+  return "Add attributed passing evidence before treating prompt improvements as effective.";
 }
 
 function buildPracticePlan(

@@ -8,7 +8,7 @@ import type {
 import { getLoopInstructionPatch } from "./api.js";
 import { LoopActivitySummary } from "./loop-activity-summary.js";
 import { LoopInstructionPatchPanel } from "./loop-instruction-patch-panel.js";
-import { LoopOutcomeForm, type LoopOutcomeInput } from "./loop-outcome-form.js";
+import type { LoopOutcomeInput } from "./loop-outcome-form.js";
 import { LoopRows, LoopWorktreeDetailRows } from "./loop-rows.js";
 import { LoopSelectedBriefAction } from "./loop-selected-brief-action.js";
 import { LoopEmptyState, LoopLoadingState } from "./loop-shell-states.js";
@@ -19,6 +19,7 @@ import { LoopWorktreeDetailHeader } from "./loop-worktree-detail-header.js";
 import { LoopWorktreeMemoryCollectionItems } from "./loop-worktree-memory-collection-items.js";
 import { LoopWorktreeMemoryApprovalRetryRenewedItems } from "./loop-worktree-memory-approval-retry-renewed-items.js";
 import { LoopWorktreeMergeReviewSummary } from "./loop-worktree-merge-review-summary.js";
+import { LoopWorktreeOutcomePanel } from "./loop-worktree-outcome-panel.js";
 import { LoopWorktreeRenewedMemoryApprovalItems } from "./loop-worktree-renewed-memory-approval-items.js";
 import { LoopWorktreeSelectedBriefGuidance } from "./loop-worktree-selected-brief-guidance.js";
 
@@ -166,19 +167,11 @@ export function LoopsView({
         <div className="loop-table panel">
           <div className="loop-worktree-detail">
             <LoopWorktreeDetailHeader worktreeDetail={worktreeDetail} />
-            {onRecordOutcome && worktreeDetail.items[0] && (
-              <LoopOutcomeForm
-                currentStatus={worktreeDetail.items[0].outcome_status}
-                initialApprovalAvailable={
-                  worktreeDetail.memory_candidate?.eligible === true
-                }
-                key={worktreeDetail.items[0].id}
-                memoryApproved={worktreeDetail.memory_approved === true}
-                onApprove={onApproveSelectedMemory}
-                onRecord={onRecordOutcome}
-                snapshotId={worktreeDetail.items[0].id}
-              />
-            )}
+            <LoopWorktreeOutcomePanel
+              detail={worktreeDetail}
+              onApprove={onApproveSelectedMemory}
+              onRecord={onRecordOutcome}
+            />
             <LoopWorktreeSelectedBriefGuidance worktreeDetail={worktreeDetail}>
               <LoopWorktreeContinuationSafetyItems
                 worktreeDetail={worktreeDetail}

@@ -16,7 +16,10 @@ import {
   toPromptLaneStatusSnapshot,
 } from "../../loop/status.js";
 import { decideLoopMemoryCandidate } from "../../loop/memory-candidate.js";
-import { parseLoopOutcomeInput } from "../../loop/outcome.js";
+import {
+  LoopOutcomeAttributionError,
+  parseLoopOutcomeInput,
+} from "../../loop/outcome.js";
 import {
   hasLoopSnapshotSelection,
   loopBriefNoSnapshotCliMessage,
@@ -86,6 +89,10 @@ const LoopOutcomeBodySchema = z.object({
   status: z.string(),
   summary: z.string().max(1_000),
   evidence_refs: z.array(z.string().max(200)).max(20).optional(),
+  used_improvement_prompt_ids: z
+    .array(z.string().trim().min(1).max(120))
+    .max(100)
+    .optional(),
 });
 
 const LoopBriefSelectionQuerySchema = z.object({
@@ -567,12 +574,21 @@ export function registerLoopRoutes(
       status: body.status,
       summary: body.summary,
       evidenceRefs: body.evidence_refs,
+      usedImprovementPromptIds: body.used_improvement_prompt_ids,
     });
     if (!parsed.ok) {
       throw problem(400, "Bad Request", parsed.message, request.url);
     }
 
-    const snapshot = storage.recordLoopOutcome(params.id, parsed.outcome);
+    let snapshot;
+    try {
+      snapshot = storage.recordLoopOutcome(params.id, parsed.outcome);
+    } catch (error) {
+      if (error instanceof LoopOutcomeAttributionError) {
+        throw problem(400, "Bad Request", error.message, request.url);
+      }
+      throw error;
+    }
     if (!snapshot) {
       throw problem(404, "Not Found", "Loop snapshot not found.", request.url);
     }

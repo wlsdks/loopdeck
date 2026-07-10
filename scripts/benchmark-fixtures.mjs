@@ -147,6 +147,7 @@ export function buildBenchmarkOutcomeSeeds({
       outcome: {
         status: "passed",
         summary: "benchmark effectiveness outcome passed",
+        improvement_used: true,
         evidence_refs: [
           "benchmark:effectiveness",
           "corepack pnpm benchmark",
@@ -340,11 +341,17 @@ function parseRealOutcome(value, fixtureIndex) {
       `real fixture ${fixtureIndex} outcome tests_run must be a non-negative integer.`,
     );
   }
+  if (typeof value.improvement_used !== "boolean") {
+    throw new Error(
+      `real fixture ${fixtureIndex} outcome improvement_used must be true or false.`,
+    );
+  }
   return {
     status,
     summary,
     evidence_refs: evidenceRefs,
     tests_run: value.tests_run,
+    improvement_used: value.improvement_used,
   };
 }
 

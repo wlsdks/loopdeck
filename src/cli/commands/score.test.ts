@@ -52,7 +52,7 @@ describe("score CLI command", () => {
       measured_prompts: 0,
       unmeasured_prompts: 3,
       next_action:
-        "Record loop outcomes to prove whether prompt improvements help.",
+        "Record loop outcomes and identify which PromptLane improvements were actually used.",
     });
     expect(report.next_prompt_template).toContain("Goal:");
     expect(report.low_score_prompts.map((prompt) => prompt.id)).toContain(
@@ -73,7 +73,7 @@ describe("score CLI command", () => {
     expect(text).toContain("Effectiveness evidence");
     expect(text).toContain("measured 0, unmeasured 3");
     expect(text).toContain(
-      "Record loop outcomes to prove whether prompt improvements help.",
+      "Record loop outcomes and identify which PromptLane improvements were actually used.",
     );
     expect(text).toContain("Next prompt template");
     expect(text).toContain("Lowest scoring prompts");

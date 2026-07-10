@@ -479,7 +479,7 @@ export const RECORD_LOOP_OUTCOME_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
   {
     name: "record_loop_outcome",
     description:
-      "Record user-approved outcome metadata for a local PromptLane snapshot after Codex or Claude Code has verified a loop result. Use this to mark a specific snapshot, or the latest snapshot when snapshot_id is omitted, as passed, failed, blocked, abandoned, in progress, or unknown. This writes only status, summary, and evidence references; it never stores prompt bodies, raw absolute paths, secrets, transcripts, or external LLM results.",
+      "Record user-approved outcome metadata for a local PromptLane snapshot after Codex or Claude Code has verified a loop result. Use this to mark a specific snapshot, or the latest snapshot when snapshot_id is omitted, as passed, failed, blocked, abandoned, in progress, or unknown. Optionally identify snapshot prompt ids whose PromptLane improvements were actually used. This writes only status, summary, evidence references, and safe prompt ids; it never stores prompt bodies, raw absolute paths, secrets, transcripts, or external LLM results.",
     annotations: {
       ...LOCAL_LOOP_WRITE_TOOL_ANNOTATIONS,
       title: "Record PromptLane outcome",
@@ -510,6 +510,12 @@ export const RECORD_LOOP_OUTCOME_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
           description:
             "Optional safe evidence labels, for example test command names, commit ids, or document ids. Do not include raw paths or secrets.",
         },
+        used_improvement_prompt_ids: {
+          type: "array",
+          items: { type: "string" },
+          description:
+            "Optional prompt ids from this snapshot whose PromptLane improvement drafts were actually used for the recorded loop. Omit when use was not verified.",
+        },
       },
       additionalProperties: false,
     },
@@ -525,6 +531,10 @@ export const RECORD_LOOP_OUTCOME_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
             status: LOOP_OUTCOME_STATUS_SCHEMA,
             summary: { type: "string" },
             evidence_refs: { type: "array", items: { type: "string" } },
+            used_improvement_prompt_ids: {
+              type: "array",
+              items: { type: "string" },
+            },
           },
         },
         next_action: { type: "string" },

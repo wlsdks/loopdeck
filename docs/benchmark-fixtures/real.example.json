@@ -10,6 +10,7 @@
       "outcome": {
         "status": "passed",
         "summary": "Replace with the redacted result of this agent loop.",
+        "improvement_used": true,
         "evidence_refs": ["test:replace-with-safe-evidence"],
         "tests_run": 1
       }

@@ -17,7 +17,10 @@ import {
   decideLoopMemoryCandidate,
   type LoopMemoryCandidateDecision,
 } from "../../loop/memory-candidate.js";
-import { parseLoopOutcomeInput } from "../../loop/outcome.js";
+import {
+  LoopOutcomeAttributionError,
+  parseLoopOutcomeInput,
+} from "../../loop/outcome.js";
 import {
   hasAmbiguousLoopSnapshotTarget,
   hasLoopSnapshotSelection,
@@ -60,6 +63,8 @@ type LoopCliOptions = {
   summary?: string;
   evidenceRef?: string[];
   evidenceRefs?: string[];
+  usedImprovementPrompt?: string[];
+  usedImprovementPromptIds?: string[];
   snapshotId?: string;
 };
 
@@ -126,6 +131,12 @@ export function registerLoopCommand(program: Command): void {
     .option(
       "--evidence-ref <ref>",
       "Privacy-safe evidence label; repeat for multiple labels.",
+      collectOptionValue,
+      [],
+    )
+    .option(
+      "--used-improvement-prompt <prompt-id>",
+      "Prompt id whose PromptLane improvement was used; repeat for multiple prompts.",
       collectOptionValue,
       [],
     )
@@ -324,6 +335,8 @@ export function loopOutcomeForCli(options: LoopCliOptions = {}): string {
     status: options.status,
     summary: options.summary,
     evidenceRefs: options.evidenceRefs ?? options.evidenceRef,
+    usedImprovementPromptIds:
+      options.usedImprovementPromptIds ?? options.usedImprovementPrompt,
   });
   if (!parsed.ok) {
     throw new UserError(parsed.message);
@@ -353,7 +366,15 @@ export function loopOutcomeForCli(options: LoopCliOptions = {}): string {
       );
     }
 
-    const recorded = storage.recordLoopOutcome(snapshot.id, parsed.outcome);
+    let recorded;
+    try {
+      recorded = storage.recordLoopOutcome(snapshot.id, parsed.outcome);
+    } catch (error) {
+      if (error instanceof LoopOutcomeAttributionError) {
+        throw new UserError(error.message);
+      }
+      throw error;
+    }
     if (!recorded) {
       throw new UserError("Loop snapshot not found.");
     }

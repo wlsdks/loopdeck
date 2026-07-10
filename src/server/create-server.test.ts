@@ -2540,6 +2540,7 @@ describe("createServer P2 ingest boundary", () => {
         status: "passed",
         summary: "  Focused web checks passed.  ",
         evidence_refs: [" test:web-loops ", "commit:abc1234"],
+        used_improvement_prompt_ids: ["prmt_one"],
       },
     });
 
@@ -2552,6 +2553,7 @@ describe("createServer P2 ingest boundary", () => {
           status: "passed",
           summary: "Focused web checks passed.",
           evidence_refs: ["test:web-loops", "commit:abc1234"],
+          used_improvement_prompt_ids: ["prmt_one"],
         },
         next_actions: [
           "promptlane loop memory-candidate",

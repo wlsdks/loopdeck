@@ -78,12 +78,12 @@ describe("benchmark scoring profiles", () => {
 
     expect(
       scoreOutcomePassRate({
-        calibration: { linked_outcomes: 3, passing_outcomes: 2 },
+        calibration: { attributed_outcomes: 3, passing_outcomes: 2 },
       }),
     ).toBe(0.667);
     expect(
       scoreOutcomePassRate({
-        calibration: { linked_outcomes: 0, passing_outcomes: 0 },
+        calibration: { attributed_outcomes: 0, passing_outcomes: 0 },
       }),
     ).toBe(0);
   });
@@ -97,6 +97,7 @@ describe("benchmark scoring profiles", () => {
         verdicts: { proven: 1 },
         calibration: {
           linked_outcomes: 1,
+          attributed_outcomes: 1,
           passing_outcomes: 1,
           total_tests_run: 4,
         },
@@ -121,7 +122,7 @@ describe("benchmark scoring profiles", () => {
         fixtureCount: 2,
         forbiddenValues: [],
       }),
-    ).toBe(0.889);
+    ).toBe(0.9);
   });
 
   it("builds a stable raw-free fingerprint from fixture set and safe labels", async () => {

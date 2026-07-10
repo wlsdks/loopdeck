@@ -172,6 +172,7 @@ describe("createArchiveScoreReport", () => {
           "Actual loop evidence passed with 5 tests across 1 linked outcome.",
         calibration: {
           linked_outcomes: 1,
+          attributed_outcomes: 1,
           passing_outcomes: 1,
           failing_outcomes: 0,
           total_tests_run: 5,
@@ -184,6 +185,7 @@ describe("createArchiveScoreReport", () => {
           "Actual loop evidence has mixed results with 3 tests across 2 linked outcomes.",
         calibration: {
           linked_outcomes: 2,
+          attributed_outcomes: 2,
           passing_outcomes: 1,
           failing_outcomes: 1,
           total_tests_run: 3,
@@ -205,6 +207,7 @@ describe("createArchiveScoreReport", () => {
       },
       calibration: {
         linked_outcomes: 3,
+        attributed_outcomes: 3,
         passing_outcomes: 2,
         failing_outcomes: 1,
         total_tests_run: 8,

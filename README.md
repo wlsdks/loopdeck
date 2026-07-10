@@ -799,7 +799,10 @@ The MCP server exposes 20 tools:
   boundary, the brief says to refresh the loop snapshot but does not include
   compact summaries or custom compact instructions.
 - `record_loop_outcome`: store user-approved loop outcome metadata for a
-  PromptLane snapshot without storing prompt bodies or raw paths.
+  PromptLane snapshot without storing prompt bodies or raw paths. Pass
+  `used_improvement_prompt_ids` only for snapshot prompts whose PromptLane
+  improvements were actually used; linked outcomes without this attribution
+  remain unproven as improvement evidence.
 - `propose_loop_memory_candidate`: decide whether the latest or explicitly
   selected verified loop outcome is safe and evidence-backed enough to become a user-approved memory
   candidate. It is read-only and never writes AGENTS.md, CLAUDE.md, memory
@@ -1004,6 +1007,7 @@ promptlane benchmark --json
 promptlane benchmark init-fixture --output "$FIXTURE_FILE"
 # Replace every example with consent-bearing redacted fixtures.
 # Add passed or failed outcome metadata with safe evidence refs.
+# Set improvement_used=true only when the PromptLane improvement was used.
 # Set template_only to false after confirming the fixture is ready.
 promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"
 promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT"
