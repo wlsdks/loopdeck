@@ -100,8 +100,12 @@ blocked로 판단했지만 exact-fact rubric은 둘 다 실패했습니다. Loop
 많은 evidence blocker를 복구했으나 비용이 조금 더 들었고 public artifact
 부재 사실을 빠뜨렸습니다. 이 과정에서 안전한 checkpoint evidence ref가
 저장되지만 brief에는 표시되지 않는 결함을 발견했습니다. 이제 privacy filter를
-거친 `Checkpoint Evidence` section에 포함됩니다. 집계는 5쌍·4개 유형이지만
-여전히 `INSUFFICIENT DATA`이며 release 승인으로 해석하지 않습니다.
+거친 `Checkpoint Evidence` section에 포함됩니다. Follow-up은 모든 release
+fact를 복구하고 재탐색을 줄였지만 필요한 version 결정 전에 final gate를
+삽입해 여전히 fail/fail입니다. 이제 selected contract는 stated action 사이에
+fallback step을 삽입하지 못하게 명시합니다. 집계는 6쌍·4개 유형, 엄격
+성공률 baseline 0% 대 LoopRelay 33.3%이며 여전히 `INSUFFICIENT DATA`이고
+release 승인으로 해석하지 않습니다.
 
 npm package가 publish된 뒤:
 

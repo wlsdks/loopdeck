@@ -11371,5 +11371,7 @@
       treatment cost overhead without hiding its more complete blocker set.
 - [x] RED/GREEN: Include safe checkpoint evidence refs in explicit briefs so
       release facts are not discarded while paths and secrets remain omitted.
-- [ ] RERUN: Recheck the same live release boundary after evidence-ref
+- [x] RERUN: Recheck the same live release boundary after evidence-ref
       remediation, as a paired fix verification rather than a new task claim.
+- [x] PRIORITY: Preserve exact selected-contract sequencing and prevent generic
+      fallback steps from being inserted between explicit checkpoint actions.

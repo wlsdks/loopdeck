@@ -26,6 +26,9 @@ describe("createLoopBrief", () => {
     expect(brief.prompt).toContain("## Selected Continuation Contract");
     expect(brief.prompt).toContain("authority: explicit local checkpoint");
     expect(brief.prompt).toContain(
+      "priority: follow this contract exactly; do not insert fallback steps between its stated actions.",
+    );
+    expect(brief.prompt).toContain(
       "Run one unseen real-repository pair and keep it separate from synthetic cohorts.",
     );
     expect(brief.prompt).toContain("## Checkpoint Evidence");

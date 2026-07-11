@@ -3,7 +3,7 @@
   "design": "matched_observational",
   "status": "insufficient_data",
   "causal_claim": false,
-  "pair_count": 5,
+  "pair_count": 6,
   "task_type_count": 4,
   "independent_user_count": 0,
   "independent_agent_operator_count": 0,
@@ -20,7 +20,7 @@
   ],
   "coverage": {
     "required_pairs_per_task_type": 2,
-    "task_types_meeting_pair_minimum": 1,
+    "task_types_meeting_pair_minimum": 2,
     "all_task_types_meet_pair_minimum": false
   },
   "by_task_type": {
@@ -87,24 +87,24 @@
       }
     },
     "release_verification_continuity": {
-      "pair_count": 1,
+      "pair_count": 2,
       "baseline_success_rate": 0,
       "looprelay_success_rate": 0,
       "success_rate_delta": 0,
-      "baseline_actionability": 0.5,
-      "looprelay_actionability": 0.75,
+      "baseline_actionability": 0.45,
+      "looprelay_actionability": 0.8,
       "transitions": {
         "improved": 0,
         "regressed": 0,
         "unchanged_passed": 0,
-        "unchanged_failed": 1
+        "unchanged_failed": 2
       },
       "delta": {
-        "mean_elapsed_ms": 2020,
-        "mean_tool_calls": 2,
-        "mean_input_tokens": 31038,
-        "mean_cached_input_tokens": 11520,
-        "mean_time_to_first_value_ms": 2020,
+        "mean_elapsed_ms": -11690,
+        "mean_tool_calls": -2,
+        "mean_input_tokens": -44956.5,
+        "mean_cached_input_tokens": -47360,
+        "mean_time_to_first_value_ms": -11690,
         "friction_free_rate": 0
       },
       "uncertainty": {
@@ -113,8 +113,8 @@
         "upper": 1
       },
       "decision": {
-        "action": "collect_more",
-        "evidence_status": "underpowered"
+        "action": "retain",
+        "evidence_status": "directional"
       }
     },
     "session_recovery": {
@@ -157,28 +157,28 @@
   },
   "baseline": {
     "success_rate": 0,
-    "mean_actionability": 0.44,
-    "mean_elapsed_ms": 51792,
-    "mean_tool_calls": 7.2,
-    "mean_input_tokens": 207536.2,
-    "mean_cached_input_tokens": 159078.4,
-    "mean_output_tokens": 1593.4,
-    "mean_time_to_first_value_ms": 51792,
-    "friction_free_rate": 0.2,
+    "mean_actionability": 0.433333,
+    "mean_elapsed_ms": 68810,
+    "mean_tool_calls": 7.666667,
+    "mean_input_tokens": 231745.166667,
+    "mean_cached_input_tokens": 176597.333333,
+    "mean_output_tokens": 1788,
+    "mean_time_to_first_value_ms": 68810,
+    "friction_free_rate": 0.166667,
     "privacy_blocker_count": 0,
     "data_loss_blocker_count": 0,
     "install_blocker_count": 0
   },
   "looprelay": {
-    "success_rate": 0.4,
-    "mean_actionability": 0.87,
-    "mean_elapsed_ms": 45622,
-    "mean_tool_calls": 3.4,
-    "mean_input_tokens": 139418.4,
-    "mean_cached_input_tokens": 86579.2,
-    "mean_output_tokens": 1178.8,
-    "mean_time_to_first_value_ms": 45622,
-    "friction_free_rate": 0.6,
+    "success_rate": 0.333333,
+    "mean_actionability": 0.866667,
+    "mean_elapsed_ms": 59435,
+    "mean_tool_calls": 3.5,
+    "mean_input_tokens": 154821.833333,
+    "mean_cached_input_tokens": 98474.666667,
+    "mean_output_tokens": 1273,
+    "mean_time_to_first_value_ms": 59435,
+    "friction_free_rate": 0.5,
     "privacy_blocker_count": 0,
     "data_loss_blocker_count": 0,
     "install_blocker_count": 0
@@ -188,36 +188,36 @@
     "time_to_first_value_ms": 1,
     "continuation_accuracy": 0,
     "failure_prevention_accuracy": 0,
-    "clarification_accuracy": 0.2,
+    "clarification_accuracy": 0.166667,
     "blocker_flags": 1
   },
   "delta": {
-    "success_rate": 0.4,
-    "mean_actionability": 0.43,
-    "mean_elapsed_ms": -6170,
-    "mean_tool_calls": -3.8,
-    "mean_input_tokens": -68117.8,
-    "mean_cached_input_tokens": -72499.2,
-    "mean_time_to_first_value_ms": -6170,
-    "friction_free_rate": 0.4
+    "success_rate": 0.333333,
+    "mean_actionability": 0.433334,
+    "mean_elapsed_ms": -9375,
+    "mean_tool_calls": -4.166667,
+    "mean_input_tokens": -76923.333334,
+    "mean_cached_input_tokens": -78122.666666,
+    "mean_time_to_first_value_ms": -9375,
+    "friction_free_rate": 0.333333
   },
   "transitions": {
     "improved": 2,
     "regressed": 0,
     "unchanged_passed": 0,
-    "unchanged_failed": 3
+    "unchanged_failed": 4
   },
   "preference": {
     "baseline": 0,
-    "looprelay": 5,
+    "looprelay": 6,
     "tie": 0
   },
   "adoption_rate": 1,
   "bias": {
-    "baseline_first": 2,
+    "baseline_first": 3,
     "looprelay_first": 3,
     "position_consistency": 1,
-    "human_review_agreement": 0.6
+    "human_review_agreement": 0.666667
   },
   "critical_blockers": 0,
   "note": "Observational matched-pair evidence only. Null and negative results are retained."

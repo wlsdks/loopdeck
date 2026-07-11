@@ -103,8 +103,12 @@ release and both failed the exact-fact rubric; LoopRelay recovered more
 evidence blockers but cost slightly more and omitted public-artifact absence
 facts. This exposed that safe checkpoint evidence refs were stored but not
 rendered in the brief. They are now included under a privacy-filtered
-`Checkpoint Evidence` section. The aggregate is now five pairs across four
-types, still `INSUFFICIENT DATA` and still not a release authorization.
+`Checkpoint Evidence` section. The follow-up recovered every release fact and
+reduced rediscovery, but still inserted a final gate before the required
+version decision, so it remains fail/fail. Selected contracts now explicitly
+forbid fallback steps between stated actions. The aggregate is six pairs
+across four types, with 0% baseline and 33.3% LoopRelay strict success; it
+remains `INSUFFICIENT DATA` and is not a release authorization.
 
 After the npm package is published:
 

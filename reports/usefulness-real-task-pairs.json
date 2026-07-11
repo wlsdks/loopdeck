@@ -342,6 +342,69 @@
         "treatment-missed-public-artifact-absence-and-suggested-versions",
         "brief-omitted-checkpoint-evidence-refs"
       ]
+    },
+    {
+      "id": "real-release-continuity-006",
+      "task_type": "release_verification_continuity",
+      "order": "baseline_first",
+      "execution": {
+        "agent": "codex",
+        "agent_version": "0.144.1",
+        "model": "gpt-5.6-terra",
+        "reasoning_effort": "medium",
+        "sandbox": "read-only",
+        "fresh_session": true,
+        "repository_state": "commit:f74466df",
+        "ground_truth": "sol-preregistered-evidence-ref-remediation"
+      },
+      "baseline": {
+        "passed": false,
+        "core_task_recovered": false,
+        "actionability": 0.4,
+        "elapsed_ms": 153900,
+        "time_to_first_value_ms": 153900,
+        "tool_calls": 10,
+        "failed_tool_calls": 1,
+        "input_tokens": 352790,
+        "cached_input_tokens": 264192,
+        "output_tokens": 2761,
+        "reasoning_output_tokens": 1083,
+        "friction_count": 1,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false
+      },
+      "looprelay": {
+        "passed": false,
+        "core_task_recovered": true,
+        "actionability": 0.85,
+        "elapsed_ms": 128500,
+        "time_to_first_value_ms": 128500,
+        "tool_calls": 4,
+        "failed_tool_calls": 2,
+        "input_tokens": 231839,
+        "cached_input_tokens": 157952,
+        "output_tokens": 1744,
+        "reasoning_output_tokens": 582,
+        "friction_count": 1,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false,
+        "adopted": true
+      },
+      "human_preference": "looprelay",
+      "judge": {
+        "position_consistent": true,
+        "preference": "looprelay",
+        "baseline_pass": false,
+        "looprelay_pass": false
+      },
+      "finding_labels": [
+        "evidence-refs-restored-all-release-facts",
+        "baseline-missed-live-artifacts-and-evidence-gates",
+        "treatment-inserted-final-gate-before-version-decision",
+        "selected-contract-sequence-not-preserved"
+      ]
     }
   ]
 }

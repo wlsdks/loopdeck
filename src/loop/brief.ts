@@ -60,6 +60,7 @@ export function createLoopBrief(input: {
         ? [
             "## Selected Continuation Contract",
             "authority: explicit local checkpoint",
+            "priority: follow this contract exactly; do not insert fallback steps between its stated actions.",
             safeOutcomeSummary(snapshot.outcome.summary),
             "",
             ...checkpointEvidenceLines(snapshot.outcome.evidence_refs),

@@ -273,6 +273,21 @@ discarded them. A focused privacy-preserving fix now renders a `Checkpoint
 Evidence` section and filters raw paths and secrets. The release pair remains
 fail/fail; a remediation rerun is required before claiming recovery.
 
+The baseline-first remediation follow-up on `f74466df` proved that rendering
+evidence refs fixed fact recovery but not full release sequencing. Treatment
+reported the immutable tag, distinct HEAD, absent npm artifact, absent GitHub
+Release, and exact 0/3, 5/10, and 1/4 gates. Baseline omitted the public
+artifact and evidence facts. Treatment also reduced elapsed time from 153.90s
+to 128.50s, tools from ten to four, and input tokens from 352,790 to 231,839.
+
+However, treatment inserted a future full release gate between evidence
+completion and the required explicit later-version decision. Sol therefore
+kept both conditions failed while preferring treatment in both position
+orders. The brief now marks selected checkpoint sequencing as exact and
+forbids inserting fallback steps between stated actions. This same release
+case will not be rerun again as additional evidence; a different future
+release boundary must test the priority remediation.
+
 ## Independent Codex Operator Holdout
 
 Three fresh Codex CLI 0.142.5 / GPT-5.4 sessions acted as first-time operators
