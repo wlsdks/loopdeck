@@ -61,6 +61,39 @@ describe("usefulness report generator", () => {
     });
   });
 
+  it("keeps remediated matched-pair blockers visible and blocks unresolved ones", () => {
+    const input = ledger();
+    input.pairs[0].baseline.data_loss_blocker = true;
+    input.pairs[0].blocker_resolution = "remediated";
+
+    const remediated = createUsefulnessReport(input);
+
+    expect(remediated).toMatchObject({
+      critical_blockers: 0,
+      matched_pair_blockers: {
+        observed_pair_count: 1,
+        remediated_pair_count: 1,
+        open_pair_count: 0,
+      },
+    });
+
+    input.pairs[1].looprelay.data_loss_blocker = true;
+    input.pairs[1].blocker_resolution = "open";
+    const unresolved = createUsefulnessReport(input);
+
+    expect(unresolved.critical_blockers).toBe(1);
+    expect(unresolved.public_readiness).toEqual({
+      ready: false,
+      reason: "critical_blocker",
+    });
+
+    const unclassified = ledger();
+    unclassified.pairs[0].baseline.data_loss_blocker = true;
+    expect(() => createUsefulnessReport(unclassified)).toThrow(
+      "matched-pair blocker resolution is required",
+    );
+  });
+
   it("aggregates paired outcomes, costs, friction, and task coverage", () => {
     const report = createUsefulnessReport(ledger());
 
@@ -430,6 +463,7 @@ function pair(
     id: `pair-${taskType.replaceAll("_", "-")}`,
     task_type: taskType,
     order,
+    blocker_resolution: undefined as "open" | "remediated" | undefined,
     baseline: {
       passed: baselinePassed,
       actionability: baselineActionability,
@@ -493,6 +527,7 @@ describe("real-task usefulness ledger", () => {
     expect(ledger.pairs.at(-1)).toMatchObject({
       id: "real-failure-prevention-011",
       order: "looprelay_first",
+      blocker_resolution: "remediated",
       baseline: { passed: false, data_loss_blocker: true },
       looprelay: { passed: false, data_loss_blocker: true },
       human_preference: "baseline",

@@ -24,6 +24,7 @@ export function createUsefulnessReport(input) {
   const minimums = input.minimums;
   const independentUsers = input.independent_users ?? [];
   const independentAgentOperators = input.independent_agent_operators ?? [];
+  const matchedPairBlockers = summarizeMatchedPairBlockers(pairs);
   const participantCriticalBlockers = independentUsers.reduce(
     (count, user) =>
       count +
@@ -33,7 +34,9 @@ export function createUsefulnessReport(input) {
     0,
   );
   const criticalBlockers =
-    (input.critical_blockers ?? 0) + participantCriticalBlockers;
+    (input.critical_blockers ?? 0) +
+    participantCriticalBlockers +
+    matchedPairBlockers.open_pair_count;
   const requiredPairsPerTaskType = minimums.pairs_per_task_type ?? 1;
   const taskTypesMeetingPairMinimum = Array.from(taskTypes).filter(
     (taskType) =>
@@ -149,6 +152,7 @@ export function createUsefulnessReport(input) {
         ),
       ),
     },
+    matched_pair_blockers: matchedPairBlockers,
     critical_blockers: criticalBlockers,
     note: "Observational matched-pair evidence only. Null and negative results are retained.",
   };
@@ -338,7 +342,7 @@ export function renderReadmeResultBlock(report, locale) {
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 ${taskRows}
 
-전체 성공률은 ${percent(report.baseline.success_rate * 100)}에서 ${percent(report.looprelay.success_rate * 100)}로 변했고 actionability는 ${percent(report.baseline.mean_actionability * 100)}에서 ${percent(report.looprelay.mean_actionability * 100)}로 변했습니다. 평균 input token 비용은 ${round(tokenDeltaPercent)}% 변했습니다. Cached token과 TTFV의 조건별 측정 coverage는 각각 ${percent(report.measurement_coverage.cached_input_tokens * 100)}, ${percent(report.measurement_coverage.time_to_first_value_ms * 100)}이며 누락값을 0으로 해석하지 않습니다. ${coverageKo} 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 독립 사용자 검증 전까지 causal claim은 false입니다.`;
+전체 성공률은 ${percent(report.baseline.success_rate * 100)}에서 ${percent(report.looprelay.success_rate * 100)}로 변했고 actionability는 ${percent(report.baseline.mean_actionability * 100)}에서 ${percent(report.looprelay.mean_actionability * 100)}로 변했습니다. 평균 input token 비용은 ${round(tokenDeltaPercent)}% 변했습니다. Cached token과 TTFV의 조건별 측정 coverage는 각각 ${percent(report.measurement_coverage.cached_input_tokens * 100)}, ${percent(report.measurement_coverage.time_to_first_value_ms * 100)}이며 누락값을 0으로 해석하지 않습니다. Matched pair에서 관찰된 blocker는 ${report.matched_pair_blockers.observed_pair_count}건이며, remediation이 기록된 사례는 ${report.matched_pair_blockers.remediated_pair_count}건, 공개를 막는 미해결 사례는 ${report.matched_pair_blockers.open_pair_count}건입니다. ${coverageKo} 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 독립 사용자 검증 전까지 causal claim은 false입니다.`;
   }
 
   return `Current results are maintainer-run observational evidence, not a causal claim. They include ${report.pair_count} matched pairs across ${report.task_type_count} task types and ${report.independent_user_count}/${report.minimums.independent_users} independent users. A separate cohort has ${report.independent_agent_operator_count} independent agent operators with ${report.independent_agent_operator_success_rate === null ? "N/A" : percent(report.independent_agent_operator_success_rate * 100)} first-value success; agent operators do not count as human users.
@@ -347,7 +351,28 @@ ${taskRows}
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 ${taskRows}
 
-Aggregate success moved from ${percent(report.baseline.success_rate * 100)} to ${percent(report.looprelay.success_rate * 100)}, while actionability moved from ${percent(report.baseline.mean_actionability * 100)} to ${percent(report.looprelay.mean_actionability * 100)}. Mean input-token cost changed by ${round(tokenDeltaPercent)}%. Cached-token and TTFV condition coverage are ${percent(report.measurement_coverage.cached_input_tokens * 100)} and ${percent(report.measurement_coverage.time_to_first_value_ms * 100)} respectively; missing values are not interpreted as zero. ${coverageEn} Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. The causal claim remains false until independent-user validation is complete.`;
+Aggregate success moved from ${percent(report.baseline.success_rate * 100)} to ${percent(report.looprelay.success_rate * 100)}, while actionability moved from ${percent(report.baseline.mean_actionability * 100)} to ${percent(report.looprelay.mean_actionability * 100)}. Mean input-token cost changed by ${round(tokenDeltaPercent)}%. Cached-token and TTFV condition coverage are ${percent(report.measurement_coverage.cached_input_tokens * 100)} and ${percent(report.measurement_coverage.time_to_first_value_ms * 100)} respectively; missing values are not interpreted as zero. Matched pairs observed ${report.matched_pair_blockers.observed_pair_count} blocker-bearing cases: ${report.matched_pair_blockers.remediated_pair_count} documented as remediated and ${report.matched_pair_blockers.open_pair_count} unresolved cases that block public readiness. ${coverageEn} Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. The causal claim remains false until independent-user validation is complete.`;
+}
+
+function summarizeMatchedPairBlockers(pairs) {
+  const observed = pairs.filter((pair) => hasMatchedPairBlocker(pair));
+  return {
+    observed_pair_count: observed.length,
+    remediated_pair_count: observed.filter(
+      (pair) => pair.blocker_resolution === "remediated",
+    ).length,
+    open_pair_count: observed.filter(
+      (pair) => pair.blocker_resolution !== "remediated",
+    ).length,
+  };
+}
+
+function hasMatchedPairBlocker(pair) {
+  return [pair.baseline, pair.looprelay].some((condition) =>
+    ["privacy_blocker", "data_loss_blocker", "install_blocker"].some(
+      (key) => condition[key] === true,
+    ),
+  );
 }
 
 function renderMetric(metric, y) {
@@ -632,6 +657,19 @@ function validateLedger(input) {
     }
     validateCondition(pair.baseline, false);
     validateCondition(pair.looprelay, true);
+    const hasBlocker = hasMatchedPairBlocker(pair);
+    if (
+      pair.blocker_resolution !== undefined &&
+      !new Set(["open", "remediated"]).has(pair.blocker_resolution)
+    ) {
+      throw new Error("invalid matched-pair blocker resolution");
+    }
+    if (hasBlocker && pair.blocker_resolution === undefined) {
+      throw new Error("matched-pair blocker resolution is required");
+    }
+    if (!hasBlocker && pair.blocker_resolution !== undefined) {
+      throw new Error("matched-pair blocker resolution requires a blocker");
+    }
     if (!new Set(["baseline", "looprelay", "tie"]).has(pair.human_preference)) {
       throw new Error("invalid human preference");
     }

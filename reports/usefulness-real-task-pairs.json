@@ -691,6 +691,7 @@
       "id": "real-failure-prevention-011",
       "task_type": "failure_prevention",
       "order": "looprelay_first",
+      "blocker_resolution": "remediated",
       "execution": {
         "agent": "codex",
         "agent_version": "0.144.1",

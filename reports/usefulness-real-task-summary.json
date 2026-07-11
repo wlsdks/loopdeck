@@ -265,6 +265,11 @@
     "position_consistency": 0.909091,
     "human_review_agreement": 0.7
   },
+  "matched_pair_blockers": {
+    "observed_pair_count": 1,
+    "remediated_pair_count": 1,
+    "open_pair_count": 0
+  },
   "critical_blockers": 0,
   "note": "Observational matched-pair evidence only. Null and negative results are retained."
 }

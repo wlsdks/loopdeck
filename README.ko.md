@@ -25,7 +25,7 @@
 | Release verification continuity | 6 | 100% | 100% | 0pp | -100..100pp | +42178.2 | Narrow |
 | Session recovery | 6 | 16.7% | 83.3% | +66.7pp | -44.2..100pp | -25189 | Retain |
 
-전체 성공률은 60%에서 83.3%로 변했고 actionability는 74%에서 89.7%로 변했습니다. 평균 input token 비용은 11.1% 변했습니다. Cached token과 TTFV의 조건별 측정 coverage는 각각 66.7%, 66.7%이며 누락값을 0으로 해석하지 않습니다. 목표 5개 작업 유형 모두 유형별 최소 5쌍을 충족했습니다. 다만 maintainer-run evidence이며 독립 사용자 검증이 끝나지 않았으므로 판단은 directional입니다. 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 독립 사용자 검증 전까지 causal claim은 false입니다.
+전체 성공률은 60%에서 83.3%로 변했고 actionability는 74%에서 89.7%로 변했습니다. 평균 input token 비용은 11.1% 변했습니다. Cached token과 TTFV의 조건별 측정 coverage는 각각 66.7%, 66.7%이며 누락값을 0으로 해석하지 않습니다. Matched pair에서 관찰된 blocker는 0건이며, remediation이 기록된 사례는 0건, 공개를 막는 미해결 사례는 0건입니다. 목표 5개 작업 유형 모두 유형별 최소 5쌍을 충족했습니다. 다만 maintainer-run evidence이며 독립 사용자 검증이 끝나지 않았으므로 판단은 directional입니다. 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 독립 사용자 검증 전까지 causal claim은 false입니다.
 <!-- USEFULNESS_RESULTS_END -->
 
 이 그래프는 수작업 마케팅 수치가 아니라 commit된 raw-free matched-pair

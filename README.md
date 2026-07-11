@@ -30,7 +30,7 @@ Current results are maintainer-run observational evidence, not a causal claim. T
 | Release verification continuity | 6 | 100% | 100% | 0pp | -100..100pp | +42178.2 | Narrow |
 | Session recovery | 6 | 16.7% | 83.3% | +66.7pp | -44.2..100pp | -25189 | Retain |
 
-Aggregate success moved from 60% to 83.3%, while actionability moved from 74% to 89.7%. Mean input-token cost changed by 11.1%. Cached-token and TTFV condition coverage are 66.7% and 66.7% respectively; missing values are not interpreted as zero. All 5 target task types meet the per-type minimum of 5 pairs. Decisions remain directional because this is maintainer-run evidence and independent-user validation is incomplete. Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. The causal claim remains false until independent-user validation is complete.
+Aggregate success moved from 60% to 83.3%, while actionability moved from 74% to 89.7%. Mean input-token cost changed by 11.1%. Cached-token and TTFV condition coverage are 66.7% and 66.7% respectively; missing values are not interpreted as zero. Matched pairs observed 0 blocker-bearing cases: 0 documented as remediated and 0 unresolved cases that block public readiness. All 5 target task types meet the per-type minimum of 5 pairs. Decisions remain directional because this is maintainer-run evidence and independent-user validation is incomplete. Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. The causal claim remains false until independent-user validation is complete.
 <!-- USEFULNESS_RESULTS_END -->
 
 This chart is generated from the committed raw-free matched-pair ledger, not
