@@ -3,7 +3,7 @@
   "design": "matched_observational",
   "status": "insufficient_data",
   "causal_claim": false,
-  "pair_count": 21,
+  "pair_count": 25,
   "task_type_count": 5,
   "independent_user_count": 0,
   "independent_agent_operator_count": 3,
@@ -21,39 +21,39 @@
   ],
   "coverage": {
     "required_pairs_per_task_type": 5,
-    "task_types_meeting_pair_minimum": 3,
-    "all_task_types_meet_pair_minimum": false
+    "task_types_meeting_pair_minimum": 5,
+    "all_task_types_meet_pair_minimum": true
   },
   "by_task_type": {
     "ambiguity_clarification": {
-      "pair_count": 3,
+      "pair_count": 5,
       "baseline_success_rate": 1,
-      "looprelay_success_rate": 0.666667,
-      "success_rate_delta": -0.333333,
+      "looprelay_success_rate": 0.4,
+      "success_rate_delta": -0.6,
       "baseline_actionability": 1,
-      "looprelay_actionability": 0.733333,
+      "looprelay_actionability": 0.64,
       "transitions": {
         "improved": 0,
-        "regressed": 1,
+        "regressed": 3,
         "unchanged_passed": 2,
         "unchanged_failed": 0
       },
       "delta": {
-        "mean_elapsed_ms": 4599.666667,
-        "mean_tool_calls": 0.333334,
-        "mean_input_tokens": 5343.666666,
-        "mean_cached_input_tokens": 512,
-        "mean_time_to_first_value_ms": 4599.666667,
-        "friction_free_rate": 0.666667
+        "mean_elapsed_ms": 2049.8,
+        "mean_tool_calls": 0.2,
+        "mean_input_tokens": -4296.8,
+        "mean_cached_input_tokens": -8243.2,
+        "mean_time_to_first_value_ms": 2049.8,
+        "friction_free_rate": 0.4
       },
       "uncertainty": {
         "method": "paired_difference_hoeffding_95",
         "lower": -1,
-        "upper": 1
+        "upper": 0.614723
       },
       "decision": {
-        "action": "collect_more",
-        "evidence_status": "underpowered"
+        "action": "narrow",
+        "evidence_status": "directional"
       }
     },
     "failure_prevention": {
@@ -119,7 +119,7 @@
       }
     },
     "release_verification_continuity": {
-      "pair_count": 3,
+      "pair_count": 5,
       "baseline_success_rate": 1,
       "looprelay_success_rate": 1,
       "success_rate_delta": 0,
@@ -128,16 +128,16 @@
       "transitions": {
         "improved": 0,
         "regressed": 0,
-        "unchanged_passed": 3,
+        "unchanged_passed": 5,
         "unchanged_failed": 0
       },
       "delta": {
-        "mean_elapsed_ms": -5423.333334,
-        "mean_tool_calls": 2.666667,
-        "mean_input_tokens": 19112,
-        "mean_cached_input_tokens": 22400,
-        "mean_time_to_first_value_ms": -5423.333334,
-        "friction_free_rate": 0
+        "mean_elapsed_ms": -5168,
+        "mean_tool_calls": 0,
+        "mean_input_tokens": 14435.8,
+        "mean_cached_input_tokens": 10035.2,
+        "mean_time_to_first_value_ms": -5168,
+        "friction_free_rate": -0.2
       },
       "uncertainty": {
         "method": "paired_difference_hoeffding_95",
@@ -145,8 +145,8 @@
         "upper": 1
       },
       "decision": {
-        "action": "collect_more",
-        "evidence_status": "underpowered"
+        "action": "narrow",
+        "evidence_status": "directional"
       }
     },
     "session_recovery": {
@@ -188,66 +188,66 @@
     "independent_users": 3
   },
   "baseline": {
-    "success_rate": 0.571429,
-    "mean_actionability": 0.719048,
-    "mean_elapsed_ms": 30978,
-    "mean_tool_calls": 5.142857,
-    "mean_input_tokens": 79861.333333,
-    "mean_cached_input_tokens": 62464,
-    "mean_output_tokens": 983.952381,
-    "mean_time_to_first_value_ms": 33440.909091,
-    "friction_free_rate": 0.714286,
+    "success_rate": 0.64,
+    "mean_actionability": 0.764,
+    "mean_elapsed_ms": 31524.166667,
+    "mean_tool_calls": 5.52,
+    "mean_input_tokens": 80312.48,
+    "mean_cached_input_tokens": 65536,
+    "mean_output_tokens": 1002.32,
+    "mean_time_to_first_value_ms": 33658,
+    "friction_free_rate": 0.72,
     "privacy_blocker_count": 0,
     "data_loss_blocker_count": 0,
     "install_blocker_count": 0
   },
   "looprelay": {
-    "success_rate": 0.857143,
-    "mean_actionability": 0.9,
-    "mean_elapsed_ms": 32478.95,
-    "mean_tool_calls": 5.285714,
-    "mean_input_tokens": 94831.333333,
-    "mean_cached_input_tokens": 70167.272727,
-    "mean_output_tokens": 1052.142857,
-    "mean_time_to_first_value_ms": 37514.454545,
-    "friction_free_rate": 0.809524,
+    "success_rate": 0.8,
+    "mean_actionability": 0.876,
+    "mean_elapsed_ms": 32228.291667,
+    "mean_tool_calls": 5.32,
+    "mean_input_tokens": 91980.4,
+    "mean_cached_input_tokens": 67200,
+    "mean_output_tokens": 1039.52,
+    "mean_time_to_first_value_ms": 35770.6,
+    "friction_free_rate": 0.76,
     "privacy_blocker_count": 0,
     "data_loss_blocker_count": 0,
     "install_blocker_count": 0
   },
   "measurement_coverage": {
-    "cached_input_tokens": 0.52381,
-    "time_to_first_value_ms": 0.52381,
-    "continuation_accuracy": 0.428571,
-    "failure_prevention_accuracy": 0.095238,
-    "clarification_accuracy": 0.095238,
-    "blocker_flags": 0.52381
+    "cached_input_tokens": 0.6,
+    "time_to_first_value_ms": 0.6,
+    "continuation_accuracy": 0.44,
+    "failure_prevention_accuracy": 0.08,
+    "clarification_accuracy": 0.16,
+    "blocker_flags": 0.6
   },
   "delta": {
-    "success_rate": 0.285714,
-    "mean_actionability": 0.180952,
-    "mean_elapsed_ms": 1500.95,
-    "mean_tool_calls": 0.142857,
-    "mean_input_tokens": 14970,
-    "mean_cached_input_tokens": 7703.272727,
-    "mean_time_to_first_value_ms": 4073.545454,
-    "friction_free_rate": 0.095238
+    "success_rate": 0.16,
+    "mean_actionability": 0.112,
+    "mean_elapsed_ms": 704.125,
+    "mean_tool_calls": -0.2,
+    "mean_input_tokens": 11667.92,
+    "mean_cached_input_tokens": 1664,
+    "mean_time_to_first_value_ms": 2112.6,
+    "friction_free_rate": 0.04
   },
   "transitions": {
     "improved": 8,
-    "regressed": 2,
-    "unchanged_passed": 10,
+    "regressed": 4,
+    "unchanged_passed": 12,
     "unchanged_failed": 1
   },
   "preference": {
-    "baseline": 8,
-    "looprelay": 11,
+    "baseline": 10,
+    "looprelay": 13,
     "tie": 2
   },
   "adoption_rate": 1,
   "bias": {
-    "baseline_first": 11,
-    "looprelay_first": 10,
+    "baseline_first": 13,
+    "looprelay_first": 12,
     "position_consistency": 0.9,
     "human_review_agreement": 0.444444
   },

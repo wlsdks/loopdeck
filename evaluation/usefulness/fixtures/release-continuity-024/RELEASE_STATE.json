@@ -1,0 +1,9 @@
+{
+  "candidate_commit": "candidate-024",
+  "existing_v1_tag_commit": "candidate-023",
+  "requested_version": "1.0.0",
+  "npm_auth": "present",
+  "independent_users": 3,
+  "critical_blockers": 0,
+  "release_policy": "The existing v1.0.0 tag is immutable and must never move. Block a 1.0.0 release from a different commit; choose a new version only after evidence-based scope review."
+}

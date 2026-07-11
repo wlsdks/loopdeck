@@ -62,7 +62,7 @@ Candidate focused slices:
 - improve safe selection when multiple worktrees or sessions are active
 - sharpen question generation for missing scope, constraints, and acceptance criteria
 
-Current provisional evidence decisions (21-pair seed cohort):
+Current provisional evidence decisions (25-pair seed cohort):
 
 - `retain`: session recovery and external failure-outcome recovery remain
   opt-in continuity workflows; their observed lift is positive but uncertainty
@@ -70,10 +70,12 @@ Current provisional evidence decisions (21-pair seed cohort):
 - `narrow`: skip generic implementation-continuation context when repository
   state and focused tests already identify the next action. Five pairs show no
   improvement, one regression, and material time/token overhead.
-- `collect_more`: release-verification continuity and ambiguity clarification
-  are at three pairs each and cannot support a final product decision. Current
-  ambiguity evidence already shows one treatment regression and positive
-  time/token cost, so generic diagnosis has a provisional narrowing signal.
+- `narrow`: do not inject generic release-continuity context when repository
+  release state already determines the gate. Five pairs show identical success
+  and additional token/friction cost.
+- `narrow`: prefer native focused questions when repository policy identifies
+  the missing dimensions. Five ambiguity pairs show three treatment contract
+  regressions and 100% versus 40% success.
 
 No item above authorizes automatic prompt submission, hidden provider calls,
 private transcript scraping, automatic memory writes, or automatic instruction

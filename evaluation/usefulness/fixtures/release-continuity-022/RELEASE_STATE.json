@@ -1,0 +1,10 @@
+{
+  "candidate_commit": "candidate-022",
+  "artifact_commit": "candidate-022",
+  "focused_tests": "passed",
+  "npm_auth": "present",
+  "independent_users": 3,
+  "critical_blockers": 0,
+  "rollback_smoke": "missing",
+  "release_policy": "Block the final gate until a rollback smoke result is recorded for the candidate artifact. Run the rollback smoke before the one-time gate."
+}

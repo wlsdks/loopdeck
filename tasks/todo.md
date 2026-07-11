@@ -11294,3 +11294,5 @@
   - [x] Add two release-continuity and two ambiguity-clarification pairs on
         identical commits. Reach 21 total pairs and preserve the malformed
         treatment-question contract as a real regression.
+  - [x] Add two more pairs for each remaining type. Reach N=5 for all five task
+        types at 25 total pairs; narrow generic release and ambiguity context.

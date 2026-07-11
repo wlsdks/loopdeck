@@ -5,12 +5,13 @@ evidence workflows. It is not a causal product claim.
 
 ## Method
 
-Twenty-one matched pairs use fixed Codex model and reasoning settings, identical
+Twenty-five matched pairs use fixed Codex model and reasoning settings, identical
 fixture commits within each pair, a read-only boundary, one output schema, and
-the same model context limit. Eleven pairs ran baseline first and ten ran LoopRelay
+the same model context limit. Thirteen pairs ran baseline first and twelve ran LoopRelay
 first. The seed corpus covers session recovery (5), implementation continuation
-(5), repeated-failure prevention (5), release-verification continuity (3), and
-ambiguity clarification (3). It is below the active threshold of 30 total pairs
+(5), repeated-failure prevention (5), release-verification continuity (5), and
+ambiguity clarification (5). Every task type meets the per-type minimum, but the
+corpus is below the active threshold of 30 total pairs
 and five pairs per task type.
 
 Human review used deterministic repository state and scored correct outcome,
@@ -27,20 +28,20 @@ therefore a bias diagnostic, not the source of success labels.
 
 | Task type | Pairs | Baseline success | LoopRelay success | Difference |
 | --- | ---: | ---: | ---: | ---: |
-| Ambiguity clarification | 3 | 100% | 66.7% | -33.3pp |
+| Ambiguity clarification | 5 | 100% | 40% | -60pp |
 | Failure prevention | 5 | 0% | 100% | +100pp |
 | Implementation continuation | 5 | 100% | 80% | -20pp |
-| Release-verification continuity | 3 | 100% | 100% | 0pp |
+| Release-verification continuity | 5 | 100% | 100% | 0pp |
 | Session recovery | 5 | 20% | 80% | +60pp |
-| **Aggregate** | **21** | **57.1%** | **85.7%** | **+28.6pp** |
+| **Aggregate** | **25** | **64%** | **80%** | **+16pp** |
 
-- Actionability increased from 71.9% to 90.0%.
-- Mean elapsed time increased by 1.50 seconds among runs with timing data.
-- Mean tool calls increased from 5.14 to 5.29.
-- Mean input tokens increased from 79,861 to 94,831 (+18.7%).
-- Eight failures improved, two successful baselines regressed, ten pairs
+- Actionability increased from 76.4% to 87.6%.
+- Mean elapsed time increased by 0.70 seconds among runs with timing data.
+- Mean tool calls decreased from 5.52 to 5.32.
+- Mean input tokens increased from 80,312 to 91,980 (+14.5%).
+- Eight failures improved, four successful baselines regressed, twelve pairs
   remained successful, and one pair remained failed.
-- Human preference was LoopRelay 11, baseline 8, tie 2.
+- Human preference was LoopRelay 13, baseline 10, tie 2.
 - Position-swapped judge choices were consistent for 9/10 pairs, but agreed
   with the ground-truth-based human preference on only 4/9 consistent pairs.
   This disagreement is evidence against using an ungrounded LLM preference as
@@ -68,7 +69,7 @@ evaluation harness assumed the wrong JSON nesting. It is recorded as excluded
 harness friction and does not contribute outcome metrics.
 
 Cached-token, TTFV, continuation-accuracy, and blocker flags are available for
-the eleven new pairs only (52.4% condition coverage). The report exposes this
+the fifteen new pairs only (60% condition coverage). The report exposes this
 coverage instead of silently treating missing historical measurements as zero.
 
 Two additional failure-prevention fixtures covered an upstream quota failure
@@ -87,20 +88,22 @@ regressed. The provisional product decision is `narrow`: do not inject a
 continuation brief when repository state and focused tests already determine
 the next action.
 
-Two additional release-continuity pairs covered an artifact/candidate mismatch
-and a fully satisfied final-gate prerequisite state. Both conditions made the
-same correct release decision in all three release pairs. LoopRelay is 5.4s
-faster on average, but adds 2.7 tool calls and 19,112 input tokens. This remains
-`collect_more`; current evidence supports neither default injection nor removal.
+Four additional release-continuity pairs covered artifact/candidate mismatch,
+fully satisfied final-gate prerequisites, missing rollback smoke evidence, and
+an immutable-tag conflict. Both conditions made the same correct release
+decision in all five pairs. LoopRelay is 5.2s faster on average, but adds 14,436
+input tokens and more friction without changing correctness. The provisional
+decision is `narrow`: repository release state is already sufficient, so do not
+inject a generic continuation brief by default.
 
-Two additional ambiguity pairs covered database migration scope and performance
-targets. The migration pair was pass/pass. In the performance pair, LoopRelay
-found all four missing dimensions but returned them as one JSON-encoded string
-inside the questions array, while baseline returned four directly usable
-questions. That treatment is retained as a contract regression. Across three
-ambiguity pairs, success is 100% versus 66.7%, elapsed cost is +4.6s, and input
-cost is +5,344. The type remains `collect_more` until N=5, with a provisional
-narrowing signal for generic diagnosis when repository policy is already clear.
+Four additional ambiguity pairs covered database migration, performance,
+destructive data deletion, and refactor scope. Baseline returned directly usable
+questions in all five pairs. Three LoopRelay treatments encoded question objects
+as JSON strings instead of returning user-facing questions. Across five pairs,
+success is 100% versus 40%, elapsed cost is +2.0s, and there are three treatment
+regressions. The decision is `narrow`: when repository policy identifies the
+missing dimensions, prefer the agent's native focused questions over generic
+diagnosis metadata.
 
 ## Interpretation And Scope
 
