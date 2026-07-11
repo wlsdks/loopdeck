@@ -485,10 +485,23 @@ describe("real-task usefulness ledger", () => {
     };
 
     expect(ledger.causal_claim).toBe(false);
-    expect(ledger.pairs).toHaveLength(10);
+    expect(ledger.pairs).toHaveLength(11);
     expect(ledger.pairs[0]).toMatchObject({
       baseline: { passed: false, core_task_recovered: false },
       looprelay: { passed: false, core_task_recovered: true },
+    });
+    expect(ledger.pairs.at(-1)).toMatchObject({
+      id: "real-failure-prevention-011",
+      order: "looprelay_first",
+      baseline: { passed: false, data_loss_blocker: true },
+      looprelay: { passed: false, data_loss_blocker: true },
+      human_preference: "baseline",
+      judge: {
+        position_consistent: true,
+        preference: "tie",
+        baseline_score_range: [6, 6],
+        looprelay_score_range: [6, 6],
+      },
     });
     expect(ledger.pairs[1]).toMatchObject({
       baseline: { passed: false, core_task_recovered: false },
@@ -585,11 +598,11 @@ describe("real-task usefulness ledger", () => {
     });
     expect(createUsefulnessReport(JSON.parse(source))).toMatchObject({
       status: "directional_evidence_ready",
-      pair_count: 10,
+      pair_count: 11,
       task_type_count: 5,
       baseline: { success_rate: 0 },
-      looprelay: { success_rate: 0.3 },
-      transitions: { improved: 3, unchanged_failed: 7 },
+      looprelay: { success_rate: 0.272727 },
+      transitions: { improved: 3, unchanged_failed: 8 },
       by_task_type: {
         session_recovery: { decision: { action: "retain" } },
         ambiguity_clarification: { decision: { action: "retain" } },
@@ -604,7 +617,7 @@ describe("real-task usefulness ledger", () => {
       join(process.cwd(), "docs/assets/usefulness-real-task-results.svg"),
       "utf8",
     );
-    expect(svg).toContain("10 matched pairs · 5 task types");
+    expect(svg).toContain("11 matched pairs · 5 task types");
     expect(svg).not.toContain("INSUFFICIENT DATA");
     expect(source).not.toMatch(/\/Users\/|\/home\//);
     expect(source).not.toMatch(/"(?:prompt|response|transcript|output)"\s*:/i);

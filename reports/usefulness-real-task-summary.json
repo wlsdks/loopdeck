@@ -3,7 +3,7 @@
   "design": "matched_observational",
   "status": "directional_evidence_ready",
   "causal_claim": false,
-  "pair_count": 10,
+  "pair_count": 11,
   "task_type_count": 5,
   "independent_user_count": 0,
   "independent_humans": {
@@ -71,25 +71,25 @@
       }
     },
     "failure_prevention": {
-      "pair_count": 2,
+      "pair_count": 3,
       "baseline_success_rate": 0,
       "looprelay_success_rate": 0,
       "success_rate_delta": 0,
-      "baseline_actionability": 0.45,
-      "looprelay_actionability": 0.7,
+      "baseline_actionability": 0.6,
+      "looprelay_actionability": 0.766667,
       "transitions": {
         "improved": 0,
         "regressed": 0,
         "unchanged_passed": 0,
-        "unchanged_failed": 2
+        "unchanged_failed": 3
       },
       "delta": {
-        "mean_elapsed_ms": -14715,
-        "mean_tool_calls": -3,
-        "mean_input_tokens": -229098,
-        "mean_cached_input_tokens": -227456,
-        "mean_time_to_first_value_ms": -14715,
-        "friction_free_rate": 0.5
+        "mean_elapsed_ms": -8524.333334,
+        "mean_tool_calls": -1.333334,
+        "mean_input_tokens": -152646.666666,
+        "mean_cached_input_tokens": -139520,
+        "mean_time_to_first_value_ms": -8524.333334,
+        "friction_free_rate": 0.333333
       },
       "uncertainty": {
         "method": "paired_difference_hoeffding_95",
@@ -203,67 +203,67 @@
   },
   "baseline": {
     "success_rate": 0,
-    "mean_actionability": 0.49,
-    "mean_elapsed_ms": 63149,
-    "mean_tool_calls": 6.9,
-    "mean_input_tokens": 254138.7,
-    "mean_cached_input_tokens": 202675.2,
-    "mean_output_tokens": 1856.4,
-    "mean_time_to_first_value_ms": 63149,
-    "friction_free_rate": 0.2,
+    "mean_actionability": 0.527273,
+    "mean_elapsed_ms": 63177.545455,
+    "mean_tool_calls": 6.727273,
+    "mean_input_tokens": 262659.090909,
+    "mean_cached_input_tokens": 209338.181818,
+    "mean_output_tokens": 1932.818182,
+    "mean_time_to_first_value_ms": 63177.545455,
+    "friction_free_rate": 0.181818,
     "privacy_blocker_count": 0,
-    "data_loss_blocker_count": 0,
+    "data_loss_blocker_count": 1,
     "install_blocker_count": 0
   },
   "looprelay": {
-    "success_rate": 0.3,
-    "mean_actionability": 0.83,
-    "mean_elapsed_ms": 55949,
-    "mean_tool_calls": 3.6,
-    "mean_input_tokens": 158194.1,
-    "mean_cached_input_tokens": 107468.8,
-    "mean_output_tokens": 1514.3,
-    "mean_time_to_first_value_ms": 55949,
-    "friction_free_rate": 0.3,
+    "success_rate": 0.272727,
+    "mean_actionability": 0.836364,
+    "mean_elapsed_ms": 56982.727273,
+    "mean_tool_calls": 3.909091,
+    "mean_input_tokens": 175460,
+    "mean_cached_input_tokens": 126091.636364,
+    "mean_output_tokens": 1548.090909,
+    "mean_time_to_first_value_ms": 56982.727273,
+    "friction_free_rate": 0.272727,
     "privacy_blocker_count": 0,
-    "data_loss_blocker_count": 0,
+    "data_loss_blocker_count": 1,
     "install_blocker_count": 0
   },
   "measurement_coverage": {
     "cached_input_tokens": 1,
     "time_to_first_value_ms": 1,
     "continuation_accuracy": 0,
-    "failure_prevention_accuracy": 0,
-    "clarification_accuracy": 0.2,
+    "failure_prevention_accuracy": 0.090909,
+    "clarification_accuracy": 0.181818,
     "blocker_flags": 1
   },
   "delta": {
-    "success_rate": 0.3,
-    "mean_actionability": 0.34,
-    "mean_elapsed_ms": -7200,
-    "mean_tool_calls": -3.3,
-    "mean_input_tokens": -95944.6,
-    "mean_cached_input_tokens": -95206.4,
-    "mean_time_to_first_value_ms": -7200,
-    "friction_free_rate": 0.1
+    "success_rate": 0.272727,
+    "mean_actionability": 0.309091,
+    "mean_elapsed_ms": -6194.818182,
+    "mean_tool_calls": -2.818182,
+    "mean_input_tokens": -87199.090909,
+    "mean_cached_input_tokens": -83246.545454,
+    "mean_time_to_first_value_ms": -6194.818182,
+    "friction_free_rate": 0.090909
   },
   "transitions": {
     "improved": 3,
     "regressed": 0,
     "unchanged_passed": 0,
-    "unchanged_failed": 7
+    "unchanged_failed": 8
   },
   "preference": {
-    "baseline": 2,
+    "baseline": 3,
     "looprelay": 8,
     "tie": 0
   },
   "adoption_rate": 1,
   "bias": {
     "baseline_first": 5,
-    "looprelay_first": 5,
-    "position_consistency": 0.9,
-    "human_review_agreement": 0.777778
+    "looprelay_first": 6,
+    "position_consistency": 0.909091,
+    "human_review_agreement": 0.7
   },
   "critical_blockers": 0,
   "note": "Observational matched-pair evidence only. Null and negative results are retained."

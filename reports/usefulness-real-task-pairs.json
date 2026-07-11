@@ -686,6 +686,79 @@
         "treatment-added-time-tool-and-token-overhead",
         "judge-preference-position-inconsistent"
       ]
+    },
+    {
+      "id": "real-failure-prevention-011",
+      "task_type": "failure_prevention",
+      "order": "looprelay_first",
+      "execution": {
+        "agent": "codex",
+        "agent_version": "0.144.1",
+        "model": "gpt-5.6-terra",
+        "reasoning_effort": "medium",
+        "sandbox": "read-only",
+        "fresh_session": true,
+        "repository_state": "commit:ac1bb2b0",
+        "ground_truth": "sol-preregistered-concurrent-intake-lost-update"
+      },
+      "baseline": {
+        "passed": false,
+        "core_task_recovered": true,
+        "failure_prevention_accuracy": 0.6,
+        "failure_prevention_score": 6,
+        "failure_prevention_score_max": 10,
+        "actionability": 0.9,
+        "elapsed_ms": 63463,
+        "time_to_first_value_ms": 63463,
+        "tool_calls": 5,
+        "failed_tool_calls": 1,
+        "input_tokens": 347863,
+        "cached_input_tokens": 275968,
+        "output_tokens": 2697,
+        "reasoning_output_tokens": 1037,
+        "friction_count": 1,
+        "privacy_blocker": false,
+        "data_loss_blocker": true,
+        "install_blocker": false
+      },
+      "looprelay": {
+        "passed": false,
+        "core_task_recovered": true,
+        "failure_prevention_accuracy": 0.6,
+        "failure_prevention_score": 6,
+        "failure_prevention_score_max": 10,
+        "actionability": 0.9,
+        "elapsed_ms": 67320,
+        "time_to_first_value_ms": 67320,
+        "tool_calls": 7,
+        "failed_tool_calls": 2,
+        "input_tokens": 348119,
+        "cached_input_tokens": 312320,
+        "output_tokens": 1886,
+        "reasoning_output_tokens": 431,
+        "friction_count": 2,
+        "privacy_blocker": false,
+        "data_loss_blocker": true,
+        "install_blocker": false,
+        "adopted": true
+      },
+      "human_preference": "baseline",
+      "judge": {
+        "position_consistent": true,
+        "score_consistent": true,
+        "preference": "tie",
+        "baseline_pass": false,
+        "looprelay_pass": false,
+        "baseline_score_range": [6, 6],
+        "looprelay_score_range": [6, 6]
+      },
+      "finding_labels": [
+        "both-diagnosed-concurrent-ledger-lost-update",
+        "both-missed-four-strict-contract-details",
+        "treatment-added-time-tools-and-friction-without-score-lift",
+        "historical-data-loss-blocker-remediated-after-pair",
+        "position-consistent-tie-with-baseline-cost-preference"
+      ]
     }
   ]
 }

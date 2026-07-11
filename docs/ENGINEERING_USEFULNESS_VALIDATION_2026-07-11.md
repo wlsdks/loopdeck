@@ -398,23 +398,42 @@ focused redaction test and required no production behavior change. One setup
 checkpoint containing a credential-shaped description was correctly rejected
 and retained as operator friction.
 
-## Ten-Pair Real-Task Conclusion
+## Eleven-Pair Real-Task Conclusion
 
-The preregistered real-task threshold is complete: ten matched pairs, five
-task types, two pairs per type, and balanced 5/5 execution order. Baseline
-strict success was 0/10 and LoopRelay was 3/10. Actionability moved from 49% to
-83%; mean TTFV decreased by 7.2s, tools by 3.3, and input tokens by 95,945.
-There were three improved transitions, no regressions, and seven unchanged
-failures. Human review preferred LoopRelay eight times and baseline twice;
-position consistency was 90% and judge/human agreement 77.8% where the judge
-was consistent.
+The preregistered ten-pair threshold remains complete and one post-threshold
+unseen pair brings the cohort to eleven: five task types, at least two pairs per
+type, and 5/6 execution order. Baseline strict success is 0/11 and LoopRelay is
+3/11. Actionability moved from 52.7% to 83.6%; mean TTFV decreased by 6.2s,
+tools by 2.8, and input tokens by 87,199. There are three improved transitions,
+no regressions, and eight unchanged failures. Human review preferred LoopRelay
+eight times and baseline three times; position consistency is 90.9% and
+judge/human agreement is 70% where the judge was consistent.
 
 These numbers are directional, not causal. Baseline's 0% is partly an artifact
 of deliberately strict preregistration, read-only Vitest startup failures, and
 two rubrics that demanded observable implementation from no-edit evaluation
-runs. Each task type has only two pairs and its conservative interval spans
-the full plausible range. The work was maintainer-selected and independent
+runs. Each task type has only two or three pairs and its conservative interval
+spans the full plausible range. The work was maintainer-selected and independent
 humans remain 0/3. No public-readiness claim follows from crossing N=10.
+
+The eleventh pair was Sol-preregistered after the participant intake append
+path landed, so no earlier pair could cover it. Both Terra conditions correctly
+diagnosed that PID-specific temporary files plus atomic rename did not serialize
+the full read-modify-replace transaction. Position-swapped Sol scoring was
+identical at 6/10 fail/fail: both omitted exact HEAD/clean state, the explicit
+`wx` limitation, the fact that both writers could report success, and the full
+raw-free/failed-flow scope. Treatment used 67.32s, seven tools, and 348,119
+input tokens versus baseline 63.46s, five tools, and 347,863 input tokens.
+There was no strict or cost lift, so human review preferred baseline and failure
+prevention remains `narrow`.
+
+The pair nevertheless exposed a real data-loss blocker in the newly added
+human-evidence intake. A deterministic concurrent subprocess test failed before
+the fix and now proves both distinct records survive. The CLI serializes the
+complete ledger read, validation, append, and atomic replacement section with a
+private lock; timeout or duplicate failures leave the ledger unchanged and keep
+stderr raw-free. Historical pair flags retain the observed blocker, while the
+current remediated candidate has zero open critical blockers.
 
 The supported scope is narrower than general agent productivity:
 
@@ -521,8 +540,9 @@ commands in that attempt succeeded.
 
 Returned raw-free results are appended with
 `pnpm evidence:participant-intake -- --append-to reports/usefulness-pairs.json
-participant-result.json`. The operation validates the result, rejects duplicate
-labels, retains failed flows, and atomically replaces the ledger. Regenerated
+participant-result.json`. The operation serializes concurrent writers,
+validates the result, rejects duplicate labels, retains failed flows, and
+atomically replaces the ledger. Regenerated
 summaries report independent-human install and first-value success rates, mean
 install and TTFV, recovery and friction counts, and
 privacy/data-loss/install blockers without pooling them with matched pairs or

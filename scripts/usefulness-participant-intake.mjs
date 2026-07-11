@@ -1,4 +1,11 @@
-import { readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import {
+  closeSync,
+  openSync,
+  readFileSync,
+  renameSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -93,21 +100,53 @@ export function appendParticipantResult(ledger, input) {
 }
 
 function appendParticipantResultFile(ledgerPath, resultPath) {
-  const ledger = JSON.parse(readFileSync(ledgerPath, "utf8"));
   const input = JSON.parse(readFileSync(resultPath, "utf8"));
-  const next = appendParticipantResult(ledger, input);
+  const lockPath = `${ledgerPath}.participant-intake.lock`;
   const temporaryPath = `${ledgerPath}.participant-intake-${process.pid}.tmp`;
+  acquireLedgerLock(lockPath);
   try {
+    holdParticipantLockForTest();
+    const ledger = JSON.parse(readFileSync(ledgerPath, "utf8"));
+    const next = appendParticipantResult(ledger, input);
     writeFileSync(temporaryPath, `${JSON.stringify(next, null, 2)}\n`, {
       encoding: "utf8",
       mode: 0o600,
       flag: "wx",
     });
     renameSync(temporaryPath, ledgerPath);
+    return next.independent_users.at(-1);
   } finally {
     rmSync(temporaryPath, { force: true });
+    rmSync(lockPath, { force: true });
   }
-  return next.independent_users.at(-1);
+}
+
+function acquireLedgerLock(lockPath) {
+  const deadline = Date.now() + 5_000;
+  while (true) {
+    try {
+      const descriptor = openSync(lockPath, "wx", 0o600);
+      closeSync(descriptor);
+      return;
+    } catch (error) {
+      if (error?.code !== "EEXIST" || Date.now() >= deadline) throw error;
+      sleepSync(25);
+    }
+  }
+}
+
+function holdParticipantLockForTest() {
+  if (process.env.NODE_ENV !== "test") return;
+  const holdMs = Number(
+    process.env.LOOPRELAY_TEST_PARTICIPANT_APPEND_HOLD_MS ?? 0,
+  );
+  if (Number.isInteger(holdMs) && holdMs > 0 && holdMs <= 1_000) {
+    sleepSync(holdMs);
+  }
+}
+
+function sleepSync(milliseconds) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
 }
 
 function runCli() {

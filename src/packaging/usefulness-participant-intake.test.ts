@@ -1,10 +1,11 @@
 import {
   mkdtempSync,
+  existsSync,
   readFileSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -136,6 +137,37 @@ describe("independent-user usefulness intake", () => {
     }
   });
 
+  it("serializes concurrent distinct appends without losing either result", async () => {
+    const directory = mkdtempSync(join(tmpdir(), "looprelay-intake-race-"));
+    const ledgerPath = join(directory, "ledger.json");
+    const firstPath = join(directory, "first.json");
+    const secondPath = join(directory, "second.json");
+    const lockPath = `${ledgerPath}.participant-intake.lock`;
+    writeFileSync(ledgerPath, `${JSON.stringify({ independent_users: [] })}\n`);
+    writeFileSync(firstPath, `${JSON.stringify(valid())}\n`);
+    writeFileSync(
+      secondPath,
+      `${JSON.stringify({ ...valid(), participant_id: "participant-m8n4" })}\n`,
+    );
+
+    try {
+      const first = runIntakeAsync(ledgerPath, firstPath, 250);
+      await waitForFile(lockPath);
+      const second = runIntake("--append-to", ledgerPath, secondPath);
+      const firstResult = await first;
+
+      expect(firstResult.status).toBe(0);
+      expect(second.status).toBe(0);
+      expect(
+        JSON.parse(readFileSync(ledgerPath, "utf8")).independent_users.map(
+          (user: { id: string }) => user.id,
+        ),
+      ).toEqual(["participant-k7m2", "participant-m8n4"]);
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
   it("ships a raw-free validation-only candidate handoff", () => {
     const manifestSource = readFileSync(
       join(process.cwd(), "reports/independent-user-candidate.json"),
@@ -202,4 +234,41 @@ function runIntake(...args: string[]) {
     [join(process.cwd(), "scripts/usefulness-participant-intake.mjs"), ...args],
     { encoding: "utf8" },
   );
+}
+
+function runIntakeAsync(ledgerPath: string, resultPath: string, holdMs: number) {
+  const child = spawn(
+    process.execPath,
+    [
+      join(process.cwd(), "scripts/usefulness-participant-intake.mjs"),
+      "--append-to",
+      ledgerPath,
+      resultPath,
+    ],
+    {
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        NODE_ENV: "test",
+        LOOPRELAY_TEST_PARTICIPANT_APPEND_HOLD_MS: String(holdMs),
+      },
+    },
+  );
+  return new Promise<{ status: number | null; stdout: string; stderr: string }>(
+    (resolve) => {
+      let stdout = "";
+      let stderr = "";
+      child.stdout.on("data", (chunk) => (stdout += String(chunk)));
+      child.stderr.on("data", (chunk) => (stderr += String(chunk)));
+      child.on("close", (status) => resolve({ status, stdout, stderr }));
+    },
+  );
+}
+
+async function waitForFile(path: string) {
+  const deadline = Date.now() + 1_000;
+  while (!existsSync(path)) {
+    if (Date.now() >= deadline) throw new Error("intake lock was not acquired");
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
 }

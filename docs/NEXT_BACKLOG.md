@@ -37,8 +37,8 @@ Primary value:
   five task types with six pairs per type. A separate five-pair
   Sol-planned/Terra-executed reproduction is retained as a distinct cohort and
   is not pooled with the GPT-5.4 aggregate.
-- Current unseen real-task corpus: 10 Sol-preregistered/Terra-executed pairs
-  across five task types with two pairs per type. It is directional only,
+- Current unseen real-task corpus: 11 Sol-preregistered/Terra-executed pairs
+  across five task types with at least two pairs per type. It is directional only,
   remains separate from both synthetic cohorts, and does not satisfy the
   independent-human public-readiness gate.
 - Current independent-human candidate: commit `12c0bbcc`, checksum-pinned in
@@ -99,14 +99,16 @@ Evidence-based 1.0.x scope:
 - Do not add a large feature until three independent humans complete install
   and first value. The 30-pair cohort does not satisfy that gate.
 
-Current real-task decisions (10-pair maintainer-run cohort):
+Current real-task decisions (11-pair maintainer-run cohort):
 
 - `retain`: exact checkpoint/session recovery when selected state is absent
   from Git.
 - `retain`: focused ambiguity questions only when required decisions are
   genuinely unresolved.
-- `narrow`: failure prevention; both real cases remained strict fail/fail and
-  one baseline found a material adjacent privacy risk that treatment missed.
+- `narrow`: failure prevention; all three real cases remained strict fail/fail.
+  The newest concurrent-intake diagnosis tied at 6/10 while treatment added
+  time, tools, and friction; its data-loss risk was remediated with a focused
+  serialized append contract.
 - `narrow`: implementation continuation; use only for hidden selected
   contracts, never for fully specified ordinary work where treatment added
   cost without quality.

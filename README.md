@@ -75,26 +75,33 @@ See the [cross-model ledger](reports/usefulness-sol-terra-pairs.json) and
 
 ![LoopRelay real-task baseline versus assisted results](docs/assets/usefulness-real-task-results.svg)
 
-The preregistered real-task threshold is now complete: 10 counterbalanced
-matched pairs, five task types, and two pairs per type. Strict success was 0%
-for baseline and 30% for LoopRelay; actionability was 49% versus 83%. LoopRelay
-averaged 7.2s less TTFV, 3.3 fewer tools, and 95,945 fewer input tokens. Three
-failures improved, seven pairs remained failed, and human review preferred
-LoopRelay 8 times and baseline twice. This is directional maintainer-run
+The preregistered 10-pair threshold is complete and one post-threshold unseen
+pair brings the cohort to 11 across five task types. Strict success is 0% for
+baseline and 27.3% for LoopRelay; actionability is 52.7% versus 83.6%. LoopRelay
+averages 6.2s less TTFV, 2.8 fewer tools, and 87,199 fewer input tokens. Three
+failures improved, eight pairs remained failed, and human review preferred
+LoopRelay 8 times and baseline 3 times. This is directional maintainer-run
 evidence, not a causal or public-readiness claim. Every task-type interval still
 spans the full plausible range, several failures came from read-only test
 startup or strict plan/outcome mismatch, and independent humans remain 0/3.
 
-Evidence-based scope at N=10:
+Evidence-based scope at N=11:
 
 - `retain`: exact session/checkpoint recovery and focused ambiguity questions
   when material decisions are absent from Git.
 - `narrow`: failure prevention until a different case produces strict success;
-  lower rediscovery cost alone did not prevent 0/2 failure.
+  the third case also remained fail/fail and added treatment cost.
 - `narrow`: implementation continuation to tasks with a genuinely hidden
   selected contract; a fully specified task received only overhead.
 - `narrow`: release continuity to fact handoff only; sequencing remained 0/2.
 - Keep all paths opt-in until three independent humans complete first value.
+
+The eleventh pair found a real concurrent lost-update risk in the new human
+evidence intake. Baseline and LoopRelay both scored 6/10 and failed; treatment
+was slower and used more tools without quality lift. A focused deterministic
+regression then reproduced the risk, and the intake now serializes the complete
+read-validate-append-replace section. Historical data-loss evidence remains in
+the ledger while the current open critical-blocker count is zero.
 
 The first separate real-repository session-recovery pair was strict fail/fail:
 baseline selected a different valid backlog item, while treatment recovered
@@ -121,7 +128,7 @@ withheld edits. Position-swapped Sol review scored LoopRelay 8/8 and baseline
 4/8 to 5/8. At that four-pair checkpoint, strict success was 0% versus 50% and
 the graph correctly remained `INSUFFICIENT DATA`. See the
 [generated real-task summary](reports/usefulness-real-task-summary.json) for
-the current ten-pair result.
+the current eleven-pair result.
 
 The fifth pair tested the live release boundary. Both conditions blocked
 release and both failed the exact-fact rubric; LoopRelay recovered more
@@ -131,9 +138,9 @@ rendered in the brief. They are now included under a privacy-filtered
 `Checkpoint Evidence` section. The follow-up recovered every release fact and
 reduced rediscovery, but still inserted a final gate before the required
 version decision, so it remains fail/fail. Selected contracts now explicitly
-forbid fallback steps between stated actions. The final aggregate is ten pairs
-across five types, with 0% baseline and 30% LoopRelay strict success. It is
-directional evidence but not a release authorization.
+forbid fallback steps between stated actions. That ten-pair threshold aggregate
+was 0% baseline and 30% LoopRelay strict success; the current eleven-pair
+aggregate is reported above. Neither is a release authorization.
 
 The seventh pair covered ordinary implementation continuation for this
 evidence pipeline. Baseline chose plausible but different command and flag

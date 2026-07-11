@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   extractCodexMetrics,
+  parseCodexMetricArgs,
   parseCodexEventLines,
 } from "../../scripts/usefulness-codex-metrics.mjs";
 
@@ -67,5 +68,12 @@ describe("Codex usefulness metrics", () => {
 
   it("still rejects malformed JSON-looking event lines", () => {
     expect(() => parseCodexEventLines('{"type":\n')).toThrow();
+  });
+
+  it("accepts the pnpm argument separator used by the documented command", () => {
+    expect(parseCodexMetricArgs(["--", "events.jsonl", "1500"])).toEqual({
+      eventsPath: "events.jsonl",
+      elapsedMs: 1500,
+    });
   });
 });

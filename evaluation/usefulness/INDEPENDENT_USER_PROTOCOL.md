@@ -69,6 +69,8 @@ pnpm --silent evidence:participant-intake -- \
 pnpm evidence:usefulness
 ```
 
+Concurrent appends are serialized across the complete read, validation, append,
+and replacement section so distinct results cannot overwrite one another.
 Duplicate participant labels fail without replacing the ledger. The generated
 summary keeps independent-human install success, first-value success, mean
 install/TTFV, recovery, friction, and privacy/data-loss/install blocker counts

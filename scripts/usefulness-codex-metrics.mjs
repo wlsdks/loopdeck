@@ -50,9 +50,19 @@ function requiredUsageMetric(usage, key) {
   return value;
 }
 
+export function parseCodexMetricArgs(input) {
+  const args = [...input];
+  if (args[0] === "--") args.shift();
+  return {
+    eventsPath: args[0],
+    elapsedMs: Number(args[1]),
+  };
+}
+
 function runCli() {
-  const eventsPath = process.argv[2];
-  const elapsedMs = Number(process.argv[3]);
+  const { eventsPath, elapsedMs } = parseCodexMetricArgs(
+    process.argv.slice(2),
+  );
   if (!eventsPath) {
     throw new Error(
       "usage: usefulness-codex-metrics <events.jsonl> <elapsed-ms>",

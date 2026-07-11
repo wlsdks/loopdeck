@@ -1,5 +1,24 @@
 # 작업 계획
 
+## 2026-07-11 Eleventh Real Failure-Prevention Pair
+
+- [x] PREREGISTER: Sol selected the post-N=10 concurrent participant-intake
+  lost-update risk and froze a 10-point rubric before Terra output.
+- [x] RUN: execute LoopRelay-first fresh read-only Terra conditions on
+  `ac1bb2b0`; retain 6/10 fail/fail and higher treatment cost/friction.
+- [x] SCORE: preserve two position-swapped Sol ties and baseline human
+  preference on equal strict quality with lower operating cost.
+- [x] RED: deterministically hold one writer after lock acquisition and require
+  two concurrent distinct results to survive in the final ledger.
+- [x] GREEN: serialize the complete read-validate-append-replace section with a
+  private ledger lock and raw-free failure behavior.
+- [x] RED/GREEN: accept the documented pnpm `--` separator in Codex metric
+  extraction after the live command exposed the literal-separator bug.
+- [x] REPORT: regenerate N=11 evidence and disclose the null treatment lift,
+  remediated data-loss blocker, costs, and unchanged narrow decision.
+- [x] VERIFY: focused evidence tests, lint, privacy, artifact drift, and diff
+  hygiene only; do not run the full release gate.
+
 ## 2026-07-11 LoopRelay Independent Human Install Blocker
 
 - [x] CHECK: participant intake recorded install success but could not
