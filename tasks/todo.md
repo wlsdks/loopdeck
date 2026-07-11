@@ -1,5 +1,19 @@
 # 작업 계획
 
+## 2026-07-11 Path Alias Functional Audit Candidate
+
+- [x] CHECK: `/tmp` versus `/private/tmp` produced separate project HMAC ids,
+  making a collected snapshot invisible to same-directory brief/status calls.
+- [x] RED/GREEN: canonicalize existing paths before project-key hashing and
+  require a symlink alias to share the same project id.
+- [x] DOGFOOD: align the first-coach runner with isolated project cwd and its
+  explicit-checkpoint brief contract; first-coach and memory approval now pass.
+- [x] PACK/SMOKE: create validation-only candidate `d1676748`, record one
+  excluded selector harness attempt, then pass clean install-to-first-value in
+  8.507 seconds with no raw-path hit or critical blocker.
+- [x] VERIFY: repack the exact product commit, run focused package/privacy and
+  live doctor checks, then refresh the current handoff references.
+
 ## 2026-07-11 First-Coach Dogfood Project Context
 
 - [x] RED: the live dogfood collected a snapshot using `projectDir` but ran the

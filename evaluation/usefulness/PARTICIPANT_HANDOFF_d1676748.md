@@ -1,4 +1,4 @@
-# Independent participant handoff — candidate 3922235b
+# Independent participant handoff — candidate d1676748
 
 This is a human-validation candidate, not a release artifact. It does not
 authorize npm publication, a GitHub Release, or movement of `v1.0.0`.
@@ -6,7 +6,7 @@ authorize npm publication, a GitHub Release, or movement of `v1.0.0`.
 The maintainer supplies this file separately:
 
 - filename: `looprelay-1.0.0.tgz`
-- SHA-256: `d055742dc0a519019a74803dcd519ddef5b7212d87ea37982294b150f28926c7`
+- SHA-256: `e24eafa5f8089678e42ef84bfc3c3e88c56b9483a3789b3df92e8d321112c38a`
 
 The participant must be a human who did not implement LoopRelay and did not
 rehearse this flow. Agent operators and the maintainer do not count.
@@ -20,7 +20,7 @@ free-form notes back to the maintainer.
 ```sh
 TARBALL="/path/to/looprelay-1.0.0.tgz"
 printf '%s  %s\n' \
-  'd055742dc0a519019a74803dcd519ddef5b7212d87ea37982294b150f28926c7' \
+  'e24eafa5f8089678e42ef84bfc3c3e88c56b9483a3789b3df92e8d321112c38a' \
   "$TARBALL" | shasum -a 256 -c -
 ```
 
@@ -33,6 +33,6 @@ confusing flows must still be returned; do not retry them away.
 
 The candidate passed an isolated maintainer smoke on Node 22.22.0 with an
 empty HOME, isolated npm prefix and cache, and fresh Git repository. Total
-install-to-first-value time was 8.975 seconds and raw-path hits were zero. This
+install-to-first-value time was 8.507 seconds and raw-path hits were zero. This
 does not count toward the 3-user gate. The raw-free manifest is
 [`reports/independent-user-candidate.json`](../../reports/independent-user-candidate.json).
