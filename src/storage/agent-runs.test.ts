@@ -48,4 +48,28 @@ describe("agent run storage", () => {
     });
     storage.close();
   });
+
+  it("rejects unsupported model metadata before it can calibrate a guide", () => {
+    const dataDir = join(tmpdir(), `looprelay-agent-runs-${randomUUID()}`);
+    dirs.push(dataDir);
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+    });
+
+    expect(() =>
+      storage.recordAgentRun({
+        project_id: "proj_test",
+        tool: "codex",
+        model: "unknown" as never,
+        role: "implement",
+        task_type: "implementation",
+        outcome_status: "passed",
+        accepted_recommendation: false,
+        attempts: 1,
+        focused_test_count: 0,
+      }),
+    ).toThrow("Agent run model must be a supported profile.");
+    storage.close();
+  });
 });

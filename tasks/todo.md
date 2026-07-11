@@ -7,6 +7,12 @@
   retention criteria in `docs/superpowers/specs/2026-07-11-adaptive-agent-guide-design.md`.
 - [x] TERRA RED: add failing policy, storage, CLI/MCP, and browser contracts
   before implementing the guide.
+- [x] TERRA HARDEN: reject unsupported run metadata at the storage and MCP
+  boundaries, and scope web evidence to the selected loop snapshot project.
+- [x] TERRA VERIFY: call `record_agent_run` three times and
+  `recommend_agent_strategy` once from an isolated real Codex MCP session;
+  restore the canonical `looprelay` registration and confirm `doctor codex`
+  reports ready with recent ingest.
 - [x] TERRA GREEN: implement model-run ledger, deterministic recommendation,
   CLI/MCP/web surfaces, and optional continuation brief guidance.
 - [x] VERIFY: pass lint, 143-file/1295-test unit suite, production build,

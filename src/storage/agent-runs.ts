@@ -7,6 +7,13 @@ import type {
   AgentGuideTaskType,
   AgentGuideTool,
 } from "../agent-guide/recommendation.js";
+import {
+  requireAgentGuideModel,
+  requireAgentGuideOutcomeStatus,
+  requireAgentGuideRole,
+  requireAgentGuideTaskType,
+  requireAgentGuideTool,
+} from "../agent-guide/recommendation.js";
 import type { LoopOutcomeStatus } from "../loop/types.js";
 
 export type AgentRun = {
@@ -42,6 +49,13 @@ export function recordAgentRun(
   input: RecordAgentRunInput,
   now: Date,
 ): AgentRun {
+  if (typeof input.project_id !== "string" || input.project_id.length === 0)
+    throw new Error("Agent run project ID is required.");
+  requireAgentGuideTool(input.tool);
+  requireAgentGuideModel(input.model);
+  requireAgentGuideRole(input.role);
+  requireAgentGuideTaskType(input.task_type);
+  requireAgentGuideOutcomeStatus(input.outcome_status);
   if (!Number.isInteger(input.attempts) || input.attempts < 1)
     throw new Error("Agent run attempts must be a positive integer.");
   if (
@@ -50,6 +64,14 @@ export function recordAgentRun(
   )
     throw new Error(
       "Agent run focused test count must be a non-negative integer.",
+    );
+  if (
+    input.first_value_seconds !== undefined &&
+    (!Number.isInteger(input.first_value_seconds) ||
+      input.first_value_seconds < 0)
+  )
+    throw new Error(
+      "Agent run first value seconds must be a non-negative integer.",
     );
   const run: AgentRun = {
     ...input,

@@ -1,5 +1,15 @@
 import {
+  AGENT_GUIDE_MODELS,
+  AGENT_GUIDE_OUTCOME_STATUSES,
+  AGENT_GUIDE_ROLES,
+  AGENT_GUIDE_TASK_TYPES,
+  AGENT_GUIDE_TOOLS,
   recommendAgentStrategy,
+  requireAgentGuideModel,
+  requireAgentGuideOutcomeStatus,
+  requireAgentGuideRole,
+  requireAgentGuideTaskType,
+  requireAgentGuideTool,
   type AgentGuideModel,
   type AgentGuideRole,
   type AgentGuideTaskType,
@@ -10,24 +20,6 @@ import { createProjectKey } from "../storage/project-id.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import type { LoopRelayMcpToolDefinition } from "./score-tool-definition-types.js";
 import type { ScorePromptToolOptions } from "./score-tool-types.js";
-
-const taskTypes = [
-  "ambiguous_request",
-  "planning",
-  "implementation",
-  "debugging",
-  "mechanical",
-  "review",
-  "continuation",
-] as const;
-const profiles = [
-  "gpt-5.6-sol",
-  "gpt-5.6-terra",
-  "gpt-5.6-luna",
-  "opus",
-  "sonnet",
-  "haiku",
-] as const;
 
 export const RECOMMEND_AGENT_STRATEGY_TOOL_DEFINITION: LoopRelayMcpToolDefinition =
   {
@@ -46,7 +38,7 @@ export const RECOMMEND_AGENT_STRATEGY_TOOL_DEFINITION: LoopRelayMcpToolDefinitio
       required: ["cwd", "task_type"],
       properties: {
         cwd: { type: "string" },
-        task_type: { type: "string", enum: taskTypes },
+        task_type: { type: "string", enum: AGENT_GUIDE_TASK_TYPES },
         failed_attempts: { type: "integer", minimum: 0 },
         worktree_count: { type: "integer", minimum: 0 },
         requires_independent_review: { type: "boolean" },
@@ -83,23 +75,16 @@ export const RECORD_AGENT_RUN_TOOL_DEFINITION: LoopRelayMcpToolDefinition = {
     required: ["cwd", "task_type", "tool", "model", "role", "outcome_status"],
     properties: {
       cwd: { type: "string" },
-      task_type: { type: "string", enum: taskTypes },
-      tool: { type: "string", enum: ["codex", "claude-code"] },
-      model: { type: "string", enum: profiles },
+      task_type: { type: "string", enum: AGENT_GUIDE_TASK_TYPES },
+      tool: { type: "string", enum: AGENT_GUIDE_TOOLS },
+      model: { type: "string", enum: AGENT_GUIDE_MODELS },
       role: {
         type: "string",
-        enum: ["plan", "implement", "fast_path", "review"],
+        enum: AGENT_GUIDE_ROLES,
       },
       outcome_status: {
         type: "string",
-        enum: [
-          "unknown",
-          "in_progress",
-          "passed",
-          "failed",
-          "blocked",
-          "abandoned",
-        ],
+        enum: AGENT_GUIDE_OUTCOME_STATUSES,
       },
       attempts: { type: "integer", minimum: 1 },
       first_value_seconds: { type: "integer", minimum: 0 },
@@ -128,6 +113,11 @@ export function recommendAgentStrategyTool(
   },
   options: ScorePromptToolOptions = {},
 ) {
+  try {
+    requireAgentGuideTaskType(args.task_type);
+  } catch (error) {
+    return invalidInput(error);
+  }
   try {
     const { storage, projectId } = open(options, args.cwd);
     try {
@@ -174,6 +164,22 @@ export function recordAgentRunTool(
   options: ScorePromptToolOptions = {},
 ) {
   try {
+    requireAgentGuideTaskType(args.task_type);
+    requireAgentGuideTool(args.tool);
+    requireAgentGuideModel(args.model);
+    requireAgentGuideRole(args.role);
+    requireAgentGuideOutcomeStatus(args.outcome_status);
+    requireNonNegativeInteger(args.attempts, "attempts", 1);
+    requireNonNegativeInteger(
+      args.first_value_seconds,
+      "first value seconds",
+      0,
+    );
+    requireNonNegativeInteger(args.focused_test_count, "focused test count", 0);
+  } catch (error) {
+    return invalidInput(error);
+  }
+  try {
     const { storage, projectId } = open(options, args.cwd);
     try {
       return storage.recordAgentRun({
@@ -199,6 +205,28 @@ export function recordAgentRunTool(
         "Local agent guide storage is unavailable. Run looprelay setup and retry.",
     };
   }
+}
+function invalidInput(error: unknown) {
+  return {
+    is_error: true as const,
+    error_code: "invalid_input",
+    message:
+      error instanceof Error
+        ? error.message
+        : "Agent guide input must use supported raw-free metadata.",
+  };
+}
+
+function requireNonNegativeInteger(
+  value: number | undefined,
+  label: string,
+  minimum: number,
+): void {
+  if (value === undefined) return;
+  if (!Number.isInteger(value) || value < minimum)
+    throw new Error(
+      `Agent run ${label} must be an integer of at least ${minimum}.`,
+    );
 }
 function open(options: ScorePromptToolOptions, cwd: string) {
   const config = loadLoopRelayConfig(options.dataDir);

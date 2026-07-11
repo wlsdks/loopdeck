@@ -161,7 +161,7 @@ export function LoopsView({
         </div>
       </div>
       <LoopInstructionPatchPanel proposal={patchProposal} />
-      <AgentGuidePanel />
+      <AgentGuidePanel snapshotId={items[0]!.id} />
       {worktreeDetail && (
         <div className="loop-table panel">
           <div className="loop-worktree-detail">

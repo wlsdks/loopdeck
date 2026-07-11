@@ -3439,12 +3439,14 @@ export async function getAgentGuide(
     | "mechanical"
     | "review"
     | "continuation" = "continuation",
+  snapshotId?: string,
 ): Promise<AgentGuideResponse> {
   await ensureSession();
-  const response = await fetch(
-    `/api/v1/agent-guide?task_type=${encodeURIComponent(taskType)}`,
-    { credentials: "same-origin" },
-  );
+  const params = new URLSearchParams({ task_type: taskType });
+  if (snapshotId) params.set("snapshot_id", snapshotId);
+  const response = await fetch(`/api/v1/agent-guide?${params}`, {
+    credentials: "same-origin",
+  });
   if (!response.ok) await failApi(response, "Agent guide failed");
   const body = (await response.json()) as { data?: unknown };
   if (!body.data || typeof body.data !== "object")

@@ -79,8 +79,9 @@ reports passing and non-passing counts so a high count cannot hide poor results.
 
 - CLI: `looprelay guide next` and `looprelay guide record-run`.
 - MCP: `recommend_agent_strategy` and `record_agent_run`.
-- Web: a Guide panel in the Loops workspace showing the latest recommendation,
-  evidence counts, switch conditions, and a manual run-record action.
+- Web: a Guide panel in the Loops workspace scoped to the selected loop
+  snapshot, showing the recommendation, evidence counts, and switch condition.
+  Run recording remains an explicit CLI or MCP action.
 - Continuation brief: append a compact advisory Guide section only when one is
   available.
 

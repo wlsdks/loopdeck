@@ -2,6 +2,11 @@ import type { Command } from "commander";
 
 import {
   recommendAgentStrategy,
+  requireAgentGuideModel,
+  requireAgentGuideOutcomeStatus,
+  requireAgentGuideRole,
+  requireAgentGuideTaskType,
+  requireAgentGuideTool,
   type AgentGuideModel,
   type AgentGuideRole,
   type AgentGuideTaskType,
@@ -106,10 +111,10 @@ export function recordGuideRunForCli(options: GuideOptions): string {
     const run = storage.recordAgentRun({
       project_id: projectId,
       task_type: requiredTaskType(options.taskType),
-      tool: options.tool!,
-      model: options.model!,
-      role: options.role!,
-      outcome_status: options.outcome!,
+      tool: requireAgentGuideTool(options.tool),
+      model: requireAgentGuideModel(options.model),
+      role: requireAgentGuideRole(options.role),
+      outcome_status: requireAgentGuideOutcomeStatus(options.outcome),
       accepted_recommendation: options.acceptedRecommendation === true,
       attempts: count(options.attempts) ?? 1,
       first_value_seconds: count(options.firstValueSeconds),
@@ -138,19 +143,7 @@ function openStorage(options: GuideOptions) {
   };
 }
 function requiredTaskType(value: string | undefined): AgentGuideTaskType {
-  if (
-    [
-      "ambiguous_request",
-      "planning",
-      "implementation",
-      "debugging",
-      "mechanical",
-      "review",
-      "continuation",
-    ].includes(value ?? "")
-  )
-    return value as AgentGuideTaskType;
-  throw new Error("--task-type must be a supported guide task type.");
+  return requireAgentGuideTaskType(value);
 }
 function count(value: string | undefined): number | undefined {
   if (value === undefined) return undefined;

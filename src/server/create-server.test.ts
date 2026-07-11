@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { initializeLoopRelay } from "../config/config.js";
 import type { LoopSnapshot } from "../loop/types.js";
+import type { AgentRun } from "../storage/agent-runs.js";
 import { createServer } from "./create-server.js";
 import type { CompactBoundary } from "../storage/compact-boundaries.js";
 import type { LoopMergeDecision } from "../storage/loop-decisions.js";
@@ -715,6 +716,46 @@ describe("createServer P2 ingest boundary", () => {
     });
     expect(response.body).not.toContain("listLoopSnapshots");
     expect(response.body).not.toContain("/Users/");
+  });
+
+  it("scopes agent-guide evidence to the requested loop snapshot project", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({ id: "loop_other", project_id: "proj_other" }),
+      loopSnapshot({ id: "loop_selected", project_id: "proj_selected" }),
+    );
+    storage.agentRuns.push(
+      ...["passed", "passed", "passed"].map((outcome_status, index) =>
+        agentRun({
+          id: `selected_${index}`,
+          project_id: "proj_selected",
+          outcome_status: outcome_status as AgentRun["outcome_status"],
+        }),
+      ),
+      agentRun({
+        id: "other_0",
+        project_id: "proj_other",
+        outcome_status: "failed",
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/agent-guide?task_type=implementation&snapshot_id=loop_selected",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        confidence: "medium",
+        evidence: { completed_runs: 3, passing_runs: 3, non_passing_runs: 0 },
+      },
+    });
   });
 
   it("returns a worktree drilldown without prompt bodies or raw paths", async () => {
@@ -3291,6 +3332,7 @@ function createMemoryStorage() {
     rating: "helpful" | "not_helpful" | "wrong";
     created_at: string;
   }> = [];
+  const agentRuns: AgentRun[] = [];
 
   return {
     events,
@@ -3300,6 +3342,7 @@ function createMemoryStorage() {
     compactBoundaries,
     loopMemories,
     loopMergeDecisions,
+    agentRuns,
     exportJobs,
     instructionReviews,
     policyForIngest: undefined as
@@ -3424,6 +3467,16 @@ function createMemoryStorage() {
     },
     listLoopSnapshots() {
       return { items: loopSnapshots };
+    },
+    listAgentRuns(options: {
+      projectId: string;
+      taskType?: AgentRun["task_type"];
+    }) {
+      return agentRuns.filter(
+        (run) =>
+          run.project_id === options.projectId &&
+          (!options.taskType || run.task_type === options.taskType),
+      );
     },
     getLatestLoopSnapshot() {
       return loopSnapshots.at(0);
@@ -3693,6 +3746,23 @@ function loopSnapshot(patch: Partial<LoopSnapshot> = {}): LoopSnapshot {
       stores_prompt_bodies: false,
       stores_raw_paths: false,
     },
+    ...patch,
+  };
+}
+
+function agentRun(patch: Partial<AgentRun> = {}): AgentRun {
+  return {
+    id: "arun_web",
+    created_at: "2026-07-11T00:00:00.000Z",
+    project_id: "proj_web",
+    tool: "codex",
+    model: "gpt-5.6-terra",
+    role: "implement",
+    task_type: "implementation",
+    outcome_status: "passed",
+    accepted_recommendation: true,
+    attempts: 1,
+    focused_test_count: 1,
     ...patch,
   };
 }

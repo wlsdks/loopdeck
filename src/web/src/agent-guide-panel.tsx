@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { getAgentGuide, type AgentGuideResponse } from "./api.js";
 
-export function AgentGuidePanel() {
+export function AgentGuidePanel({ snapshotId }: { snapshotId: string }) {
   const [guide, setGuide] = useState<AgentGuideResponse>();
   useEffect(() => {
-    void getAgentGuide()
+    void getAgentGuide("continuation", snapshotId)
       .then(setGuide)
       .catch(() => undefined);
-  }, []);
+  }, [snapshotId]);
   if (!guide) return null;
   if ("status" in guide)
     return (

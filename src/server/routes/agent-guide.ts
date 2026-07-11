@@ -10,6 +10,7 @@ import { requireAppAccess, type ServerAuthConfig } from "../auth.js";
 import { requireStorageCapabilities } from "../storage-capabilities.js";
 
 const querySchema = z.object({
+  snapshot_id: z.string().min(1).optional(),
   task_type: z.enum([
     "ambiguous_request",
     "planning",
@@ -39,15 +40,18 @@ export function registerAgentGuideRoutes(
       ["listAgentRuns", "listLoopSnapshots"],
       { label: "Agent guide storage", instance: request.url },
     );
-    const projectId = storage
-      .listLoopSnapshots({ limit: 1 })
-      .items.at(0)?.project_id;
+    const snapshots = storage.listLoopSnapshots({ limit: 100 }).items;
+    const snapshot = query.snapshot_id
+      ? snapshots.find((item) => item.id === query.snapshot_id)
+      : snapshots.at(0);
+    const projectId = snapshot?.project_id;
     if (!projectId) {
       return reply.send({
         data: {
           status: "empty",
-          next_action:
-            "Create a local loop snapshot before requesting model guidance.",
+          next_action: query.snapshot_id
+            ? "Select an available local loop snapshot before requesting model guidance."
+            : "Create a local loop snapshot before requesting model guidance.",
           privacy: {
             local_only: true,
             external_calls: false,

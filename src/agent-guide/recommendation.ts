@@ -21,6 +21,42 @@ export type AgentGuideModel =
 
 export type AgentGuideTool = "codex" | "claude-code";
 
+export const AGENT_GUIDE_TASK_TYPES = [
+  "ambiguous_request",
+  "planning",
+  "implementation",
+  "debugging",
+  "mechanical",
+  "review",
+  "continuation",
+] as const satisfies readonly AgentGuideTaskType[];
+export const AGENT_GUIDE_ROLES = [
+  "plan",
+  "implement",
+  "fast_path",
+  "review",
+] as const satisfies readonly AgentGuideRole[];
+export const AGENT_GUIDE_MODELS = [
+  "gpt-5.6-sol",
+  "gpt-5.6-terra",
+  "gpt-5.6-luna",
+  "opus",
+  "sonnet",
+  "haiku",
+] as const satisfies readonly AgentGuideModel[];
+export const AGENT_GUIDE_TOOLS = [
+  "codex",
+  "claude-code",
+] as const satisfies readonly AgentGuideTool[];
+export const AGENT_GUIDE_OUTCOME_STATUSES = [
+  "unknown",
+  "in_progress",
+  "passed",
+  "failed",
+  "blocked",
+  "abandoned",
+] as const satisfies readonly LoopOutcomeStatus[];
+
 export type AgentGuideRunEvidence = {
   outcomeStatus: LoopOutcomeStatus;
 };
@@ -64,6 +100,38 @@ export function recommendAgentStrategy(input: {
       auto_switches_model: false,
     },
   };
+}
+
+export function requireAgentGuideTaskType(value: unknown): AgentGuideTaskType {
+  return requireEnum(value, AGENT_GUIDE_TASK_TYPES, "task type");
+}
+
+export function requireAgentGuideRole(value: unknown): AgentGuideRole {
+  return requireEnum(value, AGENT_GUIDE_ROLES, "role");
+}
+
+export function requireAgentGuideModel(value: unknown): AgentGuideModel {
+  return requireEnum(value, AGENT_GUIDE_MODELS, "model");
+}
+
+export function requireAgentGuideTool(value: unknown): AgentGuideTool {
+  return requireEnum(value, AGENT_GUIDE_TOOLS, "tool");
+}
+
+export function requireAgentGuideOutcomeStatus(
+  value: unknown,
+): LoopOutcomeStatus {
+  return requireEnum(value, AGENT_GUIDE_OUTCOME_STATUSES, "outcome status");
+}
+
+function requireEnum<T extends string>(
+  value: unknown,
+  values: readonly T[],
+  label: string,
+): T {
+  if (typeof value === "string" && values.includes(value as T))
+    return value as T;
+  throw new Error(`Agent run ${label} must be a supported profile.`);
 }
 
 function chooseRole(input: {
