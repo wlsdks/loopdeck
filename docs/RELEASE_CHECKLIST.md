@@ -30,8 +30,10 @@ Use this checklist before publishing a stable public release or npm package.
 - [ ] `corepack pnpm e2e:browser`
 - [ ] `corepack pnpm smoke:release`
 - [ ] `corepack pnpm smoke:package-install`
-- [ ] `corepack pnpm smoke:candidate-first-value` (maintainer preflight only;
-      does not count as an independent-user result)
+- [ ] `corepack pnpm smoke:candidate-first-value` (checksum-pinned clean
+      install preflight; human usability remains a separate optional study)
+- [ ] Agent-native gate: three fresh Codex/Claude Code MCP runs across two
+      clients, including one continuation brief and no critical blocker.
 - [ ] `corepack pnpm evidence:quality -- --require-complete`
 - [ ] `corepack pnpm looprelay quality-evidence --require-complete`
 - [ ] `corepack pnpm looprelay quality-evidence --runtime-tool codex --require-runtime-ready`

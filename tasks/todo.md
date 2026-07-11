@@ -1,5 +1,17 @@
 # 작업 계획
 
+## 2026-07-12 Agent-Native Release Validation
+
+- [x] POLICY: replace the unavailable-human gate with a bounded agent-native
+  gate without presenting agent observations as human adoption or causality.
+- [x] EVIDENCE: retain two failed shell-first agent onboarding runs, then pass
+  three fresh MCP runs across Codex and Claude Code with one continuation brief.
+- [x] REPORT: require checksum-pinned clean install separately from fresh MCP
+  evidence; expose client diversity, continuation coverage, and retained
+  friction in the raw-free ledger and README.
+- [ ] RELEASE: wait for npm authentication and select a new immutable release
+  version before running the one-time final release gate.
+
 ## 2026-07-12 Independent First-Value Measurement
 
 - [x] RED: require the candidate assessor to reject raw isolated-path exposure

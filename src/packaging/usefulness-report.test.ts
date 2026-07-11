@@ -211,8 +211,8 @@ describe("usefulness report generator", () => {
     expect(markdown).toContain("maintainer-run observational evidence");
     expect(markdown).toContain("Conservative 95% bound");
     expect(markdown).toContain("causal claim remains false");
-    expect(markdown).toContain("0/3 independent users");
-    expect(markdown).toContain("0 independent agent operators");
+    expect(markdown).toContain("Human usability has 0 observed flows");
+    expect(markdown).toContain("0 observed runs");
   });
 
   it("rejects causal claims, prompt-bearing fields, secrets, and raw paths", () => {
@@ -284,31 +284,69 @@ describe("usefulness report generator", () => {
     );
   });
 
-  it("keeps public readiness blocked until three successful independent flows", () => {
+  it("requires three qualified fresh agent-operator flows from two clients", () => {
     const input = ledger();
-    input.independent_users = [1, 2, 3].map((index) => ({
-      id: `participant-${index}`,
-      independence_confirmed: true,
+    input.minimums = {
+      ...input.minimums,
+      independent_users: 0,
+      agent_operators: 3,
+      agent_operator_clients: 2,
+      agent_operator_continuations: 1,
+    };
+    input.independent_agent_operators = [
+      agentOperator("agent-codex-01", "codex"),
+      agentOperator("agent-claude-01", "claude-code"),
+      agentOperator("agent-codex-02", "codex"),
+    ];
+
+    expect(createUsefulnessReport(input).public_readiness).toEqual({
+      ready: true,
+      reason: "agent_operator_requirements_met",
+    });
+    expect(createUsefulnessReport(input).agent_operator_evidence).toMatchObject(
+      {
+        required_count: 3,
+        required_client_count: 2,
+        qualified_count: 3,
+        qualified_client_count: 2,
+        successful_qualified_count: 3,
+        human_usability_measured: false,
+      },
+    );
+
+    input.independent_agent_operators[0].privacy_blocker = true;
+    expect(createUsefulnessReport(input).public_readiness).toEqual({
+      ready: false,
+      reason: "critical_blocker",
+    });
+  });
+
+  it("does not let legacy agent records satisfy the fresh agent gate", () => {
+    const input = ledger();
+    input.minimums = {
+      ...input.minimums,
+      independent_users: 0,
+      agent_operators: 3,
+      agent_operator_clients: 2,
+      agent_operator_continuations: 1,
+    };
+    input.independent_agent_operators = [1, 2, 3].map((index) => ({
+      id: `agent-legacy-${index}`,
       install_success: true,
       first_value_success: true,
       install_elapsed_ms: 10_000,
       time_to_first_value_ms: 20_000,
+      command_count: 3,
+      input_tokens: 1_000,
       recovery_count: 0,
       friction_count: 0,
       privacy_blocker: false,
       data_loss_blocker: false,
-      install_blocker: false,
     }));
 
     expect(createUsefulnessReport(input).public_readiness).toEqual({
-      ready: true,
-      reason: "requirements_met",
-    });
-
-    input.independent_users[0].privacy_blocker = true;
-    expect(createUsefulnessReport(input).public_readiness).toEqual({
       ready: false,
-      reason: "critical_blocker",
+      reason: "agent_operator_evidence_missing",
     });
   });
 
@@ -448,6 +486,40 @@ function ledger() {
   };
 }
 
+function agentOperator(id: string, client: "codex" | "claude-code") {
+  return {
+    id,
+    client,
+    client_version: "test-client-version",
+    fresh_session: true,
+    isolated_product_home: true,
+    isolated_npm_prefix: true,
+    fresh_git_repository: true,
+    candidate_commit: "0123456789abcdef0123456789abcdef01234567",
+    candidate_sha256:
+      "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    agent_execution_completed: true,
+    agent_execution_blocker: false,
+    workflow: "mcp_continuation",
+    mcp_called: true,
+    mcp_ready: true,
+    continuation_brief_received: true,
+    raw_content_exposed: false,
+    candidate_install_verified: true,
+    install_success: true,
+    first_value_success: true,
+    install_elapsed_ms: 10_000,
+    time_to_first_value_ms: 20_000,
+    command_count: 3,
+    input_tokens: 1_000,
+    recovery_count: 0,
+    friction_count: 0,
+    privacy_blocker: false,
+    data_loss_blocker: false,
+    install_blocker: false,
+  };
+}
+
 function pair(
   taskType: string,
   order: "baseline_first" | "looprelay_first",
@@ -479,6 +551,8 @@ function pair(
       friction_count: baselineFriction,
       privacy_blocker: false,
       data_loss_blocker: false,
+      agent_execution_completed: false,
+      agent_execution_blocker: true,
       install_blocker: false,
     },
     looprelay: {

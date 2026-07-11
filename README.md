@@ -20,7 +20,7 @@
 ![LoopRelay baseline versus assisted engineering results](docs/assets/usefulness-results.svg)
 
 <!-- USEFULNESS_RESULTS_START -->
-Current results are maintainer-run observational evidence, not a causal claim. They include 30 matched pairs across 5 task types and 0/3 independent users. A separate cohort has 3 independent agent operators with 100% first-value success; agent operators do not count as human users.
+Current results are maintainer-run observational evidence, not a causal claim. They include 30 matched pairs across 5 task types. Human usability has 0 observed flows and is not part of this agent-native gate. The operator cohort has 8 observed runs; 3/3 combine a checksum-pinned clean install with a successful fresh MCP session across 2/2 client families, including 1/1 continuation-brief runs.
 
 | Task type | Pairs | Baseline success | LoopRelay success | Delta | Conservative 95% bound | Input-token delta | Decision |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
@@ -30,7 +30,7 @@ Current results are maintainer-run observational evidence, not a causal claim. T
 | Release verification continuity | 6 | 100% | 100% | 0pp | -100..100pp | +42178.2 | Narrow |
 | Session recovery | 6 | 16.7% | 83.3% | +66.7pp | -44.2..100pp | -25189 | Retain |
 
-Aggregate success moved from 60% to 83.3%, while actionability moved from 74% to 89.7%. Mean input-token cost changed by 11.1%. Cached-token and TTFV condition coverage are 66.7% and 66.7% respectively; missing values are not interpreted as zero. Matched pairs observed 0 blocker-bearing cases: 0 documented as remediated and 0 unresolved cases that block public readiness. All 5 target task types meet the per-type minimum of 5 pairs. Decisions remain directional because this is maintainer-run evidence and independent-user validation is incomplete. Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. The causal claim remains false until independent-user validation is complete.
+Aggregate success moved from 60% to 83.3%, while actionability moved from 74% to 89.7%. Mean input-token cost changed by 11.1%. Cached-token and TTFV condition coverage are 66.7% and 66.7% respectively; missing values are not interpreted as zero. Matched pairs observed 0 blocker-bearing cases: 0 documented as remediated and 0 unresolved cases that block public readiness. The agent-native gate requires 3 qualified runs across 2 client families and 1 continuation brief. All 5 target task types meet the per-type minimum of 5 pairs. Decisions remain directional because this is maintainer-run evidence and the agent-native gate does not establish human usability. Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. Human usability remains unmeasured and the causal claim remains false.
 <!-- USEFULNESS_RESULTS_END -->
 
 This chart is generated from the committed raw-free matched-pair ledger, not
@@ -46,14 +46,14 @@ pnpm evidence:usefulness
 See the [raw-free pair ledger](reports/usefulness-pairs.json),
 [generated summary](reports/usefulness-summary.json), and
 [evaluation protocol](docs/ENGINEERING_USEFULNESS_VALIDATION_2026-07-11.md).
-Independent humans use the
-[install-to-first-value protocol](evaluation/usefulness/INDEPENDENT_USER_PROTOCOL.md);
-agent operators do not satisfy that gate. The current validation-only
+The [agent-native protocol](evaluation/usefulness/AGENT_OPERATOR_PROTOCOL.md)
+does not invent unavailable human participants: it combines a clean,
+checksum-pinned candidate install with fresh Codex/Claude Code MCP sessions.
+The current validation-only
 [participant handoff](evaluation/usefulness/PARTICIPANT_HANDOFF_07a3ba86.md)
-pins candidate commit `07a3ba86` and its checksum. Its isolated maintainer
-smoke reached first value in 7.098 seconds (installation: 6.396 seconds) with
-zero raw-path hits, but still
-counts as 0/3 independent humans and does not authorize release.
+pins candidate commit `07a3ba86`; its isolated clean smoke reached first value
+in 7.098 seconds (installation: 6.396 seconds) with zero raw-path hits. Human
+usability remains unmeasured and does not become an implied claim.
 
 ### Sol-planned, Terra-executed reproduction
 
@@ -83,8 +83,8 @@ averages 6.2s less TTFV, 2.8 fewer tools, and 87,199 fewer input tokens. Three
 failures improved, eight pairs remained failed, and human review preferred
 LoopRelay 8 times and baseline 3 times. This is directional maintainer-run
 evidence, not a causal or public-readiness claim. Every task-type interval still
-spans the full plausible range, several failures came from read-only test
-startup or strict plan/outcome mismatch, and independent humans remain 0/3.
+spans the full plausible range, and several failures came from read-only test
+startup or strict plan/outcome mismatch. Human usability remains unmeasured.
 
 Evidence-based scope at N=11:
 
@@ -95,7 +95,9 @@ Evidence-based scope at N=11:
 - `narrow`: implementation continuation to tasks with a genuinely hidden
   selected contract; a fully specified task received only overhead.
 - `narrow`: release continuity to fact handoff only; sequencing remained 0/2.
-- Keep all paths opt-in until three independent humans complete first value.
+- Keep all paths opt-in: shell-first agent onboarding produced retained sandbox
+  and non-interactive execution failures even though clean package install and
+  live MCP paths passed.
 
 The eleventh pair found a real concurrent lost-update risk in the new human
 evidence intake. Baseline and LoopRelay both scored 6/10 and failed; treatment

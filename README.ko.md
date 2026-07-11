@@ -15,7 +15,7 @@
 ![LoopRelay 미사용 대비 사용 조건 엔지니어링 결과](docs/assets/usefulness-results.svg)
 
 <!-- USEFULNESS_RESULTS_START -->
-현재 결과는 maintainer-run observational evidence이며 인과관계를 주장하지 않습니다. 30개 matched pair와 5개 작업 유형을 포함합니다. 독립 사용자 검증은 0/3명입니다. 별도의 독립 Codex agent operator는 3개이며 첫 가치 성공률은 100%입니다. Agent operator는 사람 사용자로 계산하지 않습니다.
+현재 결과는 maintainer-run observational evidence이며 인과관계를 주장하지 않습니다. 30개 matched pair와 5개 작업 유형을 포함합니다. 사람 사용성 관찰은 0건이며 agent-native gate에는 포함하지 않습니다. Agent operator는 8건 관찰됐고, checksum-pinned clean install과 fresh MCP session을 분리 검증한 성공 run은 3/3건, client 다양성은 2/2, continuation brief 성공은 1/1건입니다.
 
 | 작업 유형 | 쌍 | Baseline 성공률 | LoopRelay 성공률 | 차이 | 보수적 95% 범위 | Input token 차이 | 판단 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
@@ -25,7 +25,7 @@
 | Release verification continuity | 6 | 100% | 100% | 0pp | -100..100pp | +42178.2 | Narrow |
 | Session recovery | 6 | 16.7% | 83.3% | +66.7pp | -44.2..100pp | -25189 | Retain |
 
-전체 성공률은 60%에서 83.3%로 변했고 actionability는 74%에서 89.7%로 변했습니다. 평균 input token 비용은 11.1% 변했습니다. Cached token과 TTFV의 조건별 측정 coverage는 각각 66.7%, 66.7%이며 누락값을 0으로 해석하지 않습니다. Matched pair에서 관찰된 blocker는 0건이며, remediation이 기록된 사례는 0건, 공개를 막는 미해결 사례는 0건입니다. 목표 5개 작업 유형 모두 유형별 최소 5쌍을 충족했습니다. 다만 maintainer-run evidence이며 독립 사용자 검증이 끝나지 않았으므로 판단은 directional입니다. 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 독립 사용자 검증 전까지 causal claim은 false입니다.
+전체 성공률은 60%에서 83.3%로 변했고 actionability는 74%에서 89.7%로 변했습니다. 평균 input token 비용은 11.1% 변했습니다. Cached token과 TTFV의 조건별 측정 coverage는 각각 66.7%, 66.7%이며 누락값을 0으로 해석하지 않습니다. Matched pair에서 관찰된 blocker는 0건이며, remediation이 기록된 사례는 0건, 공개를 막는 미해결 사례는 0건입니다. Agent-native gate는 checksum-pinned clean install과 Codex/Claude Code의 fresh MCP 성공 run 3건, 서로 다른 client 2개, continuation brief 1건을 요구합니다. 목표 5개 작업 유형 모두 유형별 최소 5쌍을 충족했습니다. 다만 maintainer-run evidence이며 agent-native gate가 사람 사용성을 증명하지 않으므로 판단은 directional입니다. 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 사람 사용성은 미측정이며 causal claim은 false입니다.
 <!-- USEFULNESS_RESULTS_END -->
 
 이 그래프는 수작업 마케팅 수치가 아니라 commit된 raw-free matched-pair
@@ -42,13 +42,13 @@ pnpm evidence:usefulness
 [생성된 summary](reports/usefulness-summary.json),
 [평가 프로토콜](docs/ENGINEERING_USEFULNESS_VALIDATION_2026-07-11.md)을 함께
 확인할 수 있습니다.
-독립 인간 사용자는
-[설치부터 첫 가치 프로토콜](evaluation/usefulness/INDEPENDENT_USER_PROTOCOL.md)을
-사용하며 agent operator는 이 gate를 충족하지 않습니다. 현재 validation-only
+[agent-native 프로토콜](evaluation/usefulness/AGENT_OPERATOR_PROTOCOL.md)은
+존재하지 않는 사람 참가자를 만들지 않습니다. checksum-pinned clean install과
+fresh Codex/Claude Code MCP session을 결합합니다. 현재 validation-only
 [참가자 handoff](evaluation/usefulness/PARTICIPANT_HANDOFF_07a3ba86.md)는 후보
-커밋 `07a3ba86`와 checksum을 고정합니다. 격리 maintainer smoke는 설치 6.396초,
-첫 가치 7.098초였고 raw-path hit는 0건이었지만, 독립 인간 수는 여전히 0/3이며
-release를 승인하지 않습니다.
+커밋 `07a3ba86`와 checksum을 고정합니다. 격리 clean smoke는 설치 6.396초,
+첫 가치 7.098초였고 raw-path hit는 0건입니다. 사람 사용성은 미측정이며 이를
+암묵적 효용 주장으로 바꾸지 않습니다.
 
 ### Sol 설계, Terra 실행 재현 검사
 
@@ -78,10 +78,10 @@ actionability는 52.7% 대 83.6%였습니다. LoopRelay는 평균 TTFV 6.2초, t
 2.8회, input token 87,199를 줄였습니다. 실패 3건이 개선됐고 8쌍은
 fail/fail로 남았으며 human review는 LoopRelay 8회, baseline 3회를
 선호했습니다. 이는 maintainer-run
-directional evidence이지 인과 또는 public-readiness 근거가 아닙니다. 모든
-유형별 interval은 여전히 전체 가능 범위를 가로지르고, 여러 실패가 read-only
-test startup 또는 plan/outcome rubric mismatch에서 발생했으며 독립 인간은
-0/3입니다.
+directional evidence이지 인과 또는 일반 생산성 근거가 아닙니다. 모든 유형별
+interval은 여전히 전체 가능 범위를 가로지르고, 여러 실패가 read-only test
+startup 또는 plan/outcome rubric mismatch에서 발생했습니다. 사람 사용성은
+미측정입니다.
 
 N=11 evidence 기반 scope:
 
@@ -90,7 +90,8 @@ N=11 evidence 기반 scope:
   증가했으므로 다른 실제 사례의 strict success 전까지 제한
 - `narrow`: implementation continuation은 숨은 selected contract가 있을 때만
 - `narrow`: release continuity는 fact handoff로 제한, sequencing은 0/2
-- 독립 인간 3명이 first value를 완료할 때까지 모든 경로를 opt-in으로 유지
+- shell-first agent onboarding에서 sandbox와 non-interactive execution 실패가
+  보존됐으므로 모든 경로를 opt-in으로 유지
 
 열한 번째 pair는 새 human evidence intake의 concurrent lost-update 위험을
 찾았습니다. Baseline과 LoopRelay 모두 6/10 fail이었고 treatment는 quality

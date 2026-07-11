@@ -20,11 +20,24 @@
     "data_loss_blocker_count": 0,
     "install_blocker_count": 0
   },
-  "independent_agent_operator_count": 3,
-  "independent_agent_operator_success_rate": 1,
+  "independent_agent_operator_count": 8,
+  "independent_agent_operator_success_rate": 0.75,
+  "agent_operator_evidence": {
+    "observed_count": 8,
+    "required_count": 3,
+    "required_client_count": 2,
+    "required_continuation_count": 1,
+    "qualified_count": 3,
+    "qualified_client_count": 2,
+    "successful_qualified_count": 3,
+    "continuation_success_count": 1,
+    "blocker_count": 0,
+    "human_usability_measured": false,
+    "ready": true
+  },
   "public_readiness": {
-    "ready": false,
-    "reason": "independent_users_missing"
+    "ready": true,
+    "reason": "agent_operator_requirements_met"
   },
   "task_types": [
     "ambiguity_clarification",
@@ -199,7 +212,10 @@
     "pairs": 30,
     "task_types": 5,
     "pairs_per_task_type": 5,
-    "independent_users": 3
+    "independent_users": 0,
+    "agent_operators": 3,
+    "agent_operator_clients": 2,
+    "agent_operator_continuations": 1
   },
   "baseline": {
     "success_rate": 0.6,

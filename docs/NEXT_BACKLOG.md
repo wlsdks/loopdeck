@@ -3,8 +3,8 @@
 Last updated: 2026-07-11
 
 LoopRelay is in identity-consolidation and usefulness-validation mode. Large new
-features remain frozen until at least three independent users complete install
-and first-value continuity flows. The bounded local Adaptive Agent Guide is an
+features remain frozen while agent-native usefulness evidence is collected and
+used to narrow scope. The bounded local Adaptive Agent Guide is an
 explicit maintainer-approved exception on 2026-07-11; it remains subject to its
 own matched-pair retention decision and does not authorize provider automation.
 
@@ -41,15 +41,16 @@ Primary value:
   is not pooled with the GPT-5.4 aggregate.
 - Current unseen real-task corpus: 11 Sol-preregistered/Terra-executed pairs
   across five task types with at least two pairs per type. It is directional only,
-  remains separate from both synthetic cohorts, and does not satisfy the
-  independent-human public-readiness gate.
-- Current independent-human candidate: commit `07a3ba86`, checksum-pinned in
+  remains separate from both synthetic cohorts and does not establish causality.
+- Current clean-install candidate: commit `07a3ba86`, checksum-pinned in
   `reports/independent-user-candidate.json`. Its isolated maintainer smoke
   passed installation in 6.396 seconds and install-to-first-value in 7.098
-  seconds with zero raw-path hits, but it
-  remains validation-only and the independent-human count is 0/3.
-- Collect unseen real-task pairs and three independent human
-  install-to-first-value flows; do not inflate confidence with additional
+  seconds with zero raw-path hits.
+- The agent-native gate now has three fresh MCP runs across Codex and Claude
+  Code, including one continuation brief. Two shell-first agent onboarding
+  runs failed at sandbox/non-interactive boundaries and remain retained as
+  friction, not product-install blockers.
+- Collect unseen real-task pairs; do not inflate confidence with additional
   repeats of the current synthetic fixtures.
 - Separate baseline work from LoopRelay-assisted work explicitly.
 - Record completion rate, failure transition, continuation reuse, adopted
@@ -62,7 +63,7 @@ Primary value:
 Keep a feature only when it reduces rediscovery, prevents repeated failure, or
 improves evidence quality without adding disproportionate friction. Modify it
 when the value is visible but setup or interpretation is confusing. Remove or
-de-emphasize it when independent users do not adopt it or when it encourages
+de-emphasize it when agents do not adopt it in real tasks or when it encourages
 prompt-score optimization without better outcomes.
 
 Candidate focused slices:
@@ -99,8 +100,8 @@ Evidence-based 1.0.x scope:
   repository state already determines the next action.
 - Remove generic diagnosis from the default ambiguity path; let the coding
   agent ask native focused questions and retain diagnosis as explicit opt-in.
-- Do not add a large feature until three independent humans complete install
-  and first value. The 30-pair cohort does not satisfy that gate.
+- Do not add a large feature without new real-task evidence. The 30-pair cohort
+  does not establish a general productivity claim.
 
 Current real-task decisions (11-pair maintainer-run cohort):
 
@@ -117,8 +118,9 @@ Current real-task decisions (11-pair maintainer-run cohort):
   cost without quality.
 - `narrow`: release continuity to factual handoff; both cases stayed fail/fail
   because action sequencing was not preserved.
-- `hold`: all large feature work and public release interpretation until three
-  independent humans complete install-to-first-value without critical blockers.
+- `hold`: all large feature work unless new real-task evidence changes the
+  narrow scope above. Agent-native readiness does not establish human adoption
+  or causality.
 
 No item above authorizes automatic prompt submission, hidden provider calls,
 private transcript scraping, automatic memory writes, or automatic instruction

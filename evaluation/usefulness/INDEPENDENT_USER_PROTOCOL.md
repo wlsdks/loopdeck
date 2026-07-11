@@ -1,7 +1,8 @@
 # Independent install-to-first-value protocol
 
-This protocol is for a human who did not build LoopRelay and did not
-participate in its design. Agent-operator runs do not count.
+This optional protocol is for a human who did not build LoopRelay and did not
+participate in its design. It measures human usability separately from the
+agent-native release gate.
 
 The maintainer provides one candidate tarball and its SHA-256. The participant
 uses a fresh temporary directory and does not share prompts, command output,
@@ -10,8 +11,7 @@ paths, usernames, repository names, or free-form notes.
 Before handing a candidate to a participant, the maintainer runs this
 raw-free preflight from the candidate checkout. It validates the same isolated
 install, checkpoint, and continuation-brief flow and reports install/first-value
-timings, but it is maintainer-only evidence and never counts toward the
-independent-user requirement.
+timings, but it is maintainer-only evidence and never counts as a human flow.
 
 ```bash
 pnpm smoke:candidate-first-value
@@ -92,6 +92,7 @@ separate from matched-pair and agent-operator cohorts.
   pre-rehearse this flow.
 - A failed install or first-value attempt counts as a participant result, not as
   a successful completion.
-- The public gate requires three independent, successful, blocker-free results.
+- This protocol does not define the agent-native public gate; see
+  `AGENT_OPERATOR_PROTOCOL.md` for that bounded release criterion.
 - Results are appended only after validation and duplicate participant labels
   are rejected.

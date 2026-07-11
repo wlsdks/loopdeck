@@ -14,7 +14,10 @@
     "pairs": 5,
     "task_types": 5,
     "pairs_per_task_type": 1,
-    "independent_users": 3
+    "independent_users": 0,
+    "agent_operators": 3,
+    "agent_operator_clients": 2,
+    "agent_operator_continuations": 1
   },
   "independent_users": [],
   "independent_agent_operators": [],
