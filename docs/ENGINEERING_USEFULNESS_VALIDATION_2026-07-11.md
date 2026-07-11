@@ -5,10 +5,13 @@ evidence workflows. It is not a causal product claim.
 
 ## Method
 
-Ten matched pairs used the same Codex model, repository, read-only boundary,
-requested output, and comparable tool budget. Five pairs ran baseline first and
-five ran LoopRelay first. The corpus covers session recovery (4), implementation
-continuation (3), and repeated-failure prevention (3).
+Twelve matched pairs use fixed Codex model and reasoning settings, identical
+fixture commits within each pair, a read-only boundary, one output schema, and
+the same model context limit. Six pairs ran baseline first and six ran LoopRelay
+first. The seed corpus covers session recovery (4), implementation continuation
+(3), repeated-failure prevention (3), release-verification continuity (1), and
+ambiguity clarification (1). It is below the active threshold of 30 total pairs
+and five pairs per task type.
 
 Human review used deterministic repository state and scored correct outcome,
 context recovery, blocker identification, next-step actionability, and operator
@@ -24,22 +27,38 @@ therefore a bias diagnostic, not the source of success labels.
 
 | Task type | Pairs | Baseline success | LoopRelay success | Difference |
 | --- | ---: | ---: | ---: | ---: |
+| Ambiguity clarification | 1 | 100% | 100% | 0pp |
 | Failure prevention | 3 | 0% | 100% | +100pp |
 | Implementation continuation | 3 | 100% | 66.7% | -33.3pp |
+| Release-verification continuity | 1 | 100% | 100% | 0pp |
 | Session recovery | 4 | 25% | 100% | +75pp |
-| **Aggregate** | **10** | **40%** | **90%** | **+50pp** |
+| **Aggregate** | **12** | **50%** | **91.7%** | **+41.7pp** |
 
-- Actionability increased from 60% to 90%.
-- Mean elapsed time decreased by 1.64 seconds among runs with timing data.
-- Mean tool calls decreased from 3.3 to 3.2.
-- Mean input tokens increased from 83,573 to 109,954 (+31.6%).
+- Actionability increased from 66.7% to 90%.
+- Mean elapsed time decreased by 0.83 seconds among runs with timing data.
+- Mean tool calls increased from 3.67 to 3.92.
+- Mean input tokens increased from 84,742 to 113,175 (+33.6%).
 - Six failures improved, one successful baseline regressed, and three pairs
   remained successful.
-- Human preference was LoopRelay 7, baseline 3, tie 0.
+- Human preference was LoopRelay 7, baseline 4, tie 1.
 - Position-swapped judge choices were consistent for 9/10 pairs, but agreed
   with the ground-truth-based human preference on only 4/9 consistent pairs.
   This disagreement is evidence against using an ungrounded LLM preference as
   the usefulness label.
+
+The two new Codex 0.144.1 / GPT-5.4 medium pairs used ephemeral sessions and
+the same fixture commit in both conditions. Release continuity was a null
+quality result: both conditions correctly blocked the gate. LoopRelay finished
+in 48.46s versus baseline 51.00s, but used 12 versus 8 tool calls and 167,021
+versus 118,105 input tokens. Ambiguity clarification was also a pass/pass pair,
+but baseline was preferable: 21.15s versus 29.30s and 63,070 versus 91,539 input
+tokens, while asking equally sufficient questions. This is evidence against
+adding a generic LoopRelay diagnosis when repository instructions already say
+which clarification dimensions are required.
+
+Cached-token, TTFV, continuation-accuracy, and blocker flags are available for
+the two new pairs only (16.7% condition coverage). The report exposes this
+coverage instead of silently treating missing historical measurements as zero.
 
 ## Interpretation And Scope
 
@@ -122,6 +141,11 @@ A fresh Codex MCP process confirmed that corrected structured response.
 Run `pnpm evidence:usefulness` to validate the raw-free ledger and regenerate
 the JSON summary, README result blocks, and SVG. The generated artifacts are
 `reports/usefulness-summary.json` and `docs/assets/usefulness-results.svg`.
+For a private Codex JSONL run, use
+`pnpm evidence:codex-metrics -- <events.jsonl> <elapsed-ms>` to emit only
+raw-free cost and tool metrics. The synthetic fixture contract and output
+schema are under `evaluation/usefulness/`; raw Codex events and answer bodies
+remain outside Git.
 
 Three independent human install-to-first-value sessions are still required. Rendered
 desktop/mobile QA is also pending because the in-app browser runtime did not

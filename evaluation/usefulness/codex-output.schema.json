@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["decision", "evidence_labels", "next_actions", "questions"],
+  "properties": {
+    "decision": {
+      "type": "string",
+      "enum": ["ready", "blocked", "ask_questions", "proceed"]
+    },
+    "evidence_labels": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 8
+    },
+    "next_actions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 8
+    },
+    "questions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 8
+    }
+  }
+}

@@ -11278,3 +11278,10 @@
       seed cohort.
 - [ ] RUN: Execute fresh counterbalanced Codex pairs and append only
       deterministic, privacy-safe outcome evidence.
+  - [x] Add one baseline-first release-verification pair on an identical commit;
+        preserve the pass/pass result and higher LoopRelay token/tool cost.
+  - [x] Add one LoopRelay-first ambiguity pair on an identical commit; preserve
+        the pass/pass result and baseline preference when repo policy already
+        supplies the required clarification dimensions.
+  - [x] Extract raw-free elapsed, TTFV, tool, failed-tool, input, cached-input,
+        output, and reasoning-token metrics from private Codex JSONL events.

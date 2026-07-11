@@ -1,0 +1,7 @@
+{
+  "request_label": "fix-login-problem",
+  "possible_surfaces": ["customer-web", "operator-console"],
+  "possible_symptoms": ["credential rejection", "session expiry", "redirect loop"],
+  "missing_required_scope": ["affected surface", "observed symptom", "reproduction steps", "acceptance criteria"],
+  "safe_policy": "Ask focused questions when required scope is missing. Do not select a surface or symptom by assumption."
+}

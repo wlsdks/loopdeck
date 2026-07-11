@@ -20,15 +20,17 @@
 ![LoopRelay baseline versus assisted engineering results](docs/assets/usefulness-results.svg)
 
 <!-- USEFULNESS_RESULTS_START -->
-Current results are maintainer-run observational evidence, not a causal claim. They include 10 matched pairs across 3 task types and 0/3 independent users. A separate cohort has 3 independent agent operators with 100% first-value success; agent operators do not count as human users.
+Current results are maintainer-run observational evidence, not a causal claim. They include 12 matched pairs across 5 task types and 0/3 independent users. A separate cohort has 3 independent agent operators with 100% first-value success; agent operators do not count as human users.
 
 | Task type | Pairs | Baseline success | LoopRelay success | Delta | Conservative 95% bound | Input-token delta | Decision |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| Ambiguity clarification | 1 | 100% | 100% | 0pp | -100..100pp | +28469 | Collect more |
 | Failure prevention | 3 | 0% | 100% | +100pp | -56.8..100pp | -24370 | Collect more |
 | Implementation continuation | 3 | 100% | 66.7% | -33.3pp | -100..100pp | +99523.3 | Collect more |
+| Release verification continuity | 1 | 100% | 100% | 0pp | -100..100pp | +48916 | Collect more |
 | Session recovery | 4 | 25% | 100% | +75pp | -60.8..100pp | +9586.3 | Collect more |
 
-Aggregate success moved from 40% to 90%, while actionability moved from 60% to 90%. Mean input-token cost changed by 31.6%. Only 0/5 target task types currently meet the per-type minimum of 5 pairs, so every task-specific decision remains provisional until coverage is complete. Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. The causal claim remains false until independent-user validation is complete.
+Aggregate success moved from 50% to 91.7%, while actionability moved from 66.7% to 90%. Mean input-token cost changed by 33.6%. Cached-token and TTFV condition coverage are 16.7% and 16.7% respectively; missing values are not interpreted as zero. Only 0/5 target task types currently meet the per-type minimum of 5 pairs, so every task-specific decision remains provisional until coverage is complete. Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. The causal claim remains false until independent-user validation is complete.
 <!-- USEFULNESS_RESULTS_END -->
 
 This chart is generated from the committed raw-free matched-pair ledger, not

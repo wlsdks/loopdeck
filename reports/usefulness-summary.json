@@ -3,8 +3,8 @@
   "design": "matched_observational",
   "status": "insufficient_data",
   "causal_claim": false,
-  "pair_count": 10,
-  "task_type_count": 3,
+  "pair_count": 12,
+  "task_type_count": 5,
   "independent_user_count": 0,
   "independent_agent_operator_count": 3,
   "independent_agent_operator_success_rate": 1,
@@ -13,8 +13,10 @@
     "reason": "independent_users_missing"
   },
   "task_types": [
+    "ambiguity_clarification",
     "failure_prevention",
     "implementation_continuation",
+    "release_verification_continuity",
     "session_recovery"
   ],
   "coverage": {
@@ -23,6 +25,37 @@
     "all_task_types_meet_pair_minimum": false
   },
   "by_task_type": {
+    "ambiguity_clarification": {
+      "pair_count": 1,
+      "baseline_success_rate": 1,
+      "looprelay_success_rate": 1,
+      "success_rate_delta": 0,
+      "baseline_actionability": 1,
+      "looprelay_actionability": 0.8,
+      "transitions": {
+        "improved": 0,
+        "regressed": 0,
+        "unchanged_passed": 1,
+        "unchanged_failed": 0
+      },
+      "delta": {
+        "mean_elapsed_ms": 8150,
+        "mean_tool_calls": 0,
+        "mean_input_tokens": 28469,
+        "mean_cached_input_tokens": 17792,
+        "mean_time_to_first_value_ms": 8150,
+        "friction_free_rate": 0
+      },
+      "uncertainty": {
+        "method": "paired_difference_hoeffding_95",
+        "lower": -1,
+        "upper": 1
+      },
+      "decision": {
+        "action": "collect_more",
+        "evidence_status": "underpowered"
+      }
+    },
     "failure_prevention": {
       "pair_count": 3,
       "baseline_success_rate": 0,
@@ -40,6 +73,8 @@
         "mean_elapsed_ms": -17710,
         "mean_tool_calls": -1.333333,
         "mean_input_tokens": -24370,
+        "mean_cached_input_tokens": null,
+        "mean_time_to_first_value_ms": null,
         "friction_free_rate": 0.333333
       },
       "uncertainty": {
@@ -69,6 +104,39 @@
         "mean_elapsed_ms": 12600,
         "mean_tool_calls": 1,
         "mean_input_tokens": 99523.333333,
+        "mean_cached_input_tokens": null,
+        "mean_time_to_first_value_ms": null,
+        "friction_free_rate": 0
+      },
+      "uncertainty": {
+        "method": "paired_difference_hoeffding_95",
+        "lower": -1,
+        "upper": 1
+      },
+      "decision": {
+        "action": "collect_more",
+        "evidence_status": "underpowered"
+      }
+    },
+    "release_verification_continuity": {
+      "pair_count": 1,
+      "baseline_success_rate": 1,
+      "looprelay_success_rate": 1,
+      "success_rate_delta": 0,
+      "baseline_actionability": 1,
+      "looprelay_actionability": 1,
+      "transitions": {
+        "improved": 0,
+        "regressed": 0,
+        "unchanged_passed": 1,
+        "unchanged_failed": 0
+      },
+      "delta": {
+        "mean_elapsed_ms": -2540,
+        "mean_tool_calls": 4,
+        "mean_input_tokens": 48916,
+        "mean_cached_input_tokens": 58496,
+        "mean_time_to_first_value_ms": -2540,
         "friction_free_rate": 0
       },
       "uncertainty": {
@@ -98,6 +166,8 @@
         "mean_elapsed_ms": 180,
         "mean_tool_calls": 0,
         "mean_input_tokens": 9586.25,
+        "mean_cached_input_tokens": null,
+        "mean_time_to_first_value_ms": null,
         "friction_free_rate": 0
       },
       "uncertainty": {
@@ -118,46 +188,64 @@
     "independent_users": 3
   },
   "baseline": {
-    "success_rate": 0.4,
-    "mean_actionability": 0.6,
-    "mean_elapsed_ms": 27967.777778,
-    "mean_tool_calls": 3.3,
-    "mean_input_tokens": 83573.2,
-    "mean_output_tokens": 924.9,
-    "friction_free_rate": 0.7
+    "success_rate": 0.5,
+    "mean_actionability": 0.666667,
+    "mean_elapsed_ms": 29441.818182,
+    "mean_tool_calls": 3.666667,
+    "mean_input_tokens": 84742.25,
+    "mean_cached_input_tokens": 72256,
+    "mean_output_tokens": 960.666667,
+    "mean_time_to_first_value_ms": 36075,
+    "friction_free_rate": 0.75,
+    "privacy_blocker_count": 0,
+    "data_loss_blocker_count": 0,
+    "install_blocker_count": 0
   },
   "looprelay": {
-    "success_rate": 0.9,
+    "success_rate": 0.916667,
     "mean_actionability": 0.9,
-    "mean_elapsed_ms": 26324.444444,
-    "mean_tool_calls": 3.2,
-    "mean_input_tokens": 109953.7,
-    "mean_output_tokens": 879.2,
-    "friction_free_rate": 0.8
+    "mean_elapsed_ms": 28607.272727,
+    "mean_tool_calls": 3.916667,
+    "mean_input_tokens": 113174.75,
+    "mean_cached_input_tokens": 110400,
+    "mean_output_tokens": 958,
+    "mean_time_to_first_value_ms": 38880,
+    "friction_free_rate": 0.833333,
+    "privacy_blocker_count": 0,
+    "data_loss_blocker_count": 0,
+    "install_blocker_count": 0
+  },
+  "measurement_coverage": {
+    "cached_input_tokens": 0.166667,
+    "time_to_first_value_ms": 0.166667,
+    "continuation_accuracy": 0.166667,
+    "blocker_flags": 0.166667
   },
   "delta": {
-    "success_rate": 0.5,
-    "mean_actionability": 0.3,
-    "mean_elapsed_ms": -1643.333334,
-    "mean_tool_calls": -0.1,
-    "mean_input_tokens": 26380.5,
-    "friction_free_rate": 0.1
+    "success_rate": 0.416667,
+    "mean_actionability": 0.233333,
+    "mean_elapsed_ms": -834.545455,
+    "mean_tool_calls": 0.25,
+    "mean_input_tokens": 28432.5,
+    "mean_cached_input_tokens": 38144,
+    "mean_time_to_first_value_ms": 2805,
+    "friction_free_rate": 0.083333
   },
   "transitions": {
     "improved": 6,
     "regressed": 1,
-    "unchanged_passed": 3,
+    "unchanged_passed": 5,
     "unchanged_failed": 0
   },
   "preference": {
-    "baseline": 3,
+    "baseline": 4,
     "looprelay": 7,
-    "tie": 0
+    "tie": 1
   },
   "adoption_rate": 1,
   "bias": {
-    "baseline_first": 5,
-    "looprelay_first": 5,
+    "baseline_first": 6,
+    "looprelay_first": 6,
     "position_consistency": 0.9,
     "human_review_agreement": 0.444444
   },

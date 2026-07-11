@@ -45,16 +45,29 @@ describe("usefulness report generator", () => {
         mean_actionability: 0.6,
         mean_tool_calls: 4,
         mean_input_tokens: 1_000,
+        mean_cached_input_tokens: 600,
+        mean_time_to_first_value_ms: 8_000,
         friction_free_rate: 0.333333,
+        privacy_blocker_count: 0,
+        data_loss_blocker_count: 0,
+        install_blocker_count: 0,
       },
       looprelay: {
         success_rate: 1,
         mean_actionability: 0.8,
         mean_tool_calls: 5,
         mean_input_tokens: 1_500,
+        mean_cached_input_tokens: 900,
+        mean_time_to_first_value_ms: 9_000,
         friction_free_rate: 0.666667,
       },
       transitions: { improved: 1, regressed: 0, unchanged_passed: 2 },
+      measurement_coverage: {
+        cached_input_tokens: 1,
+        time_to_first_value_ms: 1,
+        continuation_accuracy: 1,
+        blocker_flags: 1,
+      },
       preference: { baseline: 0, looprelay: 2, tie: 1 },
       bias: { position_consistency: 1, human_review_agreement: 1 },
       by_task_type: {
@@ -73,6 +86,8 @@ describe("usefulness report generator", () => {
             mean_elapsed_ms: 2_000,
             mean_tool_calls: 1,
             mean_input_tokens: 500,
+            mean_cached_input_tokens: 300,
+            mean_time_to_first_value_ms: 1_000,
             friction_free_rate: 1,
           },
           decision: {
@@ -186,6 +201,13 @@ describe("usefulness report generator", () => {
     });
   });
 
+  it("does not treat an unrun pairwise judge as human disagreement", () => {
+    const input = ledger();
+    input.pairs[0].judge = { position_consistent: null };
+
+    expect(createUsefulnessReport(input).bias.human_review_agreement).toBe(1);
+  });
+
   it("writes deterministic generated artifacts from a local ledger", () => {
     const dir = mkdtempSync(join(tmpdir(), "looprelay-usefulness-"));
     tempDirs.push(dir);
@@ -266,8 +288,14 @@ function pair(
       elapsed_ms: 10_000,
       tool_calls: 4,
       input_tokens: 1_000,
+      cached_input_tokens: 600,
       output_tokens: 100,
+      time_to_first_value_ms: 8_000,
+      continuation_accuracy: 1,
       friction_count: baselineFriction,
+      privacy_blocker: false,
+      data_loss_blocker: false,
+      install_blocker: false,
     },
     looprelay: {
       passed: looprelayPassed,
@@ -275,8 +303,14 @@ function pair(
       elapsed_ms: 12_000,
       tool_calls: 5,
       input_tokens: 1_500,
+      cached_input_tokens: 900,
       output_tokens: 120,
+      time_to_first_value_ms: 9_000,
+      continuation_accuracy: 1,
       friction_count: looprelayFriction,
+      privacy_blocker: false,
+      data_loss_blocker: false,
+      install_blocker: false,
       adopted: true,
     },
     human_preference: preference,

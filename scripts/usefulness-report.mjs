@@ -78,6 +78,7 @@ export function createUsefulnessReport(input) {
     minimums,
     baseline,
     looprelay,
+    measurement_coverage: measurementCoverage(pairs),
     delta: {
       success_rate: roundMetric(looprelay.success_rate - baseline.success_rate),
       mean_actionability: roundMetric(
@@ -92,6 +93,14 @@ export function createUsefulnessReport(input) {
       ),
       mean_input_tokens: roundMetric(
         looprelay.mean_input_tokens - baseline.mean_input_tokens,
+      ),
+      mean_cached_input_tokens: nullableDelta(
+        baseline.mean_cached_input_tokens,
+        looprelay.mean_cached_input_tokens,
+      ),
+      mean_time_to_first_value_ms: nullableDelta(
+        baseline.mean_time_to_first_value_ms,
+        looprelay.mean_time_to_first_value_ms,
       ),
       friction_free_rate: roundMetric(
         looprelay.friction_free_rate - baseline.friction_free_rate,
@@ -120,6 +129,7 @@ export function createUsefulnessReport(input) {
       ),
       human_review_agreement: meanNullable(
         pairs.map((pair) =>
+          pair.judge.preference === undefined ||
           pair.judge.preference === "inconsistent"
             ? null
             : pair.judge.preference === pair.human_preference
@@ -171,16 +181,36 @@ export function renderUsefulnessSvg(report) {
       looprelay: report.looprelay.mean_input_tokens / 1_000,
       format: (value) => `${round(value)}k`,
     },
+    {
+      label: `Cached tokens (${percent(report.measurement_coverage.cached_input_tokens * 100)} known)`,
+      baseline: divideNullable(report.baseline.mean_cached_input_tokens, 1_000),
+      looprelay: divideNullable(report.looprelay.mean_cached_input_tokens, 1_000),
+      format: (value) => (value === null ? "N/A" : `${round(value)}k`),
+    },
+    {
+      label: `TTFV (${percent(report.measurement_coverage.time_to_first_value_ms * 100)} known)`,
+      baseline: divideNullable(
+        report.baseline.mean_time_to_first_value_ms,
+        1_000,
+      ),
+      looprelay: divideNullable(
+        report.looprelay.mean_time_to_first_value_ms,
+        1_000,
+      ),
+      format: (value) => (value === null ? "N/A" : `${round(value)}s`),
+    },
   ];
   const rows = metrics
     .map((metric, index) => renderMetric(metric, 150 + index * 70))
     .join("\n");
+  const metricsStart = 150;
+  const dividerY = metricsStart + metrics.length * 70;
+  const taskStart = dividerY + 55;
   const taskRows = Object.entries(report.by_task_type)
     .map(([taskType, values], index) =>
-      renderTaskTypeRow(taskType, values, 625 + index * 46),
+      renderTaskTypeRow(taskType, values, taskStart + index * 46),
     )
     .join("\n");
-  const taskStart = 625;
   const footerY = taskStart + Object.keys(report.by_task_type).length * 46 + 30;
   const svgHeight = footerY + 50;
   const badge =
@@ -199,8 +229,8 @@ export function renderUsefulnessSvg(report) {
   <rect x="36" y="92" width="12" height="12" rx="2" fill="#8a887f"/><text x="56" y="103" font-family="system-ui,sans-serif" font-size="12" fill="#64665f">Baseline</text>
   <rect x="126" y="92" width="12" height="12" rx="2" fill="#1f6f64"/><text x="146" y="103" font-family="system-ui,sans-serif" font-size="12" fill="#64665f">LoopRelay</text>
 ${rows}
-  <line x1="36" y1="570" x2="884" y2="570" stroke="#d8d4ca"/>
-  <text x="36" y="598" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#171816">Success rate by task type</text>
+  <line x1="36" y1="${dividerY}" x2="884" y2="${dividerY}" stroke="#d8d4ca"/>
+  <text x="36" y="${dividerY + 28}" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#171816">Success rate by task type</text>
 ${taskRows}
   <line x1="36" y1="${footerY}" x2="884" y2="${footerY}" stroke="#d8d4ca"/>
   <text x="36" y="${footerY + 25}" font-family="system-ui,sans-serif" font-size="12" fill="#64665f">Higher is better for success, actionability, and friction-free. Lower is better for time, calls, and tokens.</text>
@@ -230,7 +260,7 @@ export function renderReadmeResultBlock(report, locale) {
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 ${taskRows}
 
-전체 성공률은 ${percent(report.baseline.success_rate * 100)}에서 ${percent(report.looprelay.success_rate * 100)}로 변했고 actionability는 ${percent(report.baseline.mean_actionability * 100)}에서 ${percent(report.looprelay.mean_actionability * 100)}로 변했습니다. 평균 input token 비용은 ${round(tokenDeltaPercent)}% 변했습니다. 현재 ${report.coverage.task_types_meeting_pair_minimum}/${report.minimums.task_types}개 목표 유형만 유형별 최소 ${report.coverage.required_pairs_per_task_type}쌍을 충족하므로 모든 유형별 판단은 충분한 표본 전까지 잠정적입니다. 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 독립 사용자 검증 전까지 causal claim은 false입니다.`;
+전체 성공률은 ${percent(report.baseline.success_rate * 100)}에서 ${percent(report.looprelay.success_rate * 100)}로 변했고 actionability는 ${percent(report.baseline.mean_actionability * 100)}에서 ${percent(report.looprelay.mean_actionability * 100)}로 변했습니다. 평균 input token 비용은 ${round(tokenDeltaPercent)}% 변했습니다. Cached token과 TTFV의 조건별 측정 coverage는 각각 ${percent(report.measurement_coverage.cached_input_tokens * 100)}, ${percent(report.measurement_coverage.time_to_first_value_ms * 100)}이며 누락값을 0으로 해석하지 않습니다. 현재 ${report.coverage.task_types_meeting_pair_minimum}/${report.minimums.task_types}개 목표 유형만 유형별 최소 ${report.coverage.required_pairs_per_task_type}쌍을 충족하므로 모든 유형별 판단은 충분한 표본 전까지 잠정적입니다. 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 독립 사용자 검증 전까지 causal claim은 false입니다.`;
   }
 
   return `Current results are maintainer-run observational evidence, not a causal claim. They include ${report.pair_count} matched pairs across ${report.task_type_count} task types and ${report.independent_user_count}/${report.minimums.independent_users} independent users. A separate cohort has ${report.independent_agent_operator_count} independent agent operators with ${report.independent_agent_operator_success_rate === null ? "N/A" : percent(report.independent_agent_operator_success_rate * 100)} first-value success; agent operators do not count as human users.
@@ -239,18 +269,18 @@ ${taskRows}
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 ${taskRows}
 
-Aggregate success moved from ${percent(report.baseline.success_rate * 100)} to ${percent(report.looprelay.success_rate * 100)}, while actionability moved from ${percent(report.baseline.mean_actionability * 100)} to ${percent(report.looprelay.mean_actionability * 100)}. Mean input-token cost changed by ${round(tokenDeltaPercent)}%. Only ${report.coverage.task_types_meeting_pair_minimum}/${report.minimums.task_types} target task types currently meet the per-type minimum of ${report.coverage.required_pairs_per_task_type} pairs, so every task-specific decision remains provisional until coverage is complete. Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. The causal claim remains false until independent-user validation is complete.`;
+Aggregate success moved from ${percent(report.baseline.success_rate * 100)} to ${percent(report.looprelay.success_rate * 100)}, while actionability moved from ${percent(report.baseline.mean_actionability * 100)} to ${percent(report.looprelay.mean_actionability * 100)}. Mean input-token cost changed by ${round(tokenDeltaPercent)}%. Cached-token and TTFV condition coverage are ${percent(report.measurement_coverage.cached_input_tokens * 100)} and ${percent(report.measurement_coverage.time_to_first_value_ms * 100)} respectively; missing values are not interpreted as zero. Only ${report.coverage.task_types_meeting_pair_minimum}/${report.minimums.task_types} target task types currently meet the per-type minimum of ${report.coverage.required_pairs_per_task_type} pairs, so every task-specific decision remains provisional until coverage is complete. Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. The causal claim remains false until independent-user validation is complete.`;
 }
 
 function renderMetric(metric, y) {
   const max = Math.max(metric.baseline ?? 0, metric.looprelay ?? 0, 1);
-  const baselineWidth = ((metric.baseline ?? 0) / max) * 480;
-  const looprelayWidth = ((metric.looprelay ?? 0) / max) * 480;
+  const baselineWidth = ((metric.baseline ?? 0) / max) * 400;
+  const looprelayWidth = ((metric.looprelay ?? 0) / max) * 400;
   return `  <text x="36" y="${y + 12}" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#171816">${metric.label}</text>
-  <rect x="170" y="${y}" width="${baselineWidth}" height="18" rx="3" fill="#8a887f"/>
-  <text x="${Math.max(180, 180 + baselineWidth)}" y="${y + 14}" font-family="ui-monospace,monospace" font-size="11" fill="#171816">${metric.format(metric.baseline)}</text>
-  <rect x="170" y="${y + 25}" width="${looprelayWidth}" height="18" rx="3" fill="#1f6f64"/>
-  <text x="${Math.max(180, 180 + looprelayWidth)}" y="${y + 39}" font-family="ui-monospace,monospace" font-size="11" fill="#171816">${metric.format(metric.looprelay)}</text>`;
+  <rect x="250" y="${y}" width="${baselineWidth}" height="18" rx="3" fill="#8a887f"/>
+  <text x="${Math.max(260, 260 + baselineWidth)}" y="${y + 14}" font-family="ui-monospace,monospace" font-size="11" fill="#171816">${metric.format(metric.baseline)}</text>
+  <rect x="250" y="${y + 25}" width="${looprelayWidth}" height="18" rx="3" fill="#1f6f64"/>
+  <text x="${Math.max(260, 260 + looprelayWidth)}" y="${y + 39}" font-family="ui-monospace,monospace" font-size="11" fill="#171816">${metric.format(metric.looprelay)}</text>`;
 }
 
 function renderTaskTypeRow(taskType, values, y) {
@@ -274,11 +304,59 @@ function aggregateCondition(values) {
     mean_elapsed_ms: meanNullable(values.map((value) => value.elapsed_ms)),
     mean_tool_calls: mean(values.map((value) => value.tool_calls)),
     mean_input_tokens: mean(values.map((value) => value.input_tokens)),
+    mean_cached_input_tokens: meanNullable(
+      values.map((value) => value.cached_input_tokens),
+    ),
     mean_output_tokens: mean(values.map((value) => value.output_tokens)),
+    mean_time_to_first_value_ms: meanNullable(
+      values.map((value) => value.time_to_first_value_ms),
+    ),
     friction_free_rate: mean(
       values.map((value) => (value.friction_count === 0 ? 1 : 0)),
     ),
+    privacy_blocker_count: values.filter(
+      (value) => value.privacy_blocker === true,
+    ).length,
+    data_loss_blocker_count: values.filter(
+      (value) => value.data_loss_blocker === true,
+    ).length,
+    install_blocker_count: values.filter(
+      (value) => value.install_blocker === true,
+    ).length,
   };
+}
+
+function measurementCoverage(pairs) {
+  const conditions = pairs.flatMap((pair) => [pair.baseline, pair.looprelay]);
+  return {
+    cached_input_tokens: metricCoverage(
+      conditions,
+      (value) => value.cached_input_tokens,
+    ),
+    time_to_first_value_ms: metricCoverage(
+      conditions,
+      (value) => value.time_to_first_value_ms,
+    ),
+    continuation_accuracy: metricCoverage(
+      conditions,
+      (value) => value.continuation_accuracy,
+    ),
+    blocker_flags: mean(
+      conditions.map((value) =>
+        ["privacy_blocker", "data_loss_blocker", "install_blocker"].every(
+          (key) => typeof value[key] === "boolean",
+        )
+          ? 1
+          : 0,
+      ),
+    ),
+  };
+}
+
+function metricCoverage(values, select) {
+  return mean(
+    values.map((value) => (Number.isFinite(select(value)) ? 1 : 0)),
+  );
 }
 
 function transitionCounts(pairs) {
@@ -315,6 +393,14 @@ function taskTypeReport(pairs, requiredPairs) {
     ),
     mean_input_tokens: roundMetric(
       looprelay.mean_input_tokens - baseline.mean_input_tokens,
+    ),
+    mean_cached_input_tokens: nullableDelta(
+      baseline.mean_cached_input_tokens,
+      looprelay.mean_cached_input_tokens,
+    ),
+    mean_time_to_first_value_ms: nullableDelta(
+      baseline.mean_time_to_first_value_ms,
+      looprelay.mean_time_to_first_value_ms,
     ),
     friction_free_rate: roundMetric(
       looprelay.friction_free_rate - baseline.friction_free_rate,
@@ -554,6 +640,35 @@ function validateCondition(value, treatment) {
     throw new Error(`invalid condition metric: ${key}`);
   }
   if (value.actionability > 1) throw new Error("actionability must be 0..1");
+  for (const key of [
+    "cached_input_tokens",
+    "time_to_first_value_ms",
+    "continuation_accuracy",
+  ]) {
+    if (
+      value[key] !== undefined &&
+      value[key] !== null &&
+      (!Number.isFinite(value[key]) || value[key] < 0)
+    ) {
+      throw new Error(`invalid optional condition metric: ${key}`);
+    }
+  }
+  if (
+    value.continuation_accuracy !== undefined &&
+    value.continuation_accuracy !== null &&
+    value.continuation_accuracy > 1
+  ) {
+    throw new Error("continuation_accuracy must be 0..1");
+  }
+  for (const key of [
+    "privacy_blocker",
+    "data_loss_blocker",
+    "install_blocker",
+  ]) {
+    if (value[key] !== undefined && typeof value[key] !== "boolean") {
+      throw new Error(`invalid optional condition flag: ${key}`);
+    }
+  }
   if (treatment && typeof value.adopted !== "boolean") {
     throw new Error("treatment adoption is required");
   }

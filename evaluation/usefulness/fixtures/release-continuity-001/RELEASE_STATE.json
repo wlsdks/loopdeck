@@ -1,0 +1,10 @@
+{
+  "candidate_commit": "fixture-candidate-001",
+  "focused_tests": "passed",
+  "package_smoke": "passed",
+  "npm_auth": "missing",
+  "independent_users": 0,
+  "required_independent_users": 3,
+  "critical_blockers": 0,
+  "release_policy": "Block publication when npm auth is missing or fewer than three independent users completed first value. Do not run the full release gate until both prerequisites are satisfied."
+}
