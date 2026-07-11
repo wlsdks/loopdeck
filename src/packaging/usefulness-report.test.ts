@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import {
   createUsefulnessReport,
+  renderReadmeResultBlock,
   renderUsefulnessSvg,
 } from "../../scripts/usefulness-report.mjs";
 
@@ -43,7 +44,15 @@ describe("usefulness report generator", () => {
       },
       transitions: { improved: 1, regressed: 0, unchanged_passed: 2 },
       preference: { baseline: 0, looprelay: 2, tie: 1 },
-      bias: { position_consistency: 1 },
+      bias: { position_consistency: 1, human_review_agreement: 1 },
+      by_task_type: {
+        implementation_continuation: {
+          pair_count: 1,
+          baseline_success_rate: 0,
+          looprelay_success_rate: 1,
+          success_rate_delta: 1,
+        },
+      },
     });
   });
 
@@ -55,8 +64,20 @@ describe("usefulness report generator", () => {
     expect(svg).toContain("3 matched pairs · 3 task types");
     expect(svg).toContain("Success rate");
     expect(svg).toContain("Tool calls");
+    expect(svg).toContain("Implementation continuation");
     expect(svg).toContain("causal claim: false");
     expect(svg).not.toContain("/Users/example");
+  });
+
+  it("renders README results with task-specific regressions and limitations", () => {
+    const report = createUsefulnessReport(ledger());
+    const markdown = renderReadmeResultBlock(report, "en");
+
+    expect(markdown).toContain("3 matched pairs across 3 task types");
+    expect(markdown).toContain("Implementation continuation");
+    expect(markdown).toContain("+100pp");
+    expect(markdown).toContain("maintainer-run observational evidence");
+    expect(markdown).toContain("causal claim remains false");
   });
 
   it("rejects causal claims, prompt-bearing fields, secrets, and raw paths", () => {
@@ -161,6 +182,6 @@ function pair(
       adopted: true,
     },
     human_preference: preference,
-    judge: { position_consistent: true },
+    judge: { position_consistent: true, preference },
   };
 }

@@ -14,6 +14,18 @@
 
 ![LoopRelay 미사용 대비 사용 조건 엔지니어링 결과](docs/assets/usefulness-results.svg)
 
+<!-- USEFULNESS_RESULTS_START -->
+현재 결과는 maintainer-run observational evidence이며 인과관계를 주장하지 않습니다. 10개 matched pair와 3개 작업 유형을 포함합니다.
+
+| 작업 유형 | 쌍 | Baseline 성공률 | LoopRelay 성공률 | 차이 |
+| --- | ---: | ---: | ---: | ---: |
+| Failure prevention | 3 | 0% | 100% | +100pp |
+| Implementation continuation | 3 | 100% | 66.7% | -33.3pp |
+| Session recovery | 4 | 25% | 100% | +75pp |
+
+전체 성공률은 40%에서 90%로 변했고 actionability는 60%에서 90%로 변했습니다. 평균 input token 비용은 31.6% 변했습니다. 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 독립 사용자 검증 전까지 causal claim은 false입니다.
+<!-- USEFULNESS_RESULTS_END -->
+
 이 그래프는 수작업 마케팅 수치가 아니라 commit된 raw-free matched-pair
 ledger에서 생성됩니다. 결과 품질과 운영 비용을 함께 보여주고 null·negative
 결과도 유지하며, 최소 3개 작업 유형의 10쌍이 모이기 전에는

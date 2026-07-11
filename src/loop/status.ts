@@ -270,15 +270,12 @@ export function summarizeLoopActivity(
   mergeDecisions: readonly LoopRelayStatusActivityRecentDecision[] = [],
 ): LoopRelayStatusActivity {
   const latest = snapshots.at(0);
-  const activeWorktrees = uniqueNonEmpty(
-    snapshots.map((snapshot) => snapshot.worktree_label),
-  ).size;
+  const worktrees = summarizeWorktreeActivity(snapshots);
+  const activeWorktrees = worktrees.length;
   const activeSessions = uniqueNonEmpty(
     snapshots.map((snapshot) => snapshot.session_id),
   ).size;
-  const needsReview = activeWorktrees > 1 || activeSessions > 1;
-
-  const worktrees = summarizeWorktreeActivity(snapshots);
+  const needsReview = activeWorktrees > 1;
 
   return {
     active_worktrees: activeWorktrees,

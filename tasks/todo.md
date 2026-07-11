@@ -11215,9 +11215,9 @@
 - [x] RED/GREEN: Build a deterministic report and SVG generator that rejects
       fewer than three task types, malformed pairs, prompt bodies, raw paths,
       secrets, and causal claims.
-- [ ] COLLECT: Complete at least 10 reproducible pairs across session recovery,
+- [x] COLLECT: Complete at least 10 reproducible pairs across session recovery,
       implementation continuation, and repeated-failure prevention tasks.
-- [ ] BIAS: Counterbalance execution order, swap pairwise judge positions, and
+- [x] BIAS: Counterbalance execution order, swap pairwise judge positions, and
       record position consistency plus human-review agreement.
 - [x] README: Publish generated baseline-versus-LoopRelay graphs, sample size,
       null/negative results, limitations, and exact reproduction commands.

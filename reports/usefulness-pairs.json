@@ -33,7 +33,8 @@
       },
       "human_preference": "looprelay",
       "judge": {
-        "position_consistent": null
+    "position_consistent": true,
+    "preference": "looprelay"
       }
     },
     {
@@ -61,7 +62,8 @@
       },
       "human_preference": "baseline",
       "judge": {
-        "position_consistent": null
+    "position_consistent": true,
+    "preference": "baseline"
       }
     },
     {
@@ -89,7 +91,8 @@
       },
       "human_preference": "looprelay",
       "judge": {
-        "position_consistent": null
+    "position_consistent": true,
+    "preference": "looprelay"
       }
     },
     {
@@ -117,7 +120,182 @@
       },
       "human_preference": "looprelay",
       "judge": {
-        "position_consistent": null
+    "position_consistent": false,
+    "preference": "inconsistent"
+      }
+    },
+    {
+      "id": "implementation-continuation-005",
+      "task_type": "implementation_continuation",
+      "order": "baseline_first",
+      "baseline": {
+        "passed": true,
+        "actionability": 1,
+        "elapsed_ms": 19060,
+        "tool_calls": 3,
+        "input_tokens": 55737,
+        "output_tokens": 619,
+        "friction_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "actionability": 1,
+        "elapsed_ms": 31200,
+        "tool_calls": 5,
+        "input_tokens": 146863,
+        "output_tokens": 1129,
+        "friction_count": 0,
+        "adopted": true
+      },
+      "human_preference": "baseline",
+      "judge": {
+    "position_consistent": true,
+    "preference": "tie"
+      }
+    },
+    {
+      "id": "failure-prevention-006",
+      "task_type": "failure_prevention",
+      "order": "looprelay_first",
+      "baseline": {
+        "passed": false,
+        "actionability": 0.8,
+        "elapsed_ms": 27210,
+        "tool_calls": 5,
+        "input_tokens": 108671,
+        "output_tokens": 972,
+        "friction_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "actionability": 1,
+        "elapsed_ms": 17210,
+        "tool_calls": 2,
+        "input_tokens": 84209,
+        "output_tokens": 548,
+        "friction_count": 0,
+        "adopted": true
+      },
+      "human_preference": "looprelay",
+      "judge": {
+    "position_consistent": true,
+    "preference": "looprelay"
+      }
+    },
+    {
+      "id": "session-recovery-007",
+      "task_type": "session_recovery",
+      "order": "baseline_first",
+      "baseline": {
+        "passed": false,
+        "actionability": 0.2,
+        "elapsed_ms": 23400,
+        "tool_calls": 3,
+        "input_tokens": 85195,
+        "output_tokens": 817,
+        "friction_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "actionability": 1,
+        "elapsed_ms": 18840,
+        "tool_calls": 3,
+        "input_tokens": 85233,
+        "output_tokens": 616,
+        "friction_count": 0,
+        "adopted": true
+      },
+      "human_preference": "looprelay",
+      "judge": {
+    "position_consistent": true,
+    "preference": "baseline"
+      }
+    },
+    {
+      "id": "implementation-continuation-008",
+      "task_type": "implementation_continuation",
+      "order": "looprelay_first",
+      "baseline": {
+        "passed": true,
+        "actionability": 1,
+        "elapsed_ms": 25260,
+        "tool_calls": 5,
+        "input_tokens": 81127,
+        "output_tokens": 1027,
+        "friction_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "actionability": 1,
+        "elapsed_ms": 33140,
+        "tool_calls": 6,
+        "input_tokens": 170866,
+        "output_tokens": 1209,
+        "friction_count": 0,
+        "adopted": true
+      },
+      "human_preference": "baseline",
+      "judge": {
+    "position_consistent": true,
+    "preference": "tie"
+      }
+    },
+    {
+      "id": "failure-prevention-009",
+      "task_type": "failure_prevention",
+      "order": "baseline_first",
+      "baseline": {
+        "passed": false,
+        "actionability": 0.4,
+        "elapsed_ms": 21620,
+        "tool_calls": 2,
+        "input_tokens": 52953,
+        "output_tokens": 344,
+        "friction_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "actionability": 1,
+        "elapsed_ms": 11190,
+        "tool_calls": 1,
+        "input_tokens": 80753,
+        "output_tokens": 209,
+        "friction_count": 0,
+        "adopted": true
+      },
+      "human_preference": "looprelay",
+      "judge": {
+    "position_consistent": true,
+    "preference": "baseline"
+      }
+    },
+    {
+      "id": "session-recovery-010",
+      "task_type": "session_recovery",
+      "order": "looprelay_first",
+      "baseline": {
+        "passed": false,
+        "actionability": 0.4,
+        "elapsed_ms": 26410,
+        "tool_calls": 4,
+        "input_tokens": 77778,
+        "output_tokens": 899,
+        "friction_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "actionability": 1,
+        "elapsed_ms": 32860,
+        "tool_calls": 3,
+        "input_tokens": 82579,
+        "output_tokens": 702,
+        "friction_count": 0,
+        "adopted": true
+      },
+      "human_preference": "looprelay",
+      "judge": {
+    "position_consistent": true,
+    "preference": "baseline"
       }
     }
   ]

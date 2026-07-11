@@ -19,6 +19,18 @@
 
 ![LoopRelay baseline versus assisted engineering results](docs/assets/usefulness-results.svg)
 
+<!-- USEFULNESS_RESULTS_START -->
+Current results are maintainer-run observational evidence, not a causal claim. They include 10 matched pairs across 3 task types.
+
+| Task type | Pairs | Baseline success | LoopRelay success | Delta |
+| --- | ---: | ---: | ---: | ---: |
+| Failure prevention | 3 | 0% | 100% | +100pp |
+| Implementation continuation | 3 | 100% | 66.7% | -33.3pp |
+| Session recovery | 4 | 25% | 100% | +75pp |
+
+Aggregate success moved from 40% to 90%, while actionability moved from 60% to 90%. Mean input-token cost changed by 31.6%. Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. The causal claim remains false until independent-user validation is complete.
+<!-- USEFULNESS_RESULTS_END -->
+
 This chart is generated from the committed raw-free matched-pair ledger, not
 hand-edited marketing data. It shows outcome quality and operating cost
 together, retains null and negative results, and displays `INSUFFICIENT DATA`

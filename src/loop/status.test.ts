@@ -372,6 +372,33 @@ describe("createLoopRelayStatus", () => {
     );
   });
 
+  it("treats multiple sessions in one worktree as continuity, not a multi-worktree review", () => {
+    const status = createLoopRelayStatus({
+      snapshots: [
+        loopSnapshot({
+          id: "loop_session_two",
+          session_id: "session-two",
+          worktree_label: undefined,
+        }),
+        loopSnapshot({
+          id: "loop_session_one",
+          session_id: "session-one",
+          worktree_label: undefined,
+        }),
+      ],
+      compactBoundaries: [],
+    });
+
+    expect(status.activity).toMatchObject({
+      active_worktrees: 1,
+      active_sessions: 2,
+      needs_review: false,
+      next_action: "continue current worktree loop",
+      worktrees: [{ worktree: "unknown", sessions: 2, snapshots: 2 }],
+    });
+    expect(status.activity.command_center).toBeUndefined();
+  });
+
   it("shell-quotes command-center continuation commands with spaces and quotes", () => {
     const status = createLoopRelayStatus({
       compactBoundaries: [],
