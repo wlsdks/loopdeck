@@ -27,7 +27,12 @@ describe("usefulness report generator", () => {
       causal_claim: false,
       pair_count: 3,
       task_type_count: 3,
-      minimums: { pairs: 10, task_types: 3 },
+      independent_user_count: 0,
+      public_readiness: {
+        ready: false,
+        reason: "independent_users_missing",
+      },
+      minimums: { pairs: 10, task_types: 3, independent_users: 3 },
       baseline: {
         success_rate: 0.666667,
         mean_actionability: 0.6,
@@ -78,6 +83,7 @@ describe("usefulness report generator", () => {
     expect(markdown).toContain("+100pp");
     expect(markdown).toContain("maintainer-run observational evidence");
     expect(markdown).toContain("causal claim remains false");
+    expect(markdown).toContain("0/3 independent users");
   });
 
   it("rejects causal claims, prompt-bearing fields, secrets, and raw paths", () => {
@@ -93,6 +99,33 @@ describe("usefulness report generator", () => {
     expect(() =>
       createUsefulnessReport({ ...ledger(), note: "/Users/example/private" }),
     ).toThrow("sensitive or raw-path content");
+  });
+
+  it("keeps public readiness blocked until three successful independent flows", () => {
+    const input = ledger();
+    input.independent_users = [1, 2, 3].map((index) => ({
+      id: `participant-${index}`,
+      independence_confirmed: true,
+      install_success: true,
+      first_value_success: true,
+      install_elapsed_ms: 10_000,
+      time_to_first_value_ms: 20_000,
+      recovery_count: 0,
+      friction_count: 0,
+      privacy_blocker: false,
+      data_loss_blocker: false,
+    }));
+
+    expect(createUsefulnessReport(input).public_readiness).toEqual({
+      ready: true,
+      reason: "requirements_met",
+    });
+
+    input.independent_users[0].privacy_blocker = true;
+    expect(createUsefulnessReport(input).public_readiness).toEqual({
+      ready: false,
+      reason: "independent_user_flow_failed",
+    });
   });
 
   it("writes deterministic generated artifacts from a local ledger", () => {
@@ -119,7 +152,8 @@ function ledger() {
     version: 1,
     design: "matched_observational",
     causal_claim: false,
-    minimums: { pairs: 10, task_types: 3 },
+    minimums: { pairs: 10, task_types: 3, independent_users: 3 },
+    independent_users: [],
     pairs: [
       pair("session_recovery", "baseline_first", true, true, 0.6, 0.8, 0, 0),
       pair(

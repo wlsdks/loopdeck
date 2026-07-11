@@ -15,7 +15,7 @@
 ![LoopRelay 미사용 대비 사용 조건 엔지니어링 결과](docs/assets/usefulness-results.svg)
 
 <!-- USEFULNESS_RESULTS_START -->
-현재 결과는 maintainer-run observational evidence이며 인과관계를 주장하지 않습니다. 10개 matched pair와 3개 작업 유형을 포함합니다.
+현재 결과는 maintainer-run observational evidence이며 인과관계를 주장하지 않습니다. 10개 matched pair와 3개 작업 유형을 포함합니다. 독립 사용자 검증은 0/3명입니다.
 
 | 작업 유형 | 쌍 | Baseline 성공률 | LoopRelay 성공률 | 차이 |
 | --- | ---: | ---: | ---: | ---: |

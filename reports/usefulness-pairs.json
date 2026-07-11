@@ -4,8 +4,10 @@
   "causal_claim": false,
   "minimums": {
     "pairs": 10,
-    "task_types": 3
+    "task_types": 3,
+    "independent_users": 3
   },
+  "independent_users": [],
   "critical_blockers": 0,
   "pairs": [
     {

@@ -6,7 +6,9 @@ identifies a privacy, data-loss, installation, or first-value blocker.
 
 ## Current Verdict
 
-LoopRelay 1.0.0 is not publicly launched yet.
+LoopRelay is not publicly launched yet. The current release-candidate work is
+at `57768d2759efd69e12f06dda78162bcd23da6329`; the immutable `v1.0.0` tag is
+older and must not be moved.
 
 - The annotated `v1.0.0` tag and `main` resolve to commit
   `106bbf899d8243f31e122a7496208b144bedc869`.
@@ -15,9 +17,32 @@ LoopRelay 1.0.0 is not publicly launched yet.
 - `corepack pnpm npm-publish:preflight -- --json` passed every package,
   privacy, worktree, tag, and remote-tag check. Its only failed check was npm
   authentication (`npm whoami` returned `E401`).
-- Do not move `v1.0.0`. Authenticate, rerun the final gate and preflight from
-  the tagged commit, publish that commit, and create the GitHub Release from
-  the same immutable tag.
+- Do not move `v1.0.0`. Because the current package remains `1.0.0` while the
+  candidate contains later correctness and evidence changes, publication is
+  blocked until a new candidate version is chosen on the final commit.
+
+## Current Candidate Refresh — 2026-07-11
+
+The current candidate was rechecked after the continuity-scoping and
+usefulness-report changes:
+
+- clean tarball installation and the installed first-success path passed on
+  Node 22.22.0 and Node 24.16.0;
+- a fresh Codex CLI 0.142.5 / `gpt-5.4` session ingested a new prompt, called
+  `get_looprelay_loop_status`, and returned `ready` for project `looprelay`,
+  branch `codex/looprelay-rebrand`, with all raw-free privacy flags intact;
+- a fresh Claude Code 2.1.207 / Haiku session completed the same MCP call. The
+  first default-model attempt exceeded the explicit $0.50 budget and is kept
+  as cost friction, not counted as a product pass;
+- both post-run doctors reported verified recent ingest, HTTP 200, registered
+  MCP, and `status: ready`;
+- the current matched-pair ledger contains 10 pairs across 3 task types, but
+  its generated `public_readiness` remains false with reason
+  `independent_users_missing` and count 0/3;
+- npm still returns E404 for `looprelay@1.0.0`, GitHub has no `v1.0.0`
+  Release, and `npm whoami` returns E401.
+
+No full release gate was run during this refresh.
 
 ## Live Codex And Claude Code Evidence
 
@@ -215,12 +240,13 @@ Required before closing validation:
 
 ## Next Actions
 
-1. Complete `npm login` interactively.
-2. From the immutable tagged commit, run the full release gate once and rerun
+1. Collect three independent install-to-first-value results; the generated
+   report must remain blocked until all three exist.
+2. Complete `npm login` interactively.
+3. Choose a new version for the final candidate without moving `v1.0.0`.
+4. Run the full release gate once on that final commit and rerun
    `corepack pnpm npm-publish:preflight`.
-3. Publish `looprelay@1.0.0`, then create the GitHub Release from `v1.0.0`
-   without retargeting the tag.
-4. Run a clean registry-install first-value smoke and record elapsed time and
+5. Publish the package and create the GitHub Release from the identical,
+   immutable new tag.
+6. Run a clean registry-install first-value smoke and record elapsed time and
    recovery observations.
-5. Recruit three independent users; do not replace their evidence with
-   synthetic fixtures or maintainer-only dogfood.

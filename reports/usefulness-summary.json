@@ -5,6 +5,11 @@
   "causal_claim": false,
   "pair_count": 10,
   "task_type_count": 3,
+  "independent_user_count": 0,
+  "public_readiness": {
+    "ready": false,
+    "reason": "independent_users_missing"
+  },
   "task_types": [
     "failure_prevention",
     "implementation_continuation",
@@ -38,7 +43,8 @@
   },
   "minimums": {
     "pairs": 10,
-    "task_types": 3
+    "task_types": 3,
+    "independent_users": 3
   },
   "baseline": {
     "success_rate": 0.4,

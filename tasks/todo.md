@@ -11223,5 +11223,11 @@
       null/negative results, limitations, and exact reproduction commands.
 - [ ] USERS: Record three independent install-to-first-value flows before
       interpreting public usefulness.
+- [x] COMPAT: On candidate `57768d27`, pass isolated tarball install and first
+      success on Node 22.22 and 24.16, plus fresh Codex 0.142.5 and Claude Code
+      2.1.207 ingest/MCP/doctor checks with raw-free ready results.
+- [x] GUARD: Generated usefulness evidence reports independent users 0/3 and
+      keeps public readiness blocked until three successful, blocker-free
+      independent flows are recorded.
 - [ ] RELEASE: Run clean install and live compatibility checks, then the full
       release gate exactly once on the final candidate commit.

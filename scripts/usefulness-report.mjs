@@ -3,7 +3,8 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { mkdirSync } from "node:fs";
 
-const FORBIDDEN_KEYS = /^(prompt|prompt_body|query|response|output|transcript)$/i;
+const FORBIDDEN_KEYS =
+  /^(prompt|prompt_body|query|response|output|transcript)$/i;
 const SENSITIVE_VALUE =
   /(?:\/Users\/[^\s]+|AKIA[0-9A-Z]{16}|sk-(?:proj-)?[A-Za-z0-9_-]{8,}|gh[opusr]_[A-Za-z0-9]{12,})/;
 const TASK_TYPES = new Set([
@@ -19,6 +20,7 @@ export function createUsefulnessReport(input) {
   const looprelay = aggregateCondition(pairs.map((pair) => pair.looprelay));
   const taskTypes = new Set(pairs.map((pair) => pair.task_type));
   const minimums = input.minimums;
+  const independentUsers = input.independent_users ?? [];
   const enoughData =
     pairs.length >= minimums.pairs && taskTypes.size >= minimums.task_types;
 
@@ -29,24 +31,26 @@ export function createUsefulnessReport(input) {
     causal_claim: false,
     pair_count: pairs.length,
     task_type_count: taskTypes.size,
+    independent_user_count: independentUsers.length,
+    public_readiness: publicReadiness(
+      independentUsers,
+      minimums.independent_users,
+      input.critical_blockers ?? 0,
+    ),
     task_types: Array.from(taskTypes).sort(),
     by_task_type: Object.fromEntries(
       Array.from(taskTypes)
         .sort()
         .map((taskType) => [
           taskType,
-          taskTypeReport(
-            pairs.filter((pair) => pair.task_type === taskType),
-          ),
+          taskTypeReport(pairs.filter((pair) => pair.task_type === taskType)),
         ]),
     ),
     minimums,
     baseline,
     looprelay,
     delta: {
-      success_rate: roundMetric(
-        looprelay.success_rate - baseline.success_rate,
-      ),
+      success_rate: roundMetric(looprelay.success_rate - baseline.success_rate),
       mean_actionability: roundMetric(
         looprelay.mean_actionability - baseline.mean_actionability,
       ),
@@ -70,15 +74,12 @@ export function createUsefulnessReport(input) {
       "looprelay",
       "tie",
     ]),
-    adoption_rate: mean(
-      pairs.map((pair) => (pair.looprelay.adopted ? 1 : 0)),
-    ),
+    adoption_rate: mean(pairs.map((pair) => (pair.looprelay.adopted ? 1 : 0))),
     bias: {
       baseline_first: pairs.filter((pair) => pair.order === "baseline_first")
         .length,
-      looprelay_first: pairs.filter(
-        (pair) => pair.order === "looprelay_first",
-      ).length,
+      looprelay_first: pairs.filter((pair) => pair.order === "looprelay_first")
+        .length,
       position_consistency: meanNullable(
         pairs.map((pair) =>
           pair.judge.position_consistent === null
@@ -99,8 +100,7 @@ export function createUsefulnessReport(input) {
       ),
     },
     critical_blockers: input.critical_blockers ?? 0,
-    note:
-      "Observational matched-pair evidence only. Null and negative results are retained.",
+    note: "Observational matched-pair evidence only. Null and negative results are retained.",
   };
 }
 
@@ -190,7 +190,7 @@ export function renderReadmeResultBlock(report, locale) {
         100;
 
   if (locale === "ko") {
-    return `현재 결과는 maintainer-run observational evidence이며 인과관계를 주장하지 않습니다. ${report.pair_count}개 matched pair와 ${report.task_type_count}개 작업 유형을 포함합니다.
+    return `현재 결과는 maintainer-run observational evidence이며 인과관계를 주장하지 않습니다. ${report.pair_count}개 matched pair와 ${report.task_type_count}개 작업 유형을 포함합니다. 독립 사용자 검증은 ${report.independent_user_count}/${report.minimums.independent_users}명입니다.
 
 | 작업 유형 | 쌍 | Baseline 성공률 | LoopRelay 성공률 | 차이 |
 | --- | ---: | ---: | ---: | ---: |
@@ -199,7 +199,7 @@ ${taskRows}
 전체 성공률은 ${percent(report.baseline.success_rate * 100)}에서 ${percent(report.looprelay.success_rate * 100)}로 변했고 actionability는 ${percent(report.baseline.mean_actionability * 100)}에서 ${percent(report.looprelay.mean_actionability * 100)}로 변했습니다. 평균 input token 비용은 ${round(tokenDeltaPercent)}% 변했습니다. 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 독립 사용자 검증 전까지 causal claim은 false입니다.`;
   }
 
-  return `Current results are maintainer-run observational evidence, not a causal claim. They include ${report.pair_count} matched pairs across ${report.task_type_count} task types.
+  return `Current results are maintainer-run observational evidence, not a causal claim. They include ${report.pair_count} matched pairs across ${report.task_type_count} task types and ${report.independent_user_count}/${report.minimums.independent_users} independent users.
 
 | Task type | Pairs | Baseline success | LoopRelay success | Delta |
 | --- | ---: | ---: | ---: | ---: |
@@ -278,8 +278,10 @@ function taskTypeReport(pairs) {
 }
 
 function validateLedger(input) {
-  if (!input || typeof input !== "object") throw new Error("ledger is required");
-  if (input.causal_claim !== false) throw new Error("causal_claim must be false");
+  if (!input || typeof input !== "object")
+    throw new Error("ledger is required");
+  if (input.causal_claim !== false)
+    throw new Error("causal_claim must be false");
   validatePrivacy(input);
   if (input.version !== 1 || input.design !== "matched_observational") {
     throw new Error("unsupported usefulness ledger contract");
@@ -289,17 +291,23 @@ function validateLedger(input) {
   }
   if (
     !Number.isInteger(input.minimums?.pairs) ||
-    !Number.isInteger(input.minimums?.task_types)
+    !Number.isInteger(input.minimums?.task_types) ||
+    !Number.isInteger(input.minimums?.independent_users)
   ) {
     throw new Error("integer minimums are required");
   }
+  if (!Array.isArray(input.independent_users)) {
+    throw new Error("independent_users must be an array");
+  }
+  for (const user of input.independent_users) validateIndependentUser(user);
   const ids = new Set();
   for (const pair of input.pairs) {
     if (!/^[a-z0-9-]+$/.test(pair.id) || ids.has(pair.id)) {
       throw new Error("pair ids must be unique raw-free labels");
     }
     ids.add(pair.id);
-    if (!TASK_TYPES.has(pair.task_type)) throw new Error("unsupported task type");
+    if (!TASK_TYPES.has(pair.task_type))
+      throw new Error("unsupported task type");
     if (!new Set(["baseline_first", "looprelay_first"]).has(pair.order)) {
       throw new Error("invalid pair order");
     }
@@ -323,6 +331,55 @@ function validateLedger(input) {
       throw new Error("invalid judge preference");
     }
   }
+}
+
+function validateIndependentUser(user) {
+  if (!/^[a-z0-9-]+$/.test(user?.id ?? "")) {
+    throw new Error("independent user ids must be raw-free labels");
+  }
+  for (const key of [
+    "independence_confirmed",
+    "install_success",
+    "first_value_success",
+    "privacy_blocker",
+    "data_loss_blocker",
+  ]) {
+    if (typeof user[key] !== "boolean") {
+      throw new Error(`independent user field is required: ${key}`);
+    }
+  }
+  for (const key of [
+    "install_elapsed_ms",
+    "time_to_first_value_ms",
+    "recovery_count",
+    "friction_count",
+  ]) {
+    if (!Number.isFinite(user[key]) || user[key] < 0) {
+      throw new Error(`invalid independent user metric: ${key}`);
+    }
+  }
+}
+
+function publicReadiness(users, requiredUsers, criticalBlockers) {
+  if (criticalBlockers > 0) {
+    return { ready: false, reason: "critical_blocker" };
+  }
+  if (users.length < requiredUsers) {
+    return { ready: false, reason: "independent_users_missing" };
+  }
+  if (
+    users.some(
+      (user) =>
+        !user.independence_confirmed ||
+        !user.install_success ||
+        !user.first_value_success ||
+        user.privacy_blocker ||
+        user.data_loss_blocker,
+    )
+  ) {
+    return { ready: false, reason: "independent_user_flow_failed" };
+  }
+  return { ready: true, reason: "requirements_met" };
 }
 
 function validateCondition(value, treatment) {
@@ -369,7 +426,10 @@ function validatePrivacy(value, key = "") {
 
 function countValues(items, key, values) {
   return Object.fromEntries(
-    values.map((value) => [value, items.filter((item) => item[key] === value).length]),
+    values.map((value) => [
+      value,
+      items.filter((item) => item[key] === value).length,
+    ]),
   );
 }
 
@@ -415,9 +475,7 @@ function runCli() {
   const args = process.argv.slice(2);
   const ledgerPath = resolve(args[0] ?? "reports/usefulness-pairs.json");
   const svgPath = resolve(args[1] ?? "docs/assets/usefulness-results.svg");
-  const summaryPath = resolve(
-    args[2] ?? "reports/usefulness-summary.json",
-  );
+  const summaryPath = resolve(args[2] ?? "reports/usefulness-summary.json");
   const report = createUsefulnessReport(
     JSON.parse(readFileSync(ledgerPath, "utf8")),
   );

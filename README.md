@@ -20,7 +20,7 @@
 ![LoopRelay baseline versus assisted engineering results](docs/assets/usefulness-results.svg)
 
 <!-- USEFULNESS_RESULTS_START -->
-Current results are maintainer-run observational evidence, not a causal claim. They include 10 matched pairs across 3 task types.
+Current results are maintainer-run observational evidence, not a causal claim. They include 10 matched pairs across 3 task types and 0/3 independent users.
 
 | Task type | Pairs | Baseline success | LoopRelay success | Delta |
 | --- | ---: | ---: | ---: | ---: |
