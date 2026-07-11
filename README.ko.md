@@ -103,9 +103,22 @@ blocked로 판단했지만 exact-fact rubric은 둘 다 실패했습니다. Loop
 거친 `Checkpoint Evidence` section에 포함됩니다. Follow-up은 모든 release
 fact를 복구하고 재탐색을 줄였지만 필요한 version 결정 전에 final gate를
 삽입해 여전히 fail/fail입니다. 이제 selected contract는 stated action 사이에
-fallback step을 삽입하지 못하게 명시합니다. 집계는 6쌍·4개 유형, 엄격
-성공률 baseline 0% 대 LoopRelay 33.3%이며 여전히 `INSUFFICIENT DATA`이고
+fallback step을 삽입하지 못하게 명시합니다. 집계는 7쌍·5개 유형, 엄격
+성공률 baseline 0% 대 LoopRelay 42.9%이며 여전히 `INSUFFICIENT DATA`이고
 release 승인으로 해석하지 않습니다.
+
+일곱 번째 pair는 이 evidence pipeline의 ordinary implementation
+continuation을 검사했습니다. Baseline은 그럴듯하지만 다른 command와 flag를
+선택하고 검증 범위를 넓혔습니다. LoopRelay는 정확한 focused plan을 복구해
+통과했지만 7.52초 더 느리고 output/reasoning token을 더 사용했습니다. 이는
+selected contract 정확도 근거이지 일반 속도 향상 근거가 아닙니다.
+
+30쌍 README 결과 block을 변경하지 않고 별도 real-task artifact만
+재생성합니다.
+
+```sh
+pnpm evidence:real-task
+```
 
 npm package가 publish된 뒤:
 

@@ -184,7 +184,10 @@ export function renderUsefulnessSvg(report) {
     {
       label: `Cached tokens (${percent(report.measurement_coverage.cached_input_tokens * 100)} known)`,
       baseline: divideNullable(report.baseline.mean_cached_input_tokens, 1_000),
-      looprelay: divideNullable(report.looprelay.mean_cached_input_tokens, 1_000),
+      looprelay: divideNullable(
+        report.looprelay.mean_cached_input_tokens,
+        1_000,
+      ),
       format: (value) => (value === null ? "N/A" : `${round(value)}k`),
     },
     {
@@ -368,9 +371,7 @@ function measurementCoverage(pairs) {
 }
 
 function metricCoverage(values, select) {
-  return mean(
-    values.map((value) => (Number.isFinite(select(value)) ? 1 : 0)),
-  );
+  return mean(values.map((value) => (Number.isFinite(select(value)) ? 1 : 0)));
 }
 
 function transitionCounts(pairs) {
@@ -784,6 +785,7 @@ function round(value) {
 
 function runCli() {
   const args = process.argv.slice(2);
+  const skipReadme = args.includes("--skip-readme");
   const ledgerPath = resolve(args[0] ?? "reports/usefulness-pairs.json");
   const svgPath = resolve(args[1] ?? "docs/assets/usefulness-results.svg");
   const summaryPath = resolve(args[2] ?? "reports/usefulness-summary.json");
@@ -794,8 +796,10 @@ function runCli() {
   mkdirSync(dirname(summaryPath), { recursive: true });
   writeFileSync(svgPath, renderUsefulnessSvg(report), "utf8");
   writeFileSync(summaryPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
-  updateReadme(resolve("README.md"), report, "en");
-  updateReadme(resolve("README.ko.md"), report, "ko");
+  if (!skipReadme) {
+    updateReadme(resolve("README.md"), report, "en");
+    updateReadme(resolve("README.ko.md"), report, "ko");
+  }
   process.stdout.write(
     `${JSON.stringify({ status: report.status, pair_count: report.pair_count, task_type_count: report.task_type_count })}\n`,
   );

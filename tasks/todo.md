@@ -11386,3 +11386,17 @@
       without weakening other provider-token patterns.
 - [x] VERIFY: Run focused redaction/outcome/checkpoint tests, static checks,
       live checkpoint creation, and privacy-safe diff hygiene.
+
+## 2026-07-11 First Real Implementation-Continuation Pair
+
+- [x] GAP: Confirm real-task artifacts require an ad-hoc generator invocation
+      because the default report command also rewrites aggregate README blocks.
+- [x] CHECKPOINT: Freeze the smallest single-generator, skip-README package
+      command and test contract through the live product.
+- [x] PREREGISTER: Define a 14-point repository-grounded plan rubric with Sol.
+- [x] RUN: Execute treatment-first on `9547bc75`; retain baseline 7/14 failure,
+      treatment 12/14 to 14/14 success, and treatment latency/output overhead.
+- [x] RED/GREEN: Add exact `evidence:real-task` and `--skip-readme` behavior
+      with subprocess tests for determinism, README preservation, and defaults.
+- [x] VERIFY: Run the package command twice, focused tests, lint, artifact
+      drift, README diff, privacy scan, and diff hygiene without a release gate.

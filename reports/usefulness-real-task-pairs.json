@@ -405,6 +405,76 @@
         "treatment-inserted-final-gate-before-version-decision",
         "selected-contract-sequence-not-preserved"
       ]
+    },
+    {
+      "id": "real-implementation-continuation-007",
+      "task_type": "implementation_continuation",
+      "order": "looprelay_first",
+      "execution": {
+        "agent": "codex",
+        "agent_version": "0.144.1",
+        "model": "gpt-5.6-terra",
+        "reasoning_effort": "medium",
+        "sandbox": "read-only",
+        "fresh_session": true,
+        "repository_state": "commit:9547bc75",
+        "ground_truth": "sol-preregistered-repository-plan"
+      },
+      "baseline": {
+        "passed": false,
+        "core_task_recovered": false,
+        "implementation_plan_score": 7,
+        "actionability": 0.6,
+        "elapsed_ms": 59050,
+        "time_to_first_value_ms": 59050,
+        "tool_calls": 6,
+        "failed_tool_calls": 0,
+        "input_tokens": 282122,
+        "cached_input_tokens": 235776,
+        "output_tokens": 2593,
+        "reasoning_output_tokens": 765,
+        "friction_count": 0,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false
+      },
+      "looprelay": {
+        "passed": true,
+        "core_task_recovered": true,
+        "implementation_plan_score": 12,
+        "implementation_plan_score_max": 14,
+        "actionability": 1,
+        "elapsed_ms": 66570,
+        "time_to_first_value_ms": 66570,
+        "tool_calls": 5,
+        "failed_tool_calls": 1,
+        "input_tokens": 225461,
+        "cached_input_tokens": 184832,
+        "output_tokens": 3023,
+        "reasoning_output_tokens": 1681,
+        "friction_count": 1,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false,
+        "adopted": true
+      },
+      "human_preference": "looprelay",
+      "judge": {
+        "position_consistent": true,
+        "score_consistent": false,
+        "preference": "looprelay",
+        "baseline_pass": false,
+        "looprelay_pass": true,
+        "baseline_score_range": [7, 7],
+        "looprelay_score_range": [12, 14]
+      },
+      "finding_labels": [
+        "baseline-selected-wrong-command-and-flag-contract",
+        "baseline-broadened-verification",
+        "treatment-recovered-exact-focused-plan",
+        "treatment-slower-with-more-output-reasoning",
+        "checkpoint-secret-detector-friction-before-run"
+      ]
     }
   ]
 }

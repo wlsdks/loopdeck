@@ -1,4 +1,5 @@
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -269,6 +270,54 @@ describe("usefulness report generator", () => {
     expect(readFileSync(svgPath, "utf8")).toContain("INSUFFICIENT DATA");
     expect(JSON.parse(readFileSync(summaryPath, "utf8"))).toEqual(report);
   });
+
+  it("regenerates real-task artifacts without changing README files", () => {
+    const dir = mkdtempSync(join(tmpdir(), "looprelay-real-task-report-"));
+    tempDirs.push(dir);
+    const ledgerPath = join(dir, "ledger.json");
+    const svgPath = join(dir, "result.svg");
+    const summaryPath = join(dir, "summary.json");
+    const readmePath = join(dir, "README.md");
+    const readmeKoPath = join(dir, "README.ko.md");
+    const readme =
+      "before\n<!-- USEFULNESS_RESULTS_START -->\nold\n<!-- USEFULNESS_RESULTS_END -->\nafter\n";
+    writeFileSync(ledgerPath, JSON.stringify(ledger()), "utf8");
+    writeFileSync(readmePath, readme, "utf8");
+    writeFileSync(readmeKoPath, readme, "utf8");
+
+    const args = [
+      join(process.cwd(), "scripts/usefulness-report.mjs"),
+      ledgerPath,
+      svgPath,
+      summaryPath,
+      "--skip-readme",
+    ];
+    expect(spawnSync(process.execPath, args, { cwd: dir }).status).toBe(0);
+    const firstSvg = readFileSync(svgPath, "utf8");
+    const firstSummary = readFileSync(summaryPath, "utf8");
+    expect(spawnSync(process.execPath, args, { cwd: dir }).status).toBe(0);
+
+    expect(readFileSync(svgPath, "utf8")).toBe(firstSvg);
+    expect(readFileSync(summaryPath, "utf8")).toBe(firstSummary);
+    expect(readFileSync(readmePath, "utf8")).toBe(readme);
+    expect(readFileSync(readmeKoPath, "utf8")).toBe(readme);
+
+    expect(
+      spawnSync(process.execPath, args.slice(0, -1), { cwd: dir }).status,
+    ).toBe(0);
+    expect(readFileSync(readmePath, "utf8")).not.toBe(readme);
+    expect(readFileSync(readmeKoPath, "utf8")).not.toBe(readme);
+  });
+
+  it("exposes one exact real-task evidence package command", () => {
+    const packageJson = JSON.parse(
+      readFileSync(join(process.cwd(), "package.json"), "utf8"),
+    ) as { scripts: Record<string, string> };
+
+    expect(packageJson.scripts["evidence:real-task"]).toBe(
+      "node scripts/usefulness-report.mjs reports/usefulness-real-task-pairs.json docs/assets/usefulness-real-task-results.svg reports/usefulness-real-task-summary.json --skip-readme",
+    );
+  });
 });
 
 function ledger() {
@@ -381,7 +430,7 @@ describe("real-task usefulness ledger", () => {
     };
 
     expect(ledger.causal_claim).toBe(false);
-    expect(ledger.pairs).toHaveLength(6);
+    expect(ledger.pairs).toHaveLength(7);
     expect(ledger.pairs[0]).toMatchObject({
       baseline: { passed: false, core_task_recovered: false },
       looprelay: { passed: false, core_task_recovered: true },
@@ -424,19 +473,32 @@ describe("real-task usefulness ledger", () => {
       looprelay: { passed: false, core_task_recovered: true },
       judge: { position_consistent: true, preference: "looprelay" },
     });
+    expect(ledger.pairs[6]).toMatchObject({
+      baseline: {
+        passed: false,
+        core_task_recovered: false,
+        implementation_plan_score: 7,
+      },
+      looprelay: {
+        passed: true,
+        core_task_recovered: true,
+        implementation_plan_score: 12,
+        implementation_plan_score_max: 14,
+      },
+    });
     expect(createUsefulnessReport(JSON.parse(source))).toMatchObject({
       status: "insufficient_data",
-      pair_count: 6,
-      task_type_count: 4,
+      pair_count: 7,
+      task_type_count: 5,
       baseline: { success_rate: 0 },
-      looprelay: { success_rate: 0.333333 },
-      transitions: { improved: 2, unchanged_failed: 4 },
+      looprelay: { success_rate: 0.428571 },
+      transitions: { improved: 3, unchanged_failed: 4 },
     });
     const svg = readFileSync(
       join(process.cwd(), "docs/assets/usefulness-real-task-results.svg"),
       "utf8",
     );
-    expect(svg).toContain("6 matched pairs · 4 task types");
+    expect(svg).toContain("7 matched pairs · 5 task types");
     expect(svg).toContain("INSUFFICIENT DATA");
     expect(source).not.toMatch(/\/Users\/|\/home\//);
     expect(source).not.toMatch(/"(?:prompt|response|transcript|output)"\s*:/i);

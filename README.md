@@ -106,9 +106,22 @@ rendered in the brief. They are now included under a privacy-filtered
 `Checkpoint Evidence` section. The follow-up recovered every release fact and
 reduced rediscovery, but still inserted a final gate before the required
 version decision, so it remains fail/fail. Selected contracts now explicitly
-forbid fallback steps between stated actions. The aggregate is six pairs
-across four types, with 0% baseline and 33.3% LoopRelay strict success; it
+forbid fallback steps between stated actions. The aggregate is seven pairs
+across five types, with 0% baseline and 42.9% LoopRelay strict success; it
 remains `INSUFFICIENT DATA` and is not a release authorization.
+
+The seventh pair covered ordinary implementation continuation for this
+evidence pipeline. Baseline chose plausible but different command and flag
+names and broadened verification; LoopRelay recovered the exact focused plan
+and passed, but took 7.52s longer and produced more output/reasoning tokens.
+This supports exact selected-contract recovery, not a general speed claim.
+
+Regenerate only the separate real-task artifacts without rewriting the 30-pair
+README result blocks:
+
+```sh
+pnpm evidence:real-task
+```
 
 After the npm package is published:
 
