@@ -21,7 +21,7 @@ describe("installService", () => {
   it("writes a macOS LaunchAgent plist with an explicit server command", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
-    const plistPath = join(dir, "LaunchAgents", "com.promptlane.server.plist");
+    const plistPath = join(dir, "LaunchAgents", "com.looprelay.server.plist");
 
     const result = installService({
       dataDir,
@@ -34,7 +34,7 @@ describe("installService", () => {
     expect(result.changed).toBe(true);
     expect(result.supported).toBe(true);
     expect(result.started).toBe(false);
-    expect(plist).toContain("com.promptlane.server");
+    expect(plist).toContain("com.looprelay.server");
     expect(plist).toContain("<string>server</string>");
     expect(plist).toContain("<string>--data-dir</string>");
     expect(plist).toContain(`<string>${dataDir}</string>`);
@@ -44,7 +44,7 @@ describe("installService", () => {
 
   it("dry-run reports the plist without writing", () => {
     const dir = createTempDir();
-    const plistPath = join(dir, "LaunchAgents", "com.promptlane.server.plist");
+    const plistPath = join(dir, "LaunchAgents", "com.looprelay.server.plist");
 
     const result = installService({
       plistPath,
@@ -55,7 +55,7 @@ describe("installService", () => {
     expect(result.changed).toBe(true);
     expect(result.dryRun).toBe(true);
     expect(() => readFileSync(plistPath, "utf8")).toThrow();
-    expect(result.nextPlist).toContain("com.promptlane.server");
+    expect(result.nextPlist).toContain("com.looprelay.server");
   });
 
   it("reports unsupported platforms without writing", () => {
@@ -74,7 +74,7 @@ describe("installService", () => {
 });
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-service-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-service-${randomUUID()}`);
   mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;

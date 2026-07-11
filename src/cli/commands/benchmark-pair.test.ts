@@ -4,7 +4,7 @@ import { benchmarkPairCandidatesForCli } from "./benchmark-pair.js";
 import type { LoopSnapshot } from "../../loop/types.js";
 
 describe("benchmark pair-candidates CLI", () => {
-  it("formats the same body-free baseline and PromptLane groups as JSON and text", () => {
+  it("formats the same body-free baseline and LoopRelay groups as JSON and text", () => {
     const snapshots = [
       snapshot("loop_lane", "prmt_lane", ["prmt_lane"]),
       snapshot("loop_base", "prmt_base", []),
@@ -18,7 +18,7 @@ describe("benchmark pair-candidates CLI", () => {
     expect(JSON.parse(json)).toMatchObject({
       status: "ready",
       baseline_candidates: [{ prompt_id: "prmt_base" }],
-      promptlane_candidates: [{ prompt_id: "prmt_lane" }],
+      looprelay_candidates: [{ prompt_id: "prmt_lane" }],
       privacy: {
         returns_prompt_bodies: false,
         returns_snapshot_ids: false,
@@ -31,7 +31,7 @@ describe("benchmark pair-candidates CLI", () => {
     expect(json).not.toContain("loop_lane");
     expect(text).toContain("benchmark pair-candidates: ready");
     expect(text).toContain("- baseline prmt_base passed; tests 2");
-    expect(text).toContain("- PromptLane prmt_lane passed; tests 2");
+    expect(text).toContain("- LoopRelay prmt_lane passed; tests 2");
     expect(text).toContain(
       "Privacy: local-only; no prompt bodies, snapshot ids, raw paths, outcome summaries, or evidence refs",
     );

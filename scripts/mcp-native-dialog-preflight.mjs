@@ -17,7 +17,7 @@ const child = spawn(process.execPath, [cliPath, "mcp"], {
   cwd: repoRoot,
   env: {
     ...process.env,
-    PROMPTLANE_NATIVE_DIALOG: "0",
+    LOOPRELAY_NATIVE_DIALOG: "0",
   },
   stdio: ["pipe", "pipe", "pipe"],
 });
@@ -70,7 +70,7 @@ send({
     protocolVersion: "2025-06-18",
     capabilities: {},
     clientInfo: {
-      name: "promptlane-mcp-native-dialog-preflight",
+      name: "looprelay-mcp-native-dialog-preflight",
       version: "0.0.0",
     },
   },
@@ -139,8 +139,8 @@ function finish(error) {
 function assertSmokeResult() {
   assertEqual(
     initializeResponse?.result?.serverInfo?.name,
-    "promptlane",
-    "Initialize should return promptlane serverInfo.",
+    "looprelay",
+    "Initialize should return looprelay serverInfo.",
   );
 
   const tool = toolsListResponse?.result?.tools?.find(

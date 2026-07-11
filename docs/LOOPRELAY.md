@@ -1,52 +1,49 @@
-# PromptLane
+# LoopRelay
 
 Last updated: 2026-07-05
 
-Product name: PromptLane.
+Product name: LoopRelay.
 
-PromptLane is a local-first prompt improvement workspace for Codex, Claude
-Code, and long-running coding-agent work.
+LoopRelay is the local continuity and evidence layer for long-running Codex and
+Claude Code loops.
 
-It helps developers write better coding-agent requests by recording prompts
-locally, scoring them, improving them, and carrying approved lessons forward
-across longer agent workflows.
+It preserves safe operational state across sessions, worktrees, branches, and
+agents; links work to outcome evidence; prepares continuation briefs; and
+promotes only approved lessons into durable memory or instruction proposals.
 
 ## Product Thesis
 
-PromptLane starts with prompt improvement:
+LoopRelay starts with loop continuity and evidence:
 
-- capture prompts from Codex and Claude Code
-- redact and store them locally in Markdown and SQLite
-- score weak requests with a deterministic local rubric
-- diagnose prompt gaps and ask focused questions by default
-- generate copy-ready improved prompts only after explicit rewrite requests
-- review recurring prompt habits
-- reuse strong prompt patterns safely
+- recover selected session/worktree/branch state
+- prepare the next evidence-backed continuation brief
+- connect prompts and loop snapshots to actual outcomes
+- preserve rejected approaches and recurring failure patterns
+- promote approved lessons into memory and instruction patch proposals
+- diagnose ambiguity and ask questions instead of rewriting by default
 
-Loop features are loop-aware continuation. They help the next prompt stay
-specific when work spans sessions, worktrees, branches, or compact boundaries.
-They are not the product identity and they do not turn PromptLane into an
-automatic agent runtime.
+Loop continuity and evidence are the product identity. LoopRelay does not run
+the agent or scrape its private transcript; it keeps the work coherent,
+reviewable, and recoverable between agent runs.
 
-## Runtime Compatibility
+## Runtime Identity
 
-Keep `promptlane` as the stable runtime identity until a dedicated migration
-plan proves otherwise.
+Use `looprelay` as the single stable runtime identity. No compatibility alias is
+shipped.
 
 | Surface | Current value | Rule |
 | --- | --- | --- |
-| npm package | `promptlane` | Keep |
-| Primary CLI | `promptlane` | Keep |
-| Hook command | `promptlane hook ...` | Keep |
-| Claude Code slash namespace | `/promptlane:*` | Keep |
-| Canonical MCP server name | `promptlane` | Keep |
-| Data directory | `~/.promptlane` | Keep |
-| Legacy CLI alias | `promptlane` | Compatibility only |
+| npm package | `looprelay` | Canonical |
+| Primary CLI | `looprelay` | Canonical |
+| Hook command | `looprelay hook ...` | Canonical |
+| Claude Code slash namespace | `/looprelay:*` | Canonical |
+| Canonical MCP server name | `looprelay` | Canonical |
+| Data directory | `~/.looprelay` | Canonical |
 
-Do not use broad search-and-replace. `promptlane` is correct in commands,
+Do not use broad search-and-replace. `looprelay` is correct in commands,
 package names, config paths, MCP server names, and slash namespaces.
-Use `docs/PROMPTLANE-LEGACY-SURFACES.md` before adding or changing any
-`PromptLane` or `promptlane` string.
+Use `docs/LOOPRELAY-RUNTIME-SURFACES.md` before adding or changing any
+`LoopRelay` or `looprelay` string.
 
 ## Core Workflows
 
@@ -73,10 +70,10 @@ Success criteria:
 Goal: a user can continue a long-running coding-agent task without rebuilding
 context from scattered notes.
 
-1. PromptLane records prompt and loop metadata.
+1. LoopRelay records prompt and loop metadata.
 2. A hook, CLI command, or MCP tool creates a safe loop snapshot.
 3. The user or active agent asks for a continuation brief.
-4. PromptLane returns a raw-free brief tied to selected worktree, session, or
+4. LoopRelay returns a raw-free brief tied to selected worktree, session, or
    branch filters when provided.
 
 Success criteria:
@@ -90,10 +87,10 @@ Success criteria:
 Goal: recurring lessons become durable only after approval.
 
 1. A loop outcome is recorded with passing status and safe evidence refs through
-   `promptlane loop outcome` or `record_loop_outcome`.
-2. PromptLane proposes a memory candidate.
+   `looprelay loop outcome` or `record_loop_outcome`.
+2. LoopRelay proposes a memory candidate.
 3. The user approves the memory.
-4. PromptLane can propose an AGENTS.md or CLAUDE.md patch.
+4. LoopRelay can propose an AGENTS.md or CLAUDE.md patch.
 5. The user explicitly applies the patch through a gated CLI/MCP path.
 
 Success criteria:
@@ -106,7 +103,7 @@ Success criteria:
 
 ## Privacy And Local-First Boundaries
 
-PromptLane must preserve these boundaries:
+LoopRelay must preserve these boundaries:
 
 - no hidden provider calls
 - no automatic prompt resubmission
@@ -118,11 +115,11 @@ PromptLane must preserve these boundaries:
 
 MCP agent rewrite and judge tools may return bounded redacted packets only when
 the user explicitly asks the active agent session to evaluate or rewrite them.
-PromptLane does not call the provider on the user's behalf.
+LoopRelay does not call the provider on the user's behalf.
 
 ## Data And Privacy Model
 
-PromptLane stores local data in separate layers so each surface can expose only
+LoopRelay stores local data in separate layers so each surface can expose only
 the minimum safe shape it needs:
 
 | Layer | Role | Boundary |
@@ -156,7 +153,7 @@ weakening local-first privacy or changing runtime IDs.
 
 ### Improve
 
-- PromptLane-first README and plugin metadata
+- LoopRelay-first README and plugin metadata
 - Codex and Claude Code setup/status guidance
 - selected worktree/session/branch continuation briefs
 - user-approved memory and instruction patch workflows
@@ -189,18 +186,18 @@ multi-user model before they can be safe.
 ### Reject
 
 - hidden external LLM calls
-- external provider judge calls from inside PromptLane
+- external provider judge calls from inside LoopRelay
 - automatic prompt resubmission
 - automatic merge/rebase/branch checkout
 - provider credential extraction, storage, proxying, or replay
 - raw transcript scraping from private app state
 
-Decision rule: reject features that make PromptLane act as a hidden provider
+Decision rule: reject features that make LoopRelay act as a hidden provider
 proxy, autonomous agent runtime, transcript scraper, or merge bot.
 
 ## Risk And Execution Plan
 
-PromptLane should move through small reliability slices before adding broader
+LoopRelay should move through small reliability slices before adding broader
 agent-loop features.
 
 | Risk | Why it matters | Mitigation |
@@ -209,7 +206,7 @@ agent-loop features.
 | MCP registry drift | Tool definitions, handlers, and setup guidance can fall out of sync | Touch registry structure only when a tool/schema change already needs it |
 | Privacy regression | Loop memory and continuation features can accidentally expose prompt bodies, raw paths, transcripts, compact summaries, or credentials | Keep raw-free fixtures, packaging guards, and focused privacy tests on every slice |
 | Overbuilding autonomy | Background cron, auto-submit, and merge automation would change the trust model before the local prompt loop is proven | Keep autonomy staged and require explicit approval gates |
-| Runtime compatibility breakage | Renaming `promptlane` runtime IDs too early would break existing hooks, MCP setup, slash commands, and scripts | Keep runtime IDs stable until a dedicated migration proves compatibility |
+| Runtime compatibility breakage | Renaming `looprelay` runtime IDs too early would break existing hooks, MCP setup, slash commands, and scripts | Keep runtime IDs stable until a dedicated migration proves compatibility |
 
 Next MVP slices:
 
@@ -227,7 +224,7 @@ TDD execution rule for each slice:
 
 ## Autonomy Model
 
-PromptLane may become more helpful, but autonomy must remain staged.
+LoopRelay may become more helpful, but autonomy must remain staged.
 
 | Level | Behavior | Default |
 | --- | --- | --- |
@@ -242,7 +239,7 @@ offered as a normal workflow.
 
 ## Non-Goals
 
-PromptLane is not:
+LoopRelay is not:
 
 - a hosted agent platform
 - a LangGraph/Temporal replacement
@@ -254,12 +251,12 @@ PromptLane is not:
 
 ## Acceptance Criteria
 
-The PromptLane direction is healthy when these are true:
+The LoopRelay direction is healthy when these are true:
 
 - a plain Codex or Claude Code user can get value through setup, capture, coach,
   status, and brief workflows
-- product-facing metadata uses PromptLane
-- runtime IDs remain `promptlane` until a dedicated migration proves a rename
+- product-facing metadata uses LoopRelay
+- runtime IDs remain `looprelay` until a dedicated migration proves a rename
 - prompt bodies remain in the redacted archive only
 - loop snapshots and status surfaces remain raw-free
 - instruction changes are proposed before they are applied

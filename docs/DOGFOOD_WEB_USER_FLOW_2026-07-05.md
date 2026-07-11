@@ -1,7 +1,7 @@
 # Web User-Flow Dogfood Evidence - 2026-07-05
 
 This document records repeatable local web user-flow evidence for the
-PromptLane 9.5 web operations bar. The command uses an isolated data directory,
+LoopRelay 9.5 web operations bar. The command uses an isolated data directory,
 isolated HOME, temporary prompt fixtures, a local server, and Playwright. It
 does not use real user prompt archives, provider credentials, or external LLM
 provider calls.
@@ -31,7 +31,7 @@ provider calls.
   follow-up commands, LLM judge score display, manual clipboard fallback,
   saved draft reuse, and saved draft copy fallback.
 - `dashboard`: validates archive score review and chart rendering.
-- `coach`: validates PromptLane prompt improvement identity, habit command
+- `coach`: validates LoopRelay prompt improvement identity, habit command
   center, bad prompt review queue, next request brief preview, and copy
   confirmation.
 - `projects`: validates agent rules analysis and capture pause state.

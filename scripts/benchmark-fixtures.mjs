@@ -253,7 +253,7 @@ export function formatBenchmarkEvidenceStateLines(evidenceState) {
 
 export function formatNoFixturesReportLines(report) {
   return [
-    `promptlane benchmark ${report.dataset}`,
+    `looprelay benchmark ${report.dataset}`,
     "status: no_fixtures",
     ...formatBenchmarkEvidenceStateLines(report.evidence_state),
     `next_action: ${report.next_action}`,
@@ -321,9 +321,9 @@ function parseRealEffectPair(value, fixtureIndex) {
   const id = readOutcomeString(value.id, "effect_pair id", fixtureIndex);
   assertRedactedText(id, `real fixture ${fixtureIndex} effect_pair id`);
   assertSafeLabel(id, `real fixture ${fixtureIndex} effect_pair id`);
-  if (value.variant !== "baseline" && value.variant !== "promptlane") {
+  if (value.variant !== "baseline" && value.variant !== "looprelay") {
     throw new Error(
-      `real fixture ${fixtureIndex} effect_pair variant must be baseline or promptlane.`,
+      `real fixture ${fixtureIndex} effect_pair variant must be baseline or looprelay.`,
     );
   }
   return { id, variant: value.variant };
@@ -342,29 +342,29 @@ function validateRealEffectPairs(fixtures) {
     const baseline = pairFixtures.filter(
       (fixture) => fixture.effect_pair.variant === "baseline",
     );
-    const promptlane = pairFixtures.filter(
-      (fixture) => fixture.effect_pair.variant === "promptlane",
+    const looprelay = pairFixtures.filter(
+      (fixture) => fixture.effect_pair.variant === "looprelay",
     );
     if (
       pairFixtures.length !== 2 ||
       baseline.length !== 1 ||
-      promptlane.length !== 1
+      looprelay.length !== 1
     ) {
       throw new Error(
-        `real effect_pair ${pairId} must contain one baseline and one promptlane fixture.`,
+        `real effect_pair ${pairId} must contain one baseline and one looprelay fixture.`,
       );
     }
     const baselineFixture = baseline[0];
-    const promptlaneFixture = promptlane[0];
+    const looprelayFixture = looprelay[0];
     if (
-      baselineFixture.adapter !== promptlaneFixture.adapter ||
-      baselineFixture.query !== promptlaneFixture.query
+      baselineFixture.adapter !== looprelayFixture.adapter ||
+      baselineFixture.query !== looprelayFixture.query
     ) {
       throw new Error(
         `real effect_pair ${pairId} fixtures must use the same adapter and query.`,
       );
     }
-    if (!baselineFixture.outcome || !promptlaneFixture.outcome) {
+    if (!baselineFixture.outcome || !looprelayFixture.outcome) {
       throw new Error(
         `real effect_pair ${pairId} fixtures must include completed outcomes.`,
       );
@@ -374,9 +374,9 @@ function validateRealEffectPairs(fixtures) {
         `real effect_pair ${pairId} baseline outcome must set improvement_used to false.`,
       );
     }
-    if (!promptlaneFixture.outcome.improvement_used) {
+    if (!looprelayFixture.outcome.improvement_used) {
       throw new Error(
-        `real effect_pair ${pairId} promptlane outcome must set improvement_used to true.`,
+        `real effect_pair ${pairId} looprelay outcome must set improvement_used to true.`,
       );
     }
   }

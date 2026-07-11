@@ -58,7 +58,7 @@ export function registerBuddyCommand(program: Command): void {
     .description(
       "Show an always-on prompt score buddy for a side terminal pane.",
     )
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--json", "Print one JSON snapshot.")
     .option("--once", "Print one text snapshot and exit.")
     .option(
@@ -128,7 +128,7 @@ function createBuddySnapshot(options: BuddyCliOptions = {}): BuddySnapshot {
     status: result.status,
     ...(latest ? { latest_prompt: latest } : {}),
     ...(habit ? { habit } : {}),
-    next_move: nextActions[0] ?? "Run promptlane setup.",
+    next_move: nextActions[0] ?? "Run looprelay setup.",
     next_actions: nextActions,
     privacy: {
       local_only: true,
@@ -213,7 +213,7 @@ function formatBuddyLine(snapshot: BuddySnapshot): string {
 
 function formatBuddySnapshot(snapshot: BuddySnapshot): string {
   const rows = [
-    "PromptLane Buddy",
+    "LoopRelay Buddy",
     `Status        ${snapshot.status.status} (${snapshot.status.total_prompts} prompts)`,
   ];
 
@@ -262,7 +262,7 @@ function createNextActions({
   if (result.status.status !== "ready") {
     return result.status.next_actions.length > 0
       ? result.status.next_actions
-      : ["Run promptlane setup."];
+      : ["Run looprelay setup."];
   }
 
   if (latest?.top_gap) {

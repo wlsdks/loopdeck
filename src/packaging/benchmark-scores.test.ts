@@ -92,11 +92,11 @@ describe("benchmark scoring profiles", () => {
     const { scorePairedEffectiveness } = await scoreModule();
     const pairedFixtures = [
       pairedFixture("release_one", "baseline", "failed"),
-      pairedFixture("release_one", "promptlane", "passed"),
+      pairedFixture("release_one", "looprelay", "passed"),
       pairedFixture("release_two", "baseline", "failed"),
-      pairedFixture("release_two", "promptlane", "failed"),
+      pairedFixture("release_two", "looprelay", "failed"),
       pairedFixture("release_three", "baseline", "passed"),
-      pairedFixture("release_three", "promptlane", "passed"),
+      pairedFixture("release_three", "looprelay", "passed"),
     ];
 
     expect(scorePairedEffectiveness(pairedFixtures)).toEqual({
@@ -106,7 +106,7 @@ describe("benchmark scoring profiles", () => {
       pair_count: 3,
       minimum_directional_pairs: 3,
       baseline_pass_rate: 0.333,
-      promptlane_pass_rate: 0.667,
+      looprelay_pass_rate: 0.667,
       pass_rate_delta: 0.333,
       transitions: {
         improved: 1,
@@ -127,7 +127,7 @@ describe("benchmark scoring profiles", () => {
       pair_count: 0,
       minimum_directional_pairs: 3,
       baseline_pass_rate: null,
-      promptlane_pass_rate: null,
+      looprelay_pass_rate: null,
       pass_rate_delta: null,
       transitions: {
         improved: 0,
@@ -139,7 +139,7 @@ describe("benchmark scoring profiles", () => {
     expect(
       scorePairedEffectiveness([
         pairedFixture("release_one", "baseline", "failed"),
-        pairedFixture("release_one", "promptlane", "passed"),
+        pairedFixture("release_one", "looprelay", "passed"),
       ]).status,
     ).toBe("insufficient_pairs");
   });
@@ -324,7 +324,7 @@ describe("benchmark scoring profiles", () => {
 
 function pairedFixture(
   pairId: string,
-  variant: "baseline" | "promptlane",
+  variant: "baseline" | "looprelay",
   status: "passed" | "failed",
 ) {
   return {
@@ -336,7 +336,7 @@ function pairedFixture(
     outcome: {
       status,
       summary: `Redacted ${variant} outcome.`,
-      improvement_used: variant === "promptlane",
+      improvement_used: variant === "looprelay",
       evidence_refs: [`test:${pairId}-${variant}`],
       tests_run: 1,
     },

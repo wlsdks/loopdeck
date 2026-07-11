@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { normalizeClaudeCodePayload } from "../../adapters/claude-code.js";
-import { initializePromptLane, loadHookAuth } from "../../config/config.js";
+import { initializeLoopRelay, loadHookAuth } from "../../config/config.js";
 import { redactPrompt } from "../../redaction/redact.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import { createProgram } from "../index.js";
@@ -78,7 +78,7 @@ describe("import CLI", () => {
         file: "/tmp/missing.jsonl",
         source: "manual-jsonl",
       }),
-    ).toThrow(/promptlane import --dry-run --file/);
+    ).toThrow(/looprelay import --dry-run --file/);
   });
 
   it("includes a usage hint when --file is omitted", () => {
@@ -91,8 +91,8 @@ describe("import CLI", () => {
   });
 
   it("hints at the next command when --resume points to a missing job", async () => {
-    const dataDir = createTempDir("promptlane-import-missing-");
-    initializePromptLane({ dataDir });
+    const dataDir = createTempDir("looprelay-import-missing-");
+    initializeLoopRelay({ dataDir });
     const file = writeJsonl([
       {
         hook_event_name: "UserPromptSubmit",
@@ -109,12 +109,12 @@ describe("import CLI", () => {
         resume: "imp_does_not_exist",
         source: "manual-jsonl",
       }),
-    ).rejects.toThrow(/Import job not found.*promptlane import-job/);
+    ).rejects.toThrow(/Import job not found.*looprelay import-job/);
   });
 
   it("does not mutate prompt storage during dry-run", () => {
-    const dataDir = createTempDir("promptlane-import-data-");
-    initializePromptLane({ dataDir });
+    const dataDir = createTempDir("looprelay-import-data-");
+    initializeLoopRelay({ dataDir });
     const hmacSecret = loadHookAuth(dataDir).web_session_secret;
     const storage = createSqlitePromptStorage({
       dataDir,
@@ -148,8 +148,8 @@ describe("import CLI", () => {
 
   it("saves and shows raw-free dry-run jobs when requested", () => {
     const rawSecret = "sk-proj-1234567890abcdef";
-    const dataDir = createTempDir("promptlane-import-job-");
-    initializePromptLane({ dataDir });
+    const dataDir = createTempDir("looprelay-import-job-");
+    initializeLoopRelay({ dataDir });
     const file = writeJsonl([
       {
         hook_event_name: "UserPromptSubmit",
@@ -178,21 +178,21 @@ describe("import CLI", () => {
   });
 
   it("hints at the dry-run save command when import-job points at a missing id", () => {
-    const dataDir = createTempDir("promptlane-import-job-missing-");
-    initializePromptLane({ dataDir });
+    const dataDir = createTempDir("looprelay-import-job-missing-");
+    initializeLoopRelay({ dataDir });
 
     expect(() =>
       showImportJobForCli("imp_does_not_exist", { dataDir }),
     ).toThrow(/Import job not found: imp_does_not_exist/);
     expect(() =>
       showImportJobForCli("imp_does_not_exist", { dataDir }),
-    ).toThrow(/promptlane import --dry-run --save-job/);
+    ).toThrow(/looprelay import --dry-run --save-job/);
   });
 
   it("resumes a saved dry-run job, imports prompts, and filters imported prompts", async () => {
     const rawSecret = "sk-proj-1234567890abcdef";
-    const dataDir = createTempDir("promptlane-import-execute-");
-    initializePromptLane({ dataDir });
+    const dataDir = createTempDir("looprelay-import-execute-");
+    initializeLoopRelay({ dataDir });
     const file = writeJsonl([
       {
         hook_event_name: "UserPromptSubmit",
@@ -270,8 +270,8 @@ describe("import CLI", () => {
   });
 
   it("skips import candidates when project capture is disabled", async () => {
-    const dataDir = createTempDir("promptlane-import-policy-");
-    initializePromptLane({ dataDir });
+    const dataDir = createTempDir("looprelay-import-policy-");
+    initializeLoopRelay({ dataDir });
     const hmacSecret = loadHookAuth(dataDir).web_session_secret;
     const storage = createSqlitePromptStorage({
       dataDir,
@@ -325,7 +325,7 @@ describe("import CLI", () => {
 });
 
 function writeJsonl(records: Array<Record<string, unknown>>): string {
-  const dir = createTempDir("promptlane-import-cli-");
+  const dir = createTempDir("looprelay-import-cli-");
 
   const path = join(dir, "transcript.jsonl");
   writeFileSync(

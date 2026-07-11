@@ -2,17 +2,17 @@
 
 Last updated: 2026-07-05
 
-This document defines PromptLane's Codex and Claude Code integration contract.
+This document defines LoopRelay's Codex and Claude Code integration contract.
 Current repeatable dogfood evidence is recorded in
 `docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md`.
-It complements `AGENTS.md`, `CLAUDE.md`, and the PromptLane product contract.
+It complements `AGENTS.md`, `CLAUDE.md`, and the LoopRelay product contract.
 
 ## Product Boundary
 
-PromptLane is not a generic agent runtime. It is a local-first prompt
-improvement workspace for coding-agent work that already happens in Codex,
-Claude Code, and similar tools. Loop features are loop-aware continuation for the
-next prompt, not autonomous agent control.
+LoopRelay is not a generic agent runtime. It is the local continuity and evidence
+layer for long-running coding-agent work that already happens in Codex, Claude
+Code, and similar tools. It preserves recoverable state and verified outcomes;
+it does not take autonomous control of the loop.
 
 The harness should provide:
 
@@ -47,18 +47,18 @@ Use Codex's current durable surfaces:
 Codex-facing setup should keep these commands working:
 
 ```bash
-corepack pnpm promptlane setup --profile coach --register-mcp --open-web
-corepack pnpm promptlane doctor codex
+corepack pnpm looprelay setup --profile coach --register-mcp --open-web
+corepack pnpm looprelay doctor codex
 corepack pnpm smoke:agent-setup
 corepack pnpm dogfood:first-coach-loop
 corepack pnpm dogfood:loop-memory-approval
-corepack pnpm promptlane loop status
-corepack pnpm promptlane loop collect
-corepack pnpm promptlane loop brief
-corepack pnpm promptlane loop outcome --status passed --summary "Focused checks passed." --evidence-ref "test:focused"
-corepack pnpm promptlane loop memory-candidate
-corepack pnpm promptlane loop memory-candidate --worktree <safe-worktree-label>
-corepack pnpm promptlane loop memory-approve --worktree <safe-worktree-label> --approved-by user
+corepack pnpm looprelay loop status
+corepack pnpm looprelay loop collect
+corepack pnpm looprelay loop brief
+corepack pnpm looprelay loop outcome --status passed --summary "Focused checks passed." --evidence-ref "test:focused"
+corepack pnpm looprelay loop memory-candidate
+corepack pnpm looprelay loop memory-candidate --worktree <safe-worktree-label>
+corepack pnpm looprelay loop memory-approve --worktree <safe-worktree-label> --approved-by user
 ```
 
 Acceptance criteria:
@@ -72,20 +72,20 @@ Acceptance criteria:
   so Codex and Claude Code can guide real fixture preparation without reading
   outcome summaries or evidence refs.
 - `get_paired_benchmark_candidates` returns separate body-free baseline and
-  attributed PromptLane candidate groups without snapshot ids or outcome
+  attributed LoopRelay candidate groups without snapshot ids or outcome
   content; agents must ask the operator to review task equivalence before
   preparing a pair.
 - Pending latest loop status points to exact-id outcome recording only after a
   verifiable checkpoint; intermediate hook snapshots are not a required
   outcome backlog.
 - Latest loop status exposes only opaque prompt ids for attribution, and agents
-  must omit `used_improvement_prompt_ids` unless a PromptLane improvement was
+  must omit `used_improvement_prompt_ids` unless a LoopRelay improvement was
   actually used.
 - Stop snapshots include only prompts from the current hook `session_id`; stale
   prompts from another session in the same cwd are not reused.
 - Worktree awareness is derived from git-safe labels and existing snapshots.
 - No feature reads private Codex databases or raw transcript stores.
-- Any scheduled collection is opt-in and calls explicit `promptlane` commands.
+- Any scheduled collection is opt-in and calls explicit `looprelay` commands.
 
 ## Claude Code Surfaces
 
@@ -93,7 +93,7 @@ Use Claude Code's plugin-oriented surfaces:
 
 - plugin skills and command markdown files
 - hooks for capture and lifecycle metadata
-- MCP server config for PromptLane tools
+- MCP server config for LoopRelay tools
 - optional monitors only when they are explicit and local
 - `CLAUDE.md` for Claude-specific caveats, with `AGENTS.md` as the shared rule
   file
@@ -101,7 +101,7 @@ Use Claude Code's plugin-oriented surfaces:
 Claude-facing setup should keep these commands and checks working:
 
 ```bash
-corepack pnpm promptlane doctor claude-code
+corepack pnpm looprelay doctor claude-code
 corepack pnpm smoke:agent-setup
 corepack pnpm dogfood:first-coach-loop
 corepack pnpm dogfood:loop-memory-approval
@@ -113,9 +113,8 @@ corepack pnpm smoke:hooks
 
 Acceptance criteria:
 
-- `/promptlane:*` remains the supported slash namespace during the migration.
-- No alternate Claude Code slash namespace is added until a dedicated namespace
-  migration plan is implemented.
+- `/looprelay:*` is the only supported slash namespace.
+- No alternate Claude Code slash namespace is shipped.
 - MCP write flows return metadata-only responses.
 - User-visible or model-visible hook output does not include raw prompt bodies,
   compact summaries, transcripts, tokens, or raw local paths.
@@ -124,8 +123,7 @@ Acceptance criteria:
 
 ## MCP Tool Contract
 
-PromptLane MCP tools are an agent-readable local API for prompt improvement and
-loop-aware continuation.
+LoopRelay MCP tools are an agent-readable local API for continuity and evidence.
 
 Required properties:
 
@@ -145,8 +143,7 @@ Required properties:
 - return explicit unavailable/setup guidance instead of transport-level crashes
 - avoid raw prompt bodies, compact summaries, transcripts, raw local paths,
   secret-looking tokens, and provider credentials
-- keep old `promptlane` tool/server compatibility during the PromptLane
-  compatibility window
+- use only the canonical `looprelay` tool and server identity
 
 Write-capable tools must require explicit user-approved arguments when they
 affect local state. Instruction-file writes require an explicit apply gate.
@@ -211,7 +208,7 @@ corepack pnpm e2e:browser
 corepack pnpm smoke:release
 corepack pnpm smoke:package-install
 corepack pnpm evidence:quality -- --require-complete
-corepack pnpm promptlane quality-evidence --require-complete
+corepack pnpm looprelay quality-evidence --require-complete
 git diff --check
 ```
 

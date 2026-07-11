@@ -56,7 +56,7 @@ export function buildSetupChecks({
         ? `${lastIngest.ok ? "last delivery succeeded" : "last delivery failed"} ${
             lastIngest.status ?? ""
           }`.trim()
-        : "Run promptlane setup --profile coach, then send one Codex or Claude Code prompt.",
+        : "Run looprelay setup --profile coach, then send one Codex or Claude Code prompt.",
     },
     {
       label: "First prompt stored",

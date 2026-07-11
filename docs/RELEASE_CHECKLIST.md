@@ -7,7 +7,7 @@ Use this checklist before publishing a stable public release or npm package.
 - [ ] README describes install, init, server, hook install, doctor, uninstall, and delete flows.
 - [ ] README states the default storage path.
 - [ ] README states that local rule-based analysis preview is implemented.
-- [ ] README states that PromptLane improvement drafts are copy-based and do not auto-type, replace, or resubmit prompts into Claude Code or Codex.
+- [ ] README states that LoopRelay improvement drafts are copy-based and do not auto-type, replace, or resubmit prompts into Claude Code or Codex.
 - [ ] Prompt Rewrite Guard docs state that `block-and-copy` is opt-in and requires manual paste/enter.
 - [ ] README states that transcript import is CLI-centered and has no web upload UI.
 - [ ] README states that browser export is anonymized-only and raw export is not implemented.
@@ -31,15 +31,15 @@ Use this checklist before publishing a stable public release or npm package.
 - [ ] `corepack pnpm smoke:release`
 - [ ] `corepack pnpm smoke:package-install`
 - [ ] `corepack pnpm evidence:quality -- --require-complete`
-- [ ] `corepack pnpm promptlane quality-evidence --require-complete`
-- [ ] `corepack pnpm promptlane quality-evidence --runtime-tool codex --require-runtime-ready`
+- [ ] `corepack pnpm looprelay quality-evidence --require-complete`
+- [ ] `corepack pnpm looprelay quality-evidence --runtime-tool codex --require-runtime-ready`
 - [ ] Create or refresh annotated tag `v1.0.0` before `corepack pnpm npm-publish:preflight`.
 - [ ] Push the annotated tag with `git push origin v1.0.0 --force` before `corepack pnpm npm-publish:preflight`.
 - [ ] `corepack pnpm npm-publish:preflight`
 - [ ] `git diff --check`
 
-Before `promptlane@1.0.0` is published, the tag may be refreshed after the full
-local gate confirms the intended release commit. After `promptlane@1.0.0` is
+Before `looprelay@1.0.0` is published, the tag may be refreshed after the full
+local gate confirms the intended release commit. After `looprelay@1.0.0` is
 published, do not retarget `v1.0.0`; bump the package version and create a new
 tag.
 
@@ -60,7 +60,7 @@ execution banners around stdout.
 
 Confirm `corepack pnpm pack:dry-run` includes:
 
-- [ ] built CLI files under `dist/cli` (including `pl-claude.js`, `pl-codex.js`)
+- [ ] built CLI files under `dist/cli` (including `lr-claude.js`, `lr-codex.js`)
 - [ ] built server files under `dist/server`
 - [ ] built web assets under `dist/web`
 - [ ] `README.md`, `README.ko.md`
@@ -74,9 +74,9 @@ Confirm `corepack pnpm pack:dry-run` includes:
 - [ ] `docs/IMPLEMENTATION_PLAN.md`
 - [ ] `docs/ADAPTERS.md`
 - [ ] `docs/PLUGINS.md`
-- [ ] `docs/PROMPTLANE.md`
-- [ ] `docs/PROMPTLANE-RUNTIME-HISTORY.md`
-- [ ] `docs/PROMPTLANE-LEGACY-SURFACES.md`
+- [ ] `docs/LOOPRELAY.md`
+- [ ] `docs/LOOPRELAY-RUNTIME-HISTORY.md`
+- [ ] `docs/LOOPRELAY-RUNTIME-SURFACES.md`
 - [ ] `docs/LOOP-SNAPSHOT-SCHEMA.md`
 - [ ] `docs/AGENT-HARNESS.md`
 - [ ] `docs/INSTRUCTION-FILES.md`
@@ -97,15 +97,15 @@ Confirm `corepack pnpm pack:dry-run` includes:
 - [ ] `docs/UI_PATROL_EVIDENCE_2026-07-06.md`
 - [ ] `docs/UI_PATROL_SCHEDULE_READINESS_2026-07-06.md`
 - [ ] `docs/CODEX_CLAUDE_LOCAL_INTEGRATION_EVIDENCE_2026-07-06.md`
-- [ ] `docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-plan.md`
-- [ ] `docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-issue-slices.md`
-- [ ] `docs/superpowers/plans/2026-07-04-promptlane-claude-dual-namespace-decision.md`
-- [ ] `docs/superpowers/plans/2026-07-04-promptlane-mcp-server-name-decision.md`
-- [ ] `docs/superpowers/plans/2026-07-04-promptlane-deprecation-readiness.md`
-- [ ] `docs/superpowers/plans/2026-07-04-promptlane-next-runtime-value-slice.md`
-- [ ] `docs/superpowers/plans/2026-07-04-promptlane-runtime-id-inventory.json`
-- [ ] `docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md`
-- [ ] `docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md`
+- [ ] `docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-plan.md`
+- [ ] `docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-issue-slices.md`
+- [ ] `docs/superpowers/plans/2026-07-04-looprelay-claude-dual-namespace-decision.md`
+- [ ] `docs/superpowers/plans/2026-07-04-looprelay-mcp-server-name-decision.md`
+- [ ] `docs/superpowers/plans/2026-07-04-looprelay-deprecation-readiness.md`
+- [ ] `docs/superpowers/plans/2026-07-04-looprelay-next-runtime-value-slice.md`
+- [ ] `docs/superpowers/plans/2026-07-04-looprelay-runtime-id-inventory.json`
+- [ ] `docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md`
+- [ ] `docs/superpowers/specs/2026-07-05-looprelay-repositioning-design.md`
 - [ ] `.claude-plugin/` and `commands/` directories
 - [ ] `plugins/` and `integrations/` directories
 - [ ] `scripts/benchmark.mjs`
@@ -164,11 +164,11 @@ Confirm `corepack pnpm pack:dry-run` excludes:
 - [ ] Project list and policy toggle work in the web UI without exposing raw project paths.
 - [ ] `capture_disabled` project policy blocks new ingest for that project.
 - [ ] `capture_disabled` project policy skips matching import candidates for known projects.
-- [ ] `promptlane import --dry-run --save-job` stores a raw-free job summary.
-- [ ] `promptlane import --execute` imports prompt candidates and supports resume/idempotency.
+- [ ] `looprelay import --dry-run --save-job` stores a raw-free job summary.
+- [ ] `looprelay import --execute` imports prompt candidates and supports resume/idempotency.
 - [ ] Imported-only filter works in CLI/API list flows.
-- [ ] Prompt detail shows local analysis and a PromptLane improvement draft.
-- [ ] PromptLane improvement drafts can be copied and saved without overwriting the original prompt.
+- [ ] Prompt detail shows local analysis and a LoopRelay improvement draft.
+- [ ] LoopRelay improvement drafts can be copied and saved without overwriting the original prompt.
 - [ ] Export preview and execute work from both CLI and web UI.
 - [ ] Benchmark v1 passes with `privacy_leak_count` equal to 0.
 - [ ] Browser E2E passes on desktop and mobile viewport checks.
@@ -184,22 +184,22 @@ Confirm `corepack pnpm pack:dry-run` excludes:
 
 `corepack pnpm smoke:release` automates the core local smoke path below with an isolated temporary data directory and HOME.
 
-- [ ] `promptlane init`
-- [ ] `promptlane server`
-- [ ] `promptlane install-hook claude-code --dry-run`
-- [ ] `promptlane install-hook codex --dry-run`
+- [ ] `looprelay init`
+- [ ] `looprelay server`
+- [ ] `looprelay install-hook claude-code --dry-run`
+- [ ] `looprelay install-hook codex --dry-run`
 - [ ] Capture one fixture-like Claude Code prompt.
 - [ ] Capture one fixture-like Codex prompt.
 - [ ] Confirm both prompts appear in CLI.
 - [ ] Confirm both prompts appear in the web UI.
-- [ ] Confirm PromptLane improvement draft copy/save works in the web UI.
+- [ ] Confirm LoopRelay improvement draft copy/save works in the web UI.
 - [ ] Confirm anonymized export preview and execution work.
 - [ ] Confirm Benchmark v1 passes.
 - [ ] Delete a prompt and confirm it disappears from CLI and web UI.
 
 ## Deferred For Broader Platform Claims
 
-PromptLane 1.0.0 can publish from the local-first release gate above. Do not make broad platform claims before platform-specific smoke is complete:
+LoopRelay 1.0.0 can publish from the local-first release gate above. Do not make broad platform claims before platform-specific smoke is complete:
 
 - [ ] `better-sqlite3` install/open/WAL/FTS5 smoke on each claimed release platform.
 - [ ] Hook install, doctor, MCP registration, and browser smoke on each claimed release platform.

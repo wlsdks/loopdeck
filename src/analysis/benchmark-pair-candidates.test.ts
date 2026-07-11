@@ -4,7 +4,7 @@ import { createBenchmarkPairCandidateReport } from "./benchmark-pair-candidates.
 import type { LoopSnapshot } from "../loop/types.js";
 
 describe("createBenchmarkPairCandidateReport", () => {
-  it("separates safe baseline and explicitly attributed PromptLane candidates", () => {
+  it("separates safe baseline and explicitly attributed LoopRelay candidates", () => {
     const report = createBenchmarkPairCandidateReport([
       snapshot({
         id: "loop_treatment",
@@ -22,7 +22,7 @@ describe("createBenchmarkPairCandidateReport", () => {
     expect(report).toEqual({
       status: "ready",
       baseline_candidate_count: 2,
-      promptlane_candidate_count: 1,
+      looprelay_candidate_count: 1,
       baseline_candidates: [
         {
           prompt_id: "prmt_base_one",
@@ -37,7 +37,7 @@ describe("createBenchmarkPairCandidateReport", () => {
           evidence_ref_count: 1,
         },
       ],
-      promptlane_candidates: [
+      looprelay_candidates: [
         {
           prompt_id: "prmt_lane",
           outcome_status: "passed",
@@ -49,14 +49,14 @@ describe("createBenchmarkPairCandidateReport", () => {
       diagnostics: {
         completed_snapshots: 2,
         baseline_snapshots: 1,
-        promptlane_snapshots: 1,
+        looprelay_snapshots: 1,
         evidence_complete_snapshots: 2,
         safe_snapshots: 2,
       },
-      has_more: { baseline: false, promptlane: false },
+      has_more: { baseline: false, looprelay: false },
       scope: { scanned_snapshots: 2, snapshot_limit: 100 },
       next_action:
-        "Review one baseline and one PromptLane candidate for task equivalence, then run promptlane benchmark prepare-pair with explicit consent.",
+        "Review one baseline and one LoopRelay candidate for task equivalence, then run looprelay benchmark prepare-pair with explicit consent.",
       privacy: {
         local_only: true,
         external_calls: false,
@@ -79,9 +79,9 @@ describe("createBenchmarkPairCandidateReport", () => {
     ).toMatchObject({
       status: "needs_baseline",
       baseline_candidate_count: 0,
-      promptlane_candidate_count: 1,
+      looprelay_candidate_count: 1,
       next_action:
-        "Record a comparable completed loop without using a PromptLane improvement, then rerun pair-candidates.",
+        "Record a comparable completed loop without using a LoopRelay improvement, then rerun pair-candidates.",
     });
 
     expect(
@@ -89,11 +89,11 @@ describe("createBenchmarkPairCandidateReport", () => {
         snapshot({ id: "loop_base", usedPromptIds: [] }),
       ]),
     ).toMatchObject({
-      status: "needs_promptlane",
+      status: "needs_looprelay",
       baseline_candidate_count: 1,
-      promptlane_candidate_count: 0,
+      looprelay_candidate_count: 0,
       next_action:
-        "Use a PromptLane improvement in a comparable loop, explicitly attribute it when recording the outcome, then rerun pair-candidates.",
+        "Use a LoopRelay improvement in a comparable loop, explicitly attribute it when recording the outcome, then rerun pair-candidates.",
     });
   });
 
@@ -109,7 +109,7 @@ describe("createBenchmarkPairCandidateReport", () => {
     ).toMatchObject({
       status: "incomplete_outcome_evidence",
       baseline_candidate_count: 0,
-      promptlane_candidate_count: 0,
+      looprelay_candidate_count: 0,
     });
 
     const unsafe = createBenchmarkPairCandidateReport([
@@ -124,7 +124,7 @@ describe("createBenchmarkPairCandidateReport", () => {
       status: "unsafe_outcome_evidence",
       excluded_unsafe_candidates: 1,
       baseline_candidate_count: 0,
-      promptlane_candidate_count: 0,
+      looprelay_candidate_count: 0,
     });
     expect(JSON.stringify(unsafe)).not.toContain("/Users/example");
   });
@@ -149,10 +149,10 @@ describe("createBenchmarkPairCandidateReport", () => {
     expect(report).toMatchObject({
       status: "ready",
       baseline_candidate_count: 2,
-      promptlane_candidate_count: 1,
+      looprelay_candidate_count: 1,
       baseline_candidates: [{ prompt_id: "prmt_one" }],
-      promptlane_candidates: [{ prompt_id: "prmt_three" }],
-      has_more: { baseline: true, promptlane: false },
+      looprelay_candidates: [{ prompt_id: "prmt_three" }],
+      has_more: { baseline: true, looprelay: false },
     });
   });
 });

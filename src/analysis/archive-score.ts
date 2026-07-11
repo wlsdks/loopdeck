@@ -304,10 +304,10 @@ function nextEffectivenessAction(summary: ArchiveEffectivenessSummary): string {
     return "Review mixed outcomes before treating prompt improvements as proven.";
   }
   if (summary.measured_prompts === 0) {
-    return "Record loop outcomes and identify which PromptLane improvements were actually used.";
+    return "Record loop outcomes and identify which LoopRelay improvements were actually used.";
   }
   if (summary.calibration.attributed_outcomes === 0) {
-    return "Record which PromptLane improvements were used before claiming effectiveness.";
+    return "Record which LoopRelay improvements were used before claiming effectiveness.";
   }
   if (summary.unmeasured_prompts > 0) {
     return "Link recent prompts to loop outcomes before claiming archive-wide effectiveness.";

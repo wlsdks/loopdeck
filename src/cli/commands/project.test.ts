@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { normalizeClaudeCodePayload } from "../../adapters/claude-code.js";
-import { initializePromptLane } from "../../config/config.js";
+import { initializeLoopRelay } from "../../config/config.js";
 import { redactPrompt } from "../../redaction/redact.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import {
@@ -42,7 +42,7 @@ describe("project CLI command", () => {
 
   it("hints when no projects have been captured yet", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const text = listProjectsForCli({ dataDir });
     expect(text).toContain("No projects captured yet.");
@@ -154,7 +154,7 @@ describe("project CLI command", () => {
 });
 
 async function seedTwoProjects(dataDir: string): Promise<void> {
-  const init = initializePromptLane({ dataDir });
+  const init = initializeLoopRelay({ dataDir });
   const storage = createSqlitePromptStorage({
     dataDir,
     hmacSecret: init.hookAuth.web_session_secret,
@@ -184,7 +184,7 @@ async function seedTwoProjects(dataDir: string): Promise<void> {
 }
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-project-cli-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-project-cli-${randomUUID()}`);
   mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;

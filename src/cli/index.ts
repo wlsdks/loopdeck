@@ -34,9 +34,9 @@ export function createProgram(): Command {
   const program = new Command();
 
   program
-    .name("promptlane")
+    .name("looprelay")
     .description(
-      "Local-first prompt improvement workspace for Codex and Claude Code.",
+      "Local continuity and evidence for Codex and Claude Code loops.",
     )
     .version(VERSION);
 

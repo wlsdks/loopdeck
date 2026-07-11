@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const cliPath = join(repoRoot, "dist", "cli", "index.js");
-const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-hook-binary-smoke-"));
+const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-hook-binary-smoke-"));
 const binDir = join(tempRoot, "bin");
 const settingsPath = join(tempRoot, "claude-settings.json");
 const hooksPath = join(tempRoot, "codex-hooks.json");
@@ -24,7 +24,7 @@ const payload = JSON.stringify({
   session_id: "hook-binary-smoke",
   cwd: join(tempRoot, "project"),
   prompt:
-    "PROMPTLANE_SMOKE_SECRET sk-proj-hooksmoke1234567890 should never be printed.",
+    "LOOPRELAY_SMOKE_SECRET sk-proj-hooksmoke1234567890 should never be printed.",
 });
 
 try {
@@ -34,9 +34,9 @@ try {
   );
   writeFileSync(settingsPath, JSON.stringify({ hooks: {} }));
   writeFileSync(hooksPath, JSON.stringify({ hooks: {} }));
-  symlinkCli("promptlane");
+  symlinkCli("looprelay");
 
-  for (const binary of ["promptlane"]) {
+  for (const binary of ["looprelay"]) {
     step(`${binary} hook status`);
     runBinary(binary, [
       "hook",
@@ -96,8 +96,8 @@ function runBinary(binary, args, options = {}) {
       `${binary} ${args.join(" ")} exited ${result.status}\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`,
     );
   }
-  assertNotIncludes(result.stdout, "PROMPTLANE_SMOKE_SECRET");
-  assertNotIncludes(result.stderr, "PROMPTLANE_SMOKE_SECRET");
+  assertNotIncludes(result.stdout, "LOOPRELAY_SMOKE_SECRET");
+  assertNotIncludes(result.stderr, "LOOPRELAY_SMOKE_SECRET");
   assertNotIncludes(result.stdout, "sk-proj");
   assertNotIncludes(result.stderr, "sk-proj");
   return result;

@@ -1,4 +1,4 @@
-# PromptLane Goal Audit - 2026-07-05
+# LoopRelay Goal Audit - 2026-07-05
 
 ## Purpose
 
@@ -7,7 +7,7 @@ state. It is not a release note and it does not mark the goal complete.
 
 Goal under audit:
 
-- evolve `promptlane` toward PromptLane, a local-first prompt improvement
+- evolve `looprelay` toward LoopRelay, a local-first prompt improvement
   workspace with loop-aware continuation
 - finish strong product planning before broad development
 - keep Codex and Claude Code as first-class integration surfaces
@@ -20,9 +20,9 @@ Goal under audit:
 
 Verified repository state:
 
-- GitHub repository: `wlsdks/promptlane`
+- GitHub repository: `wlsdks/looprelay`
 - Runtime compatibility IDs: package, CLI, hook command, Claude Code slash
-  namespace, and canonical MCP server remain `promptlane`
+  namespace, and canonical MCP server remain `looprelay`
 - Initial audit baseline commit: `2f99c10 docs: close codex claude dogfood log`
 - Later entries below extend that baseline with merged PR evidence instead of
   trying to keep this document's header commit pointer current on every merge.
@@ -36,7 +36,7 @@ Verified CI and operational evidence:
 - PR #342 added this goal audit and passed `test (22)` and `test (24)` before
   merge.
 - PR #343 added an operator-approved native-dialog dogfood harness guarded by
-  `PROMPTLANE_NATIVE_DIALOG_APPROVED=1` and passed `test (22)` and `test
+  `LOOPRELAY_NATIVE_DIALOG_APPROVED=1` and passed `test (22)` and `test
   (24)` before merge.
 - PR #344 refreshed this audit after the native-dialog dogfood harness and
   passed `test (22)` and `test (24)` before merge.
@@ -46,14 +46,14 @@ Verified CI and operational evidence:
 - PR #346 moved pnpm build-script approvals from `package.json#pnpm` to
   `pnpm-workspace.yaml`, keeping `better-sqlite3` and `esbuild` as the only
   approved build dependencies; the PR passed `test (22)` and `test (24)`.
-- PR #347 through #349 refreshed the PromptLane audit, closed stale source
+- PR #347 through #349 refreshed the LoopRelay audit, closed stale source
   hygiene work, and aligned package publishing docs after the hygiene work.
 - PR #350 through #355 aligned MCP, CLI, Claude command, infrastructure,
-  hook, and docs copy with the PromptLane product surface while preserving
-  `promptlane` command and namespace compatibility.
+  hook, and docs copy with the LoopRelay product surface while preserving
+  `looprelay` command and namespace compatibility.
 - PR #356 corrected the Codex plugin hook lifecycle marker mapping.
 - PR #357 made Codex plugin hooks setup-driven by removing active bundled
-  plugin hooks, so explicit `promptlane setup` remains the hook installation
+  plugin hooks, so explicit `looprelay setup` remains the hook installation
   path and setup-installed user hooks are not duplicated by plugin discovery.
 - PR #358 refreshed the reuse-copy audit after the local manual-copy fallback
   landed, so the original clipboard failure is no longer tracked as an open
@@ -74,7 +74,7 @@ Verified CI and operational evidence:
 - PR #364 moved loop read routes onto the shared storage capability guard, so
   missing loop snapshot, compact boundary, memory, or merge-decision storage
   fails with one raw-free local configuration problem instead of an empty
-  PromptLane status.
+  LoopRelay status.
 - PR #365 clarified the saved-draft clipboard fallback message and verified the
   real Codex in-app Browser clipboard failure path without exposing the fake
   token or temporary local path used in the reuse pass.
@@ -87,7 +87,7 @@ Verified CI and operational evidence:
 - PR #368 disabled duplicate save for reopened saved drafts with `Already
   saved` copy and browser E2E coverage, so reopening a stored draft does not
   create another saved-draft row.
-- PR #369 added a docs drift guard so the PromptLane goal audit and next backlog
+- PR #369 added a docs drift guard so the LoopRelay goal audit and next backlog
   keep citing the saved-draft reuse work from PR #366 through PR #368.
 - PR #370 closed the stale reuse audit next slice and now requires fresh
   user-flow evidence before opening more reuse-flow work.
@@ -113,20 +113,20 @@ Verified CI and operational evidence:
   MCP coach-loop, first-loop, and loop-memory approval commands.
 - PR #420 closed the Codex and Claude Code dogfood evidence log after CI
   `test (22)` and `test (24)` passed and branch pruning was confirmed.
-- PR #512 clarified `get_promptlane_status` setup-needed and empty-archive
+- PR #512 clarified `get_looprelay_status` setup-needed and empty-archive
   next actions so plain Codex and Claude Code users see the explicit
-  `promptlane setup --profile coach --register-mcp` path, then one real prompt,
+  `looprelay setup --profile coach --register-mcp` path, then one real prompt,
   then `coach_prompt` or status recheck.
-- PR #513 clarified `get_promptlane_loop_status` setup-needed guidance so loop
+- PR #513 clarified `get_looprelay_loop_status` setup-needed guidance so loop
   MCP users get the same explicit setup/MCP registration command before
-  `promptlane loop collect`.
+  `looprelay loop collect`.
 - Local `corepack pnpm ui-patrol` on current main after PR #410 passed and
   captured 9 png files: archive, detail, dashboard, coach, projects, MCP,
   exports, settings desktop, and settings mobile.
 - General test CI and scheduled UI patrol workflows were removed by maintainer
   decision. Operational browser proof now uses local browser evidence:
   `corepack pnpm ui-patrol` and `corepack pnpm dogfood:web-user-flow`.
-- `corepack pnpm --silent evidence:quality` reports `promptlane_95_quality`
+- `corepack pnpm --silent evidence:quality` reports `looprelay_95_quality`
   as `complete`, including `local_ui_patrol_evidence`,
   `manual_ui_patrol_artifact_evidence`, `codex_claude_local_integration_evidence`,
   `native_dialog_preflight`, and completed `native_dialog_approved_dogfood`
@@ -147,15 +147,15 @@ Verified CI and operational evidence:
 
 | Requirement | Current state | Evidence | Status |
 | --- | --- | --- | --- |
-| Product name and positioning | PromptLane is the product direction while `promptlane` remains the compatibility runtime ID. PromptLane is legacy terminology and a compatibility CLI alias. | `docs/PROMPTLANE.md`, `docs/PROMPTLANE.md`, `docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md`, repo `wlsdks/promptlane` | Satisfied for current compatibility window |
-| Existing feature portfolio decision | Keep/improve/defer/reject decisions are documented. | Feature portfolio matrix in `docs/PROMPTLANE.md` and the PromptLane repositioning spec | Satisfied for current slices |
+| Product name and positioning | LoopRelay is the product direction while `looprelay` remains the compatibility runtime ID. LoopRelay is legacy terminology and a compatibility CLI alias. | `docs/LOOPRELAY.md`, `docs/LOOPRELAY.md`, `docs/superpowers/specs/2026-07-05-looprelay-repositioning-design.md`, repo `wlsdks/looprelay` | Satisfied for current compatibility window |
+| Existing feature portfolio decision | Keep/improve/defer/reject decisions are documented. | Feature portfolio matrix in `docs/LOOPRELAY.md` and the LoopRelay repositioning spec | Satisfied for current slices |
 | Codex and Claude Code first-class integration | Hook, MCP, instruction, plugin, smoke, and dogfood paths are documented and verified through repeatable local-only evidence. `smoke:agent-setup` verifies setup/doctor happy paths with isolated fake provider binaries. Native-dialog preflight and approved answered dogfood are recorded as local evidence without making automated tests open OS dialogs. | `docs/AGENT-HARNESS.md`, `docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md`, `docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md`, `AGENTS.md`, `CLAUDE.md`, MCP smoke scripts, `scripts/agent-setup-smoke.mjs`, `scripts/mcp-native-dialog-approved.mjs`, `native_dialog_approved_dogfood` | Satisfied for current local integration evidence |
 | Loop data model | Loop snapshot and memory schema contracts exist and runtime slices have landed. | `docs/LOOP-SNAPSHOT-SCHEMA.md`, loop CLI/MCP/web implementation, status and selected worktree slices | Satisfied for MVP loop metadata model |
-| Privacy/local-first boundary | Prompt bodies stay in redacted archive; loop surfaces are raw-free; write paths are explicit. Approved loop memories now require safe evidence refs at the storage boundary. | `docs/PROMPTLANE.md`, storage/server/MCP tests, route capability guard cleanup, MCP smoke audits, PR #405 | Satisfied for implemented paths |
+| Privacy/local-first boundary | Prompt bodies stay in redacted archive; loop surfaces are raw-free; write paths are explicit. Approved loop memories now require safe evidence refs at the storage boundary. | `docs/LOOPRELAY.md`, storage/server/MCP tests, route capability guard cleanup, MCP smoke audits, PR #405 | Satisfied for implemented paths |
 | AGENTS.md/CLAUDE.md/harness docs | Cross-agent and Claude-specific instruction boundaries are separated. | `AGENTS.md`, `CLAUDE.md`, `docs/INSTRUCTION-FILES.md`, `docs/AGENT-HARNESS.md` | Satisfied for current compatibility window |
 | Technical risk handling | Storage capability guard work, MCP setup guidance, loop-memory evidence guards, agent setup smoke, local UI patrol evidence, dependency security cleanup, pnpm build-approval settings, package dry-run lifecycle stabilization, release/README checklist drift guards, Codex hook de-duplication, reuse fallback E2E plus in-app Browser coverage, and audit drift guards reduced known reliability gaps. | ADR 0002, PR #340, PR #341, PR #345, PR #346, PR #357, PR #359, PR #361, PR #362, PR #363, PR #364, PR #365, PR #366, PR #367, PR #368, PR #369, PR #370, PR #371, PR #403, PR #405, PR #407, PR #408, PR #512, PR #513, `docs/NEXT_BACKLOG.md` | Active and improving |
 | TDD implementation slices | Recent slices used focused RED tests, local gates, and PR merges. Full gates are reserved for release or broad shared-boundary changes. | PR #340 through #408, PR #512, PR #513, focused MCP tests, `tasks/todo.md` | Satisfied for recent slices |
-| PromptLane MVP reliability slices | The current product-contract reliability slices for storage capability, MCP setup guidance, evidence-first memory, focused Codex/Claude setup smoke, and first-step MCP status guidance have landed. | PR #403, PR #405, PR #407, PR #408, PR #512, PR #513, `docs/NEXT_BACKLOG.md`, `tasks/todo.md` | Satisfied for current MVP reliability scope |
+| LoopRelay MVP reliability slices | The current product-contract reliability slices for storage capability, MCP setup guidance, evidence-first memory, focused Codex/Claude setup smoke, and first-step MCP status guidance have landed. | PR #403, PR #405, PR #407, PR #408, PR #512, PR #513, `docs/NEXT_BACKLOG.md`, `tasks/todo.md` | Satisfied for current MVP reliability scope |
 | Reuse copy fallback | Clipboard-write failure now opens a local manual-copy fallback instead of leaving the user at a dead end, including the real Codex in-app Browser clipboard failure mode. | `src/web/src/App.tsx`, `src/web/src/prompt-detail-view.test.ts`, `scripts/browser-e2e.mjs`, `corepack pnpm e2e:browser`, fresh Codex in-app Browser pass | Satisfied for automated and manual in-app Browser coverage |
 | Reuse saved draft workflow | Saved drafts can be reopened as the current coach draft so the operator can reuse the same copy/manual-fallback controls without auto-submitting to an agent; reopened rows show `Saved draft` and disable duplicate saves with `Already saved`. | `src/web/src/saved-draft-improvement.ts`, `src/web/src/improvement-mode-label.ts`, `src/web/src/improvement-save-state.ts`, `src/web/src/prompt-detail-view.tsx`, `scripts/browser-e2e.mjs` | Satisfied for current reuse flow |
 | Local browser operations evidence | Local `corepack pnpm ui-patrol` and `corepack pnpm dogfood:web-user-flow` are the operational browser evidence lanes after workflow removal. `quality-evidence` records `local_ui_patrol_evidence`, `manual_ui_patrol_artifact_evidence`, and `web_user_flow_current_main_evidence`. | local `corepack pnpm ui-patrol` with 9 png files; `docs/UI_PATROL_EVIDENCE_2026-07-06.md`; `docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md`; `corepack pnpm --silent evidence:quality` | Satisfied for current local browser evidence |
@@ -166,7 +166,7 @@ Verified CI and operational evidence:
 
 Do not mark the long-running goal complete yet.
 
-The current codebase has made strong progress toward PromptLane, and
+The current codebase has made strong progress toward LoopRelay, and
 `corepack pnpm --silent evidence:quality` now reports all 9.5 quality axes as
 complete. Do not mark the long-running goal complete from this audit alone:
 the release-sized proof still needs the full local release gate before a final

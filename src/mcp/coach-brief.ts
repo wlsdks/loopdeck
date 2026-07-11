@@ -1,7 +1,7 @@
 import { improvementNextActionRequiresAsk } from "./improvement-next-action.js";
 import type {
   CoachPromptToolResult,
-  GetPromptLaneStatusToolResult,
+  GetLoopRelayStatusToolResult,
   ImprovePromptToolResult,
   ReviewProjectInstructionsToolResult,
   ScorePromptArchiveToolResult,
@@ -9,7 +9,7 @@ import type {
 } from "./score-tool-types.js";
 
 export function createAgentCoachBrief(input: {
-  status: GetPromptLaneStatusToolResult;
+  status: GetLoopRelayStatusToolResult;
   latestScore?: ScorePromptToolResult;
   improvement?: ImprovePromptToolResult;
   archive?: ScorePromptArchiveToolResult;
@@ -17,17 +17,17 @@ export function createAgentCoachBrief(input: {
 }): CoachPromptToolResult["agent_brief"] {
   if (input.status.status !== "ready") {
     return {
-      headline: "PromptLane is not ready yet.",
+      headline: "LoopRelay is not ready yet.",
       summary:
         "No captured prompt archive is available for coaching in this data directory.",
       next_actions: uniqueActions([
-        "Run promptlane start to see the shortest setup -> real prompt -> coach path.",
+        "Run looprelay start to see the shortest setup -> real prompt -> coach path.",
         ...input.status.next_actions,
-        "Run promptlane server if connected tools cannot reach the local service.",
-        "Run promptlane doctor claude-code or promptlane doctor codex if capture still does not work.",
+        "Run looprelay server if connected tools cannot reach the local service.",
+        "Run looprelay doctor claude-code or looprelay doctor codex if capture still does not work.",
       ]),
       suggested_user_response:
-        "I cannot coach the latest prompt yet because promptlane has no ready archive. Run promptlane start, finish the coach setup, then capture one real request first.",
+        "I cannot coach the latest prompt yet because looprelay has no ready archive. Run looprelay start, finish the coach setup, then capture one real request first.",
     };
   }
 

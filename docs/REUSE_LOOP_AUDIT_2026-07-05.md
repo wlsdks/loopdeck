@@ -8,7 +8,7 @@ This audit covers the second user-flow pass from `docs/NEXT_BACKLOG.md`.
 
 ## Environment
 
-- Repository: `/Users/jinan/side-project/prompt-memory`
+- Repository: `/Users/jinan/side-project/looprelay`
 - Branch: `codex/reuse-loop-audit`
 - Browser path: Codex in-app Browser
 - Local server: temporary archive at `http://127.0.0.1:60324`
@@ -23,7 +23,7 @@ evaluation plus screenshot evidence.
 
 ## Path Tested
 
-1. Build and run the local PromptLane web server with a temporary data dir.
+1. Build and run the local LoopRelay web server with a temporary data dir.
 2. Ingest a high-score stored prompt and a weak redaction fixture.
 3. Open the prompt archive in the Codex in-app Browser.
 4. Search for `apply_clarifications`.

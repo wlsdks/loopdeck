@@ -29,7 +29,7 @@ export function problem(
   const sanitizedDetail = sanitizeProblemText(detail);
 
   return new HttpProblem({
-    type: `https://promptlane.local/errors/${toKebabCase(sanitizedTitle)}`,
+    type: `https://looprelay.local/errors/${toKebabCase(sanitizedTitle)}`,
     title: sanitizedTitle,
     status,
     detail: sanitizedDetail,

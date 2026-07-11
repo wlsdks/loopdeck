@@ -62,46 +62,46 @@ export function selectedLoopSnapshotNotFoundMessage(
 }
 
 export function loopBriefNoSnapshotCliMessage(): string {
-  return "No loop snapshot found. Send one Codex or Claude Code prompt, run `promptlane coach` to confirm the first score, then run `promptlane loop collect` before retrying `promptlane loop brief`.";
+  return "No loop snapshot found. Send one Codex or Claude Code prompt, run `looprelay coach` to confirm the first score, then run `looprelay loop collect` before retrying `looprelay loop brief`.";
 }
 
 export function loopBriefNoSnapshotMcpMessage(): string {
-  return "No loop snapshot found. Send one Codex or Claude Code prompt, call coach_prompt or rerun get_promptlane_status to confirm the first score, then run `promptlane loop collect` before retrying prepare_loop_brief.";
+  return "No loop snapshot found. Send one Codex or Claude Code prompt, call coach_prompt or rerun get_looprelay_status to confirm the first score, then run `looprelay loop collect` before retrying prepare_loop_brief.";
 }
 
 export function loopOutcomeNoSnapshotMcpMessage(tool: string): string {
-  return `No loop snapshot found. Send one Codex or Claude Code prompt, call coach_prompt or rerun get_promptlane_status to confirm the first score, then run \`promptlane loop collect\` before retrying ${tool}.`;
+  return `No loop snapshot found. Send one Codex or Claude Code prompt, call coach_prompt or rerun get_looprelay_status to confirm the first score, then run \`looprelay loop collect\` before retrying ${tool}.`;
 }
 
 export function loopMemoryNoSnapshotCliMessage(command: string): string {
-  return `No loop snapshot found. Send one Codex or Claude Code prompt, run \`promptlane coach\` to confirm the first score, run \`promptlane loop collect\`, then record a passed loop outcome with safe evidence before retrying \`${command}\`.`;
+  return `No loop snapshot found. Send one Codex or Claude Code prompt, run \`looprelay coach\` to confirm the first score, run \`looprelay loop collect\`, then record a passed loop outcome with safe evidence before retrying \`${command}\`.`;
 }
 
 export function loopMemoryNoSnapshotMcpMessage(tool: string): string {
-  return `No loop snapshot found. Send one Codex or Claude Code prompt, call coach_prompt or rerun get_promptlane_status to confirm the first score, run \`promptlane loop collect\`, then record a passed loop outcome with safe evidence before retrying ${tool}.`;
+  return `No loop snapshot found. Send one Codex or Claude Code prompt, call coach_prompt or rerun get_looprelay_status to confirm the first score, run \`looprelay loop collect\`, then record a passed loop outcome with safe evidence before retrying ${tool}.`;
 }
 
 export function loopInstructionPatchNoMemoryCliMessage(
   command: string,
 ): string {
-  return `No loop memory found. Capture one Codex or Claude Code prompt, confirm the first score, collect a loop snapshot, record a passed outcome with safe evidence, then run \`promptlane loop memory-approve\` before retrying \`${command}\`.`;
+  return `No loop memory found. Capture one Codex or Claude Code prompt, confirm the first score, collect a loop snapshot, record a passed outcome with safe evidence, then run \`looprelay loop memory-approve\` before retrying \`${command}\`.`;
 }
 
 export function loopInstructionPatchNoMemoryMcpMessage(tool: string): string {
-  return `No loop memory found. Capture one Codex or Claude Code prompt, call coach_prompt or rerun get_promptlane_status, collect a loop snapshot, record a passed outcome with safe evidence, then call record_loop_memory before retrying ${tool}.`;
+  return `No loop memory found. Capture one Codex or Claude Code prompt, call coach_prompt or rerun get_looprelay_status, collect a loop snapshot, record a passed outcome with safe evidence, then call record_loop_memory before retrying ${tool}.`;
 }
 
 function selectedLoopSnapshotRecoveryAction(
   selection: LoopSnapshotSelection,
 ): string {
-  const collectCommand = ["promptlane", "loop", "collect"];
+  const collectCommand = ["looprelay", "loop", "collect"];
   if (selection.worktree) {
     collectCommand.push("--worktree", safeSelectionValue(selection.worktree));
   }
   if (selection.branch) {
     collectCommand.push("--branch", safeSelectionValue(selection.branch));
   }
-  return `Run \`${collectCommand.map(quoteForShell).join(" ")}\` from that project, or retry \`promptlane loop brief\` with fewer filters.`;
+  return `Run \`${collectCommand.map(quoteForShell).join(" ")}\` from that project, or retry \`looprelay loop brief\` with fewer filters.`;
 }
 
 function safeSelectionValue(value: string): string {

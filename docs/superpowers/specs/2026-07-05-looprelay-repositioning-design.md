@@ -1,4 +1,4 @@
-# PromptLane Repositioning Design
+# LoopRelay Repositioning Design
 
 > **For agentic workers:** This is a product and migration design spec. Do not
 > rename repositories, npm packages, CLI binaries, plugin manifests, slash
@@ -7,15 +7,15 @@
 
 ## Status
 
-Drafted on 2026-07-05 after user review rejected `PromptLane` and `PromptLane`
+Drafted on 2026-07-05 after user review rejected `LoopRelay` and `LoopRelay`
 as primary service names.
 
 Decision summary:
 
-- Product name: PromptLane.
-- PromptLane is rejected as the primary product name.
-- `PromptLane` remains a useful workflow phrase, not the service name.
-- Keep `promptlane` as the npm package, primary CLI, hook command, Claude
+- Product name: LoopRelay.
+- LoopRelay is rejected as the primary product name.
+- `LoopRelay` remains a useful workflow phrase, not the service name.
+- Keep `looprelay` as the npm package, primary CLI, hook command, Claude
   Code slash namespace, and canonical MCP server name until a dedicated
   compatibility migration says otherwise.
 - Reframe loop/worktree/session features as loop-aware continuation for better
@@ -23,7 +23,7 @@ Decision summary:
 
 ## Why This Change Exists
 
-`PromptLane` made the product sound like a dedicated loop-engineering surface.
+`LoopRelay` made the product sound like a dedicated loop-engineering surface.
 That is not the strongest first value. The product starts with prompt
 improvement:
 
@@ -39,13 +39,13 @@ Loop features are still important, but they should support better next prompts:
 - selected worktree/session/branch briefs help the next request be specific
 - approved loop memory can improve future prompts and project instructions
 
-`PromptLane` was also rejected as a product name because it sounds like a
+`LoopRelay` was also rejected as a product name because it sounds like a
 feature label instead of a service. It can remain a workflow name for the
 one-call coaching loop.
 
 ## Product Thesis
 
-PromptLane is a local-first prompt improvement workspace for Codex, Claude
+LoopRelay is a local-first coding-agent continuity and evidence layer for Codex, Claude
 Code, and long-running coding-agent work.
 
 It helps developers write better coding-agent requests by recording prompts
@@ -55,37 +55,37 @@ across longer agent workflows.
 Short description:
 
 ```text
-Local-first prompt improvement workspace for Codex, Claude Code, and long-running coding-agent work.
+Local-first coding-agent continuity and evidence layer for Codex, Claude Code, and long-running coding-agent work.
 ```
 
 Korean description:
 
 ```text
-PromptLane은 Codex와 Claude Code 프롬프트를 로컬에서 기록, 평가, 개선하고 장기 coding-agent 작업의 다음 요청까지 이어주는 prompt improvement workspace입니다.
+LoopRelay은 Codex와 Claude Code 프롬프트를 로컬에서 기록, 평가, 개선하고 장기 coding-agent 작업의 다음 요청까지 이어주는 coding-agent continuity and evidence layer입니다.
 ```
 
 ## Naming Rationale
 
-PromptLane is the recommended name because:
+LoopRelay is the recommended name because:
 
-- it sounds more like a service than `PromptLane`
+- it sounds more like a service than `LoopRelay`
 - it keeps `Prompt` visible, so the product is not mistaken for a generic agent
   platform
 - `Lane` suggests a path from captured prompt to improved request to continued
   agent work
 - it does not imply loop engineering is the only use case
-- npm checks at design time returned not found for `promptlane` and
-  `prompt-lane`
-- repository checks at design time found no `wlsdks/promptlane` or
-  `wlsdks/prompt-lane`; `wlsdks/promptlane` was selected and renamed on
+- npm checks at design time returned not found for `looprelay` and
+  `looprelay`
+- repository checks at design time found no `wlsdks/looprelay` or
+  `wlsdks/looprelay`; `wlsdks/looprelay` was selected and renamed on
   2026-07-05
 
 Names rejected during this pass:
 
 | Name        | Decision               | Reason                                                                        |
 | ----------- | ---------------------- | ----------------------------------------------------------------------------- |
-| PromptLane  | Reject                 | Too loop-engineering-first for a prompt improvement product                   |
-| PromptLane  | Reject as product name | Clear but too descriptive; keep as workflow phrase                            |
+| LoopRelay  | Reject                 | Too loop-engineering-first for a prompt improvement product                   |
+| LoopRelay  | Reject as product name | Clear but too descriptive; keep as workflow phrase                            |
 | PromptCraft | Reject                 | Crowded ecosystem usage and brand ambiguity                                   |
 | PromptDesk  | Reject                 | Existing product/package usage and weaker fit                                 |
 | PromptPilot | Reject                 | Existing package/project usage and agent-pilot implication                    |
@@ -95,9 +95,9 @@ Names rejected during this pass:
 
 ## Product Model
 
-PromptLane has four layers. The order matters in README, docs, and onboarding.
+LoopRelay has four layers. The order matters in README, docs, and onboarding.
 
-### 1. Prompt Improvement Core
+### 1. Loop Continuity Core
 
 This is the first-run value.
 
@@ -121,7 +121,7 @@ Boundaries:
 
 ### 2. Codex And Claude Code Integration
 
-PromptLane should feel native to the tools users already run.
+LoopRelay should feel native to the tools users already run.
 
 Capabilities:
 
@@ -136,7 +136,7 @@ Capabilities:
 Rule:
 
 Codex and Claude Code are first-class prompt improvement surfaces, not generic
-agent runtimes owned by PromptLane.
+agent runtimes owned by LoopRelay.
 
 ### 3. Loop-Aware Continuation
 
@@ -182,30 +182,30 @@ Keep these stable until explicit migration slices prove otherwise:
 
 | Surface                     | Current value           | Rule |
 | --------------------------- | ----------------------- | ---- |
-| npm package                 | `promptlane`            | Keep |
-| Primary CLI                 | `promptlane`            | Keep |
-| Claude Code slash namespace | `/promptlane:*`         | Keep |
-| MCP server name             | `promptlane`            | Keep |
-| Hook command                | `promptlane hook ...`   | Keep |
-| Data directory              | `~/.promptlane`         | Keep |
-| Wrapper bins                | `pl-claude`, `pl-codex` | Keep |
+| npm package                 | `looprelay`            | Keep |
+| Primary CLI                 | `looprelay`            | Keep |
+| Claude Code slash namespace | `/looprelay:*`         | Keep |
+| MCP server name             | `looprelay`            | Keep |
+| Hook command                | `looprelay hook ...`   | Keep |
+| Data directory              | `~/.looprelay`         | Keep |
+| Wrapper bins                | `lr-claude`, `lr-codex` | Canonical |
 
 Candidate future surfaces:
 
 | Surface                     | Target                                      | Rule                                                    |
 | --------------------------- | ------------------------------------------- | ------------------------------------------------------- |
-| Product-facing repo         | `wlsdks/promptlane` or `wlsdks/prompt-lane` | Dedicated migration slice                               |
-| Product CLI alias           | `promptlane` or `prompt-lane`               | Do not add until package/bin migration plan is accepted |
-| Existing `promptlane` alias | Remove or hide from docs                    | Decide in a separate alias cleanup slice                |
+| Product-facing repo         | `wlsdks/looprelay` or `wlsdks/looprelay` | Dedicated migration slice                               |
+| Product CLI alias           | `looprelay` or `looprelay`               | Do not add until package/bin migration plan is accepted |
+| Existing `looprelay` alias | Remove or hide from docs                    | Decide in a separate alias cleanup slice                |
 
-Do not use broad search-and-replace. `promptlane` is correct in commands,
+Do not use broad search-and-replace. `looprelay` is correct in commands,
 package names, config paths, MCP server names, and slash namespaces.
 
 ## README Rewrite Requirements
 
 The README first viewport should answer:
 
-1. What is PromptLane?
+1. What is LoopRelay?
 2. Why should a Codex or Claude Code user care?
 3. What is the first command?
 4. What stays local?
@@ -214,9 +214,9 @@ The README first viewport should answer:
 Recommended English opening:
 
 ```md
-# PromptLane
+# LoopRelay
 
-Local-first prompt improvement workspace for Claude Code, Codex, and
+Local-first coding-agent continuity and evidence layer for Claude Code, Codex, and
 long-running coding-agent work.
 
 - Capture coding-agent prompts locally in Markdown and SQLite.
@@ -229,7 +229,7 @@ long-running coding-agent work.
 Recommended Korean opening:
 
 ```md
-# PromptLane
+# LoopRelay
 
 Claude Code, Codex, 장기 coding-agent 작업을 위한 local-first prompt
 improvement workspace.
@@ -255,7 +255,7 @@ README ordering:
 
 ## Metadata Rewrite Requirements
 
-Change product-facing metadata to PromptLane:
+Change product-facing metadata to LoopRelay:
 
 - `package.json#description`
 - `.claude-plugin/plugin.json#description`
@@ -271,41 +271,41 @@ Change product-facing metadata to PromptLane:
 Keep compatibility runtime IDs:
 
 - `package.json#name`
-- `bin.promptlane`
-- `pl-claude`
-- `pl-codex`
+- `bin.looprelay`
+- `lr-claude`
+- `lr-codex`
 - slash command files under `commands/`
-- MCP server name `promptlane`
-- data directory docs for `~/.promptlane`
+- MCP server name `looprelay`
+- data directory docs for `~/.looprelay`
 
 ## Documentation Architecture
 
 Add a new primary product contract:
 
-- `docs/PROMPTLANE.md`
+- `docs/LOOPRELAY.md`
 
-Retire the current primary PromptLane contract:
+Retire the current primary LoopRelay contract:
 
-- `docs/PROMPTLANE.md` should become a short rejected-decision record, move to a
-  legacy folder, or be replaced after `docs/PROMPTLANE.md` lands.
+- `docs/LOOPRELAY.md` should become a short rejected-decision record, move to a
+  legacy folder, or be replaced after `docs/LOOPRELAY.md` lands.
 
 Update routing:
 
-- `AGENTS.md` should point product planning to `docs/PROMPTLANE.md`.
-- `CLAUDE.md` should say PromptLane is the product and `/promptlane:*` is the
+- `AGENTS.md` should point product planning to `docs/LOOPRELAY.md`.
+- `CLAUDE.md` should say LoopRelay is the product and `/looprelay:*` is the
   canonical Claude Code namespace during compatibility.
 - Loop snapshot/schema docs stay as loop feature docs, not product contract
   docs.
 
 ## Test And Drift Guards
 
-Add or update tests so future changes cannot silently re-promote PromptLane:
+Add or update tests so future changes cannot silently re-promote LoopRelay:
 
-- package/plugin metadata test expects PromptLane product-facing copy
-- README first-screen test expects PromptLane positioning
-- AGENTS/CLAUDE instruction routing test expects `docs/PROMPTLANE.md`
-- tests preserve `promptlane` runtime IDs
-- tests forbid promoting `/promptlane:*` as an active namespace
+- package/plugin metadata test expects LoopRelay product-facing copy
+- README first-screen test expects LoopRelay positioning
+- AGENTS/CLAUDE instruction routing test expects `docs/LOOPRELAY.md`
+- tests preserve `looprelay` runtime IDs
+- tests forbid promoting `/looprelay:*` as an active namespace
 - tests keep loop features described as loop-aware continuation rather than the
   whole product identity
 
@@ -318,16 +318,16 @@ metadata.
 
 Goal:
 
-- Add `docs/PROMPTLANE.md`
+- Add `docs/LOOPRELAY.md`
 - Update package/plugin metadata
 - Update README/README.ko first screen
 - Add drift guards
-- Mark `PromptLane` as rejected or legacy
+- Mark `LoopRelay` as rejected or legacy
 
 Out of scope:
 
 - GitHub repo rename
-- removing `promptlane` binary alias
+- removing `looprelay` binary alias
 - npm package rename
 
 ### Slice 2 - Instruction And Harness Docs
@@ -335,7 +335,7 @@ Out of scope:
 Goal:
 
 - Update `AGENTS.md`, `CLAUDE.md`, `docs/AGENT-HARNESS.md`,
-  `docs/INSTRUCTION-FILES.md`, and plugin skill docs to PromptLane-first
+  `docs/INSTRUCTION-FILES.md`, and plugin skill docs to LoopRelay-first
   positioning.
 
 Out of scope:
@@ -343,13 +343,13 @@ Out of scope:
 - changing command IDs
 - changing hook installation behavior
 
-### Slice 3 - PromptLane Alias Decision
+### Slice 3 - LoopRelay Alias Decision
 
 Goal:
 
-- Decide whether `bin.promptlane` remains as compatibility, is hidden from docs,
+- Decide whether `bin.looprelay` remains as compatibility, is hidden from docs,
   or is removed before the 1.0.0 release.
-- Retire `/promptlane:*` alias plans unless a concrete user need appears.
+- Retire `/looprelay:*` alias plans unless a concrete user need appears.
 
 Out of scope:
 
@@ -359,7 +359,7 @@ Out of scope:
 
 Goal:
 
-- Rename repo from `wlsdks/promptlane` to `wlsdks/promptlane`.
+- Rename repo from `wlsdks/looprelay` to `wlsdks/looprelay`.
 - Update repository URLs, docs, plugin manifests, and release checklists.
 - Status: implemented on 2026-07-05.
 
@@ -371,23 +371,23 @@ Out of scope:
 
 The repositioning is complete when:
 
-- README and README.ko lead with `PromptLane`, prompt improvement, and
+- README and README.ko lead with `LoopRelay`, prompt improvement, and
   local-first privacy.
 - Loop/worktree/session features are presented as prompt-continuation memory.
-- Product-facing package/plugin metadata says `PromptLane`.
-- `promptlane` runtime IDs remain stable.
-- Tests prevent accidental re-promotion of PromptLane as product name.
-- The old PromptLane direction is recorded as rejected or legacy, not active
+- Product-facing package/plugin metadata says `LoopRelay`.
+- `looprelay` runtime IDs remain stable.
+- Tests prevent accidental re-promotion of LoopRelay as product name.
+- The old LoopRelay direction is recorded as rejected or legacy, not active
   product truth.
 - No implementation slice changes prompt capture, storage privacy, MCP safety,
   or hook fail-open behavior unless covered by a separate TDD plan.
 
 ## Open Questions
 
-1. Whether to remove the `promptlane` CLI alias before 1.0.0 or keep it as
+1. Whether to remove the `looprelay` CLI alias before 1.0.0 or keep it as
    a silent compatibility alias until a later breaking change.
-2. Whether `docs/PROMPTLANE.md` should remain as rejected-decision history or be
-   deleted after `docs/PROMPTLANE.md` lands.
+2. Whether `docs/LOOPRELAY.md` should remain as rejected-decision history or be
+   deleted after `docs/LOOPRELAY.md` lands.
 
 These are migration sequencing questions, not blockers for adopting
-PromptLane as the product name.
+LoopRelay as the product name.

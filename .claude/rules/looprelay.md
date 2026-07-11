@@ -1,4 +1,4 @@
-# prompt-coach Claude Rules
+# looprelay Claude Rules
 
 Claude Code must follow these repository rules in addition to `CLAUDE.md` and
 `AGENTS.md`.
@@ -19,7 +19,7 @@ Claude Code must follow these repository rules in addition to `CLAUDE.md` and
 
 ## Product Identity
 
-- `prompt-coach` is an AI coding prompt memory and improvement workspace,
+- `looprelay` is an AI coding loop memory and improvement workspace,
   local-first.
 - It helps Claude Code/Codex users capture prompts locally, find them again,
   analyze weak prompt habits, and write better next requests.

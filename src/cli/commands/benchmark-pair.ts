@@ -12,7 +12,7 @@ import {
   createBenchmarkPairCandidateReport,
   type BenchmarkPairCandidateReport,
 } from "../../analysis/benchmark-pair-candidates.js";
-import { loadHookAuth, loadPromptLaneConfig } from "../../config/config.js";
+import { loadHookAuth, loadLoopRelayConfig } from "../../config/config.js";
 import type { LoopSnapshot } from "../../loop/types.js";
 import type { PromptDetail } from "../../storage/ports.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
@@ -25,7 +25,7 @@ type BenchmarkPairPrepareOptions = {
   dataDir?: string;
   fixtureFile: string;
   pairIds?: string[];
-  promptlanePromptIds?: string[];
+  looprelayPromptIds?: string[];
   queries?: string[];
 };
 
@@ -36,7 +36,7 @@ type BenchmarkPairPrepareCommandOptions = {
   dataDir?: string;
   output: string;
   pairId: string[];
-  promptlanePromptId: string[];
+  looprelayPromptId: string[];
   query: string[];
 };
 
@@ -57,9 +57,9 @@ export function registerBenchmarkPairCommand(benchmarkCommand: Command): void {
   benchmarkCommand
     .command("pair-candidates")
     .description(
-      "List body-free baseline and PromptLane candidates for matched effectiveness pairs.",
+      "List body-free baseline and LoopRelay candidates for matched effectiveness pairs.",
     )
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--limit <count>", "Maximum candidates per group.", "20")
     .option("--json", "Print JSON.")
     .action((_options: BenchmarkPairCandidateOptions, command: Command) => {
@@ -73,7 +73,7 @@ export function registerBenchmarkPairCommand(benchmarkCommand: Command): void {
   benchmarkCommand
     .command("prepare-pair")
     .description(
-      "Create consent-bearing baseline/PromptLane effectiveness pairs from local archive prompts.",
+      "Create consent-bearing baseline/LoopRelay effectiveness pairs from local archive prompts.",
     )
     .requiredOption(
       "--baseline-prompt-id <id>",
@@ -82,8 +82,8 @@ export function registerBenchmarkPairCommand(benchmarkCommand: Command): void {
       [],
     )
     .requiredOption(
-      "--promptlane-prompt-id <id>",
-      "Stored PromptLane prompt id; repeat once per pair in matching order.",
+      "--looprelay-prompt-id <id>",
+      "Stored LoopRelay prompt id; repeat once per pair in matching order.",
       collectOptionValue,
       [],
     )
@@ -107,7 +107,7 @@ export function registerBenchmarkPairCommand(benchmarkCommand: Command): void {
       "--output <path>",
       "Write the prepared paired fixture to this new local file.",
     )
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option(
       "--confirm-consent",
       "Confirm all redacted prompts and outcomes are approved for local benchmarking.",
@@ -121,7 +121,7 @@ export function registerBenchmarkPairCommand(benchmarkCommand: Command): void {
           dataDir: options.dataDir,
           fixtureFile: options.output,
           pairIds: options.pairId,
-          promptlanePromptIds: options.promptlanePromptId,
+          looprelayPromptIds: options.looprelayPromptId,
           queries: options.query,
         }),
       );
@@ -164,23 +164,21 @@ export function preparePairedBenchmarkFixtureForCli(
     throw new UserError("benchmark prepare-pair requires an output file.");
   }
   const baselinePromptIds = normalizedOptionValues(options.baselinePromptIds);
-  const promptlanePromptIds = normalizedOptionValues(
-    options.promptlanePromptIds,
-  );
+  const looprelayPromptIds = normalizedOptionValues(options.looprelayPromptIds);
   const pairIds = normalizedOptionValues(options.pairIds);
   const queries = normalizedOptionValues(options.queries);
   const pairCount = baselinePromptIds.length;
   if (
     pairCount === 0 ||
-    promptlanePromptIds.length !== pairCount ||
+    looprelayPromptIds.length !== pairCount ||
     pairIds.length !== pairCount ||
     queries.length !== pairCount
   ) {
     throw new UserError(
-      "benchmark prepare-pair requires the same non-zero number of baseline ids, PromptLane ids, pair ids, and queries.",
+      "benchmark prepare-pair requires the same non-zero number of baseline ids, LoopRelay ids, pair ids, and queries.",
     );
   }
-  const selectedPromptIds = [...baselinePromptIds, ...promptlanePromptIds];
+  const selectedPromptIds = [...baselinePromptIds, ...looprelayPromptIds];
   if (new Set(selectedPromptIds).size !== selectedPromptIds.length) {
     throw new UserError(
       "benchmark prepare-pair cannot reuse a prompt across matched pairs.",
@@ -212,7 +210,7 @@ export function preparePairedBenchmarkFixtureForCli(
           pairId: pairIds[index]!,
           query: queries[index]!,
           baselinePrompt: promptsById.get(baselinePromptIds[index]!)!,
-          promptlanePrompt: promptsById.get(promptlanePromptIds[index]!)!,
+          looprelayPrompt: promptsById.get(looprelayPromptIds[index]!)!,
         }),
       );
     }
@@ -239,7 +237,7 @@ function readBenchmarkPrompts(
   promptIds: string[],
   dataDir?: string,
 ): PromptDetail[] {
-  const config = loadPromptLaneConfig(dataDir);
+  const config = loadLoopRelayConfig(dataDir);
   const auth = loadHookAuth(dataDir);
   const storage = createSqlitePromptStorage({
     dataDir: config.data_dir,
@@ -259,7 +257,7 @@ function readBenchmarkPrompts(
 }
 
 function readBenchmarkSnapshots(dataDir?: string): LoopSnapshot[] {
-  const config = loadPromptLaneConfig(dataDir);
+  const config = loadLoopRelayConfig(dataDir);
   const auth = loadHookAuth(dataDir);
   const storage = createSqlitePromptStorage({
     dataDir: config.data_dir,
@@ -276,17 +274,17 @@ function formatPairCandidates(report: BenchmarkPairCandidateReport): string {
   const lines = [
     `benchmark pair-candidates: ${report.status}`,
     `baseline candidates ${report.baseline_candidate_count}; showing ${report.baseline_candidates.length}`,
-    `PromptLane candidates ${report.promptlane_candidate_count}; showing ${report.promptlane_candidates.length}`,
-    `readiness completed ${report.diagnostics.completed_snapshots}; baseline ${report.diagnostics.baseline_snapshots}; PromptLane ${report.diagnostics.promptlane_snapshots}; evidence complete ${report.diagnostics.evidence_complete_snapshots}; safe ${report.diagnostics.safe_snapshots}`,
+    `LoopRelay candidates ${report.looprelay_candidate_count}; showing ${report.looprelay_candidates.length}`,
+    `readiness completed ${report.diagnostics.completed_snapshots}; baseline ${report.diagnostics.baseline_snapshots}; LoopRelay ${report.diagnostics.looprelay_snapshots}; evidence complete ${report.diagnostics.evidence_complete_snapshots}; safe ${report.diagnostics.safe_snapshots}`,
   ];
   for (const candidate of report.baseline_candidates) {
     lines.push(
       `- baseline ${candidate.prompt_id} ${candidate.outcome_status}; tests ${candidate.tests_run}; evidence refs ${candidate.evidence_ref_count}`,
     );
   }
-  for (const candidate of report.promptlane_candidates) {
+  for (const candidate of report.looprelay_candidates) {
     lines.push(
-      `- PromptLane ${candidate.prompt_id} ${candidate.outcome_status}; tests ${candidate.tests_run}; evidence refs ${candidate.evidence_ref_count}`,
+      `- LoopRelay ${candidate.prompt_id} ${candidate.outcome_status}; tests ${candidate.tests_run}; evidence refs ${candidate.evidence_ref_count}`,
     );
   }
   if (report.excluded_unsafe_candidates > 0) {
@@ -333,7 +331,7 @@ function writePreparedBenchmarkFixture(
       );
     }
     throw new UserError(
-      "Unable to create the prepared PromptLane benchmark fixture.",
+      "Unable to create the prepared LoopRelay benchmark fixture.",
     );
   }
 }

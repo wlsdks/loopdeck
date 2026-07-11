@@ -5,7 +5,7 @@ export type ProjectEmptyState = {
 
 export function getProjectEmptyState(): ProjectEmptyState {
   return {
-    command: "promptlane setup --profile coach",
+    command: "looprelay setup --profile coach",
     title: "No project records yet.",
   };
 }

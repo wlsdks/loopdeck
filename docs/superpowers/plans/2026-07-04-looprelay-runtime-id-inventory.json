@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "date": "2026-07-04",
+  "purpose": "LoopRelay runtime identity inventory.",
+  "package": {
+    "name": "looprelay",
+    "bins": {
+      "looprelay": "./dist/cli/index.js",
+      "lr-claude": "./dist/cli/lr-claude.js",
+      "lr-codex": "./dist/cli/lr-codex.js"
+    },
+    "repository": "https://github.com/wlsdks/looprelay.git"
+  },
+  "claude_code_plugin": {
+    "manifest": ".claude-plugin/plugin.json",
+    "manifest_name": "looprelay",
+    "slash_namespace": "/looprelay:*",
+    "command_files": [
+      "./commands/buddy.md",
+      "./commands/coach.md",
+      "./commands/guard.md",
+      "./commands/habits.md",
+      "./commands/improve-last.md",
+      "./commands/judge.md",
+      "./commands/open.md",
+      "./commands/score.md",
+      "./commands/setup.md",
+      "./commands/status.md"
+    ]
+  },
+  "codex_plugin": {
+    "manifest": "plugins/looprelay/.codex-plugin/plugin.json",
+    "manifest_name": "looprelay",
+    "display_name": "LoopRelay",
+    "install_path": "plugins/looprelay",
+    "hook_install": "looprelay setup --profile coach --register-mcp --open-web"
+  },
+  "mcp": {
+    "canonical_server_name": "looprelay",
+    "command": "looprelay mcp",
+    "docs": [
+      "README.md",
+      "README.ko.md",
+      "docs/PLUGINS.md"
+    ]
+  },
+  "invariants": [
+    "Use /looprelay:* for Claude Code commands.",
+    "Use looprelay for package, CLI, plugin, hook, and MCP runtime ids.",
+    "Use lr-claude and lr-codex for wrapper binaries.",
+    "Keep hook and MCP examples aligned with the LoopRelay runtime."
+  ],
+  "privacy_exclusions": [
+    "prompt bodies",
+    "transcript text",
+    "compact summaries",
+    "raw paths",
+    "API tokens",
+    "provider credentials"
+  ],
+  "next_slice": "Strengthen continuity recovery and evidence-backed loop handoff."
+}

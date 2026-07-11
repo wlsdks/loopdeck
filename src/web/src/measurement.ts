@@ -175,7 +175,7 @@ function nextMeasurementAction({
   if (sampleSize === 0) {
     return {
       label: "Capture prompts first",
-      detail: "Run promptlane setup, then send a few real coding requests.",
+      detail: "Run looprelay setup, then send a few real coding requests.",
       target: "capture",
     };
   }

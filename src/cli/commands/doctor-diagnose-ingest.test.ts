@@ -17,16 +17,16 @@ describe("diagnoseIngestFailure", () => {
     const diagnosis = diagnoseIngestFailure({
       tool: "claude-code",
       status: 401,
-      configuredDataDir: "/Users/x/.promptlane",
+      configuredDataDir: "/Users/x/.looprelay",
       commandRunner: runner,
       readFile: () => undefined,
     });
 
     expect(diagnosis.cause).toBe<IngestFailureCause>("server_owner_mismatch");
-    expect(diagnosis.hint).toContain("another PromptLane server");
+    expect(diagnosis.hint).toContain("another LoopRelay server");
     expect(diagnosis.hint).not.toContain("/tmp/pm-temp/data");
-    expect(diagnosis.hint).not.toContain("/Users/x/.promptlane");
-    expect(diagnosis.hint).toContain("promptlane service install");
+    expect(diagnosis.hint).not.toContain("/Users/x/.looprelay");
+    expect(diagnosis.hint).toContain("looprelay service install");
   });
 
   it("detects server owner mismatch when data-dir uses equals syntax", () => {
@@ -39,15 +39,15 @@ describe("diagnoseIngestFailure", () => {
     const diagnosis = diagnoseIngestFailure({
       tool: "claude-code",
       status: 401,
-      configuredDataDir: "/Users/x/.promptlane",
+      configuredDataDir: "/Users/x/.looprelay",
       commandRunner: runner,
       readFile: () => undefined,
     });
 
     expect(diagnosis.cause).toBe<IngestFailureCause>("server_owner_mismatch");
     expect(diagnosis.hint).not.toContain("/tmp/pm-temp/data");
-    expect(diagnosis.hint).not.toContain("/Users/x/.promptlane");
-    expect(diagnosis.hint).toContain("promptlane service install");
+    expect(diagnosis.hint).not.toContain("/Users/x/.looprelay");
+    expect(diagnosis.hint).toContain("looprelay service install");
   });
 
   it("treats a running server without data-dir as the default data dir", () => {
@@ -66,41 +66,41 @@ describe("diagnoseIngestFailure", () => {
 
     expect(diagnosis.cause).toBe<IngestFailureCause>("server_owner_mismatch");
     expect(diagnosis.hint).not.toContain("/tmp/pm-temp/data");
-    expect(diagnosis.hint).not.toContain(".promptlane");
-    expect(diagnosis.hint).toContain("promptlane service install");
+    expect(diagnosis.hint).not.toContain(".looprelay");
+    expect(diagnosis.hint).toContain("looprelay service install");
   });
 
   it("returns 'node_abi_mismatch' when server.err.log contains a NODE_MODULE_VERSION error", () => {
     const runner = staticRunner({
       lsofStdout: "p99999\n",
       psStdout:
-        "/path/node /path/cli.js server --data-dir /Users/x/.promptlane\n",
+        "/path/node /path/cli.js server --data-dir /Users/x/.looprelay\n",
     });
 
     const diagnosis = diagnoseIngestFailure({
       tool: "claude-code",
       status: 401,
-      configuredDataDir: "/Users/x/.promptlane",
+      configuredDataDir: "/Users/x/.looprelay",
       commandRunner: runner,
       readFile: () =>
         "Error: The module ... was compiled against a different Node.js version using NODE_MODULE_VERSION 115. This version of Node.js requires NODE_MODULE_VERSION 127.",
     });
 
     expect(diagnosis.cause).toBe<IngestFailureCause>("node_abi_mismatch");
-    expect(diagnosis.hint).toContain("promptlane service install");
+    expect(diagnosis.hint).toContain("looprelay service install");
   });
 
   it("falls back to 'token_stale' when the bound server matches and no ABI error is logged", () => {
     const runner = staticRunner({
       lsofStdout: "p99999\n",
       psStdout:
-        "/path/node /path/cli.js server --data-dir /Users/x/.promptlane\n",
+        "/path/node /path/cli.js server --data-dir /Users/x/.looprelay\n",
     });
 
     const diagnosis = diagnoseIngestFailure({
       tool: "claude-code",
       status: 401,
-      configuredDataDir: "/Users/x/.promptlane",
+      configuredDataDir: "/Users/x/.looprelay",
       commandRunner: runner,
       readFile: () => "",
     });
@@ -113,13 +113,13 @@ describe("diagnoseIngestFailure", () => {
     const runner = staticRunner({
       lsofStdout: "p99999\n",
       psStdout:
-        '/path/node /path/cli.js server --data-dir "/Users/x/PromptLane Data"\n',
+        '/path/node /path/cli.js server --data-dir "/Users/x/LoopRelay Data"\n',
     });
 
     const diagnosis = diagnoseIngestFailure({
       tool: "claude-code",
       status: 401,
-      configuredDataDir: "/Users/x/PromptLane Data",
+      configuredDataDir: "/Users/x/LoopRelay Data",
       commandRunner: runner,
       readFile: () => "",
     });
@@ -132,7 +132,7 @@ describe("diagnoseIngestFailure", () => {
     const diagnosis = diagnoseIngestFailure({
       tool: "claude-code",
       status: 401,
-      configuredDataDir: "/Users/x/.promptlane",
+      configuredDataDir: "/Users/x/.looprelay",
       readFile: () => undefined,
     });
 
@@ -143,7 +143,7 @@ describe("diagnoseIngestFailure", () => {
     const diagnosis = diagnoseIngestFailure({
       tool: "claude-code",
       status: 500,
-      configuredDataDir: "/Users/x/.promptlane",
+      configuredDataDir: "/Users/x/.looprelay",
       readFile: () => undefined,
     });
 
@@ -155,13 +155,13 @@ describe("diagnoseIngestFailure", () => {
     const runner = staticRunner({
       lsofStdout: "p99999\n",
       psStdout:
-        "/path/node /path/cli.js server --data-dir /Users/x/.promptlane/\n",
+        "/path/node /path/cli.js server --data-dir /Users/x/.looprelay/\n",
     });
 
     const diagnosis = diagnoseIngestFailure({
       tool: "claude-code",
       status: 401,
-      configuredDataDir: "/Users/x/.promptlane",
+      configuredDataDir: "/Users/x/.looprelay",
       commandRunner: runner,
       readFile: () => "",
     });

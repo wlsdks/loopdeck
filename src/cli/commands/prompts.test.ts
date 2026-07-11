@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { normalizeClaudeCodePayload } from "../../adapters/claude-code.js";
-import { initializePromptLane } from "../../config/config.js";
+import { initializeLoopRelay } from "../../config/config.js";
 import { redactPrompt } from "../../redaction/redact.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import {
@@ -71,7 +71,7 @@ describe("prompt CLI commands", () => {
 
   it("explains an empty list result instead of printing a blank line", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     expect(listPromptsForCli({ dataDir })).toBe("no prompts captured yet.");
     expect(
@@ -81,7 +81,7 @@ describe("prompt CLI commands", () => {
 
   it("echoes the search query when nothing matches", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     expect(searchPromptsForCli("definitely-no-match", { dataDir })).toBe(
       'no prompts matching "definitely-no-match".',
@@ -110,7 +110,7 @@ describe("prompt CLI commands", () => {
   it("includes prompt-linked loop outcome evidence in show --json", async () => {
     const dataDir = createTempDir();
     const ids = await createCliFixture(dataDir);
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -192,7 +192,7 @@ describe("prompt CLI commands", () => {
   it("shows drafts:N suffix on list rows that have saved improvement drafts", async () => {
     const dataDir = createTempDir();
     const ids = await createCliFixture(dataDir);
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -227,7 +227,7 @@ describe("prompt CLI commands", () => {
   it("appends saved drafts with friendly analyzer labels to --explain output", async () => {
     const dataDir = createTempDir();
     const ids = await createCliFixture(dataDir);
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -262,7 +262,7 @@ describe("prompt CLI commands", () => {
 
   it("refuses to print an open URL for an unknown prompt id", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     expect(() => openPromptForCli("prmt_does_not_exist", { dataDir })).toThrow(
       "Prompt not found",
@@ -289,16 +289,16 @@ describe("prompt CLI commands", () => {
 
   it("hints at a runnable list command in Prompt not found errors", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     expect(() => showPromptForCli("prmt_missing", { dataDir })).toThrow(
-      /promptlane list/,
+      /looprelay list/,
     );
     expect(() => deletePromptForCli("prmt_missing", { dataDir })).toThrow(
-      /promptlane list/,
+      /looprelay list/,
     );
     expect(() => openPromptForCli("prmt_missing", { dataDir })).toThrow(
-      /promptlane list/,
+      /looprelay list/,
     );
   });
 
@@ -336,7 +336,7 @@ describe("prompt CLI commands", () => {
 });
 
 async function createCliFixture(dataDir: string) {
-  const init = initializePromptLane({ dataDir });
+  const init = initializeLoopRelay({ dataDir });
   const storage = createSqlitePromptStorage({
     dataDir,
     hmacSecret: init.hookAuth.web_session_secret,
@@ -398,7 +398,7 @@ async function storeClaudePrompt(
 }
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-cli-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-cli-${randomUUID()}`);
   mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;

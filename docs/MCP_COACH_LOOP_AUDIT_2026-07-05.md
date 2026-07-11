@@ -4,18 +4,18 @@
 
 Verify the agent-facing MCP coaching path with a real local stdio MCP server,
 not just direct function tests. This audit covers the first user-flow pass from
-`docs/NEXT_BACKLOG.md`: can Claude Code or Codex discover promptlane tools,
+`docs/NEXT_BACKLOG.md`: can Claude Code or Codex discover looprelay tools,
 score a weak stored prompt, generate an approval-gated improvement, and store
 the user's clarification answers without leaving the local-first boundary?
 
 ## Environment
 
-- Repository: `/Users/jinan/side-project/prompt-memory`
+- Repository: `/Users/jinan/side-project/looprelay`
 - Branch: `codex/mcp-coach-loop-audit`
 - Codex CLI: `codex-cli 0.142.5`
 - Claude Code: `2.1.199 (Claude Code)`
 - MCP command under test: `node dist/cli/index.js mcp --data-dir <temp-data-dir>`
-- Data source: temporary local archive initialized with `promptlane init`
+- Data source: temporary local archive initialized with `looprelay init`
 - Stored test prompt: short Korean request to open an HTML result
 
 This audit did not drive an interactive Claude Code or Codex UI session. It
@@ -25,7 +25,7 @@ launch.
 ## Path Tested
 
 1. Build current repo output with `corepack pnpm build`.
-2. Initialize a temporary local archive with `promptlane init --data-dir`.
+2. Initialize a temporary local archive with `looprelay init --data-dir`.
 3. Store one Claude Code `UserPromptSubmit`-shaped event into SQLite through
    the same normalization and redaction modules used by the app.
 4. Start the MCP stdio server with the temporary data directory.
@@ -43,7 +43,7 @@ Observed MCP server identity:
 
 ```json
 {
-  "name": "promptlane",
+  "name": "looprelay",
   "version": "1.0.0"
 }
 ```
@@ -142,7 +142,7 @@ Observed `record_clarifications` result:
 
 3. **The post-record next action forces a context switch for review.**
    `record_clarifications` says to open the draft in the local archive or use
-   `promptlane show`. That is privacy-preserving, but it means the agent
+   `looprelay show`. That is privacy-preserving, but it means the agent
    cannot complete the review loop entirely through MCP unless it called
    `apply_clarifications` first and kept that draft in context.
 

@@ -1,6 +1,6 @@
-# PromptLane UI Patrol Evidence 2026-07-06
+# LoopRelay UI Patrol Evidence 2026-07-06
 
-This document records current UI patrol evidence for the PromptLane web
+This document records current UI patrol evidence for the LoopRelay web
 operations 9.5 quality bar.
 
 ## Manual And Local Evidence
@@ -13,7 +13,7 @@ operations 9.5 quality bar.
 
 ## CI Policy
 
-GitHub Actions workflows are no longer part of the PromptLane quality bar.
+GitHub Actions workflows are no longer part of the LoopRelay quality bar.
 `corepack pnpm evidence:ui-patrol` has been removed with the scheduled workflow.
 Local `ui-patrol` and `dogfood:web-user-flow` are the authoritative web
 operations evidence.

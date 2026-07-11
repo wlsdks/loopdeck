@@ -54,7 +54,7 @@ describe("createBenchmarkCandidateReport", () => {
         snapshot_limit: 100,
       },
       next_action:
-        "Review candidate prompt ids, then run promptlane benchmark prepare-fixture with explicit consent.",
+        "Review candidate prompt ids, then run looprelay benchmark prepare-fixture with explicit consent.",
       privacy: {
         local_only: true,
         external_calls: false,
@@ -81,7 +81,7 @@ describe("createBenchmarkCandidateReport", () => {
         safe_snapshots: 0,
       },
       next_action:
-        "Run promptlane loop status, then record the latest snapshot outcome after a verifiable checkpoint.",
+        "Run looprelay loop status, then record the latest snapshot outcome after a verifiable checkpoint.",
     });
   });
 
@@ -99,7 +99,7 @@ describe("createBenchmarkCandidateReport", () => {
         safe_snapshots: 0,
       },
       next_action:
-        "Record improvement attribution only if a PromptLane improvement was actually used; otherwise collect another verified loop.",
+        "Record improvement attribution only if a LoopRelay improvement was actually used; otherwise collect another verified loop.",
     });
   });
 
@@ -150,7 +150,7 @@ describe("createBenchmarkCandidateReport", () => {
       candidate_count: 0,
       scope: { scanned_snapshots: 0, snapshot_limit: 100 },
       next_action:
-        "Collect a loop snapshot after using PromptLane with Codex or Claude Code.",
+        "Collect a loop snapshot after using LoopRelay with Codex or Claude Code.",
     });
   });
 });

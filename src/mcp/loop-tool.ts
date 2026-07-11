@@ -1,4 +1,4 @@
-import { loadHookAuth, loadPromptLaneConfig } from "../config/config.js";
+import { loadHookAuth, loadLoopRelayConfig } from "../config/config.js";
 import {
   createLoopBrief,
   latestCompactBoundaryAfterSnapshot,
@@ -25,8 +25,8 @@ import {
   selectedLoopSnapshotNotFoundMessage,
 } from "../loop/snapshot-selection.js";
 import {
-  createPromptLaneStatus,
-  promptlaneStatusPrivacy,
+  createLoopRelayStatus,
+  looprelayStatusPrivacy,
 } from "../loop/status.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import { MCP_FIRST_PROMPT_NEXT_STEP } from "./first-prompt-next-step.js";
@@ -34,8 +34,8 @@ import type { ScorePromptToolOptions } from "./score-tool-types.js";
 import type {
   ApplyInstructionPatchToolArguments,
   ApplyInstructionPatchToolResult,
-  GetPromptLaneLoopStatusToolArguments,
-  GetPromptLaneLoopStatusToolResult,
+  GetLoopRelayLoopStatusToolArguments,
+  GetLoopRelayLoopStatusToolResult,
   PrepareLoopBriefToolArguments,
   PrepareLoopBriefToolResult,
   ProposeInstructionPatchToolArguments,
@@ -50,7 +50,7 @@ import type {
 import { storageUnavailableMessage } from "./storage-unavailable.js";
 
 const LOOP_TOOL_NAMES = [
-  "get_promptlane_loop_status",
+  "get_looprelay_loop_status",
   "prepare_loop_brief",
   "record_loop_outcome",
   "propose_loop_memory_candidate",
@@ -59,14 +59,14 @@ const LOOP_TOOL_NAMES = [
   "apply_instruction_patch",
 ];
 
-export function getPromptLaneLoopStatusTool(
-  args: GetPromptLaneLoopStatusToolArguments,
+export function getLoopRelayLoopStatusTool(
+  args: GetLoopRelayLoopStatusToolArguments,
   options: ScorePromptToolOptions = {},
-): GetPromptLaneLoopStatusToolResult {
-  const privacy = promptlaneStatusPrivacy();
+): GetLoopRelayLoopStatusToolResult {
+  const privacy = looprelayStatusPrivacy();
 
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const auth = loadHookAuth(options.dataDir);
     const storage = createSqlitePromptStorage({
       dataDir: config.data_dir,
@@ -76,7 +76,7 @@ export function getPromptLaneLoopStatusTool(
     try {
       const snapshots = storage.listLoopSnapshots({ limit: 100 }).items;
       const latest = snapshots.at(0);
-      const status = createPromptLaneStatus({
+      const status = createLoopRelayStatus({
         snapshots,
         compactBoundaries: storage.listCompactBoundaries({ limit: 20 }).items,
         includeLatest: args.include_latest !== false,
@@ -100,12 +100,12 @@ export function getPromptLaneLoopStatusTool(
       status: "setup_needed",
       snapshot_count: 0,
       available_tools: LOOP_TOOL_NAMES,
-      next_action: "promptlane setup --profile coach --register-mcp",
+      next_action: "looprelay setup --profile coach --register-mcp",
       next_actions: [
-        "Run promptlane setup --profile coach --register-mcp before using PromptLane loop MCP tools.",
+        "Run looprelay setup --profile coach --register-mcp before using LoopRelay loop MCP tools.",
         MCP_FIRST_PROMPT_NEXT_STEP,
-        "Then run promptlane loop collect from the project you want to continue.",
-        "For custom storage, initialize it with promptlane init --data-dir <path> and pass the same --data-dir to the MCP server.",
+        "Then run looprelay loop collect from the project you want to continue.",
+        "For custom storage, initialize it with looprelay init --data-dir <path> and pass the same --data-dir to the MCP server.",
       ],
       privacy,
     };
@@ -130,7 +130,7 @@ export function prepareLoopBriefTool(
   }
 
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const auth = loadHookAuth(options.dataDir);
     const storage = createSqlitePromptStorage({
       dataDir: config.data_dir,
@@ -227,7 +227,7 @@ export function recordLoopOutcomeTool(
   }
 
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const auth = loadHookAuth(options.dataDir);
     const storage = createSqlitePromptStorage({
       dataDir: config.data_dir,
@@ -267,7 +267,7 @@ export function recordLoopOutcomeTool(
         snapshot_id: snapshot.id,
         outcome: snapshot.outcome,
         next_action:
-          "Use prepare_loop_brief to continue the loop or run promptlane loop collect after the next agent turn.",
+          "Use prepare_loop_brief to continue the loop or run looprelay loop collect after the next agent turn.",
         privacy: {
           ...loopToolPrivacy(),
           stores_prompt_bodies: false,
@@ -305,7 +305,7 @@ export function proposeLoopMemoryCandidateTool(
   }
 
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const auth = loadHookAuth(options.dataDir);
     const storage = createSqlitePromptStorage({
       dataDir: config.data_dir,
@@ -373,7 +373,7 @@ export function recordLoopMemoryTool(
   }
 
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const auth = loadHookAuth(options.dataDir);
     const storage = createSqlitePromptStorage({
       dataDir: config.data_dir,
@@ -455,7 +455,7 @@ export function proposeInstructionPatchTool(
   }
 
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const auth = loadHookAuth(options.dataDir);
     const storage = createSqlitePromptStorage({
       dataDir: config.data_dir,
@@ -501,7 +501,7 @@ export function applyInstructionPatchTool(
   }
 
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const auth = loadHookAuth(options.dataDir);
     const storage = createSqlitePromptStorage({
       dataDir: config.data_dir,

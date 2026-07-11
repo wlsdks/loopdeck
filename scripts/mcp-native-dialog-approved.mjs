@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const cliPath = join(repoRoot, "dist", "cli", "index.js");
 const timeoutMs = 90_000;
-const approvalEnv = "PROMPTLANE_NATIVE_DIALOG_APPROVED";
+const approvalEnv = "LOOPRELAY_NATIVE_DIALOG_APPROVED";
 
 if (process.env[approvalEnv] !== "1") {
   console.error(
@@ -26,7 +26,7 @@ const child = spawn(process.execPath, [cliPath, "mcp"], {
   cwd: repoRoot,
   env: {
     ...process.env,
-    PROMPTLANE_NATIVE_DIALOG: "1",
+    LOOPRELAY_NATIVE_DIALOG: "1",
   },
   stdio: ["pipe", "pipe", "pipe"],
 });
@@ -80,7 +80,7 @@ send({
     protocolVersion: "2025-06-18",
     capabilities: {},
     clientInfo: {
-      name: "promptlane-mcp-native-dialog-approved",
+      name: "looprelay-mcp-native-dialog-approved",
       version: "0.0.0",
     },
   },
@@ -143,8 +143,8 @@ function finish(error) {
 function assertDogfoodResult() {
   assertEqual(
     initializeResponse?.result?.serverInfo?.name,
-    "promptlane",
-    "Initialize should return promptlane serverInfo.",
+    "looprelay",
+    "Initialize should return looprelay serverInfo.",
   );
 
   const structured = finalResponse?.result?.structuredContent;

@@ -64,7 +64,7 @@ send({
     protocolVersion: "2025-06-18",
     capabilities: { elicitation: {} },
     clientInfo: {
-      name: "promptlane-mcp-elicitation-smoke",
+      name: "looprelay-mcp-elicitation-smoke",
       version: "0.0.0",
     },
   },
@@ -146,8 +146,8 @@ function finish(error) {
 function assertSmokeResult() {
   assertEqual(
     initializeResponse?.result?.serverInfo?.name,
-    "promptlane",
-    "Initialize should return promptlane serverInfo.",
+    "looprelay",
+    "Initialize should return looprelay serverInfo.",
   );
   assertEqual(
     elicitationRequest?.method,

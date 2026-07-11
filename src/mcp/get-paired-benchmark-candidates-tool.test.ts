@@ -5,7 +5,7 @@ import { join } from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { initializePromptLane } from "../config/config.js";
+import { initializeLoopRelay } from "../config/config.js";
 import type { LoopSnapshot } from "../loop/types.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import {
@@ -40,7 +40,7 @@ describe("get_paired_benchmark_candidates MCP tool", () => {
       outputSchema: {
         properties: {
           baseline_candidates: expect.any(Object),
-          promptlane_candidates: expect.any(Object),
+          looprelay_candidates: expect.any(Object),
           privacy: expect.objectContaining({
             properties: expect.objectContaining({
               returns_prompt_bodies: { const: false },
@@ -57,9 +57,9 @@ describe("get_paired_benchmark_candidates MCP tool", () => {
     ).not.toContain('"snapshot_id"');
   });
 
-  it("returns separate body-free baseline and PromptLane candidates", () => {
+  it("returns separate body-free baseline and LoopRelay candidates", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({ dataDir });
     storage.createLoopSnapshot(snapshot("loop_lane", "prmt_lane", true));
     storage.createLoopSnapshot(snapshot("loop_base", "prmt_base", false));
@@ -71,7 +71,7 @@ describe("get_paired_benchmark_candidates MCP tool", () => {
     expect(result).toMatchObject({
       status: "ready",
       baseline_candidates: [{ prompt_id: "prmt_base" }],
-      promptlane_candidates: [{ prompt_id: "prmt_lane" }],
+      looprelay_candidates: [{ prompt_id: "prmt_lane" }],
       privacy: {
         local_only: true,
         external_calls: false,
@@ -97,7 +97,7 @@ describe("get_paired_benchmark_candidates MCP tool", () => {
 });
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-mcp-paired-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-mcp-paired-${randomUUID()}`);
   tempDirs.push(dir);
   return dir;
 }

@@ -1,6 +1,6 @@
 # 작업 계획
 
-## 2026-07-10 PromptLane Health Instance Contract
+## 2026-07-10 LoopRelay Health Instance Contract
 
 - [x] CHECK: live health returns a boot `instance_id` used by SessionStart web
   open deduplication, while architecture and README still describe older scope.
@@ -13,7 +13,7 @@
 - [x] VERIFY: focused server/web/hook/browser/package tests, live health,
   privacy checks, PR merge, and v1.0.0 retag.
 
-## 2026-07-10 PromptLane macOS Service Status Privacy
+## 2026-07-10 LoopRelay macOS Service Status Privacy
 
 - [x] CHECK: current macOS `launchctl print` returns `Could not find service`,
   which is misclassified as unknown and echoed through service JSON.
@@ -24,7 +24,7 @@
 - [x] VERIFY: focused service/CLI/packaging tests, production build, live
   service status and doctor recovery, package gates, PR merge, v1.0.0 retag.
 
-## 2026-07-10 PromptLane Benchmark Report File
+## 2026-07-10 LoopRelay Benchmark Report File
 
 - [x] CHECK: real benchmark baselines currently rely on shell redirection, so
   failed or non-JSON output can leave an unusable evidence file.
@@ -37,7 +37,7 @@
 - [x] VERIFY: focused CLI/packaging tests, live baseline comparison, package
   smoke/dry-run, diff hygiene, PR merge, and v1.0.0 retag.
 
-## 2026-07-10 PromptLane Selected Snapshot Memory Approval
+## 2026-07-10 LoopRelay Selected Snapshot Memory Approval
 
 - [x] CHECK: outcome recording supports exact/selected snapshots while CLI,
   MCP, and web memory candidate/approval still silently use global latest.
@@ -52,7 +52,7 @@
 - [x] VERIFY: focused selector/CLI/MCP/server/web tests, live multi-worktree
   flow, static/package gates, diff hygiene, PR merge, and v1.0.0 retag.
 
-## 2026-07-10 PromptLane Web Loop Outcome Recording
+## 2026-07-10 LoopRelay Web Loop Outcome Recording
 
 - [x] CHECK: the Loops web view can approve eligible memory but cannot record
   the prerequisite outcome, forcing web users into CLI or MCP.
@@ -67,7 +67,7 @@
 - [x] VERIFY: focused server/API/UI/i18n tests, lint/build, browser
   desktop/mobile checks, package smoke/dry-run, and diff hygiene.
 
-## 2026-07-10 PromptLane Loop Outcome CLI And Privacy Guard
+## 2026-07-10 LoopRelay Loop Outcome CLI And Privacy Guard
 
 - [x] CHECK: CLI can collect/brief/approve memory but cannot record the passed
   outcome required by memory approval; MCP/storage also accept raw outcome text
@@ -78,12 +78,12 @@
   failures to raw-free `invalid_input` results.
 - [x] RED: CLI tests require latest and selected snapshot outcome recording,
   JSON/text output, actionable memory/brief next steps, and no path disclosure.
-- [x] GREEN: `promptlane loop outcome` reuses the shared validator and existing
+- [x] GREEN: `looprelay loop outcome` reuses the shared validator and existing
   snapshot selection semantics without auto-approving memory.
 - [x] VERIFY: focused loop/storage/MCP/CLI/packaging tests, type/quality/format,
   live CLI workflow, package smoke, dry-run, and diff hygiene.
 
-## 2026-07-10 PromptLane Baseline Diagnostic Output
+## 2026-07-10 LoopRelay Baseline Diagnostic Output
 
 - [x] CHECK: incompatible or malformed baseline errors are safe internally but
   become a generic `failed before producing a report` message in the installed
@@ -99,7 +99,7 @@
 - [x] VERIFY: focused comparison/CLI/packaging tests, static gates, live
   malformed/mismatched baseline checks, package smoke, dry-run, diff hygiene.
 
-## 2026-07-10 PromptLane Benchmark Baseline Comparison
+## 2026-07-10 LoopRelay Benchmark Baseline Comparison
 
 - [x] CHECK: a single real benchmark run currently reports `trend_healthy`
   without comparing any prior run.
@@ -114,7 +114,7 @@
 - [x] VERIFY: focused comparison/CLI/fixture/packaging tests, static gates,
   synthetic/real baseline live runs, package smoke, dry-run, and diff hygiene.
 
-## 2026-07-10 PromptLane Real Benchmark Scoring Profile
+## 2026-07-10 LoopRelay Real Benchmark Scoring Profile
 
 - [x] CHECK: real benchmark score calibration still requires the synthetic
   `Make this better` fixture and a 50-point spread, causing a structural 0.6
@@ -131,7 +131,7 @@
   synthetic hard benchmark, real passed/failed/no-outcome runs, package smoke,
   dry-run, and diff hygiene.
 
-## 2026-07-10 PromptLane Real Benchmark Outcome Evidence
+## 2026-07-10 LoopRelay Real Benchmark Outcome Evidence
 
 - [x] CHECK: real fixture runs currently seed an internal synthetic passed
   outcome, so archive effectiveness can look positive without operator outcome
@@ -147,7 +147,7 @@
 - [x] VERIFY: focused benchmark/CLI/packaging tests, type/quality/format gates,
   installed package smoke, package dry-run, and diff hygiene.
 
-## 2026-07-10 PromptLane Real Benchmark Template Confirmation
+## 2026-07-10 LoopRelay Real Benchmark Template Confirmation
 
 - [x] CHECK: the shipped real fixture example is currently runnable unchanged,
   so sample prompts can incorrectly produce `trend_healthy` real evidence.
@@ -162,12 +162,12 @@
 - [x] VERIFY: focused fixture/CLI/preflight/packaging tests, formatting,
   typecheck, built/installed smoke, package dry-run, and diff hygiene.
 
-## 2026-07-10 PromptLane Real Benchmark Fixture Init
+## 2026-07-10 LoopRelay Real Benchmark Fixture Init
 
 - [x] CHECK: installed benchmark users can run an operator-owned fixture file,
   but must still locate and manually copy the shipped JSON template.
 - [x] RED: a focused CLI test requires
-  `promptlane benchmark init-fixture --output "$FIXTURE_FILE"` to create
+  `looprelay benchmark init-fixture --output "$FIXTURE_FILE"` to create
   the shipped valid template with private file permissions and raw-free output.
 - [x] GREEN: the benchmark command exposes explicit fixture initialization and
   writes the shipped template without printing the destination path.
@@ -178,13 +178,13 @@
 - [x] VERIFY: focused CLI/fixture/packaging tests, docs, formatting, typecheck,
   built and installed CLI smoke, package dry-run, and diff hygiene.
 
-## 2026-07-10 PromptLane Installed Benchmark Warning Handoff
+## 2026-07-10 LoopRelay Installed Benchmark Warning Handoff
 
 - [x] CHECK: live quality evidence and npm publish preflight still tell users
   only to create repository-local `docs/benchmark-fixtures/real.json` and run
   pnpm, even though the installed CLI now accepts operator-owned fixture files.
 - [x] RED: quality-evidence JSON and text require the copy-ready installed
-  `promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"`
+  `looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"`
   recovery command without weakening the unproven-effectiveness warning.
 - [x] GREEN: quality-evidence warning points installed users to the public CLI
   while preserving the synthetic-vs-real evidence boundary.
@@ -195,12 +195,12 @@
 - [x] VERIFY: focused quality/preflight/packaging tests, formatting, live JSON
   smoke, npm registry/preflight state, and diff hygiene.
 
-## 2026-07-10 PromptLane Installed Benchmark CLI
+## 2026-07-10 LoopRelay Installed Benchmark CLI
 
 - [x] CHECK: the benchmark scripts ship in the npm package, but installed users
-  cannot invoke them through `promptlane`, and real fixtures are fixed to the
+  cannot invoke them through `looprelay`, and real fixtures are fixed to the
   repository-local `docs/benchmark-fixtures/real.json` path.
-- [x] RED: CLI tests require a public `promptlane benchmark` command with
+- [x] RED: CLI tests require a public `looprelay benchmark` command with
   synthetic/real fixture selection, JSON output, and raw-free missing-fixture
   behavior.
 - [x] GREEN: the installed CLI delegates to the shipped benchmark runtime and
@@ -212,7 +212,7 @@
 - [x] VERIFY: focused CLI/fixture/packaging tests, formatting, typecheck/build,
   installed package smoke, benchmark evidence, and diff hygiene.
 
-## 2026-07-09 PromptLane Implementation Plan Release Gate
+## 2026-07-09 LoopRelay Implementation Plan Release Gate
 
 - [x] CHECK: `docs/IMPLEMENTATION_PLAN.md` still omitted `format`, listed
   `pack:dry-run` after smoke commands, and told maintainers to run the full
@@ -226,7 +226,7 @@
 - [x] VERIFY: focused public release surface guard, formatting, live
   preflight/quality smoke, npm registry status, and diff hygiene.
 
-## 2026-07-09 PromptLane Local 9.5 Evidence Current State
+## 2026-07-09 LoopRelay Local 9.5 Evidence Current State
 
 - [x] CHECK: `docs/LOCAL_95_EVIDENCE_2026-07-06.md` still said
   `evidence:quality` must remain pending and native dialog approval was still
@@ -240,7 +240,7 @@
 - [x] VERIFY: focused evidence guard, formatting, live preflight/quality smoke,
   npm registry status, and diff hygiene.
 
-## 2026-07-09 PromptLane Harness Release Gate Docs
+## 2026-07-09 LoopRelay Harness Release Gate Docs
 
 - [x] CHECK: `docs/AGENT-HARNESS.md` still documented a shorter full gate for
   merge/release-adjacent work than the current local release gate used by
@@ -253,10 +253,10 @@
 - [x] VERIFY: focused packaging guard, formatting, live preflight/quality smoke,
   npm registry status, and diff hygiene.
 
-## 2026-07-09 PromptLane Plugin Docs Publish-Pending Install
+## 2026-07-09 LoopRelay Plugin Docs Publish-Pending Install
 
 - [x] CHECK: `docs/PLUGINS.md` setup section still told active coaching users
-  to run global `promptlane` commands before showing a complete npm-unpublished
+  to run global `looprelay` commands before showing a complete npm-unpublished
   local checkout path.
 - [x] RED: packaging guard requires `docs/PLUGINS.md` to separate post-publish
   global install from pre-publish local checkout setup.
@@ -265,21 +265,21 @@
 - [x] VERIFY: focused PLUGINS guard, formatting, live preflight/quality smoke,
   npm registry status, and diff hygiene.
 
-## 2026-07-09 PromptLane Command Docs Publish-Pending CLI
+## 2026-07-09 LoopRelay Command Docs Publish-Pending CLI
 
 - [x] CHECK: Claude slash command docs for setup/status could tell users the
   CLI was missing without a complete publish-pending local checkout path.
 - [x] RED: packaging guard now requires setup/status command docs to include
   post-publish npm install and pre-publish `git clone`/`pnpm setup` fallback.
-- [x] GREEN: `/promptlane:setup` and `/promptlane:status` docs now separate
+- [x] GREEN: `/looprelay:setup` and `/looprelay:status` docs now separate
   post-publish npm install from local checkout setup before global CLI exists.
 - [x] VERIFY: focused command-doc guard, formatting, live preflight/quality
   smoke, npm registry status, and diff hygiene.
 
-## 2026-07-09 PromptLane Plugin Publish-Pending Setup Docs
+## 2026-07-09 LoopRelay Plugin Publish-Pending Setup Docs
 
 - [x] CHECK: Codex plugin skill and Claude integration README could still be
-  read before npm publish while assuming a global `promptlane` binary was
+  read before npm publish while assuming a global `looprelay` binary was
   available.
 - [x] RED: packaging guard now requires plugin/integration setup docs to include
   the npm-not-yet-published local checkout fallback.
@@ -288,11 +288,11 @@
 - [x] VERIFY: focused plugin/integration guard, formatting, live
   preflight/quality smoke, and diff hygiene.
 
-## 2026-07-09 PromptLane README Publish-Pending Install Path
+## 2026-07-09 LoopRelay README Publish-Pending Install Path
 
 - [x] CHECK: README/README.ko first-screen install block still showed
-  `npm install -g promptlane` without the publish-pending local checkout path,
-  while live npm registry state still returns E404 for `promptlane@1.0.0`.
+  `npm install -g looprelay` without the publish-pending local checkout path,
+  while live npm registry state still returns E404 for `looprelay@1.0.0`.
 - [x] RED: packaging guard now requires the first README install path to
   separate the post-publish npm install command from the pre-publish local
   checkout coach loop.
@@ -301,7 +301,7 @@
 - [x] VERIFY: focused README install-path guard, formatting, live
   preflight/quality smoke, npm registry status, and diff hygiene.
 
-## 2026-07-09 PromptLane Release Checklist Platform Claims
+## 2026-07-09 LoopRelay Release Checklist Platform Claims
 
 - [x] CHECK: `docs/RELEASE_CHECKLIST.md` still framed a cross-platform GitHub
   Actions matrix as recommended before broader public release, while the current
@@ -314,7 +314,7 @@
 - [x] VERIFY: focused release checklist guard, formatting, live
   preflight/quality smoke, and diff hygiene.
 
-## 2026-07-09 PromptLane README Local Platform Validation
+## 2026-07-09 LoopRelay README Local Platform Validation
 
 - [x] CHECK: README/README.ko Supported Platforms and Requirements still named
   GitHub Actions or CI targets as the release validation basis, while 1.0.0
@@ -326,7 +326,7 @@
 - [x] VERIFY: focused README platform guard, formatting, live preflight/quality
   smoke, and diff hygiene.
 
-## 2026-07-09 PromptLane README Full Release Gate
+## 2026-07-09 LoopRelay README Full Release Gate
 
 - [x] CHECK: README/README.ko Development sections said "full local gate" but
   listed only format/test/lint/build/pack, while `quality-evidence` and release
@@ -339,7 +339,7 @@
 - [x] VERIFY: focused README gate guard, formatting, live preflight/quality
   smoke, and diff hygiene.
 
-## 2026-07-09 PromptLane Changelog Local Gate
+## 2026-07-09 LoopRelay Changelog Local Gate
 
 - [x] CHECK: public CHANGELOG still claimed a GitHub Actions CI matrix on every
   push/PR, while current release policy removed general PR/main CI and uses the
@@ -351,9 +351,9 @@
 - [x] VERIFY: focused public release surface guard, formatting, live
   preflight/quality smoke, and diff hygiene.
 
-## 2026-07-09 PromptLane Release Checklist Planning Docs
+## 2026-07-09 LoopRelay Release Checklist Planning Docs
 
-- [x] CHECK: `package.json#files` ships PromptLane compatibility plans, 9.5
+- [x] CHECK: `package.json#files` ships LoopRelay compatibility plans, 9.5
   quality plan, runtime inventory, and repositioning spec under
   `docs/superpowers/`, but `docs/RELEASE_CHECKLIST.md` package contents did not
   list them for manual tarball review.
@@ -364,7 +364,7 @@
 - [x] VERIFY: focused release checklist guard, formatting, live preflight/quality
   smoke, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Release Gate Order
+## 2026-07-09 LoopRelay NPM Release Gate Order
 
 - [x] CHECK: `quality-evidence` and `docs/RELEASE_CHECKLIST.md` list
   `corepack pnpm pack:dry-run` immediately after build, but
@@ -377,14 +377,14 @@
 - [x] VERIFY: focused packaging guard, formatting, live quality/preflight smoke,
   and diff hygiene.
 
-## 2026-07-09 PromptLane Release Checklist Package Docs
+## 2026-07-09 LoopRelay Release Checklist Package Docs
 
 - [x] CHECK: live preflight is blocked only by npm auth, but
   `docs/RELEASE_CHECKLIST.md` package contents lagged behind the public product,
   integration, benchmark fixture, and release evidence docs shipped by
   `package.json#files`.
 - [x] RED: packaging guard requires release checklist package contents to include
-  PromptLane product contract docs, agent harness docs, loop snapshot schema,
+  LoopRelay product contract docs, agent harness docs, loop snapshot schema,
   dogfood evidence, real benchmark fixture template, and current release evidence
   docs.
 - [x] GREEN: release checklist now lists the shipped public docs needed for a
@@ -392,7 +392,7 @@
 - [x] VERIFY: focused release checklist guard, formatting, live preflight smoke,
   and diff hygiene.
 
-## 2026-07-09 PromptLane Publish Command Handoff
+## 2026-07-09 LoopRelay Publish Command Handoff
 
 - [x] CHECK: `npm-publish:preflight` already exposes `publish_ready` and
   `next_action`, but JSON did not provide a dedicated copy-ready publish command
@@ -405,7 +405,7 @@
 - [x] VERIFY: focused preflight tests, packaging docs guard, formatting, live
   blocked preflight smoke, and diff hygiene.
 
-## 2026-07-09 PromptLane Quality Evidence Release Warning Docs
+## 2026-07-09 LoopRelay Quality Evidence Release Warning Docs
 
 - [x] CHECK: `quality-evidence` now emits `release_warnings`, but
   `docs/NEXT_BACKLOG.md` and the 9.5 plan still described complete quality
@@ -419,7 +419,7 @@
 - [x] VERIFY: focused packaging guard, quality evidence JSON smoke,
   formatting, and diff hygiene.
 
-## 2026-07-09 PromptLane Quality Evidence Release Warnings
+## 2026-07-09 LoopRelay Quality Evidence Release Warnings
 
 - [x] CHECK: `quality-evidence` returned `status: complete` with no
   `release_warnings` while `docs/benchmark-fixtures/real.json` was absent,
@@ -434,7 +434,7 @@
 - [x] VERIFY: focused quality-evidence/packaging tests, quality JSON/text
   smoke, formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane Quality Evidence Silent Benchmark Gate
+## 2026-07-09 LoopRelay Quality Evidence Silent Benchmark Gate
 
 - [x] CHECK: `corepack pnpm --silent evidence:quality` still emitted release
   gate command `corepack pnpm benchmark -- --json`, while release runbooks use
@@ -448,7 +448,7 @@
 - [x] VERIFY: focused quality-evidence/packaging tests, quality JSON smoke,
   formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane Preflight Real Fixture Warning
+## 2026-07-09 LoopRelay Preflight Real Fixture Warning
 
 - [x] CHECK: npm publish preflight warned that synthetic benchmark evidence is
   not real-world proof, but did not say whether the real benchmark fixture file
@@ -463,7 +463,7 @@
 - [x] VERIFY: focused preflight/packaging tests, real preflight JSON/human
   smoke, formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane Preflight Effectiveness Warning
+## 2026-07-09 LoopRelay Preflight Effectiveness Warning
 
 - [x] CHECK: current benchmark JSON passes the synthetic release regression
   gate, but still reports `regression_gate_passed_not_real_world_proof` and
@@ -478,43 +478,43 @@
 - [x] VERIFY: focused preflight/packaging tests, benchmark JSON smoke,
   formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane Active Slash Namespace Docs
+## 2026-07-09 LoopRelay Active Slash Namespace Docs
 
-- [x] CHECK: active README/PLUGINS text described `/promptlane:*` as
+- [x] CHECK: active README/PLUGINS text described `/looprelay:*` as
   supported while also calling it a planned alias-only namespace.
 - [x] RED: packaging docs guard rejects planned alias-only slash namespace
-  copy, missing command-file claims, and legacy `promptlane` CLI alias wording
+  copy, missing command-file claims, and legacy `looprelay` CLI alias wording
   on active surfaces.
-- [x] GREEN: README, Korean README, and PLUGINS now describe `/promptlane:*`
-  as the active Claude Code slash namespace and `promptlane` as the canonical
+- [x] GREEN: README, Korean README, and PLUGINS now describe `/looprelay:*`
+  as the active Claude Code slash namespace and `looprelay` as the canonical
   CLI.
 - [x] VERIFY: focused namespace packaging tests, touched-file formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane Command Docs Canonical CLI
+## 2026-07-09 LoopRelay Command Docs Canonical CLI
 
-- [x] CHECK: Claude command docs checked `command -v promptlane` twice and
+- [x] CHECK: Claude command docs checked `command -v looprelay` twice and
   repeated the same Claude doctor command, making setup/status instructions
   look generated instead of intentional.
 - [x] RED: packaging docs guard rejects duplicate canonical CLI checks,
   product-name alias wording, and repeated `doctor claude-code` commands.
 - [x] GREEN: setup/status command docs now use only the canonical
-  `promptlane` command and one Claude doctor invocation.
+  `looprelay` command and one Claude doctor invocation.
 - [x] VERIFY: focused command-doc packaging test, touched-file formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane Doctor JSON Status Docs
+## 2026-07-09 LoopRelay Doctor JSON Status Docs
 
 - [x] CHECK: doctor JSON now exposes top-level `status`, but README and
   Claude command docs did not tell operators or agents to use it.
 - [x] RED: packaging docs guard requires capture/status docs to mention
-  `promptlane doctor codex --json` and `status: ready|needs_attention`.
-- [x] GREEN: README, Korean README, and `/promptlane:status` command docs now
+  `looprelay doctor codex --json` and `status: ready|needs_attention`.
+- [x] GREEN: README, Korean README, and `/looprelay:status` command docs now
   document the JSON status contract.
 - [x] VERIFY: focused packaging docs test, touched-file formatting, typecheck,
   and diff hygiene.
 
-## 2026-07-09 PromptLane Doctor JSON Status
+## 2026-07-09 LoopRelay Doctor JSON Status
 
 - [x] CHECK: human doctor output printed `Status: ready/needs attention`, but
   JSON automation had to recompute readiness from nested booleans.
@@ -525,18 +525,18 @@
 - [x] VERIFY: focused doctor tests, typecheck, server build/runtime JSON smoke,
   formatting, and diff hygiene.
 
-## 2026-07-09 PromptLane Harness Slash Namespace Contract
+## 2026-07-09 LoopRelay Harness Slash Namespace Contract
 
-- [x] CHECK: `docs/AGENT-HARNESS.md` said `/promptlane:*` remains supported
+- [x] CHECK: `docs/AGENT-HARNESS.md` said `/looprelay:*` remains supported
   while also saying the same namespace is not added until a migration plan.
-- [x] RED: packaging guard requires the harness to preserve `/promptlane:*` as
+- [x] RED: packaging guard requires the harness to preserve `/looprelay:*` as
   the active namespace and reject the contradictory not-added wording.
 - [x] GREEN: harness docs now forbid alternate Claude Code slash namespaces
   without a migration plan instead of contradicting the active namespace.
 - [x] VERIFY: focused packaging test, touched-file formatting, typecheck, and
   diff hygiene.
 
-## 2026-07-09 PromptLane NPM Preflight Inspection Warnings
+## 2026-07-09 LoopRelay NPM Preflight Inspection Warnings
 
 - [x] CHECK: inspection runs now reported `publish_ready: false`, but
   `blocking_checks: []` could still be misread by weak automation.
@@ -547,7 +547,7 @@
 - [x] VERIFY: focused preflight tests, inspection JSON/human smoke,
   formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Preflight Inspection Status
+## 2026-07-09 LoopRelay NPM Preflight Inspection Status
 
 - [x] CHECK: `--skip-npm`/`--skip-git-*` inspection runs could pass with
   `status: ready`, which was too easy to mistake for publish approval.
@@ -559,7 +559,7 @@
 - [x] VERIFY: focused preflight tests, inspection JSON smoke, formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Preflight Recovery Commands
+## 2026-07-09 LoopRelay NPM Preflight Recovery Commands
 
 - [x] CHECK: npm publish preflight JSON exposed `blocking_checks`, but safe
   recovery commands were still embedded only in the prose `next_action`.
@@ -570,7 +570,7 @@
 - [x] VERIFY: focused preflight tests, human/JSON preflight output,
   formatting, typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Preflight JSON Blocking Checks
+## 2026-07-09 LoopRelay NPM Preflight JSON Blocking Checks
 
 - [x] CHECK: human npm publish preflight output now summarized failed checks,
   but JSON consumers still had to filter the long `checks` array to find
@@ -582,7 +582,7 @@
 - [x] VERIFY: focused preflight test, human/JSON preflight output,
   formatting, typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Preflight Blocking Summary
+## 2026-07-09 LoopRelay NPM Preflight Blocking Summary
 
 - [x] CHECK: npm publish preflight human output had a copy-ready next action,
   but the failed check was buried near the bottom of a long pass list.
@@ -593,7 +593,7 @@
 - [x] VERIFY: focused preflight test, human preflight output, formatting,
   typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane Benchmark No-Fixtures Text Next Action
+## 2026-07-09 LoopRelay Benchmark No-Fixtures Text Next Action
 
 - [x] CHECK: missing-real-fixtures benchmark text output showed evidence
   state, but did not print the JSON `next_action`, so operators using plain
@@ -605,7 +605,7 @@
 - [x] VERIFY: focused benchmark/preflight tests, benchmark text output,
   formatting, typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane Benchmark Evidence Text Output
+## 2026-07-09 LoopRelay Benchmark Evidence Text Output
 
 - [x] CHECK: benchmark JSON exposed `evidence_state.release_blocking`, but
   human text output still showed only `pass` and `next_action`, making it easy
@@ -619,7 +619,7 @@
 - [x] VERIFY: focused benchmark/preflight tests, benchmark text output,
   formatting, typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane Benchmark Release Blocking Evidence State
+## 2026-07-09 LoopRelay Benchmark Release Blocking Evidence State
 
 - [x] CHECK: benchmark `evidence_state` distinguished synthetic gate and real
   trend meanings, but did not expose whether a failed result should block
@@ -633,7 +633,7 @@
 - [x] VERIFY: focused benchmark/preflight tests, real no-fixtures JSON,
   formatting, typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane Benchmark Ready Evidence State
+## 2026-07-09 LoopRelay Benchmark Ready Evidence State
 
 - [x] CHECK: missing real fixtures exposed `evidence_state`, but ready
   synthetic and ready real benchmark reports still lacked the same structured
@@ -649,7 +649,7 @@
 - [x] VERIFY: focused benchmark/preflight tests, real no-fixtures JSON,
   formatting, typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane Benchmark Evidence State Preflight Guard
+## 2026-07-09 LoopRelay Benchmark Evidence State Preflight Guard
 
 - [x] CHECK: missing real benchmark fixtures now report structured
   `evidence_state`, but npm publish preflight did not yet guard that the
@@ -662,7 +662,7 @@
 - [x] VERIFY: focused preflight test, preflight JSON, formatting, typecheck,
   and diff hygiene.
 
-## 2026-07-09 PromptLane Missing Real Benchmark Evidence State
+## 2026-07-09 LoopRelay Missing Real Benchmark Evidence State
 
 - [x] CHECK: real benchmark no-fixtures JSON reported a soft `status` and
   `next_action`, but did not expose a structured evidence state that release
@@ -676,7 +676,7 @@
 - [x] VERIFY: focused benchmark fixture test, real no-fixtures JSON,
   formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane Real Fixture Example Preflight Contract
+## 2026-07-09 LoopRelay Real Fixture Example Preflight Contract
 
 - [x] CHECK: `docs/benchmark-fixtures/real.example.json` is shipped and
   documented, but npm publish preflight only proved the path/package surface
@@ -689,7 +689,7 @@
 - [x] VERIFY: focused preflight tests, preflight JSON, formatting, typecheck,
   and diff hygiene.
 
-## 2026-07-09 PromptLane Real Fixture Example Package Docs Guard
+## 2026-07-09 LoopRelay Real Fixture Example Package Docs Guard
 
 - [x] CHECK: `docs/benchmark-fixtures/real.example.json` is now shipped and
   checked by package/preflight allowlists, but the human package contents and
@@ -703,7 +703,7 @@
 - [x] VERIFY: focused packaging docs test, formatting, preflight JSON, and diff
   hygiene.
 
-## 2026-07-09 PromptLane Real Benchmark Fixture Example
+## 2026-07-09 LoopRelay Real Benchmark Fixture Example
 
 - [x] CHECK: the real benchmark loader and spec require consent-bearing
   redacted `docs/benchmark-fixtures/real.json`, but the shipped package did not
@@ -717,7 +717,7 @@
 - [x] VERIFY: focused fixture/package tests, formatting, typecheck, preflight
   JSON, real no-fixtures JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane Real Benchmark Consent Metadata Guard
+## 2026-07-09 LoopRelay Real Benchmark Consent Metadata Guard
 
 - [x] CHECK: real benchmark fixture ingestion required redacted labels,
   queries, prompts, and coach cases, but a present `real.json` did not require
@@ -731,7 +731,7 @@
 - [x] VERIFY: focused fixture/package tests, real no-fixtures JSON, formatting,
   typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane Benchmark Next Action JSON Signal
+## 2026-07-09 LoopRelay Benchmark Next Action JSON Signal
 
 - [x] CHECK: benchmark scores and pass/fail existed, but machine-readable
   output did not give an operator-level next action for distinguishing the
@@ -744,9 +744,9 @@
 - [x] VERIFY: focused benchmark/package/preflight tests, real benchmark JSON,
   formatting, typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Published Version Detail Guard
+## 2026-07-09 LoopRelay NPM Published Version Detail Guard
 
-- [x] CHECK: npm publish preflight blocks when `promptlane@1.0.0` already
+- [x] CHECK: npm publish preflight blocks when `looprelay@1.0.0` already
   exists, but the failed check detail only said the registry returned versions
   instead of preserving the runbook rule to avoid retargeting `v1.0.0`.
 - [x] RED: focused npm publish preflight test requires an already-published
@@ -757,11 +757,11 @@
 - [x] VERIFY: focused preflight/package tests, current preflight JSON,
   formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Package Install Smoke Runbook Guard
+## 2026-07-09 LoopRelay NPM Package Install Smoke Runbook Guard
 
 - [x] CHECK: `smoke:package-install` verifies shipped bin help, installed
-  `promptlane start --open-web --json`, and installed
-  `promptlane quality-evidence --require-complete`, but the npm publishing
+  `looprelay start --open-web --json`, and installed
+  `looprelay quality-evidence --require-complete`, but the npm publishing
   runbook only described bin help commands.
 - [x] RED: focused packaging guard requires the npm publishing runbook to
   document the installed first-success guide and installed quality-evidence
@@ -771,7 +771,7 @@
 - [x] VERIFY: focused packaging guard, package install smoke, preflight JSON,
   formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Runbook Node Range Guard
+## 2026-07-09 LoopRelay NPM Runbook Node Range Guard
 
 - [x] CHECK: `package.json#engines.node` supports `>=22.12 <25` and current
   release verification is running on Node 24, but the npm publishing runbook
@@ -784,7 +784,7 @@
 - [x] VERIFY: focused packaging/preflight tests, formatting, typecheck, and
   diff hygiene.
 
-## 2026-07-09 PromptLane NPM Auth Detail Preflight Guard
+## 2026-07-09 LoopRelay NPM Auth Detail Preflight Guard
 
 - [x] CHECK: final npm publish preflight can be blocked only by npm auth, but
   the failed auth check did not include raw-free recovery detail for operators
@@ -798,7 +798,7 @@
 - [x] VERIFY: focused preflight test, skip-git-clean/current preflight JSON,
   formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Secret Glob Files Preflight Guard
+## 2026-07-09 LoopRelay NPM Secret Glob Files Preflight Guard
 
 - [x] CHECK: package contents docs exclude environment files, SQLite databases,
   logs, and local package artifacts, but npm publish preflight did not guard
@@ -810,7 +810,7 @@
 - [x] VERIFY: focused preflight/package tests, skip-npm preflight JSON,
   formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Local-Only Files Preflight Guard
+## 2026-07-09 LoopRelay NPM Local-Only Files Preflight Guard
 
 - [x] CHECK: release checklist says package dry-run must exclude source, CI,
   dependency, coverage, and runtime data entries, but npm publish preflight did
@@ -819,11 +819,11 @@
   local-only package-files exclusion check.
 - [x] GREEN: npm publish preflight now fails closed if `package.json#files`
   includes source, tests, CI, dependency, coverage, Codex config, or local
-  PromptLane/legacy runtime data entries.
+  LoopRelay/legacy runtime data entries.
 - [x] VERIFY: focused preflight/package tests, skip-npm preflight JSON,
   formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane Pre-Publish Privacy Audit Path Detector Guard
+## 2026-07-09 LoopRelay Pre-Publish Privacy Audit Path Detector Guard
 
 - [x] CHECK: pre-publish privacy audit now mirrors token detectors, but did
   not yet guard the runtime local-path detector family.
@@ -834,7 +834,7 @@
 - [x] VERIFY: focused preflight/package tests, skip-npm preflight JSON,
   formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane Pre-Publish Privacy Audit Detector Guard
+## 2026-07-09 LoopRelay Pre-Publish Privacy Audit Detector Guard
 
 - [x] CHECK: pre-publish privacy audit says its grep pattern should mirror
   runtime detectors, but npm publish preflight did not guard that drift.
@@ -845,7 +845,7 @@
 - [x] VERIFY: focused preflight/package tests, skip-npm preflight JSON,
   formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Origin Tag Sync Preflight Guard
+## 2026-07-09 LoopRelay NPM Origin Tag Sync Preflight Guard
 
 - [x] CHECK: npm publish preflight verified the local annotated `v1.0.0` tag,
   but did not prove that `origin` had the same release tag before publish.
@@ -856,7 +856,7 @@
 - [x] VERIFY: focused preflight test, skip-npm preflight JSON, formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Annotated Tag Preflight Guard
+## 2026-07-09 LoopRelay NPM Annotated Tag Preflight Guard
 
 - [x] CHECK: release checklist requires an annotated `v1.0.0` tag, but npm
   publish preflight only checked that the tag target matched HEAD.
@@ -867,7 +867,7 @@
 - [x] VERIFY: focused preflight test, skip-npm preflight JSON, formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane Benchmark Safe Real Fixture Labels
+## 2026-07-09 LoopRelay Benchmark Safe Real Fixture Labels
 
 - [x] CHECK: real benchmark labels are unique and raw-free, but labels also
   feed benchmark session ids and report keys, so spaces/case/punctuation can
@@ -879,7 +879,7 @@
 - [x] VERIFY: focused fixture/package tests, real no-fixtures soft exit,
   formatting, typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane Benchmark Unique Real Fixture Labels
+## 2026-07-09 LoopRelay Benchmark Unique Real Fixture Labels
 
 - [x] CHECK: real benchmark fixture labels feed `fixtureIds` and retrieval
   reports, but duplicate labels could overwrite fixture ids and mis-link
@@ -891,7 +891,7 @@
 - [x] VERIFY: focused fixture/package tests, real no-fixtures soft exit,
   formatting, typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane Benchmark No-Fixtures Contract Helper
+## 2026-07-09 LoopRelay Benchmark No-Fixtures Contract Helper
 
 - [x] CHECK: no-fixtures JSON contract coverage spawned `benchmark.mjs` against
   the current repo, so adding `docs/benchmark-fixtures/real.json` later would
@@ -904,7 +904,7 @@
 - [x] VERIFY: focused fixture/package tests, real no-fixtures soft exit,
   formatting, typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane Benchmark No-Fixtures Soft Signal
+## 2026-07-09 LoopRelay Benchmark No-Fixtures Soft Signal
 
 - [x] CHECK: `docs/BENCHMARK_V1.md` says benchmark JSON includes
   `fixture_set` and `soft_signal`, but the real no-fixtures JSON returned
@@ -916,7 +916,7 @@
 - [x] VERIFY: focused fixture/package tests, real no-fixtures soft exit,
   formatting, typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane Benchmark Absolute Path Redaction
+## 2026-07-09 LoopRelay Benchmark Absolute Path Redaction
 
 - [x] CHECK: real benchmark fixtures rejected `/Users/...` and `/home/...`,
   but did not reject macOS `/Volumes/...` paths or Windows `C:\Users\...`
@@ -929,7 +929,7 @@
 - [x] VERIFY: focused fixture/package tests, real no-fixtures soft exit,
   formatting, typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane Benchmark Real Fixture Label Redaction
+## 2026-07-09 LoopRelay Benchmark Real Fixture Label Redaction
 
 - [x] CHECK: real benchmark fixtures reject raw secrets/paths in queries,
   prompts, and coach cases, but `label` is also emitted in retrieval reports
@@ -942,7 +942,7 @@
 - [x] VERIFY: focused fixture/package tests, real no-fixtures soft exit,
   formatting, typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane Benchmark Real Fixture Query Redaction
+## 2026-07-09 LoopRelay Benchmark Real Fixture Query Redaction
 
 - [x] CHECK: real benchmark fixtures reject raw secrets/paths in prompts and
   coach cases, but `query` is also emitted in benchmark reports and was not
@@ -955,7 +955,7 @@
 - [x] VERIFY: focused fixture/package tests, real no-fixtures soft exit,
   formatting, typecheck, preflight JSON, and diff hygiene.
 
-## 2026-07-09 PromptLane Benchmark Real Fixture Loader
+## 2026-07-09 LoopRelay Benchmark Real Fixture Loader
 
 - [x] CHECK: `docs/BENCHMARK_V1.md` says `--fixture-set real` reads
   `docs/benchmark-fixtures/real.json`, but the benchmark only checked file
@@ -968,7 +968,7 @@
 - [x] VERIFY: focused fixture/preflight/package tests, synthetic benchmark,
   real no-fixtures soft exit, formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Plugin Docs Preflight Guard
+## 2026-07-09 LoopRelay NPM Plugin Docs Preflight Guard
 
 - [x] CHECK: npm publish preflight checks plugin manifests and files, but
   shipped Codex skill/Claude command docs could lose frontmatter or privacy
@@ -981,7 +981,7 @@
 - [x] VERIFY: focused preflight test, skip-npm preflight JSON, formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Plugin Manifest Preflight Guard
+## 2026-07-09 LoopRelay NPM Plugin Manifest Preflight Guard
 
 - [x] CHECK: npm publish preflight now checks concrete plugin files exist, but
   invalid JSON or drifted Claude/Codex plugin manifest identity could still
@@ -995,7 +995,7 @@
 - [x] VERIFY: focused preflight test, skip-npm preflight JSON, formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Plugin Artifact Preflight Guard
+## 2026-07-09 LoopRelay NPM Plugin Artifact Preflight Guard
 
 - [x] CHECK: npm publish preflight checks integration directories, but an empty
   Claude/Codex plugin directory could still pass without the concrete manifests,
@@ -1008,7 +1008,7 @@
 - [x] VERIFY: focused preflight test, skip-npm preflight JSON, formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Built Asset Preflight Guard
+## 2026-07-09 LoopRelay NPM Built Asset Preflight Guard
 
 - [x] CHECK: release checklist requires built package assets under `dist/cli`,
   `dist/server`, and `dist/web`, but npm publish preflight only checked the
@@ -1020,7 +1020,7 @@
 - [x] VERIFY: focused preflight test, skip-npm preflight JSON, formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Lifecycle Script Preflight Guard
+## 2026-07-09 LoopRelay NPM Lifecycle Script Preflight Guard
 
 - [x] CHECK: package lifecycle scripts `prepack` and `prepare` rebuild the
   release artifacts, but npm publish preflight did not fail closed if those
@@ -1032,7 +1032,7 @@
 - [x] VERIFY: focused preflight test, skip-npm preflight JSON, formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Core Gate Script Preflight Guard
+## 2026-07-09 LoopRelay NPM Core Gate Script Preflight Guard
 
 - [x] CHECK: release checklist requires `format`, `test`, `lint`, and `build`
   before publish, but npm publish preflight did not fail closed if those core
@@ -1044,7 +1044,7 @@
 - [x] VERIFY: focused preflight test, skip-npm preflight JSON, formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Benchmark Script Preflight Guard
+## 2026-07-09 LoopRelay NPM Benchmark Script Preflight Guard
 
 - [x] CHECK: release checklist requires Benchmark v1 and browser E2E before
   publish, but npm publish preflight did not fail closed if the package script
@@ -1056,19 +1056,19 @@
 - [x] VERIFY: focused preflight test, skip-npm preflight JSON, formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Description Preflight Guard
+## 2026-07-09 LoopRelay NPM Description Preflight Guard
 
 - [x] CHECK: `package.json#description` is the product positioning source for
   public npm metadata, but npm publish preflight did not fail closed if it
   drifted before publish.
 - [x] RED: focused preflight JSON test required a machine-readable package
   description positioning check.
-- [x] GREEN: npm publish preflight now checks the PromptLane package
+- [x] GREEN: npm publish preflight now checks the LoopRelay package
   description before publish.
 - [x] VERIFY: focused preflight test, skip-npm preflight JSON, formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Public Metadata Docs Guard
+## 2026-07-09 LoopRelay NPM Public Metadata Docs Guard
 
 - [x] CHECK: `package.json` and npm publish preflight now guard public npm
   metadata, but the publish runbook and product positioning evidence still
@@ -1081,7 +1081,7 @@
 - [x] VERIFY: focused packaging docs tests, formatting, typecheck, and diff
   hygiene.
 
-## 2026-07-09 PromptLane NPM Public Metadata Preflight Guard
+## 2026-07-09 LoopRelay NPM Public Metadata Preflight Guard
 
 - [x] CHECK: product positioning evidence references npm package metadata, but
   npm publish preflight did not fail closed if public npm metadata such as
@@ -1093,12 +1093,12 @@
 - [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON, code
   formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Release Script Preflight Guard
+## 2026-07-09 LoopRelay NPM Release Script Preflight Guard
 
 - [x] CHECK: npm publish preflight checked its own script registration, but did
   not fail closed if release-critical package scripts such as `pack:dry-run`,
   `smoke:release`, `smoke:package-install`, `evidence:quality`, or
-  `promptlane` drifted before publish.
+  `looprelay` drifted before publish.
 - [x] RED: focused preflight JSON test required machine-readable registration
   checks for the release script wrappers used by the publish runbook.
 - [x] GREEN: npm publish preflight now checks those package scripts before
@@ -1106,19 +1106,19 @@
 - [x] VERIFY: focused preflight tests, skip-npm preflight JSON, code formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Bin Target Preflight Guard
+## 2026-07-09 LoopRelay NPM Bin Target Preflight Guard
 
 - [x] CHECK: npm publish preflight checked bin metadata registration, but did
   not fail closed if built bin target files were missing or non-executable
   before publish.
 - [x] RED: focused preflight JSON test required bin target existence and
-  executable checks for `promptlane`, `pl-claude`, and `pl-codex`.
+  executable checks for `looprelay`, `lr-claude`, and `lr-codex`.
 - [x] GREEN: npm publish preflight now checks each registered bin target exists
   and is executable before publish.
 - [x] VERIFY: focused preflight tests, skip-npm preflight JSON, code formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Package Entry Existence Preflight Guard
+## 2026-07-09 LoopRelay NPM Package Entry Existence Preflight Guard
 
 - [x] CHECK: npm publish preflight checked that source-controlled package
   entries were listed in `package.json#files`, but did not fail closed if a
@@ -1131,9 +1131,9 @@
 - [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
   touched-file formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Runtime Evidence Docs Preflight Guard
+## 2026-07-09 LoopRelay NPM Runtime Evidence Docs Preflight Guard
 
-- [x] CHECK: `package.json#files` and package contents docs ship PromptLane
+- [x] CHECK: `package.json#files` and package contents docs ship LoopRelay
   runtime history, legacy-surface, dogfood evidence, rename/deprecation
   decision, native-dialog, and UI patrol readiness docs, but npm publish
   preflight did not check those compatibility/evidence package entries.
@@ -1144,7 +1144,7 @@
 - [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
   touched-file formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Product Docs Preflight Guard
+## 2026-07-09 LoopRelay NPM Product Docs Preflight Guard
 
 - [x] CHECK: release checklist requires product, architecture, technical,
   benchmark, and audit docs to ship in the npm package, but npm publish
@@ -1156,7 +1156,7 @@
 - [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
   touched-file formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Local Verification Scripts Preflight Guard
+## 2026-07-09 LoopRelay NPM Local Verification Scripts Preflight Guard
 
 - [x] CHECK: `package.json#files` and release/package contents docs ship local
   verification, smoke, dogfood, MCP, benchmark, and UI patrol scripts, but npm
@@ -1168,7 +1168,7 @@
 - [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
   touched-file formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Release Evidence Docs Preflight Guard
+## 2026-07-09 LoopRelay NPM Release Evidence Docs Preflight Guard
 
 - [x] CHECK: `package.json#files` ships release evidence docs, but npm publish
   preflight did not check the evidence docs backing release stability, local 9.5,
@@ -1180,7 +1180,7 @@
 - [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
   touched-file formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Release Runbook Docs Preflight Guard
+## 2026-07-09 LoopRelay NPM Release Runbook Docs Preflight Guard
 
 - [x] CHECK: `package.json#files` ships release runbooks, but npm publish
   preflight did not check the operator docs that explain package contents,
@@ -1193,13 +1193,13 @@
 - [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
   touched-file formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Integration Docs Preflight Guard
+## 2026-07-09 LoopRelay NPM Integration Docs Preflight Guard
 
-- [x] CHECK: `package.json#files` ships core PromptLane integration docs, but
+- [x] CHECK: `package.json#files` ships core LoopRelay integration docs, but
   npm publish preflight did not check the docs that installed Codex/Claude
   users and agents rely on.
 - [x] RED: focused preflight and packaging guards required machine-readable
-  checks for `docs/PROMPTLANE.md`, `docs/AGENT-HARNESS.md`,
+  checks for `docs/LOOPRELAY.md`, `docs/AGENT-HARNESS.md`,
   `docs/INSTRUCTION-FILES.md`, `docs/PLUGINS.md`, `docs/ADAPTERS.md`, and
   `docs/LOOP-SNAPSHOT-SCHEMA.md`.
 - [x] GREEN: npm publish preflight now checks those core integration docs, and
@@ -1207,7 +1207,7 @@
 - [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
   touched-file formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Integration Files Preflight Guard
+## 2026-07-09 LoopRelay NPM Integration Files Preflight Guard
 
 - [x] CHECK: `package.json#files` ships Claude/Codex integration surfaces, but
   npm publish preflight did not check `.claude-plugin`, `commands`, `plugins`,
@@ -1219,7 +1219,7 @@
 - [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
   touched-file formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Community Docs Preflight Guard
+## 2026-07-09 LoopRelay NPM Community Docs Preflight Guard
 
 - [x] CHECK: `package.json#files` ships community support documents, but npm
   publish preflight did not check `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, or
@@ -1231,7 +1231,7 @@
 - [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
   touched-file formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Public Docs Preflight Guard
+## 2026-07-09 LoopRelay NPM Public Docs Preflight Guard
 
 - [x] CHECK: NPM publishing checklist requires English/Korean README and
   public release documentation, but npm publish preflight only checked
@@ -1244,7 +1244,7 @@
 - [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
   touched-file formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Release Scripts Preflight Guard
+## 2026-07-09 LoopRelay NPM Release Scripts Preflight Guard
 
 - [x] CHECK: release checklist and package contents require core release
   verification scripts to ship, but npm publish preflight only checked the
@@ -1258,7 +1258,7 @@
 - [x] VERIFY: focused preflight/packaging tests, skip-npm preflight JSON,
   touched-file formatting, typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Engine Manager Preflight Guard
+## 2026-07-09 LoopRelay NPM Engine Manager Preflight Guard
 
 - [x] CHECK: `package.json` pins `packageManager` and Node engine for release
   install/build behavior, but `scripts/npm-publish-preflight.mjs` did not check
@@ -1271,7 +1271,7 @@
 - [x] VERIFY: focused preflight/packaging tests, touched-file formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Source Map Exclusion Preflight Guard
+## 2026-07-09 LoopRelay NPM Source Map Exclusion Preflight Guard
 
 - [x] CHECK: release docs require `dist/**/*.map` to stay local-only, and
   `package.json#files` has `!dist/**/*.map`, but npm publish preflight did not
@@ -1283,7 +1283,7 @@
 - [x] VERIFY: focused preflight/packaging tests, touched-file formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Package Files Preflight Guard
+## 2026-07-09 LoopRelay NPM Package Files Preflight Guard
 
 - [x] CHECK: npm publish preflight only checked that
   `scripts/npm-publish-preflight.mjs` was in `package.json#files`, but did not
@@ -1297,31 +1297,31 @@
 - [x] VERIFY: focused preflight/packaging tests, touched-file formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM All Bins Preflight Guard
+## 2026-07-09 LoopRelay NPM All Bins Preflight Guard
 
-- [x] CHECK: npm publish preflight checked only `bin.promptlane`, while
-  `package.json` publishes three CLI entries: `promptlane`, `pl-claude`, and
-  `pl-codex`.
-- [x] RED: focused preflight and packaging guards required `pl-claude` and
-  `pl-codex` bin checks in addition to `promptlane`.
+- [x] CHECK: npm publish preflight checked only `bin.looprelay`, while
+  `package.json` publishes three CLI entries: `looprelay`, `lr-claude`, and
+  `lr-codex`.
+- [x] RED: focused preflight and packaging guards required `lr-claude` and
+  `lr-codex` bin checks in addition to `looprelay`.
 - [x] GREEN: npm publish preflight now iterates the expected bin map and emits a
   check for every shipped CLI bin entry.
 - [x] VERIFY: focused preflight/packaging tests, touched-file formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Metadata Preflight Guard
+## 2026-07-09 LoopRelay NPM Metadata Preflight Guard
 
 - [x] CHECK: `package.json` has stable release metadata for license,
-  repository, and `bin.promptlane`, but `scripts/npm-publish-preflight.mjs` did
+  repository, and `bin.looprelay`, but `scripts/npm-publish-preflight.mjs` did
   not include those checks in the single publish gate.
 - [x] RED: preflight JSON test and packaging guard now require package metadata
-  checks for MIT license, GitHub repository, and the `promptlane` bin entry.
+  checks for MIT license, GitHub repository, and the `looprelay` bin entry.
 - [x] GREEN: npm publish preflight now emits metadata checks, and the NPM
   runbook checklist mentions license, repository, and bin metadata.
 - [x] VERIFY: focused preflight/packaging tests, touched-file formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Private Publish Guard
+## 2026-07-09 LoopRelay NPM Private Publish Guard
 
 - [x] CHECK: `scripts/npm-publish-preflight.mjs` checked version, scripts,
   files, git state, tag state, npm auth, and unpublished package state, but did
@@ -1334,7 +1334,7 @@
 - [x] VERIFY: focused packaging/preflight tests, touched-file formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Useful Commands Tag Refresh
+## 2026-07-09 LoopRelay NPM Useful Commands Tag Refresh
 
 - [x] CHECK: `docs/NPM_PUBLISHING.md`의 Useful NPM Commands 섹션이 여전히
   `git tag -a v1.0.0`와 non-force push를 안내해, unpublished 1.0.0 release
@@ -1347,7 +1347,7 @@
 - [x] VERIFY: focused public release surface guard, touched-file formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane Implementation Plan Tag Order
+## 2026-07-09 LoopRelay Implementation Plan Tag Order
 
 - [x] CHECK: `docs/IMPLEMENTATION_PLAN.md` still described creating the
   annotated `v1.0.0` tag only after the full local release gate, while current
@@ -1361,7 +1361,7 @@
 - [x] VERIFY: focused public release surface guard, touched-file formatting,
   typecheck, and diff hygiene.
 
-## 2026-07-09 PromptLane NPM Runbook Tag Order
+## 2026-07-09 LoopRelay NPM Runbook Tag Order
 
 - [x] CHECK: `docs/RELEASE_CHECKLIST.md` now requires creating or refreshing
   `v1.0.0` before `corepack pnpm npm-publish:preflight`, but
@@ -1375,7 +1375,7 @@
 - [x] VERIFY: focused packaging guard, touched-file formatting, typecheck, and
   diff hygiene.
 
-## 2026-07-08 PromptLane Package Contents Script List
+## 2026-07-08 LoopRelay Package Contents Script List
 
 - [x] CHECK: `docs/PACKAGE_CONTENTS.md` shipped script 목록에서 일부 release
   scripts가 한 줄에 몰려 있어 1.0.0 공개 전 tarball 리뷰와 drift 검토가
@@ -1388,7 +1388,7 @@
 - [x] VERIFY: focused packaging guard, touched-file formatting, typecheck, and
   diff hygiene.
 
-## 2026-07-08 PromptLane Release Checklist Tag Order
+## 2026-07-08 LoopRelay Release Checklist Tag Order
 
 - [x] CHECK: release checklist told operators to run
   `corepack pnpm npm-publish:preflight` before creating the `v1.0.0` tag, but
@@ -1402,12 +1402,12 @@
 - [x] VERIFY: focused release checklist guard, touched-file formatting,
   typecheck, diff hygiene, and post-merge preflight.
 
-## 2026-07-08 PromptLane Release Checklist Preflight JSON
+## 2026-07-08 LoopRelay Release Checklist Preflight JSON
 
 - [x] CHECK: NPM publishing runbook documents the silent machine-readable
   preflight JSON command, but the release checklist only documented silent
   quality evidence JSON. Focused guard also exposed that Architecture omitted
-  the installed `promptlane start --open-web --json` package-smoke path.
+  the installed `looprelay start --open-web --json` package-smoke path.
 - [x] RED: packaging guard requires `docs/RELEASE_CHECKLIST.md` to mention
   `corepack pnpm --silent npm-publish:preflight -- --json` and still requires
   Architecture to mention the installed start guide path.
@@ -1417,7 +1417,7 @@
 - [x] VERIFY: focused packaging guards, touched-file formatting, typecheck,
   diff hygiene, and post-merge preflight.
 
-## 2026-07-08 PromptLane NPM Preflight JSON Runbook
+## 2026-07-08 LoopRelay NPM Preflight JSON Runbook
 
 - [x] CHECK: `npm-publish:preflight -- --json` through a normal pnpm script
   prints pnpm script banners before JSON, while `corepack pnpm --silent
@@ -1429,7 +1429,7 @@
 - [x] VERIFY: focused publishing guard, real silent JSON preflight, touched-file
   formatting, typecheck, diff hygiene, and post-merge preflight.
 
-## 2026-07-08 PromptLane Preflight Tag Mismatch Next Action
+## 2026-07-08 LoopRelay Preflight Tag Mismatch Next Action
 
 - [x] CHECK: tag mismatch detail now includes the unpublished 1.0.0 tag refresh
   policy, but `next_action` still returned generic `Fix blocked checks before
@@ -1441,13 +1441,13 @@
 - [x] VERIFY: focused preflight/packaging guards, touched-file formatting,
   typecheck, diff hygiene, and post-merge preflight.
 
-## 2026-07-08 PromptLane Preflight Tag Refresh Guidance
+## 2026-07-08 LoopRelay Preflight Tag Refresh Guidance
 
 - [x] CHECK: `docs/NPM_PUBLISHING.md` now distinguishes unpublished 1.0.0 tag
   refresh from post-publish version bump, but `npm-publish:preflight` tag
   mismatch output still told operators only to publish from the old tag or bump.
 - [x] RED: fake-git preflight test and packaging guard now require tag mismatch
-  detail to mention unpublished `promptlane@1.0.0` tag refresh and
+  detail to mention unpublished `looprelay@1.0.0` tag refresh and
   already-published version bump.
 - [x] GREEN: preflight tag mismatch detail includes the tagged-checkout path,
   `git tag -fa v1.0.0` for unpublished intended-release HEAD, and version bump
@@ -1455,13 +1455,13 @@
 - [x] VERIFY: focused preflight/packaging guards, touched-file formatting,
   typecheck, diff hygiene, and post-merge preflight.
 
-## 2026-07-08 PromptLane Pre-Publish Tag Refresh Policy
+## 2026-07-08 LoopRelay Pre-Publish Tag Refresh Policy
 
 - [x] CHECK: `docs/NPM_PUBLISHING.md` still implied that a newer main commit
   after `v1.0.0` should publish from the old tag or bump, while current 1.0.0
   release-candidate polishing needs a clear pre-publish tag refresh policy.
 - [x] RED: packaging guard now requires separate policy for refreshing
-  `v1.0.0` before `promptlane@1.0.0` is published and bumping after it is
+  `v1.0.0` before `looprelay@1.0.0` is published and bumping after it is
   published.
 - [x] GREEN: npm publishing runbook documents `git tag -fa v1.0.0` only for
   unpublished 1.0.0 release-candidate refreshes and forbids retargeting after
@@ -1469,12 +1469,12 @@
 - [x] VERIFY: focused packaging guard, touched-file formatting, typecheck,
   diff hygiene, and post-merge preflight.
 
-## 2026-07-08 PromptLane NPM Post-Publish First Run Guide
+## 2026-07-08 LoopRelay NPM Post-Publish First Run Guide
 
 - [x] CHECK: README first-success path uses
-  `promptlane setup --profile coach --register-mcp --open-web` plus
-  `promptlane coach`, but `docs/NPM_PUBLISHING.md` still told post-publish
-  users to run bare `promptlane setup`.
+  `looprelay setup --profile coach --register-mcp --open-web` plus
+  `looprelay coach`, but `docs/NPM_PUBLISHING.md` still told post-publish
+  users to run bare `looprelay setup`.
 - [x] RED: packaging guard now requires the npm publishing runbook to include
   the full setup/open-web/coach path and reject the bare setup command.
 - [x] GREEN: npm publishing install-after-publish commands now match the
@@ -1482,11 +1482,11 @@
 - [x] VERIFY: focused packaging guard, typecheck, touched-file formatting,
   skip-npm preflight after commit, and diff hygiene.
 
-## 2026-07-08 PromptLane Installed Quality Evidence Smoke
+## 2026-07-08 LoopRelay Installed Quality Evidence Smoke
 
 - [x] CHECK: `smoke:package-install` installs the tarball and checks first-run
   guidance, but it still does not prove the installed package can run the
-  release-gate `promptlane quality-evidence --require-complete` command away
+  release-gate `looprelay quality-evidence --require-complete` command away
   from the repository working directory.
 - [x] RED: packaging guard requires the package install smoke to execute the
   installed quality-evidence gate from an isolated cwd and requires release
@@ -1497,20 +1497,20 @@
 - [x] VERIFY: focused packaging guard, real package install smoke, typecheck,
   formatting, diff hygiene, and npm publish preflight.
 
-## 2026-07-08 PromptLane Package Smoke Start Guide
+## 2026-07-08 LoopRelay Package Smoke Start Guide
 
 - [x] CHECK: `smoke:package-install` verified shipped bin help paths but did
-  not execute the first user-facing command, `promptlane start --open-web
+  not execute the first user-facing command, `looprelay start --open-web
   --json`, from the installed tarball.
 - [x] RED: packaging guard now requires package install smoke to run and
-  validate `promptlane start --open-web --json`, and release stability evidence
+  validate `looprelay start --open-web --json`, and release stability evidence
   to mention that first-success check.
 - [x] GREEN: package install smoke parses the installed start guide JSON and
   verifies setup, coach, and doctor commands are present.
 - [x] VERIFY: focused packaging guards, real package install smoke, typecheck,
   formatting, and diff hygiene.
 
-## 2026-07-08 PromptLane Korean README MCP Troubleshooting Parity
+## 2026-07-08 LoopRelay Korean README MCP Troubleshooting Parity
 
 - [x] CHECK: English first 3-minute loop tells users to rerun
   `setup --register-mcp` before manual MCP commands, while Korean README showed
@@ -1522,31 +1522,31 @@
   order and explains why setup registration is preferred.
 - [x] VERIFY: focused README guards, pack dry-run, formatting, and diff hygiene.
 
-## 2026-07-08 PromptLane Korean README First Capture Parity
+## 2026-07-08 LoopRelay Korean README First Capture Parity
 
 - [x] CHECK: Korean README Codex quick start omitted `--open-web`, and Capture
-  check omitted `promptlane coach`, while English README included both in the
+  check omitted `looprelay coach`, while English README included both in the
   first-success path.
 - [x] RED: section-scoped README guard now requires the Korean Codex quick start
   and capture check sections to match the English first capture path.
 - [x] GREEN: README.ko Codex setup now uses `--open-web`, and Capture check
-  includes `promptlane coach`.
+  includes `looprelay coach`.
 - [x] VERIFY: focused README guards, pack dry-run, test formatting, and diff
   hygiene.
 
-## 2026-07-08 PromptLane Korean README Dev Setup Parity
+## 2026-07-08 LoopRelay Korean README Dev Setup Parity
 
 - [x] CHECK: English README local development quick start uses `pnpm install`
   plus `pnpm setup` and explains the `prepare` build lifecycle, but
   README.ko still stopped at `pnpm build`.
 - [x] RED: packaging guard now requires both English and Korean README to
   document `pnpm setup`, `prepare`, and the full
-  `pnpm promptlane setup --profile coach --register-mcp --open-web` alias.
+  `pnpm looprelay setup --profile coach --register-mcp --open-web` alias.
 - [x] GREEN: README.ko local development setup now matches the English
   install/setup path and explains the prepare lifecycle.
 - [x] VERIFY: focused README guards, pack dry-run, formatting, and diff hygiene.
 
-## 2026-07-08 PromptLane Public Release Gate Docs
+## 2026-07-08 LoopRelay Public Release Gate Docs
 
 - [x] CHECK: `docs/IMPLEMENTATION_PLAN.md`, `docs/TECH_SPEC.md`, `docs/PRD.md`
   still showed bare `pnpm` release gates and omitted package install / quality
@@ -1559,7 +1559,7 @@
 - [x] VERIFY: focused packaging doc guards, built quality evidence CLI gate,
   and diff hygiene.
 
-## 2026-07-08 PromptLane Release Evidence Pack Count Drift
+## 2026-07-08 LoopRelay Release Evidence Pack Count Drift
 
 - [x] CHECK: current `corepack pnpm pack:dry-run` reports 369 files, but
   `docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md` still hardcoded
@@ -1570,7 +1570,7 @@
   expected shipped files instead of a stale exact file count.
 - [x] VERIFY: focused packaging guard, current pack dry-run, and diff hygiene.
 
-## 2026-07-08 PromptLane Quality Evidence Package Install Gate
+## 2026-07-08 LoopRelay Quality Evidence Package Install Gate
 
 - [x] CHECK: `docs/NPM_PUBLISHING.md`와 release checklist에는
   `smoke:package-install`이 추가됐지만 `quality-evidence` JSON release gate,
@@ -1583,7 +1583,7 @@
 - [x] VERIFY: focused quality evidence tests, packaging drift guards, actual
   quality evidence CLI output, typecheck, formatting, diff hygiene를 확인한다.
 
-## 2026-07-08 PromptLane Package Install Smoke Gate
+## 2026-07-08 LoopRelay Package Install Smoke Gate
 
 - [x] CHECK: 수동 npm tarball install smoke는 통과했지만 runbook 명령이
   shell detail에 취약해 반복 release gate로 쓰기 어렵다.
@@ -1595,7 +1595,7 @@
 - [x] VERIFY: focused packaging guard, package install smoke, touched-file
   formatting, diff hygiene, publish preflight 상태를 확인한다.
 
-## 2026-07-08 PromptLane NPM Preflight Detail Length
+## 2026-07-08 LoopRelay NPM Preflight Detail Length
 
 - [x] CHECK: tag mismatch preflight detail used the new tagged-checkout
   guidance, but the shared detail cap truncated the sentence before
@@ -1607,7 +1607,7 @@
 - [x] VERIFY: focused preflight tests, packaging tests, post-merge preflight
   checks, touched-file formatting, typecheck, and diff hygiene.
 
-## 2026-07-08 PromptLane NPM Preflight Tag Mismatch Copy
+## 2026-07-08 LoopRelay NPM Preflight Tag Mismatch Copy
 
 - [x] CHECK: `docs/NPM_PUBLISHING.md` no longer claimed `v1.0.0` predates the
   preflight script, but `scripts/npm-publish-preflight.mjs` still told tag
@@ -1621,7 +1621,7 @@
 - [x] VERIFY: focused preflight tests, packaging tests, real post-merge
   preflight/tag check, touched-file formatting, typecheck, and diff hygiene.
 
-## 2026-07-08 PromptLane NPM Preflight Auth Next Action
+## 2026-07-08 LoopRelay NPM Preflight Auth Next Action
 
 - [x] CHECK: current publish preflight correctly blocks on missing npm auth,
   but its `next_action` was the generic "Fix blocked checks before publishing."
@@ -1637,7 +1637,7 @@
   skip-npm preflight/tag check, touched-file formatting, typecheck, and diff
   hygiene.
 
-## 2026-07-08 PromptLane NPM Publish Runbook Current Tag
+## 2026-07-08 LoopRelay NPM Publish Runbook Current Tag
 
 - [x] CHECK: `v1.0.0` now points at current main and
   `npm-publish:preflight` exists on the release commit, but
@@ -1650,7 +1650,7 @@
 - [x] VERIFY: focused npm publishing docs guard, packaging tests, touched-file
   formatting, typecheck, and diff hygiene.
 
-## 2026-07-08 PromptLane Benchmark Archive Effectiveness Coverage
+## 2026-07-08 LoopRelay Benchmark Archive Effectiveness Coverage
 
 - [x] CHECK: `corepack pnpm benchmark -- --json` passed but reported
   `archive_effectiveness_score: 1` while only 1 of 5 synthetic prompts had
@@ -1665,7 +1665,7 @@
 - [x] VERIFY: focused benchmark contract test, current benchmark JSON, touched
   file formatting, typecheck, and diff hygiene.
 
-## 2026-07-08 PromptLane Quality Evidence Header Row Guard
+## 2026-07-08 LoopRelay Quality Evidence Header Row Guard
 
 - [x] CHECK: 1.0.0 release smoke failed because the 9.5 scorecard Markdown
   header row was parsed as a real `axis` scorecard row after table formatting
@@ -1678,7 +1678,7 @@
   evidence quality require-complete, typecheck, code/test formatting, and diff
   hygiene.
 
-## 2026-07-08 PromptLane README Release Smoke Corepack Commands
+## 2026-07-08 LoopRelay README Release Smoke Corepack Commands
 
 - [x] CHECK: README/README.ko release smoke examples still used bare
   `pnpm smoke:release` and `pnpm e2e:browser`, and the 9.5 quality plan still
@@ -1692,7 +1692,7 @@
 - [x] VERIFY: focused README release-smoke guard, packaging tests, typecheck,
   touched-file formatting, quality lint, and diff whitespace check.
 
-## 2026-07-08 PromptLane Smoke Dogfood Corepack Build
+## 2026-07-08 LoopRelay Smoke Dogfood Corepack Build
 
 - [x] CHECK: most benchmark/e2e/smoke/dogfood package scripts still invoked
   bare `pnpm build`, and their missing-build hints said `pnpm build`, while
@@ -1704,7 +1704,7 @@
 - [x] VERIFY: focused build-backed script guard, packaging tests, typecheck,
   touched-file formatting, quality lint, and diff whitespace check.
 
-## 2026-07-08 PromptLane Agent Setup Smoke Corepack Build
+## 2026-07-08 LoopRelay Agent Setup Smoke Corepack Build
 
 - [x] CHECK: `smoke:agent-setup` still invoked bare `pnpm build`, and the
   smoke script missing-build recovery hint also said `pnpm build`, while release
@@ -1716,7 +1716,7 @@
 - [x] VERIFY: focused setup smoke packaging guard, packaging tests, typecheck,
   touched-file formatting, quality lint, and diff whitespace check.
 
-## 2026-07-08 PromptLane Architecture Release Gate Corepack Alignment
+## 2026-07-08 LoopRelay Architecture Release Gate Corepack Alignment
 
 - [x] CHECK: `docs/ARCHITECTURE.md` still documented the normal release gate
   with bare `pnpm` and omitted benchmark, browser E2E, release smoke, and 9.5
@@ -1728,25 +1728,25 @@
 - [x] VERIFY: focused release-checklist packaging guard, packaging tests,
   typecheck, touched-file formatting, quality lint, and diff whitespace check.
 
-## 2026-07-08 PromptLane README Quality Evidence Corepack Commands
+## 2026-07-08 LoopRelay README Quality Evidence Corepack Commands
 
 - [x] CHECK: README and README.ko documented the release/goal-completion
   `quality-evidence --require-complete` gate with bare `pnpm`, while release
   checklist, NPM publishing runbook, and quality evidence JSON use
   `corepack pnpm` to avoid package-manager drift.
 - [x] RED: packaging guard now requires both READMEs to show
-  `corepack pnpm promptlane quality-evidence --require-complete` and reject the
-  bare `pnpm promptlane quality-evidence --require-complete` line.
+  `corepack pnpm looprelay quality-evidence --require-complete` and reject the
+  bare `pnpm looprelay quality-evidence --require-complete` line.
 - [x] GREEN: README quality-evidence command blocks now use `corepack pnpm`
   for text, JSON, operator brief, and require-complete examples.
 - [x] VERIFY: focused quality-evidence packaging guard, packaging tests,
   typecheck, touched-file formatting, quality lint, and diff whitespace check.
 
-## 2026-07-08 PromptLane NPM Publish Quality Gate Alignment
+## 2026-07-08 LoopRelay NPM Publish Quality Gate Alignment
 
 - [x] CHECK: `docs/RELEASE_CHECKLIST.md` and quality evidence JSON require
   both `corepack pnpm evidence:quality -- --require-complete` and built product
-  CLI `corepack pnpm promptlane quality-evidence --require-complete`, but
+  CLI `corepack pnpm looprelay quality-evidence --require-complete`, but
   `docs/NPM_PUBLISHING.md` omitted both from the publish-local gate.
 - [x] RED: packaging guard now requires the NPM publishing runbook to include
   both quality evidence commands before npm preflight.
@@ -1756,11 +1756,11 @@
 - [x] VERIFY: focused packaging guard, packaging tests, typecheck,
   touched-file formatting, quality lint, and diff whitespace check.
 
-## 2026-07-08 PromptLane NPM Publishing Live Readiness
+## 2026-07-08 LoopRelay NPM Publishing Live Readiness
 
 - [x] CHECK: `docs/NPM_PUBLISHING.md` still presented a 2026-05-02
   `npm whoami` and E404 lookup as current readiness, while live checks on
-  2026-07-08 returned `npm whoami` `E401 Unauthorized` and `promptlane`
+  2026-07-08 returned `npm whoami` `E401 Unauthorized` and `looprelay`
   registry lookup `E404 Not Found`.
 - [x] RED: packaging guard requires the runbook to use `## Live Readiness Checks`,
   warn against treating older `npm whoami` notes as publish approval, include
@@ -1770,7 +1770,7 @@
 - [x] VERIFY: focused packaging guard, implementation format check, typecheck,
   and diff whitespace check.
 
-## 2026-07-08 PromptLane NPM Publish Tag Guidance
+## 2026-07-08 LoopRelay NPM Publish Tag Guidance
 
 - [x] CHECK: `v1.0.0` 태그 이후 main이 preflight 추가 커밋으로 이동해,
   현재 main에서 publish하면 태그 커밋과 package commit이 달라질 수 있다.
@@ -1782,7 +1782,7 @@
 - [x] VERIFY: focused packaging guard, preflight tag-mismatch JSON smoke,
   implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane NPM Publish Preflight
+## 2026-07-08 LoopRelay NPM Publish Preflight
 
 - [x] CHECK: 1.0.0 tag 이후 npm publish는 수동 runbook에 의존해 npm auth,
   이미 게시된 버전, clean/tag 상태를 publish 직전에 fail-closed로 확인하기 어렵다.
@@ -1794,7 +1794,7 @@
 - [x] VERIFY: focused packaging guard, preflight offline/json smoke,
   implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Release Smoke Quality Evidence CLI Gate
+## 2026-07-08 LoopRelay Release Smoke Quality Evidence CLI Gate
 
 - [x] CHECK: release gate는 product CLI `quality-evidence --require-complete`를 요구하지만
   `scripts/release-smoke.mjs`는 built CLI의 quality evidence command를 직접 실행하지 않아
@@ -1807,20 +1807,20 @@
 - [x] VERIFY: focused release checklist packaging guard, quality evidence JSON smoke,
   implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Quality Evidence Corepack CLI Gate
+## 2026-07-08 LoopRelay Quality Evidence Corepack CLI Gate
 
 - [x] CHECK: 9.5 quality release gate 대부분은 `corepack pnpm ...`을 쓰지만
-  installed CLI parity 항목만 bare `pnpm promptlane quality-evidence --require-complete`를
+  installed CLI parity 항목만 bare `pnpm looprelay quality-evidence --require-complete`를
   가리켜 package-manager PATH 의존성을 다시 만들 수 있다.
 - [x] RED: quality evidence CLI/script/packaging tests가 release gate와 release checklist에
-  `corepack pnpm promptlane quality-evidence --require-complete`를 요구하게 해 현재
-  bare `pnpm promptlane...` drift 실패를 확인한다.
+  `corepack pnpm looprelay quality-evidence --require-complete`를 요구하게 해 현재
+  bare `pnpm looprelay...` drift 실패를 확인한다.
 - [x] GREEN: `scripts/quality-95-evidence.mjs`와 release/backlog/quality-plan 문서의
-  installed CLI parity gate를 `corepack pnpm promptlane ...`로 정렬한다.
+  installed CLI parity gate를 `corepack pnpm looprelay ...`로 정렬한다.
 - [x] VERIFY: focused quality-evidence CLI/packaging tests, quality evidence JSON smoke,
   implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Server Problem Quoted Detail Redaction
+## 2026-07-08 LoopRelay Server Problem Quoted Detail Redaction
 
 - [x] CHECK: server problem sanitizer가 raw-detail key phrase를 redaction하지만
   quoted 값 안에 공백이 있으면 첫 단어까지만 치환해 prompt/session summary fragment를
@@ -1833,7 +1833,7 @@
 - [x] VERIFY: focused server problem/validation tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Server Problem Title Redaction
+## 2026-07-08 LoopRelay Server Problem Title Redaction
 
 - [x] CHECK: server `problem()` factory가 `detail`, `instance`, `errors[]`는
   redaction하지만 top-level `title`과 title-derived `type` URL은 원문 title에서
@@ -1847,7 +1847,7 @@
 - [x] VERIFY: focused server problem/validation tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Server Problem Detail Redaction
+## 2026-07-08 LoopRelay Server Problem Detail Redaction
 
 - [x] CHECK: server `problem()` factory가 `errors[]`와 `instance`는 redaction하지만
   top-level `detail`은 그대로 전달해 future route/server error detail이 raw prompt body,
@@ -1862,7 +1862,7 @@
 - [x] VERIFY: focused server problem/validation tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Server Problem Instance Redaction
+## 2026-07-08 LoopRelay Server Problem Instance Redaction
 
 - [x] CHECK: server `problem()` factory가 `errors[].field/message`는 redaction하지만
   `instance`는 그대로 전달해 `request.url` query에 raw local path/token이 들어오면
@@ -1875,7 +1875,7 @@
 - [x] VERIFY: focused server problem/validation tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Server Problem Field Redaction
+## 2026-07-08 LoopRelay Server Problem Field Redaction
 
 - [x] CHECK: server `problem()` factory가 validation `errors[].message`는 redaction하지만
   `errors[].field`는 그대로 전달해 future custom validation field가 raw local path/token을
@@ -1888,7 +1888,7 @@
 - [x] VERIFY: focused server problem/validation tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Server Problem Error Redaction
+## 2026-07-08 LoopRelay Server Problem Error Redaction
 
 - [x] CHECK: `problem()` factory가 validation `errors[].message`를 그대로 전달해
   future route/Zod/custom validation issue가 raw prompt detail, local path, provider token을
@@ -1901,7 +1901,7 @@
 - [x] VERIFY: focused server problem/validation tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Description Detail
+## 2026-07-08 LoopRelay Web Error Description Detail
 
 - [x] CHECK: `failApi`가 auth/OAuth-style failed response의 `error_description`을
   무시하고 짧은 `error` code만 표시해 settings/session recovery detail이 사라질 수 있다.
@@ -1913,7 +1913,7 @@
 - [x] VERIFY: focused web API failed response detail/redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web JSON String Error Detail
+## 2026-07-08 LoopRelay Web JSON String Error Detail
 
 - [x] CHECK: `failApi`가 failed response JSON body를 object shape로만 해석해
   valid JSON string body의 settings/session recovery detail이 사라질 수 있다.
@@ -1924,7 +1924,7 @@
 - [x] VERIFY: focused web API failed response detail/redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Real Text Response Error Detail
+## 2026-07-08 LoopRelay Web Real Text Response Error Detail
 
 - [x] CHECK: `failApi`가 JSON parse 실패 후 같은 `Response`에서 `text()`를 읽어
   mock text response는 통과하지만 실제 Fetch `Response`에서는 body가 이미 소비되어 text/plain
@@ -1937,7 +1937,7 @@
 - [x] VERIFY: focused web API failed response detail/redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Text Error Detail Redaction
+## 2026-07-08 LoopRelay Web Text Error Detail Redaction
 
 - [x] CHECK: `failApi`가 failed response를 JSON으로만 읽고 parse 실패 시 body text를
   버려 text/plain settings/session recovery detail이 사라질 수 있다.
@@ -1948,7 +1948,7 @@
 - [x] VERIFY: focused web API failed response detail/redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Errors Field Detail Redaction
+## 2026-07-08 LoopRelay Web Errors Field Detail Redaction
 
 - [x] CHECK: `failApi`가 `errors[]` array는 issue detail로 처리하지만 common
   `{ errors: "..." }` string payload는 무시해 settings/session recovery detail이 사라질 수 있다.
@@ -1959,7 +1959,7 @@
 - [x] VERIFY: focused web API failed response detail/redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Field Detail Redaction
+## 2026-07-08 LoopRelay Web Error Field Detail Redaction
 
 - [x] CHECK: `failApi`가 failed response의 top-level `detail`/`title`/`message`는
   표시하지만 common `{ error: "..." }` payload는 무시해 settings/session recovery detail이
@@ -1971,7 +1971,7 @@
 - [x] VERIFY: focused web API failed response detail/redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue Detail Redaction
+## 2026-07-08 LoopRelay Web Error Issue Detail Redaction
 
 - [x] CHECK: `apiErrorIssueText`가 failed response issue item의 `message`는 처리하지만
   JSON:API-style `detail`은 무시해 `source.pointer`가 있어도 field-level recovery detail이
@@ -1984,7 +1984,7 @@
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issues Array Redaction
+## 2026-07-08 LoopRelay Web Error Issues Array Redaction
 
 - [x] CHECK: `failApi`가 failed response의 `errors[]`만 issue detail로 읽고
   Zod-style `issues[]`는 무시해 validation recovery detail이 사라질 수 있다.
@@ -1996,7 +1996,7 @@
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue Source Pointer Redaction
+## 2026-07-08 LoopRelay Web Error Issue Source Pointer Redaction
 
 - [x] CHECK: `apiErrorIssueText`가 validation `errors[]`의 direct 위치 키와 AJV
   params는 처리하지만 JSON:API-style `source.pointer: "/data/attributes/prompt_body"`는
@@ -2010,7 +2010,7 @@
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue File URL Path Redaction
+## 2026-07-08 LoopRelay Web Error Issue File URL Path Redaction
 
 - [x] CHECK: `apiErrorIssuePathText`가 local filesystem path는 redaction 경로로 보내지만
   `file:///Users/.../raw.md` local file URL은 JSON Pointer처럼 dot path로 바꿔 failed
@@ -2023,7 +2023,7 @@
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue UNC Path Redaction
+## 2026-07-08 LoopRelay Web Error Issue UNC Path Redaction
 
 - [x] CHECK: `apiErrorIssuePathText`와 `sanitizeApiErrorText`가 Windows drive path는
   redaction하지만 `\\server\share\...\raw.md` 같은 UNC/network path는 failed response
@@ -2036,7 +2036,7 @@
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue Windows Path Redaction
+## 2026-07-08 LoopRelay Web Error Issue Windows Path Redaction
 
 - [x] CHECK: `apiErrorIssuePathText`와 `sanitizeApiErrorText`가 Unix/`~/` local path는
   redaction하지만 `C:\Users\...\raw.md` 같은 Windows-style local path는 failed response
@@ -2049,20 +2049,20 @@
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue Home Path Redaction
+## 2026-07-08 LoopRelay Web Error Issue Home Path Redaction
 
 - [x] CHECK: `apiErrorIssuePathText`가 `/Users/...` absolute path는 redaction 경로로
-  보내지만 `~/prompt-memory/...` home-relative path는 JSON Pointer처럼 dot path로 바꿔
+  보내지만 `~/looprelay/...` home-relative path는 JSON Pointer처럼 dot path로 바꿔
   failed response issue field에 남길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 settings failed response `errors[]`의
-  `path: "~/prompt-memory/prompts/raw.md"`를 `[REDACTED:path]` field로 표시하도록 요구하게 해
+  `path: "~/looprelay/prompts/raw.md"`를 `[REDACTED:path]` field로 표시하도록 요구하게 해
   현재 unsafe home path issue detail 노출 실패를 확인한다.
 - [x] GREEN: web API error issue path sanitizer와 공통 API error sanitizer가 `~/...`
   home-relative local path를 raw path로 redaction한다.
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue Additional Property Redaction
+## 2026-07-08 LoopRelay Web Error Issue Additional Property Redaction
 
 - [x] CHECK: `apiErrorIssueParamsText`가 AJV-style `missingProperty`/`propertyName`은
   처리하지만 `params.additionalProperty: "prompt_body"`는 무시해 raw issue message를
@@ -2076,7 +2076,7 @@
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue Params Redaction
+## 2026-07-08 LoopRelay Web Error Issue Params Redaction
 
 - [x] CHECK: `apiErrorIssueText`가 validation `errors[]`의 direct 위치 키는 처리하지만
   AJV-style `params.missingProperty: "prompt_body"`는 무시해 raw issue message를 failed
@@ -2090,7 +2090,7 @@
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue Param Redaction
+## 2026-07-08 LoopRelay Web Error Issue Param Redaction
 
 - [x] CHECK: `apiErrorIssueText`가 validation `errors[]`의 `field`/`path`/`property`는
   처리하지만 `param: "prompt_body"` 형태는 무시해 raw issue message를 failed response
@@ -2103,7 +2103,7 @@
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue Property Redaction
+## 2026-07-08 LoopRelay Web Error Issue Property Redaction
 
 - [x] CHECK: `apiErrorIssueText`가 validation `errors[]`의 `field`/`path`/`instancePath`는
   처리하지만 `property: "body.prompt_body"` 형태는 무시해 raw issue message를 failed
@@ -2116,7 +2116,7 @@
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue Field Array Redaction
+## 2026-07-08 LoopRelay Web Error Issue Field Array Redaction
 
 - [x] CHECK: `apiErrorIssueText`가 validation `errors[]`의 string `field`와 `path`
   array는 처리하지만 `field: ["body", "prompt_body"]` 형태는 무시해 raw issue message를
@@ -2129,7 +2129,7 @@
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue Local Path String Redaction
+## 2026-07-08 LoopRelay Web Error Issue Local Path String Redaction
 
 - [x] CHECK: `apiErrorIssuePathText`가 string `path` 값을 JSON Pointer처럼 slash split해
   `/Users/...` local path를 `Users...` dot path로 바꾸면서 existing path redaction을 우회할 수 있다.
@@ -2141,7 +2141,7 @@
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue Instance Path Redaction
+## 2026-07-08 LoopRelay Web Error Issue Instance Path Redaction
 
 - [x] CHECK: `apiErrorIssueText`가 validation `errors[]`의 `field`와 `path`는
   표시하지만 AJV-style `instancePath: "/body/prompt_body"`는 무시해 raw issue message를
@@ -2156,7 +2156,7 @@
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue Path Array Redaction
+## 2026-07-08 LoopRelay Web Error Issue Path Array Redaction
 
 - [x] CHECK: `apiErrorIssueText`가 validation `errors[]`의 `field`는 표시하지만
   `path: ["body", "prompt_body"]` 형태는 무시해 raw issue message를 failed response detail에
@@ -2169,7 +2169,7 @@
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue Raw Field Path Redaction
+## 2026-07-08 LoopRelay Web Error Issue Raw Field Path Redaction
 
 - [x] CHECK: `apiErrorIssueText`가 raw issue field exact key는 message body를
   redaction하지만 `body.prompt_body` 같은 validation field path에서는 raw key segment를
@@ -2182,7 +2182,7 @@
 - [x] VERIFY: focused web API issue/error redaction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Detail Quoted Equals Redaction
+## 2026-07-08 LoopRelay Web Error Detail Quoted Equals Redaction
 
 - [x] CHECK: `sanitizeApiErrorText`가 quoted raw-detail key의 colon-delimited phrase는
   redaction하지만 `"OPENAI_API_KEY" = private local provider token.` 같은 quoted
@@ -2195,7 +2195,7 @@
 - [x] VERIFY: focused web API recovery-detail/error redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Detail Equals Raw Redaction
+## 2026-07-08 LoopRelay Web Error Detail Equals Raw Redaction
 
 - [x] CHECK: `sanitizeApiErrorText`가 colon-delimited raw phrases는 redaction하지만
   `OPENAI_API_KEY = private local provider token.` 같은 equals-delimited phrase는
@@ -2209,7 +2209,7 @@
 - [x] VERIFY: focused web API recovery-detail/error redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Detail Env Credential Redaction
+## 2026-07-08 LoopRelay Web Error Detail Env Credential Redaction
 
 - [x] CHECK: `sanitizeApiErrorText` raw detail key pattern이 generic `api_key`와
   provider credential aliases는 redaction하지만 `OPENAI_API_KEY` 같은 env-style
@@ -2223,7 +2223,7 @@
 - [x] VERIFY: focused web API recovery-detail/error redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Detail Quoted Key Redaction
+## 2026-07-08 LoopRelay Web Error Detail Quoted Key Redaction
 
 - [x] CHECK: `sanitizeApiErrorText`가 raw detail value quote는 처리하지만
   JSON-ish detail string의 `"prompt_body": "..."`처럼 key 자체가 quoted인 경우 key 뒤의
@@ -2236,7 +2236,7 @@
 - [x] VERIFY: focused web API recovery-detail/error redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Detail CamelCase Raw Redaction
+## 2026-07-08 LoopRelay Web Error Detail CamelCase Raw Redaction
 
 - [x] CHECK: `sanitizeApiErrorText` raw detail key pattern이 snake_case 중심이라
   `providerCredential`/`promptBody`/`rawPath`/`compactSummary` 같은 JS/web camelCase keyed
@@ -2250,7 +2250,7 @@
 - [x] VERIFY: focused web API recovery-detail/error redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Detail Provider Credential Redaction
+## 2026-07-08 LoopRelay Web Error Detail Provider Credential Redaction
 
 - [x] CHECK: `sanitizeApiErrorText`가 prompt/loop raw keys는 redaction하지만
   `provider_credential`/`api_key`/`token` 같은 provider credential keyed detail은
@@ -2264,7 +2264,7 @@
 - [x] VERIFY: focused web API recovery-detail/error redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Issue Raw Field Redaction
+## 2026-07-08 LoopRelay Web Error Issue Raw Field Redaction
 
 - [x] CHECK: `apiErrorIssueText`가 `errors[]`의 `field`와 `message`를 따로 sanitize한 뒤
   합치기 때문에 `field: "compact_summary"`, `message: "<raw text>"` 형태에서는 raw
@@ -2277,7 +2277,7 @@
 - [x] VERIFY: focused web API recovery-detail/error redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Detail Compact Raw Redaction
+## 2026-07-08 LoopRelay Web Error Detail Compact Raw Redaction
 
 - [x] CHECK: `sanitizeApiErrorText`가 prompt/path/markdown raw-like keys는 redaction하지만
   `compact_summary`/`transcript_body` 같은 loop/session privacy keys는 failed response
@@ -2290,7 +2290,7 @@
 - [x] VERIFY: focused web API recovery-detail/error redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Detail Colon Raw Redaction
+## 2026-07-08 LoopRelay Web Error Detail Colon Raw Redaction
 
 - [x] CHECK: `sanitizeApiErrorText`가 unquoted 단일 토큰 raw-like value는 redaction하지만
   `prompt_body: private incident summary.` 같은 colon-delimited phrase에서는 첫 토큰만
@@ -2303,7 +2303,7 @@
 - [x] VERIFY: focused web API recovery-detail/error redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Detail Unquoted Raw Redaction
+## 2026-07-08 LoopRelay Web Error Detail Unquoted Raw Redaction
 
 - [x] CHECK: `sanitizeApiErrorText`가 quoted raw-like keyed value는 redaction하지만
   `prompt_body=private-incident-summary` 같은 unquoted 단일 토큰 value는 failed response
@@ -2316,7 +2316,7 @@
 - [x] VERIFY: focused web API recovery-detail/error redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Detail Raw Redaction
+## 2026-07-08 LoopRelay Web Error Detail Raw Redaction
 
 - [x] CHECK: `failApi`/`sanitizeApiErrorText`가 failed response detail/title/message/errors의
   path/secret은 redaction하지만 `prompt_body`/`raw_path`/`markdown` keyed value는 그대로
@@ -2329,7 +2329,7 @@
 - [x] VERIFY: focused web API recovery-detail/error redaction tests, implementation
   format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Health Raw Contract Error
+## 2026-07-08 LoopRelay Web Health Raw Contract Error
 
 - [x] CHECK: `getHealth`가 health root 응답의 `ok`/`version`만 검증하고 raw-like
   `prompt_body`/`raw_path`/`markdown` extra field를 차단하지 않아 setup/status UI state로
@@ -2342,7 +2342,7 @@
 - [x] VERIFY: focused web API settings/health tests, implementation format check,
   typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Settings Raw Contract Error
+## 2026-07-08 LoopRelay Web Settings Raw Contract Error
 
 - [x] CHECK: `getSettings`가 settings root 응답의 필수 `redaction_mode`/`server`
   field만 검증하고 raw-like `prompt_body`/`raw_path`/`markdown` extra field를 차단하지
@@ -2355,7 +2355,7 @@
 - [x] VERIFY: focused web API settings/health tests, implementation format check,
   typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Project Summary Root Raw Contract Error
+## 2026-07-08 LoopRelay Web Project Summary Root Raw Contract Error
 
 - [x] CHECK: `parseProjectSummaryResponse`가 project summary root의 raw-like
   `prompt_body`/`raw_path`/`markdown` extra field를 차단하지 않아 Projects UI state로
@@ -2369,7 +2369,7 @@
 - [x] VERIFY: focused web API project list tests, implementation format check,
   typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Project Summary Instruction Review Contract Error
+## 2026-07-08 LoopRelay Web Project Summary Instruction Review Contract Error
 
 - [x] CHECK: `parseProjectSummaryResponse`가 optional `instruction_review`를 검증하지
   않아 Projects list item에 중첩된 raw-like `prompt_body` review가 UI state로 넘어갈
@@ -2382,7 +2382,7 @@
 - [x] VERIFY: focused web API project list/instruction tests, implementation format
   check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Project Instruction Suggestions Contract Error
+## 2026-07-08 LoopRelay Web Project Instruction Suggestions Contract Error
 
 - [x] CHECK: `parseProjectInstructionReviewResponse`가 `suggestions[]`를 배열인지까지만
   검증하고 string item 계약을 확인하지 않아 raw-like `prompt_body` object가
@@ -2396,7 +2396,7 @@
 - [x] VERIFY: focused web API project instruction test, implementation format check,
   typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Project Instruction Checklist Raw Contract Error
+## 2026-07-08 LoopRelay Web Project Instruction Checklist Raw Contract Error
 
 - [x] CHECK: `parseProjectInstructionReviewResponse`가 `checklist[]`를 배열인지까지만
   검증하고 checklist item shape나 raw-like `prompt_body`/`raw_path`/`markdown` extra
@@ -2410,7 +2410,7 @@
 - [x] VERIFY: focused web API project instruction test, implementation format check,
   typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Project Instruction File Summary Raw Contract Error
+## 2026-07-08 LoopRelay Web Project Instruction File Summary Raw Contract Error
 
 - [x] CHECK: `parseProjectInstructionReviewResponse`가 `files[]`를 배열인지까지만
   검증하고 file summary shape나 raw-like `prompt_body`/`raw_path`/`markdown` extra
@@ -2424,7 +2424,7 @@
 - [x] VERIFY: focused web API project instruction test, implementation format check,
   typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Project Instruction Review Raw Contract Error
+## 2026-07-08 LoopRelay Web Project Instruction Review Raw Contract Error
 
 - [x] CHECK: `parseProjectInstructionReviewResponse`가 privacy flags를 확인하면서도
   root `data`의 raw-like `prompt_body`/`raw_path`/`markdown` extra field를 차단하지
@@ -2437,7 +2437,7 @@
 - [x] VERIFY: focused web API project instruction test, implementation format check,
   typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Import Dry-Run Root Raw Contract Error
+## 2026-07-08 LoopRelay Web Import Dry-Run Root Raw Contract Error
 
 - [x] CHECK: `parseImportDryRunResponse`가 import dry-run root `data`의 필수
   summary field만 검증하고 raw-like `prompt_body`/`raw_path`/`markdown` extra field를
@@ -2450,7 +2450,7 @@
 - [x] VERIFY: focused web API import/export client test, implementation format check,
   typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Import Dry-Run Sample Raw Contract Error
+## 2026-07-08 LoopRelay Web Import Dry-Run Sample Raw Contract Error
 
 - [x] CHECK: `parseImportDryRunResponse`가 import dry-run `samples[]`를 배열인지까지만
   검증하고 sample shape나 raw-like `prompt_body`/`raw_path`/`markdown` extra field를
@@ -2464,7 +2464,7 @@
 - [x] VERIFY: focused web API import/export client test, implementation format check,
   typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Export Payload Item Raw Contract Error
+## 2026-07-08 LoopRelay Web Export Payload Item Raw Contract Error
 
 - [x] CHECK: `parseAnonymizedExportPayloadResponse`가 export payload item 필수
   field만 검증하고 raw-like `prompt_body`/`raw_path`/`markdown` extra field를
@@ -2478,7 +2478,7 @@
 - [x] VERIFY: focused web API export client test, implementation format check,
   typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Export Preview Raw Contract Error
+## 2026-07-08 LoopRelay Web Export Preview Raw Contract Error
 
 - [x] CHECK: `parseExportJobResponse`가 export job 필수 field만 검증하고
   raw-like `prompt_body`/`raw_path`/`markdown` extra field를 차단하지 않아 export
@@ -2491,7 +2491,7 @@
 - [x] VERIFY: focused web API export client test, implementation format check,
   typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Improvement Draft Copy Raw Contract Error
+## 2026-07-08 LoopRelay Web Improvement Draft Copy Raw Contract Error
 
 - [x] CHECK: `parsePromptImprovementDraftCopyResponse`가 copy event 필수 field만
   검증하고 raw-like `prompt_body`/`raw_path`/`markdown` extra field를 차단하지 않아
@@ -2504,7 +2504,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff
   whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Prompt Usefulness Raw Contract Error
+## 2026-07-08 LoopRelay Web Prompt Usefulness Raw Contract Error
 
 - [x] CHECK: `parsePromptUsefulnessResponse`가 usefulness 필수 field만 검증하고
   raw-like `prompt_body`/`raw_path`/`markdown` extra field를 차단하지 않아 prompt
@@ -2517,7 +2517,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff
   whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Ask Event Summary Raw Contract Error
+## 2026-07-08 LoopRelay Web Ask Event Summary Raw Contract Error
 
 - [x] CHECK: `parseAskEventSummaryResponse`가 ask telemetry count/axis field만
   검증하고 raw-like `prompt_body`/`raw_path`/`markdown` extra field를 차단하지 않아
@@ -2530,7 +2530,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff
   whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Coach Feedback Summary Raw Contract Error
+## 2026-07-08 LoopRelay Web Coach Feedback Summary Raw Contract Error
 
 - [x] CHECK: `getCoachFeedbackSummary`가 feedback ratio 필수 숫자 field만 검증하고
   raw-like `prompt_body`/`raw_path`/`markdown` extra field를 차단하지 않아 feedback
@@ -2543,7 +2543,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff
   whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Coach Feedback Raw Contract Error
+## 2026-07-08 LoopRelay Web Coach Feedback Raw Contract Error
 
 - [x] CHECK: `parseCoachFeedbackEntryResponse`가 feedback entry 필수 field만
   검증하고 raw-like `prompt_body`/`raw_path`/`markdown` extra field를 차단하지 않아
@@ -2556,7 +2556,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff
   whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Prompt Detail Effectiveness Contract Error
+## 2026-07-08 LoopRelay Web Prompt Detail Effectiveness Contract Error
 
 - [x] CHECK: `parsePromptDetailResponse`가 optional `effectiveness`를 object인지까지만
   검증해 깨진 effectiveness summary나 raw path-like evidence ref가 prompt detail
@@ -2570,7 +2570,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff
   whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Prompt Detail Loop Outcomes Contract Error
+## 2026-07-08 LoopRelay Web Prompt Detail Loop Outcomes Contract Error
 
 - [x] CHECK: `parsePromptDetailResponse`가 optional `loop_outcomes[]`를 배열인지까지만
   검증해 깨진 loop outcome evidence shape나 raw-like `raw_path` field가 prompt
@@ -2584,7 +2584,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff
   whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Prompt Detail Judge Contract Error
+## 2026-07-08 LoopRelay Web Prompt Detail Judge Contract Error
 
 - [x] CHECK: `parsePromptDetailResponse`가 optional `judge_score`를 object인지까지만
   검증해 깨진 judge score shape나 raw-like `prompt_body` field가 prompt detail
@@ -2597,7 +2597,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff
   whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Prompt Detail Analysis Contract Error
+## 2026-07-08 LoopRelay Web Prompt Detail Analysis Contract Error
 
 - [x] CHECK: `parsePromptDetailResponse`가 optional `analysis`를 object인지까지만
   검증해 깨진 checklist shape나 raw-like `prompt_body` field가 prompt detail
@@ -2611,7 +2611,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff
   whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Prompt Detail Draft Contract Error
+## 2026-07-08 LoopRelay Web Prompt Detail Draft Contract Error
 
 - [x] CHECK: `parsePromptDetailResponse`가 `improvement_drafts[]`를 배열인지까지만
   검증해 깨진 draft shape나 raw-like `prompt_body` field가 prompt detail coach
@@ -2625,7 +2625,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff
   whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Prompt Detail Markdown Contract Regression
+## 2026-07-08 LoopRelay Web Prompt Detail Markdown Contract Regression
 
 - [x] CHECK: `parsePromptDetailResponse`가 `PromptDetail`의 필수 `markdown`
   field를 허용하기 전에 `isPromptSummary`를 호출하면서 prompt list용 raw-free
@@ -2639,7 +2639,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff
   whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Prompt List Root Raw Contract Error
+## 2026-07-08 LoopRelay Web Prompt List Root Raw Contract Error
 
 - [x] CHECK: web API `listPrompts`가 `/api/v1/prompts` 성공 응답의 root
   `data` 객체 raw-free 계약을 검증하지 않아 top-level raw prompt body/path-like field가 prompt list UI 데이터로 넘어갈 수 있다.
@@ -2648,7 +2648,7 @@
 - [x] GREEN: prompt list root object에서 raw body/path-like extra fields를 차단해 item validator를 우회한 raw-free contract 오류도 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Prompt List Item Contract Error
+## 2026-07-08 LoopRelay Web Prompt List Item Contract Error
 
 - [x] CHECK: web API `listPrompts`가 `/api/v1/prompts` 성공 응답의
   `items[]` prompt summary 계약을 검증하지 않아 raw prompt body나 깨진 archive item이 prompt list UI 데이터로 넘어갈 수 있다.
@@ -2657,7 +2657,7 @@
 - [x] GREEN: prompt summary item 계약을 `parsePromptListResponse`에서 확인하고 raw body/path-like extra fields는 raw-free prompt list contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Archive Score Root Raw Contract Error
+## 2026-07-08 LoopRelay Web Archive Score Root Raw Contract Error
 
 - [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의 root
   `data` 객체 raw-free 계약을 검증하지 않아 top-level raw prompt body/path-like field가 archive score UI 데이터로 넘어갈 수 있다.
@@ -2666,7 +2666,7 @@
 - [x] GREEN: archive score root object에서 raw body/path-like extra fields를 차단해 하위 validator를 우회한 raw-free contract 오류도 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Quality Dashboard Root Raw Contract Error
+## 2026-07-08 LoopRelay Web Quality Dashboard Root Raw Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의 root
   `data` 객체 raw-free 계약을 검증하지 않아 top-level raw prompt body/path-like field가 dashboard UI 데이터로 넘어갈 수 있다.
@@ -2675,7 +2675,7 @@
 - [x] GREEN: quality dashboard root object에서 raw body/path-like extra fields를 차단해 하위 validator를 우회한 raw-free contract 오류도 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Quality Dashboard Trend Contract Error
+## 2026-07-08 LoopRelay Web Quality Dashboard Trend Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의
   `trend.daily[]` item 계약을 검증하지 않아 raw prompt body나 깨진 trend metric이 dashboard trend UI 데이터로 넘어갈 수 있다.
@@ -2684,7 +2684,7 @@
 - [x] GREEN: trend daily date/prompt_count/quality_gap_count/quality_gap_rate/average_quality_score/sensitive_count 계약을 확인하고 raw body/path-like extra fields는 raw-free quality dashboard contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Quality Dashboard Recent Summary Contract Error
+## 2026-07-08 LoopRelay Web Quality Dashboard Recent Summary Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의
   `sensitive_prompts`/`sensitive_ratio`/`recent` 집계 계약을 검증하지 않아 raw path-like field나 깨진 dashboard metric summary가 UI 데이터로 넘어갈 수 있다.
@@ -2693,7 +2693,7 @@
 - [x] GREEN: sensitive count/ratio와 recent last_7_days/last_30_days 계약을 확인하고 raw body/path-like extra fields는 raw-free quality dashboard contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Quality Dashboard Project Profiles Contract Error
+## 2026-07-08 LoopRelay Web Quality Dashboard Project Profiles Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의
   `project_profiles[]`와 optional `top_gap` 계약을 검증하지 않아 raw path-like field나 깨진 project quality profile이 dashboard UI 데이터로 넘어갈 수 있다.
@@ -2702,7 +2702,7 @@
 - [x] GREEN: project profile key/label/count/rate/score/latest/top_gap 계약을 확인하고 raw body/path-like extra fields는 raw-free quality dashboard contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Quality Dashboard Duplicate Groups Contract Error
+## 2026-07-08 LoopRelay Web Quality Dashboard Duplicate Groups Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의
   `duplicate_prompt_groups[]`와 nested `prompts[]` item 계약을 검증하지 않아 raw prompt body나 깨진 duplicate prompt summary가 dashboard UI 데이터로 넘어갈 수 있다.
@@ -2711,7 +2711,7 @@
 - [x] GREEN: duplicate group group_id/count/latest_received_at/projects/prompts 계약과 nested prompt id/tool/cwd/received_at/tags/gaps 계약을 확인하고 raw body/path-like extra fields는 raw-free quality dashboard contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Quality Dashboard Useful Prompts Contract Error
+## 2026-07-08 LoopRelay Web Quality Dashboard Useful Prompts Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의
   `useful_prompts[]` item 계약을 검증하지 않아 raw prompt body나 깨진 reusable prompt summary가 dashboard UI 데이터로 넘어갈 수 있다.
@@ -2720,7 +2720,7 @@
 - [x] GREEN: useful prompt id/tool/cwd/received_at/copy/bookmark/tags/gaps 계약을 확인하고 raw body/path-like extra fields는 raw-free quality dashboard contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Quality Dashboard Instruction Suggestions Contract Error
+## 2026-07-08 LoopRelay Web Quality Dashboard Instruction Suggestions Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의
   `instruction_suggestions[]` item 계약을 검증하지 않아 raw prompt/path-like field나 깨진 AGENTS.md/CLAUDE.md candidate가 Coach UI 데이터로 넘어갈 수 있다.
@@ -2729,7 +2729,7 @@
 - [x] GREEN: instruction suggestion scope/project/text/reason 계약을 확인하고 raw body/path-like fields는 raw-free quality dashboard contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Quality Dashboard Patterns Contract Error
+## 2026-07-08 LoopRelay Web Quality Dashboard Patterns Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의
   `patterns[]` item 계약을 검증하지 않아 raw prompt/path-like field나 깨진 repeated pattern summary가 Coach UI 데이터로 넘어갈 수 있다.
@@ -2738,7 +2738,7 @@
 - [x] GREEN: pattern project/item_key/label/count/total/message 계약을 확인하고 raw body/path-like fields는 raw-free quality dashboard contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Quality Dashboard Distribution Contract Error
+## 2026-07-08 LoopRelay Web Quality Dashboard Distribution Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의
   `distribution.by_tool[]`/`distribution.by_project[]` item 계약을 검증하지 않아 raw path-like field나 깨진 distribution bucket이 quality dashboard UI 데이터로 넘어갈 수 있다.
@@ -2747,7 +2747,7 @@
 - [x] GREEN: distribution bucket key/label/count/ratio 계약을 확인하고 raw body/path-like fields는 raw-free quality dashboard contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Quality Dashboard Missing Items Contract Error
+## 2026-07-08 LoopRelay Web Quality Dashboard Missing Items Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의
   `missing_items[]` item 계약을 검증하지 않아 raw prompt/path-like field나 깨진 gap summary가 quality dashboard UI 데이터로 넘어갈 수 있다.
@@ -2756,7 +2756,7 @@
 - [x] GREEN: missing item key/label/missing/weak/total/rate 계약을 확인하고 raw body/path-like fields는 raw-free quality dashboard contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Quality Dashboard Score Contract Error
+## 2026-07-08 LoopRelay Web Quality Dashboard Score Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의
   `quality_score` 내부 계약을 검증하지 않아 raw prompt/path-like field나 깨진 score summary가 quality dashboard UI 데이터로 넘어갈 수 있다.
@@ -2765,7 +2765,7 @@
 - [x] GREEN: quality_score average/max/band/scored_prompts 계약을 확인하고 raw body/path-like fields는 raw-free quality dashboard contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Quality Dashboard Privacy Contract Error
+## 2026-07-08 LoopRelay Web Quality Dashboard Privacy Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의
   `privacy` local-first/raw-free 계약을 검증하지 않아 prompt bodies 또는 raw paths 반환 가능 상태를 web UI에 넘길 수 있다.
@@ -2774,7 +2774,7 @@
 - [x] GREEN: quality dashboard privacy가 local-only, no external calls, no prompt bodies, no raw paths 계약을 만족하는지 확인하고 깨진 privacy block은 raw-free quality dashboard contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Archive Score Metadata Contract Error
+## 2026-07-08 LoopRelay Web Archive Score Metadata Contract Error
 
 - [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의
   `generated_at`/`has_more` metadata 계약을 검증하지 않아 깨진 freshness/pagination state가 archive score UI 데이터로 넘어갈 수 있다.
@@ -2783,7 +2783,7 @@
 - [x] GREEN: generated_at string, has_more boolean 계약을 확인해 깨진 archive score metadata는 contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Archive Score Next Prompt Template Contract Error
+## 2026-07-08 LoopRelay Web Archive Score Next Prompt Template Contract Error
 
 - [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의
   `next_prompt_template` 계약을 검증하지 않아 raw path-like text가 copy-ready archive score guidance로 넘어갈 수 있다.
@@ -2792,7 +2792,7 @@
 - [x] GREEN: next_prompt_template string 계약과 raw path-like substring 차단을 확인해 raw-free archive score contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Archive Score Filters Contract Error
+## 2026-07-08 LoopRelay Web Archive Score Filters Contract Error
 
 - [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의
   `filters` 계약을 검증하지 않아 raw path-like field나 깨진 filter metadata가 archive score UI 데이터로 넘어갈 수 있다.
@@ -2801,7 +2801,7 @@
 - [x] GREEN: filters tool/project/received_from/received_to/max_prompts 계약을 확인하고 raw body/path-like fields는 raw-free archive score contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Archive Score Effectiveness Summary Contract Error
+## 2026-07-08 LoopRelay Web Archive Score Effectiveness Summary Contract Error
 
 - [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의
   `effectiveness_summary` 계약을 검증하지 않아 raw prompt/path-like field나 깨진 outcome evidence summary가 archive score UI 데이터로 넘어갈 수 있다.
@@ -2810,7 +2810,7 @@
 - [x] GREEN: effectiveness-summary measured/unmeasured/verdicts/calibration/evidence refs/next_action 계약을 확인하고 raw body/path-like fields는 raw-free archive score contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Archive Score Distribution Contract Error
+## 2026-07-08 LoopRelay Web Archive Score Distribution Contract Error
 
 - [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의
   `distribution` 계약을 검증하지 않아 raw prompt/path-like field나 깨진 band count가 archive score UI 데이터로 넘어갈 수 있다.
@@ -2819,7 +2819,7 @@
 - [x] GREEN: distribution excellent/good/needs_work/weak 숫자 계약을 확인하고 raw body/path-like fields는 raw-free archive score contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Archive Score Summary Contract Error
+## 2026-07-08 LoopRelay Web Archive Score Summary Contract Error
 
 - [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의
   `archive_score` 내부 계약을 검증하지 않아 raw prompt/path-like field나 깨진 score summary가 archive score UI 데이터로 넘어갈 수 있다.
@@ -2828,7 +2828,7 @@
 - [x] GREEN: archive-score average/max/band/scored_prompts/total_prompts 계약을 확인하고 raw body/path-like fields는 raw-free archive score contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Archive Score Top Gaps Contract Error
+## 2026-07-08 LoopRelay Web Archive Score Top Gaps Contract Error
 
 - [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의
   `top_gaps[]` item 계약을 검증하지 않아 raw prompt/path-like field가 archive score UI 데이터로 넘어갈 수 있다.
@@ -2837,7 +2837,7 @@
 - [x] GREEN: top-gap label/count/rate 계약을 확인하고 raw body/path-like fields는 raw-free archive score contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Archive Score Practice Plan Contract Error
+## 2026-07-08 LoopRelay Web Archive Score Practice Plan Contract Error
 
 - [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의
   `practice_plan[]` item 계약을 검증하지 않아 raw prompt/path-like field가 archive score UI 데이터로 넘어갈 수 있다.
@@ -2846,7 +2846,7 @@
 - [x] GREEN: practice-plan priority/label/prompt_rule/reason/count/rate 계약을 확인하고 raw body/path-like fields는 raw-free archive score contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Archive Score Low Prompts Contract Error
+## 2026-07-08 LoopRelay Web Archive Score Low Prompts Contract Error
 
 - [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의
   `low_score_prompts[]` item 계약을 검증하지 않아 prompt body 같은 raw field가 archive score UI 데이터로 넘어갈 수 있다.
@@ -2855,7 +2855,7 @@
 - [x] GREEN: low-score prompt summary id/tool/project/score/gaps/tags/sensitivity 계약을 확인하고 raw body/path-like fields는 raw-free archive score contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Archive Score Privacy Contract Error
+## 2026-07-08 LoopRelay Web Archive Score Privacy Contract Error
 
 - [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의
   `privacy` local-first/raw-free 계약을 검증하지 않아 prompt bodies 또는 raw paths 반환 가능 상태를 web UI에 넘길 수 있다.
@@ -2864,7 +2864,7 @@
 - [x] GREEN: archive score privacy가 local-only, no external calls, no prompt bodies, no raw paths 계약을 만족하는지 확인하고 깨진 privacy block은 raw-free archive score contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop List Recent Decisions Contract Error
+## 2026-07-08 LoopRelay Web Loop List Recent Decisions Contract Error
 
 - [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의 optional
   `status.activity.recent_decisions[].decision` 계약을 검증하지 않아 깨진 merge/continue/defer 상태가 loop list UI로 넘어갈 수 있다.
@@ -2873,7 +2873,7 @@
 - [x] GREEN: recent decision snapshot/worktree/decision/reason/decided_by/created_at 계약을 확인하고 깨진 recent decision은 raw-free loop list contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop List Command Center Contract Error
+## 2026-07-08 LoopRelay Web Loop List Command Center Contract Error
 
 - [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의 optional
   `status.activity.command_center.review_packet.status` 계약을 검증하지 않아 깨진 merge-review 상태가 loop list UI로 넘어갈 수 있다.
@@ -2882,11 +2882,11 @@
 - [x] GREEN: loop command-center review packet, review items, merge readiness 계약을 확인하고 깨진 command-center는 raw-free loop list contract 오류로 중단하도록 고친다.
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Uncertainty Reminder Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Uncertainty Reminder Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_uncertainty_collection_reminder`
-  계약을 검증하지 않아 PromptLane이 post-submit collection freshness를 자동 검증하거나 collection을 자동 시작한다는 guidance를 UI에 넘길 수 있다.
+  계약을 검증하지 않아 LoopRelay이 post-submit collection freshness를 자동 검증하거나 collection을 자동 시작한다는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_uncertainty_collection_reminder.not_automated`
   body를 `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -2896,11 +2896,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Freshness Result Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Freshness Result Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_result_non_persistence_note`
-  계약을 검증하지 않아 PromptLane이 post-submit collection freshness result를 저장한다는 guidance를 UI에 넘길 수 있다.
+  계약을 검증하지 않아 LoopRelay이 post-submit collection freshness result를 저장한다는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_result_non_persistence_note.not_stored`
   body를 `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -2910,11 +2910,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Post Submit Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Post Submit Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_post_submit_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 submitted state, agent response, post-submit collection freshness를 모니터링한다는 guidance를 UI에 넘길 수 있다.
+  계약을 검증하지 않아 LoopRelay이 submitted state, agent response, post-submit collection freshness를 모니터링한다는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_post_submit_freshness_advisory.not_monitored`
   body를 `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -2924,11 +2924,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Pre Submit Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Pre Submit Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_submit_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 submission을 승인하거나 post-submit collection freshness를 검증한다는 guidance를 UI에 넘길 수 있다.
+  계약을 검증하지 않아 LoopRelay이 submission을 승인하거나 post-submit collection freshness를 검증한다는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_submit_freshness_advisory.not_decision`
   body를 `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -2938,11 +2938,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Pre Paste Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Pre Paste Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_paste_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 paste target을 승인하거나 post-submit collection freshness를 검증한다는 guidance를 UI에 넘길 수 있다.
+  계약을 검증하지 않아 LoopRelay이 paste target을 승인하거나 post-submit collection freshness를 검증한다는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_paste_freshness_advisory.not_decision`
   body를 `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -2952,11 +2952,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Pre Handoff Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Pre Handoff Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_handoff_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 handoff를 승인하거나 post-submit collection freshness를 검증한다는 guidance를 UI에 넘길 수 있다.
+  계약을 검증하지 않아 LoopRelay이 handoff를 승인하거나 post-submit collection freshness를 검증한다는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_handoff_freshness_advisory.not_decision`
   body를 `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -2966,11 +2966,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Pre Merge Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Pre Merge Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_merge_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 merge를 승인하거나 post-submit collection freshness를 검증한다는 guidance를 UI에 넘길 수 있다.
+  계약을 검증하지 않아 LoopRelay이 merge를 승인하거나 post-submit collection freshness를 검증한다는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_merge_freshness_advisory.not_decision`
   body를 `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -2980,11 +2980,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Uncertainty Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Uncertainty Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder`
-  계약을 검증하지 않아 PromptLane이 post-submit retry renewed-memory-approval post-submit collection result를 검증하거나 collection을 자동 시작한다는
+  계약을 검증하지 않아 LoopRelay이 post-submit retry renewed-memory-approval post-submit collection result를 검증하거나 collection을 자동 시작한다는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder.not_automated`
@@ -2995,11 +2995,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Result Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Collection Result Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note`
-  계약을 검증하지 않아 PromptLane이 post-submit retry renewed-memory-approval post-submit collection result를 저장하거나 동기화한다는
+  계약을 검증하지 않아 LoopRelay이 post-submit retry renewed-memory-approval post-submit collection result를 저장하거나 동기화한다는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note.not_stored`
@@ -3010,11 +3010,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Post Submit Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 submitted state나 agent response를 감시해 post-submit retry renewed-memory-approval freshness를
+  계약을 검증하지 않아 LoopRelay이 submitted state나 agent response를 감시해 post-submit retry renewed-memory-approval freshness를
   자동 검증하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_freshness_advisory.not_automated`
@@ -3025,11 +3025,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Pre Submit Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Pre Submit Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_submit_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 submission을 승인하거나 post-submit retry renewed-memory-approval freshness를 검증하는
+  계약을 검증하지 않아 LoopRelay이 submission을 승인하거나 post-submit retry renewed-memory-approval freshness를 검증하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_submit_freshness_advisory.not_decision`
@@ -3040,11 +3040,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Pre Paste Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Pre Paste Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_paste_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 paste target을 승인하거나 post-submit retry renewed-memory-approval freshness를 검증하는
+  계약을 검증하지 않아 LoopRelay이 paste target을 승인하거나 post-submit retry renewed-memory-approval freshness를 검증하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_paste_freshness_advisory.not_decision`
@@ -3055,11 +3055,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Pre Handoff Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Pre Handoff Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_handoff_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 handoff를 승인하거나 post-submit retry renewed-memory-approval freshness를 검증하는
+  계약을 검증하지 않아 LoopRelay이 handoff를 승인하거나 post-submit retry renewed-memory-approval freshness를 검증하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_handoff_freshness_advisory.not_decision`
@@ -3070,11 +3070,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Pre Merge Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Pre Merge Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_merge_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 merge를 승인하거나 post-submit retry renewed-memory-approval freshness를 검증하는
+  계약을 검증하지 않아 LoopRelay이 merge를 승인하거나 post-submit retry renewed-memory-approval freshness를 검증하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_merge_freshness_advisory.not_decision`
@@ -3085,11 +3085,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Uncertainty Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Uncertainty Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_uncertainty_reminder`
-  계약을 검증하지 않아 PromptLane이 post-submit retry renewed-memory-approval collection result를 자동 검증하거나 collection을 자동 시작하는
+  계약을 검증하지 않아 LoopRelay이 post-submit retry renewed-memory-approval collection result를 자동 검증하거나 collection을 자동 시작하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_uncertainty_reminder.not_automated`
@@ -3100,11 +3100,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Result Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Result Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_result_non_persistence_note`
-  계약을 검증하지 않아 PromptLane이 post-submit retry renewed-memory-approval collection result state를 detect/store/sync하는
+  계약을 검증하지 않아 LoopRelay이 post-submit retry renewed-memory-approval collection result state를 detect/store/sync하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_result_non_persistence_note.not_stored`
@@ -3115,11 +3115,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Collection Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Renewed Memory Collection Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_reminder`
-  계약을 검증하지 않아 PromptLane이 post-submit retry renewed memory approval이나 hidden approval signal에서 collection을 자동 시작하는
+  계약을 검증하지 않아 LoopRelay이 post-submit retry renewed memory approval이나 hidden approval signal에서 collection을 자동 시작하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_reminder.not_automated`
@@ -3130,11 +3130,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Pre Memory Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Pre Memory Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_pre_memory_approval_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 이 advisory에서 memory를 승인하거나 post-submit retry freshness를 검증하는
+  계약을 검증하지 않아 LoopRelay이 이 advisory에서 memory를 승인하거나 post-submit retry freshness를 검증하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_pre_memory_approval_freshness_advisory.not_decision`
@@ -3145,11 +3145,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Freshness Uncertainty Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Freshness Uncertainty Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_uncertainty_collection_reminder`
-  계약을 검증하지 않아 PromptLane이 post-submit retry freshness를 자동 검증하거나 collection을 자동 시작하는
+  계약을 검증하지 않아 LoopRelay이 post-submit retry freshness를 자동 검증하거나 collection을 자동 시작하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_uncertainty_collection_reminder.not_automated`
@@ -3160,11 +3160,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Freshness Result Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Freshness Result Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_result_non_persistence_note`
-  계약을 검증하지 않아 PromptLane이 post-submit retry freshness result state를 detect/store/sync하는
+  계약을 검증하지 않아 LoopRelay이 post-submit retry freshness result state를 detect/store/sync하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_result_non_persistence_note.not_stored`
@@ -3175,11 +3175,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Evidence Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Evidence Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_evidence_freshness_boundary_note`
-  계약을 검증하지 않아 PromptLane이 git status, transcript, agent UI activity에서 post-submit retry evidence freshness를
+  계약을 검증하지 않아 LoopRelay이 git status, transcript, agent UI activity에서 post-submit retry evidence freshness를
   자동 검증하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_evidence_freshness_boundary_note.not_verified`
@@ -3190,11 +3190,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Outcome Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Outcome Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_outcome_non_persistence_note`
-  계약을 검증하지 않아 PromptLane이 post-submit retry outcome state를 detect/store/sync하는
+  계약을 검증하지 않아 LoopRelay이 post-submit retry outcome state를 detect/store/sync하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_outcome_non_persistence_note.not_stored`
@@ -3205,11 +3205,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Retry Boundary Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Retry Boundary Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note`
-  계약을 검증하지 않아 PromptLane이 post-submit collection command를 자동 retry하거나 hidden recovery를 수행하는
+  계약을 검증하지 않아 LoopRelay이 post-submit collection command를 자동 retry하거나 hidden recovery를 수행하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note.not_automated`
@@ -3220,11 +3220,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Result Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Result Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note`
-  계약을 검증하지 않아 PromptLane이 post-submit collection result state를 detect/store/sync하는
+  계약을 검증하지 않아 LoopRelay이 post-submit collection result state를 detect/store/sync하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note.not_stored`
@@ -3235,11 +3235,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Post Submit Advisory Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Post Submit Advisory Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 submitted state, agent responses, renewed-memory-approval freshness를
+  계약을 검증하지 않아 LoopRelay이 submitted state, agent responses, renewed-memory-approval freshness를
   자동 모니터링하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory.not_automated`
@@ -3250,11 +3250,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Pre Submit Advisory Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Pre Submit Advisory Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_submit_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 submission approve나 renewed-memory-approval freshness verification을 수행하는
+  계약을 검증하지 않아 LoopRelay이 submission approve나 renewed-memory-approval freshness verification을 수행하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_submit_freshness_advisory.not_decision`
@@ -3265,11 +3265,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Pre Paste Advisory Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Pre Paste Advisory Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_paste_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 paste target approve나 renewed-memory-approval freshness verification을 수행하는
+  계약을 검증하지 않아 LoopRelay이 paste target approve나 renewed-memory-approval freshness verification을 수행하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_paste_freshness_advisory.not_decision`
@@ -3280,11 +3280,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Pre Handoff Advisory Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Pre Handoff Advisory Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_handoff_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 handoff approve나 renewed-memory-approval freshness verification을 수행하는
+  계약을 검증하지 않아 LoopRelay이 handoff approve나 renewed-memory-approval freshness verification을 수행하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_handoff_freshness_advisory.not_decision`
@@ -3295,11 +3295,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Pre Merge Advisory Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Pre Merge Advisory Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_merge_freshness_advisory`
-  계약을 검증하지 않아 PromptLane이 merge approve나 renewed-memory-approval freshness verification을 수행하는
+  계약을 검증하지 않아 LoopRelay이 merge approve나 renewed-memory-approval freshness verification을 수행하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_merge_freshness_advisory.not_decision`
@@ -3310,11 +3310,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Collection Uncertainty Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Collection Uncertainty Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_uncertainty_reminder`
-  계약을 검증하지 않아 PromptLane이 renewed-memory-approval collection result를 verify하거나 collection을
+  계약을 검증하지 않아 LoopRelay이 renewed-memory-approval collection result를 verify하거나 collection을
   자동 시작하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_uncertainty_reminder.not_automated`
@@ -3325,11 +3325,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Collection Result Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Collection Result Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_result_non_persistence_note`
-  계약을 검증하지 않아 PromptLane이 renewed-memory-approval collection result 상태를 detect/store/sync하는
+  계약을 검증하지 않아 LoopRelay이 renewed-memory-approval collection result 상태를 detect/store/sync하는
   guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_result_non_persistence_note.not_stored`
@@ -3340,11 +3340,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Renewed Memory Collection Reminder Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Renewed Memory Collection Reminder Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_reminder` 계약을
-  검증하지 않아 PromptLane이 renewed memory approval 이후 collection을 자동 시작하는 guidance를 UI에 넘길 수 있다.
+  검증하지 않아 LoopRelay이 renewed memory approval 이후 collection을 자동 시작하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_reminder.not_automated` body를
   `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -3354,11 +3354,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Post Memory Approval Retry Pre Memory Advisory Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Post Memory Approval Retry Pre Memory Advisory Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory` 계약을
-  검증하지 않아 PromptLane이 renewed memory approval이나 post-approval retry freshness verification을 수행하는 guidance를 UI에 넘길 수 있다.
+  검증하지 않아 LoopRelay이 renewed memory approval이나 post-approval retry freshness verification을 수행하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory.not_decision` body를
   `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -3368,11 +3368,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Post Memory Approval Retry Freshness Uncertainty Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Post Memory Approval Retry Freshness Uncertainty Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder` 계약을
-  검증하지 않아 PromptLane이 post-approval retry freshness를 verify하거나 collection을 자동 시작하는 guidance를 UI에 넘길 수 있다.
+  검증하지 않아 LoopRelay이 post-approval retry freshness를 verify하거나 collection을 자동 시작하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder.not_automated` body를
   `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -3382,11 +3382,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Post Memory Approval Retry Freshness Result Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Post Memory Approval Retry Freshness Result Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note` 계약을
-  검증하지 않아 PromptLane이 post-approval retry freshness result state를 detect/store/sync하는 guidance를 UI에 넘길 수 있다.
+  검증하지 않아 LoopRelay이 post-approval retry freshness result state를 detect/store/sync하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note.not_stored` body를
   `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -3396,7 +3396,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Post Memory Approval Retry Freshness Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Post Memory Approval Retry Freshness Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note` 계약을 검증하지 않아
@@ -3410,10 +3410,10 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Post Memory Approval Retry Outcome Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Post Memory Approval Retry Outcome Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
-  optional `continuation_safety_post_memory_approval_retry_outcome_non_persistence_note` 계약을 검증하지 않아 PromptLane이
+  optional `continuation_safety_post_memory_approval_retry_outcome_non_persistence_note` 계약을 검증하지 않아 LoopRelay이
   post-approval retry success/failure state를 detect/store/sync하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_retry_outcome_non_persistence_note.not_stored` body를
@@ -3424,10 +3424,10 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Post Memory Approval Collection Retry Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Post Memory Approval Collection Retry Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
-  optional `continuation_safety_post_memory_approval_collection_retry_boundary_note` 계약을 검증하지 않아 PromptLane이
+  optional `continuation_safety_post_memory_approval_collection_retry_boundary_note` 계약을 검증하지 않아 LoopRelay이
   post-approval collection retry나 hidden recovery를 자동 실행하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_collection_retry_boundary_note.not_automated` body를
@@ -3438,11 +3438,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Post Memory Approval Collection Result Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Post Memory Approval Collection Result Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_memory_approval_collection_result_non_persistence_note` 계약을
-  검증하지 않아 PromptLane이 post-approval collection result를 detect/store/sync하는 guidance를 UI에 넘길 수 있다.
+  검증하지 않아 LoopRelay이 post-approval collection result를 detect/store/sync하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_collection_result_non_persistence_note.not_stored` body를
   `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -3452,10 +3452,10 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Post Memory Approval Collection Reminder Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Post Memory Approval Collection Reminder Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
-  optional `continuation_safety_post_memory_approval_collection_reminder` 계약을 검증하지 않아 PromptLane이
+  optional `continuation_safety_post_memory_approval_collection_reminder` 계약을 검증하지 않아 LoopRelay이
   memory approval 이후 collection을 자동 시작하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_post_memory_approval_collection_reminder.not_automated` body를
@@ -3466,10 +3466,10 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Pre Memory Approval Freshness Advisory Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Pre Memory Approval Freshness Advisory Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
-  optional `continuation_safety_pre_memory_approval_freshness_advisory` 계약을 검증하지 않아 PromptLane이
+  optional `continuation_safety_pre_memory_approval_freshness_advisory` 계약을 검증하지 않아 LoopRelay이
   memory를 approve하거나 freshness를 verify하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_pre_memory_approval_freshness_advisory.not_decision` body를
@@ -3480,10 +3480,10 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Pre Merge Freshness Advisory Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Pre Merge Freshness Advisory Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
-  optional `continuation_safety_pre_merge_freshness_advisory` 계약을 검증하지 않아 PromptLane이
+  optional `continuation_safety_pre_merge_freshness_advisory` 계약을 검증하지 않아 LoopRelay이
   merge를 approve하거나 freshness를 verify하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_pre_merge_freshness_advisory.not_decision` body를
@@ -3494,7 +3494,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Freshness Uncertainty Collection Reminder Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Freshness Uncertainty Collection Reminder Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_freshness_uncertainty_collection_reminder` 계약을 검증하지 않아 freshness
@@ -3508,11 +3508,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Freshness Result Non Persistence Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Freshness Result Non Persistence Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_freshness_result_non_persistence_note` 계약을 검증하지 않아 freshness
-  result state를 PromptLane이 detect/store/sync하는 guidance를 UI에 넘길 수 있다.
+  result state를 LoopRelay이 detect/store/sync하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_freshness_result_non_persistence_note.not_stored` body를
   `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -3522,11 +3522,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Collection Evidence Freshness Boundary Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Collection Evidence Freshness Boundary Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_collection_evidence_freshness_boundary_note` 계약을 검증하지 않아
-  freshness를 git status, transcripts, agent UI activity로 PromptLane이 검증하는 guidance를 UI에 넘길 수 있다.
+  freshness를 git status, transcripts, agent UI activity로 LoopRelay이 검증하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_collection_evidence_freshness_boundary_note.not_verified` body를
   `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -3536,11 +3536,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Retry Outcome Non Persistence Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Retry Outcome Non Persistence Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_retry_outcome_non_persistence_note` 계약을 검증하지 않아 retry
-  success/failure state를 PromptLane이 detect/store/sync하는 guidance를 UI에 넘길 수 있다.
+  success/failure state를 LoopRelay이 detect/store/sync하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_retry_outcome_non_persistence_note.not_stored` body를
   `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -3550,7 +3550,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Collection Retry Boundary Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Collection Retry Boundary Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_collection_retry_boundary_note` 계약을 검증하지 않아 collection retry가
@@ -3564,7 +3564,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Collection Result Non Persistence Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Collection Result Non Persistence Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_collection_result_non_persistence_note` 계약을 검증하지 않아
@@ -3578,7 +3578,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Post Submission Collection Reminder Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Post Submission Collection Reminder Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_post_submission_collection_reminder_note` 계약을 검증하지 않아
@@ -3592,11 +3592,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Submission Result Non Persistence Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Submission Result Non Persistence Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_submission_result_non_persistence_note` 계약을 검증하지 않아
-  submitted state나 agent response를 PromptLane이 detect/store/sync하는 guidance를 UI에 넘길 수 있다.
+  submitted state나 agent response를 LoopRelay이 detect/store/sync하는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_submission_result_non_persistence_note.not_stored` body를
   `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -3606,11 +3606,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Manual Submission Boundary Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Manual Submission Boundary Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_manual_submission_boundary_note` 계약을 검증하지 않아 final
-  submission이 PromptLane의 enter/click submit, submitted state 기록처럼 보이는 guidance를 UI에 넘길 수 있다.
+  submission이 LoopRelay의 enter/click submit, submitted state 기록처럼 보이는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_manual_submission_boundary_note.not_automated` body를
   `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -3620,7 +3620,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Paste Destination Boundary Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Paste Destination Boundary Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_paste_destination_boundary_note` 계약을 검증하지 않아 paste
@@ -3634,11 +3634,11 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Target Agent Check Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Target Agent Check Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_target_agent_check_note` 계약을 검증하지 않아 target agent
-  확인이 PromptLane의 agent UI inspection이나 target content read처럼 보이는 guidance를 UI에 넘길 수 있다.
+  확인이 LoopRelay의 agent UI inspection이나 target content read처럼 보이는 guidance를 UI에 넘길 수 있다.
 - [x] RED: `src/web/src/api.test.ts`가 malformed
   `continuation_safety_target_agent_check_note.not_inspection` body를
   `Loop worktree drilldown failed: Invalid response.`로 reject하도록 요구하게 해 현재 unsafe
@@ -3648,7 +3648,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Pre Paste Confirmation Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Pre Paste Confirmation Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_pre_paste_confirmation_note` 계약을 검증하지 않아 final
@@ -3662,7 +3662,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Copy Retry Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Copy Retry Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_copy_retry_note` 계약을 검증하지 않아 retry가 자동 clipboard
@@ -3676,7 +3676,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Copy Feedback Failure Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Copy Feedback Failure Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_copy_feedback_failure_note` 계약을 검증하지 않아 clipboard 실패를
@@ -3691,7 +3691,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Copy Feedback Timeout Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Copy Feedback Timeout Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_copy_feedback_timeout_note` 계약을 검증하지 않아 copied feedback
@@ -3706,7 +3706,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Copy Feedback Accessibility Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Copy Feedback Accessibility Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_copy_feedback_accessibility_note` 계약을 검증하지 않아 copied
@@ -3721,7 +3721,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Copy Feedback Reminder Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Copy Feedback Reminder Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_copy_feedback_reminder` 계약을 검증하지 않아 copied feedback을
@@ -3736,7 +3736,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Safety Recheck Cue Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Safety Recheck Cue Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_recheck_cue` 계약을 검증하지 않아 copy 이후 재검토 guidance가
@@ -3750,7 +3750,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Safety Non Persistence Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Safety Non Persistence Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_non_persistence_note` 계약을 검증하지 않아 safety review state
@@ -3764,7 +3764,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Continuation Safety Ordering Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Continuation Safety Ordering Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_ordering_note` 계약을 검증하지 않아 copy/paste 전 review
@@ -3778,7 +3778,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Continuation Safety Group Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Continuation Safety Group Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `continuation_safety_group` 계약을 검증하지 않아 read-only handoff boundary나
@@ -3792,7 +3792,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Snapshot Age Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Snapshot Age Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `snapshot_age` 계약을 검증하지 않아 stale/latest 판단이나 refresh guidance가 깨진
@@ -3805,7 +3805,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Copy Side Effects Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Copy Side Effects Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `copy_side_effects` 안전 계약을 검증하지 않아 clipboard-only/no-write/no-external-call
@@ -3819,7 +3819,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Command Filters Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Command Filters Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `command_filters` 안전 계약을 검증하지 않아 selected/review command scope나
@@ -3833,7 +3833,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Command Distinction Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Command Distinction Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `command_distinction` 안전 계약을 검증하지 않아 selected/review command role이나
@@ -3847,7 +3847,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Selected Action Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Selected Action Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   optional `selected_brief_action` 안전 계약을 검증하지 않아 writes_files/external_calls가
@@ -3860,7 +3860,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Selection Scope Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Selection Scope Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   `selection_scope`를 객체 여부만 검증해 malformed filter/reason/action을 selected
@@ -3873,7 +3873,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Privacy Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Privacy Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   top-level `privacy` raw-free contract를 검증하지 않아 malformed privacy flags를 selected
@@ -3887,7 +3887,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Selected Loop Brief Boundary Contract Error
+## 2026-07-08 LoopRelay Web Selected Loop Brief Boundary Contract Error
 
 - [x] CHECK: web API `getSelectedLoopBrief`가 `/api/v1/loops/brief` 성공 응답의 optional
   `compact_boundary` contract를 검증하지 않아 malformed compaction boundary를 continuation
@@ -3901,7 +3901,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Instruction Patch Contract Error
+## 2026-07-08 LoopRelay Web Loop Instruction Patch Contract Error
 
 - [x] CHECK: web API `getLoopInstructionPatch`가 `/api/v1/loops/instruction-patch` 성공
   응답의 apply gate와 instruction patch metadata 일부를 검증하지 않아 malformed source
@@ -3914,7 +3914,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Memory Approval Contract Error
+## 2026-07-08 LoopRelay Web Loop Memory Approval Contract Error
 
 - [x] CHECK: web API `approveLoopMemory`가 `/api/v1/loops/memory/approve` 성공 응답의
   durable memory metadata와 next action contract를 일부만 검증해 malformed memory title,
@@ -3928,7 +3928,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Items Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Items Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공
   응답의 `items` 배열 내부 loop snapshot summary 계약을 검증하지 않아 malformed selected
@@ -3941,7 +3941,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Status Core Contract Error
+## 2026-07-08 LoopRelay Web Loop Status Core Contract Error
 
 - [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의 core
   `status.status`, `snapshot_count`, `next_action`, `next_actions` contract를 검증하지 않아
@@ -3955,7 +3955,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Memory Candidate Contract Error
+## 2026-07-08 LoopRelay Web Loop Memory Candidate Contract Error
 
 - [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의 optional
   `status.memory_candidate` contract를 검증하지 않아 malformed approval eligibility/action을
@@ -3968,7 +3968,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Project Memory Contract Error
+## 2026-07-08 LoopRelay Web Loop Project Memory Contract Error
 
 - [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의
   `status.project_memory` contract를 검증하지 않아 malformed approved memory state를 loop
@@ -3981,7 +3981,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Activity Worktree Contract Error
+## 2026-07-08 LoopRelay Web Loop Activity Worktree Contract Error
 
 - [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의
   `status.activity.worktrees` item contract를 검증하지 않아 malformed worktree/session
@@ -3995,7 +3995,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Status Activity Contract Error
+## 2026-07-08 LoopRelay Web Loop Status Activity Contract Error
 
 - [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의
   `status.activity` core contract를 검증하지 않아 malformed activity counters/flags를
@@ -4009,7 +4009,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop List Privacy Contract Error
+## 2026-07-08 LoopRelay Web Loop List Privacy Contract Error
 
 - [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의 top-level
   `privacy` raw-free contract를 검증하지 않아 malformed privacy flags를 loop list UI에
@@ -4023,7 +4023,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Status Privacy Contract Error
+## 2026-07-08 LoopRelay Web Loop Status Privacy Contract Error
 
 - [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의 `status.privacy`
   raw-free contract를 검증하지 않아 malformed privacy flags를 agent-loop status UI에 넘길
@@ -4037,7 +4037,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Status Compact Boundary Contract Error
+## 2026-07-08 LoopRelay Web Loop Status Compact Boundary Contract Error
 
 - [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의
   `status.latest_compact_boundary` 계약을 검증하지 않아 malformed compact boundary를
@@ -4051,7 +4051,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Status Snapshot Contract Error
+## 2026-07-08 LoopRelay Web Loop Status Snapshot Contract Error
 
 - [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의
   `status.latest_snapshot` 계약을 검증하지 않아 malformed latest snapshot을
@@ -4064,7 +4064,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop List Item Contract Error
+## 2026-07-08 LoopRelay Web Loop List Item Contract Error
 
 - [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의 `items` 배열 내부
   loop summary 계약을 검증하지 않아 malformed item을 agent-loop continuity UI에 넘길 수
@@ -4077,7 +4077,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Project List Item Contract Error
+## 2026-07-08 LoopRelay Web Project List Item Contract Error
 
 - [x] CHECK: web API `listProjects`가 `/api/v1/projects` 성공 응답의 `items` 배열 내부
   project summary 계약을 검증하지 않아 malformed item을 project settings/policy UI에 넘길 수
@@ -4090,7 +4090,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Ask Summary Contract Error
+## 2026-07-08 LoopRelay Web Ask Summary Contract Error
 
 - [x] CHECK: web API `getAskEventSummary`가 `/api/v1/ask-events/summary` 성공 응답의
   ask/coach telemetry 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 UI에 넘길 수 있다.
@@ -4102,7 +4102,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Export Payload Contract Error
+## 2026-07-08 LoopRelay Web Export Payload Contract Error
 
 - [x] CHECK: web API `executeExportJob`가 `/api/v1/exports` 성공 응답의 anonymized export
   payload 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 export UI에 넘길 수 있다.
@@ -4115,7 +4115,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Similar Prompts Contract Error
+## 2026-07-08 LoopRelay Web Similar Prompts Contract Error
 
 - [x] CHECK: web API `getSimilarPrompts`가 `/api/v1/prompts/:id/similar` 성공 응답의
   prompt summary 배열 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 reuse candidates
@@ -4128,7 +4128,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Draft Copy Event Contract Error
+## 2026-07-08 LoopRelay Web Draft Copy Event Contract Error
 
 - [x] CHECK: web API `markPromptImprovementDraftCopied`가
   `/api/v1/prompts/:id/improvements/:draftId/copy` 성공 응답의 saved draft copy 계약을
@@ -4141,7 +4141,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Bookmark Contract Error
+## 2026-07-08 LoopRelay Web Bookmark Contract Error
 
 - [x] CHECK: web API `setPromptBookmark`가 `/api/v1/prompts/:id/bookmark` 성공 응답의
   prompt usefulness/reuse 계약을 검증하지 않아 malformed 응답을 `undefined` 또는 `{}` 상태로
@@ -4154,7 +4154,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Prompt Copy Event Contract Error
+## 2026-07-08 LoopRelay Web Prompt Copy Event Contract Error
 
 - [x] CHECK: web API `recordPromptCopied`가 `/api/v1/prompts/:id/events` 성공 응답의
   prompt usefulness/reuse 계약을 검증하지 않아 malformed 응답을 `undefined` 또는 `{}` 상태로
@@ -4167,7 +4167,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Improvement Draft Contract Error
+## 2026-07-08 LoopRelay Web Improvement Draft Contract Error
 
 - [x] CHECK: web API `savePromptImprovementDraft`가
   `/api/v1/prompts/:id/improvements` 성공 응답의 first coach draft 계약을 검증하지 않아
@@ -4181,7 +4181,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Prompt Detail Contract Error
+## 2026-07-08 LoopRelay Web Prompt Detail Contract Error
 
 - [x] CHECK: web API `getPrompt`가 `/api/v1/prompts/:id` 성공 응답의 prompt detail
   계약을 검증하지 않아 malformed 응답을 `{}` 상태로 archive/detail UI에 넘길 수 있다.
@@ -4193,7 +4193,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Export Preview Contract Error
+## 2026-07-08 LoopRelay Web Export Preview Contract Error
 
 - [x] CHECK: web API `createExportPreview`가 `/api/v1/exports/preview` 성공 응답의
   raw-free export job 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 export UI에 넘길 수
@@ -4207,7 +4207,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Import Dry-Run Contract Error
+## 2026-07-08 LoopRelay Web Import Dry-Run Contract Error
 
 - [x] CHECK: web API `previewImportDryRun`가 `/api/v1/import/dry-run` 성공 응답의
   raw-free import summary 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 import UI에
@@ -4221,7 +4221,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Coach Feedback Entry Contract Error
+## 2026-07-08 LoopRelay Web Coach Feedback Entry Contract Error
 
 - [x] CHECK: web API `sendCoachFeedback`가 `/api/v1/prompts/:id/coach-feedback` 성공
   응답의 feedback entry 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 first coach
@@ -4234,7 +4234,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Project Instruction Review Contract Error
+## 2026-07-08 LoopRelay Web Project Instruction Review Contract Error
 
 - [x] CHECK: web API `analyzeProjectInstructions`가
   `/api/v1/projects/:id/instructions/analyze` 성공 응답의 instruction review/privacy 계약을
@@ -4248,7 +4248,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Project Policy Contract Error
+## 2026-07-08 LoopRelay Web Project Policy Contract Error
 
 - [x] CHECK: web API `updateProjectPolicy`가 `/api/v1/projects/:id/policy` 성공 응답의
   project summary/policy 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 project settings
@@ -4262,7 +4262,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Prompt List Contract Error
+## 2026-07-08 LoopRelay Web Prompt List Contract Error
 
 - [x] CHECK: web API `listPrompts`가 `/api/v1/prompts` 성공 응답의 archive list 계약을
   검증하지 않아 malformed 응답을 `{}` 상태로 first coach/archive UI에 넘길 수 있다.
@@ -4274,7 +4274,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Instruction Patch Contract Error
+## 2026-07-08 LoopRelay Web Instruction Patch Contract Error
 
 - [x] CHECK: web API `getLoopInstructionPatch`가 `/api/v1/loops/instruction-patch`
   성공 응답의 review/apply-gate 계약을 검증하지 않아 malformed 응답을 `{}` 상태로
@@ -4288,7 +4288,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Memory Approval Contract Error
+## 2026-07-08 LoopRelay Web Loop Memory Approval Contract Error
 
 - [x] CHECK: web API `approveLoopMemory`가 `/api/v1/loops/memory/approve` 성공 응답의
   durable memory approval 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 instruction
@@ -4302,7 +4302,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Selected Brief Contract Error
+## 2026-07-08 LoopRelay Web Selected Brief Contract Error
 
 - [x] CHECK: web API `getSelectedLoopBrief`가 `/api/v1/loops/brief` 성공 응답의 selected
   continuation brief 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 continuation UI에
@@ -4316,7 +4316,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Contract Error
+## 2026-07-08 LoopRelay Web Loop Worktree Contract Error
 
 - [x] CHECK: web API `getLoopWorktree`가 `/api/v1/loops/worktrees/:worktree` 성공 응답의
   selected continuation 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 worktree
@@ -4329,7 +4329,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Coach Feedback Contract Error
+## 2026-07-08 LoopRelay Web Coach Feedback Contract Error
 
 - [x] CHECK: web API `getCoachFeedbackSummary`가 `/api/v1/coach-feedback/summary` 성공
   응답의 ratio/count 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 dashboard UI에
@@ -4343,7 +4343,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Archive Score Contract Error
+## 2026-07-08 LoopRelay Web Archive Score Contract Error
 
 - [x] CHECK: web API `getArchiveScoreReport`가 `/api/v1/score` 성공 응답의 archive
   score/practice plan 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 first coach loop
@@ -4357,7 +4357,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Quality Dashboard Contract Error
+## 2026-07-08 LoopRelay Web Quality Dashboard Contract Error
 
 - [x] CHECK: web API `getQualityDashboard`가 `/api/v1/quality` 성공 응답의 첫 화면 품질
   지표 계약을 검증하지 않아 malformed 응답을 `{}` 상태로 dashboard UI에 넘길 수 있다.
@@ -4370,7 +4370,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Health Contract Error
+## 2026-07-08 LoopRelay Web Health Contract Error
 
 - [x] CHECK: web API `getHealth`가 `/api/v1/health` 성공 응답의 `ok`/`version` 계약을
   검증하지 않아 malformed 응답을 `{}` 상태로 server status UI에 넘길 수 있다.
@@ -4382,7 +4382,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Settings Contract Error
+## 2026-07-08 LoopRelay Web Settings Contract Error
 
 - [x] CHECK: web API `getSettings`가 `/api/v1/settings` 성공 응답의 setup/redaction/server
   계약을 검증하지 않아 malformed 응답을 `{}` 상태로 UI에 넘길 수 있다.
@@ -4394,7 +4394,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop List Contract Error
+## 2026-07-08 LoopRelay Web Loop List Contract Error
 
 - [x] CHECK: web API `listLoops`가 `/api/v1/loops` 성공 응답의 top-level loop list
   계약을 검증하지 않아 malformed 응답을 `{}` 또는 `undefined` 상태로 UI에 넘길 수 있다.
@@ -4406,7 +4406,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Project List Contract Error
+## 2026-07-08 LoopRelay Web Project List Contract Error
 
 - [x] CHECK: web API `listProjects`가 `/api/v1/projects` 성공 응답의 `data.items`
   계약을 검증하지 않아 malformed 응답을 오류 대신 `undefined`로 반환할 수 있다.
@@ -4418,7 +4418,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web Session Contract Error
+## 2026-07-08 LoopRelay Web Session Contract Error
 
 - [x] CHECK: web API `ensureSession`이 `/api/v1/session` 성공 응답의 `data.csrf_token`
   계약을 검증하지 않아 malformed 또는 blank token 응답이 후속 API 호출까지 흘러가며 raw
@@ -4431,7 +4431,7 @@
 - [x] VERIFY: focused web API test, implementation format check, typecheck, diff whitespace
   check를 실행한다.
 
-## 2026-07-08 PromptLane Web API Error Redaction
+## 2026-07-08 LoopRelay Web API Error Redaction
 
 - [x] CHECK: web API client `failApi`가 structured problem `errors[]`를 browser-visible
   error에 붙이면서 future/malformed server error가 raw path 또는 token-shaped secret을
@@ -4444,7 +4444,7 @@
 - [x] VERIFY: focused web API test, typecheck, implementation format check, diff
   whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web API Problem Error Cap
+## 2026-07-08 LoopRelay Web API Problem Error Cap
 
 - [x] CHECK: web API client `failApi`가 structured problem `errors[]`를 모두 붙여
   validation issue가 많을 때 사용자-visible error가 과도하게 길어진다.
@@ -4455,7 +4455,7 @@
 - [x] VERIFY: focused web API test, typecheck, implementation format check, diff
   whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web API Problem Errors
+## 2026-07-08 LoopRelay Web API Problem Errors
 
 - [x] CHECK: server problem responses now expose readable `errors[]` field messages, but
   web API client `failApi` only surfaces `detail/title/message` and drops field-level
@@ -4468,7 +4468,7 @@
 - [x] VERIFY: focused web API test, typecheck, implementation format check, diff
   whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Ingest Too Large Prompt Message
+## 2026-07-08 LoopRelay Ingest Too Large Prompt Message
 
 - [x] CHECK: ingest route prompt length validation이 response `detail`은 readable하지만
   structured problem `errors[0].message`에는 내부 코드식 `too_large`를 노출한다.
@@ -4479,7 +4479,7 @@
 - [x] VERIFY: focused server create-server test, typecheck, implementation format check,
   diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Ingest Empty Prompt Message
+## 2026-07-08 LoopRelay Ingest Empty Prompt Message
 
 - [x] CHECK: ingest route empty prompt validation이 response `detail`은 readable하지만
   structured problem `errors[0].message`에는 내부 코드식 `empty`를 노출한다.
@@ -4489,7 +4489,7 @@
 - [x] VERIFY: focused server create-server test, typecheck, implementation format check,
   diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Ingest Zod Error Message
+## 2026-07-08 LoopRelay Ingest Zod Error Message
 
 - [x] CHECK: ingest route `normalizePayload` Zod error mapper가 structured problem
   `errors` 항목에 human-readable `issue.message` 대신 내부 `issue.code`를 넣어 agent
@@ -4502,7 +4502,7 @@
 - [x] VERIFY: focused server create-server test, typecheck, implementation format check,
   diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Server Zod Error Message
+## 2026-07-08 LoopRelay Server Zod Error Message
 
 - [x] CHECK: 공통 `createServer` Zod error handler가 structured problem `errors`
   항목에 human-readable `issue.message` 대신 내부 `issue.code`를 넣어 web/API 사용자가
@@ -4515,7 +4515,7 @@
   diff whitespace check를 실행했다. `create-server.test.ts` 전체 포맷은 기존 fixture
   줄바꿈 churn을 만들기 때문에 적용하지 않았다.
 
-## 2026-07-08 PromptLane Web API Error Message Fallback
+## 2026-07-08 LoopRelay Web API Error Message Fallback
 
 - [x] CHECK: web API client `failApi`가 canonical `detail/title`만 읽어 Fastify 기본
   또는 중간 계층의 `{ message }` error body에서는 복구 안내 대신 상태 코드만 노출한다.
@@ -4526,7 +4526,7 @@
 - [x] VERIFY: focused web API test, typecheck, code format check, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web API Error String Fallback
+## 2026-07-08 LoopRelay Web API Error String Fallback
 
 - [x] CHECK: web API client `failApi`가 `detail?.trim()`에 직접 의존해 malformed
   non-string detail이 있으면 `title` recovery hint까지 catch로 잃고 상태 코드만 노출한다.
@@ -4537,7 +4537,7 @@
 - [x] VERIFY: focused web API test, typecheck, code format check, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web API Error Title Fallback
+## 2026-07-08 LoopRelay Web API Error Title Fallback
 
 - [x] CHECK: web API client `failApi`가 서버 error body의 `detail`을 trim하지 않아
   blank detail이 있으면 `title` recovery hint fallback을 막고 공백 suffix만 노출한다.
@@ -4548,7 +4548,7 @@
 - [x] VERIFY: focused web API test, typecheck, code format check, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Command Center Brief Error Detail
+## 2026-07-08 LoopRelay Web Command Center Brief Error Detail
 
 - [x] CHECK: `getSelectedLoopBrief`는 command center loop brief에서도 서버 recovery
   detail을 Error message에 보존하지만, command center copy handler catch가 API 실패와
@@ -4562,7 +4562,7 @@
 - [x] VERIFY: focused web helper test, typecheck, code format check, diff whitespace
   check를 실행했다.
 
-## 2026-07-08 PromptLane Web Selected Loop Brief Error Detail
+## 2026-07-08 LoopRelay Web Selected Loop Brief Error Detail
 
 - [x] CHECK: `getSelectedLoopBrief`는 서버 recovery detail을 Error message에 보존하지만,
   selected loop brief copy handler catch가 API 실패와 clipboard 실패를 같은 generic
@@ -4575,7 +4575,7 @@
 - [x] VERIFY: focused web helper test, typecheck, format check, diff whitespace check를
   실행했다.
 
-## 2026-07-08 PromptLane Web Session Error Detail
+## 2026-07-08 LoopRelay Web Session Error Detail
 
 - [x] CHECK: `ensureSession`이 `/api/v1/session` non-OK 응답을 확인하지 않아
   session recovery detail 대신 `body.data.csrf_token` TypeError를 던진다.
@@ -4587,7 +4587,7 @@
   `api.test.ts` 전체 포맷은 기존 대형 fixture 포맷 churn을 만들기 때문에 적용하지
   않았다.
 
-## 2026-07-08 PromptLane Web Coach Feedback Query Error Detail
+## 2026-07-08 LoopRelay Web Coach Feedback Query Error Detail
 
 - [x] CHECK: `getCoachFeedbackSummary`는 서버 recovery detail을 Error message에 보존하지만,
   dashboard query 초기 coach feedback catch가 실패를 무시해 feedback 복구 안내가
@@ -4599,7 +4599,7 @@
 - [x] VERIFY: focused web helper/dashboard-query tests, typecheck, format check, diff
   whitespace check를 실행했다.
 
-## 2026-07-08 PromptLane Web Archive Score Query Error Detail
+## 2026-07-08 LoopRelay Web Archive Score Query Error Detail
 
 - [x] CHECK: `getArchiveScoreReport`는 서버 recovery detail을 Error message에 보존하지만,
   dashboard query 초기 archive score catch가 실패를 무시해 archive score 복구 안내가
@@ -4611,7 +4611,7 @@
 - [x] VERIFY: focused web helper/dashboard-query tests, typecheck, format check, diff
   whitespace check를 실행했다.
 
-## 2026-07-08 PromptLane Web Quality Dashboard Error Detail
+## 2026-07-08 LoopRelay Web Quality Dashboard Error Detail
 
 - [x] CHECK: `getQualityDashboard`는 서버 recovery detail을 Error message에 보존하지만,
   dashboard query 초기 로딩 catch가 실패를 무시해 quality/dashboard 복구 안내가
@@ -4623,7 +4623,7 @@
 - [x] VERIFY: focused web helper/dashboard-query tests, typecheck, format check, diff
   whitespace check를 실행했다.
 
-## 2026-07-08 PromptLane Web Project List Error Detail
+## 2026-07-08 LoopRelay Web Project List Error Detail
 
 - [x] CHECK: `listProjects`는 서버 recovery detail을 Error message에 보존하지만,
   workspace query project list catch가 실패를 무시해 project policy/setup 복구 안내가
@@ -4635,7 +4635,7 @@
 - [x] VERIFY: focused web helper/workspace-query tests, typecheck, format check, diff
   whitespace check를 실행했다.
 
-## 2026-07-08 PromptLane Web Loop List Error Detail
+## 2026-07-08 LoopRelay Web Loop List Error Detail
 
 - [x] CHECK: `listLoops`는 서버 recovery detail을 Error message에 보존하지만,
   workspace query loop list catch가 실패를 무시해 loop/session/worktree 복구 안내가
@@ -4647,7 +4647,7 @@
 - [x] VERIFY: focused web helper/workspace-query tests, typecheck, format check, diff
   whitespace check를 실행했다.
 
-## 2026-07-08 PromptLane Web Loop Worktree Error Detail
+## 2026-07-08 LoopRelay Web Loop Worktree Error Detail
 
 - [x] CHECK: `getLoopWorktree`는 서버 recovery detail을 Error message에 보존하지만,
   workspace query drilldown catch가 generic 문구로 덮어써 loop/session/worktree 복구
@@ -4659,7 +4659,7 @@
 - [x] VERIFY: focused web helper/workspace-query tests, typecheck, format check, diff
   whitespace check를 실행했다.
 
-## 2026-07-08 PromptLane Web Prompt List Error Detail
+## 2026-07-08 LoopRelay Web Prompt List Error Detail
 
 - [x] CHECK: `listPrompts`는 서버 recovery detail을 Error message에 보존하지만,
   prompt list query hook catch가 generic 문구로 덮어써 archive/search 복구 안내가
@@ -4671,7 +4671,7 @@
 - [x] VERIFY: focused web helper/query tests, typecheck, format check, diff whitespace
   check를 실행했다.
 
-## 2026-07-08 PromptLane Web Selected Prompt Error Detail
+## 2026-07-08 LoopRelay Web Selected Prompt Error Detail
 
 - [x] CHECK: `getPrompt`는 서버 recovery detail을 Error message에 보존하지만,
   selected prompt detail hook catch가 generic 문구로 덮어써 deep-link/detail 복구
@@ -4683,7 +4683,7 @@
 - [x] VERIFY: focused web helper/query tests, typecheck, format check, diff whitespace
   check를 실행했다.
 
-## 2026-07-08 PromptLane Web Similar Prompts Error Detail
+## 2026-07-08 LoopRelay Web Similar Prompts Error Detail
 
 - [x] CHECK: `getSimilarPrompts`는 서버 recovery detail을 Error message에 보존하지만,
   Prompt detail similar prompts 패널 catch가 generic 문구로 덮어써 archive/detail 복구
@@ -4694,7 +4694,7 @@
   API/server recovery detail을 보존하도록 연결했다.
 - [x] VERIFY: focused web helper test, typecheck, diff whitespace check를 실행했다.
 
-## 2026-07-08 PromptLane Web Ask Events Error Detail
+## 2026-07-08 LoopRelay Web Ask Events Error Detail
 
 - [x] CHECK: `getAskEventSummary`는 서버 recovery detail을 Error message에 보존하지만,
   Ask mode summary panel catch가 generic 문구로 덮어써 ask/clarification summary
@@ -4705,7 +4705,7 @@
   recovery detail을 보존하도록 연결했다.
 - [x] VERIFY: focused web helper test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Copy Usage Event Error Detail
+## 2026-07-08 LoopRelay Web Copy Usage Event Error Detail
 
 - [x] CHECK: `recordPromptCopied`는 서버 recovery detail을 Error message에 보존하지만,
   App prompt copy usage-event catch가 generic 문구로 덮어써 archive/search 복구 안내가
@@ -4716,7 +4716,7 @@
   API/server recovery detail을 보존하도록 연결했다.
 - [x] VERIFY: focused web helper test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Draft Copy Marker Error Detail
+## 2026-07-08 LoopRelay Web Draft Copy Marker Error Detail
 
 - [x] CHECK: `markPromptImprovementDraftCopied`는 서버 recovery detail을 Error message에
   보존하지만, App saved draft copy marker catch가 generic 문구로 덮어써 saved draft
@@ -4727,7 +4727,7 @@
   recovery detail을 보존하도록 연결했다.
 - [x] VERIFY: focused web helper test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Bulk Delete Error Detail
+## 2026-07-08 LoopRelay Web Bulk Delete Error Detail
 
 - [x] CHECK: `deletePrompt`는 서버 recovery detail을 Error message에 보존하지만,
   App bulk delete catch가 generic 문구로 덮어써 archive/search 복구 안내가 UI까지
@@ -4738,7 +4738,7 @@
   detail을 보존하도록 연결했다.
 - [x] VERIFY: focused web helper test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Bookmark Error Detail
+## 2026-07-08 LoopRelay Web Bookmark Error Detail
 
 - [x] CHECK: `setPromptBookmark`는 서버 recovery detail을 Error message에 보존하지만,
   App `toggleBookmark` catch가 generic 문구로 덮어써 archive/search 복구 안내가
@@ -4749,7 +4749,7 @@
   detail을 보존하도록 연결했다.
 - [x] VERIFY: focused web helper test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Improvement Draft Error Detail
+## 2026-07-08 LoopRelay Web Improvement Draft Error Detail
 
 - [x] CHECK: `savePromptImprovementDraft`는 서버 recovery detail을 Error message에
   보존하지만, App `saveImprovementDraft` catch가 generic 문구로 덮어써 saved draft
@@ -4760,7 +4760,7 @@
   recovery detail을 보존하도록 연결했다.
 - [x] VERIFY: focused web helper test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Health Error Detail
+## 2026-07-08 LoopRelay Web Health Error Detail
 
 - [x] CHECK: `getHealth`가 non-OK 응답에서 `failApi`를 거치지 않아 local server
   readiness/detail 응답을 Error로 보존하지 않고 성공 payload처럼 반환한다.
@@ -4770,7 +4770,7 @@
   detail을 Error message로 보존한다.
 - [x] VERIFY: focused web API test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Prompt List Error Detail
+## 2026-07-08 LoopRelay Web Prompt List Error Detail
 
 - [x] CHECK: `listPrompts`가 non-OK 응답에서 `failApi`를 거치지 않아 Prompt archive
   첫 화면에서 session/recovery detail이 UI/API caller까지 전달되지 않는다.
@@ -4780,7 +4780,7 @@
   detail을 Error message로 보존한다.
 - [x] VERIFY: focused web API test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Settings Error Detail
+## 2026-07-08 LoopRelay Web Settings Error Detail
 
 - [x] CHECK: `getSettings`가 non-OK 응답에서 `failApi`를 거치지 않아 settings/local
   server diagnostic 화면에서 session/recovery detail이 UI/API caller까지 전달되지 않는다.
@@ -4790,7 +4790,7 @@
   Error message로 보존한다.
 - [x] VERIFY: focused web API test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop Brief Error Detail
+## 2026-07-08 LoopRelay Web Loop Brief Error Detail
 
 - [x] CHECK: `getLoopBrief`가 non-OK 응답에서 `failApi`를 거치지 않아 continuation
   brief 실패 시 loop collect/reopen 같은 recovery detail이 UI/API caller까지 전달되지
@@ -4801,7 +4801,7 @@
   Error message로 보존한다.
 - [x] VERIFY: focused web API test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Loop List Error Detail
+## 2026-07-08 LoopRelay Web Loop List Error Detail
 
 - [x] CHECK: `listLoops`가 non-OK 응답에서 `failApi`를 거치지 않아 loop/session/worktree
   snapshot 화면 진입 시 session/recovery detail이 UI까지 전달되지 않는다.
@@ -4811,7 +4811,7 @@
   Error message로 보존한다.
 - [x] VERIFY: focused web API test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Project List Error Detail
+## 2026-07-08 LoopRelay Web Project List Error Detail
 
 - [x] CHECK: `listProjects`가 non-OK 응답에서 `failApi`를 거치지 않아 project control
   화면 진입 시 session/recovery detail 대신 `body.data.items` 접근 오류가 날 수 있다.
@@ -4821,7 +4821,7 @@
   detail을 Error message로 보존한다.
 - [x] VERIFY: focused web API test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Quality Dashboard Error Detail
+## 2026-07-08 LoopRelay Web Quality Dashboard Error Detail
 
 - [x] CHECK: `getQualityDashboard`가 non-OK 응답에서 `failApi`를 거치지 않아
   quality dashboard session/recovery detail이 Error로 올라오지 않고, archive
@@ -4832,7 +4832,7 @@
   measurement catch가 서버 recovery detail을 그대로 표시할 수 있게 했다.
 - [x] VERIFY: focused web API test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Archive Score Error Detail
+## 2026-07-08 LoopRelay Web Archive Score Error Detail
 
 - [x] CHECK: `getArchiveScoreReport`가 non-OK 응답에서 `failApi`를 거치지 않아
   archive score session/recovery detail이 Error로 올라오지 않고, App archive
@@ -4845,7 +4845,7 @@
 - [x] VERIFY: focused web API/helper tests, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Export Preview Error Detail
+## 2026-07-08 LoopRelay Web Export Preview Error Detail
 
 - [x] CHECK: `createExportPreview`는 서버 recovery detail을 Error message에 보존하지만,
   App `previewExport` catch가 generic preview 문구로 덮어써 CSRF/session/validation
@@ -4856,7 +4856,7 @@
   recovery detail을 보존하도록 연결했다.
 - [x] VERIFY: focused web helper test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Project Policy Error Detail
+## 2026-07-08 LoopRelay Web Project Policy Error Detail
 
 - [x] CHECK: `updateProjectPolicy`는 서버 recovery detail을 Error message에
   보존하지만, App `toggleProjectCapture` catch가 generic policy 문구로 덮어써 stale
@@ -4867,7 +4867,7 @@
   API/server recovery detail을 보존하도록 연결했다.
 - [x] VERIFY: focused web helper test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Instruction Analysis Error Detail
+## 2026-07-08 LoopRelay Web Instruction Analysis Error Detail
 
 - [x] CHECK: `analyzeProjectInstructions`는 서버 recovery detail을 Error message에
   보존하지만, App `analyzeProjectRules` catch가 generic 문구로 덮어써 stale project
@@ -4878,7 +4878,7 @@
   API/server recovery detail을 보존하도록 연결했다.
 - [x] VERIFY: focused web helper test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Export Error Detail Preservation
+## 2026-07-08 LoopRelay Web Export Error Detail Preservation
 
 - [x] CHECK: web API layer는 export job recovery detail을 Error message에 보존하지만,
   App export execution catch가 generic preview retry 문구로 덮어써 UI까지 전달되지
@@ -4889,7 +4889,7 @@
   export execution catch가 API/server recovery detail을 보존하도록 적용했다.
 - [x] VERIFY: focused web helper test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Web Error Detail Preservation
+## 2026-07-08 LoopRelay Web Error Detail Preservation
 
 - [x] CHECK: web API layer는 RFC 7807 `detail`을 Error message에 보존하지만, App
   handler catch가 generic 문구로 덮어쓰면 loop memory approval 같은 핵심 recovery
@@ -4900,7 +4900,7 @@
   API/server recovery detail을 보존하도록 적용했다.
 - [x] VERIFY: focused web helper test, typecheck, diff whitespace check를 실행한다.
 
-## 2026-07-08 PromptLane Unsupported Media Recovery
+## 2026-07-08 LoopRelay Unsupported Media Recovery
 
 - [x] CHECK: unsupported content-type 415는 "The request content-type is not
   supported."만 반환해, JSON content-type 전송과 agent hook reinstall/doctor 복구
@@ -4912,7 +4912,7 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Malformed JSON Recovery
+## 2026-07-08 LoopRelay Malformed JSON Recovery
 
 - [x] CHECK: malformed JSON body 400은 "The request body could not be parsed."만
   반환해, agent hook payload 문제일 때 valid JSON/hook reinstall/doctor 복구 경로가
@@ -4924,7 +4924,7 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Ingest Bearer Recovery
+## 2026-07-08 LoopRelay Ingest Bearer Recovery
 
 - [x] CHECK: Codex/Claude Code hook ingest route의 missing/invalid bearer token 실패는
   "Missing or invalid bearer token."만 반환해, stale hook token을 갱신하고 doctor로
@@ -4937,7 +4937,7 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web App Session Recovery
+## 2026-07-08 LoopRelay Web App Session Recovery
 
 - [x] CHECK: HTTP/web app access route의 missing/invalid session 실패는 "Missing or
   invalid app session."만 반환해, local web session을 다시 열어야 한다는 복구
@@ -4950,7 +4950,7 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web CSRF Recovery
+## 2026-07-08 LoopRelay Web CSRF Recovery
 
 - [x] CHECK: protected HTTP/web write route의 missing/invalid CSRF 실패는 "Missing
   or invalid CSRF token."만 반환해, local web session을 새로고침한 뒤 재시도해야
@@ -4963,18 +4963,18 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Unknown Route Recovery
+## 2026-07-08 LoopRelay Web Unknown Route Recovery
 
 - [x] CHECK: HTTP/web unknown route 404는 "The requested route does not exist."만
   반환해, local server readiness 확인 또는 web app route 재진입 경로가 덜 분명했다.
 - [x] RED: `src/server/create-server.test.ts`가 unknown route에서 health check/web
   app route recovery detail과 raw-free detail을 요구하게 해 실패를 확인했다.
 - [x] GREEN: Fastify notFound handler의 404 detail을 `/api/v1/health` readiness 확인
-  및 PromptLane web app route 재진입 안내로 교체했다.
+  및 LoopRelay web app route 재진입 안내로 교체했다.
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Export Job Recovery
+## 2026-07-08 LoopRelay Web Export Job Recovery
 
 - [x] CHECK: HTTP/web `POST /api/v1/exports`는 stale/missing export job 실행에서
   "Export job not found."만 반환해, 새 export preview를 만든 뒤 해당 preview에서
@@ -4986,7 +4986,7 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Project Instruction Review Recovery
+## 2026-07-08 LoopRelay Web Project Instruction Review Recovery
 
 - [x] CHECK: HTTP/web `GET /api/v1/projects/:id/instructions`는 stale/missing
   instruction review에서 "Project instruction review not found."만 반환해, 먼저
@@ -4998,7 +4998,7 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Project Instruction Analyze Recovery
+## 2026-07-08 LoopRelay Web Project Instruction Analyze Recovery
 
 - [x] CHECK: HTTP/web `POST /api/v1/projects/:id/instructions/analyze`는
   stale/missing project에서 instruction analysis를 시도할 때 "Project not
@@ -5012,7 +5012,7 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Project Policy Recovery
+## 2026-07-08 LoopRelay Web Project Policy Recovery
 
 - [x] CHECK: HTTP/web `PATCH /api/v1/projects/:id/policy`는 stale/missing
   project에서 policy 변경을 시도할 때 "Project not found."만 반환해, local
@@ -5026,7 +5026,7 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Saved Draft Copy Recovery
+## 2026-07-08 LoopRelay Web Saved Draft Copy Recovery
 
 - [x] CHECK: HTTP/web `POST /api/v1/prompts/:id/improvements/:draft_id/copy`는
   stale/missing saved draft copy에서 "Improvement draft not found."만 반환해,
@@ -5039,7 +5039,7 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Coach Feedback Recovery
+## 2026-07-08 LoopRelay Web Coach Feedback Recovery
 
 - [x] CHECK: HTTP/web `POST /api/v1/prompts/:id/coach-feedback`는 stale/missing
   prompt에서 coach feedback 기록을 시도할 때 "Prompt not found."만 반환해, local
@@ -5053,7 +5053,7 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Delete Recovery
+## 2026-07-08 LoopRelay Web Delete Recovery
 
 - [x] CHECK: HTTP/web `DELETE /api/v1/prompts/:id`는 stale/missing prompt에서
   delete를 시도할 때 "Prompt not found."만 반환해, local archive/search로 복구하는
@@ -5066,7 +5066,7 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Usage Event Recovery
+## 2026-07-08 LoopRelay Web Usage Event Recovery
 
 - [x] CHECK: HTTP/web `POST /api/v1/prompts/:id/events`는 stale/missing prompt에서
   usage event 기록을 시도할 때 "Prompt not found."만 반환해, local archive/search로
@@ -5079,7 +5079,7 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Bookmark Recovery
+## 2026-07-08 LoopRelay Web Bookmark Recovery
 
 - [x] CHECK: HTTP/web `PUT /api/v1/prompts/:id/bookmark`는 stale/missing
   prompt에서 bookmark 변경을 시도할 때 "Prompt not found."만 반환해, local
@@ -5092,7 +5092,7 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Improvement Recovery
+## 2026-07-08 LoopRelay Web Improvement Recovery
 
 - [x] CHECK: HTTP/web `POST /api/v1/prompts/:id/improvements`는 stale/missing
   prompt에서 improvement draft 저장을 시도할 때 "Prompt not found."만 반환해,
@@ -5105,7 +5105,7 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Prompt Detail Recovery
+## 2026-07-08 LoopRelay Web Prompt Detail Recovery
 
 - [x] CHECK: HTTP/web `GET /api/v1/prompts/:id`는 stale/missing prompt detail
   link에서 "Prompt not found."만 반환해, local archive/search로 복구하는 방법이
@@ -5117,21 +5117,21 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Explicit Brief Recovery
+## 2026-07-08 LoopRelay Web Explicit Brief Recovery
 
 - [x] CHECK: HTTP/web `GET /api/v1/loops/:id/brief`는 explicit snapshot id가
   없을 때 "Loop snapshot not found."만 반환해, stale detail link에서 최신 safe
   continuation brief로 복구하는 방법을 안내하지 않았다.
 - [x] RED: `src/server/create-server.test.ts`가 missing explicit loop brief
-  응답에 next Codex/Claude Code turn 후 `promptlane loop collect`를 실행하고
-  latest `promptlane loop brief`로 retry하라는 raw-free 안내를 요구하게 해 실패를
+  응답에 next Codex/Claude Code turn 후 `looprelay loop collect`를 실행하고
+  latest `looprelay loop brief`로 retry하라는 raw-free 안내를 요구하게 해 실패를
   확인했다.
 - [x] GREEN: explicit snapshot brief route의 404 detail을 raw-free recovery
   문구로 교체했다.
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Brief Recovery
+## 2026-07-08 LoopRelay Web Brief Recovery
 
 - [x] CHECK: HTTP/web `GET /api/v1/loops/brief`는 snapshot이 없거나 선택
   필터가 맞지 않을 때 CLI/MCP보다 짧은 "Loop snapshot not found." 또는
@@ -5139,13 +5139,13 @@
   분명했다.
 - [x] RED: `src/server/create-server.test.ts`가 empty web brief에는 first
   prompt/score/collect 후 retry 안내를, selected-filter miss에는 필터를 포함한
-  `promptlane loop collect ...` recovery command를 요구하게 해 실패를 확인했다.
+  `looprelay loop collect ...` recovery command를 요구하게 해 실패를 확인했다.
 - [x] GREEN: server brief route가 shared brief no-snapshot helper와 selected
   snapshot recovery helper를 사용하게 했다.
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Memory Approval Recovery
+## 2026-07-08 LoopRelay Web Memory Approval Recovery
 
 - [x] CHECK: HTTP/web `POST /api/v1/loops/memory/approve`는 loop snapshot이
   없을 때 "Loop snapshot not found."만 반환해, memory approval 전에 필요한
@@ -5158,10 +5158,10 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Web Instruction Patch Memory Recovery
+## 2026-07-08 LoopRelay Web Instruction Patch Memory Recovery
 
 - [x] CHECK: HTTP/web `GET /api/v1/loops/instruction-patch`는 approved loop
-  memory가 없을 때 CLI/MCP와 달리 "Approve a PromptLane memory first"만
+  memory가 없을 때 CLI/MCP와 달리 "Approve a LoopRelay memory first"만
   반환해 evidence-backed memory 생성 순서를 덜 분명하게 안내했다.
 - [x] RED: `src/server/create-server.test.ts`가 web instruction patch no-memory
   응답에 first prompt, first score, loop snapshot collect, passed outcome
@@ -5171,7 +5171,7 @@
 - [x] VERIFY: focused server route test, typecheck, diff whitespace check를
   실행한다.
 
-## 2026-07-08 PromptLane Instruction Patch Memory Recovery
+## 2026-07-08 LoopRelay Instruction Patch Memory Recovery
 
 - [x] CHECK: instruction patch proposal/apply가 approved loop memory가 없을 때
   단순히 `loop memory-approve`만 안내해, evidence-backed memory를 만들기 위한
@@ -5184,26 +5184,26 @@
 - [x] VERIFY: focused loop CLI/MCP tests, typecheck, formatting/diff checks를
   실행한다.
 
-## 2026-07-08 PromptLane Loop Outcome First-Prompt Recovery
+## 2026-07-08 LoopRelay Loop Outcome First-Prompt Recovery
 
 - [x] CHECK: MCP `record_loop_outcome`의 latest snapshot 경로가 empty archive에서
   바로 `loop collect`만 안내해, outcome 기록 전에 first prompt/score 확인이
   선행되어야 한다는 흐름이 덜 분명했다.
 - [x] RED: `src/mcp/loop-tool.test.ts`가 no-snapshot `record_loop_outcome`에
-  first prompt + `coach_prompt`/status recheck + `promptlane loop collect` 후
+  first prompt + `coach_prompt`/status recheck + `looprelay loop collect` 후
   retry 안내를 요구하게 해 실패를 확인했다.
 - [x] GREEN: MCP outcome no-snapshot recovery helper를 추가하고
   `recordLoopOutcomeTool`이 `record_loop_outcome`에 맞는 recovery를 반환하게 했다.
 - [x] VERIFY: focused MCP loop-tool test, typecheck, formatting/diff checks를
   실행한다.
 
-## 2026-07-08 PromptLane Loop Memory First-Prompt Recovery
+## 2026-07-08 LoopRelay Loop Memory First-Prompt Recovery
 
 - [x] CHECK: empty archive에서 `loop memory-candidate`와 MCP
   `propose_loop_memory_candidate`가 바로 `loop collect`만 안내해, loop memory가
   요구하는 first prompt/coach/collect/outcome evidence 순서가 덜 분명했다.
 - [x] RED: CLI/MCP memory candidate no-snapshot tests가 first prompt + first
-  score 확인, `promptlane loop collect`, passed outcome evidence 기록 후 retry를
+  score 확인, `looprelay loop collect`, passed outcome evidence 기록 후 retry를
   안내해야 한다고 요구하게 해 실패를 확인했다.
 - [x] GREEN: CLI/MCP 표면별 loop memory no-snapshot recovery helper를 추가하고,
   `memory-candidate`, `memory-approve`, `propose_loop_memory_candidate`,
@@ -5211,14 +5211,14 @@
 - [x] VERIFY: focused loop CLI/MCP tests, typecheck, formatting/diff checks를
   실행한다.
 
-## 2026-07-08 PromptLane Loop Brief First-Prompt Recovery
+## 2026-07-08 LoopRelay Loop Brief First-Prompt Recovery
 
-- [x] CHECK: empty archive에서 `promptlane loop brief`와 MCP
+- [x] CHECK: empty archive에서 `looprelay loop brief`와 MCP
   `prepare_loop_brief`는 바로 `loop collect`만 안내해, 첫 사용자에게 먼저
   Codex/Claude Code prompt를 캡처하고 coach/score를 확인해야 한다는 순서가
   약했다.
 - [x] RED: CLI/MCP loop brief no-snapshot tests가 first prompt + coach/score
-  확인 후 `promptlane loop collect`를 실행하라는 recovery message를 요구하게 해
+  확인 후 `looprelay loop collect`를 실행하라는 recovery message를 요구하게 해
   실패를 확인했다.
 - [x] GREEN: CLI/MCP 표면별 no-snapshot recovery message를
   `loop/snapshot-selection` helper로 공유하고, selected-filter recovery는 그대로
@@ -5226,9 +5226,9 @@
 - [x] VERIFY: focused loop CLI/MCP tests, typecheck, formatting/diff checks를
   실행한다.
 
-## 2026-07-08 PromptLane Quality Operator Brief Complete State
+## 2026-07-08 LoopRelay Quality Operator Brief Complete State
 
-- [x] CHECK: `promptlane quality-evidence --operator-brief`는 현재
+- [x] CHECK: `looprelay quality-evidence --operator-brief`는 현재
   `native_dialog_approved_dogfood`가 complete인데도, 완료 증거가 이미 기록되어
   추가 operator action이 없다는 문장을 직접 보여주지 않았다.
 - [x] RED: `src/cli/commands/quality-evidence.test.ts`가 complete 상태 operator
@@ -5239,22 +5239,22 @@
 - [x] VERIFY: focused quality-evidence CLI test, built CLI operator brief,
   typecheck, formatting/diff checks를 실행한다.
 
-## 2026-07-08 PromptLane Start Codex First-Score Guidance
+## 2026-07-08 LoopRelay Start Codex First-Score Guidance
 
-- [x] CHECK: `promptlane start --tool codex`는 first-score happy path와
-  `promptlane coach` 명령을 보여주지만, "Send one real coding prompt" 단계의
+- [x] CHECK: `looprelay start --tool codex`는 first-score happy path와
+  `looprelay coach` 명령을 보여주지만, "Send one real coding prompt" 단계의
   in-agent follow-up은 Claude Code slash command만 언급해 Codex 사용자가
   agent-native `coach_prompt`를 바로 떠올리기 어려웠다.
 - [x] RED: `src/cli/commands/start.test.ts`가 Codex 전용 start guide의 send-step
   detail에 `Inside Codex`와 `coach_prompt` 안내가 있어야 한다고 요구하게 해
   실패를 확인했다.
 - [x] GREEN: `buildStartGuide`가 선택된 tool 집합에 맞춰 Claude Code
-  `/promptlane:improve-last`와 Codex `coach_prompt` follow-up 안내를 구성하게
+  `/looprelay:improve-last`와 Codex `coach_prompt` follow-up 안내를 구성하게
   했다.
 - [x] VERIFY: focused start command test, typecheck, formatting/diff checks를
   실행한다.
 
-## 2026-07-08 PromptLane Web Empty Loop Korean Next Actions
+## 2026-07-08 LoopRelay Web Empty Loop Korean Next Actions
 
 - [x] CHECK: web Loops empty panel이 서버 `next_actions`를 렌더링하게 됐지만,
   한국어 UI에서도 first prompt/coach/loop collect 안내가 영어로 남아 첫 사용자
@@ -5267,7 +5267,7 @@
 - [x] VERIFY: focused i18n/LoopsView tests, typecheck, formatting/diff checks,
   rendered Korean web validation을 실행한다.
 
-## 2026-07-08 PromptLane Web Empty Loop Next Actions
+## 2026-07-08 LoopRelay Web Empty Loop Next Actions
 
 - [x] CHECK: loop status 모델과 MCP는 empty loop 상태에서 first prompt/coach 이후
   `loop collect`를 안내하지만, web Loops empty panel은 서버 `next_actions`를
@@ -5281,24 +5281,24 @@
 - [x] VERIFY: focused LoopsView test, typecheck, formatting/diff checks, rendered
   web validation을 실행한다.
 
-## 2026-07-08 PromptLane Empty Loop First Value Guidance
+## 2026-07-08 LoopRelay Empty Loop First Value Guidance
 
 - [x] CHECK: loop status 모델의 empty 상태는 `loop collect`를 먼저 안내하고
   prompt capture 필요성을 뒤에 말해, 새 사용자가 빈 snapshot부터 만들 수 있었다.
 - [x] RED: `src/loop/status.test.ts`가 empty loop status에서 Codex/Claude Code
-  prompt capture와 `promptlane coach` first score 확인이 `loop collect`보다 먼저
+  prompt capture와 `looprelay coach` first score 확인이 `loop collect`보다 먼저
   나오도록 요구하게 해 실패를 확인했다.
 - [x] GREEN: empty loop next actions를 first prompt/coach -> loop collect 순서로
-  바꿨다. `next_action`은 실행 가능한 snapshot 생성 명령인 `promptlane loop
+  바꿨다. `next_action`은 실행 가능한 snapshot 생성 명령인 `looprelay loop
   collect`로 유지한다.
 - [x] VERIFY: focused loop status/MCP tests, typecheck, formatting/diff checks를
   실행한다.
 
-## 2026-07-08 PromptLane Loop MCP First Prompt Guidance
+## 2026-07-08 LoopRelay Loop MCP First Prompt Guidance
 
-- [x] CHECK: 일반 `get_promptlane_status` setup-needed/empty 상태는 첫
+- [x] CHECK: 일반 `get_looprelay_status` setup-needed/empty 상태는 첫
   Codex/Claude Code prompt 후 `coach_prompt` 또는 status recheck를 안내하지만,
-  `get_promptlane_loop_status` setup-needed fallback은 바로 `loop collect`로
+  `get_looprelay_loop_status` setup-needed fallback은 바로 `loop collect`로
   넘어가 첫 사용자에게 capture/score 선행 단계를 덜 분명하게 보여줬다.
 - [x] RED: `src/mcp/loop-tool.test.ts`가 loop MCP setup guidance에 MCP용
   first-prompt next step이 포함되고 `loop collect`보다 먼저 나오도록 요구하게 해
@@ -5309,7 +5309,7 @@
 - [x] VERIFY: focused MCP loop/status/server tests, typecheck, formatting/diff
   checks를 실행한다.
 
-## 2026-07-08 PromptLane Hook Shell Quote Centralization
+## 2026-07-08 LoopRelay Hook Shell Quote Centralization
 
 - [x] CHECK: install-hook/statusline은 shared `quoteForShell` 도입 이후에도
   local `shellQuote = JSON.stringify` helper를 유지해 command quoting 규칙이
@@ -5323,7 +5323,7 @@
 - [x] VERIFY: focused packaging/install-hook/statusline tests, typecheck,
   formatting/diff checks를 실행한다.
 
-## 2026-07-08 PromptLane MCP Registration Command Quoting
+## 2026-07-08 LoopRelay MCP Registration Command Quoting
 
 - [x] CHECK: setup/doctor가 사용자에게 보여주는 MCP registration command는
   `mcpRegistrationSpec` argv를 사람이 복사할 수 있는 문자열로 렌더링하지만,
@@ -5333,11 +5333,11 @@
   command가 공백 포함 entry path를 shell-quote해야 한다는 focused test를 추가해
   실패를 확인했다.
 - [x] GREEN: `mcpRegistrationCommand`가 shared `quoteForShell`로 argv를 렌더링하게
-  했다. 기존 PATH 기반 `promptlane mcp` 문구는 그대로 유지된다.
+  했다. 기존 PATH 기반 `looprelay mcp` 문구는 그대로 유지된다.
 - [x] VERIFY: focused agent-access/setup/doctor tests, typecheck,
   formatting/diff checks를 실행한다.
 
-## 2026-07-08 PromptLane Command Center Command Quoting
+## 2026-07-08 LoopRelay Command Center Command Quoting
 
 - [x] CHECK: command-center continuation command는 web/CLI/MCP status가 공유하는
   agent-loop next action 표면인데, worktree/branch 값을 문자열 interpolation 후
@@ -5350,7 +5350,7 @@
 - [x] VERIFY: focused loop status/CLI/MCP/web tests, typecheck,
   formatting/diff checks를 실행한다.
 
-## 2026-07-08 PromptLane Shared Shell Quote Helper
+## 2026-07-08 LoopRelay Shared Shell Quote Helper
 
 - [x] CHECK: selected brief command, brief recovery command, Codex HUD buddy
   command가 모두 같은 shell-quoting primitive를 쓰지만 각 entrypoint에
@@ -5363,10 +5363,10 @@
 - [x] VERIFY: shared helper test와 관련 command rendering focused tests,
   typecheck, formatting/diff checks를 실행한다.
 
-## 2026-07-08 PromptLane Brief Recovery Command Quoting
+## 2026-07-08 LoopRelay Brief Recovery Command Quoting
 
 - [x] CHECK: selected loop brief가 선택 필터와 일치하는 snapshot을 찾지 못할 때
-  CLI/MCP가 공유 recovery message로 `promptlane loop collect ...` 명령을 안내하지만,
+  CLI/MCP가 공유 recovery message로 `looprelay loop collect ...` 명령을 안내하지만,
   worktree/branch 값에 공백이나 따옴표가 있으면 복사 실행이 깨질 수 있었다.
 - [x] RED: `src/cli/commands/loop.test.ts`에 selected brief recovery command가
   공백/따옴표 포함 필터 값을 shell-quote해야 한다는 focused test를 추가해 실패를
@@ -5376,10 +5376,10 @@
 - [x] VERIFY: focused loop CLI/MCP tests, typecheck, formatting/diff checks를
   실행한다.
 
-## 2026-07-08 PromptLane Selected Brief Command Quoting
+## 2026-07-08 LoopRelay Selected Brief Command Quoting
 
 - [x] CHECK: web/server selected continuation brief action은
-  `promptlane loop brief --worktree ...` command를 사용자에게 복사 가능한 형태로
+  `looprelay loop brief --worktree ...` command를 사용자에게 복사 가능한 형태로
   제공하지만, worktree/session/branch 값에 공백이나 따옴표가 있으면 shell command가
   깨질 수 있었다.
 - [x] RED: `src/server/loop-detail-guidance.test.ts`에 selected brief command가
@@ -5390,10 +5390,10 @@
 - [x] VERIFY: focused loop detail guidance test, typecheck, formatting/diff
   checks를 실행한다.
 
-## 2026-07-08 PromptLane Codex HUD Custom Data Dir
+## 2026-07-08 LoopRelay Codex HUD Custom Data Dir
 
 - [x] CHECK: `install-codex-hud`는 `--data-dir`를 실제 buddy argv에는 전달하지만,
-  cmux/no multiplexer 안내의 `promptlane buddy ...` pretty command에는 빠뜨려
+  cmux/no multiplexer 안내의 `looprelay buddy ...` pretty command에는 빠뜨려
   custom storage 사용자가 다른 archive를 볼 수 있었다.
 - [x] RED: `src/cli/commands/install-codex-hud.test.ts`에 cmux/no multiplexer
   JSON instructions가 custom `--data-dir`를 runnable pretty command에 보존해야
@@ -5402,7 +5402,7 @@
   사용하게 하고, custom data-dir 값은 기존 shell quoting 규칙으로 렌더링한다.
 - [x] VERIFY: focused HUD CLI test, typecheck, formatting/diff checks를 실행했다.
 
-## 2026-07-08 PromptLane Buddy Setup Actions
+## 2026-07-08 LoopRelay Buddy Setup Actions
 
 - [x] CHECK: MCP/coach/loop setup-needed 흐름은 custom data-dir 복구 안내를
   raw-free next action으로 제공하지만, `buddy` block 출력은 첫 번째
@@ -5415,13 +5415,13 @@
   `Also do` 줄로 렌더링한다.
 - [x] VERIFY: focused CLI test, typecheck, formatting/diff checks를 실행했다.
 
-## 2026-07-08 PromptLane Long-Running Product Polish
+## 2026-07-08 LoopRelay Long-Running Product Polish
 
-- [x] CHECK: 장기 goal을 등록했다. 목표는 PromptLane를 local-first
+- [x] CHECK: 장기 goal을 등록했다. 목표는 LoopRelay를 local-first
   agent-loop memory/workspace 제품으로 기획, 아키텍처, Codex/Claude Code
   통합, privacy invariant, UI/CLI/MCP/doctor/runtime 검증까지 장기 개선하는
   것이다.
-- [x] CHECK: 현재 `quality-evidence`는 `promptlane_95_quality`를
+- [x] CHECK: 현재 `quality-evidence`는 `looprelay_95_quality`를
   `complete`로 보고하고, 7개 scorecard axis 모두 `9.5/10`이며 blocker와
   recommended next slice가 없다.
 - [x] CHECK: 현재 main에서 기본 release gate가 통과했다:
@@ -5465,7 +5465,7 @@
   waiting 상태가 실행 가능한 다음 행동을 보여야 한다는 assertion을 추가했고,
   기존 `"No hook delivery has been recorded yet."` 문구에서 실패했다.
 - [x] GREEN: Settings onboarding pending copy를 행동 지향으로 바꿨다. Hook
-  Capture는 `promptlane setup --profile coach` 후 Codex/Claude Code prompt를
+  Capture는 `looprelay setup --profile coach` 후 Codex/Claude Code prompt를
   보내라고 안내하고, First prompt stored와 Reuse loop도 다음 행동을 직접 말한다.
 - [x] VERIFY: `corepack pnpm dogfood:web-user-flow`, `corepack pnpm ui-patrol`,
   `corepack pnpm lint:types`, `git diff --check`가 통과했다. `ui-patrol`
@@ -5478,7 +5478,7 @@
   보내라는 next action을 보여주지 않는 focused test를 추가해 실패를 확인했다.
 - [x] GREEN: CLI 공통 first-prompt next step을 `src/cli/agent-access.ts`에 두고
   `setup`과 `doctor`가 같은 `"Send one Codex or Claude Code prompt, then run
-  promptlane coach."` 문구를 쓰게 했다.
+  looprelay coach."` 문구를 쓰게 했다.
 - [x] VERIFY: `corepack pnpm vitest run src/cli/commands/doctor.test.ts
   src/cli/commands/setup.test.ts`, `corepack pnpm lint:types`,
   `corepack pnpm smoke:agent-setup`이 통과했다.
@@ -5495,7 +5495,7 @@
   실행하지 않았다.
 - [x] NEXT: 다음 후보는 branch의 변경을 PR 가능한 단위로 정리하고, 필요한
   경우 focused package check만 추가로 돌린 뒤 push/PR 단계로 넘기는 것이다.
-- [x] CHECK: `codex/promptlane-first-value-dogfood-hardening` 브랜치를 원격에
+- [x] CHECK: `codex/looprelay-first-value-dogfood-hardening` 브랜치를 원격에
   push했고 draft PR #511을 열었다. PR 본문에는 이번 branch의 first-value
   onboarding smoke hardening, web/CLI/doc copy alignment, focused validation
   명령을 기록했다.
@@ -5521,12 +5521,12 @@
 - 숨은 provider call, automatic prompt resubmission, raw transcript scraping,
   private app DB 접근, credential proxy/storage는 계속 reject한다.
 - 다음 구현 슬라이스는 RED -> GREEN -> focused verify -> local gate 순서로
-  진행하고, `promptlane` runtime identity compatibility window를 깨지 않는다.
+  진행하고, `looprelay` runtime identity compatibility window를 깨지 않는다.
 
-## 2026-07-06 PromptLane Approved Native Dialog Evidence
+## 2026-07-06 LoopRelay Approved Native Dialog Evidence
 
 - [x] CHECK: PR #507 이후
-  `PROMPTLANE_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved`
+  `LOOPRELAY_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved`
   를 explicit operator approval 상태에서 다시 실행했고 `approved native dialog
   dogfood passed`로 완료됐다.
 - [x] RED: 기존 quality evidence tests/docs는
@@ -5543,11 +5543,11 @@
 - `quality-evidence` must be `complete` only when every scorecard row is
   `9.5/10` or higher and the audit includes
   `interaction_status: "answered"`, `approved native dialog dogfood passed`,
-  and `PROMPTLANE_NATIVE_DIALOG_APPROVED=1`.
+  and `LOOPRELAY_NATIVE_DIALOG_APPROVED=1`.
 - Native dialog dogfood remains a human-approved local operation, never a CI or
   scheduled automation step.
 
-## 2026-07-06 PromptLane Native Dialog AppleScript Separator
+## 2026-07-06 LoopRelay Native Dialog AppleScript Separator
 
 - [x] CHECK: 승인형 native dialog dogfood가 operator approval env를 받은 뒤에도
   `interaction_status: timeout`으로 실패했다. 직접 osascript 진단은 동작했지만
@@ -5569,7 +5569,7 @@
 - Keep the macOS dialog command local-only and free of prompt archive/storage
   side effects.
 
-## 2026-07-06 PromptLane Native Dialog Operator Brief
+## 2026-07-06 LoopRelay Native Dialog Operator Brief
 
 - [x] CHECK: 남은 9.5 blocker는 승인형 native dialog dogfood뿐인데,
   일반 `quality-evidence` 출력은 전체 summary가 길어 operator가 실행 전
@@ -5578,7 +5578,7 @@
 - [x] RED: `src/cli/commands/quality-evidence.test.ts`가
   `qualityEvidenceForCli({ operatorBrief: true })`에 focused native dialog
   operator brief를 요구했고 기존 formatter가 전체 summary를 반환해 실패했다.
-- [x] GREEN: `promptlane quality-evidence --operator-brief`를 추가해 현재
+- [x] GREEN: `looprelay quality-evidence --operator-brief`를 추가해 현재
   approval status, command, preconditions, completion evidence, guardrails,
   그리고 dogfood를 실행하지 않는 result boundary를 출력한다.
 - [x] GREEN: operator brief에 approval env 없이 실행할 수 있는 refusal
@@ -5595,7 +5595,7 @@
 - It must not mark `native_dialog_approved_dogfood` complete.
 - Output must stay local-only, raw-free, and free of absolute paths.
 
-## 2026-07-06 PromptLane Native Dialog Approval Evidence Clarity
+## 2026-07-06 LoopRelay Native Dialog Approval Evidence Clarity
 
 - [x] CHECK: `quality-evidence` JSON의 recommended next slice는 native dialog
   실행 전 operator approval이 필요하다고 말하지만, direct evidence row는
@@ -5618,7 +5618,7 @@
   clarity improvements.
 - Keep external evidence output raw-free and free of local paths.
 
-## 2026-07-06 PromptLane Stale Scheduled UI Patrol Docs Cleanup
+## 2026-07-06 LoopRelay Stale Scheduled UI Patrol Docs Cleanup
 
 - [x] CHECK: CI workflow removal 이후에도 9.5 plan의 현재 blocker 문단이
   scheduled patrol cron과 next expected UTC를 언급해 다음 작업자를 잘못된
@@ -5638,7 +5638,7 @@
   local `ui-patrol` and `dogfood:web-user-flow`.
 - Do not run native dialog dogfood without explicit operator approval.
 
-## 2026-07-06 PromptLane CI Workflow Removal
+## 2026-07-06 LoopRelay CI Workflow Removal
 
 - [x] CHECK: 사용자가 CI는 없어도 된다고 명시했고, 남은 GitHub Actions 파일은
   scheduled `ui-patrol.yml` 하나였다.
@@ -5647,7 +5647,7 @@
 - [x] GREEN: `.github/workflows/ui-patrol.yml`과
   `scripts/ui-patrol-evidence.mjs`를 제거하고, web operations 품질 기준을
   local `corepack pnpm ui-patrol` plus `dogfood:web-user-flow` 증거로 전환했다.
-- [x] EFFECT: PromptLane의 active gate는 local gate와 approval-gated native
+- [x] EFFECT: LoopRelay의 active gate는 local gate와 approval-gated native
   dialog dogfood만 남는다. GitHub Actions schedule 대기는 더 이상 9.5 품질
   blocker가 아니다.
 
@@ -5657,7 +5657,7 @@
 - Do not treat removed scheduled evidence as a remaining quality blocker.
 - Keep `ui-patrol` as a local browser verification command.
 
-## 2026-07-06 PromptLane Recommendation Blocked Reasons
+## 2026-07-06 LoopRelay Recommendation Blocked Reasons
 
 - [x] CHECK: `recommended_next_slices` marked external blockers but did not
   expose why they were blocked or when a scheduled retry becomes relevant.
@@ -5675,7 +5675,7 @@
 - Do not run native dialog dogfood without explicit operator approval.
 - Keep recommendation output raw-free and free of local paths.
 
-## 2026-07-06 PromptLane Axis Blocker Causes
+## 2026-07-06 LoopRelay Axis Blocker Causes
 
 - [x] CHECK: scorecard axis blockers still said to raise the axis with direct
   evidence, even when `axis_evidence_coverage` already knew the exact remaining
@@ -5695,9 +5695,9 @@
 - Keep blocker output raw-free and free of local paths.
 - Preserve scheduled and native dialog blockers as separate direct evidence.
 
-## 2026-07-06 PromptLane Quality Blocker Next Actions
+## 2026-07-06 LoopRelay Quality Blocker Next Actions
 
-- [x] CHECK: `promptlane quality-evidence` 기본 텍스트의 Blockers 섹션이
+- [x] CHECK: `looprelay quality-evidence` 기본 텍스트의 Blockers 섹션이
   blocker id/status만 보여 주고 각 blocker의 `next_action`은 JSON에만 있었다.
 - [x] RED: CLI focused test가 scheduled `ui-patrol`과 native dialog blocker의
   `next_action=` 줄을 요구했고 기존 formatter에서 실패했다.
@@ -5711,12 +5711,12 @@
 - Keep output raw-free and free of local paths.
 - Keep JSON output unchanged.
 
-## 2026-07-06 PromptLane UI Patrol Schedule Wait State
+## 2026-07-06 LoopRelay UI Patrol Schedule Wait State
 
 - [x] CHECK: `evidence:ui-patrol`이 `pending_no_schedule_run`일 때 다음 cron을
   기다리면 되는지, 이미 예상 cron이 지났는데 schedule run이 없는지 구분하지
   못했다.
-- [x] RED: fake `gh`와 deterministic `PROMPTLANE_UI_PATROL_NOW_UTC`를 쓰는
+- [x] RED: fake `gh`와 deterministic `LOOPRELAY_UI_PATROL_NOW_UTC`를 쓰는
   focused test가 `schedule_wait_state`, `last_expected_schedule_utc`,
   `next_expected_schedule_utc`를 요구했고 기존 스크립트에서 실패했다.
 - [x] GREEN: `scripts/ui-patrol-evidence.mjs`가
@@ -5732,12 +5732,12 @@
 - Do not treat workflow_dispatch evidence as scheduled evidence.
 - Keep pending output raw-free and free of local paths.
 
-## 2026-07-06 PromptLane General CI Removal
+## 2026-07-06 LoopRelay General CI Removal
 
 - [x] CHECK: PR/main test workflow가 남아 있어 PR #495에서 GitHub Actions
   환경의 `gh run list` 실패가 제품 변경과 무관한 CI 실패로 드러났다.
 - [x] RED: packaging guard는 `.github/workflows/test.yml`이 없어야 한다고
-  요구하고, PromptLane 실행 계획 문구는 PR CI 대신 local gate를 요구한다.
+  요구하고, LoopRelay 실행 계획 문구는 PR CI 대신 local gate를 요구한다.
 - [x] GREEN: 일반 test CI workflow를 삭제하고, release/backlog/quality-plan
   문서를 local gate 기준으로 갱신했다. 예약된 `ui-patrol.yml`은 외부 운영
   증거 수집 workflow라 유지한다.
@@ -5753,7 +5753,7 @@
 - Historical CI evidence may remain as history, but active gates must name the
   local release gate.
 
-## 2026-07-06 PromptLane Quality Evidence External Status Text
+## 2026-07-06 LoopRelay Quality Evidence External Status Text
 
 - [x] CHECK: `quality-evidence --json` exposed external evidence metadata, but
   human `quality-evidence` text skipped schedule/native evidence status.
@@ -5773,7 +5773,7 @@
 - Keep JSON output unchanged except for data already emitted by the evidence
   script.
 
-## 2026-07-06 PromptLane UI Patrol Next Schedule Evidence
+## 2026-07-06 LoopRelay UI Patrol Next Schedule Evidence
 
 - [x] CHECK: `ui-patrol.yml` still has no `schedule` event, and
   `evidence:ui-patrol` only said to wait for the weekly cron.
@@ -5792,7 +5792,7 @@
   and 9-png artifact.
 - Keep pending output raw-free and free of local paths.
 
-## 2026-07-06 PromptLane External Evidence Action Criteria
+## 2026-07-06 LoopRelay External Evidence Action Criteria
 
 - [x] CHECK: The remaining 9.5 blockers are external, but the recommended next
   slices only exposed command and expected effect.
@@ -5811,7 +5811,7 @@
 - Do not treat manual/readiness evidence as scheduled or approved evidence.
 - Keep the structured criteria raw-free and path-free in CLI output.
 
-## 2026-07-06 PromptLane Native Dialog Preflight Evidence
+## 2026-07-06 LoopRelay Native Dialog Preflight Evidence
 
 - [x] CHECK: Approved native OS dialog dogfood still requires explicit operator
   approval, so `native_dialog_approved_dogfood` must stay pending.
@@ -5835,7 +5835,7 @@
 - Keep preflight evidence visible so future work waits for the right manual
   approval instead of repeating unrelated smoke checks.
 
-## 2026-07-06 PromptLane UI Patrol Schedule Readiness Evidence
+## 2026-07-06 LoopRelay UI Patrol Schedule Readiness Evidence
 
 - [x] CHECK: The GitHub `ui-patrol` workflow has no successful `schedule` event
   yet, so `scheduled_ui_patrol` must stay pending.
@@ -5857,7 +5857,7 @@
 - Keep readiness evidence visible so future work waits for the right external
   event instead of rerunning unrelated local checks.
 
-## 2026-07-06 PromptLane Codex Claude Evidence Split
+## 2026-07-06 LoopRelay Codex Claude Evidence Split
 
 - [x] CHECK: Codex/Claude integration still has an external native-dialog
   approved dogfood blocker, but local setup, hooks, MCP, elicitation, first
@@ -5883,7 +5883,7 @@
 - Keep local setup/hook/MCP/elicitation evidence visible so agents do not rerun
   stale local work unnecessarily.
 
-## 2026-07-06 PromptLane Web Operations Evidence Split
+## 2026-07-06 LoopRelay Web Operations Evidence Split
 
 - [x] CHECK: GitHub `ui-patrol.yml` still has only workflow_dispatch runs and
   no real `schedule` event, so scheduled `ui-patrol` cannot be completed.
@@ -5906,11 +5906,11 @@
 - Keep manual/local browser evidence visible so agents do not rerun stale local
   work unnecessarily.
 
-## 2026-07-06 PromptLane Product Positioning Evidence
+## 2026-07-06 LoopRelay Product Positioning Evidence
 
 - [x] CHECK: GitHub repository metadata, README copy, package metadata, Codex
   plugin metadata, Claude plugin metadata, product contract, backlog, and goal
-  audit all point to PromptLane as prompt improvement first and loop-aware
+  audit all point to LoopRelay as prompt improvement first and loop-aware
   continuation second.
 - [x] RED: quality evidence CLI/script tests required
   `product_planning_and_positioning` to report `9.5/10`, `meets_target`, and
@@ -5925,12 +5925,12 @@
 
 ### 판단 기준
 
-- Do not rename `promptlane` runtime IDs during the compatibility window.
-- Do not re-promote PromptLane as product-facing identity.
+- Do not rename `looprelay` runtime IDs during the compatibility window.
+- Do not re-promote LoopRelay as product-facing identity.
 - Do not claim full 9.5 completion while external integration and operational
   blockers remain pending.
 
-## 2026-07-06 PromptLane Local Scorecard Axis Promotion
+## 2026-07-06 LoopRelay Local Scorecard Axis Promotion
 
 - [x] CHECK: `scorecard_review_candidates` identified four axes whose local
   evidence was present and whose only remaining gap was
@@ -5953,7 +5953,7 @@
 - Do not claim full 9.5 completion while product planning or external blockers
   remain pending.
 
-## 2026-07-06 PromptLane Scorecard Review Recommendation
+## 2026-07-06 LoopRelay Scorecard Review Recommendation
 
 - [x] CHECK: `scorecard_review_candidates` existed, but
   `recommended_next_slices` pointed first at externally blocked scheduled
@@ -5961,7 +5961,7 @@
 - [x] RED: quality evidence script and CLI tests required the first
   recommendation to be `scorecard_review_candidates` with
   `blocked_by_external_event: false` and
-  `promptlane quality-evidence --json`; tests failed while
+  `looprelay quality-evidence --json`; tests failed while
   `scheduled_ui_patrol_cron_review` was first.
 - [x] GREEN: `recommendedNextSlices` now prepends
   `scorecard_review_candidates` when review candidates exist.
@@ -5974,7 +5974,7 @@
 - External blockers remain in recommendations after the local review action.
 - Output remains local-only and raw-free.
 
-## 2026-07-06 PromptLane Scorecard Review Candidates
+## 2026-07-06 LoopRelay Scorecard Review Candidates
 
 - [x] CHECK: `axis_evidence_coverage` separated satisfied evidence from
   remaining gaps, but it did not identify which axes were ready for scorecard
@@ -5986,18 +5986,18 @@
 - [x] GREEN: `scripts/quality-95-evidence.mjs` now emits
   `scorecard_review_candidates` for local-first privacy, setup/MCP smoke, loop
   memory/continuation, and release stability without marking them complete.
-- [x] GREEN: `promptlane quality-evidence` text now renders a
+- [x] GREEN: `looprelay quality-evidence` text now renders a
   `Scorecard review candidates` section for human review.
 
 ### 판단 기준
 
-- Review candidates must not remove blockers or change `promptlane_95_quality`
+- Review candidates must not remove blockers or change `looprelay_95_quality`
   from `pending`.
 - Web UI operations and Codex/Claude integration must stay out of review
   candidates while scheduled UI patrol or native-dialog dogfood is pending.
 - Candidate output must stay local-only and raw-free.
 
-## 2026-07-06 PromptLane Axis Evidence Coverage
+## 2026-07-06 LoopRelay Axis Evidence Coverage
 
 - [x] CHECK: `corepack pnpm --silent evidence:quality` had blockers and
   recommendations, but no machine-readable per-axis evidence coverage.
@@ -6008,19 +6008,19 @@
 - [x] GREEN: `scripts/quality-95-evidence.mjs` now emits
   `axis_evidence_coverage` with `partial`, `blocked_external`, `missing`, or
   `complete` status without upgrading static scorecard levels.
-- [x] GREEN: `promptlane quality-evidence` text now renders an
+- [x] GREEN: `looprelay quality-evidence` text now renders an
   `Axis evidence coverage` section so humans can see local proof vs remaining
   external/scorecard gaps without opening JSON.
 
 ### 판단 기준
 
-- Coverage must not mark `promptlane_95_quality` complete.
+- Coverage must not mark `looprelay_95_quality` complete.
 - Coverage must distinguish satisfied local evidence from
   `scheduled_ui_patrol`, `native_dialog_approved_dogfood`, and
   `scorecard_level_below_9_5`.
 - Output must remain local-only and raw-free.
 
-## 2026-07-06 PromptLane Local 9.5 Evidence Ledger
+## 2026-07-06 LoopRelay Local 9.5 Evidence Ledger
 
 - [x] CHECK: `corepack pnpm evidence:ui-patrol` still reports
   `pending_no_schedule_run`, so scheduled UI patrol remains externally blocked.
@@ -6048,13 +6048,13 @@
 - Native dialog approved dogfood must not run without explicit operator
   approval.
 - The local evidence ledger strengthens scorecard evidence but must not make
-  `promptlane_95_quality` complete by itself.
+  `looprelay_95_quality` complete by itself.
 - Evidence text must stay raw-free and avoid prompt bodies, raw paths, tokens,
   provider credentials, transcript bodies, and compact summaries.
 
-## 2026-07-06 PromptLane Quality Evidence Forward Recommendations
+## 2026-07-06 LoopRelay Quality Evidence Forward Recommendations
 
-- [x] CHECK: `promptlane quality-evidence --json` still recommended
+- [x] CHECK: `looprelay quality-evidence --json` still recommended
   `web_user_flow_current_main_evidence` first even after that recommendation
   had been dogfooded and recorded with `browser e2e passed`.
 - [x] RED: quality evidence script and CLI tests expected completed web
@@ -6068,7 +6068,7 @@
   src/hooks src/mcp` passed with 108 test files and 833 tests.
 - [x] RUN: after the recommender advanced again, `corepack pnpm
   smoke:agent-setup` passed and ended with
-  `promptlane agent setup smoke passed`.
+  `looprelay agent setup smoke passed`.
 - [x] GREEN: completed local recommendations now also skip
   `privacy_raw_free_regression_sweep` and `codex_claude_setup_smoke_refresh`,
   leaving scheduled UI patrol and native-dialog dogfood as externally blocked
@@ -6085,9 +6085,9 @@
 - Scheduled `ui-patrol` and native-dialog dogfood must remain separate blockers.
 - Recommendation output must remain raw-free and machine-parseable.
 
-## 2026-07-06 PromptLane Recommended Web User-Flow Evidence
+## 2026-07-06 LoopRelay Recommended Web User-Flow Evidence
 
-- [x] CHECK: `promptlane quality-evidence --json` now recommends
+- [x] CHECK: `looprelay quality-evidence --json` now recommends
   `web_user_flow_current_main_evidence` first, but that recommendation needed
   proof that it actually leads to executable evidence.
 - [x] RUN: `corepack pnpm dogfood:web-user-flow` completed with
@@ -6097,19 +6097,19 @@
   before the ledger update.
 - [x] GREEN: 9.5 plan and backlog now record that the first recommended local
   evidence slice was executed successfully.
-- [x] EFFECT: PromptLane's quality evidence recommendation is no longer only
+- [x] EFFECT: LoopRelay's quality evidence recommendation is no longer only
   advice; it has been followed once and converted into tracked current evidence
   without claiming scheduled `ui-patrol` or native-dialog dogfood completion.
 
 ### 판단 기준
 
-- This evidence refresh must not mark `promptlane_95_quality` complete.
+- This evidence refresh must not mark `looprelay_95_quality` complete.
 - Scheduled `ui-patrol` and native-dialog dogfood must remain separate blockers.
 - The ledger must show the exact command and `browser e2e passed` result.
 
-## 2026-07-06 PromptLane Quality Evidence Recommended Next Slices
+## 2026-07-06 LoopRelay Quality Evidence Recommended Next Slices
 
-- [x] CHECK: `promptlane quality-evidence`는 9.5 blocker를 보여주지만,
+- [x] CHECK: `looprelay quality-evidence`는 9.5 blocker를 보여주지만,
   바로 실행 가능한 다음 작업과 cron/명시 승인처럼 외부 조건이 필요한 작업을
   구분하지 않았다.
 - [x] RED: quality evidence JSON에 `recommended_next_slices`가 없고 CLI text에
@@ -6128,14 +6128,14 @@
 - The first recommendation must be locally runnable and evidence-producing.
 - Text output must stay raw-free and avoid prompt bodies, raw paths, and tokens.
 
-## 2026-07-06 PromptLane Quality Evidence CLI Ledger Refresh
+## 2026-07-06 LoopRelay Quality Evidence CLI Ledger Refresh
 
-- [x] CHECK: PR #478로 installed CLI `promptlane quality-evidence`가
+- [x] CHECK: PR #478로 installed CLI `looprelay quality-evidence`가
   landing됐지만 9.5 quality plan/backlog ledger는 아직 PR #478과 latest
   main CI run `28753458359`를 추적하지 않았다.
 - [x] RED: packaging guard가 9.5 plan과 backlog에서 PR #478,
-  `28753458359`, `promptlane quality-evidence --json`, and
-  `promptlane quality-evidence --require-complete`를 찾지 못해 실패해야
+  `28753458359`, `looprelay quality-evidence --json`, and
+  `looprelay quality-evidence --require-complete`를 찾지 못해 실패해야
   한다.
 - [x] GREEN: 9.5 plan과 backlog가 installed CLI quality gate evidence와
   latest main CI run `28753458359`를 반영한다.
@@ -6152,7 +6152,7 @@
 - The guard must fail if future docs drop PR #478 or the current main CI
   evidence from the 9.5 quality ledger.
 
-## 2026-07-06 PromptLane 9.5 Quality Evidence Summary
+## 2026-07-06 LoopRelay 9.5 Quality Evidence Summary
 
 - [x] CHECK: scheduled UI patrol and native OS dialog evidence are still
   separate blockers, but the 9.5 completion judgment was spread across plan,
@@ -6160,7 +6160,7 @@
 - [x] RED: behavior/package guards fail unless `scripts/quality-95-evidence.mjs`,
   package script `evidence:quality`, docs, and release/package lists expose
   `corepack pnpm evidence:quality`.
-- [x] GREEN: `evidence:quality` emits `promptlane_95_quality` JSON with
+- [x] GREEN: `evidence:quality` emits `looprelay_95_quality` JSON with
   `scheduled_ui_patrol` and `native_dialog_approved_dogfood` blockers instead
   of claiming 9.5 completion.
 - [x] EFFECT: future agents and release checks can see why the long-running
@@ -6168,13 +6168,13 @@
 - [x] GREEN: `scorecard_axes` now lists all seven 9.5 scorecard axes from the
   plan and marks axes below 9.5 as `below_target`.
 - [x] GREEN: `--require-complete` keeps JSON output available but exits nonzero
-  while `promptlane_95_quality.status` is not `complete`.
+  while `looprelay_95_quality.status` is not `complete`.
 - [x] GREEN: machine parsers can use
   `corepack pnpm --silent evidence:quality` or
   `node scripts/quality-95-evidence.mjs` for clean JSON without pnpm banners.
-- [x] GREEN: installed CLI users can run `promptlane quality-evidence`,
-  `promptlane quality-evidence --json`, and
-  `promptlane quality-evidence --require-complete`.
+- [x] GREEN: installed CLI users can run `looprelay quality-evidence`,
+  `looprelay quality-evidence --json`, and
+  `looprelay quality-evidence --require-complete`.
 
 ### 판단 기준
 
@@ -6190,7 +6190,7 @@
 - JSON-consuming automation should use the silent pnpm invocation or direct node
   script, not the noisy package-manager wrapper output.
 
-## 2026-07-06 PromptLane Scheduled UI Patrol Evidence Checker
+## 2026-07-06 LoopRelay Scheduled UI Patrol Evidence Checker
 
 - [x] CHECK: GitHub `ui-patrol.yml` workflow history still has no `schedule`
   event, so scheduled evidence must remain pending even though manual
@@ -6212,7 +6212,7 @@
 - Docs must keep scheduled `ui-patrol` evidence pending until
   `corepack pnpm evidence:ui-patrol` reports `complete`.
 
-## 2026-07-06 PromptLane MCP Coach Effectiveness Smoke
+## 2026-07-06 LoopRelay MCP Coach Effectiveness Smoke
 
 - [x] CHECK: `coach_prompt` agent brief는 effectiveness evidence를 포함하지만
   반복 가능한 `smoke:mcp-coach-loop`는 아직 실제 MCP stdio 서버에서 그
@@ -6233,7 +6233,7 @@
 - The agent brief must not expose prompt bodies, raw data-dir paths, transcript
   paths, or token-like secrets.
 
-## 2026-07-06 PromptLane Coach Prompt Effectiveness Brief
+## 2026-07-06 LoopRelay Coach Prompt Effectiveness Brief
 
 - [x] CHECK: `score_prompt`, archive score, web, benchmark에는 효과 evidence가
   있지만 기본 one-call `coach_prompt`의 `agent_brief`는
@@ -6256,7 +6256,7 @@
 - Benchmark `coach_prompt_actionability` must require effectiveness evidence in
   the one-call agent brief.
 
-## 2026-07-06 PromptLane Archive Effectiveness Benchmark Ledger
+## 2026-07-06 LoopRelay Archive Effectiveness Benchmark Ledger
 
 - [x] CHECK: PR #469로 `archive_effectiveness_score` benchmark hard gate는
   main에 들어갔지만, 9.5 plan/backlog ledger가 아직 그 효과 측정 evidence를
@@ -6267,7 +6267,7 @@
 - [x] GREEN: 9.5 plan과 backlog가 benchmark JSON 결과, raw-free
   `effectiveness_summary`, linked passed loop outcome, Node 22/24 main CI
   evidence를 함께 기록한다.
-- [x] EFFECT: PromptLane의 효과 판단은 CLI/MCP/Web summary에서 끝나지
+- [x] EFFECT: LoopRelay의 효과 판단은 CLI/MCP/Web summary에서 끝나지
   않고, `corepack pnpm benchmark -- --json` hard gate로 회귀를 잡는다는
   기준이 장기 품질 장부에 남는다.
 
@@ -6280,7 +6280,7 @@
 - The guard must fail if future docs remove the benchmark effectiveness
   evidence from the 9.5 ledger.
 
-## 2026-07-06 PromptLane Web Archive Effectiveness Summary
+## 2026-07-06 LoopRelay Web Archive Effectiveness Summary
 
 - [x] CHECK: archive-level `effectiveness_summary`는 CLI/MCP/API에
   연결됐지만, Dashboard의 Archive score review에는 아직 보이지 않아 실제
@@ -6301,14 +6301,14 @@
 - The block must remain compact and wrap-safe in the existing dashboard grid.
 - Browser E2E must prove the evidence block is visible and raw-free.
 
-## 2026-07-06 PromptLane Archive Effectiveness Summary
+## 2026-07-06 LoopRelay Archive Effectiveness Summary
 
 - [x] CHECK: 개별 prompt `effectiveness` verdict는 CLI/MCP/Web에 있지만,
   최근 archive 전체가 실제 loop outcome으로 검증됐는지 한 번에 판단하는
   summary surface가 약했다.
 - [x] RED: `createArchiveScoreReport()`가 `effectiveness_summary`를 반환하지
   않아 archive-level 효과 집계 테스트가 실패해야 한다.
-- [x] RED: `promptlane score` 텍스트 출력이 `Effectiveness evidence`
+- [x] RED: `looprelay score` 텍스트 출력이 `Effectiveness evidence`
   섹션을 보여주지 않아 CLI 테스트가 실패해야 한다.
 - [x] RED: MCP `score_prompt_archive` output schema가
   `effectiveness_summary`를 선언하지 않아 schema drift 테스트가 실패해야
@@ -6316,7 +6316,7 @@
 - [x] GREEN: archive score report, CLI JSON/text, server score API, MCP
   archive tool, and web API type now share the same raw-free
   `effectiveness_summary`.
-- [x] EFFECT: PromptLane can now judge whether prompt improvement is backed by
+- [x] EFFECT: LoopRelay can now judge whether prompt improvement is backed by
   actual linked loop outcomes across the recent archive, not only by predicted
   prompt score or one prompt detail page.
 
@@ -6330,7 +6330,7 @@
 - A mixed outcome must produce a review-first next action instead of claiming
   improvement is proven.
 
-## 2026-07-06 PromptLane Fresh Web User-Flow Evidence
+## 2026-07-06 LoopRelay Fresh Web User-Flow Evidence
 
 - [x] CHECK: scheduled `ui-patrol` still has no `schedule` event, so web
   operations cannot be promoted on scheduled artifact evidence.
@@ -6348,7 +6348,7 @@
 - Browser-visible output must remain raw-free.
 - Scheduled `ui-patrol` remains pending until a real `schedule` event exists.
 
-## 2026-07-06 PromptLane Release Stability Evidence
+## 2026-07-06 LoopRelay Release Stability Evidence
 
 - [x] CHECK: GitHub `ui-patrol.yml` still has no `schedule` event, so scheduled
   artifact evidence cannot be marked complete.
@@ -6371,14 +6371,14 @@
 - Release evidence must remain raw-free and must not claim scheduled
   `ui-patrol` completion without a real `schedule` event.
 - `smoke:release` must exercise isolated local CLI/server/storage/export/delete
-  behavior, not the user's real PromptLane archive.
+  behavior, not the user's real LoopRelay archive.
 - This slice must not mark the long-running goal complete.
 
-## 2026-07-06 PromptLane Prompt Effectiveness Verdict
+## 2026-07-06 LoopRelay Prompt Effectiveness Verdict
 
 - [x] CHECK: `expected_impact`와 `loop_outcomes`는 각각 보이지만, Codex/Claude Code와 web 사용자가 실제 효과를 매번 수동으로 해석해야 했다.
 - [x] RED: storage `getPrompt()`가 linked outcome에서 `effectiveness` verdict를 반환하지 않아 실패해야 한다.
-- [x] RED: `promptlane show --json`이 같은 `effectiveness` verdict를 포함하지 않아 실패해야 한다.
+- [x] RED: `looprelay show --json`이 같은 `effectiveness` verdict를 포함하지 않아 실패해야 한다.
 - [x] RED: web prompt detail이 `Effectiveness: proven`과 raw-free verdict summary를 렌더링하지 않아 실패해야 한다.
 - [x] GREEN: storage detail, CLI JSON, web detail이 같은 raw-free effectiveness verdict를 공유한다.
 - [x] EFFECT: 예상 개선량과 실제 loop outcome 사이를 사용자가 직접 추론하지 않아도, passed outcome/test/ref 기반으로 prompt 효과를 빠르게 판단할 수 있다.
@@ -6391,11 +6391,11 @@
 - verdict는 자동 승인이나 외부 LLM 판단이 아니라 local evidence summary다.
 - scheduled `ui-patrol`과 approval-gated native dialog dogfood는 별도 blocker로 유지한다.
 
-## 2026-07-06 PromptLane CLI Prompt Outcome Evidence
+## 2026-07-06 LoopRelay CLI Prompt Outcome Evidence
 
-- [x] CHECK: web/API prompt detail은 actual loop outcome evidence를 보여주지만, Codex/Claude Code가 자주 쓰는 `promptlane show --json`은 같은 효과 증거를 직접 볼 수 없었다.
+- [x] CHECK: web/API prompt detail은 actual loop outcome evidence를 보여주지만, Codex/Claude Code가 자주 쓰는 `looprelay show --json`은 같은 효과 증거를 직접 볼 수 없었다.
 - [x] RED: storage `getPrompt()`가 linked loop outcome evidence를 반환하지 않아 실패해야 한다.
-- [x] RED: `promptlane show --json`이 `loop_outcomes`를 포함하지 않아 실패해야 한다.
+- [x] RED: `looprelay show --json`이 `loop_outcomes`를 포함하지 않아 실패해야 한다.
 - [x] GREEN: storage prompt detail이 raw-free `loop_outcomes`를 포함하고, CLI `show --json`도 같은 필드를 반환한다.
 - [x] EFFECT: agent-native CLI 흐름에서도 expected-impact prediction과 actual loop outcome evidence를 함께 평가할 수 있다.
 - [x] VERIFY: focused tests, `corepack pnpm e2e:browser`, full local gate, PR CI, latest main CI run `28748664657`, and branch prune all pass.
@@ -6407,13 +6407,13 @@
 - web route와 CLI가 서로 다른 outcome derivation을 갖지 않도록 storage detail contract를 공유한다.
 - scheduled `ui-patrol`과 approval-gated native dialog dogfood는 별도 blocker로 유지한다.
 
-## 2026-07-06 PromptLane Prompt Outcome Effectiveness Evidence
+## 2026-07-06 LoopRelay Prompt Outcome Effectiveness Evidence
 
 - [x] CHECK: `expected_impact`는 CLI/MCP/Web에 보이지만, prompt detail에서 해당 prompt가 실제 loop outcome으로 이어졌는지 확인하는 사후 evidence가 없었다.
 - [x] RED: prompt detail API test가 linked loop snapshot outcome을 `loop_outcomes`로 반환하지 않아 실패해야 한다.
 - [x] RED: PromptDetailView SSR test가 `Outcome evidence`, outcome summary, status, tests count, PR/CI refs 부재로 실패해야 한다.
 - [x] GREEN: prompt detail API가 해당 prompt id를 포함한 loop snapshot outcome을 raw-free `loop_outcomes`로 반환하고, web detail이 outcome evidence panel을 렌더링한다.
-- [x] EFFECT: PromptLane이 개선안의 예상 효과만 보여주는 상태에서 벗어나, 같은 prompt가 실제 loop 결과와 어떤 evidence로 연결됐는지 확인할 수 있게 한다.
+- [x] EFFECT: LoopRelay이 개선안의 예상 효과만 보여주는 상태에서 벗어나, 같은 prompt가 실제 loop 결과와 어떤 evidence로 연결됐는지 확인할 수 있게 한다.
 - [x] VERIFY: focused tests, `corepack pnpm e2e:browser`, full local gate, PR CI, latest main CI run `28748310489`, and branch prune all pass.
 - [x] INTEGRATE: PR #453이 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인됐다.
 
@@ -6423,7 +6423,7 @@
 - 효과 판단은 expected-impact prediction과 actual loop outcome evidence를 함께 보게 해야 한다.
 - scheduled `ui-patrol`과 approval-gated native dialog dogfood는 별도 blocker로 유지한다.
 
-## 2026-07-06 PromptLane Expected Impact 9.5 Ledger Refresh
+## 2026-07-06 LoopRelay Expected Impact 9.5 Ledger Refresh
 
 - [x] CHECK: PR #447-#450으로 expected-impact 기능과 web 증거가 landing 되었지만 9.5 quality plan과 backlog Evidence Ledger가 PR #434/latest main CI `28745224451` 상태에 머물렀다.
 - [x] RED: packaging guard가 9.5 plan에 PR #447, PR #449, PR #450, `expected_impact`, latest main CI run `28747682131`이 없어서 실패해야 한다.
@@ -6438,7 +6438,7 @@
 - scheduled `ui-patrol` remains pending until a real `schedule` event exists.
 - this slice must not claim the long-running goal is complete.
 
-## 2026-07-06 PromptLane Web Expected Impact Evidence
+## 2026-07-06 LoopRelay Web Expected Impact Evidence
 
 - [x] CHECK: `improve` expected impact는 CLI/MCP에 노출되지만 web prompt detail의 current improvement draft에는 원문 점수, 개선안 점수, delta가 보이지 않았다.
 - [x] RED: `PromptDetailView` SSR test가 `Expected impact`, `Original score`, `Improved score`, positive point delta 부재로 실패해야 한다.
@@ -6453,7 +6453,7 @@
 - web UI must expose numeric improvement evidence without exposing prompt bodies outside the existing comparison panel.
 - layout must remain stable on desktop and mobile patrol viewports.
 
-## 2026-07-06 PromptLane Improve Expected Impact Evidence
+## 2026-07-06 LoopRelay Improve Expected Impact Evidence
 
 - [x] CHECK: `improve`가 approval-ready draft를 만들지만 사용자가 “정말 나아졌는지” 판단할 수 있는 원문 점수, 개선안 예상 점수, delta를 직접 보여주지 않았다.
 - [x] RED: focused improve test가 `expected_impact` 부재로 실패하고, CLI human output test가 `Expected impact` 섹션 부재로 실패해야 한다.
@@ -6485,8 +6485,8 @@
 
 ## 2026-07-06 Codex Duplicate Hook Recovery Copy
 
-- [x] CHECK: `install-hook codex` already deduplicates same-file PromptLane hooks, but `doctor codex` still gives generic duplicate removal guidance that is less useful for same-file duplicate `UserPromptSubmit` output.
-- [x] RED: focused doctor test must fail until duplicate Codex hook next steps tell the user to rerun `promptlane install-hook codex` for same-file normalization.
+- [x] CHECK: `install-hook codex` already deduplicates same-file LoopRelay hooks, but `doctor codex` still gives generic duplicate removal guidance that is less useful for same-file duplicate `UserPromptSubmit` output.
+- [x] RED: focused doctor test must fail until duplicate Codex hook next steps tell the user to rerun `looprelay install-hook codex` for same-file normalization.
 - [x] GREEN: doctor duplicate hook recovery copy points to the idempotent install-hook cleanup path while preserving manual user/project duplicate guidance.
 - [x] EFFECT: the focused doctor test proves rerunning `install-hook codex` removes same-file duplicate `UserPromptSubmit` handlers and returns `doctor codex` to ready state.
 - [x] VERIFY: focused doctor test, full local gate, PR CI, latest main CI run `28746602316`, and branch prune all pass.
@@ -6500,47 +6500,47 @@
 
 ## 2026-07-06 Codex Same-File Duplicate Hook Doctor
 
-- [x] CHECK: `doctor codex` detects duplicate PromptLane hooks across user/project sources, but same-file duplicate `UserPromptSubmit` hook groups can still create duplicate hook context output without being diagnosed.
-- [x] RED: focused doctor test must fail when one Codex hooks file contains two PromptLane `UserPromptSubmit` hook groups and `duplicateHooks` remains false.
-- [x] GREEN: doctor detects same-file duplicate PromptLane Codex `UserPromptSubmit` hooks while preserving existing user/project duplicate detection.
+- [x] CHECK: `doctor codex` detects duplicate LoopRelay hooks across user/project sources, but same-file duplicate `UserPromptSubmit` hook groups can still create duplicate hook context output without being diagnosed.
+- [x] RED: focused doctor test must fail when one Codex hooks file contains two LoopRelay `UserPromptSubmit` hook groups and `duplicateHooks` remains false.
+- [x] GREEN: doctor detects same-file duplicate LoopRelay Codex `UserPromptSubmit` hooks while preserving existing user/project duplicate detection.
 - [x] VERIFY: focused doctor test, full local gate, PR CI, latest main CI run `28746274401`, and branch prune all pass.
 - [x] INTEGRATE: PR #441가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인됐다.
 
 ### 판단 기준
 
-- duplicate hook output should be diagnosable from `promptlane doctor codex`.
+- duplicate hook output should be diagnosable from `looprelay doctor codex`.
 - this slice should not mutate user config automatically or remove hooks without explicit user action.
 - no raw prompt, path, token, or transcript content is introduced into doctor output.
 
-## 2026-07-06 PromptLane Loop Snapshot MCP Branding
+## 2026-07-06 LoopRelay Loop Snapshot MCP Branding
 
-- [x] CHECK: `docs/LOOP-SNAPSHOT-SCHEMA.md` is an active loop snapshot/privacy contract, but its MCP section still described the surface as `PromptLane MCP tools`.
-- [x] RED: packaging guard must fail unless the active schema says `PromptLane MCP loop tools may expose snapshot-derived status and briefs` and no longer says `PromptLane MCP tools may expose`.
-- [x] GREEN: active loop snapshot MCP surface wording now uses PromptLane while preserving `promptlane` runtime IDs and legacy `promptlane` compatibility boundaries.
+- [x] CHECK: `docs/LOOP-SNAPSHOT-SCHEMA.md` is an active loop snapshot/privacy contract, but its MCP section still described the surface as `LoopRelay MCP tools`.
+- [x] RED: packaging guard must fail unless the active schema says `LoopRelay MCP loop tools may expose snapshot-derived status and briefs` and no longer says `LoopRelay MCP tools may expose`.
+- [x] GREEN: active loop snapshot MCP surface wording now uses LoopRelay while preserving `looprelay` runtime IDs and legacy `looprelay` compatibility boundaries.
 - [x] VERIFY: focused packaging guard, full local gate, PR CI, latest main CI run `28745956945`, and branch prune all pass.
 - [x] INTEGRATE: PR #439가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인됐다.
 
 ### 판단 기준
 
-- active product/runtime contract docs use PromptLane for product-facing surfaces.
-- `PromptLane` remains allowed in rejected-name history, legacy compatibility docs, and compatibility alias surfaces only.
+- active product/runtime contract docs use LoopRelay for product-facing surfaces.
+- `LoopRelay` remains allowed in rejected-name history, legacy compatibility docs, and compatibility alias surfaces only.
 - this slice does not rename package, CLI, slash namespace, MCP server name, or existing compatibility ids.
 
-## 2026-07-06 PromptLane Reuse Audit Branding Drift
+## 2026-07-06 LoopRelay Reuse Audit Branding Drift
 
-- [x] CHECK: scheduled `ui-patrol` has not fired yet, and `docs/REUSE_LOOP_AUDIT_2026-07-05.md` still described the tested server as a local PromptLane web server.
-- [x] RED: focused packaging guard must fail unless the reuse audit says `local PromptLane web server` and no longer contains `local PromptLane`.
-- [x] GREEN: reuse audit path-tested copy now says `local PromptLane web server`.
+- [x] CHECK: scheduled `ui-patrol` has not fired yet, and `docs/REUSE_LOOP_AUDIT_2026-07-05.md` still described the tested server as a local LoopRelay web server.
+- [x] RED: focused packaging guard must fail unless the reuse audit says `local LoopRelay web server` and no longer contains `local LoopRelay`.
+- [x] GREEN: reuse audit path-tested copy now says `local LoopRelay web server`.
 - [x] VERIFY: focused packaging guard, full local gate, PR CI, latest main CI run `28745662071`, and branch prune all pass.
 - [x] INTEGRATE: PR #437이 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인됐다.
 
 ### 판단 기준
 
-- active audit evidence should use PromptLane for product-facing surfaces.
-- `promptlane` remains allowed only as an explicit compatibility alias or legacy tool name.
+- active audit evidence should use LoopRelay for product-facing surfaces.
+- `looprelay` remains allowed only as an explicit compatibility alias or legacy tool name.
 - naming cleanup must not rewrite historical command ids, package names, MCP tool ids, or compatibility docs.
 
-## 2026-07-06 PromptLane Release Stability Backlog Refresh
+## 2026-07-06 LoopRelay Release Stability Backlog Refresh
 
 - [x] CHECK: scheduled `ui-patrol` has not fired yet because the 2026-07-06 15:17 KST cron time has not arrived, while `docs/NEXT_BACKLOG.md` and the 9.5 quality plan still carried stale release-stability follow-up wording.
 - [x] RED: packaging guard must fail unless backlog and 9.5 plan include PR #425, PR #427, PR #433, PR #434, latest main CI run `28745224451`, and no stale action-runtime or better-sqlite3 warning follow-up text.
@@ -6554,7 +6554,7 @@
 - scheduled `ui-patrol` evidence remains pending until a real `schedule` event and artifact exist.
 - completed warning cleanup must stay guarded by tests, workflow metadata, dependency versions, and latest main CI evidence.
 
-## 2026-07-06 PromptLane UI Patrol Action Runtime Cleanup
+## 2026-07-06 LoopRelay UI Patrol Action Runtime Cleanup
 
 - [x] CHECK: `ui-patrol.yml` has a real Monday cron (`17 6 * * 1`), but as of 2026-07-06 00:04 KST the scheduled run has not fired yet; the workflow still used `pnpm/action-setup@v4`.
 - [x] RED: packaging guard must fail while the scheduled UI patrol workflow uses `pnpm/action-setup@v4` instead of Node 24 compatible `pnpm/action-setup@v6`.
@@ -6568,7 +6568,7 @@
 - action runtime cleanup is release/web reliability work because scheduled evidence should not reintroduce Node 20 action annotations.
 - workflow action major updates must be guarded so `ui-patrol.yml` does not drift behind the main test workflow.
 
-## 2026-07-05 PromptLane 9.5 Web Evidence Ledger Refresh
+## 2026-07-05 LoopRelay 9.5 Web Evidence Ledger Refresh
 
 - [x] CHECK: 9.5 quality plan Evidence Ledger still referenced the stale "after PR #422" main CI line and did not pin PR #429/#430 or latest main CI run `28744698708`.
 - [x] RED: packaging guard must fail unless the 9.5 quality plan includes PR #429, PR #430, `dogfood:web-user-flow`, `docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md`, and latest main CI run `28744698708`.
@@ -6582,7 +6582,7 @@
 - web dogfood evidence는 PR 번호, command evidence, CI evidence가 함께 추적되어야 한다.
 - scheduled `ui-patrol`과 native OS ask UI dogfood는 별도 blocker로 유지한다.
 
-## 2026-07-05 PromptLane Web User-Flow Dogfood Evidence
+## 2026-07-05 LoopRelay Web User-Flow Dogfood Evidence
 
 - [x] CHECK: 9.5 web operations blocker still needed repeatable fresh user-flow evidence beyond scheduled `ui-patrol`, while `scripts/browser-e2e.mjs` already exercises the real archive/detail/dashboard/coach/projects/mcp/exports/settings/mobile flow.
 - [x] RED: package script, shipped evidence doc, harness/package docs, backlog, and 9.5 plan must link `dogfood:web-user-flow`, or packaging guard fails.
@@ -6624,7 +6624,7 @@
 - GitHub Actions action major update는 공식 metadata로 runtime을 확인하고, workflow guard로 재발을 막는다.
 - 최신 main CI run `28743728855`에는 `Node.js 20 is deprecated` annotation이 남지 않았지만, Node 24 install 단계의 `better-sqlite3` `fs.R_OK` deprecation warning은 별도 release-stability slice로 판단한다.
 
-## 2026-07-05 PromptLane 9.5 Scorecard Refresh
+## 2026-07-05 LoopRelay 9.5 Scorecard Refresh
 
 - [x] CHECK: 9.5 plan still carried initial current-level scores and `future loop memory approval dogfood` wording even after PR #417, PR #419, and PR #421 landed.
 - [x] RED: 9.5 plan must include `## Evidence Progress Ledger`, PR #417, PR #419, PR #421, `dogfood:loop-memory-approval`, `docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md`, workflow_dispatch run `28717406758`, no `schedule` event, and Remaining 9.5 blockers, or packaging guard fails.
@@ -6638,7 +6638,7 @@
 - scheduled `ui-patrol`과 native OS ask UI는 실제 evidence 없이 완료로 올리지 않는다.
 - scorecard는 최신 dogfood/CI/package evidence가 들어오면 stale 상태로 방치하지 않는다.
 
-## 2026-07-05 PromptLane Scheduled UI Patrol Evidence Audit
+## 2026-07-05 LoopRelay Scheduled UI Patrol Evidence Audit
 
 - [x] CHECK: GitHub `ui-patrol.yml` workflow history has workflow_dispatch run `28717406758`, but no `schedule` event; artifact API confirms workflow_dispatch run `28717406758` still has non-expired screenshot artifact `8084817676` with 9 png files.
 - [x] RED: goal audit, backlog, and todo must say there is no `schedule` event and scheduled `ui-patrol` evidence remains pending, or packaging drift guard fails.
@@ -6652,7 +6652,7 @@
 - scheduled evidence가 완료됐다는 문구를 추가하지 않는다.
 - 다음 월요일 cron 이후 실제 `schedule` event와 artifact가 생기면 별도 slice에서 완료 처리한다.
 
-## 2026-07-05 PromptLane Codex And Claude Code Dogfood Evidence
+## 2026-07-05 LoopRelay Codex And Claude Code Dogfood Evidence
 
 - [x] CHECK: 9.5 plan의 Task 2가 실제 Codex/Claude Code setup, doctor, hook, MCP, loop dogfood evidence 문서를 요구하는지 확인했다.
 - [x] RED: `docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md`, package inclusion, AGENT-HARNESS 링크가 없으면 packaging test가 실패하도록 고정했다.
@@ -6666,7 +6666,7 @@
 - 자동 smoke는 real user config, provider credential, raw prompt archive를 건드리지 않아야 한다.
 - native OS dialog dogfood는 명시적 operator approval 없이는 실행하지 않고 human-only remaining step으로 남긴다.
 
-## 2026-07-05 PromptLane Loop Memory Approval Dogfood
+## 2026-07-05 LoopRelay Loop Memory Approval Dogfood
 
 - [x] CHECK: `record_loop_outcome`, `propose_loop_memory_candidate`, `record_loop_memory`, `propose_instruction_patch`가 MCP surface로 존재하며 approved memory와 instruction patch proposal을 분리하는지 확인했다.
 - [x] RED: `dogfood:loop-memory-approval`, `scripts/loop-memory-approval-dogfood.mjs`, AGENT-HARNESS/PACKAGE_CONTENTS/RELEASE_CHECKLIST 연결이 없으면 packaging test가 실패하도록 고정했다.
@@ -6680,11 +6680,11 @@
 - memory approval은 instruction files를 직접 쓰지 않고, patch proposal은 user approval gate와 `writes_files: false`를 유지해야 한다.
 - dogfood output은 prompt body, raw path, secret-looking token을 노출하지 않아야 한다.
 
-## 2026-07-05 PromptLane 9.5 Quality Plan
+## 2026-07-05 LoopRelay 9.5 Quality Plan
 
 - [x] CHECK: 기존 수준평가가 축별 점수는 제시했지만 9.5/10을 증명하는 acceptance bar와 다음 slice를 repo에 고정하지 않았음을 확인했다.
 - [x] RED: 9.5 quality plan 문서, package inclusion, NEXT_BACKLOG 링크가 없으면 packaging test가 실패하도록 고정했다.
-- [x] GREEN: `docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md`에 축별 9.5 bar, 증거 기준, 다음 TDD slice를 기록하고 package/backlog에 연결했다.
+- [x] GREEN: `docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md`에 축별 9.5 bar, 증거 기준, 다음 TDD slice를 기록하고 package/backlog에 연결했다.
 - [x] VERIFY: focused packaging test와 full gate를 통과한다.
 - [x] INTEGRATE: PR #415가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
@@ -6693,7 +6693,7 @@
 - 9.5점은 감상 평가가 아니라 축별 evidence bar로 판단한다.
 - 테스트 통과만으로 goal complete를 선언하지 않고, 실제 dogfood/CI/package/privacy 증거가 축별 요구사항과 맞아야 한다.
 
-## 2026-07-05 PromptLane First Coach Loop Dogfood
+## 2026-07-05 LoopRelay First Coach Loop Dogfood
 
 - [x] CHECK: setup smoke와 MCP smoke는 있지만 temp archive에서 실제 `hook codex` capture를 local server로 통과시킨 뒤 `coach`와 `loop` CLI로 이어지는 first loop dogfood가 없음을 확인했다.
 - [x] RED: `dogfood:first-coach-loop`, `scripts/first-coach-loop-dogfood.mjs`, AGENT-HARNESS/PACKAGE_CONTENTS 연결이 없으면 packaging test가 실패하도록 고정했다.
@@ -6704,10 +6704,10 @@
 ### 판단 기준
 
 - dogfood는 실제 사용자 config, 실제 prompt archive, provider credential, external call을 건드리지 않는다.
-- hook은 local PromptLane server가 떠 있을 때만 archive를 채우며, 실패 시 fail-open이어야 한다.
+- hook은 local LoopRelay server가 떠 있을 때만 archive를 채우며, 실패 시 fail-open이어야 한다.
 - coach/loop output은 local-only, no auto-submit, no prompt body/raw path exposure를 유지해야 한다.
 
-## 2026-07-05 PromptLane Local UI Patrol Evidence
+## 2026-07-05 LoopRelay Local UI Patrol Evidence
 
 - [x] CHECK: GitHub `ui-patrol` history still has no scheduled cron run; manual dispatch and current local evidence are the available operational proof.
 - [x] RED: goal audit/backlog must include local `corepack pnpm ui-patrol` evidence and 9 png files, or packaging drift guard fails.
@@ -6720,9 +6720,9 @@
 - Manual workflow artifact와 local patrol evidence는 증거로 인정하되 scheduled cron artifact를 완료로 둔갑시키지 않는다.
 - UI patrol은 broad operational guard로 유지하고 실제 visual regression이 나오기 전까지 targeted assertion을 늘리지 않는다.
 
-## 2026-07-05 PromptLane Goal Audit Refresh
+## 2026-07-05 LoopRelay Goal Audit Refresh
 
-- [x] CHECK: `docs/NEXT_BACKLOG.md`와 `docs/PROMPTLANE_GOAL_AUDIT_2026-07-05.md`가 #371 기준에 머물러 있고 #403-#408 MVP reliability slices를 반영하지 않는지 확인했다.
+- [x] CHECK: `docs/NEXT_BACKLOG.md`와 `docs/LOOPRELAY_GOAL_AUDIT_2026-07-05.md`가 #371 기준에 머물러 있고 #403-#408 MVP reliability slices를 반영하지 않는지 확인했다.
 - [x] RED: goal audit/backlog가 #403, #405, #407, #408 및 최신 main commit evidence를 포함하지 않으면 packaging drift guard가 실패하도록 고정했다.
 - [x] GREEN: goal audit/backlog에 MCP storage setup guidance, loop memory evidence guard, agent setup smoke, close-log PR evidence와 “No immediate MVP reliability slice remains” 판단을 반영했다.
 - [x] VERIFY: focused packaging test와 full gate를 통과한다.
@@ -6734,7 +6734,7 @@
 - 이미 닫힌 MVP reliability slice를 backlog에 open work처럼 남기지 않는다.
 - 남은 작업은 scheduled UI patrol evidence, 승인형 native dialog dogfood, 실제 MCP registry trigger, fresh user-flow evidence로 분리한다.
 
-## 2026-07-05 PromptLane Agent Setup Smoke
+## 2026-07-05 LoopRelay Agent Setup Smoke
 
 - [x] CHECK: 기존 release/hook/MCP smoke는 있지만, Codex와 Claude Code의 `setup --profile coach --register-mcp` 및 `doctor` happy path를 독립적으로 검증하는 focused smoke가 없는지 확인했다.
 - [x] RED: `smoke:agent-setup`, `scripts/agent-setup-smoke.mjs`, AGENT-HARNESS/PACKAGE_CONTENTS 연결이 없으면 packaging test가 실패하도록 고정했다.
@@ -6744,11 +6744,11 @@
 
 ### 판단 기준
 
-- Codex와 Claude Code는 PromptLane의 1급 실행 표면이므로 setup/doctor happy path가 별도 smoke로 반복 가능해야 한다.
+- Codex와 Claude Code는 LoopRelay의 1급 실행 표면이므로 setup/doctor happy path가 별도 smoke로 반복 가능해야 한다.
 - smoke는 실제 provider CLI를 실행하지 않고 격리된 fake binary와 temp HOME/data-dir만 사용한다.
 - smoke는 real user config, real prompt archive, provider credentials, external calls를 건드리지 않는다.
 
-## 2026-07-05 PromptLane Loop Memory Evidence Guard
+## 2026-07-05 LoopRelay Loop Memory Evidence Guard
 
 - [x] CHECK: `decideLoopMemoryCandidate`, CLI `loop memory-approve`, MCP `record_loop_memory`는 최신 snapshot 후보 결정을 통해 passed loop와 evidence를 요구하는지 확인했다.
 - [x] RED: storage port가 빈 evidence 또는 unsafe evidence ref로 approved loop memory를 저장하면 `src/storage/sqlite-storage.test.ts`가 실패하도록 고정했다.
@@ -6762,25 +6762,25 @@
 - approved memory evidence refs는 최소 하나 이상이어야 하며 raw local path나 secret-looking token을 포함하지 않아야 한다.
 - CLI/MCP는 계속 user approval과 separate instruction patch gate를 요구해야 한다.
 
-## 2026-07-05 PromptLane MCP Storage Setup Guidance
+## 2026-07-05 LoopRelay MCP Storage Setup Guidance
 
-- [x] CHECK: GitHub repository name/description, local origin, package repository, README heading이 `promptlane`/PromptLane 기준인지 확인했다.
+- [x] CHECK: GitHub repository name/description, local origin, package repository, README heading이 `looprelay`/LoopRelay 기준인지 확인했다.
 - [x] RED: MCP storage unavailable 메시지가 Codex/Claude Code setup/register/doctor 흐름을 안내하지 않으면 `src/mcp/storage-unavailable.test.ts`가 실패하도록 고정했다.
-- [x] GREEN: 공통 MCP storage error helper가 PromptLane setup, MCP registration, doctor, custom `--data-dir` 경로를 raw-free 문장으로 안내하도록 수정했다.
+- [x] GREEN: 공통 MCP storage error helper가 LoopRelay setup, MCP registration, doctor, custom `--data-dir` 경로를 raw-free 문장으로 안내하도록 수정했다.
 - [x] VERIFY: focused MCP tests와 full gate를 통과한다.
 - [x] INTEGRATE: PR #403이 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
 ### 판단 기준
 
-- GitHub repository canonical name은 `wlsdks/promptlane`이다.
-- npm package, CLI, slash namespace, MCP server compatibility ID는 `promptlane`로 유지한다.
+- GitHub repository canonical name은 `wlsdks/looprelay`이다.
+- npm package, CLI, slash namespace, MCP server compatibility ID는 `looprelay`로 유지한다.
 - MCP storage failure는 사용자가 다음 행동을 바로 알 수 있어야 한다: setup/register, 실제 Codex/Claude Code prompt 제출, doctor 확인, custom `--data-dir` 일치.
 - storage error copy는 raw local path나 SQLite 파일명을 노출하지 않는다.
 
-## 2026-07-05 PromptLane Risk Execution Contract
+## 2026-07-05 LoopRelay Risk Execution Contract
 
-- [x] RED: `docs/PROMPTLANE.md`가 기술 리스크, MVP slice 순서, TDD 실행 규칙을 명시하지 않으면 packaging test가 실패하도록 고정했다.
-- [x] GREEN: PromptLane product contract에 storage capability drift, MCP registry drift, privacy regression, overbuilding autonomy, runtime compatibility breakage와 mitigation을 추가했다.
+- [x] RED: `docs/LOOPRELAY.md`가 기술 리스크, MVP slice 순서, TDD 실행 규칙을 명시하지 않으면 packaging test가 실패하도록 고정했다.
+- [x] GREEN: LoopRelay product contract에 storage capability drift, MCP registry drift, privacy regression, overbuilding autonomy, runtime compatibility breakage와 mitigation을 추가했다.
 - [x] VERIFY: focused packaging test와 full gate를 통과한다.
 - [x] INTEGRATE: PR #401이 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
@@ -6792,10 +6792,10 @@
 - auto-submit, background cron, merge automation은 승인 gate 전에는 구현하지 않는다.
 - 각 slice는 RED/GREEN/VERIFY/INTEGRATE 순서로 진행한다.
 
-## 2026-07-05 PromptLane Data Privacy Contract
+## 2026-07-05 LoopRelay Data Privacy Contract
 
-- [x] RED: `docs/PROMPTLANE.md`가 데이터 모델과 privacy/local-first 경계를 명시하지 않으면 packaging test가 실패하도록 고정했다.
-- [x] GREEN: PromptLane product contract에 redacted Markdown archive, SQLite/FTS, loop snapshots, approved memories, instruction patch proposals, storage capability registry의 역할과 boundary를 추가했다.
+- [x] RED: `docs/LOOPRELAY.md`가 데이터 모델과 privacy/local-first 경계를 명시하지 않으면 packaging test가 실패하도록 고정했다.
+- [x] GREEN: LoopRelay product contract에 redacted Markdown archive, SQLite/FTS, loop snapshots, approved memories, instruction patch proposals, storage capability registry의 역할과 boundary를 추가했다.
 - [x] VERIFY: focused packaging test와 full gate를 통과한다.
 - [x] INTEGRATE: PR #399가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
@@ -6807,10 +6807,10 @@
 - provider credentials는 추출, 저장, proxy, replay하지 않는다.
 - loop state의 Markdown export는 opt-in이며 기본 기능으로 확장하지 않는다.
 
-## 2026-07-05 PromptLane Feature Portfolio Contract
+## 2026-07-05 LoopRelay Feature Portfolio Contract
 
-- [x] RED: `docs/PROMPTLANE.md`가 Keep/Improve/Build Next/Defer/Reject 기능 결정을 명시하지 않으면 packaging test가 실패하도록 고정했다.
-- [x] GREEN: PromptLane product contract의 Feature Portfolio를 결정 기준과 함께 유지/개선/신규/보류/거부 matrix로 보강했다.
+- [x] RED: `docs/LOOPRELAY.md`가 Keep/Improve/Build Next/Defer/Reject 기능 결정을 명시하지 않으면 packaging test가 실패하도록 고정했다.
+- [x] GREEN: LoopRelay product contract의 Feature Portfolio를 결정 기준과 함께 유지/개선/신규/보류/거부 matrix로 보강했다.
 - [x] VERIFY: focused packaging test와 full gate를 통과한다.
 - [x] INTEGRATE: PR #397이 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
@@ -6822,10 +6822,10 @@
 - semantic vector memory, cloud/team sync, background cron collection은 명시적으로 보류한다.
 - hidden external LLM calls, automatic prompt resubmission, automatic merge/rebase/branch checkout, provider credential proxying, raw transcript scraping은 거부한다.
 
-## 2026-07-05 PromptLane Instruction Contract
+## 2026-07-05 LoopRelay Instruction Contract
 
-- [x] RED: AGENTS.md/CLAUDE.md/harness/instruction docs가 PromptLane product contract와 PromptLane legacy allowlist를 함께 라우팅하지 않으면 packaging test가 실패하도록 고정했다.
-- [x] GREEN: AGENTS.md와 instruction layering docs가 `docs/PROMPTLANE-LEGACY-SURFACES.md`를 직접 안내한다.
+- [x] RED: AGENTS.md/CLAUDE.md/harness/instruction docs가 LoopRelay product contract와 LoopRelay legacy allowlist를 함께 라우팅하지 않으면 packaging test가 실패하도록 고정했다.
+- [x] GREEN: AGENTS.md와 instruction layering docs가 `docs/LOOPRELAY-RUNTIME-SURFACES.md`를 직접 안내한다.
 - [x] VERIFY: focused packaging test와 full gate를 통과한다.
 - [x] INTEGRATE: PR #395가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
@@ -6833,99 +6833,99 @@
 
 - AGENTS.md는 repo-level source of truth로 짧게 유지하고 deeper docs로 라우팅한다.
 - CLAUDE.md는 Claude Code 전용 차이만 남기고 AGENTS.md를 먼저 읽게 한다.
-- Codex/Claude harness 판단은 `docs/AGENT-HARNESS.md`와 PromptLane product contract를 함께 따른다.
-- 새 `PromptLane`/`promptlane` 문자열은 legacy surface allowlist 기준으로 분류한다.
+- Codex/Claude harness 판단은 `docs/AGENT-HARNESS.md`와 LoopRelay product contract를 함께 따른다.
+- 새 `LoopRelay`/`looprelay` 문자열은 legacy surface allowlist 기준으로 분류한다.
 
-## 2026-07-05 PromptLane Repository Surface Audit
+## 2026-07-05 LoopRelay Repository Surface Audit
 
-- [x] CHECK: GitHub canonical repository, local origin, README, package metadata, Claude/Codex plugin metadata가 `wlsdks/promptlane`과 `PromptLane`을 쓰는지 확인했다.
-- [x] RED: loop continuation brief가 product-facing `PromptLane` wording을 노출하면 focused test와 packaging guard가 실패하도록 고정했다.
-- [x] GREEN: continuation brief의 user-facing snapshot copy를 `PromptLane` 기준으로 수정한다.
+- [x] CHECK: GitHub canonical repository, local origin, README, package metadata, Claude/Codex plugin metadata가 `wlsdks/looprelay`과 `LoopRelay`을 쓰는지 확인했다.
+- [x] RED: loop continuation brief가 product-facing `LoopRelay` wording을 노출하면 focused test와 packaging guard가 실패하도록 고정했다.
+- [x] GREEN: continuation brief의 user-facing snapshot copy를 `LoopRelay` 기준으로 수정한다.
 - [x] VERIFY: focused tests, full test/lint/build, pack dry-run, diff check를 통과한다.
 - [x] INTEGRATE: PR #394가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
 ### 판단 기준
 
-- GitHub repository canonical name은 `wlsdks/promptlane`이다.
-- 로컬 checkout 폴더명 `prompt-memory`는 GitHub repository name이 아니다.
-- `promptlane`는 package/CLI/MCP/slash/runtime compatibility id로 유지한다.
-- `PromptLane`는 제품명으로 쓰지 않고 workflow phrase로만 허용한다.
-- product-facing `PromptLane` copy는 legacy/historical/compatibility allowlist 밖에서 추가하지 않는다.
+- GitHub repository canonical name은 `wlsdks/looprelay`이다.
+- 로컬 checkout 폴더명 `looprelay`는 GitHub repository name이 아니다.
+- `looprelay`는 package/CLI/MCP/slash/runtime compatibility id로 유지한다.
+- `LoopRelay`는 제품명으로 쓰지 않고 workflow phrase로만 허용한다.
+- product-facing `LoopRelay` copy는 legacy/historical/compatibility allowlist 밖에서 추가하지 않는다.
 
-## 2026-07-05 PromptLane Historical Plan Contract
+## 2026-07-05 LoopRelay Historical Plan Contract
 
-- [x] RED: shipped `docs/superpowers/plans/2026-07-04-promptlane-*.md` 문서가 현재 PromptLane 계약 안내 없이 package에 실리면 packaging test가 실패하도록 고정했다.
-- [x] GREEN: 모든 shipped historical PromptLane markdown plan 상단에 historical naming note, 현재 제품명 `PromptLane`, 현재 runtime id `promptlane`, current contract 문서 링크를 추가했다.
+- [x] RED: shipped `docs/superpowers/plans/2026-07-04-looprelay-*.md` 문서가 현재 LoopRelay 계약 안내 없이 package에 실리면 packaging test가 실패하도록 고정했다.
+- [x] GREEN: 모든 shipped historical LoopRelay markdown plan 상단에 historical naming note, 현재 제품명 `LoopRelay`, 현재 runtime id `looprelay`, current contract 문서 링크를 추가했다.
 - [x] VERIFY: focused packaging guard, full test/lint/build, pack dry-run, diff check를 통과한다.
 - [x] INTEGRATE: PR #393이 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
 ### 판단 기준
 
 - historical docs는 삭제하지 않고 과거 결정 기록으로 유지한다.
-- 설치 사용자가 historical docs를 열어도 현재 제품명은 PromptLane이고 runtime id는 `promptlane`임을 먼저 보게 한다.
-- 새 PromptLane/`promptlane` surface는 `docs/PROMPTLANE-LEGACY-SURFACES.md` 기준으로 분류한다.
+- 설치 사용자가 historical docs를 열어도 현재 제품명은 LoopRelay이고 runtime id는 `looprelay`임을 먼저 보게 한다.
+- 새 LoopRelay/`looprelay` surface는 `docs/LOOPRELAY-RUNTIME-SURFACES.md` 기준으로 분류한다.
 
-## 2026-07-05 PromptLane Runtime Copy Boundary
+## 2026-07-05 LoopRelay Runtime Copy Boundary
 
-- [x] RED: CLI loop schedule help가 `PromptLane` 제품명을 노출하면 `src/cli/index.test.ts`가 실패하도록 고정했다.
-- [x] GREEN: `loop schedule` help description을 PromptLane 중심으로 정리했다.
-- [x] GREEN: active backlog/audit 문서의 stale `PromptLane status` copy를 PromptLane status로 정리하고 active product surface guard 범위에 포함했다.
+- [x] RED: CLI loop schedule help가 `LoopRelay` 제품명을 노출하면 `src/cli/index.test.ts`가 실패하도록 고정했다.
+- [x] GREEN: `loop schedule` help description을 LoopRelay 중심으로 정리했다.
+- [x] GREEN: active backlog/audit 문서의 stale `LoopRelay status` copy를 LoopRelay status로 정리하고 active product surface guard 범위에 포함했다.
 - [x] VERIFY: focused CLI/packaging tests, full test/lint/build, pack dry-run, diff check를 통과한다.
 - [x] INTEGRATE: PR #391이 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
 ### 판단 기준
 
-- `get_promptlane_status` 같은 published compatibility id는 유지한다.
-- 사용자-facing CLI/help/docs copy는 PromptLane을 제품명으로 사용한다.
-- `PromptLane`는 allowlist 문서의 legacy/internal/historical 범주 밖에서 제품명으로 쓰지 않는다.
+- `get_looprelay_status` 같은 published compatibility id는 유지한다.
+- 사용자-facing CLI/help/docs copy는 LoopRelay을 제품명으로 사용한다.
+- `LoopRelay`는 allowlist 문서의 legacy/internal/historical 범주 밖에서 제품명으로 쓰지 않는다.
 
-## 2026-07-05 PromptLane Legacy Surface Inventory
+## 2026-07-05 LoopRelay Legacy Surface Inventory
 
-- [x] RED: 남아 있는 `PromptLane`/`promptlane` surface allowlist 문서가 package contract에 없으면 packaging test가 실패하도록 고정했다.
-- [x] GREEN: `docs/PROMPTLANE-LEGACY-SURFACES.md`를 추가해 legacy CLI alias, MCP compatibility tool, internal runtime type, historical planning docs, forbidden product-facing copy를 분류했다.
-- [x] GREEN: `package.json#files`, `docs/PACKAGE_CONTENTS.md`, `docs/PROMPTLANE.md`, `docs/PROMPTLANE.md`를 allowlist 문서와 연결했다.
+- [x] RED: 남아 있는 `LoopRelay`/`looprelay` surface allowlist 문서가 package contract에 없으면 packaging test가 실패하도록 고정했다.
+- [x] GREEN: `docs/LOOPRELAY-RUNTIME-SURFACES.md`를 추가해 legacy CLI alias, MCP compatibility tool, internal runtime type, historical planning docs, forbidden product-facing copy를 분류했다.
+- [x] GREEN: `package.json#files`, `docs/PACKAGE_CONTENTS.md`, `docs/LOOPRELAY.md`, `docs/LOOPRELAY.md`를 allowlist 문서와 연결했다.
 - [x] VERIFY: focused packaging guard, full test/lint/build, pack dry-run, diff check를 통과한다.
 - [x] INTEGRATE: PR #389가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
 ### 판단 기준
 
-- 새 `PromptLane`/`promptlane` 문자열은 allowlist의 네 허용 범주 중 하나여야 한다.
-- product-facing copy는 PromptLane을 사용하고, `promptlane`는 runtime compatibility ID로 유지한다.
-- `get_promptlane_status` 같은 published MCP/tool compatibility 이름은 유지하되 설명 copy는 PromptLane을 사용한다.
+- 새 `LoopRelay`/`looprelay` 문자열은 allowlist의 네 허용 범주 중 하나여야 한다.
+- product-facing copy는 LoopRelay을 사용하고, `looprelay`는 runtime compatibility ID로 유지한다.
+- `get_looprelay_status` 같은 published MCP/tool compatibility 이름은 유지하되 설명 copy는 LoopRelay을 사용한다.
 
-## 2026-07-05 PromptLane PromptLane Alias Boundary
+## 2026-07-05 LoopRelay LoopRelay Alias Boundary
 
-- [x] RED: Codex default prompts, README, PLUGINS가 `promptlane` alias를 추천하거나 preferred/manual command로 홍보하면 packaging test가 실패하도록 고정했다.
-- [x] GREEN: Codex plugin default prompts에서 `promptlane` 제안을 제거하고 README/PLUGINS는 legacy compatibility 설명만 남겼다.
+- [x] RED: Codex default prompts, README, PLUGINS가 `looprelay` alias를 추천하거나 preferred/manual command로 홍보하면 packaging test가 실패하도록 고정했다.
+- [x] GREEN: Codex plugin default prompts에서 `looprelay` 제안을 제거하고 README/PLUGINS는 legacy compatibility 설명만 남겼다.
 - [x] VERIFY: focused packaging guard, full test/lint/build, pack dry-run, diff check를 통과한다.
 - [x] INTEGRATE: PR #387이 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
 ### 판단 기준
 
-- `PromptLane`은 제품명이고 `promptlane`는 기본 runtime command다.
-- `promptlane`는 primary CLI로 설명하고 새 사용자 prompt/default action도 `promptlane` 기준으로 제안한다.
-- `/promptlane:*`는 shipped slash namespace가 아니며 `/promptlane:*`가 계속 required namespace다.
+- `LoopRelay`은 제품명이고 `looprelay`는 기본 runtime command다.
+- `looprelay`는 primary CLI로 설명하고 새 사용자 prompt/default action도 `looprelay` 기준으로 제안한다.
+- `/looprelay:*`는 shipped slash namespace가 아니며 `/looprelay:*`가 계속 required namespace다.
 
-## 2026-07-05 PromptLane Name And Repository Surface
+## 2026-07-05 LoopRelay Name And Repository Surface
 
-- [x] DECISION: `PromptLane`는 서비스명으로 쓰지 않고 `PromptLane`을 제품명으로 사용한다.
-- [x] DECISION: `PromptLane`은 primary product/repository name으로 쓰지 않고 legacy CLI alias와 historical migration 문맥으로만 남긴다.
-- [x] META: GitHub repository를 `wlsdks/promptlane`에서 `wlsdks/promptlane`으로 rename하고 local origin과 repo description/topics를 갱신했다.
-- [x] RED: active product surfaces가 `PromptLane` 또는 product-facing `PromptLane` wording을 다시 노출하면 packaging test가 실패하도록 고정한다.
-- [x] GREEN: README, plugin metadata, package metadata, install docs, product docs가 `PromptLane`과 `wlsdks/promptlane` 기준으로 맞춰진다.
+- [x] DECISION: `LoopRelay`는 서비스명으로 쓰지 않고 `LoopRelay`을 제품명으로 사용한다.
+- [x] DECISION: `LoopRelay`은 primary product/repository name으로 쓰지 않고 legacy CLI alias와 historical migration 문맥으로만 남긴다.
+- [x] META: GitHub repository를 `wlsdks/looprelay`에서 `wlsdks/looprelay`으로 rename하고 local origin과 repo description/topics를 갱신했다.
+- [x] RED: active product surfaces가 `LoopRelay` 또는 product-facing `LoopRelay` wording을 다시 노출하면 packaging test가 실패하도록 고정한다.
+- [x] GREEN: README, plugin metadata, package metadata, install docs, product docs가 `LoopRelay`과 `wlsdks/looprelay` 기준으로 맞춰진다.
 - [x] VERIFY: focused packaging guard, full test/lint/build, pack dry-run, diff check를 통과한다.
 - [x] INTEGRATE: PR #385가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인했다.
 
 ### 판단 기준
 
-- 제품명은 `PromptLane`이고 `promptlane`는 package/CLI/hook/MCP/slash compatibility runtime ID다.
-- `promptlane`는 현재 binary alias, tag, historical docs, internal compatibility symbols에서만 허용한다.
-- 사용자 설치 경로와 GitHub marketplace 경로는 `wlsdks/promptlane`을 사용한다.
+- 제품명은 `LoopRelay`이고 `looprelay`는 package/CLI/hook/MCP/slash compatibility runtime ID다.
+- `looprelay`는 현재 binary alias, tag, historical docs, internal compatibility symbols에서만 허용한다.
+- 사용자 설치 경로와 GitHub marketplace 경로는 `wlsdks/looprelay`을 사용한다.
 
 ## 2026-07-04 Agent Loop Memory Design
 
 - [x] 2026년 7월 기준 Codex, Claude Code, OpenAI Agents, Anthropic context engineering, Google ADK, AGENTS.md 자료 확인
-- [x] 현재 promptlane의 MCP, hook, storage, adapter, web/CLI 표면과 확장 가능 지점 확인
+- [x] 현재 looprelay의 MCP, hook, storage, adapter, web/CLI 표면과 확장 가능 지점 확인
 - [x] 프로젝트명 후보와 GitHub/npm rename 리스크 확인
 - [x] `docs/superpowers/specs/2026-07-04-agent-loop-memory-design.md` 설계 문서 작성
 - [x] 설계 문서 셀프리뷰와 기본 검증 실행
@@ -6934,14 +6934,14 @@
 
 - Codex와 Claude Code는 부가 통합이 아니라 제품의 1급 실행 표면이어야 한다.
 - 제품명/저장소명 변경은 CLI/package/plugin/remote/docs migration을 포함해야 하며, 사용자가 원한 방향을 좁히지 않는다.
-- `promptlane`의 기존 privacy/local-first 원칙은 유지하되 제품 포지션은 prompt 단위에서 agent loop/worktree/session 단위로 확장한다.
+- `looprelay`의 기존 privacy/local-first 원칙은 유지하되 제품 포지션은 prompt 단위에서 agent loop/worktree/session 단위로 확장한다.
 - 설계 문서는 실제 TDD 구현 계획으로 내려갈 수 있는 첫 slice를 포함해야 한다.
 
 ## 2026-07-05 Package Publishing Docs Drift
 
-- [x] RED: package contents/publishing docs가 shipped `promptlane` bin과 local verification scripts 목록에서 드리프트 나면 packaging test가 실패하도록 고정
+- [x] RED: package contents/publishing docs가 shipped `looprelay` bin과 local verification scripts 목록에서 드리프트 나면 packaging test가 실패하도록 고정
 - [x] GREEN: `docs/PACKAGE_CONTENTS.md`에 shipped native-dialog approved harness와 ui-patrol script를 반영
-- [x] GREEN: `docs/NPM_PUBLISHING.md` publish checklist를 four-bin contract와 `promptlane` alias에 맞게 갱신
+- [x] GREEN: `docs/NPM_PUBLISHING.md` publish checklist를 four-bin contract와 `looprelay` alias에 맞게 갱신
 
 ### 판단 기준
 
@@ -6985,47 +6985,47 @@
 ### 판단 기준
 
 - README의 contributor-facing local gate는 release checklist와 package contents 문서의 package lifecycle contract를 따라야 한다.
-- 사용자 설치 명령, compatibility runtime id, plugin/slash/MCP command 예시는 `promptlane`를 유지한다.
+- 사용자 설치 명령, compatibility runtime id, plugin/slash/MCP command 예시는 `looprelay`를 유지한다.
 
-## 2026-07-05 PromptLane MCP Storage Setup Copy
+## 2026-07-05 LoopRelay MCP Storage Setup Copy
 
-- [x] RED: 중앙 MCP storage unavailable 메시지가 제품명 없이 `promptlane` archive만 말하면 실패하도록 고정
-- [x] GREEN: agent-facing setup 오류는 `Local PromptLane archive`를 쓰고, 실행 command는 compatibility runtime인 `promptlane init`로 유지
-
-### 판단 기준
-
-- MCP tool 결과처럼 Codex/Claude Code가 직접 읽는 제품-facing 문구는 PromptLane 방향을 반영한다.
-- 설치/호환성 command, package id, MCP server id는 `promptlane` compatibility window를 유지한다.
-
-## 2026-07-05 PromptLane MCP Tool Description Copy
-
-- [x] RED: `tools/list`의 agent-facing description이 `promptlane archive/storage`를 제품 저장소명처럼 노출하면 실패하도록 고정
-- [x] GREEN: MCP tool/schema description은 `PromptLane archive/storage`를 사용하고, command/tool/server id 문맥의 `promptlane`는 유지
+- [x] RED: 중앙 MCP storage unavailable 메시지가 제품명 없이 `looprelay` archive만 말하면 실패하도록 고정
+- [x] GREEN: agent-facing setup 오류는 `Local LoopRelay archive`를 쓰고, 실행 command는 compatibility runtime인 `looprelay init`로 유지
 
 ### 판단 기준
 
-- Codex와 Claude Code가 읽는 tool description은 PromptLane 제품 방향을 보여야 한다.
-- `promptlane`는 command, tool, package, MCP server compatibility id로만 남긴다.
+- MCP tool 결과처럼 Codex/Claude Code가 직접 읽는 제품-facing 문구는 LoopRelay 방향을 반영한다.
+- 설치/호환성 command, package id, MCP server id는 `looprelay` compatibility window를 유지한다.
 
-## 2026-07-05 PromptLane Claude Command Copy
+## 2026-07-05 LoopRelay MCP Tool Description Copy
 
-- [x] RED: Claude Code slash command frontmatter/heading이 `promptlane` 또는 Prompt Memory 제품명을 노출하면 packaging test가 실패하도록 고정
-- [x] GREEN: slash command description과 top-level heading은 PromptLane-facing으로 갱신하고, 본문 command 예시는 compatibility runtime인 `promptlane`를 유지
-
-### 판단 기준
-
-- `/promptlane:*` namespace는 유지하지만 사용자가 보는 command copy는 PromptLane 제품 방향을 보여야 한다.
-- 실행 명령, MCP tool name, package id 문맥의 `promptlane`는 유지한다.
-
-## 2026-07-05 PromptLane CLI Coach Copy
-
-- [x] RED: CLI `coach`/`buddy` text output과 MCP status preflight title이 Prompt Memory/Prompt-memory 제품명을 노출하면 실패하도록 고정
-- [x] GREEN: user-facing CLI headings와 setup-needed headline/title은 PromptLane으로 갱신하고, 실행 command 예시는 `promptlane` compatibility runtime을 유지
+- [x] RED: `tools/list`의 agent-facing description이 `looprelay archive/storage`를 제품 저장소명처럼 노출하면 실패하도록 고정
+- [x] GREEN: MCP tool/schema description은 `LoopRelay archive/storage`를 사용하고, command/tool/server id 문맥의 `looprelay`는 유지
 
 ### 판단 기준
 
-- CLI와 MCP가 직접 보여주는 제목/상태 문구는 PromptLane 제품 방향을 사용한다.
-- command 이름, slash namespace, MCP server/tool compatibility id 문맥의 `promptlane`는 유지한다.
+- Codex와 Claude Code가 읽는 tool description은 LoopRelay 제품 방향을 보여야 한다.
+- `looprelay`는 command, tool, package, MCP server compatibility id로만 남긴다.
+
+## 2026-07-05 LoopRelay Claude Command Copy
+
+- [x] RED: Claude Code slash command frontmatter/heading이 `looprelay` 또는 Loop Memory 제품명을 노출하면 packaging test가 실패하도록 고정
+- [x] GREEN: slash command description과 top-level heading은 LoopRelay-facing으로 갱신하고, 본문 command 예시는 compatibility runtime인 `looprelay`를 유지
+
+### 판단 기준
+
+- `/looprelay:*` namespace는 유지하지만 사용자가 보는 command copy는 LoopRelay 제품 방향을 보여야 한다.
+- 실행 명령, MCP tool name, package id 문맥의 `looprelay`는 유지한다.
+
+## 2026-07-05 LoopRelay CLI Coach Copy
+
+- [x] RED: CLI `coach`/`buddy` text output과 MCP status preflight title이 Loop Memory/LoopRelay 제품명을 노출하면 실패하도록 고정
+- [x] GREEN: user-facing CLI headings와 setup-needed headline/title은 LoopRelay으로 갱신하고, 실행 command 예시는 `looprelay` compatibility runtime을 유지
+
+### 판단 기준
+
+- CLI와 MCP가 직접 보여주는 제목/상태 문구는 LoopRelay 제품 방향을 사용한다.
+- command 이름, slash namespace, MCP server/tool compatibility id 문맥의 `looprelay`는 유지한다.
 
 ## 2026-07-04 Loop Snapshot CLI Implementation Plan
 
@@ -7036,13 +7036,13 @@
 
 ### 판단 기준
 
-- 구현 계획은 `promptlane` CLI/package 이름을 유지하고 PromptLane rename은 별도 slice로 남긴다.
+- 구현 계획은 `looprelay` CLI/package 이름을 유지하고 LoopRelay rename은 별도 slice로 남긴다.
 - 각 단계는 실패 테스트, 최소 구현, focused test, commit 단위로 쪼갠다.
 - 계획은 prompt body/raw path/privacy 경계를 첫 slice의 검증 조건으로 포함해야 한다.
 
 ## 2026-07-05 CLI Input Error Boundary Audit
 
-- [x] RED: `promptlane import --dry-run --file <missing>`가 importer의 plain `Error`를 통해 stack trace로 실패할 수 있음을 `runCli` 테스트로 재현
+- [x] RED: `looprelay import --dry-run --file <missing>`가 importer의 plain `Error`를 통해 stack trace로 실패할 수 있음을 `runCli` 테스트로 재현
 - [x] GREEN: importer 입력/일치성 오류를 `ImportInputError`로 분리하고 CLI import 경계에서 `UserError`로 변환
 - [x] 회귀: import dry-run, resume, source parsing 입력 오류는 friendly stderr를 유지하고 prompt path 원문을 출력하지 않음
 - [x] Track C audit: `service install/start/stop/status`는 기본 plain text, `--json` opt-in, launchctl friendly mapping, 회귀 테스트를 이미 충족함
@@ -7067,12 +7067,12 @@
 ### 판단 기준
 
 - 개발 착수 전 제품 포트폴리오 결정이 명시되어야 한다.
-- PromptLane은 generic agent runtime이 아니라 Codex/Claude Code loop memory workbench로 좁힌다.
+- LoopRelay은 generic agent runtime이 아니라 Codex/Claude Code loop memory workbench로 좁힌다.
 - 기획서가 승인되기 전 package/CLI/repo/plugin rename과 hook/MCP/web 구현을 섞지 않는다.
 
-## 2026-07-05 PromptLane Instruction And Harness Docs
+## 2026-07-05 LoopRelay Instruction And Harness Docs
 
-- [x] 현재 `AGENTS.md`/`CLAUDE.md`가 PromptLane runtime 상태와 drift 난 부분 확인
+- [x] 현재 `AGENTS.md`/`CLAUDE.md`가 LoopRelay runtime 상태와 drift 난 부분 확인
 - [x] 2026년 7월 기준 Codex AGENTS.md/hooks/MCP/plugins/worktrees와 Claude Code plugin component 방향 재확인
 - [x] `AGENTS.md`를 짧은 cross-agent source of truth로 재작성
 - [x] `CLAUDE.md`를 Claude Code-specific adapter 문서로 축소
@@ -7084,20 +7084,20 @@
 
 - AGENTS.md는 공통 규칙과 문서 라우팅을 담고, 긴 제품/기술 세부사항은 docs로 넘긴다.
 - CLAUDE.md는 AGENTS.md 복제본이 아니라 Claude Code hook/stdout/plugin/slash namespace 차이만 담는다.
-- Codex와 Claude Code 통합 문서는 최신 공식 surface를 기준으로 하되, PromptLane이 generic runtime으로 확장되지 않도록 local-first harness boundary를 명시한다.
+- Codex와 Claude Code 통합 문서는 최신 공식 surface를 기준으로 하되, LoopRelay이 generic runtime으로 확장되지 않도록 local-first harness boundary를 명시한다.
 - 새 문서는 설치 사용자에게도 필요한 공개 계약이므로 `package.json#files`와 packaging test에 포함한다.
 
-## 2026-07-05 PromptLane Product And Snapshot Schema Docs
+## 2026-07-05 LoopRelay Product And Snapshot Schema Docs
 
-- [x] 설계서의 필수 harness document set에서 아직 비어 있는 `docs/PROMPTLANE.md`와 `docs/LOOP-SNAPSHOT-SCHEMA.md` 확인
-- [x] `docs/PROMPTLANE.md`에 제품 thesis, runtime id compatibility, core workflows, feature portfolio, autonomy model, non-goals 정리
+- [x] 설계서의 필수 harness document set에서 아직 비어 있는 `docs/LOOPRELAY.md`와 `docs/LOOP-SNAPSHOT-SCHEMA.md` 확인
+- [x] `docs/LOOPRELAY.md`에 제품 thesis, runtime id compatibility, core workflows, feature portfolio, autonomy model, non-goals 정리
 - [x] `docs/LOOP-SNAPSHOT-SCHEMA.md`에 현재 `src/loop/types.ts`와 SQLite `loop_snapshots` 저장 형태, privacy invariants, CLI/MCP/web/hook surface rules 정리
 - [x] 두 문서를 `package.json#files`, package contents 문서, packaging test에 포함
 - [x] 설계서의 필수 문서 상태를 implemented로 갱신
 
 ### 판단 기준
 
-- 제품 계약은 PromptLane 방향을 넓히되 `promptlane` runtime compatibility window를 깨지 않는다.
+- 제품 계약은 LoopRelay 방향을 넓히되 `looprelay` runtime compatibility window를 깨지 않는다.
 - Snapshot schema 문서는 raw transcript store나 generic tracing backend가 아니라 privacy-safe local loop record임을 명시한다.
 - 문서가 runtime type과 drift 나지 않도록 변경 절차에 `src/loop/types.ts`, storage tests, CLI/MCP/web tests 갱신 규칙을 포함한다.
 
@@ -7108,29 +7108,29 @@
 - [x] RED: Codex rewrite-guard context output이 hook stdout에 남아 사용자 화면에 보일 수 있음을 wrapper 테스트로 재현
 - [x] GREEN: Codex `additionalContext` rewrite guidance는 기본적으로 stdout을 비워 사용자-visible hook context 노이즈를 막음
 - [x] README/README.ko에 Codex stdout 노출 경계와 대체 확인 경로 문서화
-- [x] Dogfood: Codex/Claude Code MCP를 `promptlane` absolute dist command로 재등록하고 doctor `mcp.registered=true` 확인
-- [x] Dogfood: legacy `prompt-memory` MCP 실패/disabled 항목 제거 및 project-local `.codex/config.toml` rename 잔재 정리
+- [x] Dogfood: Codex/Claude Code MCP를 `looprelay` absolute dist command로 재등록하고 doctor `mcp.registered=true` 확인
+- [x] Dogfood: legacy `looprelay` MCP 실패/disabled 항목 제거 및 project-local `.codex/config.toml` rename 잔재 정리
 - [x] Source hygiene: absolute path가 들어가는 `.codex/` project-local runtime config를 git ignore 처리
 - [x] Dogfood: Codex `UserPromptSubmit` capture `prmt_20260704_101950_a5aa324a10c7`를 list/show/score/open으로 확인
-- [x] Dogfood: MCP stdio `tools/list`, `get_promptlane_status`, `score_prompt_archive` 호출이 통과하고 dogfood prompt id가 low-score list에 포함됨 확인
+- [x] Dogfood: MCP stdio `tools/list`, `get_looprelay_status`, `score_prompt_archive` 호출이 통과하고 dogfood prompt id가 low-score list에 포함됨 확인
 - [x] Dogfood: Playwright로 detail UI를 열어 codex, 10/100 weak, 원문, 개선안, MCP/CLI action 렌더링 확인
 - [x] RED: UI selected action이 안내하는 `score_prompt include_suggestions=true`가 MCP schema에 없어 strict client에서 깨질 수 있음을 server test로 재현
 - [x] GREEN: `score_prompt` MCP input schema에 `include_suggestions`를 추가해 UI action command와 tool schema를 일치시킴
 - [x] Dogfood: MCP stdio로 selected prompt `score_prompt prompt_id=... include_suggestions=true`와 `improve_prompt prompt_id=...` 호출 성공 확인
-- [x] Dogfood: 새 `codex exec` 세션에서 native `promptlane` MCP `score_prompt`/`improve_prompt` tool call 완료 확인
+- [x] Dogfood: 새 `codex exec` 세션에서 native `looprelay` MCP `score_prompt`/`improve_prompt` tool call 완료 확인
 - [x] Dogfood: native `improve_prompt` 결과가 `clarifying_questions`와 ask-first `next_action`을 반환하고 자동 제출하지 않음 확인
 - [x] Dogfood: MCP stdio `apply_clarifications`로 사용자 답변을 적용하면 copy/manual approval draft가 생성되고 local-only/no-external 경계를 유지함 확인
 - [x] Dogfood: MCP stdio `record_clarifications`는 stored prompt id에 답변 기반 draft를 저장하되 응답에는 prompt body, draft body, user answer text를 반환하지 않음 확인
-- [x] Dogfood: 새 `codex exec` 세션에서 native `promptlane` MCP `improve_prompt` -> `record_clarifications` tool call이 완료되고 manual review/copy 흐름을 유지함 확인
+- [x] Dogfood: 새 `codex exec` 세션에서 native `looprelay` MCP `improve_prompt` -> `record_clarifications` tool call이 완료되고 manual review/copy 흐름을 유지함 확인
 - [x] Dogfood: CLI `show --explain`은 saved draft metadata를 보여주고 `show --json`은 local-only 검토용 draft body를 반환함 확인
 - [x] RED: stored clarification draft가 web detail UI에서 metadata만 보이고 draft body/copy action이 없어 MCP `record_clarifications`의 local review/copy 안내가 약함을 컴포넌트 테스트로 고정
 - [x] GREEN: web detail UI의 saved drafts 섹션에 draft body preview와 `Copy saved draft` 액션을 추가해 local review/copy 흐름을 완성
 - [x] Dogfood: Playwright로 dogfood prompt detail에서 저장된 `clarifications-v1` draft 본문과 `Copy saved draft` 버튼이 실제 렌더링됨 확인
 - [x] Dogfood: Playwright click으로 `Copy saved draft`를 눌렀을 때 버튼 상태가 `Copied`로 바뀌고 clipboard에 답변 반영 draft 본문이 들어감 확인
-- [x] Dogfood: `claude mcp list`와 `promptlane doctor claude-code --json`에서 `promptlane` MCP 등록/연결/last ingest 200 확인
-- [x] Dogfood: Claude Code 기본 Fable 5 실행은 usage credits 429로 막혔지만 `--model sonnet` 재시도에서 native `mcp__promptlane__score_prompt`/`improve_prompt` tool call 성공 확인
-- [x] Dogfood: Claude Code stream JSON에 `server_display_name: "promptlane"` tool_use metadata와 최종 "both tool calls succeeded" 보고가 남음 확인
-- [x] Dogfood: Claude Code native `mcp__promptlane__record_clarifications` tool call 성공 확인
+- [x] Dogfood: `claude mcp list`와 `looprelay doctor claude-code --json`에서 `looprelay` MCP 등록/연결/last ingest 200 확인
+- [x] Dogfood: Claude Code 기본 Fable 5 실행은 usage credits 429로 막혔지만 `--model sonnet` 재시도에서 native `mcp__looprelay__score_prompt`/`improve_prompt` tool call 성공 확인
+- [x] Dogfood: Claude Code stream JSON에 `server_display_name: "looprelay"` tool_use metadata와 최종 "both tool calls succeeded" 보고가 남음 확인
+- [x] Dogfood: Claude Code native `mcp__looprelay__record_clarifications` tool call 성공 확인
 - [x] Dogfood: Claude Code `record_clarifications` 결과가 `draft_id=impdraft_7f47a9c62c0f47cd9f1b663b` metadata만 반환하고 prompt body/draft body/user answer text를 echo하지 않음 확인
 - [x] Dogfood: CLI `show --json`에서 Claude Code가 기록한 draft id와 local draft body가 archive에 저장되어 UI/CLI 검토 대상으로 남음 확인
 - [x] DECISION: saved draft copy telemetry는 새 prompt usage event/body 저장을 만들지 않고 기존 draft row의 `copied_at`만 갱신한다
@@ -7139,14 +7139,14 @@
 - [x] GREEN: saved draft copy route/storage/web API/UI handler가 `id`, `prompt_id`, `copied_at` metadata만 반환하고 draft row의 `copied_at`을 갱신
 - [x] Dogfood: Playwright로 실제 dogfood prompt detail에서 `Copy saved draft` 버튼 클릭 후 CLI `show --json`에 `impdraft_7f47a9c62c0f47cd9f1b663b.copied_at=2026-07-04T11:06:36.809Z` 기록 확인
 - [x] Dogfood: 실제 서버 session+CSRF POST `/api/v1/prompts/:id/improvements/:draft_id/copy`가 200을 반환하고 응답에 draft body가 포함되지 않음 확인
-- [x] Dogfood: Claude Code 2.1.199 `claude -p --model sonnet --output-format stream-json`에서 native `mcp__promptlane__ask_clarifying_questions` tool call 성공 확인
+- [x] Dogfood: Claude Code 2.1.199 `claude -p --model sonnet --output-format stream-json`에서 native `mcp__looprelay__ask_clarifying_questions` tool call 성공 확인
 - [x] Dogfood: Claude Code ask/elicitation print-mode 실행은 사용자가 1000ms 안에 답하지 않아 `interaction_status=declined`, `answers_count=0`, `clarifying_questions=2`, `requires_user_approval=true` metadata fallback으로 종료됨 확인
 - [x] Docs: 비대화형 Claude Code print-mode에서는 MCP routing 성공과 사용자 답변 수집 성공을 분리해서 보고하고, `declined` fallback 시 native ask UI로 다시 묻도록 README/README.ko에 명시
 - [x] RED: `ask_clarifying_questions` 타입/문서는 `allow_native_dialog`를 지원하지만 공개 MCP `tools/list` input schema에 없어 strict Codex/Claude client가 native dialog opt-in을 보낼 수 없음을 server test로 재현
 - [x] GREEN: `ask_clarifying_questions` public input schema에 `allow_native_dialog` boolean opt-in을 추가하고 test 고정
 - [x] Dogfood: dist MCP stdio `tools/list`에서 `allow_native_dialog`가 노출되고 `additionalProperties=false`를 유지함 확인
-- [x] Dogfood: 새 `codex exec` 세션에서 native `mcp__promptlane.ask_clarifying_questions`를 `allow_native_dialog=false`로 호출해 schema error 없이 `interaction_status=declined`, `answers_count=0`, `clarifying_questions=yes`로 완료됨 확인
-- [x] Dogfood: 실제 dist `promptlane mcp` stdio server에 `initialize`로 `capabilities.elicitation`을 광고하는 dogfood client를 붙여 server-initiated `elicitation/create` 요청 발생 확인
+- [x] Dogfood: 새 `codex exec` 세션에서 native `mcp__looprelay.ask_clarifying_questions`를 `allow_native_dialog=false`로 호출해 schema error 없이 `interaction_status=declined`, `answers_count=0`, `clarifying_questions=yes`로 완료됨 확인
+- [x] Dogfood: 실제 dist `looprelay mcp` stdio server에 `initialize`로 `capabilities.elicitation`을 광고하는 dogfood client를 붙여 server-initiated `elicitation/create` 요청 발생 확인
 - [x] Dogfood: dogfood client가 `elicitation/create`에 사용자 답변 payload를 반환하자 최종 `interaction_status=answered`, `answers_count=2`, `analyzer=clarifications-v1`, `clarifying_questions=[]`, answer text가 반영된 improved draft, local-only/no-store/no-external privacy contract를 확인
 - [x] Harness: `scripts/mcp-elicitation-smoke.mjs`와 `pnpm smoke:mcp-elicitation`을 추가해 dist MCP stdio answered path를 반복 검증 가능하게 고정
 - [x] Source hygiene: selected worktree detail의 command/filter/copy guidance helper를 `src/server/loop-detail-guidance.ts`로 분리하고 focused 테스트 추가
@@ -7202,7 +7202,7 @@
 - [x] Task 181 DECISION: `LoopsView`는 orchestration-only에 충분히 가까워졌으므로 추가 UI cleanup보다 Codex native dialog fallback dogfood 준비로 이동
 - [x] Task 181 RED: dist MCP native dialog opt-in preflight harness/package script가 없어 packaging focused test 실패 확인
 - [x] Task 181 GREEN: `scripts/mcp-native-dialog-preflight.mjs`와 `smoke:mcp-native-dialog`를 추가해 `allow_native_dialog` public schema와 no-dialog metadata fallback을 dist MCP stdio에서 반복 검증
-- [x] Task 181 PRIVACY: preflight는 `allow_native_dialog=false`와 `PROMPTLANE_NATIVE_DIALOG=0`으로 OS dialog를 열지 않고, prompt body 저장/external call/raw path/git read/write/transcript import를 추가하지 않음
+- [x] Task 181 PRIVACY: preflight는 `allow_native_dialog=false`와 `LOOPRELAY_NATIVE_DIALOG=0`으로 OS dialog를 열지 않고, prompt body 저장/external call/raw path/git read/write/transcript import를 추가하지 않음
 - [x] Task 182 RED: Commander unknown-command 오류가 테스트 중 `process.exit`를 호출해 raw stack path로 실패하는 것을 확인
 - [x] Task 182 GREEN: `runCli`가 Commander input error를 `exitOverride`로 받아 friendly stderr와 exit code 1을 반환하고 programmer error는 계속 rethrow
 - [x] Task 182 PRIVACY: CLI error handling만 변경하며 prompt body 저장/external call/raw path 출력/git read/write/transcript import를 추가하지 않음
@@ -7210,14 +7210,14 @@
 - [x] Task 183 RED: approval-gated native dialog dogfood harness가 package files와 scripts에 없어 focused packaging test가 실패함 확인
 - [x] Task 183 GREEN: `scripts/mcp-native-dialog-approved.mjs`와 `dogfood:mcp-native-dialog-approved`를 추가하고 승인 env가 없으면 OS dialog를 열지 않고 실패하도록 고정
 - [x] Task 183 PRIVACY: 승인 없는 경로는 prompt body 저장/external call/raw path/git read/write/transcript import/OS dialog 실행을 추가하지 않음
-- [ ] 다음 dogfood slice: 명시적 사용자 승인 후 `PROMPTLANE_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved`로 실제 answered OS dialog 결과 확인
+- [ ] 다음 dogfood slice: 명시적 사용자 승인 후 `LOOPRELAY_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved`로 실제 answered OS dialog 결과 확인
 
 ### 판단 기준
 
 - 이번 수정은 Codex의 화면 노이즈를 줄이는 실사용 결함 수정이며, Claude Code의 기존 `UserPromptSubmit` context 출력 동작은 유지한다.
 - Codex `Stop`/compact lifecycle hook의 local-only 수집과 prompt ingest 경계는 변경하지 않는다.
 - `block-and-copy`처럼 decision이 필요한 hook 출력은 이번 수정에서 제거하지 않는다.
-- Codex/Claude Code MCP는 낡은 `prompt-memory` command가 아니라 `promptlane` 이름과 현재 dist entrypoint로 연결되어야 한다.
+- Codex/Claude Code MCP는 낡은 `looprelay` command가 아니라 `looprelay` 이름과 현재 dist entrypoint로 연결되어야 한다.
 - Archive, UI, MCP 검증은 prompt body/raw path를 외부로 보내지 않고 local-only 경로에서 수행한다.
 - Selected prompt MCP action은 UI에 표시되는 command, MCP tool schema, 실제 tool-call 동작이 서로 일치해야 한다.
 - Native tool routing 검증은 현재 실행 중인 thread tool exposure가 아니라 새 agent session에서 실제 `mcp_tool_call` 이벤트가 발생했는지로 판단한다.
@@ -7225,8 +7225,8 @@
 - Stored clarification 기록은 local archive write를 허용하지만 MCP 응답은 metadata-only여야 하며, 실제 draft body 검토와 복사는 local UI/CLI에서 사용자가 수행해야 한다.
 - Stored draft UI는 metadata만 보여주면 불충분하다. `record_clarifications`가 반환한 `draft_id` 이후 사용자는 local detail UI에서 draft body를 검토하고 복사할 수 있어야 한다.
 - Saved draft copy telemetry는 copy success 여부를 회고/사용성 신호로 남길 가치가 있지만, 새 event stream이나 prompt body 복제는 privacy/value 대비 과하다. 기존 `prompt_improvement_drafts.copied_at`만 갱신하고 응답은 metadata-only로 유지한다.
-- Claude Code native MCP routing은 `claude mcp list`의 health check만으로 완료 처리하지 않는다. 실제 `claude -p --output-format stream-json`에서 `mcp__promptlane__...` tool_use가 발생하고 성공한 기록이 있어야 한다.
-- Claude Code 모델/크레딧 실패는 integration 실패와 구분한다. 이번 검증에서는 Fable 5 usage credits 429는 별도 외부 상태이고, Sonnet 실행에서 promptlane MCP routing 자체는 성공했다.
+- Claude Code native MCP routing은 `claude mcp list`의 health check만으로 완료 처리하지 않는다. 실제 `claude -p --output-format stream-json`에서 `mcp__looprelay__...` tool_use가 발생하고 성공한 기록이 있어야 한다.
+- Claude Code 모델/크레딧 실패는 integration 실패와 구분한다. 이번 검증에서는 Fable 5 usage credits 429는 별도 외부 상태이고, Sonnet 실행에서 looprelay MCP routing 자체는 성공했다.
 - Claude Code의 stored clarification write flow는 MCP 응답에서는 metadata-only를 유지하고, draft body 검토는 local archive/UI/CLI로 넘어가야 한다.
 - Claude Code `ask_clarifying_questions` print-mode dogfood는 MCP routing 성공 여부와 실제 사용자 답변 수집 여부를 분리한다. `interaction_status=declined`는 tool failure가 아니라 답변 미수집 fallback이며, 다음 단계는 agent native ask UI 또는 interactive session에서 답을 받아 `apply_clarifications`/`record_clarifications`로 이어가는 것이다.
 - Codex native dialog fallback을 문서화하려면 `allow_native_dialog`가 public MCP schema에 있어야 한다. internal TypeScript-only argument는 실제 strict MCP client 통합으로 간주하지 않는다.
@@ -7242,10 +7242,10 @@
 - [x] Task 3 RED: SQLite loop snapshot storage 테스트가 missing method로 실패하는지 확인
 - [x] Task 3 GREEN: migration 16과 loop snapshot persistence port 구현
 - [x] Task 4 RED: loop CLI 테스트가 missing module로 실패하는지 확인
-- [x] Task 4 GREEN: `promptlane loop collect` / `promptlane loop brief` CLI 등록
+- [x] Task 4 GREEN: `looprelay loop collect` / `looprelay loop brief` CLI 등록
 - [x] Task 5: architecture 문서에 `src/loop/` 경계 추가
-- [x] Task 6 RED: PromptLane MCP tool 테스트가 missing module/tool list로 실패하는지 확인
-- [x] Task 6 GREEN: `get_promptlane_status` / `prepare_loop_brief` MCP tool 구현
+- [x] Task 6 RED: LoopRelay MCP tool 테스트가 missing module/tool list로 실패하는지 확인
+- [x] Task 6 GREEN: `get_looprelay_status` / `prepare_loop_brief` MCP tool 구현
 - [x] Task 7 RED: loop outcome storage/MCP 테스트가 missing method/tool로 실패하는지 확인
 - [x] Task 7 GREEN: `record_loop_outcome` MCP write tool과 SQLite outcome update 구현
 - [x] 다음 slice: Codex/Claude Code hook 기반 loop snapshot 수집 설계 및 구현
@@ -7294,7 +7294,7 @@
 - Stop hook은 `UserPromptSubmit` ingest 흐름을 깨지 않고, prompt body가 없는 lifecycle event를 별도 local collector로 처리한다.
 - Hook 실패는 기존처럼 fail-open이며 stdout/stderr에 prompt body, raw path, token을 노출하지 않는다.
 - 이번 slice는 hook 기반 수집까지만 포함하고 cron, web loops view, repo/package rename은 섞지 않는다.
-- Codex/Claude Code acceptance criteria 중 "Hook `Stop`: collect loop snapshot"을 현재 `promptlane` CLI/package 이름 아래에서 먼저 증명한다.
+- Codex/Claude Code acceptance criteria 중 "Hook `Stop`: collect loop snapshot"을 현재 `looprelay` CLI/package 이름 아래에서 먼저 증명한다.
 
 ## 2026-07-04 Compact Boundary Metadata Slice
 
@@ -7309,18 +7309,18 @@
 
 ## 2026-07-04 Compact Boundary Awareness Slice
 
-- [x] Task 1 RED: `promptlane loop brief`가 최신 snapshot 이후 compact boundary section을 요구하도록 CLI 테스트 작성
+- [x] Task 1 RED: `looprelay loop brief`가 최신 snapshot 이후 compact boundary section을 요구하도록 CLI 테스트 작성
 - [x] Task 1 GREEN: `createLoopBrief`와 CLI가 최신 snapshot 이후 compact boundary metadata를 표시
-- [x] Task 2 RED: `get_promptlane_status` / `prepare_loop_brief`가 compact boundary awareness를 요구하도록 MCP 테스트 작성
+- [x] Task 2 RED: `get_looprelay_status` / `prepare_loop_brief`가 compact boundary awareness를 요구하도록 MCP 테스트 작성
 - [x] Task 2 GREEN: MCP status/brief result에 raw-free compact boundary metadata 추가
 - [x] Task 3: spec/README/PLUGINS에 compact boundary awareness 범위와 한계 반영
 - [x] 다음 slice: compact-aware loop status CLI 또는 web Loops view 설계
 
 ## 2026-07-04 Loop Status CLI Slice
 
-- [x] Task 1 RED: `promptlane loop status`가 missing export로 실패하는지 확인
+- [x] Task 1 RED: `looprelay loop status`가 missing export로 실패하는지 확인
 - [x] Task 1 GREEN: local loop snapshot readiness와 latest snapshot metadata를 표시하는 CLI status 구현
-- [x] Task 2 GREEN: 최신 snapshot 이후 compact boundary가 있으면 `promptlane loop collect` refresh action 표시
+- [x] Task 2 GREEN: 최신 snapshot 이후 compact boundary가 있으면 `looprelay loop collect` refresh action 표시
 - [x] Task 3: README/PLUGINS/spec/todo에 `loop status` 범위와 privacy contract 반영
 - [x] 다음 slice: web Loops view 또는 CLI/MCP status 모델 공통화
 
@@ -7335,7 +7335,7 @@
 - [x] Task 5 RED: `/api/v1/loops/:id/brief`와 `getLoopBrief()`가 missing route/function으로 실패하는지 확인
 - [x] Task 5 GREEN: row-level `Copy brief` action이 privacy-safe continuation brief를 가져와 복사
 - [x] Task 6 RED: `loop collect`가 `source: "service"` snapshot을 만들지 못하는 실패 확인
-- [x] Task 6 GREEN: `promptlane loop collect --source service` 명시적 one-shot collector 구현
+- [x] Task 6 GREEN: `looprelay loop collect --source service` 명시적 one-shot collector 구현
 - [x] Task 7 RED: `loop schedule install --dry-run` LaunchAgent helper가 missing module로 실패하는지 확인
 - [x] Task 7 GREEN: opt-in macOS LaunchAgent dry-run/install helper와 `loop schedule install` CLI 구현
 - [x] Task 8 RED: scheduler status/uninstall helper가 missing export로 실패하는지 확인
@@ -7348,26 +7348,26 @@
 - [x] Task 11 GREEN: `loop instruction-patch`, `propose_instruction_patch`, review-only unified diff proposal 구현
 - [x] Task 12 RED: explicit instruction patch apply 함수/CLI/MCP/tool list가 missing export/tool로 실패하는지 확인
 - [x] Task 12 GREEN: `loop instruction-apply`, `apply_instruction_patch`, confirm-required/idempotent file write 구현
-- [x] Task 13 RED: package/plugin product-facing metadata가 PromptLane이 아니라는 manifest 테스트 실패 확인
-- [x] Task 13 GREEN: package/plugin/README/docs product-facing metadata를 PromptLane으로 갱신하고 CLI/package id는 `promptlane` 유지
-- [x] Task 13 META: GitHub repo를 `wlsdks/promptlane`으로 rename, origin URL과 repo description/topics 갱신
+- [x] Task 13 RED: package/plugin product-facing metadata가 LoopRelay이 아니라는 manifest 테스트 실패 확인
+- [x] Task 13 GREEN: package/plugin/README/docs product-facing metadata를 LoopRelay으로 갱신하고 CLI/package id는 `looprelay` 유지
+- [x] Task 13 META: GitHub repo를 `wlsdks/looprelay`으로 rename, origin URL과 repo description/topics 갱신
 - [x] Task 14 PLAN: CLI/MCP/web status model 공통화 구현 계획을 `docs/superpowers/plans/2026-07-04-loop-status-model-commonization.md`로 작성
 - [x] Task 14.1 RED: `src/loop/status.test.ts`가 missing `src/loop/status.ts`로 실패하는지 확인
-- [x] Task 14.1 GREEN: `createPromptLaneStatus` 공유 모델과 privacy-safe snapshot mapper 구현
+- [x] Task 14.1 GREEN: `createLoopRelayStatus` 공유 모델과 privacy-safe snapshot mapper 구현
 - [x] Task 14.2 RED: CLI/MCP/API/web loop status surfaces가 공유 status shape 없이 drift할 수 있음을 focused test로 고정
-- [x] Task 14.2 GREEN: CLI `loop status`, MCP `get_promptlane_status`, `/api/v1/loops`, web Loops status header를 `src/loop/status.ts`로 연결
+- [x] Task 14.2 GREEN: CLI `loop status`, MCP `get_looprelay_status`, `/api/v1/loops`, web Loops status header를 `src/loop/status.ts`로 연결
 - [x] Task 15 RED: approved loop memory가 continuation brief에 포함되지 않는 CLI/MCP/API focused test 실패 확인
 - [x] Task 15 GREEN: `createLoopBrief`와 CLI `loop brief`, MCP `prepare_loop_brief`, `/api/v1/loops/:id/brief`가 최신 approved memory를 privacy-safe section으로 포함
 - [x] Task 16 RED: approved loop memory가 다른 project continuation brief에 섞이는 storage/CLI/MCP/API focused test 실패 확인
 - [x] Task 16 GREEN: `listLoopMemories({ projectId })`와 brief 호출부 project scoping으로 현재 snapshot project memory만 포함
 - [x] Task 17 RED: CLI/MCP/API/web status가 project-scoped approved memory count를 노출하지 않는 focused test 실패 확인
-- [x] Task 17 GREEN: `PromptLaneStatus.project_memory` count를 CLI `loop status`, MCP `get_promptlane_status`, `/api/v1/loops`, web Loops summary에 raw-free로 연결
-- [x] Task 18 RED: `package.json#bin.promptlane`와 alias 문서가 누락된 packaging focused test 실패 확인
-- [x] Task 18 GREEN: `promptlane` bin alias를 기존 CLI entrypoint에 연결하고 README/PACKAGE_CONTENTS에 compatibility 설명 추가
+- [x] Task 17 GREEN: `LoopRelayStatus.project_memory` count를 CLI `loop status`, MCP `get_looprelay_status`, `/api/v1/loops`, web Loops summary에 raw-free로 연결
+- [x] Task 18 RED: `package.json#bin.looprelay`와 alias 문서가 누락된 packaging focused test 실패 확인
+- [x] Task 18 GREEN: `looprelay` bin alias를 기존 CLI entrypoint에 연결하고 README/PACKAGE_CONTENTS에 compatibility 설명 추가
 - [x] Task 19 RED: status surfaces가 latest loop memory candidate eligibility를 raw-free로 노출하지 않는 focused test 실패 확인
-- [x] Task 19 GREEN: `PromptLaneStatus.memory_candidate`를 CLI/MCP/API/web status에 statement/evidence 없이 연결
-- [x] Task 20 RED: plugin command docs/default prompts가 `promptlane` CLI alias와 `/promptlane:*` namespace compatibility를 설명하지 않는 packaging focused test 실패 확인
-- [x] Task 20 GREEN: Claude command docs, Codex default prompt, README/PLUGINS에 `promptlane` CLI alias guidance를 추가하고 slash namespace는 유지
+- [x] Task 19 GREEN: `LoopRelayStatus.memory_candidate`를 CLI/MCP/API/web status에 statement/evidence 없이 연결
+- [x] Task 20 RED: plugin command docs/default prompts가 `looprelay` CLI alias와 `/looprelay:*` namespace compatibility를 설명하지 않는 packaging focused test 실패 확인
+- [x] Task 20 GREEN: Claude command docs, Codex default prompt, README/PLUGINS에 `looprelay` CLI alias guidance를 추가하고 slash namespace는 유지
 - [x] Task 21 RED: memory approval result가 다음 실행 명령을 structured `next_actions`로 안내하지 않는 CLI/MCP focused test 실패 확인
 - [x] Task 21 GREEN: CLI `loop memory-approve`와 MCP `record_loop_memory`에 brief/patch proposal 후속 명령을 추가하되 instruction file write는 하지 않음
 - [x] Task 22 RED: web Loops approval API/client/CTA가 없어 latest memory candidate를 승인할 수 없는 focused test 실패 확인
@@ -7375,13 +7375,13 @@
 - [x] Task 23 RED: web에서 latest approved memory의 instruction patch proposal을 review-only로 볼 수 없는 focused test 실패 확인
 - [x] Task 23 GREEN: `/api/v1/loops/instruction-patch`, `getLoopInstructionPatch()`, Loops summary review CTA/diff preview 구현
 - [x] Task 24 RED: dedicated plugin rename plan이 없어 slash command/plugin id rename compatibility gate를 증명하지 못하는 packaging focused test 실패 확인
-- [x] Task 24 GREEN: `2026-07-04-promptlane-plugin-rename-plan.md`로 package/CLI/plugin/slash namespace/hook/MCP rename phases와 acceptance gates 고정
+- [x] Task 24 GREEN: `2026-07-04-looprelay-plugin-rename-plan.md`로 package/CLI/plugin/slash namespace/hook/MCP rename phases와 acceptance gates 고정
 - [x] Task 25 RED: instruction patch proposal에 web no-apply gate/CLI confirm command/MCP apply tool 계약이 없어 focused tests 실패 확인
 - [x] Task 25 GREEN: core proposal, MCP schema/result, API client type, web review panel에 explicit apply gate 연결
-- [x] Task 26 RED: shared PromptLane status에 worktree/session activity summary가 없어 CLI/API/web/MCP focused tests 실패 확인
-- [x] Task 26 GREEN: `PromptLaneStatus.activity`를 active worktree/session counts, review-needed signal, CLI/MCP/API/web summary로 연결
-- [x] Task 27 RED: shared PromptLane status에 worktree별 activity detail이 없어 CLI/API/web/MCP focused tests 실패 확인
-- [x] Task 27 GREEN: `PromptLaneStatus.activity.worktrees`를 safe worktree label, sessions, snapshots, latest outcome으로 CLI/MCP/API/web summary에 연결
+- [x] Task 26 RED: shared LoopRelay status에 worktree/session activity summary가 없어 CLI/API/web/MCP focused tests 실패 확인
+- [x] Task 26 GREEN: `LoopRelayStatus.activity`를 active worktree/session counts, review-needed signal, CLI/MCP/API/web summary로 연결
+- [x] Task 27 RED: shared LoopRelay status에 worktree별 activity detail이 없어 CLI/API/web/MCP focused tests 실패 확인
+- [x] Task 27 GREEN: `LoopRelayStatus.activity.worktrees`를 safe worktree label, sessions, snapshots, latest outcome으로 CLI/MCP/API/web summary에 연결
 - [x] Task 28 RED: dedicated worktree drilldown API/client/UI가 없어 focused tests 실패 확인
 - [x] Task 28 GREEN: `/api/v1/loops/worktrees/:worktree`, `getLoopWorktree()`, Loops summary open action, selected worktree detail panel 구현
 - [x] Task 29 RED: `/loops?worktree=...` query-state deep link가 복원되지 않는 routing focused test 실패 확인
@@ -7390,20 +7390,20 @@
 - [x] Task 30 GREEN: `session_id` API query, `getLoopWorktree(..., { sessionId })`, `/loops?worktree=...&session=...`, active session label 연결
 - [x] Task 31 RED: worktree drilldown을 branch 단위로 좁히는 API/client/routing/UI focused tests 실패 확인
 - [x] Task 31 GREEN: `branch` API query, `getLoopWorktree(..., { branch })`, `/loops?worktree=...&session=...&branch=...`, active branch label 연결
-- [x] Task 32 RED: PromptLane rename issue-slice plan과 package files 계약이 없어 packaging focused test 실패 확인
+- [x] Task 32 RED: LoopRelay rename issue-slice plan과 package files 계약이 없어 packaging focused test 실패 확인
 - [x] Task 32 GREEN: rename issue-slice plan을 R1-R7로 분해하고 package files/spec/todo에 연결
 - [x] Task 33 RED: runtime id inventory artifact가 없어 packaging focused test 실패 확인
 - [x] Task 33 GREEN: package/bin/plugin/command/hook/MCP runtime id inventory JSON을 추가하고 live manifest 비교 테스트로 잠금
-- [x] Task 34 RED: `/promptlane:*` alias-only slash namespace docs 계약이 없어 packaging focused test 실패 확인
-- [x] Task 34 GREEN: README/README.ko/PLUGINS가 `/promptlane:*`를 future alias-only namespace로 설명하고 command files/runtime ids는 유지
+- [x] Task 34 RED: `/looprelay:*` alias-only slash namespace docs 계약이 없어 packaging focused test 실패 확인
+- [x] Task 34 GREEN: README/README.ko/PLUGINS가 `/looprelay:*`를 future alias-only namespace로 설명하고 command files/runtime ids는 유지
 - [x] Task 35 RED: R3 Claude Code dual namespace decision artifact가 없어 packaging focused test 실패 확인
-- [x] Task 35 GREEN: 공식 plugin namespace 모델 근거로 `/promptlane:*` command file 추가를 보류하고 safe future path를 문서화
-- [x] Task 36 RED: Codex plugin display/default prompt가 아직 promptlane 중심이라 packaging focused test 실패 확인
-- [x] Task 36 GREEN: Codex plugin 사용자-facing copy를 PromptLane으로 정리하고 plugin id/path/hook command는 유지
+- [x] Task 35 GREEN: 공식 plugin namespace 모델 근거로 `/looprelay:*` command file 추가를 보류하고 safe future path를 문서화
+- [x] Task 36 RED: Codex plugin display/default prompt가 아직 looprelay 중심이라 packaging focused test 실패 확인
+- [x] Task 36 GREEN: Codex plugin 사용자-facing copy를 LoopRelay으로 정리하고 plugin id/path/hook command는 유지
 - [x] Task 37 RED: hook binary compatibility smoke script/package 계약이 없어 packaging focused test 실패 확인
-- [x] Task 37 GREEN: built `promptlane`/`promptlane` entrypoint hook status/claude-code/codex fail-open smoke 추가
+- [x] Task 37 GREEN: built `looprelay`/`looprelay` entrypoint hook status/claude-code/codex fail-open smoke 추가
 - [x] Task 38 RED: MCP server name compatibility decision artifact가 없어 packaging focused test 실패 확인
-- [x] Task 38 GREEN: `promptlane` canonical MCP server name 유지와 `promptlane` server-name alias 보류 조건 문서화
+- [x] Task 38 GREEN: `looprelay` canonical MCP server name 유지와 `looprelay` server-name alias 보류 조건 문서화
 - [x] Task 39 RED: deprecation readiness artifact가 없어 packaging focused test 실패 확인
 - [x] Task 39 GREEN: alias-only/deprecation/breaking release note template, saved snippet support, rollback/upgrade smoke gate 문서화
 - [x] Task 40 RED: rename line 이후 다음 runtime value slice artifact/package 계약이 없어 packaging focused test 실패 확인
@@ -7413,7 +7413,7 @@
 - [x] Task 42 RED: Web selected worktree detail filtered brief endpoint/client/action이 없어 focused tests 실패 확인
 - [x] Task 42 GREEN: `/api/v1/loops/brief`, `getSelectedLoopBrief`, selected detail copy action 구현
 - [x] Task 43 RED: multi-worktree command center summary가 shared status/CLI/MCP schema/web summary에 없어 focused tests 실패 확인
-- [x] Task 43 GREEN: `PromptLaneStatus.activity.command_center`, CLI status, MCP schema, web Loops summary 구현
+- [x] Task 43 GREEN: `LoopRelayStatus.activity.command_center`, CLI status, MCP schema, web Loops summary 구현
 - [x] Task 44 RED: command-center review item별 selected brief shortcut/command metadata가 없어 focused tests 실패 확인
 - [x] Task 44 GREEN: `continuation_command`, CLI/MCP schema, web `Copy review brief` action, App filtered brief copy 연결
 - [x] Task 44 PRIVACY: continuation brief outcome summary가 unsafe raw path/secret-looking text를 포함하면 출력하지 않도록 회귀 테스트와 필터 추가
@@ -7432,7 +7432,7 @@
 - [x] Task 48 PRIVACY: decision reason은 raw path/secret-looking token을 거부하고 prompt body/evidence refs/git writes/external calls를 포함하지 않음
 - [x] Task 49 DECISION: recent merge decisions는 status/MCP/web에 read-only로 노출하고 write boundary는 CLI-only 유지
 - [x] Task 49 RED: `activity.recent_decisions`가 없어 domain/CLI/MCP/web focused tests 실패 확인
-- [x] Task 49 GREEN: 최근 decision 3개를 `PromptLaneStatus.activity`, CLI status, MCP schema/runtime, API type, web Loops summary에 노출
+- [x] Task 49 GREEN: 최근 decision 3개를 `LoopRelayStatus.activity`, CLI status, MCP schema/runtime, API type, web Loops summary에 노출
 - [x] Task 49 PRIVACY: recent decision은 snapshot_id/worktree/decision/reason/decided_by/created_at만 포함하고 prompt body/evidence refs/outcome summary/raw path/git write를 포함하지 않음
 - [x] Task 50 DECISION: recent decisions는 `review_packet.decision_advisory`로만 반영하고 readiness status/next_action/git state는 변경하지 않음
 - [x] Task 50 RED: `review_packet.decision_advisory`가 없어 domain/CLI/MCP/web focused tests 실패 확인
@@ -7574,7 +7574,7 @@
 - [x] Task 84 RED: selected detail API/UI에 `continuation_safety_copy_feedback_failure_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 84 GREEN: selected worktree detail API/type/UI에 manual retry requirement, not prompt submission/review state, no-write/no-external flags를 read-only로 노출
 - [x] Task 84 PRIVACY: continuation safety copy feedback failure note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 85 DECISION: selected-brief copy retry note는 retry가 operator manual action이고 PromptLane이 clipboard write/prompt submission을 자동 retry하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 85 DECISION: selected-brief copy retry note는 retry가 operator manual action이고 LoopRelay이 clipboard write/prompt submission을 자동 retry하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 85 RED: selected detail API/UI에 `continuation_safety_copy_retry_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 85 GREEN: selected worktree detail API/type/UI에 manual retry scope, no automatic clipboard retry/prompt submission, no-write/no-external flags를 read-only로 노출
 - [x] Task 85 PRIVACY: continuation safety copy retry note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
@@ -7582,147 +7582,147 @@
 - [x] Task 86 RED: selected detail API/UI에 `continuation_safety_pre_paste_confirmation_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 86 GREEN: selected worktree detail API/type/UI에 copied brief/target agent request confirmation, not submission/safety approval, no-write/no-external flags를 read-only로 노출
 - [x] Task 86 PRIVACY: continuation safety pre-paste confirmation note는 prompt body/evidence refs/outcome summary/raw path/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 87 DECISION: selected-brief target-agent check note는 paste 전에 active Codex/Claude Code request box를 operator가 직접 확인해야 하며 PromptLane이 agent UI state/target contents를 inspect하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 87 DECISION: selected-brief target-agent check note는 paste 전에 active Codex/Claude Code request box를 operator가 직접 확인해야 하며 LoopRelay이 agent UI state/target contents를 inspect하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 87 RED: selected detail API/UI에 `continuation_safety_target_agent_check_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 87 GREEN: selected worktree detail API/type/UI에 active request box check, no agent UI/target content inspection, no-write/no-external flags를 read-only로 노출
 - [x] Task 87 PRIVACY: continuation safety target-agent check note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 88 DECISION: paste destination verification boundary note는 paste destination이 Codex/Claude Code 안에서 operator가 수동 선택하는 경계이며 PromptLane이 active window/target content/paste success를 verify하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 88 DECISION: paste destination verification boundary note는 paste destination이 Codex/Claude Code 안에서 operator가 수동 선택하는 경계이며 LoopRelay이 active window/target content/paste success를 verify하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 88 RED: selected detail API/UI에 `continuation_safety_paste_destination_boundary_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 88 GREEN: selected worktree detail API/type/UI에 manual paste destination boundary, no active-window/target-content/paste-success verification, no-write/no-external flags를 read-only로 노출
 - [x] Task 88 PRIVACY: continuation safety paste destination boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 89 DECISION: manual submission boundary note는 pasted brief submit이 Codex/Claude Code 안에서 operator가 수동 수행하는 경계이며 PromptLane이 press enter/click submit/submitted state record를 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 89 DECISION: manual submission boundary note는 pasted brief submit이 Codex/Claude Code 안에서 operator가 수동 수행하는 경계이며 LoopRelay이 press enter/click submit/submitted state record를 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 89 RED: selected detail API/UI에 `continuation_safety_manual_submission_boundary_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 89 GREEN: selected worktree detail API/type/UI에 manual submission boundary, no enter/click submit/submitted-state record, no-write/no-external flags를 read-only로 노출
 - [x] Task 89 PRIVACY: continuation safety manual submission boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 90 DECISION: submission result non-persistence note는 agent response/submission result가 다음 explicit loop snapshot 전까지 PromptLane 밖에 있고 submitted state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 90 DECISION: submission result non-persistence note는 agent response/submission result가 다음 explicit loop snapshot 전까지 LoopRelay 밖에 있고 submitted state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 90 RED: selected detail API/UI에 `continuation_safety_submission_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
-- [x] Task 90 GREEN: selected worktree detail API/type/UI에 submission result outside PromptLane until explicit snapshot, no submitted-state detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 90 GREEN: selected worktree detail API/type/UI에 submission result outside LoopRelay until explicit snapshot, no submitted-state detect/store/sync, no-write/no-external flags를 read-only로 노출
 - [x] Task 90 PRIVACY: continuation safety submission result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 91 DECISION: post-submission collection reminder boundary note는 agent response 준비 후 operator가 다음 loop snapshot을 명시적으로 수집해야 하며 PromptLane이 submission/transcript/agent UI activity에서 collection을 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 91 DECISION: post-submission collection reminder boundary note는 agent response 준비 후 operator가 다음 loop snapshot을 명시적으로 수집해야 하며 LoopRelay이 submission/transcript/agent UI activity에서 collection을 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 91 RED: selected detail API/UI에 `continuation_safety_post_submission_collection_reminder_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 91 GREEN: selected worktree detail API/type/UI에 explicit next loop snapshot collection reminder, no submission/transcript/agent UI activity background collection, no-write/no-external flags를 read-only로 노출
 - [x] Task 91 PRIVACY: continuation safety post-submission collection reminder note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 92 DECISION: collection result non-persistence note는 collection result state가 다음 explicit loop snapshot 기록 전까지 persist되지 않고 PromptLane이 agent UI activity에서 collection result state를 store/sync/infer하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 92 DECISION: collection result non-persistence note는 collection result state가 다음 explicit loop snapshot 기록 전까지 persist되지 않고 LoopRelay이 agent UI activity에서 collection result state를 store/sync/infer하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 92 RED: selected detail API/UI에 `continuation_safety_collection_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 92 GREEN: selected worktree detail API/type/UI에 collection result not persisted until explicit snapshot, no store/sync/infer from agent UI activity, no-write/no-external flags를 read-only로 노출
 - [x] Task 92 PRIVACY: continuation safety collection result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 93 DECISION: collection retry boundary note는 retry가 operator가 explicit loop collection flow를 다시 실행하는 수동 경계이며 PromptLane이 collection command나 hidden recovery action을 자동 retry하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 93 DECISION: collection retry boundary note는 retry가 operator가 explicit loop collection flow를 다시 실행하는 수동 경계이며 LoopRelay이 collection command나 hidden recovery action을 자동 retry하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 93 RED: selected detail API/UI에 `continuation_safety_collection_retry_boundary_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 93 GREEN: selected worktree detail API/type/UI에 manual explicit collection retry, no automatic collection command retry/hidden recovery, no-write/no-external flags를 read-only로 노출
 - [x] Task 93 PRIVACY: continuation safety collection retry boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 94 DECISION: retry outcome non-persistence note는 retry attempt/outcome이 다음 explicit loop snapshot 전까지 PromptLane 밖에 있고 retry success/failure state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 94 DECISION: retry outcome non-persistence note는 retry attempt/outcome이 다음 explicit loop snapshot 전까지 LoopRelay 밖에 있고 retry success/failure state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 94 RED: selected detail API/UI에 `continuation_safety_retry_outcome_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
-- [x] Task 94 GREEN: selected worktree detail API/type/UI에 retry attempt/outcome outside PromptLane until explicit snapshot, no retry success/failure detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 94 GREEN: selected worktree detail API/type/UI에 retry attempt/outcome outside LoopRelay until explicit snapshot, no retry success/failure detect/store/sync, no-write/no-external flags를 read-only로 노출
 - [x] Task 94 PRIVACY: continuation safety retry outcome non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 95 DECISION: collection evidence freshness boundary note는 evidence freshness를 latest explicit loop snapshot evidence 기준으로 operator가 확인해야 하며 PromptLane이 git status/transcript/agent UI activity에서 freshness를 verify하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 95 DECISION: collection evidence freshness boundary note는 evidence freshness를 latest explicit loop snapshot evidence 기준으로 operator가 확인해야 하며 LoopRelay이 git status/transcript/agent UI activity에서 freshness를 verify하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 95 RED: selected detail API/UI에 `continuation_safety_collection_evidence_freshness_boundary_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 95 GREEN: selected worktree detail API/type/UI에 latest explicit loop snapshot evidence freshness check, no git status/transcript/agent UI freshness verification, no-write/no-external flags를 read-only로 노출
 - [x] Task 95 PRIVACY: continuation safety collection evidence freshness boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 96 DECISION: freshness result non-persistence note는 freshness result state가 다음 explicit loop snapshot 전까지 PromptLane 밖에 있고 PromptLane이 freshness result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 96 DECISION: freshness result non-persistence note는 freshness result state가 다음 explicit loop snapshot 전까지 LoopRelay 밖에 있고 LoopRelay이 freshness result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 96 RED: selected detail API/UI에 `continuation_safety_freshness_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
-- [x] Task 96 GREEN: selected worktree detail API/type/UI에 freshness result outside PromptLane until explicit snapshot, no freshness result detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 96 GREEN: selected worktree detail API/type/UI에 freshness result outside LoopRelay until explicit snapshot, no freshness result detect/store/sync, no-write/no-external flags를 read-only로 노출
 - [x] Task 96 PRIVACY: continuation safety freshness result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 97 DECISION: freshness uncertainty collection reminder는 evidence freshness가 uncertain할 때 operator가 새 explicit loop snapshot을 collect해야 하며 PromptLane이 freshness verify나 automatic collection을 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 97 DECISION: freshness uncertainty collection reminder는 evidence freshness가 uncertain할 때 operator가 새 explicit loop snapshot을 collect해야 하며 LoopRelay이 freshness verify나 automatic collection을 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 97 RED: selected detail API/UI에 `continuation_safety_freshness_uncertainty_collection_reminder`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 97 GREEN: selected worktree detail API/type/UI에 uncertainty 시 new explicit loop snapshot collection reminder, no freshness verification/automatic collection, no-write/no-external flags를 read-only로 노출
 - [x] Task 97 PRIVACY: continuation safety freshness uncertainty collection reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 98 DECISION: pre-merge freshness advisory는 merge decision 전에 freshness uncertainty를 review해야 하며 PromptLane이 merge approve나 freshness verify를 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 98 DECISION: pre-merge freshness advisory는 merge decision 전에 freshness uncertainty를 review해야 하며 LoopRelay이 merge approve나 freshness verify를 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 98 RED: selected detail API/UI에 `continuation_safety_pre_merge_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 98 GREEN: selected worktree detail API/type/UI에 review freshness uncertainty before merge decisions, no merge approval/freshness verification, no-write/no-external flags를 read-only로 노출
 - [x] Task 98 PRIVACY: continuation safety pre-merge freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/merge decision state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 99 DECISION: pre-memory-approval freshness advisory는 loop memory approval 전에 freshness uncertainty를 review해야 하며 PromptLane이 memory approve나 freshness verify를 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 99 DECISION: pre-memory-approval freshness advisory는 loop memory approval 전에 freshness uncertainty를 review해야 하며 LoopRelay이 memory approve나 freshness verify를 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 99 RED: selected detail API/UI에 `continuation_safety_pre_memory_approval_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 99 GREEN: selected worktree detail API/type/UI에 review freshness uncertainty before approving loop memory, no memory approval/freshness verification, no-write/no-external flags를 read-only로 노출
 - [x] Task 99 PRIVACY: continuation safety pre-memory-approval freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/merge decision state/memory approval state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 100 DECISION: post-memory-approval collection reminder는 loop memory approval 후 새 explicit loop snapshot을 collect해야 하며 PromptLane이 memory approval이나 approval state change에서 collection을 자동 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 100 DECISION: post-memory-approval collection reminder는 loop memory approval 후 새 explicit loop snapshot을 collect해야 하며 LoopRelay이 memory approval이나 approval state change에서 collection을 자동 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 100 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_collection_reminder`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 100 GREEN: selected worktree detail API/type/UI에 collect a new explicit loop snapshot after approving loop memory, no collection from approval/state changes, no-write/no-external flags를 read-only로 노출
 - [x] Task 100 PRIVACY: continuation safety post-memory-approval collection reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/retry result state/freshness result state/merge decision state/memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 101 DECISION: post-memory-approval collection result non-persistence note는 approval 후 collection result state가 다음 explicit loop snapshot 전까지 PromptLane 밖에 있고 PromptLane이 이를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 101 DECISION: post-memory-approval collection result non-persistence note는 approval 후 collection result state가 다음 explicit loop snapshot 전까지 LoopRelay 밖에 있고 LoopRelay이 이를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 101 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_collection_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
-- [x] Task 101 GREEN: selected worktree detail API/type/UI에 post-approval collection result outside PromptLane until explicit snapshot, no detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 101 GREEN: selected worktree detail API/type/UI에 post-approval collection result outside LoopRelay until explicit snapshot, no detect/store/sync, no-write/no-external flags를 read-only로 노출
 - [x] Task 101 PRIVACY: continuation safety post-memory-approval collection result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/retry result state/freshness result state/merge decision state/memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 102 DECISION: post-memory-approval collection retry boundary note는 retry가 operator가 explicit post-approval loop collection flow를 다시 실행하는 수동 경계이며 PromptLane이 collection command나 hidden recovery action을 자동 retry하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 102 DECISION: post-memory-approval collection retry boundary note는 retry가 operator가 explicit post-approval loop collection flow를 다시 실행하는 수동 경계이며 LoopRelay이 collection command나 hidden recovery action을 자동 retry하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 102 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_collection_retry_boundary_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 102 GREEN: selected worktree detail API/type/UI에 manual explicit post-approval collection retry, no automatic collection command retry/hidden recovery, no-write/no-external flags를 read-only로 노출
 - [x] Task 102 PRIVACY: continuation safety post-memory-approval collection retry boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/retry result state/post-approval retry result state/freshness result state/merge decision state/memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 103 DECISION: post-memory-approval retry outcome non-persistence note는 retry outcome이 다음 explicit loop snapshot 전까지 PromptLane 밖에 있고 PromptLane이 post-approval retry success/failure state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 103 DECISION: post-memory-approval retry outcome non-persistence note는 retry outcome이 다음 explicit loop snapshot 전까지 LoopRelay 밖에 있고 LoopRelay이 post-approval retry success/failure state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 103 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_outcome_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
-- [x] Task 103 GREEN: selected worktree detail API/type/UI에 post-approval retry outcome outside PromptLane until explicit snapshot, no detect/store/sync retry success/failure, no-write/no-external flags를 read-only로 노출
+- [x] Task 103 GREEN: selected worktree detail API/type/UI에 post-approval retry outcome outside LoopRelay until explicit snapshot, no detect/store/sync retry success/failure, no-write/no-external flags를 read-only로 노출
 - [x] Task 103 PRIVACY: continuation safety post-memory-approval retry outcome non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/merge decision state/memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 104 DECISION: post-memory-approval retry evidence freshness boundary note는 operator가 retry evidence freshness를 latest explicit loop snapshot 기준으로 확인해야 하고 PromptLane이 git status/transcript/agent UI activity에서 freshness를 verify하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 104 DECISION: post-memory-approval retry evidence freshness boundary note는 operator가 retry evidence freshness를 latest explicit loop snapshot 기준으로 확인해야 하고 LoopRelay이 git status/transcript/agent UI activity에서 freshness를 verify하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 104 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_evidence_freshness_boundary_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 104 GREEN: selected worktree detail API/type/UI에 manual post-approval retry freshness review against latest explicit loop snapshot, no git/transcript/UI freshness verification, no-write/no-external flags를 read-only로 노출
 - [x] Task 104 PRIVACY: continuation safety post-memory-approval retry evidence freshness boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/merge decision state/memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 105 DECISION: post-memory-approval retry freshness result non-persistence note는 freshness review result가 다음 explicit loop snapshot 전까지 PromptLane 밖에 있고 PromptLane이 post-approval retry freshness result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 105 DECISION: post-memory-approval retry freshness result non-persistence note는 freshness review result가 다음 explicit loop snapshot 전까지 LoopRelay 밖에 있고 LoopRelay이 post-approval retry freshness result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 105 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_freshness_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
-- [x] Task 105 GREEN: selected worktree detail API/type/UI에 post-approval retry freshness result outside PromptLane until explicit snapshot, no detect/store/sync freshness result state, no-write/no-external flags를 read-only로 노출
+- [x] Task 105 GREEN: selected worktree detail API/type/UI에 post-approval retry freshness result outside LoopRelay until explicit snapshot, no detect/store/sync freshness result state, no-write/no-external flags를 read-only로 노출
 - [x] Task 105 PRIVACY: continuation safety post-memory-approval retry freshness result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 106 DECISION: post-memory-approval retry freshness uncertainty collection reminder는 freshness가 uncertain할 때 operator가 새 explicit loop snapshot을 collect해야 하며 PromptLane이 freshness verify나 automatic collection을 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 106 DECISION: post-memory-approval retry freshness uncertainty collection reminder는 freshness가 uncertain할 때 operator가 새 explicit loop snapshot을 collect해야 하며 LoopRelay이 freshness verify나 automatic collection을 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 106 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_freshness_uncertainty_collection_reminder`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 106 GREEN: selected worktree detail API/type/UI에 collect a new explicit loop snapshot when post-approval retry freshness is uncertain, no freshness verification/automatic collection, no-write/no-external flags를 read-only로 노출
 - [x] Task 106 PRIVACY: continuation safety post-memory-approval retry freshness uncertainty collection reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 107 DECISION: post-memory-approval retry pre-memory-approval freshness advisory는 retry 후 loop memory를 다시 승인하기 전에 freshness uncertainty를 검토해야 하며 PromptLane이 memory approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 107 DECISION: post-memory-approval retry pre-memory-approval freshness advisory는 retry 후 loop memory를 다시 승인하기 전에 freshness uncertainty를 검토해야 하며 LoopRelay이 memory approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 107 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_pre_memory_approval_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 107 GREEN: selected worktree detail API/type/UI에 review post-approval retry freshness uncertainty before approving loop memory again, no memory approval/freshness verification, no-write/no-external flags를 read-only로 노출
 - [x] Task 107 PRIVACY: continuation safety post-memory-approval retry pre-memory-approval freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 108 DECISION: post-memory-approval retry renewed-memory-approval collection reminder는 retry 후 loop memory를 다시 승인한 뒤에도 새 explicit loop snapshot collection은 operator가 명시적으로 수행해야 하며 PromptLane이 approval state 변화로 자동 collection을 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 108 DECISION: post-memory-approval retry renewed-memory-approval collection reminder는 retry 후 loop memory를 다시 승인한 뒤에도 새 explicit loop snapshot collection은 operator가 명시적으로 수행해야 하며 LoopRelay이 approval state 변화로 자동 collection을 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 108 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_reminder`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 108 GREEN: selected worktree detail API/type/UI에 collect a new explicit loop snapshot after approving loop memory again, no automatic collection from renewed memory approval or approval state changes, no-write/no-external flags를 read-only로 노출
 - [x] Task 108 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval collection reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 109 DECISION: post-memory-approval retry renewed-memory-approval collection result non-persistence note는 renewed approval 이후 collection 결과가 다음 explicit loop snapshot 전까지 PromptLane 밖에 있으며 PromptLane이 결과 state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 109 DECISION: post-memory-approval retry renewed-memory-approval collection result non-persistence note는 renewed approval 이후 collection 결과가 다음 explicit loop snapshot 전까지 LoopRelay 밖에 있으며 LoopRelay이 결과 state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 109 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
-- [x] Task 109 GREEN: selected worktree detail API/type/UI에 renewed-memory-approval collection result outside PromptLane until explicit snapshot, no detect/store/sync result state, no-write/no-external flags를 read-only로 노출
+- [x] Task 109 GREEN: selected worktree detail API/type/UI에 renewed-memory-approval collection result outside LoopRelay until explicit snapshot, no detect/store/sync result state, no-write/no-external flags를 read-only로 노출
 - [x] Task 109 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval collection result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 110 DECISION: post-memory-approval retry renewed-memory-approval collection uncertainty reminder는 renewed approval 이후 collection 결과가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 PromptLane이 hidden verification이나 automatic collection을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 110 DECISION: post-memory-approval retry renewed-memory-approval collection uncertainty reminder는 renewed approval 이후 collection 결과가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 LoopRelay이 hidden verification이나 automatic collection을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 110 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_collection_uncertainty_reminder`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 110 GREEN: selected worktree detail API/type/UI에 collect a new explicit loop snapshot when renewed-memory-approval collection result is uncertain, no verification/automatic collection, no-write/no-external flags를 read-only로 노출
 - [x] Task 110 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval collection uncertainty reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 111 DECISION: post-memory-approval retry renewed-memory-approval pre-merge freshness advisory는 renewed approval 이후에도 merge decision 전에 freshness uncertainty를 재검토해야 하며 PromptLane이 merge approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 111 DECISION: post-memory-approval retry renewed-memory-approval pre-merge freshness advisory는 renewed approval 이후에도 merge decision 전에 freshness uncertainty를 재검토해야 하며 LoopRelay이 merge approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 111 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_merge_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 111 GREEN: selected worktree detail API/type/UI에 review renewed-memory-approval freshness uncertainty before merge decisions, no merge approval/freshness verification before merge, no-write/no-external flags를 read-only로 노출
 - [x] Task 111 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval pre-merge freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 112 DECISION: post-memory-approval retry renewed-memory-approval pre-handoff freshness advisory는 renewed approval 이후 continuation handoff 전에 freshness uncertainty를 재검토해야 하며 PromptLane이 handoff approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 112 DECISION: post-memory-approval retry renewed-memory-approval pre-handoff freshness advisory는 renewed approval 이후 continuation handoff 전에 freshness uncertainty를 재검토해야 하며 LoopRelay이 handoff approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 112 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_handoff_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 112 GREEN: selected worktree detail API/type/UI에 review renewed-memory-approval freshness uncertainty before continuation handoff, no handoff approval/freshness verification before handoff, no-write/no-external flags를 read-only로 노출
 - [x] Task 112 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval pre-handoff freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/handoff approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 113 DECISION: post-memory-approval retry renewed-memory-approval pre-paste freshness advisory는 renewed approval 이후 Codex/Claude Code로 paste하기 전에 freshness uncertainty를 재검토해야 하며 PromptLane이 paste target approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 113 DECISION: post-memory-approval retry renewed-memory-approval pre-paste freshness advisory는 renewed approval 이후 Codex/Claude Code로 paste하기 전에 freshness uncertainty를 재검토해야 하며 LoopRelay이 paste target approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 113 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_paste_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 113 GREEN: selected worktree detail API/type/UI에 review renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code, no paste target approval/freshness verification before paste, no-write/no-external flags를 read-only로 노출
 - [x] Task 113 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval pre-paste freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 114 DECISION: post-memory-approval retry renewed-memory-approval pre-submit freshness advisory는 renewed approval 이후 Codex/Claude Code에서 submit하기 전에 freshness uncertainty를 재검토해야 하며 PromptLane이 submission approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 114 DECISION: post-memory-approval retry renewed-memory-approval pre-submit freshness advisory는 renewed approval 이후 Codex/Claude Code에서 submit하기 전에 freshness uncertainty를 재검토해야 하며 LoopRelay이 submission approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 114 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_pre_submit_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 114 GREEN: selected worktree detail API/type/UI에 review renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code, no submission approval/freshness verification before submit, no-write/no-external flags를 read-only로 노출
 - [x] Task 114 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval pre-submit freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 115 DECISION: post-memory-approval retry renewed-memory-approval post-submit freshness advisory는 renewed approval 이후 submit 후 freshness가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 PromptLane이 submitted state/agent response/freshness monitoring을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 115 DECISION: post-memory-approval retry renewed-memory-approval post-submit freshness advisory는 renewed approval 이후 submit 후 freshness가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 LoopRelay이 submitted state/agent response/freshness monitoring을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 115 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 115 GREEN: selected detail API/type/UI에 collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain, no submitted-state/agent-response/freshness monitoring, no-write/no-external flags를 read-only로 노출
 - [x] Task 115 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 116 DECISION: post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence note는 post-submit collection 결과가 다음 explicit loop snapshot 전까지 PromptLane 밖에 있고 PromptLane이 post-submit collection result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 116 DECISION: post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence note는 post-submit collection 결과가 다음 explicit loop snapshot 전까지 LoopRelay 밖에 있고 LoopRelay이 post-submit collection result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 116 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
-- [x] Task 116 GREEN: selected detail API/type/UI에 post-submit collection result outside PromptLane until explicit snapshot, no detect/store/sync post-submit collection result state, no-write/no-external flags를 read-only로 노출
+- [x] Task 116 GREEN: selected detail API/type/UI에 post-submit collection result outside LoopRelay until explicit snapshot, no detect/store/sync post-submit collection result state, no-write/no-external flags를 read-only로 노출
 - [x] Task 116 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 117 DECISION: post-memory-approval retry renewed-memory-approval post-submit collection retry boundary note는 post-submit collection retry가 operator가 explicit flow를 다시 실행하는 수동 경계이며 PromptLane이 post-submit collection command나 hidden recovery action을 자동 retry하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 117 DECISION: post-memory-approval retry renewed-memory-approval post-submit collection retry boundary note는 post-submit collection retry가 operator가 explicit flow를 다시 실행하는 수동 경계이며 LoopRelay이 post-submit collection command나 hidden recovery action을 자동 retry하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 117 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_collection_retry_boundary_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 117 GREEN: selected detail API/type/UI에 operator reruns explicit post-submit loop collection flow when retry is needed, no automatic retry/hidden recovery, no-write/no-external flags를 read-only로 노출
 - [x] Task 117 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit collection retry boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 118 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence note는 retry attempt/outcome이 다음 explicit loop snapshot 전까지 PromptLane 밖에 있고 retry success/failure state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 118 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence note는 retry attempt/outcome이 다음 explicit loop snapshot 전까지 LoopRelay 밖에 있고 retry success/failure state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 118 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_outcome_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
-- [x] Task 118 GREEN: selected detail API/type/UI에 post-submit retry attempt/outcome outside PromptLane until explicit snapshot, no retry success/failure detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 118 GREEN: selected detail API/type/UI에 post-submit retry attempt/outcome outside LoopRelay until explicit snapshot, no retry success/failure detect/store/sync, no-write/no-external flags를 read-only로 노출
 - [x] Task 118 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 119 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry evidence freshness boundary note는 operator가 post-submit retry evidence freshness를 latest explicit loop snapshot 기준으로 확인하며 PromptLane이 git status/transcript/agent UI activity로 freshness를 verify하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 119 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry evidence freshness boundary note는 operator가 post-submit retry evidence freshness를 latest explicit loop snapshot 기준으로 확인하며 LoopRelay이 git status/transcript/agent UI activity로 freshness를 verify하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 119 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_evidence_freshness_boundary_note`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 119 GREEN: selected detail API/type/UI에 operator checks post-submit retry evidence freshness against latest explicit loop snapshot, no git/transcript/agent UI freshness verification, no-write/no-external flags를 read-only로 노출
 - [x] Task 119 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry evidence freshness boundary note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 120 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence note는 post-submit retry freshness result가 다음 explicit loop snapshot 전까지 PromptLane 밖에 있고 PromptLane이 freshness result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 120 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence note는 post-submit retry freshness result가 다음 explicit loop snapshot 전까지 LoopRelay 밖에 있고 LoopRelay이 freshness result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 120 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
-- [x] Task 120 GREEN: selected detail API/type/UI에 post-submit retry freshness result outside PromptLane until explicit snapshot, no detect/store/sync freshness result state, no-write/no-external flags를 read-only로 노출
+- [x] Task 120 GREEN: selected detail API/type/UI에 post-submit retry freshness result outside LoopRelay until explicit snapshot, no detect/store/sync freshness result state, no-write/no-external flags를 read-only로 노출
 - [x] Task 120 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 121 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry freshness uncertainty collection reminder는 post-submit retry freshness가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 PromptLane이 freshness verification이나 collection을 자동 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 121 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry freshness uncertainty collection reminder는 post-submit retry freshness가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 LoopRelay이 freshness verification이나 collection을 자동 시작하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 121 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_freshness_uncertainty_collection_reminder`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 121 GREEN: selected detail API/type/UI에 collect new explicit loop snapshot when post-submit retry freshness is uncertain, no automatic freshness verification/collection start, no-write/no-external flags를 read-only로 노출
 - [x] Task 121 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry freshness uncertainty collection reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 122 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry pre-memory-approval freshness advisory는 renewed memory approval 전에 post-submit retry freshness uncertainty를 재검토해야 하며 PromptLane이 memory approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 122 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry pre-memory-approval freshness advisory는 renewed memory approval 전에 post-submit retry freshness uncertainty를 재검토해야 하며 LoopRelay이 memory approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 122 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_pre_memory_approval_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 122 GREEN: selected detail API/type/UI에 review post-submit retry freshness uncertainty before approving loop memory again, no memory approval/freshness verification from advisory, no-write/no-external flags를 read-only로 노출
 - [x] Task 122 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry pre-memory-approval freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
@@ -7730,65 +7730,65 @@
 - [x] Task 123 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_reminder`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 123 GREEN: selected detail API/type/UI에 collect a new explicit loop snapshot after approving loop memory again after post-submit retry, no hidden approval signal collection, no-write/no-external flags를 read-only로 노출
 - [x] Task 123 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 124 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence note는 collection reminder가 collection completion tracking을 암시하지 않도록 결과 state가 다음 explicit loop snapshot 전까지 PromptLane 밖에 있음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 124 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence note는 collection reminder가 collection completion tracking을 암시하지 않도록 결과 state가 다음 explicit loop snapshot 전까지 LoopRelay 밖에 있음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 124 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
-- [x] Task 124 GREEN: selected detail API/type/UI에 post-submit retry renewed-memory-approval collection result stays outside PromptLane until the next explicit loop snapshot, no detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 124 GREEN: selected detail API/type/UI에 post-submit retry renewed-memory-approval collection result stays outside LoopRelay until the next explicit loop snapshot, no detect/store/sync, no-write/no-external flags를 read-only로 노출
 - [x] Task 124 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 125 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection uncertainty reminder는 해당 collection result가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 PromptLane이 result verification이나 automatic collection을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 125 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection uncertainty reminder는 해당 collection result가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 LoopRelay이 result verification이나 automatic collection을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 125 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_collection_uncertainty_reminder`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 125 GREEN: selected detail API/type/UI에 collect a new explicit loop snapshot when post-submit retry renewed-memory-approval collection result is uncertain, no result verification/automatic collection start, no-write/no-external flags를 read-only로 노출
 - [x] Task 125 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection uncertainty reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/uncertainty result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 126 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-merge freshness advisory는 merge decision 전에 post-submit retry renewed-memory-approval freshness uncertainty를 재검토해야 하며 PromptLane이 merge approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 126 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-merge freshness advisory는 merge decision 전에 post-submit retry renewed-memory-approval freshness uncertainty를 재검토해야 하며 LoopRelay이 merge approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 126 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_merge_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 126 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval freshness uncertainty before merge decisions, no merge approval/freshness verification before merge, no-write/no-external flags를 read-only로 노출
 - [x] Task 126 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-merge freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/uncertainty result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 127 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-handoff freshness advisory는 continuation handoff 전에 post-submit retry renewed-memory-approval freshness uncertainty를 재검토해야 하며 PromptLane이 handoff approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 127 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-handoff freshness advisory는 continuation handoff 전에 post-submit retry renewed-memory-approval freshness uncertainty를 재검토해야 하며 LoopRelay이 handoff approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 127 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_handoff_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 127 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval freshness uncertainty before continuation handoff, no handoff approval/freshness verification before handoff, no-write/no-external flags를 read-only로 노출
 - [x] Task 127 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-handoff freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/uncertainty result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 128 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-paste freshness advisory는 Codex/Claude Code로 paste하기 전에 post-submit retry renewed-memory-approval freshness uncertainty를 재검토해야 하며 PromptLane이 paste target approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 128 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-paste freshness advisory는 Codex/Claude Code로 paste하기 전에 post-submit retry renewed-memory-approval freshness uncertainty를 재검토해야 하며 LoopRelay이 paste target approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 128 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_paste_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 128 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code, no paste target approval/freshness verification before paste, no-write/no-external flags를 read-only로 노출
 - [x] Task 128 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-paste freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/uncertainty result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 129 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-submit freshness advisory는 Codex/Claude Code에서 submit하기 전에 post-submit retry renewed-memory-approval freshness uncertainty를 재검토해야 하며 PromptLane이 submission approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 129 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-submit freshness advisory는 Codex/Claude Code에서 submit하기 전에 post-submit retry renewed-memory-approval freshness uncertainty를 재검토해야 하며 LoopRelay이 submission approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 129 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_pre_submit_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 129 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code, no submission approval/freshness verification before submit, no-write/no-external flags를 read-only로 노출
 - [x] Task 129 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval pre-submit freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/uncertainty result state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 130 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit freshness advisory는 submit 후 post-submit retry renewed-memory-approval freshness가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 PromptLane이 submitted state/agent response/freshness monitoring을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 130 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit freshness advisory는 submit 후 post-submit retry renewed-memory-approval freshness가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 LoopRelay이 submitted state/agent response/freshness monitoring을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 130 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 130 GREEN: selected detail API/type/UI에 collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain, no submitted-state/agent-response/freshness monitoring, no-write/no-external flags를 read-only로 노출
 - [x] Task 130 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 131 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence note는 submit 후 collection 결과가 다음 explicit loop snapshot 전까지 PromptLane 밖에 있고 PromptLane이 결과 state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 131 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence note는 submit 후 collection 결과가 다음 explicit loop snapshot 전까지 LoopRelay 밖에 있고 LoopRelay이 결과 state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 131 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
-- [x] Task 131 GREEN: selected detail API/type/UI에 post-submit retry renewed-memory-approval post-submit collection result outside PromptLane until explicit snapshot, no detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 131 GREEN: selected detail API/type/UI에 post-submit retry renewed-memory-approval post-submit collection result outside LoopRelay until explicit snapshot, no detect/store/sync, no-write/no-external flags를 read-only로 노출
 - [x] Task 131 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 132 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection uncertainty reminder는 post-submit collection result가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 PromptLane이 result verification이나 automatic collection을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 132 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection uncertainty reminder는 post-submit collection result가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 LoopRelay이 result verification이나 automatic collection을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 132 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_uncertainty_reminder`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 132 GREEN: selected detail API/type/UI에 collect new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection result is uncertain, no result verification/automatic collection start, no-write/no-external flags를 read-only로 노출
 - [x] Task 132 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection uncertainty reminder는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/post-submit retry renewed-memory-approval post-submit collection uncertainty result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 133 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-merge freshness advisory는 merge decision 전에 post-submit collection freshness uncertainty를 재검토해야 하며 PromptLane이 merge approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 133 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-merge freshness advisory는 merge decision 전에 post-submit collection freshness uncertainty를 재검토해야 하며 LoopRelay이 merge approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 133 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_merge_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 133 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before merge decisions, no merge approval/freshness verification before merge, no-write/no-external flags를 read-only로 노출
 - [x] Task 133 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-merge freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/post-submit retry renewed-memory-approval post-submit collection uncertainty result state/post-submit retry renewed-memory-approval post-submit collection freshness result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 134 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-handoff freshness advisory는 continuation handoff 전에 post-submit collection freshness uncertainty를 재검토해야 하며 PromptLane이 handoff approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 134 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-handoff freshness advisory는 continuation handoff 전에 post-submit collection freshness uncertainty를 재검토해야 하며 LoopRelay이 handoff approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 134 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_handoff_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 134 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before continuation handoff, no handoff approval/freshness verification before handoff, no-write/no-external flags를 read-only로 노출
 - [x] Task 134 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-handoff freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/post-submit retry renewed-memory-approval post-submit collection uncertainty result state/post-submit retry renewed-memory-approval post-submit collection freshness result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 135 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-paste freshness advisory는 Codex/Claude Code로 paste하기 전에 post-submit collection freshness uncertainty를 재검토해야 하며 PromptLane이 paste target approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 135 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-paste freshness advisory는 Codex/Claude Code로 paste하기 전에 post-submit collection freshness uncertainty를 재검토해야 하며 LoopRelay이 paste target approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 135 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_paste_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 135 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before pasting into Codex or Claude Code, no paste target approval/freshness verification before paste, no-write/no-external flags를 read-only로 노출
 - [x] Task 135 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-paste freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/post-submit retry renewed-memory-approval post-submit collection uncertainty result state/post-submit retry renewed-memory-approval post-submit collection freshness result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 136 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-submit freshness advisory는 Codex/Claude Code에서 submit하기 전에 post-submit collection freshness uncertainty를 재검토해야 하며 PromptLane이 submission approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 136 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-submit freshness advisory는 Codex/Claude Code에서 submit하기 전에 post-submit collection freshness uncertainty를 재검토해야 하며 LoopRelay이 submission approval이나 freshness verification을 대신하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 136 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_pre_submit_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 136 GREEN: selected detail API/type/UI에 review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before submitting in Codex or Claude Code, no submission approval/freshness verification before submit, no-write/no-external flags를 read-only로 노출
 - [x] Task 136 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection pre-submit freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/post-submit retry renewed-memory-approval post-submit collection uncertainty result state/post-submit retry renewed-memory-approval post-submit collection freshness result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 137 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection post-submit freshness advisory는 submit 후 post-submit collection freshness가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 PromptLane이 submitted state/agent response/freshness monitoring을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 137 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection post-submit freshness advisory는 submit 후 post-submit collection freshness가 uncertain하면 operator가 새 explicit loop snapshot을 collect해야 하며 LoopRelay이 submitted state/agent response/freshness monitoring을 하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 137 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_post_submit_freshness_advisory`가 없어 focused server/API/web tests 실패 확인
 - [x] Task 137 GREEN: selected detail API/type/UI에 collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain, no submitted state/agent response/freshness monitoring, no-write/no-external flags를 read-only로 노출
 - [x] Task 137 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection post-submit freshness advisory는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/post-submit retry renewed-memory-approval post-submit collection uncertainty result state/post-submit retry renewed-memory-approval post-submit collection freshness result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
-- [x] Task 138 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence note는 freshness result가 다음 explicit loop snapshot 전까지 PromptLane 밖에 있고 PromptLane이 freshness result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
+- [x] Task 138 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence note는 freshness result가 다음 explicit loop snapshot 전까지 LoopRelay 밖에 있고 LoopRelay이 freshness result state를 detect/store/sync하지 않음을 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 138 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_result_non_persistence_note`가 없어 focused server/API/web tests 실패 확인
-- [x] Task 138 GREEN: selected detail API/type/UI에 post-submit retry renewed-memory-approval post-submit collection freshness result stays outside PromptLane until next explicit loop snapshot, no detect/store/sync, no-write/no-external flags를 read-only로 노출
+- [x] Task 138 GREEN: selected detail API/type/UI에 post-submit retry renewed-memory-approval post-submit collection freshness result stays outside LoopRelay until next explicit loop snapshot, no detect/store/sync, no-write/no-external flags를 read-only로 노출
 - [x] Task 138 PRIVACY: continuation safety post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence note는 prompt body/evidence refs/outcome summary/raw path/target content/active-window title/pasted content/paste result state/submitted state/agent response content/collection result state/post-submit collection result state/post-submit retry result state/retry success/failure state/post-submit retry freshness result state/post-submit retry freshness uncertainty collection result state/post-submit retry renewed memory approval state/post-approval collection result state/renewed memory approval collection result state/post-submit retry renewed-memory-approval collection result state/post-submit retry renewed-memory-approval post-submit collection result state/post-submit retry renewed-memory-approval post-submit collection uncertainty result state/post-submit retry renewed-memory-approval post-submit collection freshness result state/uncertainty result state/freshness monitoring state/retry result state/post-approval retry result state/retry outcome state/freshness result state/retry freshness result state/post-approval retry freshness result state/merge decision state/paste target state/handoff approval state/submission approval state/memory approval state/renewed memory approval state/approval result state/git read/write/transcript import/command execution/persisted review state/checklist completion state/memory approval write/merge decision write/external call을 포함하지 않음
 - [x] Task 139 DECISION: post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness uncertainty collection reminder는 freshness uncertainty가 남은 상태에서 operator가 다음 explicit loop snapshot을 collect해야 함을 pre/post handoff 흐름과 별도로 명확히 하기 위해 필요하므로 raw-free로 제공
 - [x] Task 139 RED: selected detail API/UI에 `continuation_safety_post_memory_approval_retry_renewed_memory_approval_post_submit_retry_renewed_memory_approval_post_submit_collection_freshness_uncertainty_collection_reminder`가 없어 focused server/API/web tests 실패 확인
@@ -7925,14 +7925,14 @@
 
 ### Compact Boundary Awareness 판단 기준
 
-- `loop brief`, `prepare_loop_brief`, `get_promptlane_status`는 최신 loop snapshot 이후 발생한 compact boundary만 표시한다.
+- `loop brief`, `prepare_loop_brief`, `get_looprelay_status`는 최신 loop snapshot 이후 발생한 compact boundary만 표시한다.
 - 표시되는 boundary 정보는 event name, trigger, time, tool, id, optional hash 같은 safe metadata로 제한한다.
 - compact summary, custom instructions, transcript body, raw path는 CLI/MCP 출력과 테스트 결과에 노출하지 않는다.
 - 이번 slice는 "다시 collect할 필요가 있음"을 알려주는 awareness까지만 포함하고 summary 재주입, semantic memory, web UI는 다음 slice로 남긴다.
 
 ### Loop Status CLI 판단 기준
 
-- `promptlane loop status`는 사람용 터미널 readiness surface이며 MCP `get_promptlane_status`와 같은 local-first privacy 경계를 따른다.
+- `looprelay loop status`는 사람용 터미널 readiness surface이며 MCP `get_looprelay_status`와 같은 local-first privacy 경계를 따른다.
 - 출력은 snapshot count, latest loop safe metadata, compact refresh action, next command만 포함한다.
 - prompt body, compact summary, custom instructions, transcript body, raw path는 text/JSON 출력에 포함하지 않는다.
 
@@ -7946,10 +7946,10 @@
 
 ### Explicit Service Collection 판단 기준
 
-- `promptlane loop collect --source service`는 cron/LaunchAgent가 호출할 수 있는 명시적 one-shot 명령이다.
-- `promptlane loop schedule install --dry-run`은 macOS LaunchAgent를 쓰기 전에 미리볼 수 있어야 한다.
-- `promptlane loop schedule status`는 plist 존재 여부만 확인한다.
-- `promptlane loop schedule uninstall`은 명시 호출 시 plist만 제거한다.
+- `looprelay loop collect --source service`는 cron/LaunchAgent가 호출할 수 있는 명시적 one-shot 명령이다.
+- `looprelay loop schedule install --dry-run`은 macOS LaunchAgent를 쓰기 전에 미리볼 수 있어야 한다.
+- `looprelay loop schedule status`는 plist 존재 여부만 확인한다.
+- `looprelay loop schedule uninstall`은 명시 호출 시 plist만 제거한다.
 - scheduler 설치는 사용자의 명시적 CLI 명령으로만 동작한다.
 - status/uninstall은 숨은 launchctl load/unload나 외부 서비스 변경을 하지 않는다.
 - service-origin snapshot도 prompt body, compact summary, custom instructions, transcript body, raw path를 출력하지 않는다.
@@ -7959,14 +7959,14 @@
 - semantic memory는 자동 저장이 아니라 후보 판정부터 시작한다.
 - `passed` outcome, non-empty summary, non-empty evidence refs가 있어야 candidate eligible이다.
 - unsafe summary(raw path, secret-looking token)는 candidate로 반환하지 않는다.
-- `promptlane loop memory-candidate`와 MCP `propose_loop_memory_candidate`는 같은 결정 함수를 사용한다.
+- `looprelay loop memory-candidate`와 MCP `propose_loop_memory_candidate`는 같은 결정 함수를 사용한다.
 - 결과는 prompt body, compact summary, custom instructions, transcript body, raw path를 출력하지 않는다.
 - AGENTS.md, CLAUDE.md, memory files, project docs에는 자동으로 쓰지 않는다.
 
 ### Approved Memory Record 판단 기준
 
 - approved memory write는 local SQLite `loop_memories` 저장까지만 수행한다.
-- `promptlane loop memory-approve`와 MCP `record_loop_memory`는 latest eligible candidate를 재검증한 뒤 저장한다.
+- `looprelay loop memory-approve`와 MCP `record_loop_memory`는 latest eligible candidate를 재검증한 뒤 저장한다.
 - stored memory는 statement, safe evidence refs, approval actor, created_at, privacy metadata만 포함한다.
 - unsafe statement(raw path, secret-looking token)는 저장하지 않는다.
 - AGENTS.md, CLAUDE.md, project docs, vector store에는 쓰지 않는다.
@@ -7974,7 +7974,7 @@
 ### Instruction File Patch Proposal 판단 기준
 
 - instruction patch는 승인된 최신 `loop_memories` record에서만 생성한다.
-- `promptlane loop instruction-patch`와 MCP `propose_instruction_patch`는 같은 pure proposal generator를 사용한다.
+- `looprelay loop instruction-patch`와 MCP `propose_instruction_patch`는 같은 pure proposal generator를 사용한다.
 - 결과는 `AGENTS.md` 또는 `CLAUDE.md` 대상 unified diff 문자열과 approval-required metadata만 반환한다.
 - 명령과 MCP tool은 instruction file, project docs, memory files를 직접 쓰지 않는다.
 - prompt body, compact summary, transcript body, raw path, secret-looking token은 출력하지 않는다.
@@ -7990,15 +7990,15 @@
 
 ### Brand Migration 판단 기준
 
-- GitHub repository는 `wlsdks/promptlane`이고 local `origin`도 새 URL을 사용한다.
+- GitHub repository는 `wlsdks/looprelay`이고 local `origin`도 새 URL을 사용한다.
 - GitHub description/topics는 local-first agent loop memory/meta-prompting 포지션을 반영한다.
-- package/plugin product-facing description, homepage, repository, display name은 PromptLane을 사용한다.
-- npm package name, CLI binary, plugin command id는 compatibility window 동안 `promptlane`를 유지한다.
-- README/docs는 `PromptLane`을 제품명으로 소개하고 `promptlane`를 현재 CLI/package 이름으로 설명한다.
+- package/plugin product-facing description, homepage, repository, display name은 LoopRelay을 사용한다.
+- npm package name, CLI binary, plugin command id는 compatibility window 동안 `looprelay`를 유지한다.
+- README/docs는 `LoopRelay`을 제품명으로 소개하고 `looprelay`를 현재 CLI/package 이름으로 설명한다.
 
 ### Shared Loop Status Model 판단 기준
 
-- CLI `promptlane loop status`, MCP `get_promptlane_status`, `/api/v1/loops`, web Loops status header는 같은 `src/loop/status.ts` 모델에서 나온 readiness, latest snapshot, compact refresh, next action 값을 사용한다.
+- CLI `looprelay loop status`, MCP `get_looprelay_status`, `/api/v1/loops`, web Loops status header는 같은 `src/loop/status.ts` 모델에서 나온 readiness, latest snapshot, compact refresh, next action 값을 사용한다.
 - 공유 모델은 prompt body, compact summary, custom instructions, transcript body, raw path, secret-looking token을 입력으로 받거나 출력하지 않는다.
 - MCP surface는 `available_tools`만 추가하고 readiness 판단 자체는 shared model을 따른다.
 - Web API는 list item metadata와 별개로 `status` object를 반환해 web client가 list length로 상태를 재추론하지 않게 한다.
@@ -8006,7 +8006,7 @@
 
 ### Approved Memory In Continuation Brief 판단 기준
 
-- CLI `promptlane loop brief`, MCP `prepare_loop_brief`, `/api/v1/loops/:id/brief`는 최신 approved `loop_memories`를 continuation prompt의 `Approved Loop Memories` 섹션에 포함한다.
+- CLI `looprelay loop brief`, MCP `prepare_loop_brief`, `/api/v1/loops/:id/brief`는 최신 approved `loop_memories`를 continuation prompt의 `Approved Loop Memories` 섹션에 포함한다.
 - memory section은 statement와 safe evidence refs만 포함한다.
 - continuation brief는 현재 snapshot의 `project_id`와 같은 source snapshot에서 승인된 memory만 포함한다.
 - prompt body, compact summary, custom instructions, transcript body, raw path, secret-looking token은 brief 출력에 포함하지 않는다.
@@ -8121,7 +8121,7 @@
 ## 2026-05-04 Coach Follow-Up Commands Polish
 
 - [x] 기능/코드/UI 관점에서 다음 고효과 개선 후보 재점검
-- [x] `promptlane coach` 텍스트 출력에 agent-native follow-up 명령 추가
+- [x] `looprelay coach` 텍스트 출력에 agent-native follow-up 명령 추가
 - [x] privacy-safe CLI 회귀 테스트 추가
 - [x] 브라우저/릴리스 게이트로 실제 동작 검증
 - [x] PR 생성, CI 확인, main merge, branch cleanup
@@ -8148,8 +8148,8 @@
 
 ## 2026-05-04 Vertical StatusLine And Agent UX Polish
 
-- [x] statusLine chain이 `claude-hud`와 promptlane multiline 출력을 모두 보존하는지 재점검
-- [x] promptlane 상태줄을 score/action 중심의 세로 분리 출력으로 개선
+- [x] statusLine chain이 `claude-hud`와 looprelay multiline 출력을 모두 보존하는지 재점검
+- [x] looprelay 상태줄을 score/action 중심의 세로 분리 출력으로 개선
 - [x] 웹 Dashboard의 agent command surface를 더 실사용 중심으로 다듬기
 - [x] 기능/코드 품질 회귀 테스트와 브라우저 검증 실행
 - [x] PR 생성, CI 확인, main merge, branch cleanup
@@ -8157,7 +8157,7 @@
 ### 판단 기준
 
 - 기존 HUD의 stdout, ANSI 색상, 줄바꿈을 변경하지 않는다.
-- promptlane 상태줄은 한 줄에 과도한 정보를 몰아넣지 않고 readiness와 coaching action을 분리한다.
+- looprelay 상태줄은 한 줄에 과도한 정보를 몰아넣지 않고 readiness와 coaching action을 분리한다.
 - 웹 UI는 command 실행 맥락, 복사 행동, 현재 개선 포인트를 즉시 이해할 수 있어야 한다.
 - 모든 출력은 local-first privacy를 유지하고 prompt body, raw path, token을 노출하지 않는다.
 
@@ -8172,25 +8172,25 @@
 
 ### 판단 기준
 
-- 기존 Claude HUD의 multiline/ANSI 출력은 유지하고 promptlane는 가로 폭을 과도하게 늘리지 않는다.
-- 기능 추가는 promptlane 정체성인 local-first prompt coach/memory에 직접 도움이 되는 것만 한다.
+- 기존 Claude HUD의 multiline/ANSI 출력은 유지하고 looprelay는 가로 폭을 과도하게 늘리지 않는다.
+- 기능 추가는 looprelay 정체성인 local-first prompt coach/memory에 직접 도움이 되는 것만 한다.
 - UI 개선은 `DESIGN.md`의 warm developer workbench 기준을 따른다.
 - prompt body, raw path, token은 stdout/stderr, browser diagnostics, test output에 노출하지 않는다.
 
 ## 2026-05-03 Claude StatusLine Multiline Layout
 
 - [x] 현재 chained statusLine 출력이 기존 HUD 줄바꿈을 깨는 원인 확인
-- [x] 기존 HUD multiline 보존과 promptlane compact line 회귀 테스트 추가
-- [x] chained renderer와 promptlane statusLine 문구를 짧게 개선
+- [x] 기존 HUD multiline 보존과 looprelay compact line 회귀 테스트 추가
+- [x] chained renderer와 looprelay statusLine 문구를 짧게 개선
 - [x] 로컬 Claude 설정/실행 출력 재검증
 - [x] targeted/full 검증 실행
 - [ ] PR 생성, CI 확인, main merge, branch cleanup
 
 ### 판단 기준
 
-- `claude-hud` 같은 기존 HUD의 줄바꿈과 ANSI 출력은 promptlane가 한 줄로 뭉개면 안 된다.
-- 기존 HUD가 있으면 promptlane는 별도 짧은 line으로 붙여 가로 폭을 과도하게 늘리지 않는다.
-- 기존 HUD가 실패하거나 비어 있으면 promptlane만 짧고 읽기 쉬운 한 줄로 표시한다.
+- `claude-hud` 같은 기존 HUD의 줄바꿈과 ANSI 출력은 looprelay가 한 줄로 뭉개면 안 된다.
+- 기존 HUD가 있으면 looprelay는 별도 짧은 line으로 붙여 가로 폭을 과도하게 늘리지 않는다.
+- 기존 HUD가 실패하거나 비어 있으면 looprelay만 짧고 읽기 쉬운 한 줄로 표시한다.
 - statusLine 출력은 prompt body, raw path, token을 포함하지 않는다.
 
 ## 2026-05-03 Stable CLI Entry Path For Hooks
@@ -8219,16 +8219,16 @@
 
 ### 판단 기준
 
-- Claude Code는 `statusLine`을 하나만 지원하므로 여러 설정을 만들지 않고 하나의 command 안에서 기존 HUD와 promptlane를 같이 실행한다.
-- 기존 `claude-hud` 같은 command는 설치 시 보존되고, promptlane 제거 시 가능한 경우 원래 command로 복구되어야 한다.
-- reinstall은 기존 command를 중첩 wrapping하지 않고 promptlane command만 갱신해야 한다.
+- Claude Code는 `statusLine`을 하나만 지원하므로 여러 설정을 만들지 않고 하나의 command 안에서 기존 HUD와 looprelay를 같이 실행한다.
+- 기존 `claude-hud` 같은 command는 설치 시 보존되고, looprelay 제거 시 가능한 경우 원래 command로 복구되어야 한다.
+- reinstall은 기존 command를 중첩 wrapping하지 않고 looprelay command만 갱신해야 한다.
 - statusLine 출력과 로그는 prompt body, raw path, secret을 노출하지 않아야 한다.
 
 ## 2026-05-03 Coach Release Readiness
 
 - [x] benchmark v1에 coach actionability 지표 추가
 - [x] `coach_prompt` agent brief를 첫 보완/다음 요청 template 중심으로 강화
-- [x] `promptlane start --open-web`로 첫 3분 setup 안내 압축
+- [x] `looprelay start --open-web`로 첫 3분 setup 안내 압축
 - [x] README/README.ko 첫 3분 외부 사용자 흐름 재정리
 - [x] 테스트/벤치마크/릴리스 게이트 실행
 - [x] PR 생성, CI 확인, main merge, branch cleanup
@@ -8367,7 +8367,7 @@
 
 ### 판단 기준
 
-- `promptlane`는 외부 LLM/API를 직접 호출하지 않고 현재 Claude Code/Codex/Gemini CLI 세션이 rewrite를 만든다.
+- `looprelay`는 외부 LLM/API를 직접 호출하지 않고 현재 Claude Code/Codex/Gemini CLI 세션이 rewrite를 만든다.
 - prepare tool은 bounded redacted prompt packet과 명확한 rewrite contract만 반환한다.
 - record tool은 승인 가능한 rewrite draft와 metadata만 저장하고 raw prompt body, raw absolute path, secret을 저장/반환하지 않는다.
 - local deterministic rewrite는 빠른 fallback으로 유지하고, agent-assisted rewrite는 사용자가 명시적으로 요청했을 때만 실행한다.
@@ -8416,7 +8416,7 @@
 
 ### 판단 기준
 
-- `promptlane`가 사용자 Claude/OAuth나 Codex 계정을 대신 라우팅하는 숨은 외부 호출을 하지 않는다.
+- `looprelay`가 사용자 Claude/OAuth나 Codex 계정을 대신 라우팅하는 숨은 외부 호출을 하지 않는다.
 - Claude Code/Codex 현재 세션이 MCP tool로 redacted prompt packet을 받아 직접 평가하고, 결과만 저장한다.
 - 원문 prompt body, raw absolute path, secret은 judge packet/result/log/stdout/stderr에 노출하지 않는다.
 - LLM judge 결과는 advisory signal로 저장하고, deterministic local score를 기본 기준으로 유지한다.
@@ -8424,7 +8424,7 @@
 ## 2026-05-03 Agent Wrapper Experiment
 
 - [x] 로컬 Claude/Codex CLI의 초기 prompt 입력 표면 확인
-- [x] `pl-claude` / `pl-codex` wrapper 설계와 TDD 구현
+- [x] `lr-claude` / `lr-codex` wrapper 설계와 TDD 구현
 - [x] package bin, README/PLUGINS 문서, release packaging 반영
 - [x] dry-run/실행 smoke와 전체 검증 실행
 - [x] PR 생성, CI 확인, main merge, branch cleanup
@@ -8432,8 +8432,8 @@
 ### 판단 기준
 
 - wrapper는 초기 prompt 인자만 rewrite/approval 대상으로 삼고, interactive 입력창 내부를 계속 가로채는 것처럼 과장하지 않는다.
-- 기본값은 approval 모드이며, 진짜 딸깍 자동 rewrite는 `--pc-mode auto`로 명시한다.
-- `--pc-dry-run`은 실제 Claude/Codex를 실행하지 않고 어떤 prompt가 선택될지 privacy-safe JSON으로 검증 가능해야 한다.
+- 기본값은 approval 모드이며, 진짜 딸깍 자동 rewrite는 `--lr-mode auto`로 명시한다.
+- `--lr-dry-run`은 실제 Claude/Codex를 실행하지 않고 어떤 prompt가 선택될지 privacy-safe JSON으로 검증 가능해야 한다.
 - subcommand, auth, mcp, plugin 같은 관리 명령은 rewrite하지 않고 원 CLI로 pass-through 해야 한다.
 
 ## 2026-05-03 Coach Setup Profile
@@ -8548,8 +8548,8 @@
 ## 2026-05-03 Always-On Prompt Buddy
 
 - [x] Claude Code status line에 최신 prompt score HUD를 TDD로 추가
-- [x] Claude Code/Codex 옆 split pane에서 띄우는 `promptlane buddy` CLI를 TDD로 추가
-- [x] `/promptlane:coach` / MCP 문서와 plugin 안내를 always-on buddy 흐름과 연결
+- [x] Claude Code/Codex 옆 split pane에서 띄우는 `looprelay buddy` CLI를 TDD로 추가
+- [x] `/looprelay:coach` / MCP 문서와 plugin 안내를 always-on buddy 흐름과 연결
 - [x] privacy-safe 출력, CLI 실제 실행, release gate 검증
 - [x] 커밋, 푸시, CI 확인
 
@@ -8563,8 +8563,8 @@
 ## 2026-05-03 Unified Agent Coach
 
 - [x] `coach_prompt` MCP 통합 workflow를 TDD로 추가
-- [x] `promptlane coach --json` CLI fallback을 추가하고 top-level CLI에 연결
-- [x] Claude Code `/promptlane:coach` command와 Codex skill/default prompt를 갱신
+- [x] `looprelay coach --json` CLI fallback을 추가하고 top-level CLI에 연결
+- [x] Claude Code `/looprelay:coach` command와 Codex skill/default prompt를 갱신
 - [x] privacy-safe partial failure와 raw path/body 미노출 검증
 - [x] release gate, 커밋, 푸시, CI 확인
 
@@ -8575,7 +8575,7 @@
 - 반환값은 prompt body, raw absolute path, instruction file body, secret을 포함하지 않는다.
 - 웹 UI는 변경하지 않고 agent-facing MCP/CLI/plugin 표면만 강화한다.
 
-## 2026-05-03 Agent-Native PromptLane Workflow
+## 2026-05-03 Agent-Native LoopRelay Workflow
 
 - [x] Claude Code/Codex 안에서 바로 쓰는 핵심 workflow 범위 확정
 - [x] `score --latest`, `improve --latest` CLI fallback을 TDD로 추가
@@ -8679,7 +8679,7 @@
 
 ### 판단 기준
 
-- 사용자는 promptlane 안에서 다음 Claude Code/Codex 요청을 작성하고 바로 점수를 확인할 수 있어야 한다.
+- 사용자는 looprelay 안에서 다음 Claude Code/Codex 요청을 작성하고 바로 점수를 확인할 수 있어야 한다.
 - 초안 작성/점수 preview는 로컬 deterministic rule만 사용하고 prompt를 저장하지 않는다.
 - Practice 화면은 raw prompt archive를 새로 노출하지 않고 사용자가 직접 작성 중인 draft만 다룬다.
 
@@ -8769,7 +8769,7 @@
 ## 2026-05-03 MCP Status Preflight And Final Polish
 
 - [x] UI/UX 추가 탭 필요성 재평가
-- [x] MCP에서 promptlane 준비 상태를 확인하는 preflight tool 추가
+- [x] MCP에서 looprelay 준비 상태를 확인하는 preflight tool 추가
 - [x] README/Plugin/Tech spec에 새 MCP tool 사용 맥락 반영
 - [x] MCP 테스트와 release/browser 검증 재실행
 - [x] 커밋, 푸시, CI 확인
@@ -8859,7 +8859,7 @@
 ## 2026-05-02 Dashboard Information Architecture Split
 
 - [x] Dashboard를 overview 전용 화면으로 축소
-- [x] PromptLane, Scores, Insights를 좌측 메뉴의 독립 화면으로 분리
+- [x] LoopRelay, Scores, Insights를 좌측 메뉴의 독립 화면으로 분리
 - [x] 기존 Dashboard 섹션을 새 화면에 재배치하고 중복/과밀 표시 제거
 - [x] English/Korean UI 문구와 라우팅/E2E 기대값 갱신
 - [x] 웹 기준 Playwright 점검, 자동 검증, 커밋 및 푸시
@@ -8875,7 +8875,7 @@
 ## 2026-05-02 Dashboard Design Rebuild And Functionality Recheck
 
 - [x] `/Users/jinan/ai/awesome-design-md` 참고 기준을 프로젝트 디자인 문서와 작업 규칙에 반영
-- [x] `/Users/jinan/side-project/oh-my-ontology` 디자인 시스템을 확인하고 promptlane 기준으로 이식
+- [x] `/Users/jinan/side-project/oh-my-ontology` 디자인 시스템을 확인하고 looprelay 기준으로 이식
 - [x] warm teal/dashboard command center 스타일을 oh-my-ontology 단일 인디고 다크 시스템으로 재구축
 - [x] 낮은 점수 review queue가 실제 개선 대상만 보여주는지 실패 테스트 작성
 - [x] Prompt Habit Coach dashboard를 command center 형태로 재구축
@@ -8886,7 +8886,7 @@
 
 ### 디자인 기준
 
-- awesome-design-md는 그대로 복제하지 않고 `promptlane`의 로컬 우선 developer tool 정체성에 맞게 적용한다.
+- awesome-design-md는 그대로 복제하지 않고 `looprelay`의 로컬 우선 developer tool 정체성에 맞게 적용한다.
 - 사용자가 명시한 기준은 `/Users/jinan/side-project/oh-my-ontology`의 Linear-base dark indigo design system이다.
 - Dashboard 첫 영역은 score, biggest weakness, next fix, low-score review queue가 한눈에 들어오는 작업 화면이어야 한다.
 - 낮은 점수 큐는 높은 점수 prompt를 섞어 보여주면 안 된다.
@@ -8906,13 +8906,13 @@
 
 - 대시보드 첫 영역은 "내 프롬프트 습관이 지금 어떤 상태인지"를 바로 말해줘야 한다.
 - 점수만 나열하지 않고, 가장 자주 빠뜨리는 항목과 다음 요청에서 넣을 문장을 제안한다.
-- 낮은 점수 prompt는 review queue로 보여주고, 클릭하면 기존 상세 화면의 PromptLane로 이어진다.
+- 낮은 점수 prompt는 review queue로 보여주고, 클릭하면 기존 상세 화면의 LoopRelay로 이어진다.
 - 원문 prompt body, raw path, secret은 Dashboard에 표시하지 않는다.
 
 ## 2026-05-02 Archive Score Review / MCP Batch Scoring
 
 - [x] 누적 프롬프트 archive score 공통 엔진과 privacy-safe report 구현
-- [x] CLI `promptlane score` 추가 및 JSON/text 출력 검증
+- [x] CLI `looprelay score` 추가 및 JSON/text 출력 검증
 - [x] MCP `score_prompt_archive` 도구 추가 및 Claude/Codex 호출 문서화
 - [x] Web API와 Dashboard에서 archive score review 제공
 - [x] Claude Code slash command와 Codex plugin skill에 archive score 흐름 추가
@@ -8924,7 +8924,7 @@
 
 - 원문 프롬프트 전체를 MCP 응답으로 반환하지 않는다.
 - 기본 점수는 로컬 deterministic Prompt Quality Score를 사용한다.
-- Claude Code/Codex는 `/promptlane:score` 또는 MCP 요청 시 report를 해석하고 개선 방향을 제안한다.
+- Claude Code/Codex는 `/looprelay:score` 또는 MCP 요청 시 report를 해석하고 개선 방향을 제안한다.
 - CLI와 Web도 같은 archive score report를 사용한다.
 - 외부 LLM judge나 자동 원문 재입력은 이번 단위에서 제외한다.
 
@@ -9085,22 +9085,22 @@
 
 ## 2026-05-02 Product Identity Documentation
 
-- [x] README 첫머리에 local-first prompt memory and improvement workspace 포지셔닝 반영
+- [x] README 첫머리에 local-first loop memory and improvement workspace 포지셔닝 반영
 - [x] PRD/Phase 2 PRD/Technical Spec/Implementation Plan의 목적 문장을 같은 정체성으로 정렬
 - [x] CLAUDE.md/AGENTS.md 프로젝트 요약에 prompt coach와 패턴 분석 가치 반영
 - [x] 문서 변경 검증, 커밋 및 푸시
 
 ### 정체성 기준
 
-- `promptlane`는 단순 프롬프트 저장소가 아니다.
+- `looprelay`는 단순 프롬프트 저장소가 아니다.
 - 핵심 정체성은 "Claude Code, Codex 같은 AI 코딩 도구에 입력한 프롬프트를 로컬에 안전하게 기록하고, 다시 찾고, 분석하고, 다음 요청을 더 잘 쓰도록 돕는 developer tool"이다.
-- 제품 포지셔닝은 "AI coding prompt memory and improvement workspace, local-first"로 통일한다.
+- 제품 포지셔닝은 "AI coding loop memory and improvement workspace, local-first"로 통일한다.
 
-## 2026-05-02 PromptLane 승인형 개선 흐름
+## 2026-05-02 LoopRelay 승인형 개선 흐름
 
 - [x] local prompt improver 실패 테스트 작성
 - [x] `improvePrompt` rule 기반 개선안 생성 구현
-- [x] `promptlane improve --stdin|--text --json` CLI 추가
+- [x] `looprelay improve --stdin|--text --json` CLI 추가
 - [x] prompt detail UI에 개선안 preview와 복사 버튼 추가
 - [x] hook 자동 대체/자동 재제출은 제외하고 사용자 승인형 copy flow로 제한
 - [x] CLI/UI 실제 사용성 검증
@@ -9115,7 +9115,7 @@
 
 ### 점검 결과
 
-- `promptlane improve --text "이거 좀 고쳐줘" --json`이 승인형 copy 개선안을 생성하는 것을 확인했다.
+- `looprelay improve --text "이거 좀 고쳐줘" --json`이 승인형 copy 개선안을 생성하는 것을 확인했다.
 - 상세 화면에 "승인 후 재입력할 개선안" preview와 "개선안 복사" 버튼을 추가했다.
 - Playwright로 desktop/mobile 상세 화면을 확인했고, 개선안 복사 후 copy count가 증가했다.
 - mobile 390px에서 document horizontal overflow는 없었다.
@@ -9152,8 +9152,8 @@
 - [x] import job storage 실패 테스트 작성
 - [x] `import_jobs`, `import_records`, `import_errors` SQLite migration 추가
 - [x] raw-free import job 저장/조회/list 구현
-- [x] `promptlane import --dry-run --save-job` CLI 추가
-- [x] `promptlane import-job <id>` 조회 CLI 추가
+- [x] `looprelay import --dry-run --save-job` CLI 추가
+- [x] `looprelay import-job <id>` 조회 CLI 추가
 - [x] targeted 검증 실행
 - [x] full 검증, 커밋 및 푸시
 
@@ -9197,7 +9197,7 @@
 
 - [x] import dry-run 범위 확정
 - [x] source별 allowlist parser 실패 테스트 작성
-- [x] `promptlane import --dry-run --file <path>` CLI 추가
+- [x] `looprelay import --dry-run --file <path>` CLI 추가
 - [x] raw-free dry-run summary 출력 구현
 - [x] assistant/tool/command/file content 제외 회귀 테스트
 - [x] malformed JSONL이 전체 dry-run을 깨지 않는지 검증
@@ -9220,29 +9220,29 @@
 
 ### 점검 결과
 
-- README 상단에 Quick Start를 추가해 `promptlane` CLI 설치와 Claude Code/Codex marketplace 추가를 분리했다.
+- README 상단에 Quick Start를 추가해 `looprelay` CLI 설치와 Claude Code/Codex marketplace 추가를 분리했다.
 - marketplace plugin은 CLI binary를 설치하지 않으므로, 권장 순서를 CLI 설치 후 marketplace 추가로 명시했다.
-- Claude Code는 `/plugin marketplace add wlsdks/promptlane`, `/plugin install promptlane`, `/reload-plugins`, `/promptlane:setup` 순서로 정리했다.
-- Codex는 `codex plugin marketplace add wlsdks/promptlane` 후 `promptlane setup`으로 hook을 설치하고 Codex hooks를 활성화한다고 정리했다.
+- Claude Code는 `/plugin marketplace add wlsdks/looprelay`, `/plugin install looprelay`, `/reload-plugins`, `/looprelay:setup` 순서로 정리했다.
+- Codex는 `codex plugin marketplace add wlsdks/looprelay` 후 `looprelay setup`으로 hook을 설치하고 Codex hooks를 활성화한다고 정리했다.
 - 검증 명령: `git diff --check`, `pnpm pack:dry-run` 통과. Node 20.20.0에서 실행되어 `engines.node >=22 <25` 경고는 계속 발생한다.
 
 ## 2026-05-02 Claude HUD-style Plugin
 
 - [x] Claude Code plugin 구조 설계: marketplace, manifest, slash commands, statusLine
 - [x] 실패 테스트 작성: Claude plugin 파일, command 문서, statusLine 출력
-- [x] `.claude-plugin` marketplace/manifest와 `/promptlane:*` commands 추가
-- [x] `promptlane statusline claude-code` CLI 추가
+- [x] `.claude-plugin` marketplace/manifest와 `/looprelay:*` commands 추가
+- [x] `looprelay statusline claude-code` CLI 추가
 - [x] README/docs/package 포함 파일 갱신
 - [x] 검증 명령 실행
 - [x] 커밋 및 푸시
 
 ### 점검 결과
 
-- Claude Code repo-local marketplace 파일을 `.claude-plugin/marketplace.json`에 추가했다. 사용 흐름은 `/plugin marketplace add wlsdks/promptlane`, `/plugin install promptlane`, `/reload-plugins`다.
-- Claude Code plugin manifest `.claude-plugin/plugin.json`에 `/promptlane:setup`, `/promptlane:status`, `/promptlane:open` command 문서를 연결했다.
-- `/promptlane:setup`은 CLI 존재 여부를 먼저 확인하고, `promptlane setup --dry-run`을 보여준 뒤 승인 시 실제 setup을 실행하도록 작성했다. statusLine은 기존 Claude `statusLine`을 대체할 수 있어서 별도 승인 후 `install-statusline`을 실행하게 했다.
-- `promptlane statusline claude-code`, `install-statusline claude-code`, `uninstall-statusline claude-code`를 추가했다. statusLine은 capture on/paused/setup needed, server 상태, last ingest 상태를 한 줄로 출력한다.
-- 검증 명령: `pnpm format`, `pnpm test`, `pnpm lint`, `pnpm build`, `pnpm pack:dry-run`, `pnpm smoke:release`, `git diff --check` 통과. `pnpm promptlane install-statusline claude-code --dry-run`과 `pnpm promptlane statusline claude-code`도 실제 빌드된 CLI로 실행했다.
+- Claude Code repo-local marketplace 파일을 `.claude-plugin/marketplace.json`에 추가했다. 사용 흐름은 `/plugin marketplace add wlsdks/looprelay`, `/plugin install looprelay`, `/reload-plugins`다.
+- Claude Code plugin manifest `.claude-plugin/plugin.json`에 `/looprelay:setup`, `/looprelay:status`, `/looprelay:open` command 문서를 연결했다.
+- `/looprelay:setup`은 CLI 존재 여부를 먼저 확인하고, `looprelay setup --dry-run`을 보여준 뒤 승인 시 실제 setup을 실행하도록 작성했다. statusLine은 기존 Claude `statusLine`을 대체할 수 있어서 별도 승인 후 `install-statusline`을 실행하게 했다.
+- `looprelay statusline claude-code`, `install-statusline claude-code`, `uninstall-statusline claude-code`를 추가했다. statusLine은 capture on/paused/setup needed, server 상태, last ingest 상태를 한 줄로 출력한다.
+- 검증 명령: `pnpm format`, `pnpm test`, `pnpm lint`, `pnpm build`, `pnpm pack:dry-run`, `pnpm smoke:release`, `git diff --check` 통과. `pnpm looprelay install-statusline claude-code --dry-run`과 `pnpm looprelay statusline claude-code`도 실제 빌드된 CLI로 실행했다.
 - 현재 로컬에서는 서버가 내려가 있어 statusLine 출력은 `PM capture paused | server down | last ingest failed`였다. Node 20.20.0에서 실행되어 `engines.node >=22 <25` 경고는 계속 발생한다.
 
 ## 2026-05-02 Claude/Codex Plugin Packaging
@@ -9256,9 +9256,9 @@
 
 ### 점검 결과
 
-- Codex용 repo-local plugin 패키지를 `plugins/promptlane`에 추가했다. 구성은 `.codex-plugin/plugin.json`, `hooks.json`, `skills/promptlane/SKILL.md`다.
-- Codex plugin hook은 `UserPromptSubmit`에서 `promptlane hook codex`를 실행하며, CLI가 `PATH`에 없거나 실패하면 `|| true`로 fail-open한다. hook command에는 ingest token을 넣지 않았다.
-- Claude Code는 공식 확장 지점이 settings hook이라 `integrations/claude-code/settings.example.json`과 설명 문서를 추가했다. 일반 사용자는 `promptlane setup` 또는 `install-hook claude-code`가 더 안전하다.
+- Codex용 repo-local plugin 패키지를 `plugins/looprelay`에 추가했다. 구성은 `.codex-plugin/plugin.json`, `hooks.json`, `skills/looprelay/SKILL.md`다.
+- Codex plugin hook은 `UserPromptSubmit`에서 `looprelay hook codex`를 실행하며, CLI가 `PATH`에 없거나 실패하면 `|| true`로 fail-open한다. hook command에는 ingest token을 넣지 않았다.
+- Claude Code는 공식 확장 지점이 settings hook이라 `integrations/claude-code/settings.example.json`과 설명 문서를 추가했다. 일반 사용자는 `looprelay setup` 또는 `install-hook claude-code`가 더 안전하다.
 - README와 `docs/PLUGINS.md`에 plugin 패키징과 명시적 setup이 여전히 필요한 이유를 문서화했다.
 - `package.json` `files`에 `docs/PLUGINS.md`, `plugins`, `integrations`를 추가했고, `pnpm pack:dry-run`에서 tarball 포함을 확인했다.
 - 검증 명령: `pnpm format`, `pnpm test`, `pnpm lint`, `pnpm build`, `pnpm pack:dry-run`, `pnpm smoke:release`, `git diff --check` 통과. Node 20.20.0에서 실행되어 `engines.node >=22 <25` 경고는 계속 발생한다.
@@ -9267,18 +9267,18 @@
 
 - [x] `setup`/service 설계 범위 확정
 - [x] 실패 테스트 작성: setup dry-run, hook install, macOS service plist
-- [x] `promptlane setup` 구현
-- [x] `promptlane service install/start/status/stop` 구현
+- [x] `looprelay setup` 구현
+- [x] `looprelay service install/start/status/stop` 구현
 - [x] README에 명시적 setup 필요 이유와 간단 사용법 추가
 - [x] 검증 명령 실행
 - [x] 커밋 및 푸시
 
 ### 점검 결과
 
-- `promptlane setup`은 data dir 초기화, Claude Code/Codex hook 자동 감지 설치, macOS LaunchAgent 서버 등록을 한 번에 수행한다.
+- `looprelay setup`은 data dir 초기화, Claude Code/Codex hook 자동 감지 설치, macOS LaunchAgent 서버 등록을 한 번에 수행한다.
 - package install만으로 사용자 설정 파일이나 로그인 서비스를 바꾸지 않는 이유를 README에 명시했다. `setup`은 사용자가 로컬 설정 변경을 승인하는 명시적 단계다.
-- `promptlane setup --dry-run`으로 어떤 설정이 바뀔지 먼저 확인할 수 있고, `--no-service`로 hook만 설치한 뒤 서버는 수동 실행할 수 있다.
-- `promptlane service install/status/start/stop`을 추가했다. 현재 자동 서비스 등록은 macOS LaunchAgent만 지원하고, 다른 OS에서는 unsupported 결과를 돌려준다.
+- `looprelay setup --dry-run`으로 어떤 설정이 바뀔지 먼저 확인할 수 있고, `--no-service`로 hook만 설치한 뒤 서버는 수동 실행할 수 있다.
+- `looprelay service install/status/start/stop`을 추가했다. 현재 자동 서비스 등록은 macOS LaunchAgent만 지원하고, 다른 OS에서는 unsupported 결과를 돌려준다.
 - 검증 명령: `pnpm format`, `pnpm test`, `pnpm lint`, `pnpm build`, `pnpm pack:dry-run`, `pnpm smoke:release`, `git diff --check` 통과. Node 20.20.0에서 실행되어 `engines.node >=22 <25` 경고는 계속 발생한다.
 
 ## 2026-05-02 Hook 재점검 및 동작 설명
@@ -9295,7 +9295,7 @@
 - 처음 재점검에서 서버가 내려가 있어 `doctor`의 `server.ok=false`였다. hook은 fail-open이라 도구 사용은 막지 않지만, 서버가 내려가 있으면 저장되지 않는다.
 - 서버를 foreground로 실행한 상태에서 설치된 hook command 문자열을 그대로 읽어 stdin payload를 넣었고, Claude Code/Codex 모두 새 prompt가 저장됐다.
 - 저장 확인: 최신 2건이 각각 `claude-code-v1`, `codex-v1` adapter로 `indexed` 상태였고, `password/access_token`과 API key 계열 값은 마스킹됐다.
-- 결론: hook 등록은 한 번 설치하면 유지된다. 다만 저장을 하려면 `promptlane server`가 떠 있어야 한다. 현재 MVP에는 OS 로그인 시 서버 자동 시작 등록 기능은 없다.
+- 결론: hook 등록은 한 번 설치하면 유지된다. 다만 저장을 하려면 `looprelay server`가 떠 있어야 한다. 현재 MVP에는 OS 로그인 시 서버 자동 시작 등록 기능은 없다.
 
 ## 2026-05-02 Claude Code/Codex 실제 Hook 연동 점검
 
@@ -9312,8 +9312,8 @@
 
 - 실제 CLI 존재: `claude --version`은 `2.1.126 (Claude Code)`, `codex --version`은 `codex-cli 0.128.0`.
 - 최초 상태: 기본 data dir 기준 `doctor claude-code`, `doctor codex` 모두 server/token/hook 미설정이었다.
-- 실제 설치: `promptlane init`으로 기본 promptlane data dir을 초기화했고, `install-hook claude-code`, `install-hook codex`를 실행했다. Claude 설정은 `~/.claude/settings.json`, Codex 설정은 `~/.codex/hooks.json`, `~/.codex/config.toml`에 설치됐다.
-- 발견/수정: 설치된 hook command가 `promptlane hook ...` 전역 명령을 가정해 실제 셸에서 `command not found`가 났다. installer를 수정해 `PROMPTLANE_HOOK="..." "<node>" "<repo>/dist/cli/index.js" hook ...` 형태의 절대 실행 명령을 기록하고 기존 hook도 갱신하게 했다.
+- 실제 설치: `looprelay init`으로 기본 looprelay data dir을 초기화했고, `install-hook claude-code`, `install-hook codex`를 실행했다. Claude 설정은 `~/.claude/settings.json`, Codex 설정은 `~/.codex/hooks.json`, `~/.codex/config.toml`에 설치됐다.
+- 발견/수정: 설치된 hook command가 `looprelay hook ...` 전역 명령을 가정해 실제 셸에서 `command not found`가 났다. installer를 수정해 `LOOPRELAY_HOOK="..." "<node>" "<repo>/dist/cli/index.js" hook ...` 형태의 절대 실행 명령을 기록하고 기존 hook도 갱신하게 했다.
 - 실제 저장 검증: 설치된 설정 파일의 command 문자열을 그대로 읽어 `sh -c`로 실행했고, Claude Code payload와 Codex payload가 각각 `claude-code-v1`, `codex-v1`로 저장됐다.
 - 보안 확인: 실제 저장된 두 prompt 모두 `password/access_token` 계열은 `[REDACTED:secret_assignment]`, API key 계열은 `[REDACTED:api_key]`로 마스킹됐다.
 - doctor 결과: Claude Code와 Codex 모두 server/token/settings ok. Codex는 `codexHooksEnabled=true`, `duplicateHooks=false`, `hookSources=["user"]`. 마지막 ingest status는 `ok=true`, `status=200`.
@@ -9351,7 +9351,7 @@
 
 ### 점검 결과
 
-- `localhost:3100`은 `excalidraw-mcp-server`였고, `promptlane`는 임시 data dir `/tmp/promptlane-devtools.5BogJo`로 `http://127.0.0.1:17373`에서 별도 실행했다.
+- `localhost:3100`은 `excalidraw-mcp-server`였고, `looprelay`는 임시 data dir `/tmp/looprelay-devtools.5BogJo`로 `http://127.0.0.1:17373`에서 별도 실행했다.
 - 샘플 prompt 3건을 ingest했고, 1건은 삭제 흐름 확인 후 정상 삭제되어 최종 UI에는 2건이 남았다.
 - 목록, 검색, 태그 필터, 민감정보 필터, 상세 분석 preview, prompt 복사 이벤트, bookmark, 삭제 modal/confirm, dashboard, settings를 Chrome DevTools MCP로 확인했다.
 - desktop 1440x900, mobile 390x844에서 screenshot과 accessibility snapshot을 확인했고, mobile horizontal overflow는 없었다.
@@ -9428,7 +9428,7 @@
 - [x] Codex hook wrapper route 테스트 작성
 - [x] Codex doctor feature flag/hook/중복 탐지 테스트 작성
 - [x] `install-hook codex` / `uninstall-hook codex` 구현
-- [x] `promptlane hook codex` 구현
+- [x] `looprelay hook codex` 구현
 - [x] `doctor codex` 구현
 - [x] targeted/full 검증 실행
 - [x] 커밋 및 푸시
@@ -9511,7 +9511,7 @@
 
 - CI matrix는 이번 작업에서 제외한다.
 - 스모크는 배포 산출물인 `dist/cli/index.js`를 직접 실행해서 사용자가 받을 CLI 흐름을 검증한다.
-- 실제 사용자 `~/.claude`, `~/.codex`, `~/.promptlane`를 건드리지 않도록 임시 HOME과 임시 data dir만 사용한다.
+- 실제 사용자 `~/.claude`, `~/.codex`, `~/.looprelay`를 건드리지 않도록 임시 HOME과 임시 data dir만 사용한다.
 - 샌드박스에서는 로컬 포트 listen이 `EPERM`으로 막혀 `pnpm smoke:release`를 권한 상승으로 실행했고 통과했다.
 - `pnpm format`, `pnpm test`, `pnpm lint`, `pnpm build`, `pnpm pack:dry-run`, `pnpm smoke:release`, `git diff --check`를 통과했다.
 
@@ -9597,7 +9597,7 @@
   - [x] `pnpm pack:dry-run`
   - [x] `git diff --check`
 - [x] 로컬 디자인 가이드 구조와 관련 예시 확인
-- [x] `promptlane` 전용 `DESIGN.md` 재작성
+- [x] `looprelay` 전용 `DESIGN.md` 재작성
   - [x] Visual Theme & Atmosphere
   - [x] Color Palette & Roles
   - [x] Typography Rules
@@ -9622,7 +9622,7 @@
 ### P12 설계 메모
 
 - `awesome-design-md`의 목적은 특정 사이트 복제가 아니라 AI가 반복해서 따를 수 있는 명확한 디자인 문서다.
-- `promptlane`는 마케팅 사이트가 아니라 로컬 운영형 developer tool이므로 첫 화면은 계속 실제 archive/list로 둔다.
+- `looprelay`는 마케팅 사이트가 아니라 로컬 운영형 developer tool이므로 첫 화면은 계속 실제 archive/list로 둔다.
 - 시각 방향은 Linear의 정밀한 정보 밀도와 Cursor의 따뜻한 로컬 도구 톤을 참고하되, 자체 색상/컴포넌트 언어로 유지한다.
 
 ## P13 Feature Discovery / Usability Review
@@ -10268,7 +10268,7 @@
 
 - [x] CLI command surface 확인
 - [x] 임시 data dir에서 init/server/ingest/list/search/show/delete/rebuild 동작 확인
-- [x] PromptLane improve, import, anonymized export 동작 확인
+- [x] LoopRelay improve, import, anonymized export 동작 확인
 - [x] Benchmark, release smoke, browser E2E 실행
 - [x] 실제 기능 목록과 한계 정리
 
@@ -10293,18 +10293,18 @@
 
 - [x] MCP tool 계약 설계: 사용자 요청에 따라 current prompt text 또는 저장 prompt id를 점수화
 - [x] MCP tool handler 단위 테스트 추가
-- [x] `promptlane mcp` stdio JSON-RPC 서버 구현
+- [x] `looprelay mcp` stdio JSON-RPC 서버 구현
 - [x] Claude Code/Codex 연결 문서화
 - [x] 직접 JSON-RPC smoke, test/lint/build/pack 검증
 - [x] 커밋 및 PR 브랜치 푸시
 
 ### 설계 메모
 
-- MCP 서버는 `promptlane mcp`로 실행되는 stdio JSON-RPC 서버다.
+- MCP 서버는 `looprelay mcp`로 실행되는 stdio JSON-RPC 서버다.
 - 노출 tool은 `score_prompt` 하나만 둔다. 입력은 `prompt`, `prompt_id`, `latest: true` 중 정확히 하나다.
 - 직접 전달된 prompt text는 저장하지 않고, 결과에도 prompt body를 반환하지 않는다.
 - 저장 prompt scoring은 기존 SQLite analysis를 읽고 score/checklist metadata만 반환한다.
-- Claude Code는 `claude mcp add --transport stdio promptlane -- promptlane mcp`, Codex는 `codex mcp add promptlane -- promptlane mcp`로 연결하도록 문서화했다.
+- Claude Code는 `claude mcp add --transport stdio looprelay -- looprelay mcp`, Codex는 `codex mcp add looprelay -- looprelay mcp`로 연결하도록 문서화했다.
 
 ## 2026-05-08 Multi-Track Improvement Pass
 
@@ -10383,25 +10383,25 @@
 - [ ] 운영 후 첫 scheduled artifact 결과 확인.
 ## 2026-07-05 Codex Plugin Setup-Driven Hooks
 
-- [x] RED: Add packaging regressions that the Codex marketplace plugin does not bundle active hooks and points users through explicit `promptlane setup`.
+- [x] RED: Add packaging regressions that the Codex marketplace plugin does not bundle active hooks and points users through explicit `looprelay setup`.
 - [x] GREEN: Remove active bundled Codex hooks from the plugin manifest/package docs while preserving setup-installed user-level hooks.
 - [x] VERIFY: Run focused packaging tests, full gates, push a coherent PR, merge, and prune the branch.
 
 ## 2026-07-05 Codex Plugin Hook Event Mapping
 
-- [x] RED: Add packaging regression coverage that each bundled Codex plugin hook event uses the matching `PROMPTLANE_HOOK` lifecycle marker.
-- [x] GREEN: Fix `plugins/promptlane/hooks.json` so `UserPromptSubmit`, `Stop`, `PreCompact`, and `PostCompact` no longer point at shifted markers.
+- [x] RED: Add packaging regression coverage that each bundled Codex plugin hook event uses the matching `LOOPRELAY_HOOK` lifecycle marker.
+- [x] GREEN: Fix `plugins/looprelay/hooks.json` so `UserPromptSubmit`, `Stop`, `PreCompact`, and `PostCompact` no longer point at shifted markers.
 - [x] VERIFY: Run focused packaging tests, full gates, push a coherent PR, merge, and prune the branch.
 
-## 2026-07-05 PromptLane Hook And Docs Copy
+## 2026-07-05 LoopRelay Hook And Docs Copy
 
-- [x] RED: Add regression coverage for rewrite-guard hook context headers and docs copy that should describe product surfaces as PromptLane while preserving `promptlane` command/id compatibility.
-- [x] GREEN: Update hook copy plus README/PLUGINS/reuse-audit wording for PromptLane-facing storage/server surfaces.
+- [x] RED: Add regression coverage for rewrite-guard hook context headers and docs copy that should describe product surfaces as LoopRelay while preserving `looprelay` command/id compatibility.
+- [x] GREEN: Update hook copy plus README/PLUGINS/reuse-audit wording for LoopRelay-facing storage/server surfaces.
 - [x] VERIFY: Run focused tests, full gates, push a coherent PR, merge, and prune the branch.
 
-## 2026-07-05 PromptLane CLI Infrastructure Help Copy
+## 2026-07-05 LoopRelay CLI Infrastructure Help Copy
 
-- [x] RED: Add regression coverage for CLI infrastructure help and MCP readiness copy that should use PromptLane as the product surface while preserving `promptlane` command compatibility.
+- [x] RED: Add regression coverage for CLI infrastructure help and MCP readiness copy that should use LoopRelay as the product surface while preserving `looprelay` command compatibility.
 - [x] GREEN: Update CLI/web help copy for server, MCP, hooks, status line, and service setup without renaming runtime IDs or command namespaces.
 - [x] VERIFY: Run focused tests, full test/lint/build/pack dry-run gates, push a coherent PR, merge, and prune the branch.
 
@@ -10417,10 +10417,10 @@
 - [x] GREEN: `scripts/browser-e2e.mjs` now uses shared clipboard failure helpers and verifies `Copy draft` plus `Copy saved draft` fallback paths.
 - [x] VERIFY: Run browser E2E, full test/lint/build/pack dry-run gates, push a coherent PR, merge, and prune the branch.
 
-## 2026-07-05 PromptLane Audit Refresh After Fallback Coverage
+## 2026-07-05 LoopRelay Audit Refresh After Fallback Coverage
 
 - [x] EVIDENCE: `main` is at `d6dfcc4` after PR #359, no open PRs, and no scheduled `ui-patrol` run has appeared yet.
-- [x] DOCS: Refresh `NEXT_BACKLOG` and `PROMPTLANE_GOAL_AUDIT_2026-07-05.md` so they cite PR #358/#359 reuse fallback coverage instead of the stale #357/#346 state.
+- [x] DOCS: Refresh `NEXT_BACKLOG` and `LOOPRELAY_GOAL_AUDIT_2026-07-05.md` so they cite PR #358/#359 reuse fallback coverage instead of the stale #357/#346 state.
 - [x] VERIFY: Run docs/search checks plus full test/lint/build/pack dry-run gates, push a coherent PR, merge, and prune the branch.
 
 ## 2026-07-05 Package Dry-Run Lifecycle Gates
@@ -10432,7 +10432,7 @@
 
 ## 2026-07-05 Loop Read Storage Capability Guard
 
-- [x] RED: `/api/v1/loops` returns 200 with an empty PromptLane state when `listLoopSnapshots` is missing.
+- [x] RED: `/api/v1/loops` returns 200 with an empty LoopRelay state when `listLoopSnapshots` is missing.
 - [x] GREEN: Loop read routes now require loop snapshot, compact boundary, loop memory, and merge decision storage through the shared capability helper.
 - [x] PRIVACY: Missing capability responses use one raw-free local configuration problem and do not expose method names or local paths.
 - [x] VERIFY: Run focused tests and full local gates.
@@ -10467,10 +10467,10 @@
 - [x] VERIFY: Focused tests, browser E2E, full test/lint/build, pack dry-run, and diff check passed.
 - [x] INTEGRATE: PR #368 was merged to `main`; branch was pruned.
 
-## 2026-07-05 PromptLane Audit Reuse Drift Guard
+## 2026-07-05 LoopRelay Audit Reuse Drift Guard
 
-- [x] RED: Add a focused packaging/docs drift test requiring the PromptLane goal audit and next backlog to cite PR #366, PR #367, and PR #368 saved-draft reuse work.
-- [x] GREEN: Refresh the PromptLane goal audit and next backlog so saved-draft reuse is documented as the current completed flow instead of a stale active slice.
+- [x] RED: Add a focused packaging/docs drift test requiring the LoopRelay goal audit and next backlog to cite PR #366, PR #367, and PR #368 saved-draft reuse work.
+- [x] GREEN: Refresh the LoopRelay goal audit and next backlog so saved-draft reuse is documented as the current completed flow instead of a stale active slice.
 - [x] VERIFY: Focused test, full test/lint/build, pack dry-run, and diff check passed.
 - [x] INTEGRATE: PR #369 was merged to `main`; branch was pruned.
 
@@ -10490,164 +10490,164 @@
 
 ## 2026-07-05 Goal Audit And Backlog Drift Guard
 
-- [x] RED: Add a focused packaging/docs drift test requiring the PromptLane goal audit and next backlog to cite latest merged evidence through PR #371 and stop carrying completed MCP/reuse follow-up text.
-- [x] GREEN: Refresh `docs/PROMPTLANE_GOAL_AUDIT_2026-07-05.md` and `docs/NEXT_BACKLOG.md` so completed audit follow-ups are closed and only scheduled UI patrol plus approval-gated native ask dogfood remain.
+- [x] RED: Add a focused packaging/docs drift test requiring the LoopRelay goal audit and next backlog to cite latest merged evidence through PR #371 and stop carrying completed MCP/reuse follow-up text.
+- [x] GREEN: Refresh `docs/LOOPRELAY_GOAL_AUDIT_2026-07-05.md` and `docs/NEXT_BACKLOG.md` so completed audit follow-ups are closed and only scheduled UI patrol plus approval-gated native ask dogfood remain.
 - [x] VERIFY: Focused test, full test/lint/build, pack dry-run, and diff check passed.
 - [x] INTEGRATE: PR #372 was merged to `main`; branch was pruned.
 
-## 2026-07-05 CLI Root PromptLane Help Copy
+## 2026-07-05 CLI Root LoopRelay Help Copy
 
-- [x] RED: Add a focused CLI help-copy test requiring root `promptlane --help` to present PromptLane as an agent loop memory and meta-prompting workbench while preserving the `promptlane` command id.
-- [x] GREEN: Update the root CLI description to the PromptLane workbench positioning for Codex and Claude Code.
+- [x] RED: Add a focused CLI help-copy test requiring root `looprelay --help` to present LoopRelay as an agent loop memory and meta-prompting workbench while preserving the `looprelay` command id.
+- [x] GREEN: Update the root CLI description to the LoopRelay workbench positioning for Codex and Claude Code.
 - [x] VERIFY: Focused test, full test/lint/build, pack dry-run, and diff check passed.
 - [x] INTEGRATE: PR #373 was merged to `main`; branch was pruned.
 
-## 2026-07-05 PromptLane Repositioning Design
+## 2026-07-05 LoopRelay Repositioning Design
 
-- [x] RED: Add a focused packaging/docs drift test requiring a PromptLane repositioning spec before replacing PromptLane branding.
-- [x] GREEN: Add `docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md` with PromptLane product naming, PromptLane rejection, prompt improvement first positioning, compatibility rules, migration slices, TDD guard requirements, and package inclusion.
+- [x] RED: Add a focused packaging/docs drift test requiring a LoopRelay repositioning spec before replacing LoopRelay branding.
+- [x] GREEN: Add `docs/superpowers/specs/2026-07-05-looprelay-repositioning-design.md` with LoopRelay product naming, LoopRelay rejection, prompt improvement first positioning, compatibility rules, migration slices, TDD guard requirements, and package inclusion.
 - [x] VERIFY: Focused test, placeholder/path scan, full test/lint/build, pack dry-run, and diff check passed.
 - [x] INTEGRATE: PR #374 was merged to `main`; branch was pruned.
 
-## 2026-07-05 PromptLane Product Contract
+## 2026-07-05 LoopRelay Product Contract
 
-- [x] RED: Add packaging drift guards requiring PromptLane product-facing metadata, README first viewport, `docs/PROMPTLANE.md`, and `docs/PROMPTLANE.md` legacy status while preserving `promptlane` runtime ids.
-- [x] GREEN: Update README/README.ko, package and plugin metadata, Codex skill copy, AGENTS/CLAUDE/INSTRUCTION routing, NEXT_BACKLOG, PACKAGE_CONTENTS, root CLI/help/hook/coach/buddy copy, and runtime inventory to PromptLane-first wording.
+- [x] RED: Add packaging drift guards requiring LoopRelay product-facing metadata, README first viewport, `docs/LOOPRELAY.md`, and `docs/LOOPRELAY.md` legacy status while preserving `looprelay` runtime ids.
+- [x] GREEN: Update README/README.ko, package and plugin metadata, Codex skill copy, AGENTS/CLAUDE/INSTRUCTION routing, NEXT_BACKLOG, PACKAGE_CONTENTS, root CLI/help/hook/coach/buddy copy, and runtime inventory to LoopRelay-first wording.
 - [x] VERIFY: Focused packaging and CLI/hook tests passed; full `corepack pnpm test` passed.
 - [x] INTEGRATE: PR #375 was merged to `main`; branch was pruned.
 
-## 2026-07-05 PromptLane Core Docs Alignment
+## 2026-07-05 LoopRelay Core Docs Alignment
 
-- [x] RED: Add packaging/docs drift guard requiring shipped core docs (`ARCHITECTURE`, `AGENT-HARNESS`, `PLUGINS`, `TECH_SPEC`) to name PromptLane as the prompt improvement workspace with loop-aware continuation while preserving `promptlane` runtime ids.
-- [x] GREEN: Align core doc product boundaries, harness wording, plugin MCP wording, and tech spec purpose to PromptLane-first positioning.
+- [x] RED: Add packaging/docs drift guard requiring shipped core docs (`ARCHITECTURE`, `AGENT-HARNESS`, `PLUGINS`, `TECH_SPEC`) to name LoopRelay as the coding-agent continuity and evidence layer with loop-aware continuation while preserving `looprelay` runtime ids.
+- [x] GREEN: Align core doc product boundaries, harness wording, plugin MCP wording, and tech spec purpose to LoopRelay-first positioning.
 - [x] VERIFY: Focused packaging test, full test/lint/build, pack dry-run, and diff check passed.
 - [x] INTEGRATE: PR #376 was merged to `main`; branch was pruned.
 
-## 2026-07-05 PromptLane PromptLane Boundary
+## 2026-07-05 LoopRelay LoopRelay Boundary
 
-- [x] RED: Add focused packaging/docs and MCP drift guards requiring active product docs and agent-facing tool descriptions to avoid presenting `PromptLane` as a service name.
-- [x] GREEN: Replace active README, release checklist, tech spec, implementation-plan, and MCP `improve_prompt` `PromptLane` labels with PromptLane improvement-draft wording while preserving `promptlane` runtime IDs.
+- [x] RED: Add focused packaging/docs and MCP drift guards requiring active product docs and agent-facing tool descriptions to avoid presenting `LoopRelay` as a service name.
+- [x] GREEN: Replace active README, release checklist, tech spec, implementation-plan, and MCP `improve_prompt` `LoopRelay` labels with LoopRelay improvement-draft wording while preserving `looprelay` runtime IDs.
 - [x] VERIFY: Focused packaging and MCP tests, full test/lint/build, pack dry-run, and diff check passed.
 - [x] INTEGRATE: PR #377 was merged to `main`; branch was pruned.
 
-## 2026-07-05 PromptLane Plugin Surface Copy
+## 2026-07-05 LoopRelay Plugin Surface Copy
 
-- [x] RED: Update packaging tests to require Claude Code marketplace metadata and slash command docs to present PromptLane, while preserving `promptlane` command IDs and `promptlane` compatibility alias where explicitly documented.
-- [x] GREEN: Replace PromptLane-facing marketplace and slash command titles/descriptions with PromptLane wording without changing command filenames or runtime IDs.
+- [x] RED: Update packaging tests to require Claude Code marketplace metadata and slash command docs to present LoopRelay, while preserving `looprelay` command IDs and `looprelay` compatibility alias where explicitly documented.
+- [x] GREEN: Replace LoopRelay-facing marketplace and slash command titles/descriptions with LoopRelay wording without changing command filenames or runtime IDs.
 - [x] VERIFY: Focused packaging test, full test/lint/build, pack dry-run, and diff check passed.
 - [x] INTEGRATE: PR #379 was merged to `main`; branch was pruned.
 
-## 2026-07-05 PromptLane Runtime Surface Copy
+## 2026-07-05 LoopRelay Runtime Surface Copy
 
-- [x] RED: Add focused MCP, storage, web readiness, and CLI loop tests requiring user-facing runtime copy to say PromptLane while preserving `promptlane` commands and `get_promptlane_status` compatibility names.
-- [x] GREEN: Replace PromptLane-facing runtime descriptions, local archive/server messages, instruction-memory headings, and loop status labels with PromptLane wording without renaming internal types or compatibility tool names.
+- [x] RED: Add focused MCP, storage, web readiness, and CLI loop tests requiring user-facing runtime copy to say LoopRelay while preserving `looprelay` commands and `get_looprelay_status` compatibility names.
+- [x] GREEN: Replace LoopRelay-facing runtime descriptions, local archive/server messages, instruction-memory headings, and loop status labels with LoopRelay wording without renaming internal types or compatibility tool names.
 - [x] VERIFY: Focused tests, full test/lint/build, pack dry-run, and diff check passed.
 - [x] INTEGRATE: PR #381 was merged to `main`; branch was pruned.
 
-## 2026-07-05 PromptLane Safety Guidance Copy
+## 2026-07-05 LoopRelay Safety Guidance Copy
 
-- [x] RED: Use focused API/web guidance tests and literal scans to prove safety/privacy guidance no longer needs to expose `PromptLane` as the product name.
-- [x] GREEN: Replace safety guidance phrases such as `PromptLane does not ...`, `outside PromptLane`, and `PromptLane records ...` with PromptLane wording while preserving internal `PromptLaneStatus` compatibility identifiers.
+- [x] RED: Use focused API/web guidance tests and literal scans to prove safety/privacy guidance no longer needs to expose `LoopRelay` as the product name.
+- [x] GREEN: Replace safety guidance phrases such as `LoopRelay does not ...`, `outside LoopRelay`, and `LoopRelay records ...` with LoopRelay wording while preserving internal `LoopRelayStatus` compatibility identifiers.
 - [x] VERIFY: Focused API/web tests, full test/lint/build, pack dry-run, and diff check passed.
 - [x] INTEGRATE: PR #383 was merged to `main`; branch was pruned.
 
 ## 2026-07-08 MCP First Prompt Next Step
 
 - [x] RED: Add focused MCP status expectations for setup-needed and empty archives to require a concrete first prompt action.
-- [x] GREEN: Update `get_promptlane_status` next actions to point users through `promptlane setup --profile coach --register-mcp`, then one Codex or Claude Code prompt, then `coach_prompt` or status recheck.
+- [x] GREEN: Update `get_looprelay_status` next actions to point users through `looprelay setup --profile coach --register-mcp`, then one Codex or Claude Code prompt, then `coach_prompt` or status recheck.
 - [x] VERIFY: Focused MCP status/server checks and diff hygiene passed.
-- [x] INTEGRATE: Commit prepared from `codex/promptlane-mcp-status-first-step` for PR.
+- [x] INTEGRATE: Commit prepared from `codex/looprelay-mcp-status-first-step` for PR.
 
 ## 2026-07-08 Loop MCP Setup Guidance
 
 - [x] RED: Add focused loop MCP status coverage for unavailable storage setup guidance.
-- [x] GREEN: Update `get_promptlane_loop_status` setup-needed next action to use `promptlane setup --profile coach --register-mcp` before loop collection.
+- [x] GREEN: Update `get_looprelay_loop_status` setup-needed next action to use `looprelay setup --profile coach --register-mcp` before loop collection.
 - [x] VERIFY: Focused loop MCP/server checks and diff hygiene passed.
-- [x] INTEGRATE: Commit prepared from `codex/promptlane-loop-mcp-setup-guidance` for PR.
+- [x] INTEGRATE: Commit prepared from `codex/looprelay-loop-mcp-setup-guidance` for PR.
 
 ## 2026-07-08 Goal Audit Evidence Alignment
 
 - [x] RED: Add focused packaging guards requiring the goal audit and backlog to cite PR #512/#513 and stop carrying stale scheduled-ui-patrol/native-dialog blockers.
-- [x] GREEN: Refresh `docs/PROMPTLANE_GOAL_AUDIT_2026-07-05.md` and `docs/NEXT_BACKLOG.md` to match current local `quality-evidence` status, local browser evidence, approved native-dialog evidence, and first-step MCP guidance.
+- [x] GREEN: Refresh `docs/LOOPRELAY_GOAL_AUDIT_2026-07-05.md` and `docs/NEXT_BACKLOG.md` to match current local `quality-evidence` status, local browser evidence, approved native-dialog evidence, and first-step MCP guidance.
 - [x] VERIFY: Focused packaging guard, `quality-evidence`, and diff hygiene passed.
-- [x] INTEGRATE: Commit prepared from `codex/promptlane-goal-audit-evidence-alignment` for PR.
+- [x] INTEGRATE: Commit prepared from `codex/looprelay-goal-audit-evidence-alignment` for PR.
 
 ## 2026-07-08 Goal Audit Baseline Copy
 
 - [x] RED: Add a focused packaging guard that rejects the stale `Latest merged main commit at audit time` label in the long-lived goal audit.
 - [x] GREEN: Rename the fixed `2f99c10` pointer to an initial audit baseline and clarify that later merged PR evidence extends it.
 - [x] VERIFY: Focused packaging guard and diff hygiene passed.
-- [x] INTEGRATE: Commit prepared from `codex/promptlane-goal-audit-baseline-copy` for PR.
+- [x] INTEGRATE: Commit prepared from `codex/looprelay-goal-audit-baseline-copy` for PR.
 
 ## 2026-07-08 Quality Evidence Release Gate Guidance
 
 - [x] RED: Add focused CLI and packaging expectations requiring `quality-evidence` JSON/text to expose the local release gate commands before goal completion claims.
-- [x] GREEN: Add `release_gate` to `scripts/quality-95-evidence.mjs`, render it in `promptlane quality-evidence`, and document the field in backlog/9.5 plan.
+- [x] GREEN: Add `release_gate` to `scripts/quality-95-evidence.mjs`, render it in `looprelay quality-evidence`, and document the field in backlog/9.5 plan.
 - [x] VERIFY: Focused CLI, packaging, quality-evidence, build, built-CLI output, and diff hygiene checks passed.
-- [x] INTEGRATE: Commit prepared from `codex/promptlane-quality-release-gate-guidance` for PR.
+- [x] INTEGRATE: Commit prepared from `codex/looprelay-quality-release-gate-guidance` for PR.
 
 ## 2026-07-08 Quality Release Gate Checklist Alignment
 
 - [x] RED: Expand focused `quality-evidence` CLI expectations so `release_gate` matches `docs/RELEASE_CHECKLIST.md` verification commands.
 - [x] GREEN: Add format, benchmark, browser E2E, release smoke, and built product CLI quality-evidence checks to the structured `release_gate`, backlog, and 9.5 plan.
 - [x] VERIFY: Focused CLI, packaging, quality-evidence, build, built-CLI output, and diff hygiene checks passed.
-- [x] INTEGRATE: Commit prepared from `codex/promptlane-quality-release-gate-checklist-alignment` for PR.
+- [x] INTEGRATE: Commit prepared from `codex/looprelay-quality-release-gate-checklist-alignment` for PR.
 
 ## 2026-07-08 Release Stability Evidence Policy Alignment
 
 - [x] RED: Add a focused packaging guard requiring release stability evidence to stop carrying scheduled UI patrol and native-dialog blocker language while listing the full `release_gate`.
 - [x] GREEN: Refresh `docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md` to use local browser evidence, approved native-dialog evidence, and the checklist-aligned local release gate.
 - [x] VERIFY: Focused packaging guard, `quality-evidence`, stale blocker scan, and diff hygiene checks passed.
-- [x] INTEGRATE: Commit prepared from `codex/promptlane-release-evidence-policy-alignment` for PR.
+- [x] INTEGRATE: Commit prepared from `codex/looprelay-release-evidence-policy-alignment` for PR.
 
 ## 2026-07-08 Quality Plan Native Evidence Alignment
 
 - [x] RED: Add a focused packaging guard requiring the 9.5 quality plan to cite approved native-dialog evidence and reject stale pending/blocker language.
 - [x] GREEN: Refresh the 9.5 quality plan completion-state copy to match current complete `quality-evidence` output and the approved native-dialog audit.
 - [x] VERIFY: Focused packaging guards, `quality-evidence`, stale blocker scan, and diff hygiene passed.
-- [x] INTEGRATE: Commit prepared from `codex/promptlane-quality-plan-native-evidence-alignment` for PR.
+- [x] INTEGRATE: Commit prepared from `codex/looprelay-quality-plan-native-evidence-alignment` for PR.
 
 ## 2026-07-08 Backlog Quality Completion Alignment
 
 - [x] RED: Add a focused packaging guard requiring `docs/NEXT_BACKLOG.md` to stop carrying stale native-dialog pending/blocker copy after quality evidence became complete.
 - [x] GREEN: Refresh the backlog 9.5 quality section to describe current complete evidence, future operator-gated recommendations, and explicit-approval-only native-dialog dogfood.
 - [x] VERIFY: Focused packaging guard, stale backlog scan, `quality-evidence`, and diff hygiene passed.
-- [x] INTEGRATE: Commit prepared from `codex/promptlane-backlog-quality-completion-alignment` for PR.
+- [x] INTEGRATE: Commit prepared from `codex/looprelay-backlog-quality-completion-alignment` for PR.
 
 ## 2026-07-08 Prompt List Query Hook Extraction
 
 - [x] RED: Add focused prompt-list query tests for replace/append behavior, search cursor hiding, and row patching.
 - [x] GREEN: Extract prompt list loading, cursor, and summary patch state from `App.tsx` into `usePromptListQuery`.
 - [x] VERIFY: Focused web query tests, web typecheck, touched-code formatting check, and diff hygiene passed.
-- [x] INTEGRATE: Commit prepared from `codex/promptlane-prompt-list-query-hook` for PR.
+- [x] INTEGRATE: Commit prepared from `codex/looprelay-prompt-list-query-hook` for PR.
 
 ## 2026-07-08 Dashboard Query Hook Extraction
 
 - [x] RED: Add focused dashboard query tests for view-gated dashboard, archive score, and coach feedback loading decisions.
 - [x] GREEN: Extract dashboard/archive score/coach feedback automatic loading state from `App.tsx` into `useDashboardQuery`.
 - [x] VERIFY: Focused dashboard/list query tests, web typecheck, touched-code formatting check, and diff hygiene passed.
-- [x] INTEGRATE: Commit prepared from `codex/promptlane-dashboard-query-hook` for PR.
+- [x] INTEGRATE: Commit prepared from `codex/looprelay-dashboard-query-hook` for PR.
 
 ## 2026-07-08 Workspace Query Hook Extraction
 
 - [x] RED: Add focused workspace query tests for projects/loops view-gated loading and project row patching.
 - [x] GREEN: Extract projects and loops list automatic loading state from `App.tsx` into `useWorkspaceQuery` while leaving loop worktree navigation in `App.tsx`.
 - [x] VERIFY: Focused workspace/dashboard query tests, web typecheck, touched-code formatting check, and diff hygiene passed.
-- [x] INTEGRATE: Commit prepared from `codex/promptlane-workspace-query-hook` for PR.
+- [x] INTEGRATE: Commit prepared from `codex/looprelay-workspace-query-hook` for PR.
 
 ## 2026-07-08 Loop Worktree Query Hook Extraction
 
 - [x] RED: Add focused workspace query tests for cached loop worktree detail matching and loop route navigation decisions.
 - [x] GREEN: Move loop worktree detail state, route-triggered loading, and worktree selection navigation into `useWorkspaceQuery`.
 - [x] VERIFY: Focused workspace/dashboard query tests, web typecheck, touched-code formatting check, and diff hygiene passed.
-- [x] INTEGRATE: Commit prepared from `codex/promptlane-loop-worktree-query-hook` for PR.
+- [x] INTEGRATE: Commit prepared from `codex/looprelay-loop-worktree-query-hook` for PR.
 
 ## 2026-07-08 Prompt Selection Hook Extraction
 
 - [x] RED: Add focused prompt selection tests for immutable toggle behavior and visible-row select-all behavior.
 - [x] GREEN: Extract bulk-selection state and helpers from `App.tsx` into `usePromptSelection`.
 - [x] VERIFY: Focused prompt selection/list query tests, web typecheck, touched-code formatting check, and diff hygiene passed.
-- [x] INTEGRATE: Commit prepared from `codex/promptlane-prompt-selection-hook` for PR.
+- [x] INTEGRATE: Commit prepared from `codex/looprelay-prompt-selection-hook` for PR.
 
 ## 2026-07-08 App View Model Extraction
 
@@ -10682,7 +10682,7 @@
 ## 2026-07-08 Project Empty State Model Extraction
 
 - [x] RED: Add a focused project empty-state test requiring the explicit coach setup command.
-- [x] GREEN: Extract project empty-state copy from `App.tsx` into `project-empty-state` and align the command with `promptlane setup --profile coach`.
+- [x] GREEN: Extract project empty-state copy from `App.tsx` into `project-empty-state` and align the command with `looprelay setup --profile coach`.
 - [x] VERIFY: Focused project/prompt empty-state tests and web typecheck passed.
 
 ## 2026-07-08 Sidebar Storage Extraction
@@ -10771,7 +10771,7 @@
 
 ## 2026-07-08 Doctor Service Recovery Guidance
 
-- [x] RED: Add focused doctor output expectation requiring server-down recovery to mention `promptlane service start` before falling back to foreground `promptlane server`.
+- [x] RED: Add focused doctor output expectation requiring server-down recovery to mention `looprelay service start` before falling back to foreground `looprelay server`.
 - [x] GREEN: Align doctor server recovery guidance with setup's background-service path while preserving setup fallback for uninstalled services.
 - [x] VERIFY: Focused doctor/setup/start tests, typecheck, and diff hygiene passed.
 
@@ -10801,8 +10801,8 @@
 
 ## 2026-07-08 Doctor Default Data Dir Inference
 
-- [x] RED: Add focused ingest diagnosis test requiring a running `promptlane server` without `--data-dir` to count as the default data directory when the configured doctor data-dir is custom.
-- [x] GREEN: Infer the default PromptLane data directory for bound server commands that omit `--data-dir` so owner mismatch diagnosis stays accurate and raw-free.
+- [x] RED: Add focused ingest diagnosis test requiring a running `looprelay server` without `--data-dir` to count as the default data directory when the configured doctor data-dir is custom.
+- [x] GREEN: Infer the default LoopRelay data directory for bound server commands that omit `--data-dir` so owner mismatch diagnosis stays accurate and raw-free.
 - [x] VERIFY: Focused ingest diagnosis/doctor tests, typecheck, touched-file formatting, and diff hygiene passed.
 
 ## 2026-07-08 Effectiveness Backlog Drift Guard
@@ -10813,7 +10813,7 @@
 
 ## 2026-07-08 MCP Custom Data Dir Setup Guidance
 
-- [x] RED: Add focused `get_promptlane_status` test requiring setup-needed MCP
+- [x] RED: Add focused `get_looprelay_status` test requiring setup-needed MCP
   guidance to mention custom `--data-dir` initialization without echoing raw
   local paths.
 - [x] GREEN: Add a raw-free custom storage next action to setup-needed MCP
@@ -10825,21 +10825,21 @@
 
 - [x] RED: Extend focused `coach_prompt` setup guidance test so the one-call
   agent brief must include the raw-free custom `--data-dir` recovery action.
-- [x] GREEN: Reuse `get_promptlane_status` setup next actions in not-ready
+- [x] GREEN: Reuse `get_looprelay_status` setup next actions in not-ready
   coach briefs while preserving start/server/doctor recovery guidance.
 - [x] VERIFY: Focused MCP score-tool/server tests, typecheck, touched-file
   formatting, and diff hygiene passed.
 
 ## 2026-07-08 Loop MCP Custom Data Dir Guidance
 
-- [x] RED: Extend focused `get_promptlane_loop_status` setup guidance test so
+- [x] RED: Extend focused `get_looprelay_loop_status` setup guidance test so
   custom `--data-dir` recovery appears without echoing raw local paths.
 - [x] GREEN: Add the same raw-free custom storage next action to loop MCP
   setup-needed responses.
 - [x] VERIFY: Focused loop MCP tests, MCP server tests, typecheck,
   touched-file formatting, and diff hygiene passed.
 
-## 2026-07-08 PromptLane Release Evidence Quality CLI Ledger
+## 2026-07-08 LoopRelay Release Evidence Quality CLI Ledger
 
 - [x] CHECK: release smoke now verifies the built product `quality-evidence --require-complete`, but local/release evidence ledgers still described release smoke as ending at import/export/delete cleanup.
 - [x] RED: packaging guard requires `quality evidence CLI gate` in the local 9.5 evidence, backlog, 9.5 plan, and release stability evidence, exposing stale ledger text.
@@ -10870,7 +10870,7 @@
 - [x] VERIFY: focused dashboard-query/App-adjacent tests, touched TypeScript
       formatting, typecheck, and diff hygiene checks.
 
-## 2026-07-08 PromptLane 1.0.0 Release Surface Prep
+## 2026-07-08 LoopRelay 1.0.0 Release Surface Prep
 
 - [x] CHECK: git had no release tags, while package/plugin/shared version and
       publishing docs still pointed at `0.1.0-beta.0` / beta publish flow.
@@ -10885,7 +10885,7 @@
 
 ## 2026-07-10 Prompt Improvement Effect Attribution
 
-- [x] CONTRACT: Separate a linked loop result from evidence that a PromptLane
+- [x] CONTRACT: Separate a linked loop result from evidence that a LoopRelay
       improvement draft was actually used.
 - [x] RED: Require unattributed passing loop outcomes to remain `unproven` and
       require explicit prompt-id attribution before a `proven` verdict.
@@ -10941,7 +10941,7 @@
 - [x] GREEN: Preserve the safe ids through CLI, MCP, and web API status while
       keeping prompt bodies and raw paths absent.
 - [x] GREEN: Explain that `--used-improvement-prompt` is selected only when a
-      PromptLane improvement was actually used; otherwise attribution is omitted.
+      LoopRelay improvement was actually used; otherwise attribution is omitted.
 - [x] VERIFY: Run focused status/CLI/MCP/API/privacy/package tests, lint, build,
       pack, and live status checks before retagging `v1.0.0`.
 
@@ -11005,10 +11005,10 @@
 
 - [x] CHECK: Real fixtures can prove an attributed outcome and compare product
       versions, but cannot compare an equivalent baseline loop with a loop that
-      explicitly used a PromptLane improvement.
+      explicitly used a LoopRelay improvement.
 - [x] RED: Require optional raw-free `effect_pair` baseline/treatment fixtures,
       complete pair validation, and a non-causal paired observational report.
-- [x] GREEN: Report baseline and PromptLane pass rates, pass-rate delta, outcome
+- [x] GREEN: Report baseline and LoopRelay pass rates, pass-rate delta, outcome
       transitions, minimum sample status, and `causal_claim: false` without
       turning the soft real signal into a release gate.
 - [x] ALIGN: Update the fixture example, benchmark spec, backlog, release
@@ -11026,7 +11026,7 @@
       prepare-pair` command with explicit baseline/treatment ids, pair id,
       shared query, consent, private permissions, and no overwrite.
 - [x] GREEN: Validate distinct prompts, matching Codex/Claude tool, completed
-      safe evidence, baseline `improvement_used: false`, and PromptLane
+      safe evidence, baseline `improvement_used: false`, and LoopRelay
       `improvement_used: true` before writing a runnable pair.
 - [x] ALIGN: Add installed help/package smoke and benchmark runbook guidance
       without exposing prompt bodies, evidence refs, ids, or output paths.
@@ -11060,7 +11060,7 @@
       tools/list entry, and structured tools/call result.
 - [x] GREEN: Derive MCP catalogue and dispatch from the same registry while
       preserving all 21 existing handlers and adding body-free baseline and
-      PromptLane candidate groups as tool 22.
+      LoopRelay candidate groups as tool 22.
 - [x] ALIGN: Update initialize instructions, plugin/README tool lists, ADR
       migration state, package guards, and privacy wording.
 - [x] VERIFY: Run focused registry/tool/server/privacy/package tests, stdio
@@ -11071,10 +11071,10 @@
 
 - [x] AUDIT: Confirm `main`, the annotated local `v1.0.0` tag, and the remote
       tag resolve to commit `106bbf899d8243f31e122a7496208b144bedc869`.
-- [x] AUDIT: Confirm `promptlane@1.0.0` is absent from npm and GitHub has no
+- [x] AUDIT: Confirm `looprelay@1.0.0` is absent from npm and GitHub has no
       `v1.0.0` Release; do not describe the product as publicly launched.
 - [x] VERIFY: Run real installed Codex and Claude Code prompts that each ingest
-      successfully and call `get_promptlane_status`; both MCP calls returned
+      successfully and call `get_looprelay_status`; both MCP calls returned
       `ready`, and both live doctors reported recent ingest and `ready`.
 - [x] VERIFY: Run the local tarball `smoke:package-install`; isolated install,
       three packaged binaries, and the installed first-success path passed.
@@ -11087,12 +11087,12 @@
 - [ ] AUTH: Complete interactive `npm login`; current preflight passes every
       check except npm authentication (`E401`).
 - [ ] RELEASE: Run the full local release gate once immediately before publish,
-      rerun npm preflight, publish `promptlane@1.0.0`, and create the GitHub
+      rerun npm preflight, publish `looprelay@1.0.0`, and create the GitHub
       Release from the same immutable `v1.0.0` tag.
 - [ ] POST-PUBLISH: Repeat clean install from the npm registry and record
       install failures, elapsed first-value time, and recovery steps.
 - [x] VALIDATE: Collect 10 operator-reviewed matched pairs across at least three
-      task types. The ten-pair aggregate is baseline 80% versus PromptLane 50%,
+      task types. The ten-pair aggregate is baseline 80% versus LoopRelay 50%,
       with zero improvements, three regressions, five unchanged passes, two
       unchanged failures, treatment adoption 10/10, and privacy leaks 0. Keep
       the result non-causal.
@@ -11115,7 +11115,7 @@
       are already owner-only, keeping read-only diagnostics usable.
 - [x] VERIFY: Focused analysis, MCP, CLI, statusline, and storage tests pass.
 - [x] VALIDATE: Run six new remediation-focused matched pairs. Human end-state
-      results were 6/6 versus 6/6 with no lift; PromptLane added 73.5% elapsed
+      results were 6/6 versus 6/6 with no lift; LoopRelay added 73.5% elapsed
       time, 42.9% command events, and 45.8% input tokens.
 - [ ] RELEASE: Preserve the existing `v1.0.0` tag and choose a new candidate
       version only after remediation evidence is positive.
@@ -11124,7 +11124,7 @@
 
 - [x] FREEZE: Define six read-only repository tasks, deterministic ground truth,
       one output schema, fixed Codex model, and equal execution budget.
-- [x] PREPARE: Generate PromptLane treatments locally and record whether each
+- [x] PREPARE: Generate LoopRelay treatments locally and record whether each
       treatment is a rewrite, no-op, or refusal before running agents.
 - [x] RUN: Execute twelve fresh ephemeral Codex sessions in counterbalanced
       baseline/treatment order without allowing repository writes.
@@ -11145,3 +11145,23 @@
 - [x] VERIFY: Focused analysis/CLI/MCP/packaging tests and type checks passed.
       Six-input replay preserved every prompt with 138ms mean local diagnosis;
       this is not a user-answered task-outcome claim.
+
+## 2026-07-11 LoopRelay Complete Identity Migration
+
+- [x] INVENTORY: Classify every product filename, symbol, runtime
+      id, package surface, plugin surface, doc, config, and live local state.
+- [x] RENAME: Make LoopRelay/looprelay the only package, CLI, MCP, slash,
+      plugin, hook, service, statusline, data-directory, and code identity.
+- [x] DATA: Move existing local data to `~/.looprelay`, verify integrity, and
+      remove the old runtime directory without keeping a compatibility alias.
+- [x] PRODUCT: Reframe README and canonical docs around local continuity and
+      evidence for long-running coding-agent loops.
+- [x] STRENGTHEN: Make session/worktree/branch recovery, continuation briefs,
+      outcome linkage, approved memory, instruction proposals, diagnosis-first
+      questions, and recurring failure detection the primary workflows.
+- [x] VERIFY: Run focused tests during migration, then one final full gate and
+      live Codex/Claude MCP plus doctor checks.
+- [x] GITHUB: Rename the repository to `wlsdks/looprelay`, update remotes and
+      metadata, and prove all public surfaces resolve to the new repository.
+- [x] ZERO-SCAN: Require zero previous product identity remnants outside Git
+      history before declaring the migration complete.

@@ -8,8 +8,8 @@ import {
 } from "./agent-judge-tool-definitions.js";
 import { ARCHIVE_EFFECTIVENESS_SUMMARY_SCHEMA } from "./archive-effectiveness-summary-schema.js";
 import { PROMPT_EFFECTIVENESS_SCHEMA } from "./prompt-effectiveness-schema.js";
-import type { PromptLaneMcpToolDefinition } from "./score-tool-definition-types.js";
-export type { PromptLaneMcpToolDefinition } from "./score-tool-definition-types.js";
+import type { LoopRelayMcpToolDefinition } from "./score-tool-definition-types.js";
+export type { LoopRelayMcpToolDefinition } from "./score-tool-definition-types.js";
 export {
   PREPARE_AGENT_REWRITE_TOOL_DEFINITION,
   RECORD_AGENT_REWRITE_TOOL_DEFINITION,
@@ -63,14 +63,14 @@ const TOOL_ERROR_OUTPUT_SCHEMA = {
   },
 } as const;
 
-export const GET_PROMPTLANE_STATUS_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
+export const GET_LOOPRELAY_STATUS_TOOL_DEFINITION: LoopRelayMcpToolDefinition =
   {
-    name: "get_promptlane_status",
+    name: "get_looprelay_status",
     description:
-      "Check whether the local PromptLane archive is initialized and has captured prompts before calling scoring tools. Use this first when the user asks if promptlane is working, whether Claude Code/Codex prompts are being captured, or which promptlane MCP tool to call next. Returns local readiness, safe counts, latest prompt metadata, available tool names, and next actions. It never returns prompt bodies, raw absolute paths, secrets, or external LLM results.",
+      "Check whether the local LoopRelay archive is initialized and has captured prompts before calling scoring tools. Use this first when the user asks if looprelay is working, whether Claude Code/Codex prompts are being captured, or which looprelay MCP tool to call next. Returns local readiness, safe counts, latest prompt metadata, available tool names, and next actions. It never returns prompt bodies, raw absolute paths, secrets, or external LLM results.",
     annotations: {
       ...LOCAL_READ_ONLY_TOOL_ANNOTATIONS,
-      title: "PromptLane status preflight",
+      title: "LoopRelay status preflight",
     },
     inputSchema: {
       type: "object",
@@ -134,10 +134,10 @@ export const GET_PROMPTLANE_STATUS_TOOL_DEFINITION: PromptLaneMcpToolDefinition 
     },
   } as const;
 
-export const SCORE_PROMPT_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
+export const SCORE_PROMPT_TOOL_DEFINITION: LoopRelayMcpToolDefinition = {
   name: "score_prompt",
   description:
-    "Score a coding prompt with promptlane's local deterministic 0-100 Prompt Quality Score. Use this when the user asks Claude Code or Codex to evaluate the current request, a pasted prompt, a stored prompt id, or the latest captured prompt. The tool does not call external LLMs, does not store direct prompt input, and does not return prompt bodies.",
+    "Score a coding prompt with looprelay's local deterministic 0-100 Prompt Quality Score. Use this when the user asks Claude Code or Codex to evaluate the current request, a pasted prompt, a stored prompt id, or the latest captured prompt. The tool does not call external LLMs, does not store direct prompt input, and does not return prompt bodies.",
   annotations: {
     ...LOCAL_READ_ONLY_TOOL_ANNOTATIONS,
     title: "Prompt quality score",
@@ -153,7 +153,7 @@ export const SCORE_PROMPT_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
       prompt_id: {
         type: "string",
         description:
-          "Stored prompt id to score from the local PromptLane archive.",
+          "Stored prompt id to score from the local LoopRelay archive.",
       },
       latest: {
         type: "boolean",
@@ -222,7 +222,7 @@ export const SCORE_PROMPT_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
   },
 } as const;
 
-export const IMPROVE_PROMPT_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
+export const IMPROVE_PROMPT_TOOL_DEFINITION: LoopRelayMcpToolDefinition = {
   name: "improve_prompt",
   description:
     "Diagnose prompt gaps locally without changing the prompt by default. Set rewrite=true only when the user explicitly asks for a full copy-ready rewrite. The tool never auto-submits a draft, never calls external LLMs, does not store direct prompt input, and never returns the original stored prompt body.",
@@ -241,12 +241,12 @@ export const IMPROVE_PROMPT_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
       prompt_id: {
         type: "string",
         description:
-          "Stored prompt id to improve from the local PromptLane archive without returning the original stored body.",
+          "Stored prompt id to improve from the local LoopRelay archive without returning the original stored body.",
       },
       latest: {
         type: "boolean",
         description:
-          "Set true to improve the latest stored prompt in the local PromptLane archive.",
+          "Set true to improve the latest stored prompt in the local LoopRelay archive.",
       },
       language: {
         type: "string",
@@ -353,11 +353,11 @@ export const IMPROVE_PROMPT_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
   },
 } as const;
 
-export const SCORE_PROMPT_ARCHIVE_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
+export const SCORE_PROMPT_ARCHIVE_TOOL_DEFINITION: LoopRelayMcpToolDefinition =
   {
     name: "score_prompt_archive",
     description:
-      "Score the local PromptLane archive across many stored Claude Code or Codex prompts. Use this when the user asks to evaluate accumulated prompt habits, score all recent prompts, find low scoring prompts, summarize recurring prompt quality gaps, or prepare the next better request. The result is a local-only aggregate report with distribution, recurring gaps, a practice plan, a next prompt template, and low-score metadata; it does not return prompt bodies, raw paths, or call external LLMs.",
+      "Score the local LoopRelay archive across many stored Claude Code or Codex prompts. Use this when the user asks to evaluate accumulated prompt habits, score all recent prompts, find low scoring prompts, summarize recurring prompt quality gaps, or prepare the next better request. The result is a local-only aggregate report with distribution, recurring gaps, a practice plan, a next prompt template, and low-score metadata; it does not return prompt bodies, raw paths, or call external LLMs.",
     annotations: {
       ...LOCAL_READ_ONLY_TOOL_ANNOTATIONS,
       title: "Archive prompt habit score",
@@ -553,11 +553,11 @@ export const SCORE_PROMPT_ARCHIVE_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
     },
   } as const;
 
-export const REVIEW_PROJECT_INSTRUCTIONS_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
+export const REVIEW_PROJECT_INSTRUCTIONS_TOOL_DEFINITION: LoopRelayMcpToolDefinition =
   {
     name: "review_project_instructions",
     description:
-      "Review a local project's Claude Code/Codex instruction files such as AGENTS.md and CLAUDE.md using promptlane's deterministic local rubric. Use this when the user asks whether project rules are good enough, wants agent instructions scored, or wants suggestions for improving coding-agent behavior. With no project_id, set latest=true or omit project_id to review the most recently captured project. The tool can rescan local instruction files, but returns only file metadata, checklist scores, and suggestions; it never returns file bodies, raw absolute paths, or calls external LLMs.",
+      "Review a local project's Claude Code/Codex instruction files such as AGENTS.md and CLAUDE.md using looprelay's deterministic local rubric. Use this when the user asks whether project rules are good enough, wants agent instructions scored, or wants suggestions for improving coding-agent behavior. With no project_id, set latest=true or omit project_id to review the most recently captured project. The tool can rescan local instruction files, but returns only file metadata, checklist scores, and suggestions; it never returns file bodies, raw absolute paths, or calls external LLMs.",
     annotations: {
       ...LOCAL_READ_ONLY_TOOL_ANNOTATIONS,
       title: "Project instruction review",
@@ -568,7 +568,7 @@ export const REVIEW_PROJECT_INSTRUCTIONS_TOOL_DEFINITION: PromptLaneMcpToolDefin
         project_id: {
           type: "string",
           description:
-            "Optional promptlane project id from the Projects UI/API. Use this for an exact project.",
+            "Optional looprelay project id from the Projects UI/API. Use this for an exact project.",
         },
         latest: {
           type: "boolean",
@@ -715,10 +715,10 @@ export const REVIEW_PROJECT_INSTRUCTIONS_TOOL_DEFINITION: PromptLaneMcpToolDefin
     },
   } as const;
 
-export const COACH_PROMPT_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
+export const COACH_PROMPT_TOOL_DEFINITION: LoopRelayMcpToolDefinition = {
   name: "coach_prompt",
   description:
-    "Run promptlane's one-call agent coaching workflow for Claude Code or Codex. Use this when the user asks to coach the latest request, check whether the prompt is good enough, improve it, summarize recurring habits, review project rules, or generate the next better request without opening the web UI. It combines local status, latest prompt score, approval-required rewrite, archive habit review, and optional AGENTS.md/CLAUDE.md rule review. It is read-only, local-only, never auto-submits drafts, and never returns prompt bodies, raw paths, instruction file bodies, secrets, or external LLM results.",
+    "Run looprelay's one-call agent coaching workflow for Claude Code or Codex. Use this when the user asks to coach the latest request, check whether the prompt is good enough, improve it, summarize recurring habits, review project rules, or generate the next better request without opening the web UI. It combines local status, latest prompt score, approval-required rewrite, archive habit review, and optional AGENTS.md/CLAUDE.md rule review. It is read-only, local-only, never auto-submits drafts, and never returns prompt bodies, raw paths, instruction file bodies, secrets, or external LLM results.",
   annotations: {
     ...LOCAL_READ_ONLY_TOOL_ANNOTATIONS,
     title: "One-call prompt coach",
@@ -774,7 +774,7 @@ export const COACH_PROMPT_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
     properties: {
       mode: { const: "agent_coach" },
       generated_at: { type: "string" },
-      status: GET_PROMPTLANE_STATUS_TOOL_DEFINITION.outputSchema,
+      status: GET_LOOPRELAY_STATUS_TOOL_DEFINITION.outputSchema,
       latest_score: SCORE_PROMPT_TOOL_DEFINITION.outputSchema,
       improvement: IMPROVE_PROMPT_TOOL_DEFINITION.outputSchema,
       archive: SCORE_PROMPT_ARCHIVE_TOOL_DEFINITION.outputSchema,

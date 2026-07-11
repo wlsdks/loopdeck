@@ -1,4 +1,4 @@
-# promptlane Implementation Plan
+# looprelay Implementation Plan
 
 Date: 2026-05-01
 
@@ -13,13 +13,13 @@ Related docs:
 
 ## 1. Purpose
 
-This plan breaks `promptlane` into implementation phases and release gates.
+This plan breaks `looprelay` into implementation phases and release gates.
 
 The product identity is:
 
-> AI coding prompt memory and improvement workspace, local-first.
+> AI coding loop memory and improvement workspace, local-first.
 
-The implementation goal is to help Claude Code and Codex users safely record prompts locally, find them again, understand weak prompting habits, and write better next requests through a copy-based PromptLane improvement workflow.
+The implementation goal is to help Claude Code and Codex users safely record prompts locally, find them again, understand weak prompting habits, and write better next requests through a copy-based LoopRelay improvement workflow.
 
 ## 2. Engineering Principles
 
@@ -65,7 +65,7 @@ The beta is implementation-complete when:
 - Markdown and SQLite/FTS rows are created
 - CLI can list/search/show/delete/open prompts
 - web UI can list/search/detail/delete prompts
-- PromptLane can create, copy, and save improvement drafts
+- LoopRelay can create, copy, and save improvement drafts
 - Prompt Rewrite Guard can optionally block low-score prompts and copy a local
   rewrite for manual resubmission
 - project capture/export policies are enforced
@@ -90,7 +90,7 @@ corepack pnpm e2e:browser
 corepack pnpm smoke:release
 corepack pnpm smoke:package-install
 corepack pnpm evidence:quality -- --require-complete
-corepack pnpm promptlane quality-evidence --require-complete
+corepack pnpm looprelay quality-evidence --require-complete
 git diff --check
 ```
 
@@ -158,7 +158,7 @@ Before the first stable npm publish:
 - verify `npm whoami`
 - verify package name availability or ownership
 - create or refresh the annotated git tag before npm publish preflight:
-  `git tag -fa v1.0.0 -m "promptlane 1.0.0"`
+  `git tag -fa v1.0.0 -m "looprelay 1.0.0"`
 - run `corepack pnpm npm-publish:preflight`
 - publish with `npm publish --tag latest`
 
@@ -181,7 +181,7 @@ Deferred from the 1.0.0 stable release:
 
 1. Expand smoke coverage across macOS, Linux, and Windows when product support
    requires it.
-2. Collect real-user feedback on PromptLane improvement usefulness.
+2. Collect real-user feedback on LoopRelay improvement usefulness.
 3. Decide whether to add web import upload.
 4. Decide whether semantic search can remain local-first.
 5. Revisit external/tool-assisted analysis only with explicit opt-in, preview,

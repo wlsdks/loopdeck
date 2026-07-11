@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to promptlane will be documented in this file.
+All notable changes to looprelay will be documented in this file.
 
 The format follows a simple reverse-chronological release log.
 
@@ -8,17 +8,17 @@ The format follows a simple reverse-chronological release log.
 
 This is the first stable public release. The release covers local capture, storage,
 search, deletion, prompt analysis, project policy, transcript import,
-anonymized export, PromptLane drafts, Prompt Practice workspace, MCP scoring
+anonymized export, LoopRelay drafts, Prompt Practice workspace, MCP scoring
 tools, benchmark/release validation, and an English/Korean web UI.
 
 ### Added
 
 #### Setup and capture
 
-- `promptlane setup`, `promptlane init`, `promptlane doctor`,
-  `promptlane hook`, `promptlane install-hook`/`uninstall-hook`,
-  `promptlane statusline`/`install-statusline`/`uninstall-statusline`,
-  and `promptlane service` for guided local installation and diagnostics.
+- `looprelay setup`, `looprelay init`, `looprelay doctor`,
+  `looprelay hook`, `looprelay install-hook`/`uninstall-hook`,
+  `looprelay statusline`/`install-statusline`/`uninstall-statusline`,
+  and `looprelay service` for guided local installation and diagnostics.
   Service errors expose stable codes and raw-free recovery hints, including the
   current macOS `Could not find service` wording as `not_loaded`.
 - Doctor distinguishes configured-but-unverified or stale hook runtime state
@@ -28,22 +28,22 @@ tools, benchmark/release validation, and an English/Korean web UI.
 - `setup --profile coach` to register a low-friction rewrite guidance profile
   through hook context, with a Claude Code status line installed when
   Claude Code is detected.
-- `setup --register-mcp` to register `promptlane mcp` with detected
+- `setup --register-mcp` to register `looprelay mcp` with detected
   Claude Code and/or Codex CLIs.
-- `promptlane start --open-web` to launch the local server and open the
+- `looprelay start --open-web` to launch the local server and open the
   web workspace on a new agent session.
 - Health exposes a random per-server-boot UUID so explicit
   `SessionStart --open-web` setup opens the workspace once per running server,
   not once per agent session.
 - Claude Code hook wrapper, settings install, and doctor checks.
 - Codex beta hook adapter, install, and doctor checks.
-- `promptlane buddy` for hook diagnostics during a live session.
+- `looprelay buddy` for hook diagnostics during a live session.
 
 #### Storage and recovery
 
 - Markdown source-of-truth archive with SQLite/FTS search index.
 - Hard delete across Markdown, DB rows, FTS, events, and drafts.
-- `promptlane rebuild-index` to reconstruct the SQLite index from the
+- `looprelay rebuild-index` to reconstruct the SQLite index from the
   Markdown archive.
 - Project quality profiles persisted in SQLite.
 - Reused-prompt focus, duplicate prompt candidate detection, and
@@ -64,11 +64,11 @@ tools, benchmark/release validation, and an English/Korean web UI.
   summary, sensitive count, residual identifier count, and small-set warning.
 - English/Korean language switch.
 
-#### PromptLane and Prompt Practice
+#### LoopRelay and Prompt Practice
 
 - Local rule-based analysis preview (`local-rules-v1`) and checklist.
-- `promptlane improve` and `promptlane coach` commands.
-- Approval-based PromptLane with copy/save improvement draft, latest-saved
+- `looprelay improve` and `looprelay coach` commands.
+- Approval-based LoopRelay with copy/save improvement draft, latest-saved
   draft fetch, and related-draft cleanup on prompt deletion.
 - Coach follow-up commands and recommended next agent action.
 - Prompt Practice workspace with one-click builder, fixed-draft copy action,
@@ -76,16 +76,16 @@ tools, benchmark/release validation, and an English/Korean web UI.
 
 #### Import and export
 
-- `promptlane import` with `--dry-run`, `--save-job`, `--execute`,
-  `--resume`, and `promptlane import-job` for transcript import jobs.
+- `looprelay import` with `--dry-run`, `--save-job`, `--execute`,
+  `--resume`, and `looprelay import-job` for transcript import jobs.
 - Capture-disabled project import skip and imported-only filtering.
-- `promptlane export --anonymized` with `--preview` and `--job` for
+- `looprelay export --anonymized` with `--preview` and `--job` for
   raw-free anonymized export.
 
 #### MCP and agent workflows
 
-- Local stdio MCP server (`promptlane mcp`) with prompt scoring tools.
-- `promptlane loop outcome` for recording a privacy-validated result on the
+- Local stdio MCP server (`looprelay mcp`) with prompt scoring tools.
+- `looprelay loop outcome` for recording a privacy-validated result on the
   latest or selected snapshot before proposing or approving durable memory.
 - Stop-hook loop snapshots are scoped to the current hook session so stale
   prompts from another session in the same project are not reused as evidence.
@@ -109,7 +109,7 @@ tools, benchmark/release validation, and an English/Korean web UI.
 
 #### Validation and packaging
 
-- Installed `promptlane benchmark` command with synthetic/real fixture
+- Installed `looprelay benchmark` command with synthetic/real fixture
   selection and an explicit operator-owned `--fixture-file` path for local,
   consent-bearing redacted effectiveness signals, plus no-overwrite
   `benchmark init-fixture` setup for the shipped private-permission template.
@@ -117,14 +117,14 @@ tools, benchmark/release validation, and an English/Korean web UI.
   replaces every example and explicitly sets `template_only` to `false`.
   Real benchmark runs now derive effectiveness only from operator-confirmed
   outcome metadata; prompt-only corpora remain explicitly unproven.
-  Optional matched `effect_pair` fixtures now report baseline-versus-PromptLane
+  Optional matched `effect_pair` fixtures now report baseline-versus-LoopRelay
   pass-rate direction and transitions while requiring complete attribution,
   at least three pairs for a directional status, and `causal_claim: false`.
-  `promptlane benchmark prepare-pair` can create one private fixture containing
+  `looprelay benchmark prepare-pair` can create one private fixture containing
   repeated matched pairs from explicitly selected archive prompts after consent
   and attribution checks.
-  `promptlane benchmark pair-candidates` separates body-free no-improvement
-  baseline ids from explicitly attributed PromptLane treatment ids without
+  `looprelay benchmark pair-candidates` separates body-free no-improvement
+  baseline ids from explicitly attributed LoopRelay treatment ids without
   exposing snapshot or outcome content.
   The read-only `get_paired_benchmark_candidates` MCP tool exposes the same
   groups to Codex and Claude Code, and an explicit static MCP registry now
@@ -162,7 +162,7 @@ tools, benchmark/release validation, and an English/Korean web UI.
   Korean section headers, copy, and safety notes.
 - `score_prompt_archive` returns Korean practice plan, gap rule labels,
   and next-prompt template when `language: "ko"` is set.
-- `coach_prompt` and `promptlane coach --language ko` forward the
+- `coach_prompt` and `looprelay coach --language ko` forward the
   language argument all the way through the archive call.
 - Hook rewrite-guard emits Korean block/context messages for Korean
   prompts; web UI auto-detects Korean from `navigator.language` on first
@@ -172,7 +172,7 @@ tools, benchmark/release validation, and an English/Korean web UI.
 
 - Web prompt detail shows per-criterion `earned/weight` next to each
   checklist item so the score is no longer a single opaque number.
-- `promptlane show <id> --explain` renders the same per-axis breakdown
+- `looprelay show <id> --explain` renders the same per-axis breakdown
   on the terminal.
 - MCP `score_prompt` already returns the breakdown; the plugin doc now
   describes it explicitly so agents can relay the per-axis explanation.
@@ -188,7 +188,7 @@ tools, benchmark/release validation, and an English/Korean web UI.
 - Many CLI/MCP/hook errors now end with a working example or a next
   command (import dry-run/execute, export preset, prompts open,
   doctor last-ingest, MCP score/improve/rewrite/judge empty paths,
-  pm-\* wrapper `--pc-help`).
+  pm-\* wrapper `--lr-help`).
 
 ### Changed
 
@@ -204,7 +204,7 @@ tools, benchmark/release validation, and an English/Korean web UI.
 - Solo-maintainer PR rules documented so that stable release merges no longer
   require an external approving review while remaining gated on Node 22 and
   Node 24 CI plus resolved conversations.
-- Prompt-memory product identity statement aligned across docs, CLI help,
+- LoopRelay product identity statement aligned across docs, CLI help,
   setup output, and Coach surface text.
 
 ### Fixed
@@ -212,7 +212,7 @@ tools, benchmark/release validation, and an English/Korean web UI.
 - Installed Claude Code and Codex hooks now use a stable absolute CLI path
   so that hook execution survives `npm`/`pnpm` global path differences.
 - Existing Claude Code status line commands are preserved and chained when
-  the promptlane status line is installed, and restored on uninstall.
+  the looprelay status line is installed, and restored on uninstall.
 - Multiline Claude Code status line output is preserved instead of being
   collapsed to a single line.
 - Web filter controls now have stable accessible names so that screen
@@ -223,7 +223,7 @@ tools, benchmark/release validation, and an English/Korean web UI.
   with the next-step hint added in the same release.
 - Claude Code adapter normalizes `session_id` before hashing it into
   the idempotency key, matching Codex behavior.
-- `promptlane open <id>` validates the id before printing a URL,
+- `looprelay open <id>` validates the id before printing a URL,
   matching `show`/`delete`. The `runImportDryRun` ENOENT now produces
   a friendly message that does not echo the resolved local path.
 
@@ -240,10 +240,10 @@ tools, benchmark/release validation, and an English/Korean web UI.
 - Privacy regression checks for Markdown, SQLite, FTS, browser APIs, import
   jobs, export jobs, hook output, and npm publish tokens across every
   surface.
-- PromptLane output redaction hardened so that improvement drafts and
+- LoopRelay output redaction hardened so that improvement drafts and
   follow-up commands do not leak prompt body, raw paths, or tokens.
 - Agent judge / MCP rewrite handoff is opt-in and routes through the user's
-  active Claude Code/Codex/Gemini CLI session; promptlane does not extract
+  active Claude Code/Codex/Gemini CLI session; looprelay does not extract
   or proxy provider credentials and does not call external LLMs from its own
   process.
 - Pre-publish privacy audit grep mirrors the live detector list so a

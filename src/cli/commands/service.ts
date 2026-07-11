@@ -41,17 +41,17 @@ export type ServiceInstallResult = {
   startError?: string;
 };
 
-const SERVICE_LABEL = "com.promptlane.server";
+const SERVICE_LABEL = "com.looprelay.server";
 
 export function registerServiceCommand(program: Command): void {
   const service = program
     .command("service")
-    .description("Manage the PromptLane background service.");
+    .description("Manage the LoopRelay background service.");
 
   service
     .command("install")
-    .description("Install a login service for the local PromptLane server.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .description("Install a login service for the local LoopRelay server.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--plist-path <path>", "Override macOS LaunchAgent plist path.")
     .option("--dry-run", "Print intended service change without writing.")
     .option("--no-start", "Install service without starting it now.")
@@ -75,7 +75,7 @@ export function registerServiceCommand(program: Command): void {
 
   service
     .command("start")
-    .description("Start the PromptLane service on supported platforms.")
+    .description("Start the LoopRelay service on supported platforms.")
     .option("--plist-path <path>", "Override macOS LaunchAgent plist path.")
     .option("--json", "Print machine-readable JSON instead of plain text.")
     .action((options: ServiceActionOptions & { json?: boolean }) => {
@@ -92,7 +92,7 @@ export function registerServiceCommand(program: Command): void {
 
   service
     .command("stop")
-    .description("Stop the PromptLane service on supported platforms.")
+    .description("Stop the LoopRelay service on supported platforms.")
     .option("--plist-path <path>", "Override macOS LaunchAgent plist path.")
     .option("--json", "Print machine-readable JSON instead of plain text.")
     .action((options: ServiceActionOptions & { json?: boolean }) => {
@@ -109,7 +109,7 @@ export function registerServiceCommand(program: Command): void {
 
   service
     .command("status")
-    .description("Check the PromptLane service status.")
+    .description("Check the LoopRelay service status.")
     .option("--json", "Print machine-readable JSON instead of plain text.")
     .action((options: ServiceActionOptions & { json?: boolean }) => {
       const result = serviceStatus(options);
@@ -159,7 +159,7 @@ export function installService(
   if (changed) {
     mkdirSync(dirname(plistPath), { recursive: true, mode: 0o700 });
     if (existsSync(plistPath)) {
-      backupPath = `${plistPath}.promptlane.${Date.now()}.bak`;
+      backupPath = `${plistPath}.looprelay.${Date.now()}.bak`;
       copyFileSync(plistPath, backupPath);
     }
     writeFileSync(plistPath, nextPlist, { mode: 0o600 });
@@ -312,7 +312,7 @@ function defaultLaunchAgentPath(): string {
 }
 
 function logPath(fileName: string): string {
-  return join(homedir(), ".promptlane", "logs", fileName);
+  return join(homedir(), ".looprelay", "logs", fileName);
 }
 
 function launchdDomain(): string {

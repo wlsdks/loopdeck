@@ -18,7 +18,7 @@ type RealBenchmarkFixtureCase = {
   prompt: string;
   effect_pair?: {
     id: string;
-    variant: "baseline" | "promptlane";
+    variant: "baseline" | "looprelay";
   };
   outcome?: {
     status: "passed" | "failed";
@@ -34,13 +34,13 @@ export function createPairedRealBenchmarkFixture({
   pairId,
   query,
   baselinePrompt,
-  promptlanePrompt,
+  looprelayPrompt,
 }: {
   consentNote: string;
   pairId: string;
   query: string;
   baselinePrompt: PromptDetail;
-  promptlanePrompt: PromptDetail;
+  looprelayPrompt: PromptDetail;
 }): RealBenchmarkFixture {
   const normalizedConsent = validateRealBenchmarkConsentNote(consentNote);
   const normalizedPairId = pairId.trim();
@@ -55,7 +55,7 @@ export function createPairedRealBenchmarkFixture({
       "Paired benchmark query must be non-empty and redacted.",
     );
   }
-  if (baselinePrompt.id === promptlanePrompt.id) {
+  if (baselinePrompt.id === looprelayPrompt.id) {
     throw new BenchmarkFixtureInputError(
       "Paired benchmark prompts must be distinct.",
     );
@@ -63,7 +63,7 @@ export function createPairedRealBenchmarkFixture({
   if (
     (baselinePrompt.tool !== "codex" &&
       baselinePrompt.tool !== "claude-code") ||
-    baselinePrompt.tool !== promptlanePrompt.tool
+    baselinePrompt.tool !== looprelayPrompt.tool
   ) {
     throw new BenchmarkFixtureInputError(
       "Paired benchmark prompts must use the same supported tool.",
@@ -71,18 +71,18 @@ export function createPairedRealBenchmarkFixture({
   }
 
   const baselineText = pairedPromptText(baselinePrompt);
-  const promptlaneText = pairedPromptText(promptlanePrompt);
+  const looprelayText = pairedPromptText(looprelayPrompt);
   const baselineOutcome = requiredPairedOutcome({
     outcomes: baselinePrompt.loop_outcomes ?? [],
     improvementUsed: false,
     missingMessage:
-      "Baseline prompt requires completed redacted outcome evidence without PromptLane improvement attribution.",
+      "Baseline prompt requires completed redacted outcome evidence without LoopRelay improvement attribution.",
   });
-  const promptlaneOutcome = requiredPairedOutcome({
-    outcomes: promptlanePrompt.loop_outcomes ?? [],
+  const looprelayOutcome = requiredPairedOutcome({
+    outcomes: looprelayPrompt.loop_outcomes ?? [],
     improvementUsed: true,
     missingMessage:
-      "PromptLane prompt requires completed redacted outcome evidence with explicit improvement attribution.",
+      "LoopRelay prompt requires completed redacted outcome evidence with explicit improvement attribution.",
   });
 
   return {
@@ -98,15 +98,15 @@ export function createPairedRealBenchmarkFixture({
         outcome: baselineOutcome,
       },
       {
-        label: `${normalizedPairId}_promptlane`,
-        adapter: promptlanePrompt.tool,
+        label: `${normalizedPairId}_looprelay`,
+        adapter: looprelayPrompt.tool,
         query: normalizedQuery,
-        prompt: promptlaneText,
-        effect_pair: { id: normalizedPairId, variant: "promptlane" },
-        outcome: promptlaneOutcome,
+        prompt: looprelayText,
+        effect_pair: { id: normalizedPairId, variant: "looprelay" },
+        outcome: looprelayOutcome,
       },
     ],
-    coach_cases: [baselineText, promptlaneText],
+    coach_cases: [baselineText, looprelayText],
   };
 }
 

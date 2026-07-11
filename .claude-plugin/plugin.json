@@ -1,10 +1,10 @@
 {
-  "name": "promptlane",
-  "description": "PromptLane is a local-first prompt improvement workspace for Claude Code, Codex, and long-running coding-agent work.",
+  "name": "looprelay",
+  "description": "Local continuity and evidence for long-running Claude Code and Codex loops.",
   "version": "1.0.0",
   "author": {
-    "name": "PromptLane contributors",
-    "url": "https://github.com/wlsdks/promptlane"
+    "name": "LoopRelay contributors",
+    "url": "https://github.com/wlsdks/looprelay"
   },
   "commands": [
     "./commands/setup.md",
@@ -18,19 +18,18 @@
     "./commands/habits.md",
     "./commands/open.md"
   ],
-  "homepage": "https://github.com/wlsdks/promptlane",
-  "repository": "https://github.com/wlsdks/promptlane",
+  "homepage": "https://github.com/wlsdks/looprelay",
+  "repository": "https://github.com/wlsdks/looprelay",
   "license": "MIT",
   "keywords": [
-    "promptlane",
-    "promptlane",
-    "promptlane",
-    "prompt-improvement",
-    "meta-prompting",
-    "memory",
+    "looprelay",
+    "agent-continuity",
+    "loop-engineering",
+    "evidence",
+    "continuation",
     "hooks",
-    "statusline",
     "local-first",
-    "claude-code"
+    "claude-code",
+    "codex"
   ]
 }

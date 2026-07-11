@@ -8,7 +8,7 @@ import { parsePromptMarkdown } from "./markdown.js";
 let sandbox: string;
 
 beforeEach(() => {
-  sandbox = mkdtempSync(join(tmpdir(), "promptlane-md-parse-"));
+  sandbox = mkdtempSync(join(tmpdir(), "looprelay-md-parse-"));
 });
 
 afterEach(() => {

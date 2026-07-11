@@ -5,7 +5,7 @@ import {
   improvePrompt,
   type PromptImprovement,
 } from "../analysis/improve.js";
-import { loadHookAuth, loadPromptLaneConfig } from "../config/config.js";
+import { loadHookAuth, loadLoopRelayConfig } from "../config/config.js";
 import type { PromptAnalysisPreview } from "../shared/schema.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import type { PromptEffectiveness, PromptSummary } from "../storage/ports.js";
@@ -34,12 +34,12 @@ export type {
   RecordAgentRewriteToolArguments,
   RecordAgentRewriteToolResult,
 } from "./agent-rewrite-tool-types.js";
-import { listPromptLaneMcpToolNames } from "./tool-registry.js";
+import { listLoopRelayMcpToolNames } from "./tool-registry.js";
 import type {
   CoachPromptToolArguments,
   CoachPromptToolResult,
-  GetPromptLaneStatusToolArguments,
-  GetPromptLaneStatusToolResult,
+  GetLoopRelayStatusToolArguments,
+  GetLoopRelayStatusToolResult,
   ImprovePromptToolArguments,
   ImprovePromptToolResult,
   ReviewProjectInstructionsToolArguments,
@@ -53,7 +53,7 @@ import type {
 
 export {
   COACH_PROMPT_TOOL_DEFINITION,
-  GET_PROMPTLANE_STATUS_TOOL_DEFINITION,
+  GET_LOOPRELAY_STATUS_TOOL_DEFINITION,
   IMPROVE_PROMPT_TOOL_DEFINITION,
   PREPARE_AGENT_REWRITE_TOOL_DEFINITION,
   PREPARE_AGENT_JUDGE_BATCH_TOOL_DEFINITION,
@@ -64,15 +64,15 @@ export {
   SCORE_PROMPT_TOOL_DEFINITION,
 } from "./score-tool-definitions.js";
 export {
-  PROMPTLANE_MCP_TOOL_DEFINITIONS,
-  listPromptLaneMcpToolNames,
+  LOOPRELAY_MCP_TOOL_DEFINITIONS,
+  listLoopRelayMcpToolNames,
 } from "./tool-registry.js";
 
 export type {
   CoachPromptToolArguments,
   CoachPromptToolResult,
-  GetPromptLaneStatusToolArguments,
-  GetPromptLaneStatusToolResult,
+  GetLoopRelayStatusToolArguments,
+  GetLoopRelayStatusToolResult,
   ImprovePromptToolArguments,
   ImprovePromptToolResult,
   ReviewProjectInstructionsToolArguments,
@@ -89,7 +89,7 @@ export function coachPromptTool(
   options: ScorePromptToolOptions = {},
 ): CoachPromptToolResult {
   const generatedAt = (options.now ?? new Date()).toISOString();
-  const status = getPromptLaneStatusTool({}, options);
+  const status = getLoopRelayStatusTool({}, options);
   const includeLatestScore = args.include_latest_score !== false;
   const includeImprovement = args.include_improvement !== false;
   const includeArchive = args.include_archive !== false;
@@ -225,7 +225,7 @@ export function scorePromptArchiveTool(
   options: ScorePromptToolOptions = {},
 ): ScorePromptArchiveToolResult {
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const auth = loadHookAuth(options.dataDir);
     const storage = createSqlitePromptStorage({
       dataDir: config.data_dir,
@@ -258,10 +258,10 @@ export function scorePromptArchiveTool(
   }
 }
 
-export function getPromptLaneStatusTool(
-  args: GetPromptLaneStatusToolArguments,
+export function getLoopRelayStatusTool(
+  args: GetLoopRelayStatusToolArguments,
   options: ScorePromptToolOptions = {},
-): GetPromptLaneStatusToolResult {
+): GetLoopRelayStatusToolResult {
   const privacy = {
     local_only: true,
     external_calls: false,
@@ -270,7 +270,7 @@ export function getPromptLaneStatusTool(
   } as const;
 
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const auth = loadHookAuth(options.dataDir);
     const storage = createSqlitePromptStorage({
       dataDir: config.data_dir,
@@ -305,7 +305,7 @@ export function getPromptLaneStatusTool(
               ]
             : [
                 MCP_FIRST_PROMPT_NEXT_STEP,
-                "Run promptlane setup --profile coach --register-mcp if hooks or MCP registration are not installed yet.",
+                "Run looprelay setup --profile coach --register-mcp if hooks or MCP registration are not installed yet.",
               ],
         privacy,
       };
@@ -321,9 +321,9 @@ export function getPromptLaneStatusTool(
       project_count: 0,
       available_tools: availableMcpToolNames(),
       next_actions: [
-        "Run promptlane setup --profile coach --register-mcp before using archive-backed MCP tools.",
+        "Run looprelay setup --profile coach --register-mcp before using archive-backed MCP tools.",
         MCP_FIRST_PROMPT_NEXT_STEP,
-        "For custom storage, initialize it with promptlane init --data-dir <path> and pass the same --data-dir to the MCP server.",
+        "For custom storage, initialize it with looprelay init --data-dir <path> and pass the same --data-dir to the MCP server.",
       ],
       privacy,
     };
@@ -342,7 +342,7 @@ export function reviewProjectInstructionsTool(
   }
 
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const auth = loadHookAuth(options.dataDir);
     const storage = createSqlitePromptStorage({
       dataDir: config.data_dir,
@@ -411,7 +411,7 @@ function withStoredPrompt(
   options: ScorePromptToolOptions,
 ): ScorePromptToolResult {
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const auth = loadHookAuth(options.dataDir);
     const storage = createSqlitePromptStorage({
       dataDir: config.data_dir,
@@ -436,7 +436,7 @@ function withStoredPrompt(
       if (!prompt?.analysis) {
         return toolError(
           "not_found",
-          `Prompt not found or not analyzed: ${id}. Run get_promptlane_status to confirm the archive state, or pass a \`prompt\` text argument instead.`,
+          `Prompt not found or not analyzed: ${id}. Run get_looprelay_status to confirm the archive state, or pass a \`prompt\` text argument instead.`,
         );
       }
 
@@ -505,7 +505,7 @@ function toSafeLatestPrompt(prompt: PromptSummary) {
 }
 
 function availableMcpToolNames(): string[] {
-  return listPromptLaneMcpToolNames();
+  return listLoopRelayMcpToolNames();
 }
 
 function withStoredPromptImprovement(
@@ -513,7 +513,7 @@ function withStoredPromptImprovement(
   options: ScorePromptToolOptions,
 ): ImprovePromptToolResult {
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const auth = loadHookAuth(options.dataDir);
     const storage = createSqlitePromptStorage({
       dataDir: config.data_dir,
@@ -538,7 +538,7 @@ function withStoredPromptImprovement(
       if (!prompt?.analysis) {
         return improvementToolError(
           "not_found",
-          `Prompt not found or not analyzed: ${id}. Run get_promptlane_status to confirm the archive state, or pass a \`prompt\` text argument instead.`,
+          `Prompt not found or not analyzed: ${id}. Run get_looprelay_status to confirm the archive state, or pass a \`prompt\` text argument instead.`,
         );
       }
 
@@ -548,7 +548,7 @@ function withStoredPromptImprovement(
       ) {
         return improvementToolError(
           "target_unavailable",
-          "The stored prompt has no concrete target that PromptLane can return safely. Pass the original request with the `prompt` argument (or CLI `--text`) before generating a rewrite.",
+          "The stored prompt has no concrete target that LoopRelay can return safely. Pass the original request with the `prompt` argument (or CLI `--text`) before generating a rewrite.",
         );
       }
 
@@ -562,7 +562,7 @@ function withStoredPromptImprovement(
       if (improvement.changed_sections.length === 0) {
         return improvementToolError(
           "no_improvement_needed",
-          "The stored prompt already satisfies every local quality check, so PromptLane did not generate or return a replacement body.",
+          "The stored prompt already satisfies every local quality check, so LoopRelay did not generate or return a replacement body.",
         );
       }
 

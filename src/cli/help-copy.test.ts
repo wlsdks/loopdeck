@@ -28,11 +28,11 @@ function nestedHelpFor(commandPath: string, subcommandPath: string): string {
 }
 
 describe("CLI help copy", () => {
-  it("presents the root command as the PromptLane workbench while preserving the promptlane command id", () => {
+  it("presents the root command as the LoopRelay workbench while preserving the looprelay command id", () => {
     const help = createProgram().helpInformation();
 
-    expect(help).toContain("Usage: promptlane");
-    expect(help).toContain("Local-first prompt improvement workspace");
+    expect(help).toContain("Usage: looprelay");
+    expect(help).toContain("Local continuity and evidence");
     expect(help).toContain("Codex");
     expect(help).toContain("Claude Code");
     expect(help).not.toContain(
@@ -40,7 +40,7 @@ describe("CLI help copy", () => {
     );
   });
 
-  it("presents local infrastructure commands as PromptLane surfaces", () => {
+  it("presents local infrastructure commands as LoopRelay surfaces", () => {
     const help = [
       helpFor("server"),
       helpFor("mcp"),
@@ -54,22 +54,22 @@ describe("CLI help copy", () => {
       nestedHelpFor("service", "install"),
     ].join("\n");
 
-    expect(help).toContain("Run the local PromptLane HTTP server");
-    expect(help).toContain("Run the local PromptLane MCP server over stdio.");
-    expect(help).toContain("Install the PromptLane capture hook");
-    expect(help).toContain("Uninstall the PromptLane capture hook");
-    expect(help).toContain("Render the PromptLane status line");
-    expect(help).toContain("combines PromptLane with another tool");
-    expect(help).toContain("Install the PromptLane status line");
-    expect(help).toContain("Uninstall the PromptLane status line");
-    expect(help).toContain("Report PromptLane 9.5 quality evidence");
+    expect(help).toContain("Run the local LoopRelay HTTP server");
+    expect(help).toContain("Run the local LoopRelay MCP server over stdio.");
+    expect(help).toContain("Install the LoopRelay capture hook");
+    expect(help).toContain("Uninstall the LoopRelay capture hook");
+    expect(help).toContain("Render the LoopRelay status line");
+    expect(help).toContain("combines LoopRelay with another tool");
+    expect(help).toContain("Install the LoopRelay status line");
+    expect(help).toContain("Uninstall the LoopRelay status line");
+    expect(help).toContain("Report LoopRelay 9.5 quality evidence");
     expect(help).toContain(
-      "Install a login service for the local PromptLane server.",
+      "Install a login service for the local LoopRelay server.",
     );
-    expect(help).not.toContain("local promptlane HTTP server");
-    expect(help).not.toContain("local promptlane MCP server");
-    expect(help).not.toContain("promptlane capture hook");
-    expect(help).not.toContain("promptlane status line");
-    expect(help).not.toContain("local promptlane server");
+    expect(help).not.toContain("local looprelay HTTP server");
+    expect(help).not.toContain("local looprelay MCP server");
+    expect(help).not.toContain("looprelay capture hook");
+    expect(help).not.toContain("looprelay status line");
+    expect(help).not.toContain("local looprelay server");
   });
 });

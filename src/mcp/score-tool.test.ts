@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { analyzePrompt } from "../analysis/analyze.js";
 import { normalizeClaudeCodePayload } from "../adapters/claude-code.js";
-import { initializePromptLane } from "../config/config.js";
+import { initializeLoopRelay } from "../config/config.js";
 import { redactPrompt } from "../redaction/redact.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import { SCORE_PROMPT_ARCHIVE_TOOL_DEFINITION } from "./score-tool-definitions.js";
@@ -14,7 +14,7 @@ import {
   coachPromptTool,
   prepareAgentRewriteTool,
   prepareAgentJudgeBatchTool,
-  getPromptLaneStatusTool,
+  getLoopRelayStatusTool,
   improvePromptTool,
   recordAgentRewriteTool,
   recordAgentJudgmentsTool,
@@ -89,7 +89,7 @@ describe("scorePromptTool", () => {
 
   it("scores the latest stored prompt by id without returning the prompt body", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -123,7 +123,7 @@ describe("scorePromptTool", () => {
 
   it("includes raw-free prompt effectiveness evidence when scoring a stored prompt", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -201,7 +201,7 @@ describe("scorePromptTool", () => {
 
   it("scores the stored prompt archive without returning bodies or raw paths", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -243,7 +243,7 @@ describe("scorePromptTool", () => {
       measured_prompts: 0,
       unmeasured_prompts: 2,
       next_action:
-        "Record loop outcomes and identify which PromptLane improvements were actually used.",
+        "Record loop outcomes and identify which LoopRelay improvements were actually used.",
     });
     expect(result.privacy).toMatchObject({
       local_only: true,
@@ -281,7 +281,7 @@ describe("scorePromptTool", () => {
 
   it("renders archive practice plan in Korean when language=ko is passed", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -313,7 +313,7 @@ describe("scorePromptTool", () => {
   });
 
   it("does not include raw data directory paths in storage errors", () => {
-    const dataDir = join(tmpdir(), `promptlane-missing-${randomUUID()}`);
+    const dataDir = join(tmpdir(), `looprelay-missing-${randomUUID()}`);
     const result = scorePromptTool({ latest: true }, { dataDir });
     const serialized = JSON.stringify(result);
 
@@ -325,7 +325,7 @@ describe("scorePromptTool", () => {
 
   it("hints next actions when latest=true on an empty archive", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = scorePromptTool({ latest: true }, { dataDir });
 
@@ -384,7 +384,7 @@ describe("improvePromptTool", () => {
 
   it("returns a body-free diagnosis for a stored prompt without a concrete target", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -418,7 +418,7 @@ describe("improvePromptTool", () => {
 
   it("improves stored prompts from the redacted archive body instead of the generic analysis summary", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -455,7 +455,7 @@ describe("improvePromptTool", () => {
 
   it("returns a body-free no-op for a stored prompt that already needs no improvement", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -548,7 +548,7 @@ describe("reviewProjectInstructionsTool", () => {
       ].join("\n"),
       "utf8",
     );
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -585,7 +585,7 @@ describe("reviewProjectInstructionsTool", () => {
 
   it("returns an actionable tool error when no project exists", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = reviewProjectInstructionsTool({ latest: true }, { dataDir });
 
@@ -595,10 +595,10 @@ describe("reviewProjectInstructionsTool", () => {
   });
 });
 
-describe("getPromptLaneStatusTool", () => {
+describe("getLoopRelayStatusTool", () => {
   it("returns local archive readiness without prompt bodies or raw paths", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -611,7 +611,7 @@ describe("getPromptLaneStatusTool", () => {
     );
     storage.close();
 
-    const result = getPromptLaneStatusTool({}, { dataDir });
+    const result = getLoopRelayStatusTool({}, { dataDir });
     const serialized = JSON.stringify(result);
 
     expect(result.status).toBe("ready");
@@ -622,7 +622,7 @@ describe("getPromptLaneStatusTool", () => {
       project: "project",
     });
     expect(result.available_tools).toContain("score_prompt");
-    expect(result.available_tools).toContain("get_promptlane_status");
+    expect(result.available_tools).toContain("get_looprelay_status");
     expect(result.privacy).toEqual({
       local_only: true,
       external_calls: false,
@@ -634,20 +634,18 @@ describe("getPromptLaneStatusTool", () => {
   });
 
   it("returns a setup-needed status when storage is unavailable", () => {
-    const dataDir = join(tmpdir(), `promptlane-missing-${randomUUID()}`);
-    const result = getPromptLaneStatusTool({}, { dataDir });
+    const dataDir = join(tmpdir(), `looprelay-missing-${randomUUID()}`);
+    const result = getLoopRelayStatusTool({}, { dataDir });
     const serialized = JSON.stringify(result);
 
     expect(result.status).toBe("setup_needed");
-    expect(result.next_actions[0]).toContain(
-      "promptlane setup --profile coach",
-    );
+    expect(result.next_actions[0]).toContain("looprelay setup --profile coach");
     expect(result.next_actions[1]).toBe(
-      "Send one Codex or Claude Code prompt, then call coach_prompt or rerun get_promptlane_status.",
+      "Send one Codex or Claude Code prompt, then call coach_prompt or rerun get_looprelay_status.",
     );
     expect(result.next_actions).toContain(
       [
-        "For custom storage, initialize it with promptlane init --data-dir <path>",
+        "For custom storage, initialize it with looprelay init --data-dir <path>",
         "and pass the same --data-dir to the MCP server.",
       ].join(" "),
     );
@@ -657,24 +655,22 @@ describe("getPromptLaneStatusTool", () => {
 
   it("gives the first MCP action when setup exists but no prompts are captured", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
-    const result = getPromptLaneStatusTool({}, { dataDir });
+    const result = getLoopRelayStatusTool({}, { dataDir });
 
     expect(result.status).toBe("empty");
     expect(result.next_actions[0]).toBe(
-      "Send one Codex or Claude Code prompt, then call coach_prompt or rerun get_promptlane_status.",
+      "Send one Codex or Claude Code prompt, then call coach_prompt or rerun get_looprelay_status.",
     );
-    expect(result.next_actions[1]).toContain(
-      "promptlane setup --profile coach",
-    );
+    expect(result.next_actions[1]).toContain("looprelay setup --profile coach");
   });
 });
 
 describe("agent judge MCP tools", () => {
   it("prepares a redacted agent rewrite packet for the latest stored prompt", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -714,7 +710,7 @@ describe("agent judge MCP tools", () => {
     expect(result.agent_instructions).toContain("record_agent_rewrite");
     expect(result.privacy).toEqual({
       local_only: true,
-      external_calls_by_promptlane: false,
+      external_calls_by_looprelay: false,
       intended_external_rewriter: "current_agent_session",
       returns_redacted_prompt_body: true,
       returns_raw_prompt_body: false,
@@ -728,7 +724,7 @@ describe("agent judge MCP tools", () => {
 
   it("records an agent rewrite as a redacted improvement draft without returning the draft body", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -778,7 +774,7 @@ describe("agent judge MCP tools", () => {
     );
     expect(result.privacy).toEqual({
       local_only: true,
-      external_calls_by_promptlane: false,
+      external_calls_by_looprelay: false,
       stores_original_prompt_body: false,
       stores_rewrite_draft: true,
       returns_rewrite_draft: false,
@@ -803,7 +799,7 @@ describe("agent judge MCP tools", () => {
 
   it("hints next actions when prepare_agent_rewrite latest=true on an empty archive", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = prepareAgentRewriteTool({ latest: true }, { dataDir });
 
@@ -815,7 +811,7 @@ describe("agent judge MCP tools", () => {
 
   it("prepares a redacted LLM judge packet for the current agent session", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -855,7 +851,7 @@ describe("agent judge MCP tools", () => {
     expect(result.agent_instructions).toContain("record_agent_judgments");
     expect(result.privacy).toEqual({
       local_only: true,
-      external_calls_by_promptlane: false,
+      external_calls_by_looprelay: false,
       intended_external_evaluator: "current_agent_session",
       returns_redacted_prompt_bodies: true,
       returns_raw_prompt_bodies: false,
@@ -869,7 +865,7 @@ describe("agent judge MCP tools", () => {
 
   it("records current-agent judgments without storing prompt bodies", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -914,7 +910,7 @@ describe("agent judge MCP tools", () => {
     );
     expect(result.privacy).toEqual({
       local_only: true,
-      external_calls_by_promptlane: false,
+      external_calls_by_looprelay: false,
       stores_prompt_bodies: false,
       stores_raw_paths: false,
       stores_judgment_results: true,
@@ -945,7 +941,7 @@ describe("agent judge MCP tools", () => {
 
   it("hints next actions when prepare_agent_judge_batch finds no prompts", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = prepareAgentJudgeBatchTool(
       { selection: "low_score", max_prompts: 5 },
@@ -955,7 +951,7 @@ describe("agent judge MCP tools", () => {
     expect(result.is_error).toBe(true);
     expect(result.error_code).toBe("not_found");
     expect(result.message).toContain("Capture Claude Code or Codex prompts");
-    expect(result.message).toContain("get_promptlane_status");
+    expect(result.message).toContain("get_looprelay_status");
   });
 });
 
@@ -973,7 +969,7 @@ describe("coachPromptTool", () => {
       ].join("\n"),
       "utf8",
     );
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -1057,7 +1053,7 @@ describe("coachPromptTool", () => {
   });
 
   it("returns setup guidance instead of a hard error when storage is unavailable", () => {
-    const dataDir = join(tmpdir(), `promptlane-missing-${randomUUID()}`);
+    const dataDir = join(tmpdir(), `looprelay-missing-${randomUUID()}`);
     const result = coachPromptTool({}, { dataDir });
     const serialized = JSON.stringify(result);
 
@@ -1065,11 +1061,11 @@ describe("coachPromptTool", () => {
     expect(result.status.status).toBe("setup_needed");
     expect(result.agent_brief.next_actions).toEqual(
       expect.arrayContaining([
-        "Run promptlane start to see the shortest setup -> real prompt -> coach path.",
-        "Run promptlane setup --profile coach --register-mcp before using archive-backed MCP tools.",
-        "Send one Codex or Claude Code prompt, then call coach_prompt or rerun get_promptlane_status.",
-        "For custom storage, initialize it with promptlane init --data-dir <path> and pass the same --data-dir to the MCP server.",
-        "Run promptlane server if connected tools cannot reach the local service.",
+        "Run looprelay start to see the shortest setup -> real prompt -> coach path.",
+        "Run looprelay setup --profile coach --register-mcp before using archive-backed MCP tools.",
+        "Send one Codex or Claude Code prompt, then call coach_prompt or rerun get_looprelay_status.",
+        "For custom storage, initialize it with looprelay init --data-dir <path> and pass the same --data-dir to the MCP server.",
+        "Run looprelay server if connected tools cannot reach the local service.",
       ]),
     );
     expect(serialized).not.toContain(dataDir);
@@ -1078,7 +1074,7 @@ describe("coachPromptTool", () => {
 
   it("routes the agent brief through archive effectiveness evidence before claiming improvement", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -1172,7 +1168,7 @@ describe("coachPromptTool", () => {
 
   it("returns coach questions without fabricating a stored rewrite", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -1202,7 +1198,7 @@ describe("coachPromptTool", () => {
 
   it("does not rewrite an acknowledgment-like latest prompt without its prior target", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -1230,7 +1226,7 @@ describe("coachPromptTool", () => {
 });
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-mcp-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-mcp-${randomUUID()}`);
   mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;

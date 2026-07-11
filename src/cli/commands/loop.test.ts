@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { normalizeClaudeCodePayload } from "../../adapters/claude-code.js";
-import { initializePromptLane } from "../../config/config.js";
+import { initializeLoopRelay } from "../../config/config.js";
 import { redactPrompt } from "../../redaction/redact.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import {
@@ -110,10 +110,7 @@ describe("loop CLI command", () => {
         evidence_refs: ["test:loop-cli", "build:pnpm-build"],
         used_improvement_prompt_ids: [snapshot.prompt_ids[0]],
       },
-      next_actions: [
-        "promptlane loop memory-candidate",
-        "promptlane loop brief",
-      ],
+      next_actions: ["looprelay loop memory-candidate", "looprelay loop brief"],
       privacy: {
         local_only: true,
         stores_prompt_bodies: false,
@@ -150,7 +147,7 @@ describe("loop CLI command", () => {
     ) as { snapshot_id: string };
 
     expect(result.snapshot_id).toBe(selected.id);
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -216,7 +213,7 @@ describe("loop CLI command", () => {
     });
 
     expect(text).toContain("source service");
-    expect(text).toContain("Next: promptlane loop brief");
+    expect(text).toContain("Next: looprelay loop brief");
     expect(text).not.toContain("Make this better");
     expect(text).not.toContain("/Users/example");
   });
@@ -242,10 +239,10 @@ describe("loop CLI command", () => {
 
   it("guides first-time loop brief users through prompt capture before collect", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     expect(() => loopBriefForCli({ dataDir })).toThrow(
-      "No loop snapshot found. Send one Codex or Claude Code prompt, run `promptlane coach` to confirm the first score, then run `promptlane loop collect` before retrying `promptlane loop brief`.",
+      "No loop snapshot found. Send one Codex or Claude Code prompt, run `looprelay coach` to confirm the first score, then run `looprelay loop collect` before retrying `looprelay loop brief`.",
     );
   });
 
@@ -335,7 +332,7 @@ describe("loop CLI command", () => {
         branch: "feature/missing-loop",
       }),
     ).toThrow(
-      "No loop snapshot matched the selected worktree/session/branch filters. Run `promptlane loop collect --worktree missing-worktree --branch feature/missing-loop` from that project, or retry `promptlane loop brief` with fewer filters.",
+      "No loop snapshot matched the selected worktree/session/branch filters. Run `looprelay loop collect --worktree missing-worktree --branch feature/missing-loop` from that project, or retry `looprelay loop brief` with fewer filters.",
     );
   });
 
@@ -357,7 +354,7 @@ describe("loop CLI command", () => {
         branch: "feature/missing 'loop'",
       }),
     ).toThrow(
-      "No loop snapshot matched the selected worktree/session/branch filters. Run `promptlane loop collect --worktree 'missing worktree' --branch 'feature/missing '\\''loop'\\'''` from that project, or retry `promptlane loop brief` with fewer filters.",
+      "No loop snapshot matched the selected worktree/session/branch filters. Run `looprelay loop collect --worktree 'missing worktree' --branch 'feature/missing '\\''loop'\\'''` from that project, or retry `looprelay loop brief` with fewer filters.",
     );
   });
 
@@ -378,7 +375,7 @@ describe("loop CLI command", () => {
         worktree: "/Users/example/private-project",
       }),
     ).toThrow(
-      "No loop snapshot matched the selected worktree/session/branch filters. Run `promptlane loop collect --worktree private-project` from that project, or retry `promptlane loop brief` with fewer filters.",
+      "No loop snapshot matched the selected worktree/session/branch filters. Run `looprelay loop collect --worktree private-project` from that project, or retry `looprelay loop brief` with fewer filters.",
     );
   });
 
@@ -397,7 +394,7 @@ describe("loop CLI command", () => {
 
     expect(text).toContain("## Compaction Boundary");
     expect(text).toContain("PostCompact at 2026-07-04T01:05:00.000Z");
-    expect(text).toContain("Run promptlane loop collect again");
+    expect(text).toContain("Run looprelay loop collect again");
     expect(text).not.toContain("Compact summary with sk-proj-secret");
     expect(text).not.toContain("/Users/example");
   });
@@ -430,7 +427,7 @@ describe("loop CLI command", () => {
 
     const text = loopStatusForCli({ dataDir });
 
-    expect(text).toContain("PromptLane status ready");
+    expect(text).toContain("LoopRelay status ready");
     expect(text).toContain("snapshots 2");
     expect(text).toContain("approved memories 1");
     expect(text).toContain("active worktrees 2");
@@ -456,7 +453,7 @@ describe("loop CLI command", () => {
     );
     expect(text).toContain("review primary-worktree ready for continuation");
     expect(text).toContain(
-      "command promptlane loop brief --worktree primary-worktree",
+      "command looprelay loop brief --worktree primary-worktree",
     );
     expect(text).toContain("merge readiness primary-worktree ready");
     expect(text).toContain("evidence primary-worktree evidence present refs 2");
@@ -472,7 +469,7 @@ describe("loop CLI command", () => {
     expect(text).toContain(
       "compact boundary PostCompact at 2026-07-04T01:05:00.000Z",
     );
-    expect(text).toContain("Next: promptlane loop collect");
+    expect(text).toContain("Next: looprelay loop collect");
     expect(text).not.toContain("Make this better");
     expect(text).not.toContain("Compact summary with sk-proj-secret");
     expect(text).not.toContain("/Users/example");
@@ -589,7 +586,7 @@ describe("loop CLI command", () => {
             worktree: "primary-worktree",
             recommendation: "ready for continuation",
             continuation_command:
-              "promptlane loop brief --worktree primary-worktree",
+              "looprelay loop brief --worktree primary-worktree",
             evidence_count: 2,
             merge_readiness: {
               status: "ready",
@@ -601,7 +598,7 @@ describe("loop CLI command", () => {
             worktree: "other-worktree",
             recommendation: "ready for continuation",
             continuation_command:
-              "promptlane loop brief --worktree other-worktree",
+              "looprelay loop brief --worktree other-worktree",
             evidence_count: 1,
             merge_readiness: {
               status: "ready",
@@ -629,12 +626,12 @@ describe("loop CLI command", () => {
     expect(parsed.memory_candidate).toEqual({
       eligible: true,
       reason: "passed_with_evidence",
-      next_action: "promptlane loop memory-approve",
+      next_action: "looprelay loop memory-approve",
     });
     expect(parsed.next_actions).toEqual(
       expect.arrayContaining([
-        expect.stringContaining("promptlane loop collect"),
-        expect.stringContaining("promptlane loop memory-approve"),
+        expect.stringContaining("looprelay loop collect"),
+        expect.stringContaining("looprelay loop memory-approve"),
       ]),
     );
     expect(parsed.privacy?.returns_compact_content).toBe(false);
@@ -664,7 +661,7 @@ describe("loop CLI command", () => {
 
     expect(text).toContain("Next actions:");
     expect(text).toContain(
-      `promptlane loop outcome --snapshot-id ${snapshot.id}`,
+      `looprelay loop outcome --snapshot-id ${snapshot.id}`,
     );
     expect(text).toContain("verifiable checkpoint");
     expect(text).toContain("prompt ids prmt_");
@@ -676,13 +673,13 @@ describe("loop CLI command", () => {
 
   it("prints empty loop status guidance", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const text = loopStatusForCli({ dataDir });
 
-    expect(text).toContain("PromptLane status empty");
+    expect(text).toContain("LoopRelay status empty");
     expect(text).toContain("snapshots 0");
-    expect(text).toContain("Next: promptlane loop collect");
+    expect(text).toContain("Next: looprelay loop collect");
   });
 
   it("prints a privacy-safe memory candidate decision for the latest passed loop", async () => {
@@ -727,10 +724,10 @@ describe("loop CLI command", () => {
 
   it("guides first-time loop memory users through prompt capture, collect, and outcome evidence", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     expect(() => loopMemoryCandidateForCli({ dataDir })).toThrow(
-      "No loop snapshot found. Send one Codex or Claude Code prompt, run `promptlane coach` to confirm the first score, run `promptlane loop collect`, then record a passed loop outcome with safe evidence before retrying `promptlane loop memory-candidate`.",
+      "No loop snapshot found. Send one Codex or Claude Code prompt, run `looprelay coach` to confirm the first score, run `looprelay loop collect`, then record a passed loop outcome with safe evidence before retrying `looprelay loop memory-candidate`.",
     );
   });
 
@@ -766,8 +763,8 @@ describe("loop CLI command", () => {
     );
     expect(parsed.memory.evidence_refs).toContain("commit:2a91de0");
     expect(parsed.next_actions).toEqual([
-      "promptlane loop brief",
-      "promptlane loop instruction-patch --target-file AGENTS.md",
+      "looprelay loop brief",
+      "looprelay loop instruction-patch --target-file AGENTS.md",
     ]);
     expect(parsed.privacy.writes_instruction_files).toBe(false);
     expect(json).not.toContain("Make this better");
@@ -778,9 +775,9 @@ describe("loop CLI command", () => {
     expect(text).toContain("Loop memory recorded");
     expect(text).toContain("approved by user");
     expect(text).toContain("Next: use recorded memory as local context");
-    expect(text).toContain("- promptlane loop brief");
+    expect(text).toContain("- looprelay loop brief");
     expect(text).toContain(
-      "- promptlane loop instruction-patch --target-file AGENTS.md",
+      "- looprelay loop instruction-patch --target-file AGENTS.md",
     );
     expect(text).not.toContain("Make this better");
     expect(text).not.toContain("/Users/example");
@@ -966,7 +963,7 @@ describe("loop CLI command", () => {
 
     expect(parsed.target_file).toBe("AGENTS.md");
     expect(parsed.writes_files).toBe(false);
-    expect(parsed.diff).toContain("## PromptLane Memories");
+    expect(parsed.diff).toContain("## LoopRelay Memories");
     expect(parsed.diff).toContain("Scheduler lifecycle should stay plist-only");
     expect(parsed.privacy.writes_instruction_files).toBe(false);
     expect(json).not.toContain("Make this better");
@@ -987,12 +984,12 @@ describe("loop CLI command", () => {
 
   it("guides instruction patch users to approve evidence-backed memory first", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     expect(() =>
       loopInstructionPatchForCli({ dataDir, targetFile: "AGENTS.md" }),
     ).toThrow(
-      "No loop memory found. Capture one Codex or Claude Code prompt, confirm the first score, collect a loop snapshot, record a passed outcome with safe evidence, then run `promptlane loop memory-approve` before retrying `promptlane loop instruction-patch --target-file AGENTS.md`.",
+      "No loop memory found. Capture one Codex or Claude Code prompt, confirm the first score, collect a loop snapshot, record a passed outcome with safe evidence, then run `looprelay loop memory-approve` before retrying `looprelay loop instruction-patch --target-file AGENTS.md`.",
     );
   });
 
@@ -1061,7 +1058,7 @@ describe("loop CLI command", () => {
 });
 
 async function seedPrompts(dataDir: string): Promise<void> {
-  const init = initializePromptLane({ dataDir });
+  const init = initializeLoopRelay({ dataDir });
   const storage = createSqlitePromptStorage({
     dataDir,
     hmacSecret: init.hookAuth.web_session_secret,
@@ -1107,7 +1104,7 @@ async function storeClaudePrompt(
 }
 
 function seedCompactBoundary(dataDir: string): void {
-  const init = initializePromptLane({ dataDir });
+  const init = initializeLoopRelay({ dataDir });
   const storage = createSqlitePromptStorage({
     dataDir,
     hmacSecret: init.hookAuth.web_session_secret,
@@ -1128,7 +1125,7 @@ function seedCompactBoundary(dataDir: string): void {
 }
 
 function seedLoopOutcome(dataDir: string, snapshotId: string): void {
-  const init = initializePromptLane({ dataDir });
+  const init = initializeLoopRelay({ dataDir });
   const storage = createSqlitePromptStorage({
     dataDir,
     hmacSecret: init.hookAuth.web_session_secret,
@@ -1146,7 +1143,7 @@ function seedLoopOutcome(dataDir: string, snapshotId: string): void {
 }
 
 function seedNewerOtherWorktreeSnapshot(dataDir: string): void {
-  const init = initializePromptLane({ dataDir });
+  const init = initializeLoopRelay({ dataDir });
   const storage = createSqlitePromptStorage({
     dataDir,
     hmacSecret: init.hookAuth.web_session_secret,
@@ -1173,7 +1170,7 @@ function seedNewerOtherWorktreeSnapshot(dataDir: string): void {
 }
 
 function seedOtherProjectMemory(dataDir: string): void {
-  const init = initializePromptLane({ dataDir });
+  const init = initializeLoopRelay({ dataDir });
   const storage = createSqlitePromptStorage({
     dataDir,
     hmacSecret: init.hookAuth.web_session_secret,
@@ -1218,7 +1215,7 @@ function nextDate(values: string[]): () => Date {
 }
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-loop-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-loop-${randomUUID()}`);
   mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;

@@ -30,7 +30,7 @@ describe("runSetup", () => {
     const settingsPath = join(dir, ".claude", "settings.json");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    const plistPath = join(dir, "LaunchAgents", "com.promptlane.server.plist");
+    const plistPath = join(dir, "LaunchAgents", "com.looprelay.server.plist");
 
     const result = runSetup({
       dataDir,
@@ -50,11 +50,11 @@ describe("runSetup", () => {
     expect(result.service.installed).toBe(true);
     expect(existsSync(join(dataDir, "config.json"))).toBe(true);
     expect(readFileSync(settingsPath, "utf8")).toContain(
-      "promptlane hook claude-code",
+      "looprelay hook claude-code",
     );
-    expect(readFileSync(hooksPath, "utf8")).toContain("promptlane hook codex");
+    expect(readFileSync(hooksPath, "utf8")).toContain("looprelay hook codex");
     expect(readFileSync(configPath, "utf8")).toContain("hooks = true");
-    expect(readFileSync(plistPath, "utf8")).toContain("com.promptlane.server");
+    expect(readFileSync(plistPath, "utf8")).toContain("com.looprelay.server");
   });
 
   it("dry-run reports intended work without writing files", () => {
@@ -63,7 +63,7 @@ describe("runSetup", () => {
     const settingsPath = join(dir, ".claude", "settings.json");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    const plistPath = join(dir, "LaunchAgents", "com.promptlane.server.plist");
+    const plistPath = join(dir, "LaunchAgents", "com.looprelay.server.plist");
 
     const result = runSetup({
       dataDir,
@@ -111,14 +111,14 @@ describe("runSetup", () => {
     });
     expect(result.nextSteps).toEqual(
       expect.arrayContaining([
-        "Register MCP for agent commands: claude mcp add --transport stdio promptlane -- promptlane mcp.",
-        "Register MCP for agent commands: codex mcp add promptlane -- promptlane mcp.",
-        "Send one Codex or Claude Code prompt, then run promptlane coach.",
+        "Register MCP for agent commands: claude mcp add --transport stdio looprelay -- looprelay mcp.",
+        "Register MCP for agent commands: codex mcp add looprelay -- looprelay mcp.",
+        "Send one Codex or Claude Code prompt, then run looprelay coach.",
       ]),
     );
     expect(
       result.nextSteps.indexOf(
-        "Send one Codex or Claude Code prompt, then run promptlane coach.",
+        "Send one Codex or Claude Code prompt, then run looprelay coach.",
       ),
     ).toBeLessThan(
       result.nextSteps.indexOf(
@@ -127,27 +127,27 @@ describe("runSetup", () => {
     );
     expect(result.statusLine.claudeCode?.installed).toBe(true);
     expect(result.nextSteps).toContain(
-      "Then run /promptlane:improve-last inside Claude Code to see PromptLane rewrite guidance for that prompt.",
+      "Then run /looprelay:improve-last inside Claude Code to see LoopRelay rewrite guidance for that prompt.",
     );
     expect(result.nextSteps).not.toContain(
-      "Then run /promptlane:improve-last inside Claude Code to see promptlane rewrite that prompt.",
+      "Then run /looprelay:improve-last inside Claude Code to see looprelay rewrite that prompt.",
     );
     expect(result.nextSteps).toContain(
-      "Restart Claude Code if the PromptLane status line is not visible.",
+      "Restart Claude Code if the LoopRelay status line is not visible.",
     );
     expect(result.nextSteps).not.toContain(
-      "Restart Claude Code if the promptlane status line is not visible.",
+      "Restart Claude Code if the looprelay status line is not visible.",
     );
 
     const claudeSettings = readFileSync(settingsPath, "utf8");
     const codexHooks = readFileSync(hooksPath, "utf8");
-    expect(claudeSettings).toContain("promptlane hook claude-code");
+    expect(claudeSettings).toContain("looprelay hook claude-code");
     expect(claudeSettings).toContain("--rewrite-guard");
     expect(claudeSettings).toContain("context");
     expect(claudeSettings).toContain("--rewrite-min-score");
     expect(claudeSettings).toContain("80");
-    expect(claudeSettings).toContain("promptlane statusline claude-code");
-    expect(codexHooks).toContain("promptlane hook codex");
+    expect(claudeSettings).toContain("looprelay statusline claude-code");
+    expect(codexHooks).toContain("looprelay hook codex");
     expect(codexHooks).toContain("--rewrite-guard");
     expect(codexHooks).toContain("context");
   });
@@ -175,10 +175,10 @@ describe("runSetup", () => {
       "Auto web open: installed on SessionStart",
     );
     expect(readFileSync(settingsPath, "utf8")).toContain(
-      "promptlane hook session-start claude-code",
+      "looprelay hook session-start claude-code",
     );
     expect(readFileSync(hooksPath, "utf8")).toContain(
-      "promptlane hook session-start codex",
+      "looprelay hook session-start codex",
     );
   });
 
@@ -226,8 +226,8 @@ describe("runSetup", () => {
     });
 
     expect(commands).toEqual([
-      "claude mcp add --transport stdio promptlane -- promptlane mcp",
-      "codex mcp add promptlane -- promptlane mcp",
+      "claude mcp add --transport stdio looprelay -- looprelay mcp",
+      "codex mcp add looprelay -- looprelay mcp",
     ]);
     expect(result.mcp.claudeCode).toMatchObject({ ok: true, dryRun: false });
     expect(result.mcp.codex).toMatchObject({
@@ -238,7 +238,7 @@ describe("runSetup", () => {
     expect(formatSetupResult(result)).toContain("Claude Code MCP: registered");
     expect(formatSetupResult(result)).toContain("Codex MCP: failed");
     expect(result.nextSteps).toContain(
-      "Retry MCP registration: codex mcp add promptlane -- promptlane mcp.",
+      "Retry MCP registration: codex mcp add looprelay -- looprelay mcp.",
     );
     expect(setupNeedsAttention(result, true)).toBe(true);
   });
@@ -260,7 +260,7 @@ describe("runSetup", () => {
     expect(result.mcp.registerRequested).toBe(false);
     expect(result.mcp.claudeCode).toBeUndefined();
     expect(result.nextSteps).toContain(
-      "Register MCP for agent commands: claude mcp add --transport stdio promptlane -- promptlane mcp.",
+      "Register MCP for agent commands: claude mcp add --transport stdio looprelay -- looprelay mcp.",
     );
   });
 
@@ -339,7 +339,7 @@ describe("runSetup", () => {
 
     const output = formatSetupResult(result);
 
-    expect(output).toContain("promptlane setup preview");
+    expect(output).toContain("looprelay setup preview");
     expect(output).toContain("Profile: coach");
     expect(output).toContain("Claude Code hook: installed");
     expect(output).toContain("Codex hook: installed");
@@ -348,15 +348,15 @@ describe("runSetup", () => {
       output.indexOf("If capture does not appear:"),
     );
     expect(output).toContain("Register MCP for agent commands");
-    expect(output).toContain("promptlane coach");
-    expect(output).toContain("/promptlane:improve-last");
+    expect(output).toContain("looprelay coach");
+    expect(output).toContain("/looprelay:improve-last");
     expect(output.indexOf("Send one Codex or Claude Code prompt")).toBeLessThan(
-      output.indexOf("/promptlane:improve-last"),
+      output.indexOf("/looprelay:improve-last"),
     );
     expect(output).toContain("Use --json for automation.");
   });
 
-  it("installs the promptlane slash commands under <claudeCommandsDir>/promptlane", () => {
+  it("installs the looprelay slash commands under <claudeCommandsDir>/looprelay", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const settingsPath = join(dir, ".claude", "settings.json");
@@ -384,10 +384,10 @@ describe("runSetup", () => {
 
     expect(result.slashCommands.claudeCode?.installedCount).toBe(2);
     expect(result.slashCommands.claudeCode?.namespaceDir).toBe(
-      join(claudeCommandsDir, "promptlane"),
+      join(claudeCommandsDir, "looprelay"),
     );
     expect(
-      readFileSync(join(claudeCommandsDir, "promptlane", "guard.md"), "utf8"),
+      readFileSync(join(claudeCommandsDir, "looprelay", "guard.md"), "utf8"),
     ).toBe("# guard fixture\n");
     expect(formatSetupResult(result)).toContain(
       "Claude Code slash commands: 2 installed",
@@ -405,7 +405,7 @@ describe("runSetup", () => {
       join(slashCommandsSourceDir, "guard.md"),
       "# guard fixture\n",
     );
-    const namespaceDir = join(claudeCommandsDir, "promptlane");
+    const namespaceDir = join(claudeCommandsDir, "looprelay");
     mkdirSync(namespaceDir, { recursive: true });
     writeFileSync(join(namespaceDir, "guard.md"), "# guard fixture\n");
     writeFileSync(join(namespaceDir, "score-last.md"), "# stale\n");
@@ -448,12 +448,12 @@ describe("runSetup", () => {
     expect(formatSetupResult(result)).toContain(
       "Claude Code slash commands: skipped",
     );
-    expect(existsSync(join(claudeCommandsDir, "promptlane"))).toBe(false);
+    expect(existsSync(join(claudeCommandsDir, "looprelay"))).toBe(false);
   });
 });
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-setup-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-setup-${randomUUID()}`);
   mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;

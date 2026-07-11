@@ -1,6 +1,6 @@
 # Code Of Conduct
 
-promptlane uses a simple contribution standard:
+looprelay uses a simple contribution standard:
 
 - Be respectful and direct.
 - Keep discussion focused on the project and the technical tradeoffs.

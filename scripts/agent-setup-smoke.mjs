@@ -15,14 +15,14 @@ import { fileURLToPath } from "node:url";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const cliPath = join(repoRoot, "dist", "cli", "index.js");
-const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-agent-setup-smoke-"));
+const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-agent-setup-smoke-"));
 const homeDir = join(tempRoot, "home");
 const binDir = join(tempRoot, "bin");
 const dataDir = join(tempRoot, "data");
 const settingsPath = join(tempRoot, "claude-settings.json");
 const hooksPath = join(tempRoot, "codex-hooks.json");
 const configPath = join(tempRoot, "codex-config.toml");
-const plistPath = join(tempRoot, "LaunchAgents", "com.promptlane.server.plist");
+const plistPath = join(tempRoot, "LaunchAgents", "com.looprelay.server.plist");
 const mcpConfigPath = join(tempRoot, "mcp-config.json");
 const serverPort = 20_000 + Math.floor(Math.random() * 20_000);
 const serverBaseUrl = `http://127.0.0.1:${serverPort}`;
@@ -30,7 +30,7 @@ const env = {
   ...process.env,
   HOME: homeDir,
   USERPROFILE: homeDir,
-  PROMPTLANE_AGENT_SETUP_SMOKE_MCP_CONFIG: mcpConfigPath,
+  LOOPRELAY_AGENT_SETUP_SMOKE_MCP_CONFIG: mcpConfigPath,
   PATH: `${binDir}${process.platform === "win32" ? ";" : ":"}${process.env.PATH ?? ""}`,
 };
 let serverProcess;
@@ -45,7 +45,7 @@ try {
   writeExecutable(join(binDir, "claude"));
   writeExecutable(join(binDir, "codex"));
 
-  step("Run promptlane setup --profile coach --register-mcp dry-run");
+  step("Run looprelay setup --profile coach --register-mcp dry-run");
   const dryRun = runCli([
     "setup",
     "--profile",
@@ -75,7 +75,7 @@ try {
   runCli(["init", "--data-dir", dataDir]);
   configureSmokePort();
 
-  step("Run promptlane setup --profile coach --register-mcp");
+  step("Run looprelay setup --profile coach --register-mcp");
   const setup = runCli([
     "setup",
     "--profile",
@@ -96,22 +96,22 @@ try {
   assertIncludes(setup.stdout, "Profile: coach");
   assertIncludes(
     setup.stdout,
-    "Send one Codex or Claude Code prompt, then run promptlane coach.",
+    "Send one Codex or Claude Code prompt, then run looprelay coach.",
   );
   assertNoSecretOutput(setup);
 
   const claudeSettings = readFileSync(settingsPath, "utf8");
   const codexHooks = readFileSync(hooksPath, "utf8");
   const codexConfig = readFileSync(configPath, "utf8");
-  assertIncludes(claudeSettings, "promptlane hook claude-code");
-  assertIncludes(codexHooks, "promptlane hook codex");
+  assertIncludes(claudeSettings, "looprelay hook claude-code");
+  assertIncludes(codexHooks, "looprelay hook codex");
   assertIncludes(codexConfig, "hooks = true");
 
   step("Start local server for doctor checks");
   serverProcess = startServer();
   await waitForHealth(`${serverBaseUrl}/api/v1/health`);
 
-  step("Run promptlane doctor claude-code");
+  step("Run looprelay doctor claude-code");
   const claudeDoctor = runCli([
     "doctor",
     "claude-code",
@@ -122,11 +122,11 @@ try {
     "--mcp-config-path",
     mcpConfigPath,
   ]);
-  assertIncludes(claudeDoctor.stdout, "promptlane doctor: claude-code");
+  assertIncludes(claudeDoctor.stdout, "looprelay doctor: claude-code");
   assertIncludes(claudeDoctor.stdout, "Claude Code hook");
   assertNoSecretOutput(claudeDoctor);
 
-  step("Run promptlane doctor codex");
+  step("Run looprelay doctor codex");
   const codexDoctor = runCli([
     "doctor",
     "codex",
@@ -139,12 +139,12 @@ try {
     "--mcp-config-path",
     mcpConfigPath,
   ]);
-  assertIncludes(codexDoctor.stdout, "promptlane doctor: codex");
+  assertIncludes(codexDoctor.stdout, "looprelay doctor: codex");
   assertIncludes(codexDoctor.stdout, "Codex hook");
   assertIncludes(codexDoctor.stdout, "hooks enabled");
   assertNoSecretOutput(codexDoctor);
 
-  console.log("promptlane agent setup smoke passed");
+  console.log("looprelay agent setup smoke passed");
 } finally {
   if (serverProcess) {
     serverProcess.kill("SIGTERM");
@@ -164,7 +164,7 @@ function runCli(args) {
   }
   if (result.status !== 0) {
     throw new Error(
-      `promptlane ${args.join(" ")} exited ${result.status}\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`,
+      `looprelay ${args.join(" ")} exited ${result.status}\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`,
     );
   }
   return result;
@@ -233,12 +233,12 @@ function writeExecutable(path) {
   writeFileSync(
     path,
     `#!/bin/sh
-if [ "$1" = "mcp" ] && [ "$2" = "add" ] && [ -n "$PROMPTLANE_AGENT_SETUP_SMOKE_MCP_CONFIG" ]; then
-  mkdir -p "$(dirname "$PROMPTLANE_AGENT_SETUP_SMOKE_MCP_CONFIG")"
-  printf '{"mcpServers":{"promptlane":{"command":"promptlane","args":["mcp"]}}}\\n' > "$PROMPTLANE_AGENT_SETUP_SMOKE_MCP_CONFIG"
+if [ "$1" = "mcp" ] && [ "$2" = "add" ] && [ -n "$LOOPRELAY_AGENT_SETUP_SMOKE_MCP_CONFIG" ]; then
+  mkdir -p "$(dirname "$LOOPRELAY_AGENT_SETUP_SMOKE_MCP_CONFIG")"
+  printf '{"mcpServers":{"looprelay":{"command":"looprelay","args":["mcp"]}}}\\n' > "$LOOPRELAY_AGENT_SETUP_SMOKE_MCP_CONFIG"
 fi
 if [ "$1" = "mcp" ] && [ "$2" = "list" ]; then
-  printf 'promptlane  promptlane mcp\\n'
+  printf 'looprelay  looprelay mcp\\n'
 fi
 exit 0
 `,

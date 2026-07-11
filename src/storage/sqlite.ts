@@ -36,7 +36,7 @@ import {
   createImportJobId,
   createPromptImprovementDraftId,
 } from "./generated-ids.js";
-import { getPromptLanePaths, supportsPosixMode } from "./paths.js";
+import { getLoopRelayPaths, supportsPosixMode } from "./paths.js";
 import {
   markPromptImprovementDraftCopied,
   readPromptImprovementDrafts,
@@ -151,7 +151,7 @@ export type {
 export function createSqlitePromptStorage(
   options: SqlitePromptStorageOptions,
 ): SqlitePromptStorage {
-  const paths = getPromptLanePaths(options.dataDir);
+  const paths = getLoopRelayPaths(options.dataDir);
   mkdirSync(paths.dataDir, { recursive: true, mode: 0o700 });
   mkdirSync(paths.promptsDir, { recursive: true, mode: 0o700 });
 
@@ -1824,9 +1824,6 @@ function extractMarkdownBody(markdown: string): string {
     return markdown;
   }
 
-  // writePromptMarkdown appends a single trailing "\n" after the body. Strip
-  // that so the body string round-trips byte-for-byte through the archive
-  // and stored_content_hash stays comparable on rebuild.
   return markdown
     .slice(delimiter + "\n---\n".length)
     .trimStart()

@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { normalizeClaudeCodePayload } from "../../adapters/claude-code.js";
-import { initializePromptLane } from "../../config/config.js";
+import { initializeLoopRelay } from "../../config/config.js";
 import { redactPrompt } from "../../redaction/redact.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import { scoreArchiveForCli } from "./score.js";
@@ -52,7 +52,7 @@ describe("score CLI command", () => {
       measured_prompts: 0,
       unmeasured_prompts: 3,
       next_action:
-        "Record loop outcomes and identify which PromptLane improvements were actually used.",
+        "Record loop outcomes and identify which LoopRelay improvements were actually used.",
     });
     expect(report.next_prompt_template).toContain("Goal:");
     expect(report.low_score_prompts.map((prompt) => prompt.id)).toContain(
@@ -73,7 +73,7 @@ describe("score CLI command", () => {
     expect(text).toContain("Effectiveness evidence");
     expect(text).toContain("measured 0, unmeasured 3");
     expect(text).toContain(
-      "Record loop outcomes and identify which PromptLane improvements were actually used.",
+      "Record loop outcomes and identify which LoopRelay improvements were actually used.",
     );
     expect(text).toContain("Next prompt template");
     expect(text).toContain("Lowest scoring prompts");
@@ -84,12 +84,12 @@ describe("score CLI command", () => {
 
   it("hints at the start command when the archive is empty", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const text = scoreArchiveForCli({ dataDir });
 
     expect(text).toContain("scored 0 prompts");
-    expect(text).toContain("No prompts captured yet. Run promptlane start");
+    expect(text).toContain("No prompts captured yet. Run looprelay start");
     // Privacy line still trails the report.
     expect(text.lastIndexOf("Privacy:")).toBeGreaterThan(
       text.indexOf("No prompts captured yet."),
@@ -131,7 +131,7 @@ describe("score CLI command", () => {
 
   it("includes a runnable example in the missing-input error path on --latest with empty archive", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const text = scoreArchiveForCli({ dataDir, latest: true });
 
@@ -173,7 +173,7 @@ describe("score CLI command", () => {
 });
 
 async function createScoreFixture(dataDir: string) {
-  const init = initializePromptLane({ dataDir });
+  const init = initializeLoopRelay({ dataDir });
   const storage = createSqlitePromptStorage({
     dataDir,
     hmacSecret: init.hookAuth.web_session_secret,
@@ -235,7 +235,7 @@ async function storeClaudePrompt(
 }
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-score-cli-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-score-cli-${randomUUID()}`);
   mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;

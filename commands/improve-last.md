@@ -1,9 +1,9 @@
 ---
-description: Rewrite the latest captured PromptLane request for approval (deterministic or agent-assisted)
+description: Rewrite the latest captured LoopRelay request for approval (deterministic or agent-assisted)
 allowed-tools: Bash, AskUserQuestion
 ---
 
-# Improve Latest PromptLane Prompt
+# Improve Latest LoopRelay Prompt
 
 This command rewrites the most recently captured prompt for the user's approval.
 There are two modes — pick one before running anything.
@@ -11,7 +11,7 @@ There are two modes — pick one before running anything.
 ## 1. Pick the rewrite mode
 
 Default to **deterministic** mode and run it without asking. This matches the
-historical UX — `/promptlane:improve-last` should produce a rewrite quickly
+historical UX — `/looprelay:improve-last` should produce a rewrite quickly
 in the common case.
 
 Only call `AskUserQuestion` when the user's request explicitly signals agent
@@ -19,11 +19,11 @@ intent — phrases like "agent", "rewrite with the active session", "have Claude
 rewrite", "semantic rewrite", or asking for a more thoughtful rewrite than the
 local heuristic. In that case, present these two options verbatim:
 
-- **deterministic** — Local rewrite from promptlane's heuristic improver. No
+- **deterministic** — Local rewrite from looprelay's heuristic improver. No
   agent reasoning; reproducible; never sends prompt content out of the local
   process.
 - **agent** — Use this active Claude Code session to semantically rewrite the
-  prompt. promptlane hands you one locally redacted body, the local score,
+  prompt. looprelay hands you one locally redacted body, the local score,
   and a baseline draft. You rewrite, then ask the user before saving. Because
   the redacted packet is processed by this active provider session, the user's
   configured provider may see the redacted text.
@@ -33,7 +33,7 @@ local heuristic. In that case, present these two options verbatim:
 Prefer the MCP tool when it is available:
 
 ```text
-promptlane:improve_prompt latest=true rewrite=true
+looprelay:improve_prompt latest=true rewrite=true
 ```
 
 Return the approval-ready draft, the changed sections, and the safety notes.
@@ -42,7 +42,7 @@ Make it clear that the draft is copy-based and must not be auto-submitted.
 If MCP is not configured, use the privacy-safe CLI fallback:
 
 ```bash
-promptlane improve --latest --rewrite --json
+looprelay improve --latest --rewrite --json
 ```
 
 ## 2b. Agent mode
@@ -50,8 +50,8 @@ promptlane improve --latest --rewrite --json
 Prefer the MCP tools when they are available:
 
 ```text
-promptlane:prepare_agent_rewrite latest=true
-promptlane:record_agent_rewrite
+looprelay:prepare_agent_rewrite latest=true
+looprelay:record_agent_rewrite
 ```
 
 `prepare_agent_rewrite` returns one locally redacted prompt, the local score
@@ -69,13 +69,13 @@ Summarize the result as:
 - whether the draft was saved with `record_agent_rewrite`
 
 If MCP is not configured, say that agent mode needs the local
-`promptlane mcp` server. Use `promptlane improve --latest --json` only as
+`looprelay mcp` server. Use `looprelay improve --latest --json` only as
 the local deterministic fallback, and label it clearly as the fallback.
 
 ## Safety (both modes)
 
 Do not auto-submit the rewrite. Do not call external providers through
-promptlane. Do not ask for provider tokens. Do not print the stored original
+looprelay. Do not ask for provider tokens. Do not print the stored original
 prompt body, raw hook payloads, raw absolute paths, tokens, or secrets. If the
 archive is empty, tell the user to capture one Claude Code or Codex prompt
 first.

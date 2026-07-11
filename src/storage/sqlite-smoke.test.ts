@@ -27,7 +27,7 @@ describe("better-sqlite3 smoke test", () => {
   });
 
   it("supports WAL mode for file databases", () => {
-    const dir = mkdtempSync(join(tmpdir(), "promptlane-sqlite-"));
+    const dir = mkdtempSync(join(tmpdir(), "looprelay-sqlite-"));
     tempDirs.push(dir);
 
     const db = new Database(join(dir, "smoke.sqlite"));
@@ -44,7 +44,7 @@ describe("better-sqlite3 smoke test", () => {
     try {
       db.exec(`
         CREATE VIRTUAL TABLE prompt_fts USING fts5(body);
-        INSERT INTO prompt_fts(body) VALUES ('hello prompt memory');
+        INSERT INTO prompt_fts(body) VALUES ('hello loop memory');
       `);
 
       const rows = db

@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a reproducible problem in prompt-coach
+about: Report a reproducible problem in looprelay
 title: "bug: "
 labels: bug
 assignees: ""
@@ -12,7 +12,7 @@ assignees: ""
 
 - OS:
 - Node version:
-- prompt-coach version or commit:
+- looprelay version or commit:
 - Tool: Claude Code / Codex / other
 
 ## Steps To Reproduce

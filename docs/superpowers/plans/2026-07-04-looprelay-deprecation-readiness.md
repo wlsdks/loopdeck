@@ -1,11 +1,11 @@
-# PromptLane Deprecation Readiness
+# LoopRelay Deprecation Readiness
 
 Historical naming note:
 
-- Current product name: PromptLane.
-- Current runtime id: `promptlane`.
-- This document preserves an older PromptLane compatibility decision. See `docs/PROMPTLANE.md` for the active product contract.
-- See `docs/PROMPTLANE-LEGACY-SURFACES.md` before adding or changing any PromptLane/`promptlane` surface.
+- Current product name: LoopRelay.
+- Current runtime id: `looprelay`.
+- This document preserves an older LoopRelay compatibility decision. See `docs/LOOPRELAY.md` for the active product contract.
+- See `docs/LOOPRELAY-RUNTIME-SURFACES.md` before adding or changing any LoopRelay/`looprelay` surface.
 
 **Date:** 2026-07-04
 **Slice:** R7 Deprecation Window Readiness
@@ -13,11 +13,11 @@ Historical naming note:
 
 ## Current Position
 
-`promptlane` remains the compatibility runtime id. The product-facing name is
-PromptLane, but `/promptlane:* remains supported`, the npm package name remains
-`promptlane`, the Claude Code plugin name remains `promptlane`, the Codex
-plugin id remains `promptlane`, hook commands keep `promptlane hook ...`,
-and the canonical MCP server name remains `promptlane`.
+`looprelay` remains the compatibility runtime id. The product-facing name is
+LoopRelay, but `/looprelay:* remains supported`, the npm package name remains
+`looprelay`, the Claude Code plugin name remains `looprelay`, the Codex
+plugin id remains `looprelay`, hook commands keep `looprelay hook ...`,
+and the canonical MCP server name remains `looprelay`.
 
 Do not show a deprecation banner yet. Do not remove the old namespace. Do not
 tell users they must migrate saved slash command snippets yet.
@@ -26,8 +26,8 @@ tell users they must migrate saved slash command snippets yet.
 
 Use this only when an alias is added while every old id remains supported:
 
-> PromptLane now includes an additional alias for `<surface>`. Existing
-> `promptlane` commands, `/promptlane:*` slash commands, plugin ids, hook
+> LoopRelay now includes an additional alias for `<surface>`. Existing
+> `looprelay` commands, `/looprelay:*` slash commands, plugin ids, hook
 > commands, and MCP server registrations keep working. No migration is required.
 
 Required evidence:
@@ -76,14 +76,14 @@ Required evidence:
 
 Before any deprecation banner, support docs must say:
 
-- saved `/promptlane:*` snippets keep working
-- new `/promptlane:*` snippets are optional only after a real alias namespace ships
+- saved `/looprelay:*` snippets keep working
+- new `/looprelay:*` snippets are optional only after a real alias namespace ships
 - users should not bulk-rewrite snippets until the alias is smoke-tested
-- rollback is to keep or restore `/promptlane:*`
+- rollback is to keep or restore `/looprelay:*`
 
 ## Minimum evidence before deprecation
 
-Do not mark `/promptlane:*`, plugin ids, hook commands, or MCP server names as
+Do not mark `/looprelay:*`, plugin ids, hook commands, or MCP server names as
 deprecated until all of these are true:
 
 - alias-only implementation exists for that exact surface
@@ -98,7 +98,7 @@ deprecated until all of these are true:
 
 Rollback smoke:
 
-- keep existing `promptlane` CLI, `/promptlane:*`, plugin ids, hook commands,
+- keep existing `looprelay` CLI, `/looprelay:*`, plugin ids, hook commands,
   and MCP server names functional after ignoring any new alias
 - verify no prompt body, transcript, compact summary, raw path, API token, or
   provider credential is printed

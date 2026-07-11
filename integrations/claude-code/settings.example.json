@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "PROMPTLANE_HOOK=\"promptlane hook claude-code\" /bin/sh -lc 'command -v promptlane >/dev/null 2>&1 && promptlane hook claude-code || true'",
+            "command": "LOOPRELAY_HOOK=\"looprelay hook claude-code\" /bin/sh -lc 'command -v looprelay >/dev/null 2>&1 && looprelay hook claude-code || true'",
             "timeout": 2
           }
         ]
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "PROMPTLANE_HOOK=\"promptlane hook claude-code\" /bin/sh -lc 'command -v promptlane >/dev/null 2>&1 && promptlane hook claude-code || true'",
+            "command": "LOOPRELAY_HOOK=\"looprelay hook claude-code\" /bin/sh -lc 'command -v looprelay >/dev/null 2>&1 && looprelay hook claude-code || true'",
             "timeout": 2
           }
         ]
@@ -27,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "PROMPTLANE_HOOK=\"promptlane hook claude-code\" /bin/sh -lc 'command -v promptlane >/dev/null 2>&1 && promptlane hook claude-code || true'",
+            "command": "LOOPRELAY_HOOK=\"looprelay hook claude-code\" /bin/sh -lc 'command -v looprelay >/dev/null 2>&1 && looprelay hook claude-code || true'",
             "timeout": 2
           }
         ]
@@ -38,7 +38,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "PROMPTLANE_HOOK=\"promptlane hook claude-code\" /bin/sh -lc 'command -v promptlane >/dev/null 2>&1 && promptlane hook claude-code || true'",
+            "command": "LOOPRELAY_HOOK=\"looprelay hook claude-code\" /bin/sh -lc 'command -v looprelay >/dev/null 2>&1 && looprelay hook claude-code || true'",
             "timeout": 2
           }
         ]

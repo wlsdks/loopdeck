@@ -43,7 +43,7 @@ const cliPath = join(repoRoot, "dist", "cli", "index.js");
 const packageJson = JSON.parse(
   readFileSync(join(repoRoot, "package.json"), "utf8"),
 );
-const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-benchmark-"));
+const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-benchmark-"));
 const dataDir = join(tempRoot, "data");
 const homeDir = join(tempRoot, "home");
 const rawPathPrefix = "/Users/example";
@@ -194,7 +194,7 @@ try {
     duration: exportMs,
   } = await runExportFlow(serverBaseUrl);
 
-  const coachScore = scorePromptLane();
+  const coachScore = scoreLoopRelay();
   const coachPromptActionability = scoreCoachPromptActionability();
   const promptQualityEvidence = scorePromptQualityEvidence({
     fixtureSet,
@@ -391,7 +391,7 @@ function scoreExperimentalRulesAB() {
   return ruleResults;
 }
 
-function scorePromptLane() {
+function scoreLoopRelay() {
   let passed = 0;
   for (const prompt of coachCases) {
     const result = improvePrompt({
@@ -465,7 +465,7 @@ function scoreArchiveEffectivenessCoverage(report) {
 }
 
 function seedArchiveEffectivenessOutcomes(seeds) {
-  const db = new Database(join(dataDir, "promptlane.sqlite"));
+  const db = new Database(join(dataDir, "looprelay.sqlite"));
   try {
     const insert = db.prepare(
       `
@@ -551,7 +551,7 @@ function countPrivacyLeaks(surfaces) {
     }
   }
 
-  const db = new Database(join(dataDir, "promptlane.sqlite"));
+  const db = new Database(join(dataDir, "looprelay.sqlite"));
   try {
     for (const table of ["prompts", "prompt_analyses", "redaction_events"]) {
       const rows = JSON.stringify(db.prepare(`SELECT * FROM ${table}`).all());
@@ -665,7 +665,7 @@ function runCli(args) {
   });
   if (result.status !== 0) {
     throw new Error(
-      `CLI failed: promptlane ${args.join(" ")}\n${result.stderr}`,
+      `CLI failed: looprelay ${args.join(" ")}\n${result.stderr}`,
     );
   }
   return result.stdout.trim();
@@ -766,7 +766,7 @@ function passes(scores) {
 }
 
 function printReport(report) {
-  console.log(`promptlane benchmark ${report.dataset}`);
+  console.log(`looprelay benchmark ${report.dataset}`);
   console.log(`pass: ${report.pass ? "yes" : "no"}`);
   for (const line of formatBenchmarkEvidenceStateLines(report.evidence_state)) {
     console.log(line);
@@ -822,13 +822,13 @@ function benchmarkNextAction({
 }) {
   if (fixtureSet === "real") {
     if (comparison.status === "incompatible") {
-      return `Baseline comparison is incompatible (${comparison.reason}); use a valid prior PromptLane report from the same fixture set and corpus fingerprint.`;
+      return `Baseline comparison is incompatible (${comparison.reason}); use a valid prior LoopRelay report from the same fixture set and corpus fingerprint.`;
     }
     if (outcomeCount === 0) {
       return "Real prompts were benchmarked, but effectiveness is unproven; add operator-confirmed passed or failed outcome metadata before comparing usefulness trends.";
     }
     if (pairedEffectiveness.status === "not_collected") {
-      return "Attributed outcomes exist, but before-versus-after usefulness is unproven; add matched baseline and promptlane effect_pair fixtures.";
+      return "Attributed outcomes exist, but before-versus-after usefulness is unproven; add matched baseline and looprelay effect_pair fixtures.";
     }
     if (pairedEffectiveness.status === "insufficient_pairs") {
       return `Paired effectiveness has ${pairedEffectiveness.pair_count} matched case(s); collect at least ${pairedEffectiveness.minimum_directional_pairs} before interpreting direction.`;

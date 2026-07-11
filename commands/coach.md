@@ -1,14 +1,14 @@
 ---
-description: Run the full PromptLane coach inside Claude Code
+description: Run the full LoopRelay coach inside Claude Code
 allowed-tools: Bash
 ---
 
-# PromptLane Coach
+# LoopRelay Coach
 
 Prefer the MCP tool when it is available:
 
 ```text
-promptlane:coach_prompt
+looprelay:coach_prompt
 ```
 
 Use this as the default command when the user wants prompt coaching inside
@@ -19,8 +19,8 @@ request guidance in one call.
 If MCP is not configured, use the privacy-safe CLI fallback:
 
 ```bash
-promptlane coach --json
-promptlane coach --json
+looprelay coach --json
+looprelay coach --json
 ```
 
 Summarize the result as:

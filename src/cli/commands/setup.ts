@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
 import type { Command } from "commander";
 
-import { initializePromptLane } from "../../config/config.js";
+import { initializeLoopRelay } from "../../config/config.js";
 import { clampScore } from "../../shared/clamp-score.js";
 import {
   installClaudeCodeHook,
@@ -11,15 +11,11 @@ import {
 } from "./install-hook.js";
 import {
   defaultClaudeCommandsDir,
-  defaultPromptLaneSlashCommandsSource,
-  installPromptLaneSlashCommands,
+  defaultLoopRelaySlashCommandsSource,
+  installLoopRelaySlashCommands,
   type SlashCommandInstallResult,
 } from "./install-slash-commands.js";
 import { installService, type ServiceInstallResult } from "./service.js";
-import {
-  migrateLegacyDataDir,
-  type DataDirMigrationResult,
-} from "../../storage/data-dir-migration.js";
 import {
   installClaudeCodeStatusLine,
   type StatusLineInstallResult,
@@ -69,8 +65,6 @@ export type SetupOptions = {
   };
   registerMcp?: boolean;
   json?: boolean;
-  legacyDataDir?: string;
-  skipLegacyMigration?: boolean;
 };
 
 export type SetupResult = {
@@ -137,7 +131,6 @@ export type SetupResult = {
     claudeCode?: McpRegistrationResult;
     codex?: McpRegistrationResult;
   };
-  dataDirMigration?: DataDirMigrationResult;
   nextSteps: string[];
 };
 
@@ -152,9 +145,9 @@ export function registerSetupCommand(program: Command): void {
   program
     .command("setup")
     .description(
-      "Initialize promptlane, install detected hooks, and set up local server startup.",
+      "Initialize looprelay, install detected hooks, and set up local server startup.",
     )
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--settings-path <path>", "Override Claude Code settings path.")
     .option("--hooks-path <path>", "Override Codex hooks.json path.")
     .option("--config-path <path>", "Override Codex config.toml path.")
@@ -187,7 +180,7 @@ export function registerSetupCommand(program: Command): void {
     .option("--skip-statusline", "Do not install the Claude Code status line.")
     .option(
       "--skip-slash-commands",
-      "Do not install /promptlane:* slash commands into Claude Code.",
+      "Do not install /looprelay:* slash commands into Claude Code.",
     )
     .option(
       "--open-web",
@@ -226,7 +219,7 @@ export function setupNeedsAttention(
 
 export function formatSetupResult(result: SetupResult): string {
   const lines = [
-    result.dryRun ? "promptlane setup preview" : "promptlane setup complete",
+    result.dryRun ? "looprelay setup preview" : "looprelay setup complete",
     `Profile: ${result.profile}`,
     `Data: ${result.dataDir}`,
     `Tools: ${result.detectedTools.length > 0 ? result.detectedTools.join(", ") : "none detected"}`,
@@ -325,10 +318,10 @@ function formatMcpRegistration(
 
 function isFirstScoreStep(step: string): boolean {
   return (
-    step.startsWith("Run promptlane server") ||
-    step.startsWith("Run promptlane service start") ||
+    step.startsWith("Run looprelay server") ||
+    step.startsWith("Run looprelay service start") ||
     step.startsWith("Send one Codex or Claude Code prompt") ||
-    step.startsWith("Then run /promptlane:improve-last")
+    step.startsWith("Then run /looprelay:improve-last")
   );
 }
 
@@ -336,7 +329,7 @@ function isTroubleshootingStep(step: string): boolean {
   return (
     step.startsWith("Register MCP") ||
     step.startsWith("Retry MCP") ||
-    step.startsWith("Run promptlane doctor")
+    step.startsWith("Run looprelay doctor")
   );
 }
 
@@ -362,9 +355,9 @@ export function runSetup(options: SetupOptions = {}): SetupResult {
   const rewriteGuard = resolveRewriteGuardOptions({ ...options, profile });
   const initResult = options.dryRun
     ? undefined
-    : initializePromptLane({ dataDir: options.dataDir });
+    : initializeLoopRelay({ dataDir: options.dataDir });
   const dataDir =
-    initResult?.config.data_dir ?? options.dataDir ?? "~/.promptlane";
+    initResult?.config.data_dir ?? options.dataDir ?? "~/.looprelay";
 
   const claudeResult = detectedTools.includes("claude-code")
     ? installClaudeCodeHook({
@@ -397,10 +390,10 @@ export function runSetup(options: SetupOptions = {}): SetupResult {
       : undefined;
   const slashCommandsResult =
     !options.skipSlashCommands && detectedTools.includes("claude-code")
-      ? installPromptLaneSlashCommands({
+      ? installLoopRelaySlashCommands({
           sourceDir:
             options.slashCommandsSourceDir ??
-            defaultPromptLaneSlashCommandsSource(),
+            defaultLoopRelaySlashCommandsSource(),
           targetDir: options.claudeCommandsDir ?? defaultClaudeCommandsDir(),
           dryRun: options.dryRun,
         })
@@ -630,28 +623,26 @@ function buildNextSteps(options: {
   const steps: string[] = [];
 
   if (options.detectedTools.length === 0) {
-    steps.push(
-      "Install Claude Code or Codex, then run promptlane setup again.",
-    );
+    steps.push("Install Claude Code or Codex, then run looprelay setup again.");
   }
 
   if (options.noService) {
-    steps.push("Run promptlane server before using connected tools.");
+    steps.push("Run looprelay server before using connected tools.");
   } else if (!options.serviceResult?.supported) {
-    steps.push("Run promptlane server manually on this platform.");
+    steps.push("Run looprelay server manually on this platform.");
   } else if (!options.serviceResult.started) {
-    steps.push("Run promptlane service start or promptlane server.");
+    steps.push("Run looprelay service start or looprelay server.");
   }
 
   if (options.profile === "coach") {
     steps.push(FIRST_PROMPT_NEXT_STEP);
     if (options.detectedTools.includes("claude-code")) {
       steps.push(
-        "Then run /promptlane:improve-last inside Claude Code to see PromptLane rewrite guidance for that prompt.",
+        "Then run /looprelay:improve-last inside Claude Code to see LoopRelay rewrite guidance for that prompt.",
       );
     }
     steps.push(
-      "Coach profile enabled: promptlane will add low-friction rewrite guidance inside supported hooks.",
+      "Coach profile enabled: looprelay will add low-friction rewrite guidance inside supported hooks.",
     );
     if (!options.mcpResult.registerRequested) {
       for (const tool of options.detectedTools) {
@@ -674,7 +665,7 @@ function buildNextSteps(options: {
     }
     if (options.statusLineResult) {
       steps.push(
-        "Restart Claude Code if the PromptLane status line is not visible.",
+        "Restart Claude Code if the LoopRelay status line is not visible.",
       );
     }
   }
@@ -692,7 +683,7 @@ function buildDoctorNextStep(tools: SetupTool[]): string {
     return `Run ${doctorCommand(tools[0])} if capture does not appear.`;
   }
 
-  return "Run promptlane doctor claude-code or promptlane doctor codex if capture does not appear.";
+  return "Run looprelay doctor claude-code or looprelay doctor codex if capture does not appear.";
 }
 
 function registerMcpForTools(

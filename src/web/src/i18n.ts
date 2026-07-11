@@ -1,6 +1,6 @@
 export type Language = "en" | "ko";
 
-const LANGUAGE_KEY = "promptlane.language";
+const LANGUAGE_KEY = "looprelay.language";
 
 export function detectInitialLanguage(): Language {
   const stored = window.localStorage.getItem(LANGUAGE_KEY);
@@ -471,8 +471,8 @@ const UI_TRANSLATIONS: Record<string, string> = {
     "공유하기 전에 측정 결과를 점검하세요.",
   "Not measured in this session yet": "이번 세션에서 아직 측정하지 않았습니다",
   "Capture prompts first": "먼저 프롬프트를 수집하세요",
-  "Run promptlane setup, then send a few real coding requests.":
-    "promptlane setup을 실행한 뒤 실제 코딩 요청을 몇 개 보내세요.",
+  "Run looprelay setup, then send a few real coding requests.":
+    "looprelay setup을 실행한 뒤 실제 코딩 요청을 몇 개 보내세요.",
   "Open the review queue and rewrite one weak prompt into a reusable request.":
     "리뷰 큐를 열고 약한 프롬프트 하나를 재사용 가능한 요청으로 고쳐 쓰세요.",
   "Capture a few Claude Code or Codex prompts before measuring.":
@@ -512,8 +512,8 @@ const UI_TRANSLATIONS: Record<string, string> = {
   "Needs practice": "연습 필요",
   "No data yet": "아직 데이터 없음",
   "Agent cockpit": "에이전트 조종석",
-  "Use promptlane inside Claude Code or Codex":
-    "Claude Code 또는 Codex 안에서 promptlane 사용",
+  "Use looprelay inside Claude Code or Codex":
+    "Claude Code 또는 Codex 안에서 looprelay 사용",
   "Keep the web UI for review, then run these commands directly in the coding agent loop.":
     "웹 UI는 회고용으로 두고, 실제 코딩 에이전트 루프에서는 이 명령을 바로 실행하세요.",
   "Local-only shortcuts. This panel does not render prompt bodies, raw paths, or tokens.":
@@ -545,8 +545,8 @@ const UI_TRANSLATIONS: Record<string, string> = {
     "최근 프롬프트 점수만 필요할 때 MCP 도구로 호출합니다.",
   "Keep a compact always-on prompt score companion in a side pane.":
     "옆 pane에 항상 켜두는 작은 프롬프트 점수 companion을 둡니다.",
-  "Add promptlane under the existing Claude HUD without replacing it.":
-    "기존 Claude HUD를 대체하지 않고 그 아래에 promptlane를 추가합니다.",
+  "Add looprelay under the existing Claude HUD without replacing it.":
+    "기존 Claude HUD를 대체하지 않고 그 아래에 looprelay를 추가합니다.",
   "Copied command": "명령 복사됨",
   next: "다음",
   "Review Goal clarity": "목표 명확성 리뷰",
@@ -631,8 +631,8 @@ const UI_TRANSLATIONS: Record<string, string> = {
   "View all": "전체 보기",
   Sensitive: "민감정보",
   "Agent tool surface": "에이전트 도구 표면",
-  "Use promptlane from Claude Code or Codex":
-    "Claude Code 또는 Codex에서 promptlane 사용",
+  "Use looprelay from Claude Code or Codex":
+    "Claude Code 또는 Codex에서 looprelay 사용",
   "Start with status, then choose the scoring or project-rule review tool that matches the user request.":
     "먼저 상태를 확인한 뒤 사용자 요청에 맞는 점수 측정 또는 프로젝트 규칙 리뷰 도구를 선택하세요.",
   "MCP setup commands": "MCP 설정 명령",
@@ -651,18 +651,18 @@ const UI_TRANSLATIONS: Record<string, string> = {
     "Claude Code 또는 Codex에 프롬프트 습관 점수를 요청하기 전에 로컬 아카이브 상태를 불러오세요.",
   "Use the status tool first so the agent can confirm capture, scoring, and privacy readiness.":
     "에이전트가 수집, 점수화, 개인정보 준비 상태를 확인할 수 있도록 먼저 status tool을 사용하세요.",
-  "Start the local PromptLane server before using Claude Code or Codex MCP tools.":
-    "Claude Code 또는 Codex MCP 도구를 사용하기 전에 로컬 promptlane 서버를 시작하세요.",
-  "Run promptlane server, then call get_promptlane_status from the agent.":
-    "promptlane server를 실행한 뒤 에이전트에서 get_promptlane_status를 호출하세요.",
+  "Start the local LoopRelay server before using Claude Code or Codex MCP tools.":
+    "Claude Code 또는 Codex MCP 도구를 사용하기 전에 로컬 looprelay 서버를 시작하세요.",
+  "Run looprelay server, then call get_looprelay_status from the agent.":
+    "looprelay server를 실행한 뒤 에이전트에서 get_looprelay_status를 호출하세요.",
   "MCP tools avoid prompt bodies, but raw redaction mode should be reviewed before sharing reports.":
     "MCP 도구는 prompt 본문을 피하지만, raw redaction mode에서는 리포트 공유 전에 설정을 점검하세요.",
   "Switch redaction to mask or review local settings before asking an agent to summarize results.":
     "에이전트에 결과 요약을 요청하기 전에 redaction을 mask로 바꾸거나 로컬 설정을 점검하세요.",
   "No stored prompts are available yet, so archive scoring cannot reveal habit patterns.":
     "아직 저장된 prompt가 없어 아카이브 점수로 습관 패턴을 볼 수 없습니다.",
-  "Capture a few Claude Code or Codex prompts, then call get_promptlane_status again.":
-    "Claude Code 또는 Codex prompt를 몇 개 수집한 뒤 get_promptlane_status를 다시 호출하세요.",
+  "Capture a few Claude Code or Codex prompts, then call get_looprelay_status again.":
+    "Claude Code 또는 Codex prompt를 몇 개 수집한 뒤 get_looprelay_status를 다시 호출하세요.",
   "Stored prompts are available; the next useful step is an archive quality review.":
     "저장된 prompt가 있습니다. 다음으로 유용한 단계는 아카이브 품질 리뷰입니다.",
   "Stored prompts are available; the next useful step is the default one-call coach.":
@@ -712,8 +712,8 @@ const UI_TRANSLATIONS: Record<string, string> = {
   "local-only": "로컬 전용",
   "structured JSON": "구조화 JSON",
   "output schema": "출력 스키마",
-  "The user asks if promptlane is working, whether prompts are being captured, or what to do next.":
-    "사용자가 promptlane가 동작하는지, prompt가 캡처되는지, 다음에 무엇을 해야 하는지 물을 때 사용합니다.",
+  "The user asks if looprelay is working, whether prompts are being captured, or what to do next.":
+    "사용자가 looprelay가 동작하는지, prompt가 캡처되는지, 다음에 무엇을 해야 하는지 물을 때 사용합니다.",
   "The user asks to review the latest request, improve the next prompt, summarize habits, or get one agent-native coaching result without opening the web UI.":
     "사용자가 웹 UI를 열지 않고 최신 요청 리뷰, 다음 prompt 개선, 습관 요약, agent-native coach 결과를 원할 때 사용합니다.",
   "Ready/setup status, safe prompt counts, latest prompt metadata, available tools, and next actions.":
@@ -767,14 +767,14 @@ const UI_TRANSLATIONS: Record<string, string> = {
   "Improvement use not attributed": "개선 사용이 귀속되지 않음",
   "Outcome evidence incomplete": "outcome evidence 미완료",
   "Outcome evidence needs redaction": "outcome evidence 수정 필요",
-  "Review candidate prompt ids, then run promptlane benchmark prepare-fixture with explicit consent.":
-    "후보 prompt id를 검토한 뒤 명시적 동의와 함께 promptlane benchmark prepare-fixture를 실행하세요.",
-  "Collect a loop snapshot after using PromptLane with Codex or Claude Code.":
-    "Codex 또는 Claude Code에서 PromptLane을 사용한 뒤 loop snapshot을 수집하세요.",
-  "Run promptlane loop status, then record the latest snapshot outcome after a verifiable checkpoint.":
-    "promptlane loop status를 실행한 뒤 검증 가능한 checkpoint에서 최신 snapshot outcome을 기록하세요.",
-  "Record improvement attribution only if a PromptLane improvement was actually used; otherwise collect another verified loop.":
-    "PromptLane 개선안을 실제로 사용한 경우에만 개선 사용을 귀속하세요. 아니라면 검증된 loop를 하나 더 수집하세요.",
+  "Review candidate prompt ids, then run looprelay benchmark prepare-fixture with explicit consent.":
+    "후보 prompt id를 검토한 뒤 명시적 동의와 함께 looprelay benchmark prepare-fixture를 실행하세요.",
+  "Collect a loop snapshot after using LoopRelay with Codex or Claude Code.":
+    "Codex 또는 Claude Code에서 LoopRelay을 사용한 뒤 loop snapshot을 수집하세요.",
+  "Run looprelay loop status, then record the latest snapshot outcome after a verifiable checkpoint.":
+    "looprelay loop status를 실행한 뒤 검증 가능한 checkpoint에서 최신 snapshot outcome을 기록하세요.",
+  "Record improvement attribution only if a LoopRelay improvement was actually used; otherwise collect another verified loop.":
+    "LoopRelay 개선안을 실제로 사용한 경우에만 개선 사용을 귀속하세요. 아니라면 검증된 loop를 하나 더 수집하세요.",
   "Record at least one privacy-safe evidence ref on an attributed passed or failed outcome.":
     "귀속된 passed 또는 failed outcome에 privacy-safe evidence ref를 하나 이상 기록하세요.",
   "Replace sensitive outcome evidence with privacy-safe labels before preparing a benchmark fixture.":
@@ -971,8 +971,8 @@ const UI_TRANSLATIONS: Record<string, string> = {
   "Hook Capture": "Hook 수집",
   "last delivery succeeded": "마지막 전송 성공",
   "last delivery failed": "마지막 전송 실패",
-  "Run promptlane setup --profile coach, then send one Codex or Claude Code prompt.":
-    "`promptlane setup --profile coach` 실행 후 Codex 또는 Claude Code 프롬프트를 하나 보내세요.",
+  "Run looprelay setup --profile coach, then send one Codex or Claude Code prompt.":
+    "`looprelay setup --profile coach` 실행 후 Codex 또는 Claude Code 프롬프트를 하나 보내세요.",
   "First prompt stored": "첫 프롬프트 저장",
   "Send one Codex or Claude Code prompt after setup.":
     "설정 후 Codex 또는 Claude Code 프롬프트를 하나 보내면 완료됩니다.",
@@ -1000,14 +1000,14 @@ const UI_TRANSLATIONS: Record<string, string> = {
   "Run coach setup, send one Codex or Claude Code request, then check the first score and improvement suggestion.":
     "coach 설정을 실행하고 Codex 또는 Claude Code 요청을 하나 보낸 뒤 첫 점수와 개선 제안을 확인하세요.",
   "No loop snapshots yet": "아직 loop snapshot이 없습니다",
-  "PromptLane status": "PromptLane 상태",
-  "PromptLane status empty": "PromptLane 상태 비어 있음",
+  "LoopRelay status": "LoopRelay 상태",
+  "LoopRelay status empty": "LoopRelay 상태 비어 있음",
   empty: "비어 있음",
   "Next steps": "다음 단계",
-  "Capture one Codex or Claude Code prompt, then run promptlane coach to confirm the first score.":
-    "Codex 또는 Claude Code 프롬프트를 하나 캡처한 뒤 promptlane coach로 첫 점수를 확인하세요.",
-  "Then run promptlane loop collect to create the first local loop snapshot.":
-    "그 다음 promptlane loop collect를 실행해 첫 로컬 loop snapshot을 만드세요.",
+  "Capture one Codex or Claude Code prompt, then run looprelay coach to confirm the first score.":
+    "Codex 또는 Claude Code 프롬프트를 하나 캡처한 뒤 looprelay coach로 첫 점수를 확인하세요.",
+  "Then run looprelay loop collect to create the first local loop snapshot.":
+    "그 다음 looprelay loop collect를 실행해 첫 로컬 loop snapshot을 만드세요.",
   "Local-only. No prompt bodies, raw paths, or compact summaries are shown here.":
     "로컬 전용입니다. 프롬프트 본문, raw path, compact summary는 여기에 표시하지 않습니다.",
   "Save prompts for later from the detail screen.":

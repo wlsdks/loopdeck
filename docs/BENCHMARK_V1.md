@@ -4,7 +4,7 @@ Date: 2026-05-02
 
 ## Purpose
 
-Benchmark v1 is the local regression benchmark for `promptlane`. It checks whether the product is still delivering its core value to Claude Code and Codex users:
+Benchmark v1 is the local regression benchmark for `looprelay`. It checks whether the product is still delivering its core value to Claude Code and Codex users:
 
 - finding previously useful prompts again
 - surfacing weak prompting habits
@@ -17,26 +17,26 @@ This benchmark is intentionally local-only. It does not call an external LLM jud
 ## Command
 
 ```sh
-promptlane benchmark --json
-promptlane benchmark pair-candidates --json
-promptlane benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE"
-promptlane benchmark prepare-pair --baseline-prompt-id "$BASELINE_PROMPT_ID" --promptlane-prompt-id "$PROMPTLANE_PROMPT_ID" --pair-id "$PAIR_ID" --query "$MATCH_QUERY" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$PAIR_FIXTURE_FILE"
-promptlane benchmark init-fixture --output "$FIXTURE_FILE"
+looprelay benchmark --json
+looprelay benchmark pair-candidates --json
+looprelay benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE"
+looprelay benchmark prepare-pair --baseline-prompt-id "$BASELINE_PROMPT_ID" --looprelay-prompt-id "$LOOPRELAY_PROMPT_ID" --pair-id "$PAIR_ID" --query "$MATCH_QUERY" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$PAIR_FIXTURE_FILE"
+looprelay benchmark init-fixture --output "$FIXTURE_FILE"
 # Replace every example with consent-bearing redacted fixtures.
 # Add passed or failed outcome metadata with safe evidence refs.
 # Set template_only to false after confirming the fixture is ready.
-promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"
+looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"
 
 # Save one successful JSON snapshot, then compare the same redacted corpus later.
-promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT"
-promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --baseline-file "$BASELINE_REPORT" --json
+looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT"
+looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --baseline-file "$BASELINE_REPORT" --json
 
 corepack pnpm benchmark
 corepack pnpm --silent benchmark -- --json
 corepack pnpm benchmark -- --fixture-set real      # opt-in, soft signal only
 ```
 
-The installed `promptlane benchmark` command uses the shipped production build.
+The installed `looprelay benchmark` command uses the shipped production build.
 The repository-local pnpm command builds first. Both create an isolated
 temporary data directory, start the local server on a temporary loopback port,
 ingest fixture prompts, and measure API/UI-adjacent behavior through the built
@@ -51,18 +51,18 @@ Installed users should keep real fixtures in an operator-owned local file and
 prefer the archive-backed command when selected prompts already exist:
 
 ```sh
-promptlane benchmark candidates --json
-promptlane benchmark pair-candidates --json
+looprelay benchmark candidates --json
+looprelay benchmark pair-candidates --json
 
-promptlane benchmark prepare-fixture \
+looprelay benchmark prepare-fixture \
   --prompt-id "$PROMPT_ID" \
   --consent-note "$CONSENT_NOTE" \
   --confirm-consent \
   --output "$FIXTURE_FILE"
 
-promptlane benchmark prepare-pair \
+looprelay benchmark prepare-pair \
   --baseline-prompt-id "$BASELINE_PROMPT_ID" \
-  --promptlane-prompt-id "$PROMPTLANE_PROMPT_ID" \
+  --looprelay-prompt-id "$LOOPRELAY_PROMPT_ID" \
   --pair-id "$PAIR_ID" \
   --query "$MATCH_QUERY" \
   --consent-note "$CONSENT_NOTE" \
@@ -79,11 +79,11 @@ confirming consent with `prepare-fixture`.
 `benchmark pair-candidates` scans the same bounded local snapshot window but
 returns two separate body-free groups. A completed outcome with no
 `used_improvement_prompt_ids` is a baseline candidate; only explicitly listed
-ids from an attributed outcome are PromptLane candidates. In mixed loops,
+ids from an attributed outcome are LoopRelay candidates. In mixed loops,
 unlisted prompt ids are not inferred as baselines. Latest completed
 classification wins across duplicate prompt ids. The report omits prompt
 bodies, snapshot ids, paths, summaries, and evidence refs, and distinguishes
-`needs_baseline`, `needs_promptlane`, incomplete evidence, and unsafe evidence.
+`needs_baseline`, `needs_looprelay`, incomplete evidence, and unsafe evidence.
 The operator still reviews task equivalence before passing selected ids to
 `prepare-pair`.
 
@@ -92,9 +92,9 @@ The operator explicitly selects two distinct prompt ids after reviewing their
 local prompt and outcome records, supplies one safe pair id and shared redacted
 query, and confirms consent. Repeat all four selection options in matching
 order to create multiple pairs in one fixture; option counts must match and a
-prompt cannot be reused across pairs. PromptLane requires the same Codex or Claude Code
+prompt cannot be reused across pairs. LoopRelay requires the same Codex or Claude Code
 tool, a completed baseline outcome without improvement attribution, and a
-completed treatment outcome with explicit PromptLane attribution. It rechecks
+completed treatment outcome with explicit LoopRelay attribution. It rechecks
 both prompt bodies, summaries, and evidence refs for sensitive values, writes a
 new 0600 fixture, refuses overwrite, and prints no selected ids, bodies,
 evidence refs, or output path. Create at least three reviewed pairs in one
@@ -113,12 +113,12 @@ action. It does not display candidate ids, outcome summaries, or evidence refs.
 
 The command reads only explicitly selected prompt ids after consent
 confirmation, revalidates redacted prompt and attributed outcome text, includes
-only completed outcomes whose PromptLane improvement use was explicitly
+only completed outcomes whose LoopRelay improvement use was explicitly
 recorded, writes a new private 0600 file, refuses overwrite, and does not print
 the file path or prompt bodies. Multiple prompts use repeated `--prompt-id`.
 
 For manual fixture authoring, create the starter shape with
-`promptlane benchmark init-fixture --output "$FIXTURE_FILE"`. The command
+`looprelay benchmark init-fixture --output "$FIXTURE_FILE"`. The command
 creates parent directories, writes the shipped template with private file
 permissions, refuses to overwrite an existing file, and never prints the local
 path. The generated file starts with `template_only: true` and cannot run as
@@ -128,7 +128,7 @@ passing the file to `--fixture-set real`;
 the synthetic release gate remains deterministic.
 
 Use `--report-file` with `--json` to save a successful report as a new private
-local file. PromptLane validates JSON before writing, uses `0600` permissions,
+local file. LoopRelay validates JSON before writing, uses `0600` permissions,
 and refuses to overwrite existing evidence. Failed benchmark runs do not create
 the report file. Stdout remains the same JSON report for scripts and review.
 
@@ -192,7 +192,7 @@ Start from the shipped example if you need a local template. Set
 command:
 
 ```sh
-promptlane benchmark init-fixture --output "$FIXTURE_FILE"
+looprelay benchmark init-fixture --output "$FIXTURE_FILE"
 
 # Repository-maintainer alternative:
 mkdir -p docs/benchmark-fixtures
@@ -216,7 +216,7 @@ prompts, coach cases, outcomes, evidence refs, and `consent_note` before writing
 the file. An optional `outcome` must use completed status `passed` or `failed`,
 a non-empty redacted summary and `evidence_refs`, and a non-negative integer
 `tests_run`. It must also set `improvement_used` to `true` only when the
-operator confirmed that the PromptLane improvement was used for that loop;
+operator confirmed that the LoopRelay improvement was used for that loop;
 otherwise it must be `false`. Fixtures without outcomes still exercise real-corpus retrieval,
 coaching, privacy, and runtime behavior, but cannot prove usefulness. The loader
 rejects obvious `sk-...`, `npm_...`, `/Users/...`, `/home/...`,
@@ -232,20 +232,20 @@ fixture supplies an outcome, and `none` for an outcome-free real corpus.
 A real fixture may optionally match two equivalent operator-observed tasks with
 `effect_pair`. Use the same safe pair `id`, adapter, and query. The `baseline`
 variant must have a completed outcome with `improvement_used: false`; the
-`promptlane` variant must have a completed outcome with
+`looprelay` variant must have a completed outcome with
 `improvement_used: true`. Every declared pair must contain exactly one of each
-variant. PromptLane rejects incomplete pairs, attribution mismatches, unsafe
+variant. LoopRelay rejects incomplete pairs, attribution mismatches, unsafe
 ids, and pairs whose adapter or query differs.
 
 The JSON report aggregates these fixtures under
-`details.paired_effectiveness`. It reports baseline and PromptLane pass rates,
+`details.paired_effectiveness`. It reports baseline and LoopRelay pass rates,
 their delta, and improved/regressed/unchanged transitions without returning
 prompt bodies, summaries, evidence refs, or local paths. Zero pairs report
 `not_collected`; one or two pairs report `insufficient_pairs`; three or more
 report `positive_direction`, `negative_direction`, or `mixed_direction`.
 This is a directional observational signal, not a randomized experiment, so
 `design` is always `paired_observational` and `causal_claim` is always `false`.
-It remains outside the synthetic release gate. Do not claim PromptLane caused
+It remains outside the synthetic release gate. Do not claim LoopRelay caused
 an improvement from a single attributed outcome or from a same-corpus version
 trend.
 
@@ -257,7 +257,7 @@ rather than adding private context to benchmark data.
 
 ### Baseline comparison
 
-`--baseline-file` reads a prior PromptLane benchmark JSON report locally. The
+`--baseline-file` reads a prior LoopRelay benchmark JSON report locally. The
 report includes a `corpus_fingerprint` derived by hashing fixture set,
 label/adapter/query/prompt fields, and coach cases. Outcome metadata is excluded
 so a later result for the same prompts can be compared. Prompt text and local
@@ -275,7 +275,7 @@ latencies are lower-is-better. Score changes up to `0.01`, and latency changes
 up to the greater of `5ms` or `10%`, are treated as noise and reported as
 unchanged. JSON reports expose `comparison.metrics`, `improvements`,
 `regressions`, and `unchanged`. Without a baseline, `requires_baseline` remains
-true and PromptLane does not call the snapshot a trend.
+true and LoopRelay does not call the snapshot a trend.
 
 ## Principles
 
@@ -321,7 +321,7 @@ Pass threshold:
 
 - `>= 0.8`
 
-### 3. PromptLane Quality
+### 3. LoopRelay Quality
 
 Checks:
 
@@ -444,7 +444,7 @@ Output:
 
 This is reported only — there is no pass threshold on lift today, since the synthetic corpus does not exercise spec-style language. Once real user fixtures land (P2-1), the average lift becomes a meaningful trend signal.
 
-To enable a rule for live ingest, edit `~/.promptlane/config.json`:
+To enable a rule for live ingest, edit `~/.looprelay/config.json`:
 
 ```json
 {

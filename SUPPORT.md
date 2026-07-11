@@ -1,6 +1,6 @@
 # Support
 
-promptlane is pre-release open-source software.
+looprelay is pre-release open-source software.
 
 ## Questions And Ideas
 
@@ -19,7 +19,7 @@ session tokens, or proprietary source code into public discussions.
 
 Use GitHub Issues for reproducible bugs. Include:
 
-- promptlane version
+- looprelay version
 - operating system
 - Node.js version
 - command or UI path

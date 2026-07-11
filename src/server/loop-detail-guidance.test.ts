@@ -23,7 +23,7 @@ describe("loop detail guidance", () => {
       reason:
         "uses the selected worktree/session/branch filters without auto-submitting",
       command:
-        "promptlane loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
+        "looprelay loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
       writes_files: false,
       external_calls: false,
     });
@@ -37,7 +37,7 @@ describe("loop detail guidance", () => {
         branch: "feature/branch filter",
       }).command,
     ).toBe(
-      "promptlane loop brief --worktree 'agent loop worktree' --session 'session '\\''quoted'\\''' --branch 'feature/branch filter'",
+      "looprelay loop brief --worktree 'agent loop worktree' --session 'session '\\''quoted'\\''' --branch 'feature/branch filter'",
     );
   });
 

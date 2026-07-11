@@ -9,14 +9,14 @@ Run these checks in the same shell and checkout that will run `npm publish`:
 
 ```sh
 npm whoami
-npm view promptlane versions --json
+npm view looprelay versions --json
 ```
 
 Latest local observation on 2026-07-09:
 
 - `npm whoami` returned `E401 Unauthorized`, so this machine was not ready to
   publish without npm login.
-- `npm view promptlane versions --json` returned `E404 Not Found`, so the
+- `npm view looprelay versions --json` returned `E404 Not Found`, so the
   package name still appeared unpublished at that moment.
 
 Both results can change. Treat them as a dated operator note only, not as a
@@ -52,28 +52,28 @@ repository maintainers may collect consent-bearing redacted fixtures in
 shape in an operator-owned local file by running:
 
 ```sh
-promptlane benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE"
-promptlane benchmark pair-candidates --json
-promptlane benchmark prepare-pair --baseline-prompt-id "$BASELINE_PROMPT_ID" --promptlane-prompt-id "$PROMPTLANE_PROMPT_ID" --pair-id "$PAIR_ID" --query "$MATCH_QUERY" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$PAIR_FIXTURE_FILE"
+looprelay benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE"
+looprelay benchmark pair-candidates --json
+looprelay benchmark prepare-pair --baseline-prompt-id "$BASELINE_PROMPT_ID" --looprelay-prompt-id "$LOOPRELAY_PROMPT_ID" --pair-id "$PAIR_ID" --query "$MATCH_QUERY" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$PAIR_FIXTURE_FILE"
 ```
 
 `prepare-fixture` revalidates selected archive prompts and includes only
 explicitly attributed completed outcomes. `prepare-pair` is the paired
 observational path: it requires a completed unattributed baseline and explicitly
-attributed PromptLane treatment from the same tool, writes one private matched
+attributed LoopRelay treatment from the same tool, writes one private matched
 fixture, and never turns that evidence into a causal claim. Repeat the four
 pair-selection options in matching order to put at least three pairs in one
 fixture without manual JSON merging. Use `pair-candidates --json` to inspect
 separate body-free baseline and
-PromptLane candidate groups before choosing equivalent tasks; the command does
+LoopRelay candidate groups before choosing equivalent tasks; the command does
 not expose snapshot ids or outcome content and does not infer equivalence. For
 manual fixture authoring, run
-`promptlane benchmark init-fixture --output "$FIXTURE_FILE"`, replacing
+`looprelay benchmark init-fixture --output "$FIXTURE_FILE"`, replacing
 every example with consent-bearing redacted fixtures, updating `consent_note`,
 adding operator-confirmed `passed` or `failed` outcome metadata with safe
 evidence refs, setting `improvement_used` to `true` only when the generated
 improvement was actually used (`false` otherwise), setting `template_only` to `false`, and then running
-`promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"`
+`looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"`
 with `--json --report-file "$BASELINE_REPORT"` to save one validated private
 JSON snapshot. A trend claim additionally requires rerunning the same corpus
 with `--baseline-file "$BASELINE_REPORT"`.
@@ -127,16 +127,16 @@ npm publish --tag latest
 
 `v1.0.0` must point at the commit you are publishing.
 
-Before `promptlane@1.0.0` is published, release-candidate polish commits may
+Before `looprelay@1.0.0` is published, release-candidate polish commits may
 still be included in the first stable release by rerunning the full local
 release gate and refreshing the annotated tag on the verified main commit:
 
 ```sh
-git tag -fa v1.0.0 -m "promptlane 1.0.0"
+git tag -fa v1.0.0 -m "looprelay 1.0.0"
 git push origin v1.0.0 --force
 ```
 
-After `promptlane@1.0.0` is published, do not retarget `v1.0.0`; bump the
+After `looprelay@1.0.0` is published, do not retarget `v1.0.0`; bump the
 package version, rerun the full release gate, and create a new annotated tag
 for the next published release.
 
@@ -151,18 +151,18 @@ Recommended version:
 Why `--tag latest`:
 
 - this is the first stable release target
-- `npm install -g promptlane` gets the stable release
+- `npm install -g looprelay` gets the stable release
 - future prereleases can still use `--tag beta` or another explicit tag
 
 ## Install Commands After Publish
 
 ```sh
-npm install -g promptlane
-promptlane setup --profile coach --register-mcp --open-web
-promptlane coach
-promptlane doctor claude-code
-promptlane doctor codex
-promptlane server
+npm install -g looprelay
+looprelay setup --profile coach --register-mcp --open-web
+looprelay coach
+looprelay doctor claude-code
+looprelay doctor codex
+looprelay server
 ```
 
 ## Required Local Gate Before Publishing
@@ -180,8 +180,8 @@ corepack pnpm e2e:browser
 corepack pnpm smoke:release
 corepack pnpm smoke:package-install
 corepack pnpm evidence:quality -- --require-complete
-corepack pnpm promptlane quality-evidence --require-complete
-git tag -fa v1.0.0 -m "promptlane 1.0.0"
+corepack pnpm looprelay quality-evidence --require-complete
+git tag -fa v1.0.0 -m "looprelay 1.0.0"
 git push origin v1.0.0 --force
 corepack pnpm npm-publish:preflight
 git diff --check
@@ -189,8 +189,8 @@ git diff --check
 
 The package install smoke builds, packs with `--ignore-scripts`, installs the
 tarball into an isolated npm prefix, runs all shipped bin help commands,
-verifies the installed `promptlane start --open-web --json` first-success guide,
-and verifies the installed `promptlane quality-evidence --require-complete` release gate:
+verifies the installed `looprelay start --open-web --json` first-success guide,
+and verifies the installed `looprelay quality-evidence --require-complete` release gate:
 
 ```sh
 corepack pnpm smoke:package-install
@@ -203,7 +203,7 @@ corepack pnpm smoke:package-install
 - [ ] package manager is pinned to `pnpm@10.18.0`, and Node engine remains `>=22.12 <25`
 - [ ] license, repository, homepage, bugs, keywords, publish access, and bin metadata are present in `package.json`
 - [ ] `corepack pnpm npm-publish:preflight` reports `package publish access is public` and `package keywords include public positioning terms`
-- [ ] package files include `dist`, Claude/Codex integration surfaces (`.claude-plugin`, `commands`, `plugins`, `integrations`), core integration docs (`docs/PROMPTLANE.md`, `docs/AGENT-HARNESS.md`, `docs/INSTRUCTION-FILES.md`, `docs/PLUGINS.md`, `docs/ADAPTERS.md`, `docs/LOOP-SNAPSHOT-SCHEMA.md`), the real benchmark fixture template (`docs/benchmark-fixtures/real.example.json`), release runbooks (`docs/NPM_PUBLISHING.md`, `docs/PACKAGE_CONTENTS.md`, `docs/PRE_PUBLISH_PRIVACY_AUDIT.md`, `docs/RELEASE_CHECKLIST.md`), release evidence docs, public docs (`README.md`, `README.ko.md`, `CHANGELOG.md`, `LICENSE`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SUPPORT.md`), the npm publish preflight script, and core release verification scripts
+- [ ] package files include `dist`, Claude/Codex integration surfaces (`.claude-plugin`, `commands`, `plugins`, `integrations`), core integration docs (`docs/LOOPRELAY.md`, `docs/AGENT-HARNESS.md`, `docs/INSTRUCTION-FILES.md`, `docs/PLUGINS.md`, `docs/ADAPTERS.md`, `docs/LOOP-SNAPSHOT-SCHEMA.md`), the real benchmark fixture template (`docs/benchmark-fixtures/real.example.json`), release runbooks (`docs/NPM_PUBLISHING.md`, `docs/PACKAGE_CONTENTS.md`, `docs/PRE_PUBLISH_PRIVACY_AUDIT.md`, `docs/RELEASE_CHECKLIST.md`), release evidence docs, public docs (`README.md`, `README.ko.md`, `CHANGELOG.md`, `LICENSE`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SUPPORT.md`), the npm publish preflight script, and core release verification scripts
 - [ ] package files exclude `dist/**/*.map`
 - [ ] version in `package.json` is bumped and has never been published
 - [ ] `src/shared/version.ts` `VERSION` matches `package.json#version` (the
@@ -211,9 +211,9 @@ corepack pnpm smoke:package-install
 - [ ] README is available in English and Korean and matches the actual feature set
 - [ ] package contents contain built CLI/server/web assets
 - [ ] all three bin entries exist after build:
-  - `bin.promptlane` → `dist/cli/index.js`
-  - `bin.pl-claude` → `dist/cli/pl-claude.js`
-  - `bin.pl-codex` → `dist/cli/pl-codex.js`
+  - `bin.looprelay` → `dist/cli/index.js`
+  - `bin.lr-claude` → `dist/cli/lr-claude.js`
+  - `bin.lr-codex` → `dist/cli/lr-codex.js`
 - [ ] each bin file is executable after build (`scripts/fix-bin-mode.mjs`
       runs as part of `pnpm build:server` and chmods all three)
 - [ ] `corepack pnpm pack:dry-run` excludes `dist/**/*.map` (source maps stay local)
@@ -230,7 +230,7 @@ corepack pnpm smoke:package-install
 
 - `corepack pnpm smoke:release` fails
 - `corepack pnpm pack:dry-run` does not include `dist/cli`, `dist/server`, or `dist/web`
-- npm reports that `promptlane` is already taken by another owner
+- npm reports that `looprelay` is already taken by another owner
 - the npm account cannot complete 2FA/OTP
 - README still claims a feature that is not implemented
 
@@ -238,11 +238,11 @@ corepack pnpm smoke:package-install
 
 ```sh
 npm whoami
-npm view promptlane version
+npm view looprelay version
 npm access list packages "$(npm whoami)" --json
 npm publish --tag latest
-npm dist-tag ls promptlane
-npm view promptlane versions --json
-git tag -fa v1.0.0 -m "promptlane 1.0.0"
+npm dist-tag ls looprelay
+npm view looprelay versions --json
+git tag -fa v1.0.0 -m "looprelay 1.0.0"
 git push origin v1.0.0 --force
 ```

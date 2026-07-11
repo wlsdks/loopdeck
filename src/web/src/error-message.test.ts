@@ -28,11 +28,11 @@ import {
 describe("errorMessageOrDefault", () => {
   it("preserves API recovery detail from Error messages", () => {
     const error = new Error(
-      "Loop memory approval failed (404): No loop snapshot found. Send one Codex or Claude Code prompt, run `promptlane coach`, then run `promptlane loop collect`.",
+      "Loop memory approval failed (404): No loop snapshot found. Send one Codex or Claude Code prompt, run `looprelay coach`, then run `looprelay loop collect`.",
     );
 
     expect(errorMessageOrDefault(error, "Could not approve loop memory.")).toBe(
-      "Loop memory approval failed (404): No loop snapshot found. Send one Codex or Claude Code prompt, run `promptlane coach`, then run `promptlane loop collect`.",
+      "Loop memory approval failed (404): No loop snapshot found. Send one Codex or Claude Code prompt, run `looprelay coach`, then run `looprelay loop collect`.",
     );
   });
 
@@ -79,41 +79,41 @@ describe("errorMessageOrDefault", () => {
 
   it("preserves export preview recovery detail", () => {
     const error = new Error(
-      "Export preview failed (403): Missing or invalid CSRF token. Refresh the local PromptLane web session, then retry the action.",
+      "Export preview failed (403): Missing or invalid CSRF token. Refresh the local LoopRelay web session, then retry the action.",
     );
 
     expect(exportPreviewErrorMessage(error)).toBe(
-      "Export preview failed (403): Missing or invalid CSRF token. Refresh the local PromptLane web session, then retry the action.",
+      "Export preview failed (403): Missing or invalid CSRF token. Refresh the local LoopRelay web session, then retry the action.",
     );
   });
 
   it("preserves archive score recovery detail", () => {
     const error = new Error(
-      "Archive score report failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the archive score request.",
+      "Archive score report failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the archive score request.",
     );
 
     expect(archiveScoreErrorMessage(error)).toBe(
-      "Archive score report failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the archive score request.",
+      "Archive score report failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the archive score request.",
     );
   });
 
   it("preserves archive score query recovery detail", () => {
     const error = new Error(
-      "Archive score report failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the archive score request.",
+      "Archive score report failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the archive score request.",
     );
 
     expect(archiveScoreQueryErrorMessage(error)).toBe(
-      "Archive score report failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the archive score request.",
+      "Archive score report failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the archive score request.",
     );
   });
 
   it("preserves improvement draft save recovery detail", () => {
     const error = new Error(
-      "Improvement draft save failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry saving the improvement draft.",
+      "Improvement draft save failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry saving the improvement draft.",
     );
 
     expect(improvementDraftSaveErrorMessage(error)).toBe(
-      "Improvement draft save failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry saving the improvement draft.",
+      "Improvement draft save failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry saving the improvement draft.",
     );
   });
 
@@ -159,11 +159,11 @@ describe("errorMessageOrDefault", () => {
 
   it("preserves ask event summary recovery detail", () => {
     const error = new Error(
-      "Ask event summary unavailable (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the ask events summary.",
+      "Ask event summary unavailable (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the ask events summary.",
     );
 
     expect(askEventSummaryErrorMessage(error)).toBe(
-      "Ask event summary unavailable (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the ask events summary.",
+      "Ask event summary unavailable (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the ask events summary.",
     );
   });
 
@@ -189,81 +189,81 @@ describe("errorMessageOrDefault", () => {
 
   it("preserves prompt list recovery detail", () => {
     const error = new Error(
-      "Prompt list failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the prompt archive request.",
+      "Prompt list failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the prompt archive request.",
     );
 
     expect(promptListErrorMessage(error)).toBe(
-      "Prompt list failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the prompt archive request.",
+      "Prompt list failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the prompt archive request.",
     );
   });
 
   it("preserves loop worktree recovery detail", () => {
     const error = new Error(
-      "Loop worktree drilldown failed (404): Worktree snapshot not found. Run `promptlane loop collect --worktree agent-loop-worktree`, then reopen the loop worktree drilldown.",
+      "Loop worktree drilldown failed (404): Worktree snapshot not found. Run `looprelay loop collect --worktree agent-loop-worktree`, then reopen the loop worktree drilldown.",
     );
 
     expect(loopWorktreeErrorMessage(error)).toBe(
-      "Loop worktree drilldown failed (404): Worktree snapshot not found. Run `promptlane loop collect --worktree agent-loop-worktree`, then reopen the loop worktree drilldown.",
+      "Loop worktree drilldown failed (404): Worktree snapshot not found. Run `looprelay loop collect --worktree agent-loop-worktree`, then reopen the loop worktree drilldown.",
     );
   });
 
   it("preserves loop list recovery detail", () => {
     const error = new Error(
-      "Loop list failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the loop list request.",
+      "Loop list failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the loop list request.",
     );
 
     expect(loopListErrorMessage(error)).toBe(
-      "Loop list failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the loop list request.",
+      "Loop list failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the loop list request.",
     );
   });
 
   it("preserves selected loop brief recovery detail", () => {
     const error = new Error(
-      "Selected loop brief failed (404): No loop snapshot found for the selected worktree. Run `promptlane loop collect --worktree agent-loop-worktree`, then retry the continuation brief.",
+      "Selected loop brief failed (404): No loop snapshot found for the selected worktree. Run `looprelay loop collect --worktree agent-loop-worktree`, then retry the continuation brief.",
     );
 
     expect(selectedLoopBriefErrorMessage(error)).toBe(
-      "Selected loop brief failed (404): No loop snapshot found for the selected worktree. Run `promptlane loop collect --worktree agent-loop-worktree`, then retry the continuation brief.",
+      "Selected loop brief failed (404): No loop snapshot found for the selected worktree. Run `looprelay loop collect --worktree agent-loop-worktree`, then retry the continuation brief.",
     );
   });
 
   it("preserves command center loop brief recovery detail", () => {
     const error = new Error(
-      "Selected loop brief failed (404): No loop snapshot found for the selected command center scope. Run `promptlane loop collect --worktree agent-loop-worktree`, then retry the command center brief.",
+      "Selected loop brief failed (404): No loop snapshot found for the selected command center scope. Run `looprelay loop collect --worktree agent-loop-worktree`, then retry the command center brief.",
     );
 
     expect(commandCenterLoopBriefErrorMessage(error)).toBe(
-      "Selected loop brief failed (404): No loop snapshot found for the selected command center scope. Run `promptlane loop collect --worktree agent-loop-worktree`, then retry the command center brief.",
+      "Selected loop brief failed (404): No loop snapshot found for the selected command center scope. Run `looprelay loop collect --worktree agent-loop-worktree`, then retry the command center brief.",
     );
   });
 
   it("preserves project list recovery detail", () => {
     const error = new Error(
-      "Project list failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the project list request.",
+      "Project list failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the project list request.",
     );
 
     expect(projectListErrorMessage(error)).toBe(
-      "Project list failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the project list request.",
+      "Project list failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the project list request.",
     );
   });
 
   it("preserves quality dashboard recovery detail", () => {
     const error = new Error(
-      "Quality dashboard failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the quality dashboard request.",
+      "Quality dashboard failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the quality dashboard request.",
     );
 
     expect(qualityDashboardErrorMessage(error)).toBe(
-      "Quality dashboard failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the quality dashboard request.",
+      "Quality dashboard failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the quality dashboard request.",
     );
   });
 
   it("preserves coach feedback query recovery detail", () => {
     const error = new Error(
-      "Coach feedback summary failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the coach feedback request.",
+      "Coach feedback summary failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the coach feedback request.",
     );
 
     expect(coachFeedbackQueryErrorMessage(error)).toBe(
-      "Coach feedback summary failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the coach feedback request.",
+      "Coach feedback summary failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the coach feedback request.",
     );
   });
 });

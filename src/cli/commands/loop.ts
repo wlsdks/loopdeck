@@ -1,6 +1,6 @@
 import type { Command } from "commander";
 
-import { loadHookAuth, loadPromptLaneConfig } from "../../config/config.js";
+import { loadHookAuth, loadLoopRelayConfig } from "../../config/config.js";
 import {
   createLoopBrief,
   latestCompactBoundaryAfterSnapshot,
@@ -32,8 +32,8 @@ import {
   selectedLoopSnapshotNotFoundMessage,
 } from "../../loop/snapshot-selection.js";
 import {
-  createPromptLaneStatus,
-  type PromptLaneStatus,
+  createLoopRelayStatus,
+  type LoopRelayStatus,
 } from "../../loop/status.js";
 import type { LoopSnapshot, LoopSnapshotSource } from "../../loop/types.js";
 import type { LoopMergeDecisionValue } from "../../storage/loop-decisions.js";
@@ -75,8 +75,8 @@ export function registerLoopCommand(program: Command): void {
 
   loop
     .command("status")
-    .description("Show local PromptLane snapshot readiness.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .description("Show local LoopRelay snapshot readiness.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--json", "Print JSON.")
     .action((options: LoopCliOptions) => {
       console.log(loopStatusForCli(options));
@@ -85,7 +85,7 @@ export function registerLoopCommand(program: Command): void {
   loop
     .command("collect")
     .description("Collect a privacy-safe snapshot from recent prompt metadata.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--json", "Print JSON.")
     .option("--limit <count>", "Maximum recent prompts to include.")
     .option(
@@ -102,7 +102,7 @@ export function registerLoopCommand(program: Command): void {
   loop
     .command("brief")
     .description("Print a continuation prompt from a local loop snapshot.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--json", "Print JSON.")
     .option(
       "--worktree <name>",
@@ -136,7 +136,7 @@ export function registerLoopCommand(program: Command): void {
     )
     .option(
       "--used-improvement-prompt <prompt-id>",
-      "Prompt id whose PromptLane improvement was used; repeat for multiple prompts.",
+      "Prompt id whose LoopRelay improvement was used; repeat for multiple prompts.",
       collectOptionValue,
       [],
     )
@@ -144,7 +144,7 @@ export function registerLoopCommand(program: Command): void {
     .option("--worktree <name>", "Select the newest snapshot for a worktree.")
     .option("--session <id>", "Select the newest snapshot for a session.")
     .option("--branch <name>", "Select the newest snapshot for a branch.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--json", "Print JSON.")
     .action((options: LoopCliOptions) => {
       console.log(loopOutcomeForCli(options));
@@ -157,7 +157,7 @@ export function registerLoopCommand(program: Command): void {
     .option("--worktree <name>", "Select the newest snapshot for a worktree.")
     .option("--session <id>", "Select the newest snapshot for a session.")
     .option("--branch <name>", "Select the newest snapshot for a branch.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--json", "Print JSON.")
     .action((options: LoopCliOptions) => {
       console.log(loopMemoryCandidateForCli(options));
@@ -170,7 +170,7 @@ export function registerLoopCommand(program: Command): void {
     .option("--worktree <name>", "Select the newest snapshot for a worktree.")
     .option("--session <id>", "Select the newest snapshot for a session.")
     .option("--branch <name>", "Select the newest snapshot for a branch.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--approved-by <actor>", "Approval actor label.", "user")
     .option("--json", "Print JSON.")
     .action((options: LoopCliOptions) => {
@@ -180,9 +180,9 @@ export function registerLoopCommand(program: Command): void {
   loop
     .command("instruction-patch")
     .description(
-      "Propose an instruction-file patch from approved PromptLane memory.",
+      "Propose an instruction-file patch from approved LoopRelay memory.",
     )
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option(
       "--target-file <file>",
       "Instruction file target (AGENTS.md or CLAUDE.md).",
@@ -195,8 +195,8 @@ export function registerLoopCommand(program: Command): void {
 
   loop
     .command("instruction-apply")
-    .description("Apply an approved PromptLane memory to an instruction file.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .description("Apply an approved LoopRelay memory to an instruction file.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option(
       "--target-file <file>",
       "Instruction file target (AGENTS.md or CLAUDE.md).",
@@ -227,7 +227,7 @@ export function registerLoopCommand(program: Command): void {
     )
     .requiredOption("--reason <text>", "Privacy-safe decision reason.")
     .option("--decided-by <actor>", "Decision actor label.", "user")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--json", "Print JSON.")
     .action((options: LoopCliOptions) => {
       console.log(loopDecisionRecordForCli(options));
@@ -236,7 +236,7 @@ export function registerLoopCommand(program: Command): void {
   decision
     .command("list")
     .description("List recent local merge decisions.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--json", "Print JSON.")
     .option("--limit <count>", "Maximum decisions to include.")
     .option("--worktree <name>", "Only include this worktree label.")
@@ -273,7 +273,7 @@ export function loopStatusForCli(options: LoopCliOptions = {}): string {
   return withStorage(options.dataDir, (storage) => {
     const snapshots = storage.listLoopSnapshots({ limit: 100 }).items;
     const latest = snapshots.at(0);
-    const status = createPromptLaneStatus({
+    const status = createLoopRelayStatus({
       snapshots,
       compactBoundaries: storage.listCompactBoundaries({ limit: 20 }).items,
       projectMemoryCount: latest
@@ -362,7 +362,7 @@ export function loopOutcomeForCli(options: LoopCliOptions = {}): string {
       throw new UserError(
         hasSelection
           ? selectedLoopSnapshotNotFoundMessage(target)
-          : "No loop snapshot found. Run `promptlane loop collect` before recording an outcome.",
+          : "No loop snapshot found. Run `looprelay loop collect` before recording an outcome.",
       );
     }
 
@@ -384,10 +384,7 @@ export function loopOutcomeForCli(options: LoopCliOptions = {}): string {
       snapshot_id: recorded.id,
       outcome: recorded.outcome,
       next_action: "review the outcome before approving durable memory",
-      next_actions: [
-        "promptlane loop memory-candidate",
-        "promptlane loop brief",
-      ],
+      next_actions: ["looprelay loop memory-candidate", "looprelay loop brief"],
       privacy: {
         local_only: true as const,
         external_calls: false as const,
@@ -414,7 +411,7 @@ export function loopMemoryCandidateForCli(
     );
     if (!snapshot) {
       throw new UserError(
-        loopMemoryNoSnapshotCliMessage("promptlane loop memory-candidate"),
+        loopMemoryNoSnapshotCliMessage("looprelay loop memory-candidate"),
       );
     }
 
@@ -434,7 +431,7 @@ export function loopMemoryApproveForCli(options: LoopCliOptions = {}): string {
     );
     if (!snapshot) {
       throw new UserError(
-        loopMemoryNoSnapshotCliMessage("promptlane loop memory-approve"),
+        loopMemoryNoSnapshotCliMessage("looprelay loop memory-approve"),
       );
     }
 
@@ -457,8 +454,8 @@ export function loopMemoryApproveForCli(options: LoopCliOptions = {}): string {
       memory,
       next_action: "use recorded memory as local context in future loop briefs",
       next_actions: [
-        "promptlane loop brief",
-        "promptlane loop instruction-patch --target-file AGENTS.md",
+        "looprelay loop brief",
+        "looprelay loop instruction-patch --target-file AGENTS.md",
       ],
       privacy: {
         ...memory.privacy,
@@ -484,7 +481,7 @@ export function loopInstructionPatchForCli(
     if (!memory) {
       throw new UserError(
         loopInstructionPatchNoMemoryCliMessage(
-          `promptlane loop instruction-patch --target-file ${targetFile}`,
+          `looprelay loop instruction-patch --target-file ${targetFile}`,
         ),
       );
     }
@@ -514,7 +511,7 @@ export function loopInstructionPatchApplyForCli(
     if (!memory) {
       throw new UserError(
         loopInstructionPatchNoMemoryCliMessage(
-          `promptlane loop instruction-apply --target-file ${targetFile} --confirm-apply`,
+          `looprelay loop instruction-apply --target-file ${targetFile} --confirm-apply`,
         ),
       );
     }
@@ -605,7 +602,7 @@ function withStorage<T>(
     hmacSecret: string,
   ) => T,
 ): T {
-  const config = loadPromptLaneConfig(dataDir);
+  const config = loadLoopRelayConfig(dataDir);
   const hookAuth = loadHookAuth(dataDir);
   const storage = createSqlitePromptStorage({
     dataDir: config.data_dir,
@@ -677,15 +674,15 @@ function formatLoopSnapshot(snapshot: LoopSnapshot): string {
       ? `top gaps ${snapshot.quality.top_gaps.join(", ")}`
       : "top gaps none",
     "",
-    "Next: promptlane loop brief",
+    "Next: looprelay loop brief",
     "",
     "Privacy: local-only, no prompt bodies, no raw paths.",
   ].join("\n");
 }
 
-function formatLoopStatus(status: PromptLaneStatus): string {
+function formatLoopStatus(status: LoopRelayStatus): string {
   return [
-    `PromptLane status ${status.status}`,
+    `LoopRelay status ${status.status}`,
     `snapshots ${status.snapshot_count}`,
     `approved memories ${status.project_memory.approved_count}`,
     `active worktrees ${status.activity.active_worktrees}`,

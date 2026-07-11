@@ -15,7 +15,7 @@ export type WebSession = {
   expiresAt: number;
 };
 
-const SESSION_COOKIE_NAME = "promptlane_session";
+const SESSION_COOKIE_NAME = "looprelay_session";
 const SESSION_DURATION_MS = 12 * HOUR_MS;
 const SESSION_DURATION_SECONDS = SESSION_DURATION_MS / 1000;
 
@@ -30,7 +30,7 @@ export function requireBearerToken(
     throw problem(
       401,
       "Unauthorized",
-      "Missing or invalid bearer token. Reinstall the agent hook with `promptlane install-hook claude-code` or `promptlane install-hook codex`, then run the matching `promptlane doctor` command if ingest still fails.",
+      "Missing or invalid bearer token. Reinstall the agent hook with `looprelay install-hook claude-code` or `looprelay install-hook codex`, then run the matching `looprelay doctor` command if ingest still fails.",
       request.url,
     );
   }

@@ -4,9 +4,7 @@ import { projectLabel } from "./project-label.js";
 
 describe("projectLabel (mcp)", () => {
   it("returns the last segment of a posix path", () => {
-    expect(projectLabel("/Users/example/projects/promptlane")).toBe(
-      "promptlane",
-    );
+    expect(projectLabel("/Users/example/projects/looprelay")).toBe("looprelay");
   });
 
   it("ignores trailing separators", () => {

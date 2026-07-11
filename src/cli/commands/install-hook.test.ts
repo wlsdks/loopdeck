@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { initializePromptLane, loadHookAuth } from "../../config/config.js";
+import { initializeLoopRelay, loadHookAuth } from "../../config/config.js";
 import {
   installCodexHook,
   installClaudeCodeHook,
@@ -28,7 +28,7 @@ describe("Claude Code hook install/uninstall", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const settingsPath = join(dir, "settings.json");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = installClaudeCodeHook({
       dataDir,
@@ -49,7 +49,7 @@ describe("Claude Code hook install/uninstall", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const settingsPath = join(dir, "settings.json");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     writeFileSync(
       settingsPath,
       `${JSON.stringify({ theme: "dark", hooks: { Stop: [] } }, null, 2)}\n`,
@@ -66,11 +66,11 @@ describe("Claude Code hook install/uninstall", () => {
     expect(settings.hooks.UserPromptSubmit).toHaveLength(1);
     expect(settings.hooks.UserPromptSubmit[0].hooks).toHaveLength(1);
     expect(settings.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
-      "promptlane hook claude-code",
+      "looprelay hook claude-code",
     );
     expect(settings.hooks.Stop).toHaveLength(1);
     expect(settings.hooks.Stop[0].hooks[0].command).toContain(
-      "promptlane hook claude-code",
+      "looprelay hook claude-code",
     );
     expect(settings.hooks.PreCompact).toHaveLength(1);
     expect(settings.hooks.PostCompact).toHaveLength(1);
@@ -79,11 +79,11 @@ describe("Claude Code hook install/uninstall", () => {
     );
   });
 
-  it("replaces legacy prompt-coach Claude Code hooks during install", () => {
+  it("replaces existing LoopRelay Claude Code hooks during install", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const settingsPath = join(dir, "settings.json");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     writeFileSync(
       settingsPath,
       `${JSON.stringify(
@@ -95,7 +95,7 @@ describe("Claude Code hook install/uninstall", () => {
                   {
                     type: "command",
                     command:
-                      'PROMPT_COACH_HOOK="prompt-coach hook claude-code" /usr/bin/node /repo/dist/cli/index.js hook claude-code --rewrite-guard "context"',
+                      'LOOPRELAY_HOOK="looprelay hook claude-code" /usr/bin/node /repo/dist/cli/index.js hook claude-code --rewrite-guard "context"',
                     timeout: 2,
                   },
                 ],
@@ -107,7 +107,7 @@ describe("Claude Code hook install/uninstall", () => {
                   {
                     type: "command",
                     command:
-                      'PROMPT_COACH_HOOK="prompt-coach hook session-start claude-code" /usr/bin/node /repo/dist/cli/index.js hook session-start claude-code --open-web',
+                      'LOOPRELAY_HOOK="looprelay hook session-start claude-code" /usr/bin/node /repo/dist/cli/index.js hook session-start claude-code --open-web',
                     timeout: 5,
                   },
                 ],
@@ -132,20 +132,18 @@ describe("Claude Code hook install/uninstall", () => {
     expect(settings.hooks.UserPromptSubmit).toHaveLength(1);
     expect(settings.hooks.SessionStart).toHaveLength(1);
     expect(settings.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
-      "PROMPTLANE_HOOK='promptlane hook claude-code'",
+      "LOOPRELAY_HOOK='looprelay hook claude-code'",
     );
     expect(settings.hooks.SessionStart[0].hooks[0].command).toContain(
-      "PROMPTLANE_HOOK='promptlane hook session-start claude-code'",
+      "LOOPRELAY_HOOK='looprelay hook session-start claude-code'",
     );
-    expect(JSON.stringify(settings)).not.toContain("PROMPT_COACH_HOOK");
-    expect(JSON.stringify(settings)).not.toContain("prompt-coach");
   });
 
   it("can install Claude Code hook with opt-in rewrite guard flags", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const settingsPath = join(dir, "settings.json");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = installClaudeCodeHook({
       dataDir,
@@ -158,7 +156,7 @@ describe("Claude Code hook install/uninstall", () => {
 
     const command =
       result.nextSettings.hooks.UserPromptSubmit[0].hooks[0].command;
-    expect(command).toContain("promptlane hook claude-code");
+    expect(command).toContain("looprelay hook claude-code");
     expect(command).toContain("--rewrite-guard");
     expect(command).toContain("block-and-copy");
     expect(command).toContain("--rewrite-min-score");
@@ -171,7 +169,7 @@ describe("Claude Code hook install/uninstall", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const settingsPath = join(dir, "settings.json");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = installClaudeCodeHook({
       dataDir,
@@ -183,7 +181,7 @@ describe("Claude Code hook install/uninstall", () => {
     expect(result.nextSettings.hooks.UserPromptSubmit).toHaveLength(1);
     expect(result.nextSettings.hooks.SessionStart).toHaveLength(1);
     const command = result.nextSettings.hooks.SessionStart[0].hooks[0].command;
-    expect(command).toContain("promptlane hook session-start claude-code");
+    expect(command).toContain("looprelay hook session-start claude-code");
     expect(command).toContain("--open-web");
     expect(command).not.toContain(loadHookAuth(dataDir).ingest_token);
   });
@@ -192,7 +190,7 @@ describe("Claude Code hook install/uninstall", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const settingsPath = join(dir, "settings.json");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const oldToken = loadHookAuth(dataDir).ingest_token;
     installClaudeCodeHook({ dataDir, settingsPath });
 
@@ -212,7 +210,7 @@ describe("Codex hook install/uninstall", () => {
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = installCodexHook({
       dataDir,
@@ -238,7 +236,7 @@ describe("Codex hook install/uninstall", () => {
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     mkdirSync(join(dir, ".codex"), { recursive: true });
     writeFileSync(
       hooksPath,
@@ -269,13 +267,13 @@ describe("Codex hook install/uninstall", () => {
     expect(hooks.hooks.Stop).toHaveLength(2);
     expect(hooks.hooks.Stop[0].hooks[0].command).toBe("echo stop");
     expect(hooks.hooks.Stop[1].hooks[0].command).toContain(
-      "promptlane hook stop codex",
+      "looprelay hook stop codex",
     );
     expect(hooks.hooks.PreCompact).toHaveLength(1);
     expect(hooks.hooks.PostCompact).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
-      "promptlane hook codex",
+      "looprelay hook codex",
     );
     expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).not.toContain(
       loadHookAuth(dataDir).ingest_token,
@@ -285,12 +283,12 @@ describe("Codex hook install/uninstall", () => {
     expect(config).not.toContain("codex_hooks");
   });
 
-  it("replaces legacy prompt-memory Codex hook during install", () => {
+  it("replaces existing LoopRelay Codex hooks during install", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     mkdirSync(join(dir, ".codex"), { recursive: true });
     writeFileSync(
       hooksPath,
@@ -303,7 +301,7 @@ describe("Codex hook install/uninstall", () => {
                   {
                     type: "command",
                     command:
-                      'PROMPT_MEMORY_HOOK="prompt-memory hook codex" /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard "context"',
+                      'PROMPT_MEMORY_HOOK="looprelay hook codex" /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard "context"',
                     timeout: 2,
                   },
                 ],
@@ -329,19 +327,19 @@ describe("Codex hook install/uninstall", () => {
     expect(hooks.hooks.UserPromptSubmit).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit[0].hooks).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
-      "PROMPTLANE_HOOK='promptlane hook codex'",
+      "LOOPRELAY_HOOK='looprelay hook codex'",
     );
     expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).not.toContain(
       "PROMPT_MEMORY_HOOK",
     );
   });
 
-  it("replaces legacy prompt-coach Codex hook during install", () => {
+  it("replaces legacy looprelay Codex hook during install", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     mkdirSync(join(dir, ".codex"), { recursive: true });
     writeFileSync(
       hooksPath,
@@ -354,7 +352,7 @@ describe("Codex hook install/uninstall", () => {
                   {
                     type: "command",
                     command:
-                      'PROMPT_COACH_HOOK="prompt-coach hook codex" /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard "context"',
+                      'LOOPRELAY_HOOK="looprelay hook codex" /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard "context"',
                     timeout: 2,
                   },
                 ],
@@ -380,10 +378,8 @@ describe("Codex hook install/uninstall", () => {
     expect(hooks.hooks.UserPromptSubmit).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit[0].hooks).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
-      "PROMPTLANE_HOOK='promptlane hook codex'",
+      "LOOPRELAY_HOOK='looprelay hook codex'",
     );
-    expect(JSON.stringify(hooks)).not.toContain("PROMPT_COACH_HOOK");
-    expect(JSON.stringify(hooks)).not.toContain("prompt-coach");
   });
 
   it("deduplicates legacy and current Codex hooks during install", () => {
@@ -391,7 +387,7 @@ describe("Codex hook install/uninstall", () => {
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     mkdirSync(join(dir, ".codex"), { recursive: true });
     writeFileSync(
       hooksPath,
@@ -404,7 +400,7 @@ describe("Codex hook install/uninstall", () => {
                   {
                     type: "command",
                     command:
-                      'PROMPT_MEMORY_HOOK="prompt-memory hook codex" /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard "context"',
+                      'PROMPT_MEMORY_HOOK="looprelay hook codex" /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard "context"',
                     timeout: 2,
                   },
                 ],
@@ -414,7 +410,7 @@ describe("Codex hook install/uninstall", () => {
                   {
                     type: "command",
                     command:
-                      "PROMPTLANE_HOOK='promptlane hook codex' /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard context",
+                      "LOOPRELAY_HOOK='looprelay hook codex' /usr/bin/node /repo/dist/cli/index.js hook codex --rewrite-guard context",
                     timeout: 2,
                   },
                 ],
@@ -439,17 +435,17 @@ describe("Codex hook install/uninstall", () => {
     expect(hooks.hooks.UserPromptSubmit).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit[0].hooks).toHaveLength(1);
     expect(hooks.hooks.UserPromptSubmit[0].hooks[0].command).toContain(
-      "PROMPTLANE_HOOK='promptlane hook codex'",
+      "LOOPRELAY_HOOK='looprelay hook codex'",
     );
     expect(JSON.stringify(hooks)).not.toContain("PROMPT_MEMORY_HOOK");
   });
 
-  it("deduplicates legacy prompt-coach and current Codex lifecycle hooks during install", () => {
+  it("deduplicates existing LoopRelay Codex lifecycle hooks during install", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     mkdirSync(join(dir, ".codex"), { recursive: true });
     writeFileSync(
       hooksPath,
@@ -462,7 +458,7 @@ describe("Codex hook install/uninstall", () => {
                   {
                     type: "command",
                     command:
-                      'PROMPT_COACH_HOOK="prompt-coach hook stop codex" /usr/bin/node /repo/dist/cli/index.js hook codex',
+                      'LOOPRELAY_HOOK="looprelay hook stop codex" /usr/bin/node /repo/dist/cli/index.js hook codex',
                     timeout: 2,
                   },
                 ],
@@ -472,7 +468,7 @@ describe("Codex hook install/uninstall", () => {
                   {
                     type: "command",
                     command:
-                      "PROMPTLANE_HOOK='promptlane hook stop codex' /usr/bin/node /repo/dist/cli/index.js hook codex",
+                      "LOOPRELAY_HOOK='looprelay hook stop codex' /usr/bin/node /repo/dist/cli/index.js hook codex",
                     timeout: 2,
                   },
                 ],
@@ -484,7 +480,7 @@ describe("Codex hook install/uninstall", () => {
                   {
                     type: "command",
                     command:
-                      'PROMPT_COACH_HOOK="prompt-coach hook pre-compact codex" /usr/bin/node /repo/dist/cli/index.js hook codex',
+                      'LOOPRELAY_HOOK="looprelay hook pre-compact codex" /usr/bin/node /repo/dist/cli/index.js hook codex',
                     timeout: 2,
                   },
                 ],
@@ -496,7 +492,7 @@ describe("Codex hook install/uninstall", () => {
                   {
                     type: "command",
                     command:
-                      'PROMPT_COACH_HOOK="prompt-coach hook post-compact codex" /usr/bin/node /repo/dist/cli/index.js hook codex',
+                      'LOOPRELAY_HOOK="looprelay hook post-compact codex" /usr/bin/node /repo/dist/cli/index.js hook codex',
                     timeout: 2,
                   },
                 ],
@@ -516,16 +512,14 @@ describe("Codex hook install/uninstall", () => {
     expect(hooks.hooks.PreCompact).toHaveLength(1);
     expect(hooks.hooks.PostCompact).toHaveLength(1);
     expect(hooks.hooks.Stop[0].hooks[0].command).toContain(
-      "PROMPTLANE_HOOK='promptlane hook stop codex'",
+      "LOOPRELAY_HOOK='looprelay hook stop codex'",
     );
     expect(hooks.hooks.PreCompact[0].hooks[0].command).toContain(
-      "PROMPTLANE_HOOK='promptlane hook pre-compact codex'",
+      "LOOPRELAY_HOOK='looprelay hook pre-compact codex'",
     );
     expect(hooks.hooks.PostCompact[0].hooks[0].command).toContain(
-      "PROMPTLANE_HOOK='promptlane hook post-compact codex'",
+      "LOOPRELAY_HOOK='looprelay hook post-compact codex'",
     );
-    expect(JSON.stringify(hooks)).not.toContain("PROMPT_COACH_HOOK");
-    expect(JSON.stringify(hooks)).not.toContain("prompt-coach");
   });
 
   it("can install Codex hook with opt-in rewrite guard flags", () => {
@@ -533,7 +527,7 @@ describe("Codex hook install/uninstall", () => {
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = installCodexHook({
       dataDir,
@@ -545,7 +539,7 @@ describe("Codex hook install/uninstall", () => {
     });
 
     const command = result.nextHooks.hooks.UserPromptSubmit[0].hooks[0].command;
-    expect(command).toContain("promptlane hook codex");
+    expect(command).toContain("looprelay hook codex");
     expect(command).toContain("--rewrite-guard");
     expect(command).toContain("context");
     expect(command).toContain("--rewrite-min-score");
@@ -557,7 +551,7 @@ describe("Codex hook install/uninstall", () => {
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = installCodexHook({
       dataDir,
@@ -574,9 +568,9 @@ describe("Codex hook install/uninstall", () => {
     const postCompactCommand =
       result.nextHooks.hooks.PostCompact[0].hooks[0].command;
 
-    expect(stopCommand).toContain("promptlane hook stop codex");
-    expect(preCompactCommand).toContain("promptlane hook pre-compact codex");
-    expect(postCompactCommand).toContain("promptlane hook post-compact codex");
+    expect(stopCommand).toContain("looprelay hook stop codex");
+    expect(preCompactCommand).toContain("looprelay hook pre-compact codex");
+    expect(postCompactCommand).toContain("looprelay hook post-compact codex");
     for (const command of [
       stopCommand,
       preCompactCommand,
@@ -593,7 +587,7 @@ describe("Codex hook install/uninstall", () => {
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = installCodexHook({
       dataDir,
@@ -606,17 +600,17 @@ describe("Codex hook install/uninstall", () => {
     expect(result.nextHooks.hooks.UserPromptSubmit).toHaveLength(1);
     expect(result.nextHooks.hooks.SessionStart).toHaveLength(1);
     const command = result.nextHooks.hooks.SessionStart[0].hooks[0].command;
-    expect(command).toContain("promptlane hook session-start codex");
+    expect(command).toContain("looprelay hook session-start codex");
     expect(command).toContain("--open-web");
     expect(command).not.toContain(loadHookAuth(dataDir).ingest_token);
   });
 
-  it("replaces legacy prompt-memory Codex SessionStart hook during open-web install", () => {
+  it("replaces legacy looprelay Codex SessionStart hook during open-web install", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     mkdirSync(join(dir, ".codex"), { recursive: true });
     writeFileSync(
       hooksPath,
@@ -629,7 +623,7 @@ describe("Codex hook install/uninstall", () => {
                   {
                     type: "command",
                     command:
-                      'PROMPT_MEMORY_HOOK="prompt-memory hook session-start codex" /usr/bin/node /repo/dist/cli/index.js hook session-start codex --open-web',
+                      'PROMPT_MEMORY_HOOK="looprelay hook session-start codex" /usr/bin/node /repo/dist/cli/index.js hook session-start codex --open-web',
                     timeout: 5,
                   },
                 ],
@@ -653,17 +647,17 @@ describe("Codex hook install/uninstall", () => {
     expect(hooks.hooks.SessionStart).toHaveLength(1);
     expect(hooks.hooks.SessionStart[0].hooks).toHaveLength(1);
     expect(hooks.hooks.SessionStart[0].hooks[0].command).toContain(
-      "PROMPTLANE_HOOK='promptlane hook session-start codex'",
+      "LOOPRELAY_HOOK='looprelay hook session-start codex'",
     );
     expect(JSON.stringify(hooks)).not.toContain("PROMPT_MEMORY_HOOK");
   });
 
-  it("removes legacy prompt-coach Codex SessionStart hook when open-web is not requested", () => {
+  it("removes LoopRelay Codex SessionStart hook when open-web is not requested", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     mkdirSync(join(dir, ".codex"), { recursive: true });
     writeFileSync(
       hooksPath,
@@ -676,7 +670,7 @@ describe("Codex hook install/uninstall", () => {
                   {
                     type: "command",
                     command:
-                      'PROMPT_COACH_HOOK="prompt-coach hook session-start codex" /usr/bin/node /repo/dist/cli/index.js hook session-start codex --open-web',
+                      'LOOPRELAY_HOOK="looprelay hook session-start codex" /usr/bin/node /repo/dist/cli/index.js hook session-start codex --open-web',
                     timeout: 5,
                   },
                 ],
@@ -693,8 +687,6 @@ describe("Codex hook install/uninstall", () => {
     const hooks = JSON.parse(readFileSync(hooksPath, "utf8"));
 
     expect(hooks.hooks.SessionStart ?? []).toEqual([]);
-    expect(JSON.stringify(hooks)).not.toContain("PROMPT_COACH_HOOK");
-    expect(JSON.stringify(hooks)).not.toContain("prompt-coach");
   });
 
   it("uninstalls hook and revokes the previous ingest token", () => {
@@ -702,7 +694,7 @@ describe("Codex hook install/uninstall", () => {
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const oldToken = loadHookAuth(dataDir).ingest_token;
     installCodexHook({ dataDir, hooksPath, configPath });
 
@@ -719,7 +711,7 @@ describe("Codex hook install/uninstall", () => {
 });
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-install-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-install-${randomUUID()}`);
   mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;

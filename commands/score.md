@@ -1,9 +1,9 @@
 ---
-description: Score PromptLane habits (latest prompt or accumulated archive)
+description: Score LoopRelay habits (latest prompt or accumulated archive)
 allowed-tools: Bash
 ---
 
-# PromptLane Score
+# LoopRelay Score
 
 This command covers both the latest captured prompt and the whole local
 archive. Pick the scope based on the user's request.
@@ -13,7 +13,7 @@ archive. Pick the scope based on the user's request.
 Prefer the MCP tool when it is available:
 
 ```text
-promptlane:score_prompt latest=true
+looprelay:score_prompt latest=true
 ```
 
 Ask it to include concise suggestions and summarize:
@@ -25,10 +25,10 @@ Ask it to include concise suggestions and summarize:
 If MCP is not configured, use the privacy-safe CLI fallback:
 
 ```bash
-promptlane score --latest --json
+looprelay score --latest --json
 ```
 
-If no captured prompt exists yet, tell the user to run `promptlane setup`
+If no captured prompt exists yet, tell the user to run `looprelay setup`
 and submit one Claude Code or Codex prompt first.
 
 ## Accumulated archive
@@ -36,13 +36,13 @@ and submit one Claude Code or Codex prompt first.
 Prefer the MCP tool when it is available:
 
 ```text
-promptlane:score_prompt_archive
+looprelay:score_prompt_archive
 ```
 
 If MCP is not configured, run:
 
 ```bash
-promptlane score --json
+looprelay score --json
 ```
 
 Summarize the average archive score, recurring quality gaps, and the lowest
@@ -51,8 +51,8 @@ scoring prompt ids.
 If the user asks to focus on one tool, use:
 
 ```bash
-promptlane score --tool claude-code --json
-promptlane score --tool codex --json
+looprelay score --tool claude-code --json
+looprelay score --tool codex --json
 ```
 
 ## Safety

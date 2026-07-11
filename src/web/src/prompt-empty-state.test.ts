@@ -6,13 +6,13 @@ describe("prompt empty state", () => {
   it("points a first-run archive at setup, one prompt, and coach", () => {
     expect(getPromptEmptyState({})).toEqual({
       commands: [
-        "promptlane start",
-        "promptlane setup --profile coach",
-        "promptlane doctor claude-code",
-        "promptlane doctor codex",
-        "promptlane coach",
+        "looprelay start",
+        "looprelay setup --profile coach",
+        "looprelay doctor claude-code",
+        "looprelay doctor codex",
+        "looprelay coach",
       ],
-      hint: "Run promptlane setup --profile coach, send one Codex or Claude Code request, then check the first score and improvement suggestion.",
+      hint: "Run looprelay setup --profile coach, send one Codex or Claude Code request, then check the first score and improvement suggestion.",
       secondary: undefined,
       title: "Capture your first coding prompt.",
     });

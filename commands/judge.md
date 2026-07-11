@@ -1,15 +1,15 @@
 ---
-description: Judge low-scoring PromptLane prompts with the active agent session
+description: Judge low-scoring LoopRelay prompts with the active agent session
 allowed-tools: Bash
 ---
 
-# PromptLane Agent Judge
+# LoopRelay Agent Judge
 
 Prefer the MCP tools when they are available:
 
 ```text
-promptlane:prepare_agent_judge_batch selection=low_score max_prompts=5
-promptlane:record_agent_judgments
+looprelay:prepare_agent_judge_batch selection=low_score max_prompts=5
+looprelay:record_agent_judgments
 ```
 
 Use this when the user explicitly asks Claude Code to judge accumulated prompt
@@ -21,7 +21,7 @@ Because this happens inside the active Claude Code session, the redacted packet
 may be processed by the user's configured provider session. Make that boundary
 clear when summarizing sensitive workflows.
 
-Do not call external providers through promptlane. Do not ask for provider
+Do not call external providers through looprelay. Do not ask for provider
 tokens. Do not print raw prompt bodies, raw absolute paths, raw hook payloads,
 tokens, or secrets. The judgment is advisory and should be summarized alongside
 the local score.
@@ -35,5 +35,5 @@ Summarize the result as:
 - whether any prompt should be rewritten before reuse
 
 If MCP is not configured, say that agent-judge mode needs the local
-`promptlane mcp` server. Do not emulate it by manually reading Markdown
+`looprelay mcp` server. Do not emulate it by manually reading Markdown
 archives unless the user explicitly asks for raw local file inspection.

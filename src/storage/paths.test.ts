@@ -4,8 +4,8 @@ import { resolveHomePath, safeResolveUnderRoot } from "./paths.js";
 
 describe("path helpers", () => {
   it("resolves home-relative paths", () => {
-    expect(resolveHomePath("~/.promptlane", "/Users/example")).toBe(
-      "/Users/example/.promptlane",
+    expect(resolveHomePath("~/.looprelay", "/Users/example")).toBe(
+      "/Users/example/.looprelay",
     );
   });
 

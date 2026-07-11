@@ -1,15 +1,15 @@
 ---
-description: Open the local PromptLane archive
+description: Open the local LoopRelay archive
 allowed-tools: Bash
 ---
 
-# Open PromptLane
+# Open LoopRelay
 
 Check whether the local server is already configured:
 
 ```bash
-promptlane service status || true
-promptlane statusline claude-code || true
+looprelay service status || true
+looprelay statusline claude-code || true
 ```
 
 Open the local archive:
@@ -22,12 +22,12 @@ If the status line says the server is down, ask the user whether to start the
 service:
 
 ```bash
-promptlane service start
+looprelay service start
 ```
 
 If service startup is unsupported on this platform, tell the user to run this in
 a separate terminal because it stays in the foreground:
 
 ```bash
-promptlane server
+looprelay server
 ```

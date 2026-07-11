@@ -47,12 +47,12 @@ describe("npm publish preflight", () => {
       {
         label: "benchmark is synthetic regression evidence",
         detail:
-          'corepack pnpm --silent benchmark -- --json must pass before publish, but a synthetic pass is not real-world effectiveness proof. Create an operator-owned fixture from selected archive prompts with promptlane benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE", or create a manual template with promptlane benchmark init-fixture --output "$FIXTURE_FILE", then save one JSON snapshot with promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT" and rerun with --baseline-file "$BASELINE_REPORT" before claiming real-user prompt quality trends.',
+          'corepack pnpm --silent benchmark -- --json must pass before publish, but a synthetic pass is not real-world effectiveness proof. Create an operator-owned fixture from selected archive prompts with looprelay benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE", or create a manual template with looprelay benchmark init-fixture --output "$FIXTURE_FILE", then save one JSON snapshot with looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT" and rerun with --baseline-file "$BASELINE_REPORT" before claiming real-user prompt quality trends.',
       },
       {
         label: "real benchmark fixtures are missing",
         detail:
-          'docs/benchmark-fixtures/real.json is absent; publish can proceed after release gates pass, but do not claim real-user effectiveness trends. Create an operator-owned fixture from selected archive prompts with promptlane benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE", or create a manual template with promptlane benchmark init-fixture --output "$FIXTURE_FILE", then save one JSON snapshot with promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT" and rerun with --baseline-file "$BASELINE_REPORT".',
+          'docs/benchmark-fixtures/real.json is absent; publish can proceed after release gates pass, but do not claim real-user effectiveness trends. Create an operator-owned fixture from selected archive prompts with looprelay benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE", or create a manual template with looprelay benchmark init-fixture --output "$FIXTURE_FILE", then save one JSON snapshot with looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT" and rerun with --baseline-file "$BASELINE_REPORT".',
       },
     ]);
     expect(parsed.next_action).toContain(
@@ -68,7 +68,7 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
-          label: "package description uses PromptLane positioning",
+          label: "package description uses LoopRelay positioning",
           ok: true,
         }),
         expect.objectContaining({
@@ -96,39 +96,39 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
-          label: "promptlane bin entry is registered",
+          label: "looprelay bin entry is registered",
           ok: true,
         }),
         expect.objectContaining({
-          label: "promptlane bin target exists",
+          label: "looprelay bin target exists",
           ok: true,
         }),
         expect.objectContaining({
-          label: "promptlane bin target is executable",
+          label: "looprelay bin target is executable",
           ok: true,
         }),
         expect.objectContaining({
-          label: "pl-claude bin entry is registered",
+          label: "lr-claude bin entry is registered",
           ok: true,
         }),
         expect.objectContaining({
-          label: "pl-claude bin target exists",
+          label: "lr-claude bin target exists",
           ok: true,
         }),
         expect.objectContaining({
-          label: "pl-claude bin target is executable",
+          label: "lr-claude bin target is executable",
           ok: true,
         }),
         expect.objectContaining({
-          label: "pl-codex bin entry is registered",
+          label: "lr-codex bin entry is registered",
           ok: true,
         }),
         expect.objectContaining({
-          label: "pl-codex bin target exists",
+          label: "lr-codex bin target exists",
           ok: true,
         }),
         expect.objectContaining({
-          label: "pl-codex bin target is executable",
+          label: "lr-codex bin target is executable",
           ok: true,
         }),
         expect.objectContaining({
@@ -241,12 +241,12 @@ describe("npm publish preflight", () => {
         }),
         expect.objectContaining({
           label:
-            "plugin artifact exists plugins/promptlane/.codex-plugin/plugin.json",
+            "plugin artifact exists plugins/looprelay/.codex-plugin/plugin.json",
           ok: true,
         }),
         expect.objectContaining({
           label:
-            "plugin artifact exists plugins/promptlane/skills/promptlane/SKILL.md",
+            "plugin artifact exists plugins/looprelay/skills/looprelay/SKILL.md",
           ok: true,
         }),
         expect.objectContaining({
@@ -287,11 +287,11 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
-          label: "Codex plugin manifest display metadata is PromptLane",
+          label: "Codex plugin manifest display metadata is LoopRelay",
           ok: true,
         }),
         expect.objectContaining({
-          label: "Codex plugin skill frontmatter is PromptLane",
+          label: "Codex plugin skill frontmatter is LoopRelay",
           ok: true,
         }),
         expect.objectContaining({
@@ -312,11 +312,11 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
-          label: "package files include docs/PROMPTLANE.md",
+          label: "package files include docs/LOOPRELAY.md",
           ok: true,
         }),
         expect.objectContaining({
-          label: "package files entry exists docs/PROMPTLANE.md",
+          label: "package files entry exists docs/LOOPRELAY.md",
           ok: true,
         }),
         expect.objectContaining({
@@ -340,11 +340,11 @@ describe("npm publish preflight", () => {
           ok: true,
         }),
         expect.objectContaining({
-          label: "package files include docs/PROMPTLANE-RUNTIME-HISTORY.md",
+          label: "package files include docs/LOOPRELAY-RUNTIME-HISTORY.md",
           ok: true,
         }),
         expect.objectContaining({
-          label: "package files include docs/PROMPTLANE-LEGACY-SURFACES.md",
+          label: "package files include docs/LOOPRELAY-RUNTIME-SURFACES.md",
           ok: true,
         }),
         expect.objectContaining({
@@ -359,47 +359,47 @@ describe("npm publish preflight", () => {
         }),
         expect.objectContaining({
           label:
-            "package files include docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-plan.md",
+            "package files include docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-plan.md",
           ok: true,
         }),
         expect.objectContaining({
           label:
-            "package files include docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-issue-slices.md",
+            "package files include docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-issue-slices.md",
           ok: true,
         }),
         expect.objectContaining({
           label:
-            "package files include docs/superpowers/plans/2026-07-04-promptlane-runtime-id-inventory.json",
+            "package files include docs/superpowers/plans/2026-07-04-looprelay-runtime-id-inventory.json",
           ok: true,
         }),
         expect.objectContaining({
           label:
-            "package files include docs/superpowers/plans/2026-07-04-promptlane-claude-dual-namespace-decision.md",
+            "package files include docs/superpowers/plans/2026-07-04-looprelay-claude-dual-namespace-decision.md",
           ok: true,
         }),
         expect.objectContaining({
           label:
-            "package files include docs/superpowers/plans/2026-07-04-promptlane-mcp-server-name-decision.md",
+            "package files include docs/superpowers/plans/2026-07-04-looprelay-mcp-server-name-decision.md",
           ok: true,
         }),
         expect.objectContaining({
           label:
-            "package files include docs/superpowers/plans/2026-07-04-promptlane-deprecation-readiness.md",
+            "package files include docs/superpowers/plans/2026-07-04-looprelay-deprecation-readiness.md",
           ok: true,
         }),
         expect.objectContaining({
           label:
-            "package files include docs/superpowers/plans/2026-07-04-promptlane-next-runtime-value-slice.md",
+            "package files include docs/superpowers/plans/2026-07-04-looprelay-next-runtime-value-slice.md",
           ok: true,
         }),
         expect.objectContaining({
           label:
-            "package files include docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
+            "package files include docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md",
           ok: true,
         }),
         expect.objectContaining({
           label:
-            "package files include docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md",
+            "package files include docs/superpowers/specs/2026-07-05-looprelay-repositioning-design.md",
           ok: true,
         }),
         expect.objectContaining({
@@ -649,7 +649,7 @@ describe("npm publish preflight", () => {
   });
 
   it("uses current preflight guidance when the release tag does not match HEAD", () => {
-    const binDir = mkdtempSync(join(tmpdir(), "promptlane-fake-git-"));
+    const binDir = mkdtempSync(join(tmpdir(), "looprelay-fake-git-"));
     const fakeGit = join(binDir, "git");
     writeFileSync(
       fakeGit,
@@ -697,10 +697,10 @@ exit 1
     expect(tagCheck?.detail).toContain("git checkout v1.0.0");
     expect(tagCheck?.detail).toContain("tagged checkout");
     expect(tagCheck?.detail).toContain("corepack pnpm npm-publish:preflight");
-    expect(tagCheck?.detail).toContain("If promptlane@1.0.0 is unpublished");
+    expect(tagCheck?.detail).toContain("If looprelay@1.0.0 is unpublished");
     expect(tagCheck?.detail).toContain("git tag -fa v1.0.0");
     expect(tagCheck?.detail).toContain(
-      "If promptlane@1.0.0 is already published",
+      "If looprelay@1.0.0 is already published",
     );
     expect(tagCheck?.detail).toContain("bump version and create a new tag");
     expect(parsed.next_action).toContain("v1.0.0 tag does not point at HEAD");
@@ -712,7 +712,7 @@ exit 1
   });
 
   it("requires the release tag to be annotated", () => {
-    const binDir = mkdtempSync(join(tmpdir(), "promptlane-fake-git-"));
+    const binDir = mkdtempSync(join(tmpdir(), "looprelay-fake-git-"));
     const fakeGit = join(binDir, "git");
     writeFileSync(
       fakeGit,
@@ -768,7 +768,7 @@ exit 1
   });
 
   it("requires the origin release tag to match the local release tag", () => {
-    const binDir = mkdtempSync(join(tmpdir(), "promptlane-fake-git-"));
+    const binDir = mkdtempSync(join(tmpdir(), "looprelay-fake-git-"));
     const fakeGit = join(binDir, "git");
     writeFileSync(
       fakeGit,
@@ -830,7 +830,7 @@ exit 1
   });
 
   it("emits the publish command only when every release preflight passes", () => {
-    const binDir = mkdtempSync(join(tmpdir(), "promptlane-ready-tools-"));
+    const binDir = mkdtempSync(join(tmpdir(), "looprelay-ready-tools-"));
     const fakeNpm = join(binDir, "npm");
     const fakeGit = join(binDir, "git");
     writeFileSync(
@@ -907,7 +907,7 @@ exit 1
   });
 
   it("points the operator to npm login when npm auth is the remaining blocker", () => {
-    const binDir = mkdtempSync(join(tmpdir(), "promptlane-fake-npm-"));
+    const binDir = mkdtempSync(join(tmpdir(), "looprelay-fake-npm-"));
     const fakeNpm = join(binDir, "npm");
     writeFileSync(
       fakeNpm,
@@ -990,7 +990,7 @@ exit 1
   });
 
   it("summarizes blocking checks near the top of human preflight output", () => {
-    const binDir = mkdtempSync(join(tmpdir(), "promptlane-fake-npm-"));
+    const binDir = mkdtempSync(join(tmpdir(), "looprelay-fake-npm-"));
     const fakeNpm = join(binDir, "npm");
     writeFileSync(
       fakeNpm,
@@ -1042,10 +1042,10 @@ exit 1
       "do not claim real-user effectiveness trends",
     );
     expect(result.stdout).toContain(
-      'promptlane benchmark init-fixture --output "$FIXTURE_FILE"',
+      'looprelay benchmark init-fixture --output "$FIXTURE_FILE"',
     );
     expect(result.stdout).toContain(
-      'promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"',
+      'looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"',
     );
     expect(result.stdout).toContain(
       "Recovery commands\n- npm login\n- corepack pnpm npm-publish:preflight",
@@ -1063,7 +1063,7 @@ exit 1
   });
 
   it("tells the operator to bump version instead of retargeting v1.0.0 after publish", () => {
-    const binDir = mkdtempSync(join(tmpdir(), "promptlane-fake-npm-"));
+    const binDir = mkdtempSync(join(tmpdir(), "looprelay-fake-npm-"));
     const fakeNpm = join(binDir, "npm");
     writeFileSync(
       fakeNpm,
@@ -1111,7 +1111,7 @@ exit 1
     );
     expect(versionCheck).toMatchObject({ ok: false });
     expect(versionCheck?.detail).toContain(
-      "promptlane@1.0.0 is already published",
+      "looprelay@1.0.0 is already published",
     );
     expect(versionCheck?.detail).toContain("do not retarget v1.0.0");
     expect(versionCheck?.detail).toContain("bump package.json");

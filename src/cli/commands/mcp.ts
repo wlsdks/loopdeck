@@ -1,6 +1,6 @@
 import type { Command } from "commander";
 
-import { runPromptLaneMcpServer } from "../../mcp/server.js";
+import { runLoopRelayMcpServer } from "../../mcp/server.js";
 
 type McpCliOptions = {
   dataDir?: string;
@@ -9,9 +9,9 @@ type McpCliOptions = {
 export function registerMcpCommand(program: Command): void {
   program
     .command("mcp")
-    .description("Run the local PromptLane MCP server over stdio.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .description("Run the local LoopRelay MCP server over stdio.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .action(async (options: McpCliOptions) => {
-      await runPromptLaneMcpServer({ dataDir: options.dataDir });
+      await runLoopRelayMcpServer({ dataDir: options.dataDir });
     });
 }

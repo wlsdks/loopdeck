@@ -1,0 +1,47 @@
+{
+  "name": "looprelay",
+  "version": "1.0.0",
+  "description": "Local continuity and evidence for long-running Codex and Claude Code loops.",
+  "author": {
+    "name": "LoopRelay contributors",
+    "url": "https://github.com/wlsdks/looprelay"
+  },
+  "homepage": "https://github.com/wlsdks/looprelay",
+  "repository": "https://github.com/wlsdks/looprelay",
+  "license": "MIT",
+  "keywords": [
+    "looprelay",
+    "agent-continuity",
+    "loop-engineering",
+    "evidence",
+    "continuation",
+    "codex",
+    "claude-code",
+    "local-first"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "LoopRelay",
+    "shortDescription": "Local continuity and evidence for long-running coding-agent loops",
+    "longDescription": "LoopRelay preserves safe session, worktree, branch, request, and outcome evidence locally so Codex and Claude Code work can resume without rediscovery. It creates continuation briefs, detects repeated failure patterns, and turns only user-approved lessons into memory or instruction proposals.",
+    "developerName": "LoopRelay contributors",
+    "category": "Coding",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "websiteURL": "https://github.com/wlsdks/looprelay",
+    "privacyPolicyURL": "https://github.com/wlsdks/looprelay/blob/main/SECURITY.md",
+    "termsOfServiceURL": "https://github.com/wlsdks/looprelay/blob/main/README.md",
+    "defaultPrompt": [
+      "Set up LoopRelay for this machine",
+      "Check whether LoopRelay is ready for the latest Codex session",
+      "Recover the current worktree and branch state",
+      "Create a continuation brief for the next session",
+      "Record the outcome of the latest request",
+      "Show recurring failure patterns across recent loops",
+      "Propose an approved lesson for memory or AGENTS.md",
+      "Diagnose what information is missing before this request can proceed",
+      "Open my local LoopRelay evidence archive"
+    ],
+    "brandColor": "#2563EB",
+    "screenshots": []
+  }
+}

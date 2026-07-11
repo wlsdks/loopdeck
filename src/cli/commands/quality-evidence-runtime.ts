@@ -62,7 +62,7 @@ export function readRuntimeEvidence(
   const result = runner(tool);
   if (!result.stdout.trim()) {
     throw new UserError(
-      `Unable to read live ${tool} doctor evidence. Run promptlane doctor ${tool} --json.`,
+      `Unable to read live ${tool} doctor evidence. Run looprelay doctor ${tool} --json.`,
     );
   }
 
@@ -89,7 +89,7 @@ export function readRuntimeEvidence(
       : {}),
     ...(parsed.status !== "ready"
       ? {
-          next_action: `Send one new ${tool} prompt, then rerun promptlane quality-evidence --runtime-tool ${tool} --require-runtime-ready.`,
+          next_action: `Send one new ${tool} prompt, then rerun looprelay quality-evidence --runtime-tool ${tool} --require-runtime-ready.`,
         }
       : {}),
     privacy: {

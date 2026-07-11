@@ -11,9 +11,9 @@ import {
 describe("agent wrapper", () => {
   it("rewrites Claude initial prompt in auto mode without leaking raw secrets", async () => {
     const parsed = parseWrapperArgs("claude", [
-      "--pc-mode",
+      "--lr-mode",
       "auto",
-      "--pc-min-score",
+      "--lr-min-score",
       "100",
       "--model",
       "sonnet",
@@ -40,7 +40,7 @@ describe("agent wrapper", () => {
 
   it("treats Claude -p as a forwarded flag and still rewrites the following prompt", async () => {
     const parsed = parseWrapperArgs("claude", [
-      "--pc-auto",
+      "--lr-auto",
       "-p",
       "fix this with sk-proj-1234567890abcdef",
     ]);
@@ -63,7 +63,7 @@ describe("agent wrapper", () => {
 
   it("rewrites Codex default initial prompt and preserves forwarded options", async () => {
     const parsed = parseWrapperArgs("codex", [
-      "--pc-auto",
+      "--lr-auto",
       "-m",
       "gpt-5.5",
       "-C",
@@ -91,7 +91,7 @@ describe("agent wrapper", () => {
 
   it("rewrites Codex exec prompts but passes through management subcommands", async () => {
     const execPlan = await createAgentWrapperPlan(
-      parseWrapperArgs("codex", ["--pc-mode", "auto", "exec", "fix"]),
+      parseWrapperArgs("codex", ["--lr-mode", "auto", "exec", "fix"]),
       {
         tool: "codex",
         now: new Date("2026-05-03T00:00:00.000Z"),
@@ -101,7 +101,7 @@ describe("agent wrapper", () => {
       },
     );
     const mcpPlan = await createAgentWrapperPlan(
-      parseWrapperArgs("codex", ["--pc-mode", "auto", "mcp", "list"]),
+      parseWrapperArgs("codex", ["--lr-mode", "auto", "mcp", "list"]),
       {
         tool: "codex",
         now: new Date("2026-05-03T00:00:00.000Z"),
@@ -117,13 +117,13 @@ describe("agent wrapper", () => {
     expect(mcpPlan.args).toEqual(["mcp", "list"]);
   });
 
-  it("--pc-help prints working examples for each pm-* flag", async () => {
+  it("--lr-help prints working examples for each pm-* flag", async () => {
     const stdout = new MemoryWritable();
     const spawn = vi.fn();
 
     const exitCode = await runAgentWrapper({
       tool: "claude",
-      argv: ["--pc-help"],
+      argv: ["--lr-help"],
       stdout: stdout as NodeJS.WriteStream,
       stdin: process.stdin,
       isTTY: false,
@@ -133,9 +133,9 @@ describe("agent wrapper", () => {
     expect(exitCode).toBe(0);
     expect(spawn).not.toHaveBeenCalled();
     expect(stdout.output).toContain("Examples:");
-    expect(stdout.output).toContain("--pc-mode off");
-    expect(stdout.output).toContain("--pc-language ko");
-    expect(stdout.output).toContain("--pc-dry-run");
+    expect(stdout.output).toContain("--lr-mode off");
+    expect(stdout.output).toContain("--lr-language ko");
+    expect(stdout.output).toContain("--lr-dry-run");
   });
 
   it("dry-run prints the selected prompt plan and does not spawn the agent", async () => {
@@ -144,7 +144,7 @@ describe("agent wrapper", () => {
 
     const exitCode = await runAgentWrapper({
       tool: "claude",
-      argv: ["--pc-mode", "auto", "--pc-dry-run", "fix"],
+      argv: ["--lr-mode", "auto", "--lr-dry-run", "fix"],
       now: new Date("2026-05-03T00:00:00.000Z"),
       stdout: stdout as NodeJS.WriteStream,
       stdin: process.stdin,
@@ -161,22 +161,22 @@ describe("agent wrapper", () => {
     expect(payload.prompt.selected_prompt).toContain("Please work from");
   });
 
-  it("rejects an unsupported --pc-mode value instead of silently keeping the default", () => {
+  it("rejects an unsupported --lr-mode value instead of silently keeping the default", () => {
     expect(() =>
-      parseWrapperArgs("claude", ["--pc-mode", "madeup", "fix"]),
-    ).toThrow(/Unsupported --pc-mode: madeup\. Use ask, auto, or off\./);
+      parseWrapperArgs("claude", ["--lr-mode", "madeup", "fix"]),
+    ).toThrow(/Unsupported --lr-mode: madeup\. Use ask, auto, or off\./);
     expect(() =>
-      parseWrapperArgs("claude", ["--pc-mode", "asks", "fix"]),
-    ).toThrow(/Unsupported --pc-mode: asks/);
+      parseWrapperArgs("claude", ["--lr-mode", "asks", "fix"]),
+    ).toThrow(/Unsupported --lr-mode: asks/);
     // Valid modes still parse.
     expect(
-      parseWrapperArgs("claude", ["--pc-mode", "ask", "fix"]).wrapper.mode,
+      parseWrapperArgs("claude", ["--lr-mode", "ask", "fix"]).wrapper.mode,
     ).toBe("ask");
     expect(
-      parseWrapperArgs("claude", ["--pc-mode", "auto", "fix"]).wrapper.mode,
+      parseWrapperArgs("claude", ["--lr-mode", "auto", "fix"]).wrapper.mode,
     ).toBe("auto");
     expect(
-      parseWrapperArgs("claude", ["--pc-mode", "off", "fix"]).wrapper.mode,
+      parseWrapperArgs("claude", ["--lr-mode", "off", "fix"]).wrapper.mode,
     ).toBe("off");
   });
 

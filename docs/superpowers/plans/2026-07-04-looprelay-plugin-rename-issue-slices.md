@@ -1,29 +1,29 @@
-# PromptLane Plugin Rename Issue Slices
+# LoopRelay Plugin Rename Issue Slices
 
 Historical naming note:
 
-- Current product name: PromptLane.
-- Current runtime id: `promptlane`.
-- This document preserves an older PromptLane compatibility decision. See `docs/PROMPTLANE.md` for the active product contract.
-- See `docs/PROMPTLANE-LEGACY-SURFACES.md` before adding or changing any PromptLane/`promptlane` surface.
+- Current product name: LoopRelay.
+- Current runtime id: `looprelay`.
+- This document preserves an older LoopRelay compatibility decision. See `docs/LOOPRELAY.md` for the active product contract.
+- See `docs/LOOPRELAY-RUNTIME-SURFACES.md` before adding or changing any LoopRelay/`looprelay` surface.
 
 **Date:** 2026-07-04
-**Parent plan:** `docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-plan.md`
+**Parent plan:** `docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-plan.md`
 **Status:** Implementation slicing plan, not approval to rename runtime ids
 
 ## Purpose
 
-Break the PromptLane plugin rename plan into independently shippable issues that
+Break the LoopRelay plugin rename plan into independently shippable issues that
 protect Claude Code, Codex, hooks, MCP, and npm packaging compatibility. Each
-slice must keep the current `promptlane` runtime ids working until a later
+slice must keep the current `looprelay` runtime ids working until a later
 phase has explicit compatibility evidence.
 
 ## Global Invariants
 
-- Do not remove `/promptlane:*`.
+- Do not remove `/looprelay:*`.
 - Do not rename `package.json#name`.
 - Do not rename plugin ids.
-- Do not remove the `promptlane` binary.
+- Do not remove the `looprelay` binary.
 - Do not rename MCP server examples without an MCP compatibility decision.
 - Do not change hook commands unless a hook binary compatibility smoke proves
   both old and new command paths.
@@ -42,7 +42,7 @@ Every rename slice must include:
 - `pnpm pack:dry-run`
 - `git diff --check`
 - Fresh install smoke for packaged files and binaries touched by the slice
-- Codex plugin smoke when `plugins/promptlane/**` or hook metadata changes
+- Codex plugin smoke when `plugins/looprelay/**` or hook metadata changes
 - Claude Code plugin smoke when `.claude-plugin/**` or `commands/*.md` changes
 - release-note classification: alias-only, deprecation, or breaking
 
@@ -54,10 +54,10 @@ rename implementation.
 Scope:
 
 - inventory `package.json#name`
-- inventory `package.json#bin.promptlane`
-- inventory `package.json#bin.promptlane`
+- inventory `package.json#bin.looprelay`
+- inventory `package.json#bin.looprelay`
 - inventory `.claude-plugin/plugin.json#name`
-- inventory `plugins/promptlane/.codex-plugin/plugin.json#name`
+- inventory `plugins/looprelay/.codex-plugin/plugin.json#name`
 - inventory command docs under `commands/*.md`
 - inventory hook install examples under README, plugin docs, and setup command
   docs
@@ -77,13 +77,13 @@ Acceptance:
 
 ## Slice R2: Alias-Only Command Docs
 
-Goal: document `/promptlane:*` as a future alias namespace without installing or
+Goal: document `/looprelay:*` as a future alias namespace without installing or
 shipping it as the only namespace.
 
 Scope:
 
-- add docs that define `/promptlane:*` as alias-only and optional
-- keep every `/promptlane:*` command documented
+- add docs that define `/looprelay:*` as alias-only and optional
+- keep every `/looprelay:*` command documented
 - add migration notes explaining that existing Claude Code users do not need to
   change saved slash commands
 - update README, README.ko, docs/PLUGINS, and command docs together
@@ -91,24 +91,24 @@ Scope:
 TDD proof:
 
 - RED: packaging docs test fails because alias-only docs do not mention both
-  `/promptlane:*` and `/promptlane:*`.
+  `/looprelay:*` and `/looprelay:*`.
 - GREEN: docs include both namespaces and explicitly say alias-only.
 
 Acceptance:
 
-- Do not remove `/promptlane:*`.
+- Do not remove `/looprelay:*`.
 - Do not add new command files that shadow old commands yet.
 - Claude Code plugin smoke proves old commands remain discoverable.
 
 ## Slice R3: Claude Code Dual Namespace Packaging Decision
 
-Goal: decide whether `/promptlane:*` command aliases can be packaged for Claude
-Code while keeping `/promptlane:*` commands intact.
+Goal: decide whether `/looprelay:*` command aliases can be packaged for Claude
+Code while keeping `/looprelay:*` commands intact.
 
 Scope:
 
 - check the current Claude Code plugin namespace model before adding files
-- document whether command-file aliases can actually create `/promptlane:*`
+- document whether command-file aliases can actually create `/looprelay:*`
 - define safe future paths for dual plugin package, official namespace alias
   support, or a later major rename window
 - keep command bodies and manifest unchanged unless a fresh RED test proves a
@@ -117,37 +117,37 @@ Scope:
 TDD proof:
 
 - RED: packaging test fails because the R3 decision artifact does not exist.
-- GREEN: decision artifact documents why current `commands/promptlane-*.md` files
-  would not create `/promptlane:*`, keeps `/promptlane:*` required, and names the
+- GREEN: decision artifact documents why current `commands/looprelay-*.md` files
+  would not create `/looprelay:*`, keeps `/looprelay:*` required, and names the
   allowed future paths.
 
 Acceptance:
 
-- Do not add `/promptlane:*` command files unless Claude Code plugin smoke can
+- Do not add `/looprelay:*` command files unless Claude Code plugin smoke can
   prove both namespaces are discoverable.
-- `promptlane` binary remains the command used in hook-sensitive paths unless
+- `looprelay` binary remains the command used in hook-sensitive paths unless
   a later hook slice proves otherwise.
 - R3 may end as "defer" if the current official namespace model cannot support
   alias-only commands without a second plugin identity or plugin id rename.
 
 ## Slice R4: Codex Plugin Display Rename Without ID Rename
 
-Goal: make Codex-facing copy say PromptLane while preserving install path and
+Goal: make Codex-facing copy say LoopRelay while preserving install path and
 plugin id compatibility.
 
 Scope:
 
-- update user-facing display copy in `plugins/promptlane/**`
-- keep `plugins/promptlane/.codex-plugin/plugin.json#name` as `promptlane`
+- update user-facing display copy in `plugins/looprelay/**`
+- keep `plugins/looprelay/.codex-plugin/plugin.json#name` as `looprelay`
   unless a later major rename slice approves an id change
 - keep setup-installed hook command compatibility
 - update Codex plugin docs and smoke instructions
 
 TDD proof:
 
-- RED: packaging test fails because display copy lacks PromptLane or because id
+- RED: packaging test fails because display copy lacks LoopRelay or because id
   compatibility is not asserted.
-- GREEN: display copy uses PromptLane and id compatibility stays locked.
+- GREEN: display copy uses LoopRelay and id compatibility stays locked.
 
 Acceptance:
 
@@ -156,14 +156,14 @@ Acceptance:
 
 ## Slice R5: Hook Binary Compatibility Smoke
 
-Goal: decide whether hooks can safely call `promptlane` as a fallback while
-keeping `promptlane` primary.
+Goal: decide whether hooks can safely call `looprelay` as a fallback while
+keeping `looprelay` primary.
 
 Scope:
 
-- add smoke coverage for `promptlane hook codex`
-- add smoke coverage for `promptlane hook claude-code`
-- optionally add `promptlane hook ...` smoke only after binary alias behavior is
+- add smoke coverage for `looprelay hook codex`
+- add smoke coverage for `looprelay hook claude-code`
+- optionally add `looprelay hook ...` smoke only after binary alias behavior is
   proven from packaged output
 - document fallback order and failure behavior
 
@@ -174,19 +174,19 @@ TDD proof:
 
 Acceptance:
 
-- no hook command switches to `promptlane` as the only command
+- no hook command switches to `looprelay` as the only command
 - hook stdout/stderr never prints prompt body, raw path, or secrets
 - Fresh install smoke covers packaged bin permissions
 
 ## Slice R6: MCP Server Name Compatibility Decision
 
-Goal: decide whether `promptlane` should become an MCP server alias or stay
+Goal: decide whether `looprelay` should become an MCP server alias or stay
 documentation-only during the compatibility window.
 
 Scope:
 
 - inventory README, README.ko, docs/PLUGINS, setup output, and CLI examples
-- define whether `promptlane` remains the canonical MCP server name
+- define whether `looprelay` remains the canonical MCP server name
 - if adding alias docs, make the alias explicit and non-breaking
 - update doctor/setup tests only after RED proves the current guidance is
   insufficient
@@ -210,7 +210,7 @@ Scope:
 
 - draft release-note template for alias-only, deprecation, and breaking phases
 - draft support guidance for saved slash command snippets
-- define minimum usage/evidence needed before marking `/promptlane:*`
+- define minimum usage/evidence needed before marking `/looprelay:*`
   deprecated
 - define rollback and upgrade smoke requirements
 

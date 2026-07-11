@@ -102,7 +102,7 @@ describe("createRealBenchmarkFixture", () => {
 });
 
 describe("createPairedRealBenchmarkFixture", () => {
-  it("creates a matched baseline and explicitly attributed PromptLane pair", () => {
+  it("creates a matched baseline and explicitly attributed LoopRelay pair", () => {
     const baseline = promptDetail();
     baseline.id = "prmt_baseline";
     baseline.loop_outcomes![0]!.improvement_used = false;
@@ -116,7 +116,7 @@ describe("createPairedRealBenchmarkFixture", () => {
         pairId: "release_review",
         query: "release verification",
         baselinePrompt: baseline,
-        promptlanePrompt: treatment,
+        looprelayPrompt: treatment,
       }),
     ).toEqual({
       template_only: false,
@@ -133,10 +133,10 @@ describe("createPairedRealBenchmarkFixture", () => {
           }),
         }),
         expect.objectContaining({
-          label: "release_review_promptlane",
+          label: "release_review_looprelay",
           adapter: "codex",
           query: "release verification",
-          effect_pair: { id: "release_review", variant: "promptlane" },
+          effect_pair: { id: "release_review", variant: "looprelay" },
           outcome: expect.objectContaining({
             status: "passed",
             improvement_used: true,
@@ -157,7 +157,7 @@ describe("createPairedRealBenchmarkFixture", () => {
         pairId: "release_review",
         query: "release verification",
         baselinePrompt: baseline,
-        promptlanePrompt: baseline,
+        looprelayPrompt: baseline,
       }),
     ).toThrow("Paired benchmark prompts must be distinct.");
 
@@ -170,12 +170,12 @@ describe("createPairedRealBenchmarkFixture", () => {
         pairId: "release_review",
         query: "release verification",
         baselinePrompt: baseline,
-        promptlanePrompt: treatment,
+        looprelayPrompt: treatment,
       }),
     ).toThrow("Paired benchmark prompts must use the same supported tool.");
   });
 
-  it("requires safe completed baseline and attributed PromptLane outcomes", () => {
+  it("requires safe completed baseline and attributed LoopRelay outcomes", () => {
     const baseline = promptDetail();
     baseline.id = "prmt_baseline";
     const treatment = promptDetail();
@@ -187,10 +187,10 @@ describe("createPairedRealBenchmarkFixture", () => {
         pairId: "release_review",
         query: "release verification",
         baselinePrompt: baseline,
-        promptlanePrompt: treatment,
+        looprelayPrompt: treatment,
       }),
     ).toThrow(
-      "Baseline prompt requires completed redacted outcome evidence without PromptLane improvement attribution.",
+      "Baseline prompt requires completed redacted outcome evidence without LoopRelay improvement attribution.",
     );
 
     baseline.loop_outcomes![0]!.improvement_used = false;
@@ -201,10 +201,10 @@ describe("createPairedRealBenchmarkFixture", () => {
         pairId: "release_review",
         query: "release verification",
         baselinePrompt: baseline,
-        promptlanePrompt: treatment,
+        looprelayPrompt: treatment,
       }),
     ).toThrow(
-      "PromptLane prompt requires completed redacted outcome evidence with explicit improvement attribution.",
+      "LoopRelay prompt requires completed redacted outcome evidence with explicit improvement attribution.",
     );
   });
 
@@ -221,7 +221,7 @@ describe("createPairedRealBenchmarkFixture", () => {
         pairId: "release_review",
         query: "Review /Users/example/private/release notes",
         baselinePrompt: baseline,
-        promptlanePrompt: treatment,
+        looprelayPrompt: treatment,
       }),
     ).toThrow("Paired benchmark query must be non-empty and redacted.");
 
@@ -234,7 +234,7 @@ describe("createPairedRealBenchmarkFixture", () => {
         pairId: "release_review",
         query: "release verification",
         baselinePrompt: baseline,
-        promptlanePrompt: treatment,
+        looprelayPrompt: treatment,
       }),
     ).toThrow(
       "Paired benchmark outcome evidence must be redacted before export.",

@@ -13,16 +13,16 @@ describe("createPromptAgentActionSnapshot", () => {
     expect(snapshot.heading).toBe("Continue in Claude Code or Codex");
     expect(snapshot.promptLabel).toBe("claude-code · 44/100 weak");
     expect(command(snapshot, "mcp-score")).toBe(
-      "promptlane:score_prompt prompt_id=prompt_abc123 include_suggestions=true",
+      "looprelay:score_prompt prompt_id=prompt_abc123 include_suggestions=true",
     );
     expect(command(snapshot, "mcp-improve")).toBe(
-      "promptlane:improve_prompt prompt_id=prompt_abc123",
+      "looprelay:improve_prompt prompt_id=prompt_abc123",
     );
     expect(command(snapshot, "agent-rewrite")).toBe(
-      "promptlane:prepare_agent_rewrite prompt_id=prompt_abc123 include_local_baseline=true",
+      "looprelay:prepare_agent_rewrite prompt_id=prompt_abc123 include_local_baseline=true",
     );
     expect(command(snapshot, "open-stored")).toBe(
-      "promptlane show prompt_abc123 --json",
+      "looprelay show prompt_abc123 --json",
     );
     expect(JSON.stringify(snapshot)).not.toContain("/Users/example");
     expect(JSON.stringify(snapshot)).not.toContain("sk-proj");

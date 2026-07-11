@@ -1,27 +1,26 @@
 {
-  "name": "promptlane",
+  "name": "looprelay",
   "owner": {
-    "name": "PromptLane contributors",
+    "name": "LoopRelay contributors",
     "email": "wlsdks@users.noreply.github.com"
   },
   "metadata": {
-    "description": "PromptLane is a local-first prompt improvement workspace with loop-aware continuation for Claude Code and Codex.",
+    "description": "Local continuity and evidence for long-running Claude Code and Codex loops.",
     "version": "1.0.0"
   },
   "plugins": [
     {
-      "name": "promptlane",
+      "name": "looprelay",
       "source": "./",
-      "description": "Use PromptLane to capture Claude Code and Codex prompts locally, redact secrets before storage, improve next requests, and prepare loop-aware continuation briefs.",
+      "description": "Recover loop state, carry evidence into the next session, connect outcomes to requests, and surface recurring failure patterns locally.",
       "category": "memory",
       "tags": [
-        "promptlane",
-        "promptlane",
+        "looprelay",
+        "agent-continuity",
         "loop-engineering",
-        "meta-prompting",
-        "memory",
+        "evidence",
+        "continuation",
         "hooks",
-        "statusline",
         "local-first"
       ]
     }

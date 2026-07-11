@@ -1,6 +1,6 @@
 import type { Command } from "commander";
 
-import { loadHookAuth, loadPromptLaneConfig } from "../../config/config.js";
+import { loadHookAuth, loadLoopRelayConfig } from "../../config/config.js";
 import {
   parseImportSourceType,
   runImportDryRun,
@@ -33,7 +33,7 @@ export function registerImportCommand(program: Command): void {
   program
     .command("import")
     .description("Preview or execute transcript imports.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--dry-run", "Preview import without writing Markdown or SQLite.")
     .option("--execute", "Import prompt candidates into local storage.")
     .option("--file <path>", "JSONL transcript file to preview.")
@@ -53,7 +53,7 @@ export function registerImportCommand(program: Command): void {
     .command("import-job")
     .description("Show a saved import dry-run job.")
     .argument("<id>", "Import job id.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--json", "Print JSON.")
     .action((id: string, options: ImportJobCliOptions) => {
       console.log(showImportJobForCli(id, options));
@@ -77,7 +77,7 @@ export function importForCli(
 function importForCliSync(options: ImportCliOptions): string {
   if (!options.dryRun) {
     throw new UserError(
-      "--dry-run is required for import preview. Try: promptlane import --dry-run --file <transcript.jsonl> --source <manual-jsonl|claude-transcript-best-effort|codex-transcript-best-effort>",
+      "--dry-run is required for import preview. Try: looprelay import --dry-run --file <transcript.jsonl> --source <manual-jsonl|claude-transcript-best-effort|codex-transcript-best-effort>",
     );
   }
   if (!options.file) {
@@ -94,7 +94,7 @@ function importForCliSync(options: ImportCliOptions): string {
     return runImportDryRun({
       file,
       redactionMode: options.dataDir
-        ? loadPromptLaneConfig(options.dataDir).redaction_mode
+        ? loadLoopRelayConfig(options.dataDir).redaction_mode
         : "mask",
       sourceType,
     });
@@ -134,7 +134,7 @@ async function importExecuteForCli(options: ImportCliOptions): Promise<string> {
         options.source ?? "manual-jsonl",
       ) as ImportSourceType,
   );
-  const config = loadPromptLaneConfig(options.dataDir);
+  const config = loadLoopRelayConfig(options.dataDir);
   const hookAuth = loadHookAuth(options.dataDir);
   const storage = createSqlitePromptStorage({
     dataDir: config.data_dir,
@@ -201,7 +201,7 @@ export function showImportJobForCli(
 
     if (!job) {
       throw new UserError(
-        `Import job not found: ${id}. Run promptlane import --dry-run --save-job to create a new one.`,
+        `Import job not found: ${id}. Run looprelay import --dry-run --save-job to create a new one.`,
       );
     }
 
@@ -241,7 +241,7 @@ function withImportStorage<T>(
   dataDir: string | undefined,
   callback: (storage: ReturnType<typeof createSqlitePromptStorage>) => T,
 ): T {
-  const config = loadPromptLaneConfig(dataDir);
+  const config = loadLoopRelayConfig(dataDir);
   const hookAuth = loadHookAuth(dataDir);
   const storage = createSqlitePromptStorage({
     dataDir: config.data_dir,

@@ -1,14 +1,14 @@
 ---
-description: Summarize recent PromptLane habits and recurring gaps
+description: Summarize recent LoopRelay habits and recurring gaps
 allowed-tools: Bash
 ---
 
-# PromptLane Habits
+# LoopRelay Habits
 
 Prefer the MCP tool when it is available:
 
 ```text
-promptlane:score_prompt_archive max_prompts=200 low_score_limit=8
+looprelay:score_prompt_archive max_prompts=200 low_score_limit=8
 ```
 
 Summarize:
@@ -22,7 +22,7 @@ Summarize:
 If MCP is not configured, run:
 
 ```bash
-promptlane score --json --limit 200 --low-score-limit 8
+looprelay score --json --limit 200 --low-score-limit 8
 ```
 
 Do not print raw prompt bodies, raw hook payloads, raw absolute paths, tokens,

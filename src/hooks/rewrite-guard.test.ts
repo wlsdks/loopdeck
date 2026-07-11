@@ -61,10 +61,10 @@ describe("createPromptRewriteGuardOutput", () => {
     });
     expect("decision" in (output ?? {})).toBe(false);
     expect(output?.hookSpecificOutput.additionalContext).toContain(
-      "PromptLane rewrite guidance",
+      "LoopRelay rewrite guidance",
     );
     expect(output?.hookSpecificOutput.additionalContext).not.toContain(
-      "promptlane rewrite guidance",
+      "looprelay rewrite guidance",
     );
   });
 
@@ -100,7 +100,7 @@ describe("createPromptRewriteGuardOutput", () => {
       expect(output.decision).toBe("block");
       expect(output.reason).toContain("개선된 프롬프트:");
       expect(output.reason).toContain("주의사항:");
-      expect(output.reason).toContain("promptlane가 이 프롬프트를 제출 전");
+      expect(output.reason).toContain("looprelay가 이 프롬프트를 제출 전");
       expect(output.reason).not.toContain("Improved prompt:");
     }
   });
@@ -116,13 +116,13 @@ describe("createPromptRewriteGuardOutput", () => {
     expect(output).toBeDefined();
     if (output && "hookSpecificOutput" in output && !("decision" in output)) {
       expect(output.hookSpecificOutput.additionalContext).toContain(
-        "PromptLane 개선안 가이드",
+        "LoopRelay 개선안 가이드",
       );
       expect(output.hookSpecificOutput.additionalContext).not.toContain(
-        "promptlane rewrite guidance",
+        "looprelay rewrite guidance",
       );
       expect(output.hookSpecificOutput.additionalContext).not.toContain(
-        "promptlane 개선안 가이드",
+        "looprelay 개선안 가이드",
       );
     }
   });
@@ -160,7 +160,7 @@ describe("createPromptRewriteGuardOutput", () => {
       expect(output).toBeDefined();
       if (output && "hookSpecificOutput" in output && !("decision" in output)) {
         const additionalContext = output.hookSpecificOutput.additionalContext;
-        expect(additionalContext).toContain("[promptlane coach]");
+        expect(additionalContext).toContain("[looprelay coach]");
         expect(additionalContext).toContain("AskUserQuestion");
         expect(additionalContext).toContain("1.");
         expect(additionalContext).not.toContain("decision");

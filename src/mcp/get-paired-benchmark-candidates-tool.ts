@@ -2,9 +2,9 @@ import {
   createBenchmarkPairCandidateReport,
   type BenchmarkPairCandidateReport,
 } from "../analysis/benchmark-pair-candidates.js";
-import { loadHookAuth, loadPromptLaneConfig } from "../config/config.js";
+import { loadHookAuth, loadLoopRelayConfig } from "../config/config.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
-import type { PromptLaneMcpToolDefinition } from "./score-tool-definition-types.js";
+import type { LoopRelayMcpToolDefinition } from "./score-tool-definition-types.js";
 import type { ScorePromptToolOptions } from "./score-tool-types.js";
 import { storageUnavailableMessage } from "./storage-unavailable.js";
 
@@ -32,11 +32,11 @@ const CANDIDATE_SCHEMA = {
   additionalProperties: false,
 } as const;
 
-export const GET_PAIRED_BENCHMARK_CANDIDATES_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
+export const GET_PAIRED_BENCHMARK_CANDIDATES_TOOL_DEFINITION: LoopRelayMcpToolDefinition =
   {
     name: "get_paired_benchmark_candidates",
     description:
-      "Inspect local PromptLane baseline and treatment readiness from at most the latest 100 loop snapshots. Use this before preparing a paired effectiveness fixture. Returns separate opaque baseline and explicitly attributed PromptLane prompt ids, outcome status, counts, diagnostics, next action, and privacy flags. It never infers task equivalence and never returns prompt bodies, snapshot ids, raw paths, outcome summaries, evidence references, transcripts, or external LLM results.",
+      "Inspect local LoopRelay baseline and treatment readiness from at most the latest 100 loop snapshots. Use this before preparing a paired effectiveness fixture. Returns separate opaque baseline and explicitly attributed LoopRelay prompt ids, outcome status, counts, diagnostics, next action, and privacy flags. It never infers task equivalence and never returns prompt bodies, snapshot ids, raw paths, outcome summaries, evidence references, transcripts, or external LLM results.",
     annotations: {
       destructiveHint: false,
       idempotentHint: true,
@@ -64,7 +64,7 @@ export const GET_PAIRED_BENCHMARK_CANDIDATES_TOOL_DEFINITION: PromptLaneMcpToolD
           enum: [
             "ready",
             "needs_baseline",
-            "needs_promptlane",
+            "needs_looprelay",
             "no_completed_outcomes",
             "incomplete_outcome_evidence",
             "unsafe_outcome_evidence",
@@ -72,23 +72,23 @@ export const GET_PAIRED_BENCHMARK_CANDIDATES_TOOL_DEFINITION: PromptLaneMcpToolD
           ],
         },
         baseline_candidate_count: { type: "integer", minimum: 0 },
-        promptlane_candidate_count: { type: "integer", minimum: 0 },
+        looprelay_candidate_count: { type: "integer", minimum: 0 },
         baseline_candidates: { type: "array", items: CANDIDATE_SCHEMA },
-        promptlane_candidates: { type: "array", items: CANDIDATE_SCHEMA },
+        looprelay_candidates: { type: "array", items: CANDIDATE_SCHEMA },
         excluded_unsafe_candidates: { type: "integer", minimum: 0 },
         diagnostics: {
           type: "object",
           required: [
             "completed_snapshots",
             "baseline_snapshots",
-            "promptlane_snapshots",
+            "looprelay_snapshots",
             "evidence_complete_snapshots",
             "safe_snapshots",
           ],
           properties: {
             completed_snapshots: { type: "integer", minimum: 0 },
             baseline_snapshots: { type: "integer", minimum: 0 },
-            promptlane_snapshots: { type: "integer", minimum: 0 },
+            looprelay_snapshots: { type: "integer", minimum: 0 },
             evidence_complete_snapshots: { type: "integer", minimum: 0 },
             safe_snapshots: { type: "integer", minimum: 0 },
           },
@@ -96,10 +96,10 @@ export const GET_PAIRED_BENCHMARK_CANDIDATES_TOOL_DEFINITION: PromptLaneMcpToolD
         },
         has_more: {
           type: "object",
-          required: ["baseline", "promptlane"],
+          required: ["baseline", "looprelay"],
           properties: {
             baseline: { type: "boolean" },
-            promptlane: { type: "boolean" },
+            looprelay: { type: "boolean" },
           },
           additionalProperties: false,
         },
@@ -147,9 +147,9 @@ export const GET_PAIRED_BENCHMARK_CANDIDATES_TOOL_DEFINITION: PromptLaneMcpToolD
           required: [
             "status",
             "baseline_candidate_count",
-            "promptlane_candidate_count",
+            "looprelay_candidate_count",
             "baseline_candidates",
-            "promptlane_candidates",
+            "looprelay_candidates",
             "excluded_unsafe_candidates",
             "diagnostics",
             "has_more",
@@ -177,7 +177,7 @@ export function getPairedBenchmarkCandidatesTool(
   }
 
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const auth = loadHookAuth(options.dataDir);
     const storage = createSqlitePromptStorage({
       dataDir: config.data_dir,

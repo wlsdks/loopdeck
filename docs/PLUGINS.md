@@ -1,11 +1,11 @@
-# PromptLane Plugin Packaging
+# LoopRelay Plugin Packaging
 
-PromptLane is a local-first prompt improvement workspace with loop-aware continuation
+LoopRelay is a local-first coding-agent continuity and evidence layer with loop-aware continuation
 for Codex, Claude Code, and long-running coding-agent work.
-`promptlane` remains the compatibility package, CLI, hook command, slash
+`looprelay` remains the compatibility package, CLI, hook command, slash
 namespace, and MCP server name.
 
-`promptlane` supports two integration layers:
+`looprelay` supports two integration layers:
 
 - an explicit setup command that installs hooks and, where supported, a local
   server service
@@ -15,22 +15,22 @@ namespace, and MCP server name.
 ## Why Setup Is Still Required
 
 Installing a package should not silently edit user-level agent settings, install
-login services, or start a background server. `promptlane setup` is the
+login services, or start a background server. `looprelay setup` is the
 consent step that performs those local changes.
 
 The plugin package is therefore discovery and convenience, not hidden
 installation. After the npm package is published, install the CLI first:
 
 ```sh
-npm install -g promptlane
+npm install -g looprelay
 ```
 
-If `promptlane` is not available yet because the npm package has not been
+If `looprelay` is not available yet because the npm package has not been
 published, use a local checkout first:
 
 ```sh
-git clone https://github.com/wlsdks/promptlane.git
-cd promptlane
+git clone https://github.com/wlsdks/looprelay.git
+cd looprelay
 pnpm install
 pnpm setup
 ```
@@ -38,25 +38,25 @@ pnpm setup
 Users who want active prompt coaching should then run:
 
 ```sh
-promptlane start
-promptlane setup --profile coach --register-mcp --open-web
+looprelay start
+looprelay setup --profile coach --register-mcp --open-web
 ```
 
 The coach profile installs capture hooks, low-friction rewrite guidance through
 hook context, local server startup where supported, and the Claude Code status
 line when Claude Code is detected. `--register-mcp` is explicit consent to run
-the detected agent CLI registration commands for the PromptLane MCP server,
+the detected agent CLI registration commands for the LoopRelay MCP server,
 which gives the active agent session access to coach/rewrite/judge tools. From a
 development checkout, run `pnpm setup`; it registers MCP with absolute Node +
-`dist/cli/index.js` paths so Codex does not require a global `promptlane`
-binary in `PATH`. Plain `promptlane setup` remains available for passive
+`dist/cli/index.js` paths so Codex does not require a global `looprelay`
+binary in `PATH`. Plain `looprelay setup` remains available for passive
 capture only.
 
 Users who want the web workspace to open automatically when Claude Code or Codex
 starts can explicitly add `--open-web`:
 
 ```sh
-promptlane setup --profile coach --register-mcp --open-web
+looprelay setup --profile coach --register-mcp --open-web
 ```
 
 This installs a `SessionStart` hook, ensures the local server is available, and
@@ -66,7 +66,7 @@ installing a plugin should not surprise users by launching a browser.
 Use a preview first when reviewing changes:
 
 ```sh
-promptlane setup --profile coach --register-mcp --dry-run
+looprelay setup --profile coach --register-mcp --dry-run
 ```
 
 ## Codex Plugin
@@ -74,16 +74,16 @@ promptlane setup --profile coach --register-mcp --dry-run
 The repo-local Codex plugin lives in:
 
 ```text
-plugins/promptlane
+plugins/looprelay
 ```
 
 It includes:
 
 - `.codex-plugin/plugin.json` for plugin metadata
-- `skills/promptlane/SKILL.md` so Codex can help install, diagnose, and use
+- `skills/looprelay/SKILL.md` so Codex can help install, diagnose, and use
   the archive
 
-The Codex plugin does not bundle active Codex hooks; setup installs user-level hooks explicitly. This prevents plugin-managed hooks and setup-installed hooks from both firing for the same `UserPromptSubmit` event. `promptlane setup`
+The Codex plugin does not bundle active Codex hooks; setup installs user-level hooks explicitly. This prevents plugin-managed hooks and setup-installed hooks from both firing for the same `UserPromptSubmit` event. `looprelay setup`
 remains the reliable path for normal users because setup records an absolute CLI
 command and can configure the local service.
 
@@ -92,10 +92,10 @@ command and can configure the local service.
 Claude Code can consume this repository as a plugin marketplace:
 
 ```text
-/plugin marketplace add wlsdks/promptlane
-/plugin install promptlane
+/plugin marketplace add wlsdks/looprelay
+/plugin install looprelay
 /reload-plugins
-/promptlane:setup
+/looprelay:setup
 ```
 
 The Claude Code plugin files live in:
@@ -107,58 +107,55 @@ commands
 
 The plugin exposes:
 
-- `/promptlane:setup` to preview and run local setup
-- `/promptlane:status` to run doctor and statusLine checks
-- `/promptlane:buddy` to show the side-pane buddy command and one-shot
+- `/looprelay:setup` to preview and run local setup
+- `/looprelay:status` to run doctor and statusLine checks
+- `/looprelay:buddy` to show the side-pane buddy command and one-shot
   checks
-- `/promptlane:coach` to run the one-call prompt coach workflow inside
+- `/looprelay:coach` to run the one-call prompt coach workflow inside
   Claude Code
-- `/promptlane:score` to score the latest captured request or the
+- `/looprelay:score` to score the latest captured request or the
   accumulated archive
-- `/promptlane:judge` to ask the active Claude Code session to judge a
+- `/looprelay:judge` to ask the active Claude Code session to judge a
   bounded batch of low-scoring redacted prompts through MCP
-- `/promptlane:improve-last` to generate an approval-ready rewrite for the
+- `/looprelay:improve-last` to generate an approval-ready rewrite for the
   latest captured request, in either deterministic or active-agent mode
-- `/promptlane:habits` to summarize recurring prompt habit gaps
-- `/promptlane:open` to open the local archive
+- `/looprelay:habits` to summarize recurring prompt habit gaps
+- `/looprelay:open` to open the local archive
 
-Claude Code slash commands remain under `/promptlane:*` during the PromptLane
-compatibility window. The npm package installs the canonical `promptlane` CLI
-for terminal workflows, and plugin command ids stay stable until a dedicated
-plugin rename plan is implemented. That gate is documented in
-`docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-plan.md`.
-Do not introduce alternate slash namespaces without a dedicated migration plan.
+Claude Code slash commands use `/looprelay:*`. The npm package installs the
+canonical `looprelay` CLI for terminal workflows. No alternate slash namespace
+or CLI alias is shipped.
 
 Prompt capture still uses Claude Code hook configuration in settings files. The
 supported install paths are:
 
 ```sh
-promptlane setup --profile coach --register-mcp --open-web
-promptlane install-hook claude-code
+looprelay setup --profile coach --register-mcp --open-web
+looprelay install-hook claude-code
 ```
 
 The coach profile also installs the optional Claude Code status line. It can be
 managed manually with:
 
 ```sh
-promptlane install-statusline claude-code
-promptlane statusline claude-code
+looprelay install-statusline claude-code
+looprelay statusline claude-code
 ```
 
 This status line reports capture readiness, server health, the latest prompt
 score when available, and the last ingest status. Claude Code supports one
-`statusLine` command, so promptlane preserves an existing HUD by chaining the
-previous command and the promptlane command into one status line. Uninstall
-restores the previous command when promptlane captured it during install. The
+`statusLine` command, so looprelay preserves an existing HUD by chaining the
+previous command and the looprelay command into one status line. Uninstall
+restores the previous command when looprelay captured it during install. The
 setup command must ask before installing it.
 
 Claude Code and Codex can also use an always-on side-pane buddy in a second
 terminal pane:
 
 ```sh
-promptlane buddy
-promptlane buddy --once
-promptlane buddy --json
+looprelay buddy
+looprelay buddy --once
+looprelay buddy --json
 ```
 
 The buddy prints latest prompt score, tool, top gap, habit score, and the next
@@ -166,25 +163,25 @@ move without returning prompt bodies, raw paths, or secrets.
 
 ## Agent Wrappers
 
-The npm package also ships experimental `pl-claude` and `pl-codex` binaries.
+The npm package also ships experimental `lr-claude` and `lr-codex` binaries.
 They sit in front of the real agent binary for the initial prompt argument:
 
 ```sh
-pl-claude --pc-mode auto -- "fix this"
-pl-codex --pc-mode auto -- "fix this"
-pl-codex --pc-mode auto -- exec "fix this"
+lr-claude --lr-mode auto -- "fix this"
+lr-codex --lr-mode auto -- "fix this"
+lr-codex --lr-mode auto -- exec "fix this"
 ```
 
-Use `--pc-dry-run` to inspect the local rewrite plan without launching the real
+Use `--lr-dry-run` to inspect the local rewrite plan without launching the real
 agent:
 
 ```sh
-pl-claude --pc-mode auto --pc-dry-run -- "fix this"
-pl-codex --pc-mode auto --pc-dry-run -- "fix this"
+lr-claude --lr-mode auto --lr-dry-run -- "fix this"
+lr-codex --lr-mode auto --lr-dry-run -- "fix this"
 ```
 
-Run `pl-claude --pc-help` or `pl-codex --pc-help` to see every supported flag
-(`--pc-mode`, `--pc-min-score`, `--pc-language`, `--pc-dry-run`) with working
+Run `lr-claude --lr-help` or `lr-codex --lr-help` to see every supported flag
+(`--lr-mode`, `--lr-min-score`, `--lr-language`, `--lr-dry-run`) with working
 example invocations.
 
 The wrappers intentionally do not rewrite management subcommands such as
@@ -203,22 +200,22 @@ uses the exact CLI path from the current installation.
 
 ## MCP Prompt Scoring
 
-`promptlane` also ships a local stdio MCP server:
+`looprelay` also ships a local stdio MCP server:
 
 ```sh
-promptlane mcp
+looprelay mcp
 ```
 
 This server exposes 22 model-controlled tools:
 
-- `get_promptlane_status`
+- `get_looprelay_status`
 - `coach_prompt`
 - `score_prompt`
 - `improve_prompt`
 - `apply_clarifications`
 - `ask_clarifying_questions`
 - `record_clarifications`
-- `get_promptlane_loop_status`
+- `get_looprelay_loop_status`
 - `get_benchmark_candidates`
 - `get_paired_benchmark_candidates`
 - `prepare_loop_brief`
@@ -237,32 +234,32 @@ This server exposes 22 model-controlled tools:
 `coach_prompt` is the default agent-facing workflow. It combines local archive
 status, latest prompt score, approval-required rewrite, recent habit review,
 project instruction review, and next request guidance in one read-only call.
-`get_promptlane_status` checks local archive readiness and returns safe
+`get_looprelay_status` checks local archive readiness and returns safe
 counts, latest prompt metadata, available tool names, and next actions.
-`get_promptlane_loop_status` checks whether local loop snapshots exist and
+`get_looprelay_loop_status` checks whether local loop snapshots exist and
 returns safe latest-loop metadata. It also reports safe compact-boundary
 metadata when a compact happened after the latest snapshot.
 `get_benchmark_candidates` reads at most the latest 100 snapshots and returns
 only staged readiness counts, opaque candidate ids, status, and next actions;
 it never returns outcome summaries, evidence refs, prompt bodies, or raw paths.
 `get_paired_benchmark_candidates` returns separate body-free baseline and
-explicitly attributed PromptLane candidate groups without snapshot ids or
+explicitly attributed LoopRelay candidate groups without snapshot ids or
 outcome content. It supports agent-native paired-fixture preparation but leaves
 task-equivalence and causal interpretation to the operator.
 `prepare_loop_brief`
-returns a copy-ready continuation prompt from the latest PromptLane snapshot, or
+returns a copy-ready continuation prompt from the latest LoopRelay snapshot, or
 from the newest snapshot matching optional `worktree`, `session_id`, and
 `branch` filters, without prompt bodies, raw paths, or auto-submission; when the
 selected snapshot is pre-compact, it asks the user to refresh the snapshot
 instead of replaying compact summaries or custom compact instructions.
 `record_loop_outcome` writes only user-approved status, summary, and evidence
-references for a PromptLane snapshot; it does not store prompt bodies, raw paths,
+references for a LoopRelay snapshot; it does not store prompt bodies, raw paths,
 or external LLM results.
 `propose_loop_memory_candidate` is the semantic-memory decision gate: it checks
 the latest passed loop outcome and safe evidence refs, then returns a
 user-reviewable candidate without writing memory or instruction files.
 `record_loop_memory` records a user-approved candidate into local
-PromptLane storage only; instruction-file patches remain a separate explicit
+LoopRelay storage only; instruction-file patches remain a separate explicit
 workflow. Its structured `next_actions` point agents to `prepare_loop_brief`
 and `propose_instruction_patch target_file=AGENTS.md`.
 `propose_instruction_patch` returns a reviewable unified diff for
@@ -272,19 +269,19 @@ explicit apply gate. The web review panel does not write those files.
 `confirm_apply` is true, is idempotent by source memory id, and does not return
 raw paths.
 
-The local CLI mirrors that loop surface with `promptlane loop status`,
-`promptlane loop collect`, `promptlane loop brief`, and
-`promptlane loop memory-candidate`; approved memories are recorded with
-`promptlane loop memory-approve`. `promptlane loop brief` accepts optional
+The local CLI mirrors that loop surface with `looprelay loop status`,
+`looprelay loop collect`, `looprelay loop brief`, and
+`looprelay loop memory-candidate`; approved memories are recorded with
+`looprelay loop memory-approve`. `looprelay loop brief` accepts optional
 `--worktree`, `--session`, and `--branch` filters so Codex or Claude Code can
 continue the same selected worktree/session/branch even when another worktree
 has a newer snapshot. Use
-`promptlane loop instruction-patch --target-file AGENTS.md` to generate the
+`looprelay loop instruction-patch --target-file AGENTS.md` to generate the
 review-only instruction patch. Use
-`promptlane loop instruction-apply --target-file AGENTS.md --confirm-apply`
+`looprelay loop instruction-apply --target-file AGENTS.md --confirm-apply`
 only after reviewing the proposal and intending to write the file; the web
-review panel intentionally has no apply button. `get_promptlane_loop_status`,
-`/api/v1/loops`, and `promptlane loop status` include raw-free worktree and
+review panel intentionally has no apply button. `get_looprelay_loop_status`,
+`/api/v1/loops`, and `looprelay loop status` include raw-free worktree and
 session activity counts plus per-worktree safe labels, snapshot counts, and
 latest outcome status so active agents can notice parallel work before merging
 or handing off. The web Loops view can open and deep-link a selected worktree
@@ -292,19 +289,19 @@ detail panel through `/api/v1/loops/worktrees/:worktree`, still limited to safe
 loop metadata. The drilldown can also be narrowed with
 `/loops?worktree=<safe-label>&session=<safe-session-id>&branch=<safe-branch>`,
 backed by the API `session_id` and `branch` filters and still raw-free. Use
-`promptlane loop collect --source service` as the explicit one-shot command
+`looprelay loop collect --source service` as the explicit one-shot command
 for cron or LaunchAgent collection; it does not silently install a scheduler.
-The opt-in macOS schedule is `promptlane loop schedule install`; use
+The opt-in macOS schedule is `looprelay loop schedule install`; use
 `--dry-run` to inspect the LaunchAgent before writing it. Use
-`promptlane loop schedule status` to check whether the plist exists and
-`promptlane loop schedule uninstall` to remove it. `loop status` prints
+`looprelay loop schedule status` to check whether the plist exists and
+`looprelay loop schedule uninstall` to remove it. `loop status` prints
 snapshot readiness, latest safe loop metadata, and compact refresh guidance
 without prompt bodies, compact summaries, custom compact instructions, or raw
 paths.
 The web Loops view uses the same privacy boundary for recent loop snapshots,
 empty state guidance, compact refresh markers, and copy-ready next loop briefs;
 it can also record an eligible latest memory candidate through the local web
-session. That web approval only writes the local PromptLane memory record;
+session. That web approval only writes the local LoopRelay memory record;
 after approval, the same view can fetch a review-only AGENTS.md patch preview.
 Instruction-file writes still require the separate explicit apply workflow. It
 does not render prompt bodies, compact summaries, custom compact instructions,
@@ -348,7 +345,7 @@ avoid raw absolute paths, and the instruction review tool avoids file bodies and
 raw absolute paths. The agent rewrite/judge packets are explicit because they
 return redacted prompt bodies to the active user-controlled agent session for
 rewrite or evaluation; that agent may send the packet through its provider
-session according to the user's tool setup. `promptlane` does not extract,
+session according to the user's tool setup. `looprelay` does not extract,
 proxy, or reuse provider credentials. Read tool definitions are marked
 read-only, idempotent, and local-only through MCP annotations.
 `record_agent_rewrite` and
@@ -360,7 +357,7 @@ structured result. If MCP is not configured, users can run the same local archiv
 review through:
 
 ```sh
-promptlane score --json
+looprelay score --json
 ```
 
 ## Prompt Rewrite Guard
@@ -369,8 +366,8 @@ For users who want a stronger query-rewriting workflow, the hook can be
 installed with an opt-in guard:
 
 ```sh
-promptlane install-hook claude-code --rewrite-guard block-and-copy --rewrite-min-score 80
-promptlane install-hook codex --rewrite-guard block-and-copy --rewrite-min-score 80
+looprelay install-hook claude-code --rewrite-guard block-and-copy --rewrite-min-score 80
+looprelay install-hook codex --rewrite-guard block-and-copy --rewrite-min-score 80
 ```
 
 This uses the official `UserPromptSubmit` hook decision path where supported.
@@ -381,10 +378,10 @@ rewrite the interactive composer, or auto-submit prompts. If local ingest is
 unavailable or fails, the hook fails open and does not block.
 
 The installed hook set also includes `Stop`, `PreCompact`, and `PostCompact`.
-Stop events are handled locally: promptlane collects a PromptLane snapshot from
+Stop events are handled locally: looprelay collects a LoopRelay snapshot from
 recent prompt metadata without posting the lifecycle event to the prompt ingest
 route. Compact events record only safe boundary metadata and an optional HMAC
-content hash; promptlane does not store prompt bodies, raw paths, transcript
+content hash; looprelay does not store prompt bodies, raw paths, transcript
 contents, custom compact instructions, or compact summaries.
 
 `--rewrite-guard context` is less disruptive: it allows the original prompt to
@@ -394,51 +391,51 @@ replacement because the original submitted prompt remains part of the turn.
 Claude Code registration:
 
 ```sh
-claude mcp add --transport stdio promptlane -- promptlane mcp
+claude mcp add --transport stdio looprelay -- looprelay mcp
 ```
 
 Codex registration:
 
 ```sh
-codex mcp add promptlane -- promptlane mcp
+codex mcp add looprelay -- looprelay mcp
 ```
 
-The manual commands above assume `promptlane` is globally available in
+The manual commands above assume `looprelay` is globally available in
 `PATH`. In a cloned checkout, use `pnpm setup` or
-`pnpm promptlane setup --profile coach --register-mcp --open-web` so the MCP
+`pnpm looprelay setup --profile coach --register-mcp --open-web` so the MCP
 registration uses absolute paths.
 
-After registration, `promptlane doctor claude-code` and
-`promptlane doctor codex` report MCP command access. The doctor command first
+After registration, `looprelay doctor claude-code` and
+`looprelay doctor codex` report MCP command access. The doctor command first
 inspects known local config files, then uses read-only `claude mcp list` or
 `codex mcp list` as a fallback when config-file detection is inconclusive.
 
 Use `--data-dir` when the archive is not in the default location:
 
 ```sh
-promptlane mcp --data-dir /path/to/promptlane-data
+looprelay mcp --data-dir /path/to/looprelay-data
 ```
 
 For agent-native usage, prefer MCP first and CLI fallback second:
 
 ```text
-promptlane:score_prompt latest=true
-promptlane:improve_prompt latest=true
-promptlane:score_prompt_archive max_prompts=200
-promptlane:review_project_instructions latest=true
-promptlane:coach_prompt
-promptlane:prepare_agent_rewrite latest=true
-promptlane:record_agent_rewrite provider=codex prompt_id=...
-promptlane:prepare_agent_judge_batch selection=low_score max_prompts=5
-promptlane:record_agent_judgments provider=codex judgments=[...]
+looprelay:score_prompt latest=true
+looprelay:improve_prompt latest=true
+looprelay:score_prompt_archive max_prompts=200
+looprelay:review_project_instructions latest=true
+looprelay:coach_prompt
+looprelay:prepare_agent_rewrite latest=true
+looprelay:record_agent_rewrite provider=codex prompt_id=...
+looprelay:prepare_agent_judge_batch selection=low_score max_prompts=5
+looprelay:record_agent_judgments provider=codex judgments=[...]
 ```
 
 ```sh
-promptlane coach
-promptlane coach --json
-promptlane score --latest --json
-promptlane improve --latest --json
-promptlane score --json --limit 200
+looprelay coach
+looprelay coach --json
+looprelay score --latest --json
+looprelay improve --latest --json
+looprelay score --json --limit 200
 ```
 
 ## Local-First Boundary

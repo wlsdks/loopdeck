@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 
-import { getPromptLanePaths } from "../../storage/paths.js";
+import { getLoopRelayPaths } from "../../storage/paths.js";
 import type { DoctorCommandRunner } from "./doctor.js";
 
 export type IngestFailureCause =
@@ -38,12 +38,12 @@ export function diagnoseIngestFailure({
   port = DEFAULT_PORT,
   commandRunner,
   readFile = defaultReadFile,
-  serverErrLogPath = join(homedir(), ".promptlane", "logs", "server.err.log"),
+  serverErrLogPath = join(homedir(), ".looprelay", "logs", "server.err.log"),
 }: DiagnoseIngestFailureInput): IngestFailureDiagnosis {
   if (status !== 401) {
     return {
       cause: "unknown",
-      hint: "Run promptlane buddy --once to inspect the most recent failed hook ingest.",
+      hint: "Run looprelay buddy --once to inspect the most recent failed hook ingest.",
     };
   }
 
@@ -54,7 +54,7 @@ export function diagnoseIngestFailure({
   ) {
     return {
       cause: "server_owner_mismatch",
-      hint: `another PromptLane server is bound to port ${port} with a different local data directory. Stop it and start the configured service: promptlane service stop && promptlane service install.`,
+      hint: `another LoopRelay server is bound to port ${port} with a different local data directory. Stop it and start the configured service: looprelay service stop && looprelay service install.`,
     };
   }
 
@@ -64,13 +64,13 @@ export function diagnoseIngestFailure({
   ) {
     return {
       cause: "node_abi_mismatch",
-      hint: "The local server keeps exiting with a Node ABI mismatch (better-sqlite3 NODE_MODULE_VERSION error). Reinstall the LaunchAgent with the current Node binary: promptlane service install.",
+      hint: "The local server keeps exiting with a Node ABI mismatch (better-sqlite3 NODE_MODULE_VERSION error). Reinstall the LaunchAgent with the current Node binary: looprelay service install.",
     };
   }
 
   return {
     cause: "token_stale",
-    hint: `Reinstall the hook to refresh the local ingest token: promptlane install-hook ${tool}.`,
+    hint: `Reinstall the hook to refresh the local ingest token: looprelay install-hook ${tool}.`,
   };
 }
 
@@ -130,7 +130,7 @@ function parseDataDirArgument(commandLine: string): string | undefined {
     return normalizePath(value);
   }
   return /(?:^|\s)server(?:\s|$)/.test(commandLine)
-    ? getPromptLanePaths().dataDir
+    ? getLoopRelayPaths().dataDir
     : undefined;
 }
 

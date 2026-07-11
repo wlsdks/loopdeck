@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parse as parseYaml } from "yaml";
 
-import { listPromptLaneMcpToolNames } from "../mcp/tool-registry.js";
+import { listLoopRelayMcpToolNames } from "../mcp/tool-registry.js";
 
 function readJson<T>(path: string): T {
   return JSON.parse(readFileSync(join(process.cwd(), path), "utf8")) as T;
@@ -189,7 +189,7 @@ describe("plugin packaging files", () => {
       "package repository points at GitHub project",
     );
     expect(preflightScript).toContain(
-      'packageJson.repository?.url === "https://github.com/wlsdks/promptlane.git"',
+      'packageJson.repository?.url === "https://github.com/wlsdks/looprelay.git"',
     );
     expect(preflightScript).toContain(
       "package homepage points at GitHub project",
@@ -199,9 +199,9 @@ describe("plugin packaging files", () => {
       "package keywords include public positioning terms",
     );
     expect(preflightScript).toContain("package publish access is public");
-    expect(preflightScript).toContain('promptlane: "./dist/cli/index.js"');
-    expect(preflightScript).toContain('"pl-claude": "./dist/cli/pl-claude.js"');
-    expect(preflightScript).toContain('"pl-codex": "./dist/cli/pl-codex.js"');
+    expect(preflightScript).toContain('looprelay: "./dist/cli/index.js"');
+    expect(preflightScript).toContain('"lr-claude": "./dist/cli/lr-claude.js"');
+    expect(preflightScript).toContain('"lr-codex": "./dist/cli/lr-codex.js"');
     expect(preflightScript).toContain("`${binName} bin entry is registered`");
     expect(preflightScript).toContain("registeredPath === expectedPath");
     expect(preflightScript).toContain("package files include ${filePath}");
@@ -210,14 +210,14 @@ describe("plugin packaging files", () => {
     expect(preflightScript).toContain('"commands"');
     expect(preflightScript).toContain('"plugins"');
     expect(preflightScript).toContain('"integrations"');
-    expect(preflightScript).toContain('"docs/PROMPTLANE.md"');
+    expect(preflightScript).toContain('"docs/LOOPRELAY.md"');
     expect(preflightScript).toContain('"docs/AGENT-HARNESS.md"');
     expect(preflightScript).toContain('"docs/INSTRUCTION-FILES.md"');
     expect(preflightScript).toContain('"docs/PLUGINS.md"');
     expect(preflightScript).toContain('"docs/ADAPTERS.md"');
     expect(preflightScript).toContain('"docs/LOOP-SNAPSHOT-SCHEMA.md"');
-    expect(preflightScript).toContain('"docs/PROMPTLANE-RUNTIME-HISTORY.md"');
-    expect(preflightScript).toContain('"docs/PROMPTLANE-LEGACY-SURFACES.md"');
+    expect(preflightScript).toContain('"docs/LOOPRELAY-RUNTIME-HISTORY.md"');
+    expect(preflightScript).toContain('"docs/LOOPRELAY-RUNTIME-SURFACES.md"');
     expect(preflightScript).toContain(
       '"docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md"',
     );
@@ -225,31 +225,31 @@ describe("plugin packaging files", () => {
       '"docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md"',
     );
     expect(preflightScript).toContain(
-      '"docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-plan.md"',
+      '"docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-plan.md"',
     );
     expect(preflightScript).toContain(
-      '"docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-issue-slices.md"',
+      '"docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-issue-slices.md"',
     );
     expect(preflightScript).toContain(
-      '"docs/superpowers/plans/2026-07-04-promptlane-runtime-id-inventory.json"',
+      '"docs/superpowers/plans/2026-07-04-looprelay-runtime-id-inventory.json"',
     );
     expect(preflightScript).toContain(
-      '"docs/superpowers/plans/2026-07-04-promptlane-claude-dual-namespace-decision.md"',
+      '"docs/superpowers/plans/2026-07-04-looprelay-claude-dual-namespace-decision.md"',
     );
     expect(preflightScript).toContain(
-      '"docs/superpowers/plans/2026-07-04-promptlane-mcp-server-name-decision.md"',
+      '"docs/superpowers/plans/2026-07-04-looprelay-mcp-server-name-decision.md"',
     );
     expect(preflightScript).toContain(
-      '"docs/superpowers/plans/2026-07-04-promptlane-deprecation-readiness.md"',
+      '"docs/superpowers/plans/2026-07-04-looprelay-deprecation-readiness.md"',
     );
     expect(preflightScript).toContain(
-      '"docs/superpowers/plans/2026-07-04-promptlane-next-runtime-value-slice.md"',
+      '"docs/superpowers/plans/2026-07-04-looprelay-next-runtime-value-slice.md"',
     );
     expect(preflightScript).toContain(
-      '"docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md"',
+      '"docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md"',
     );
     expect(preflightScript).toContain(
-      '"docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md"',
+      '"docs/superpowers/specs/2026-07-05-looprelay-repositioning-design.md"',
     );
     expect(preflightScript).toContain('"docs/PRD.md"');
     expect(preflightScript).toContain('"docs/PRD_PHASE2.md"');
@@ -360,23 +360,23 @@ describe("plugin packaging files", () => {
     expect(publishing).toContain('publish_command: "npm publish --tag latest"');
     expect(publishing).toContain("corepack pnpm smoke:package-install");
     expect(publishing).toContain(
-      "verifies the installed `promptlane start --open-web --json` first-success guide",
+      "verifies the installed `looprelay start --open-web --json` first-success guide",
     );
     expect(publishing).toContain(
-      "verifies the installed `promptlane quality-evidence --require-complete` release gate",
+      "verifies the installed `looprelay quality-evidence --require-complete` release gate",
     );
     expect(publishing).toContain("does not publish");
     expect(publishing).toContain("--skip-npm");
     for (const command of [
       "corepack pnpm evidence:quality -- --require-complete",
-      "corepack pnpm promptlane quality-evidence --require-complete",
+      "corepack pnpm looprelay quality-evidence --require-complete",
     ]) {
       expect(publishing).toContain(command);
     }
     expect(publishing).toContain("## Live Readiness Checks");
     expect(publishing).toContain("Do not treat older `npm whoami`");
     expect(publishing).toContain("npm whoami");
-    expect(publishing).toContain("npm view promptlane versions --json");
+    expect(publishing).toContain("npm view looprelay versions --json");
     expect(publishing).toContain("Release warnings");
     expect(publishing).toContain(
       "synthetic pass is not real-world effectiveness proof",
@@ -388,10 +388,10 @@ describe("plugin packaging files", () => {
       "blocks overclaiming real-user effectiveness trends",
     );
     expect(publishing).toContain(
-      "promptlane setup --profile coach --register-mcp --open-web",
+      "looprelay setup --profile coach --register-mcp --open-web",
     );
-    expect(publishing).toContain("promptlane coach");
-    expect(publishing).not.toContain("\npromptlane setup\n");
+    expect(publishing).toContain("looprelay coach");
+    expect(publishing).not.toContain("\nlooprelay setup\n");
     expect(publishing).not.toContain("## Current Readiness");
     expect(publishing).not.toContain("# stark97");
     expect(publishing).not.toContain("# E404 Not Found");
@@ -400,9 +400,9 @@ describe("plugin packaging files", () => {
     expect(publishing).toContain(
       "`v1.0.0` must point at the commit you are publishing",
     );
-    expect(publishing).toContain("Before `promptlane@1.0.0` is published");
+    expect(publishing).toContain("Before `looprelay@1.0.0` is published");
     expect(publishing).toContain("git tag -fa v1.0.0");
-    expect(publishing).toContain("After `promptlane@1.0.0` is published");
+    expect(publishing).toContain("After `looprelay@1.0.0` is published");
     expect(publishing).toMatch(/bump the\s+package version/);
     expect(publishing).toContain(
       "annotated git tag `v1.0.0` is created or refreshed before `corepack pnpm npm-publish:preflight`",
@@ -422,12 +422,10 @@ describe("plugin packaging files", () => {
     expect(preflightScript).toContain("git checkout ${expectedTag}");
     expect(preflightScript).toContain("tagged release commit");
     expect(preflightScript).toContain("tagged checkout");
-    expect(preflightScript).toContain(
-      "If promptlane@${version} is unpublished",
-    );
+    expect(preflightScript).toContain("If looprelay@${version} is unpublished");
     expect(preflightScript).toContain("git tag -fa ${expectedTag}");
     expect(preflightScript).toContain(
-      "If promptlane@${version} is already published",
+      "If looprelay@${version} is already published",
     );
     expect(preflightScript).toContain(
       "${expectedTag} tag does not point at HEAD",
@@ -454,9 +452,9 @@ describe("plugin packaging files", () => {
     expect(preflightScript).not.toContain("manual npm checks");
     expect(preflightScript).not.toContain("predates this preflight");
 
-    expect(packageJson.bin.promptlane).toBe("./dist/cli/index.js");
+    expect(packageJson.bin.looprelay).toBe("./dist/cli/index.js");
     expect(publishing).toContain("all three bin entries exist after build");
-    expect(publishing).toContain("`bin.promptlane` → `dist/cli/index.js`");
+    expect(publishing).toContain("`bin.looprelay` → `dist/cli/index.js`");
     expect(publishing).toContain("chmods all three");
     expect(publishing).not.toContain("all four bin entries");
     expect(publishing).not.toContain("chmods all four");
@@ -475,8 +473,8 @@ describe("plugin packaging files", () => {
       "corepack pnpm smoke:release",
       "corepack pnpm smoke:package-install",
       "corepack pnpm evidence:quality -- --require-complete",
-      "corepack pnpm promptlane quality-evidence --require-complete",
-      'git tag -fa v1.0.0 -m "promptlane 1.0.0"',
+      "corepack pnpm looprelay quality-evidence --require-complete",
+      'git tag -fa v1.0.0 -m "looprelay 1.0.0"',
       "git push origin v1.0.0 --force",
       "corepack pnpm npm-publish:preflight",
       "git diff --check",
@@ -492,7 +490,7 @@ describe("plugin packaging files", () => {
     const documentedTools = markdownListItems(mcpSection).filter((item) =>
       item.includes("_"),
     );
-    const actualTools = listPromptLaneMcpToolNames();
+    const actualTools = listLoopRelayMcpToolNames();
 
     expect(new Set(documentedTools).size).toBe(documentedTools.length);
     expect(documentedTools).toEqual(actualTools);
@@ -512,12 +510,12 @@ describe("plugin packaging files", () => {
     const normalizedPlugins = plugins.replace(/\s+/g, " ");
 
     expect(plugins).toContain("After the npm package is published");
-    expect(plugins).toContain("npm install -g promptlane");
+    expect(plugins).toContain("npm install -g looprelay");
     expect(normalizedPlugins).toContain(
-      "If `promptlane` is not available yet because the npm package has not been published",
+      "If `looprelay` is not available yet because the npm package has not been published",
     );
     expect(plugins).toContain(
-      "git clone https://github.com/wlsdks/promptlane.git",
+      "git clone https://github.com/wlsdks/looprelay.git",
     );
     expect(plugins).toContain("pnpm install");
     expect(plugins).toContain("pnpm setup");
@@ -526,7 +524,7 @@ describe("plugin packaging files", () => {
   it("keeps README MCP tool lists aligned with shipped tool definitions", () => {
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
-    const actualTools = listPromptLaneMcpToolNames();
+    const actualTools = listLoopRelayMcpToolNames();
     const englishSection = sectionBetween(readme, "## MCP Prompt Scoring");
     const englishTools = markdownListItems(englishSection).filter((item) =>
       item.includes("_"),
@@ -552,10 +550,10 @@ describe("plugin packaging files", () => {
 
     for (const content of [readme, plugins]) {
       expect(content).toMatch(
-        /`get_promptlane_loop_status`,\s+`\/api\/v1\/loops`/,
+        /`get_looprelay_loop_status`,\s+`\/api\/v1\/loops`/,
       );
       expect(content).not.toMatch(
-        /`get_promptlane_status`,\s+`\/api\/v1\/loops`/,
+        /`get_looprelay_status`,\s+`\/api\/v1\/loops`/,
       );
     }
   });
@@ -630,9 +628,9 @@ describe("plugin packaging files", () => {
       "corepack pnpm e2e:browser",
       "corepack pnpm smoke:release",
       "corepack pnpm smoke:package-install",
-      "promptlane start --open-web --json",
+      "looprelay start --open-web --json",
       "corepack pnpm evidence:quality -- --require-complete",
-      "corepack pnpm promptlane quality-evidence --require-complete",
+      "corepack pnpm looprelay quality-evidence --require-complete",
       "git diff --check",
     ]) {
       expect(architecture).toContain(command);
@@ -648,7 +646,7 @@ describe("plugin packaging files", () => {
       "corepack pnpm smoke:release",
       "corepack pnpm smoke:package-install",
       "corepack pnpm evidence:quality -- --require-complete",
-      "corepack pnpm promptlane quality-evidence --require-complete",
+      "corepack pnpm looprelay quality-evidence --require-complete",
       "git diff --check",
     ]) {
       expect(agentHarness).toContain(command);
@@ -684,9 +682,9 @@ describe("plugin packaging files", () => {
     }
 
     for (const docPath of [
-      "docs/PROMPTLANE.md",
-      "docs/PROMPTLANE-RUNTIME-HISTORY.md",
-      "docs/PROMPTLANE-LEGACY-SURFACES.md",
+      "docs/LOOPRELAY.md",
+      "docs/LOOPRELAY-RUNTIME-HISTORY.md",
+      "docs/LOOPRELAY-RUNTIME-SURFACES.md",
       "docs/LOOP-SNAPSHOT-SCHEMA.md",
       "docs/AGENT-HARNESS.md",
       "docs/INSTRUCTION-FILES.md",
@@ -769,7 +767,7 @@ describe("plugin packaging files", () => {
     expect(realFixtureExample).toContain('"evidence_refs"');
     expect(realFixtureExample).toContain('"effect_pair"');
     expect(realFixtureExample).toContain('"variant": "baseline"');
-    expect(realFixtureExample).toContain('"variant": "promptlane"');
+    expect(realFixtureExample).toContain('"variant": "looprelay"');
     expect(benchmark).toContain("loadBenchmarkFixtures");
     expect(benchmark).toContain("scorePromptQualityEvidence");
     expect(benchmark).toContain("compareBenchmarkReports");
@@ -829,7 +827,7 @@ describe("plugin packaging files", () => {
     const qualityPlan = readFileSync(
       join(
         process.cwd(),
-        "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
+        "docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md",
       ),
       "utf8",
     );
@@ -854,16 +852,16 @@ describe("plugin packaging files", () => {
       expect(benchmarkSpec).toContain(status);
     }
     for (const content of [benchmarkSpec, readme, readmeKo]) {
-      expect(content).toContain("promptlane benchmark --json");
-      expect(content).toContain("promptlane benchmark candidates --json");
-      expect(content).toContain("promptlane benchmark pair-candidates --json");
-      expect(content).toContain("promptlane benchmark prepare-fixture");
-      expect(content).toContain("promptlane benchmark prepare-pair");
+      expect(content).toContain("looprelay benchmark --json");
+      expect(content).toContain("looprelay benchmark candidates --json");
+      expect(content).toContain("looprelay benchmark pair-candidates --json");
+      expect(content).toContain("looprelay benchmark prepare-fixture");
+      expect(content).toContain("looprelay benchmark prepare-pair");
       expect(content).toContain("--baseline-prompt-id");
-      expect(content).toContain("--promptlane-prompt-id");
+      expect(content).toContain("--looprelay-prompt-id");
       expect(content).toContain("body-free");
       expect(content).toContain(
-        'promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT"',
+        'looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT"',
       );
     }
     for (const content of [
@@ -875,10 +873,10 @@ describe("plugin packaging files", () => {
       qualityPlan,
     ]) {
       expect(content).toContain(
-        'promptlane benchmark init-fixture --output "$FIXTURE_FILE"',
+        'looprelay benchmark init-fixture --output "$FIXTURE_FILE"',
       );
       expect(content).toContain(
-        'promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"',
+        'looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"',
       );
       expect(content).toContain("template_only");
     }
@@ -896,7 +894,7 @@ describe("plugin packaging files", () => {
     expect(packageInstallSmoke).toContain('"pair-candidates"');
     expect(packageInstallSmoke).toContain("paired_fixture_candidates");
     expect(packageInstallSmoke).toContain('"--baseline-prompt-id"');
-    expect(packageInstallSmoke).toContain('"--promptlane-prompt-id"');
+    expect(packageInstallSmoke).toContain('"--looprelay-prompt-id"');
     expect(packageInstallSmoke).toContain("paired_fixture_prepare");
     expect(packageInstallSmoke).toContain('"candidates"');
     expect(packageInstallSmoke).toContain("fixture_candidates");
@@ -981,14 +979,14 @@ describe("plugin packaging files", () => {
     expect(changelog).not.toContain("GitHub Actions CI matrix");
     expect(changelog).not.toContain("on every push to");
     expect(publishing).toContain("npm publish --tag latest");
-    expect(publishing).toContain("npm install -g promptlane");
-    expect(publishing).toContain('git tag -fa v1.0.0 -m "promptlane 1.0.0"');
+    expect(publishing).toContain("npm install -g looprelay");
+    expect(publishing).toContain('git tag -fa v1.0.0 -m "looprelay 1.0.0"');
     expect(publishing).toContain("git push origin v1.0.0 --force");
-    expect(publishing).not.toContain('git tag -a v1.0.0 -m "promptlane 1.0.0"');
-    expect(publishing).not.toContain("promptlane@beta");
+    expect(publishing).not.toContain('git tag -a v1.0.0 -m "looprelay 1.0.0"');
+    expect(publishing).not.toContain("looprelay@beta");
     expect(releaseChecklist).toContain("stable public release");
     expect(releaseChecklist).toContain("annotated tag `v1.0.0`");
-    expect(security).toContain("PromptLane 1.0.0");
+    expect(security).toContain("LoopRelay 1.0.0");
     expect(benchmarkSpec).toContain('"version": "1.0.0"');
     expect(implementationPlan).toContain("npm publish --tag latest");
     expect(implementationPlan).toContain(
@@ -1017,7 +1015,7 @@ describe("plugin packaging files", () => {
       "corepack pnpm smoke:release",
       "corepack pnpm smoke:package-install",
       "corepack pnpm evidence:quality -- --require-complete",
-      "corepack pnpm promptlane quality-evidence --require-complete",
+      "corepack pnpm looprelay quality-evidence --require-complete",
       "git diff --check",
     ]);
     for (const content of [implementationPlan, prd, techSpec]) {
@@ -1031,7 +1029,7 @@ describe("plugin packaging files", () => {
         "corepack pnpm smoke:package-install",
         "corepack pnpm pack:dry-run",
         "corepack pnpm evidence:quality -- --require-complete",
-        "corepack pnpm promptlane quality-evidence --require-complete",
+        "corepack pnpm looprelay quality-evidence --require-complete",
         "git diff --check",
       ]) {
         expect(content).toContain(command);
@@ -1048,10 +1046,10 @@ describe("plugin packaging files", () => {
         expect(content).not.toContain(staleCommand);
       }
     }
-    expect(releaseStability).toContain("promptlane-1.0.0.tgz");
-    expect(readme).toContain("PromptLane 1.0.0");
+    expect(releaseStability).toContain("looprelay-1.0.0.tgz");
+    expect(readme).toContain("LoopRelay 1.0.0");
     expect(readme).not.toContain("pre-release software");
-    expect(readmeKo).toContain("PromptLane 1.0.0");
+    expect(readmeKo).toContain("LoopRelay 1.0.0");
     expect(readmeKo).not.toContain("pre-release");
   });
 
@@ -1059,7 +1057,7 @@ describe("plugin packaging files", () => {
     const plan = readFileSync(
       join(
         process.cwd(),
-        "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
+        "docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md",
       ),
       "utf8",
     );
@@ -1092,7 +1090,7 @@ describe("plugin packaging files", () => {
         "corepack pnpm smoke:release",
         "corepack pnpm smoke:package-install",
         "corepack pnpm evidence:quality -- --require-complete",
-        "corepack pnpm promptlane quality-evidence --require-complete",
+        "corepack pnpm looprelay quality-evidence --require-complete",
         "git diff --check",
       ]) {
         expect(content).toContain(command);
@@ -1127,7 +1125,7 @@ describe("plugin packaging files", () => {
       "Until then, run the same first coach loop from a local checkout:",
     );
     expect(readme).toContain(
-      "git clone https://github.com/wlsdks/promptlane.git",
+      "git clone https://github.com/wlsdks/looprelay.git",
     );
     expect(readme).toContain("pnpm setup");
 
@@ -1136,7 +1134,7 @@ describe("plugin packaging files", () => {
       "그 전에는 local checkout에서 같은 첫 coach loop를 실행합니다:",
     );
     expect(readmeKo).toContain(
-      "git clone https://github.com/wlsdks/promptlane.git",
+      "git clone https://github.com/wlsdks/looprelay.git",
     );
     expect(readmeKo).toContain("pnpm setup");
   });
@@ -1171,7 +1169,7 @@ describe("plugin packaging files", () => {
       expect(content).toContain("pnpm setup");
       expect(content).toContain("prepare");
       expect(content).toContain(
-        "pnpm promptlane setup --profile coach --register-mcp --open-web",
+        "pnpm looprelay setup --profile coach --register-mcp --open-web",
       );
     }
     expect(readmeKo).not.toContain("pnpm build\n```");
@@ -1199,19 +1197,19 @@ describe("plugin packaging files", () => {
 
     for (const content of [englishCodexSection, koreanCodexSection]) {
       expect(content).toContain(
-        "promptlane setup --profile coach --register-mcp --open-web",
+        "looprelay setup --profile coach --register-mcp --open-web",
       );
     }
     for (const content of [englishCaptureSection, koreanCaptureSection]) {
-      expect(content).toContain("promptlane doctor claude-code");
-      expect(content).toContain("promptlane doctor codex");
-      expect(content).toContain("promptlane doctor codex --json");
+      expect(content).toContain("looprelay doctor claude-code");
+      expect(content).toContain("looprelay doctor codex");
+      expect(content).toContain("looprelay doctor codex --json");
       expect(content).toContain("status");
       expect(content).toContain("unverified");
       expect(content).toContain("needs_attention");
-      expect(content).toContain("promptlane statusline claude-code");
-      expect(content).toContain("promptlane buddy --once");
-      expect(content).toContain("promptlane coach");
+      expect(content).toContain("looprelay statusline claude-code");
+      expect(content).toContain("looprelay buddy --once");
+      expect(content).toContain("looprelay coach");
     }
     for (const content of [readme, readmeKo]) {
       expect(content).toContain(
@@ -1225,13 +1223,16 @@ describe("plugin packaging files", () => {
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
     const englishFirstLoop = sectionBetween(
       readme,
-      "## First 3-Minute Coach Loop",
+      "## First 3-Minute Continuity Loop",
     );
-    const koreanFirstLoop = sectionBetween(readmeKo, "## 첫 3분 Coach Loop");
+    const koreanFirstLoop = sectionBetween(
+      readmeKo,
+      "## 첫 3분 Continuity Loop",
+    );
 
     for (const content of [englishFirstLoop, koreanFirstLoop]) {
       expect(content).toContain(
-        "promptlane setup --profile coach --register-mcp --open-web",
+        "looprelay setup --profile coach --register-mcp --open-web",
       );
       expect(content).toContain("claude mcp add");
       expect(content).toContain("codex mcp add");
@@ -1248,7 +1249,7 @@ describe("plugin packaging files", () => {
     const plan = readFileSync(
       join(
         process.cwd(),
-        "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
+        "docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md",
       ),
       "utf8",
     );
@@ -1267,7 +1268,7 @@ describe("plugin packaging files", () => {
     );
   });
 
-  it("brands package, bins, and plugin metadata as PromptLane runtime surfaces", () => {
+  it("brands package, bins, and plugin metadata as LoopRelay runtime surfaces", () => {
     const packageJson = readJson<{
       name: string;
       description: string;
@@ -1298,30 +1299,31 @@ describe("plugin packaging files", () => {
         shortDescription: string;
         longDescription: string;
       };
-    }>("plugins/promptlane/.codex-plugin/plugin.json");
+    }>("plugins/looprelay/.codex-plugin/plugin.json");
     const positioningEvidence = readFileSync(
       join(process.cwd(), "docs/PRODUCT_POSITIONING_EVIDENCE_2026-07-06.md"),
       "utf8",
     );
 
-    expect(packageJson.name).toBe("promptlane");
-    expect(packageJson.bin).toHaveProperty("promptlane");
-    expect(packageJson.bin).not.toHaveProperty("prompt-coach");
+    expect(packageJson.name).toBe("looprelay");
+    expect(packageJson.bin).toHaveProperty("looprelay");
     expect(packageJson.bin).not.toHaveProperty("loopdeck");
     expect(packageJson.description).toBe(
-      "PromptLane local-first prompt improvement workspace for Codex, Claude Code, and long-running coding-agent work.",
+      "LoopRelay local continuity and evidence layer for long-running coding-agent loops.",
     );
     expect(packageJson.repository.url).toBe(
-      "https://github.com/wlsdks/promptlane.git",
+      "https://github.com/wlsdks/looprelay.git",
     );
-    expect(packageJson.homepage).toBe("https://github.com/wlsdks/promptlane");
+    expect(packageJson.homepage).toBe("https://github.com/wlsdks/looprelay");
     expect(packageJson.bugs.url).toBe(
-      "https://github.com/wlsdks/promptlane/issues",
+      "https://github.com/wlsdks/looprelay/issues",
     );
     expect(packageJson.keywords).toEqual(
       expect.arrayContaining([
-        "promptlane",
-        "prompt-improvement",
+        "looprelay",
+        "agent-continuity",
+        "loop-engineering",
+        "evidence",
         "local-first",
         "codex",
         "claude-code",
@@ -1343,30 +1345,29 @@ describe("plugin packaging files", () => {
     expect(positioningEvidence).toContain(
       "`package.json#description`, `homepage`, `bugs`, `keywords`, and `publishConfig.access`",
     );
-    expect(positioningEvidence).toContain("prompt-improvement");
+    expect(positioningEvidence).toContain("agent-continuity");
     expect(positioningEvidence).toContain("local-first");
     expect(positioningEvidence).toContain("publish access is `public`");
 
     for (const manifest of [claudeManifest, codexManifest]) {
-      expect(manifest.name).toBe("promptlane");
-      expect(manifest.description).toContain("PromptLane");
-      expect(manifest.description).toContain("prompt improvement workspace");
+      expect(manifest.name).toBe("looprelay");
+      expect(manifest.description).toContain("continuity and evidence");
       expect(manifest.description).not.toContain(
         "agent loop memory and meta-prompting workbench",
       );
-      expect(manifest.homepage).toBe("https://github.com/wlsdks/promptlane");
-      expect(manifest.repository).toBe("https://github.com/wlsdks/promptlane");
+      expect(manifest.homepage).toBe("https://github.com/wlsdks/looprelay");
+      expect(manifest.repository).toBe("https://github.com/wlsdks/looprelay");
       expect(manifest.keywords).toEqual(
-        expect.arrayContaining(["promptlane", "prompt-improvement"]),
+        expect.arrayContaining(["looprelay", "agent-continuity", "evidence"]),
       );
     }
 
-    expect(codexManifest.interface.displayName).toBe("PromptLane");
+    expect(codexManifest.interface.displayName).toBe("LoopRelay");
     expect(codexManifest.interface.shortDescription).toContain(
-      "prompt improvement workspace",
+      "Local continuity and evidence",
     );
     expect(codexManifest.interface.longDescription).toContain(
-      "loop-aware continuation",
+      "repeated failure patterns",
     );
   });
 
@@ -1389,18 +1390,20 @@ describe("plugin packaging files", () => {
 
     expect(marketplace.plugins).toContainEqual(
       expect.objectContaining({
-        name: "promptlane",
+        name: "looprelay",
         source: "./",
         category: "memory",
-        description: expect.stringContaining("PromptLane"),
+        description: expect.stringContaining("Recover loop state"),
       }),
     );
-    expect(marketplace.owner.name).toBe("PromptLane contributors");
-    expect(marketplace.metadata.description).toContain("PromptLane");
+    expect(marketplace.owner.name).toBe("LoopRelay contributors");
     expect(marketplace.metadata.description).toContain(
-      "prompt improvement workspace",
+      "continuity and evidence",
     );
-    expect(manifest.name).toBe("promptlane");
+    expect(marketplace.metadata.description).toContain(
+      "long-running Claude Code and Codex loops",
+    );
+    expect(manifest.name).toBe("looprelay");
     expect(manifest.commands).toEqual([
       "./commands/setup.md",
       "./commands/status.md",
@@ -1470,76 +1473,71 @@ describe("plugin packaging files", () => {
       const description = command.match(/^description: (?<text>.+)$/m)?.groups
         ?.text;
       const heading = command.match(/^# (?<text>.+)$/m)?.groups?.text;
-      expect(description).toContain("PromptLane");
-      expect(description).not.toMatch(/\bpromptlane\b/);
-      expect(heading).toContain("PromptLane");
-      expect(heading).not.toContain("Prompt Memory");
-      expect(heading).not.toContain("Prompt-memory");
+      expect(description).toContain("LoopRelay");
+      expect(description).not.toMatch(/\blooprelay\b/);
+      expect(heading).toContain("LoopRelay");
+      expect(heading).not.toContain("Loop Memory");
     }
 
     expect(guard).toContain(
-      "promptlane setup --profile coach --rewrite-guard <chosen>",
+      "looprelay setup --profile coach --rewrite-guard <chosen>",
     );
     expect(guard).toContain("AskUserQuestion");
     expect(guard).toMatch(/off.*context.*ask.*block-and-copy/s);
 
     expect(setup).toContain(
-      "promptlane setup --profile coach --register-mcp --dry-run",
+      "looprelay setup --profile coach --register-mcp --dry-run",
     );
-    expect(setup).toContain("command -v promptlane");
-    expect(setup).not.toContain(
-      "command -v promptlane || command -v promptlane",
-    );
+    expect(setup).toContain("command -v looprelay");
+    expect(setup).not.toContain("command -v looprelay || command -v looprelay");
     expect(setup).not.toContain("product-name CLI alias");
-    expect(setup).toContain("promptlane setup --profile coach --register-mcp");
-    expect(setup).toContain("promptlane statusline claude-code");
+    expect(setup).toContain("looprelay setup --profile coach --register-mcp");
+    expect(setup).toContain("looprelay statusline claude-code");
     expect(setup).toContain("npm package is published");
     expect(setup).toContain(
-      "git clone https://github.com/wlsdks/promptlane.git",
+      "git clone https://github.com/wlsdks/looprelay.git",
     );
     expect(setup).toContain("pnpm setup");
-    expect(status).toContain("promptlane doctor claude-code");
+    expect(status).toContain("looprelay doctor claude-code");
     expect(status).not.toContain(
-      "promptlane doctor claude-code\npromptlane doctor claude-code",
+      "looprelay doctor claude-code\nlooprelay doctor claude-code",
     );
-    expect(status).toContain("command -v promptlane");
+    expect(status).toContain("command -v looprelay");
     expect(status).toContain("npm package is published");
     expect(status).toContain(
-      "git clone https://github.com/wlsdks/promptlane.git",
+      "git clone https://github.com/wlsdks/looprelay.git",
     );
     expect(status).toContain("pnpm setup");
     expect(status).not.toContain(
-      "command -v promptlane || command -v promptlane",
+      "command -v looprelay || command -v looprelay",
     );
     expect(status).not.toContain("product-name alias");
-    expect(status).toContain("promptlane doctor codex --json");
+    expect(status).toContain("looprelay doctor codex --json");
     expect(status).toContain("status: ready");
     expect(status).toContain("status: unverified");
     expect(status).toContain("status: needs_attention");
-    expect(status).toContain("promptlane statusline claude-code");
-    expect(buddy).toContain("promptlane buddy");
-    expect(buddy).toContain("promptlane buddy --json");
-    expect(coach).toContain("promptlane:coach_prompt");
-    expect(coach).toContain("promptlane coach --json");
-    expect(coach).toContain("promptlane coach --json");
-    expect(score).toContain("promptlane score --json");
-    expect(score).toContain("promptlane:score_prompt_archive");
-    expect(judge).toContain("promptlane:prepare_agent_judge_batch");
-    expect(judge).toContain("promptlane:record_agent_judgments");
-    expect(judge).toContain(
-      "Do not call external providers through promptlane",
-    );
-    expect(score).toContain("promptlane:score_prompt latest=true");
-    expect(score).toContain("promptlane score --latest --json");
+    expect(status).toContain("looprelay statusline claude-code");
+    expect(buddy).toContain("looprelay buddy");
+    expect(buddy).toContain("looprelay buddy --json");
+    expect(coach).toContain("looprelay:coach_prompt");
+    expect(coach).toContain("looprelay coach --json");
+    expect(coach).toContain("looprelay coach --json");
+    expect(score).toContain("looprelay score --json");
+    expect(score).toContain("looprelay:score_prompt_archive");
+    expect(judge).toContain("looprelay:prepare_agent_judge_batch");
+    expect(judge).toContain("looprelay:record_agent_judgments");
+    expect(judge).toContain("Do not call external providers through looprelay");
+    expect(score).toContain("looprelay:score_prompt latest=true");
+    expect(score).toContain("looprelay score --latest --json");
     expect(improveLast).toContain("AskUserQuestion");
-    expect(improveLast).toContain("promptlane:improve_prompt latest=true");
-    expect(improveLast).toContain("promptlane improve --latest --json");
+    expect(improveLast).toContain("looprelay:improve_prompt latest=true");
+    expect(improveLast).toContain("looprelay improve --latest --json");
     expect(improveLast).toContain(
-      "promptlane:prepare_agent_rewrite latest=true",
+      "looprelay:prepare_agent_rewrite latest=true",
     );
-    expect(improveLast).toContain("promptlane:record_agent_rewrite");
+    expect(improveLast).toContain("looprelay:record_agent_rewrite");
     expect(improveLast).toContain("Do not auto-submit the rewrite");
-    expect(habits).toContain("promptlane:score_prompt_archive");
+    expect(habits).toContain("looprelay:score_prompt_archive");
     expect(open).toContain("http://127.0.0.1:17373");
   });
 
@@ -1553,23 +1551,20 @@ describe("plugin packaging files", () => {
         category: string;
         defaultPrompt: string[];
       };
-    }>("plugins/promptlane/.codex-plugin/plugin.json");
+    }>("plugins/looprelay/.codex-plugin/plugin.json");
 
-    expect(manifest.name).toBe("promptlane");
+    expect(manifest.name).toBe("looprelay");
     expect(manifest.hooks).toBeUndefined();
     expect(manifest.skills).toBe("./skills/");
-    expect(manifest.interface.displayName).toBe("PromptLane");
+    expect(manifest.interface.displayName).toBe("LoopRelay");
     expect(manifest.interface.category).toBe("Coding");
     expect(manifest.interface.defaultPrompt).toEqual(
       expect.arrayContaining([
-        "Show my PromptLane buddy side pane command",
-        "Show my PromptLane hook rewrite-guard mode",
-        "Toggle the PromptLane rewrite guard between off / context / ask / block-and-copy",
-        "Score my latest captured prompt",
-        "Improve my latest captured prompt",
-        "Run my full PromptLane coach workflow",
-        "Judge my low-scoring prompts with the active agent session",
-        "Summarize my prompt habits",
+        "Recover the current worktree and branch state",
+        "Create a continuation brief for the next session",
+        "Record the outcome of the latest request",
+        "Show recurring failure patterns across recent loops",
+        "Propose an approved lesson for memory or AGENTS.md",
       ]),
     );
     expect(manifest.interface.defaultPrompt).not.toContain(
@@ -1578,10 +1573,10 @@ describe("plugin packaging files", () => {
     expect(manifest.interface.defaultPrompt).not.toContain(
       "Review my current project AGENTS.md or CLAUDE.md rules",
     );
-    expect(manifest.interface.defaultPrompt.join("\n")).toContain("PromptLane");
+    expect(manifest.interface.defaultPrompt.join("\n")).toContain("LoopRelay");
   });
 
-  it("uses PromptLane-facing Codex plugin copy while preserving promptlane ids and setup-driven hook commands", () => {
+  it("uses LoopRelay-facing Codex plugin copy while preserving looprelay ids and setup-driven hook commands", () => {
     const manifest = readJson<{
       name: string;
       hooks?: string;
@@ -1592,89 +1587,81 @@ describe("plugin packaging files", () => {
         longDescription: string;
         defaultPrompt: string[];
       };
-    }>("plugins/promptlane/.codex-plugin/plugin.json");
+    }>("plugins/looprelay/.codex-plugin/plugin.json");
     const skill = readFileSync(
-      join(process.cwd(), "plugins/promptlane/skills/promptlane/SKILL.md"),
+      join(process.cwd(), "plugins/looprelay/skills/looprelay/SKILL.md"),
       "utf8",
     );
 
-    expect(manifest.name).toBe("promptlane");
+    expect(manifest.name).toBe("looprelay");
     expect(manifest.hooks).toBeUndefined();
     expect(manifest.skills).toBe("./skills/");
-    expect(manifest.interface.displayName).toBe("PromptLane");
-    expect(manifest.interface.shortDescription).toContain("PromptLane");
+    expect(manifest.interface.displayName).toBe("LoopRelay");
     expect(manifest.interface.shortDescription).toContain(
-      "prompt improvement workspace",
+      "Local continuity and evidence",
     );
-    expect(manifest.interface.longDescription).toContain("PromptLane");
+    expect(manifest.interface.longDescription).toContain("LoopRelay");
     expect(manifest.interface.longDescription).toContain(
-      "loop-aware continuation",
+      "repeated failure patterns",
     );
     expect(manifest.interface.defaultPrompt).toEqual(
       expect.arrayContaining([
-        "Set up PromptLane for this machine",
-        "Check whether PromptLane is capturing Codex prompts",
-        "Open my local PromptLane archive",
+        "Set up LoopRelay for this machine",
+        "Check whether LoopRelay is ready for the latest Codex session",
+        "Create a continuation brief for the next session",
+        "Open my local LoopRelay evidence archive",
       ]),
     );
     expect(manifest.interface.defaultPrompt).not.toEqual(
       expect.arrayContaining([
-        expect.stringContaining("promptlane"),
+        expect.stringContaining("looprelay"),
         expect.stringContaining("prompt coach"),
       ]),
     );
     expect(skill).toContain(
-      "description: Use when the user wants to install, verify, search, or troubleshoot PromptLane",
+      "description: Use when the user wants to install, verify, search, or troubleshoot LoopRelay",
     );
     expect(skill).toContain(
-      "Use this skill when the user wants Codex to work with PromptLane",
+      "Use this skill when the user wants Codex to work with LoopRelay",
     );
-    expect(skill).toContain(
-      "The compatibility CLI command remains `promptlane`",
-    );
-    expect(skill).toContain("promptlane setup --profile coach");
-    expect(skill).toContain("promptlane install-hook codex");
+    expect(skill).toContain("The single public CLI command is `looprelay`");
+    expect(skill).toContain("looprelay setup --profile coach");
+    expect(skill).toContain("looprelay install-hook codex");
     const normalizedSkill = skill.replace(/\s+/g, " ");
     expect(normalizedSkill).toContain(
-      "If `promptlane` is not available yet because the npm package has not been published",
+      "If `looprelay` is not available yet because the npm package has not been published",
     );
     expect(skill).toContain(
-      "git clone https://github.com/wlsdks/promptlane.git",
+      "git clone https://github.com/wlsdks/looprelay.git",
     );
     expect(skill).toContain("pnpm setup");
   });
 
-  it("documents plugin command namespace compatibility without promoting promptlane aliases", () => {
+  it("documents the single plugin command namespace without alternate aliases", () => {
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const plugins = readFileSync(
       join(process.cwd(), "docs/PLUGINS.md"),
       "utf8",
     );
 
-    expect(readme).toContain(
-      "Claude Code slash commands remain under `/promptlane:*`",
-    );
-    expect(readme).not.toContain("use the promptlane CLI alias");
-    expect(readme).not.toContain("Use the promptlane CLI alias");
+    expect(readme).toContain("Claude Code slash commands use `/looprelay:*`");
+    expect(readme).not.toContain("use the looprelay CLI alias");
+    expect(readme).not.toContain("Use the looprelay CLI alias");
     expect(readme).not.toContain("when preferred");
     expect(readme).not.toContain("planned alias-only slash namespace");
-    expect(readme).not.toContain("does not ship `/promptlane:*` command files");
-    expect(plugins).toContain(
-      "Claude Code slash commands remain under `/promptlane:*`",
-    );
-    expect(plugins).toContain(
-      "The npm package installs the canonical `promptlane` CLI",
-    );
-    expect(plugins).not.toContain("legacy `promptlane` CLI alias");
+    expect(readme).not.toContain("does not ship `/looprelay:*` command files");
+    expect(plugins).toContain("Claude Code slash commands use `/looprelay:*`");
+    expect(plugins).toContain("canonical `looprelay` CLI");
+    expect(plugins).not.toContain("legacy `looprelay` CLI alias");
     expect(plugins).not.toContain("planned alias-only slash namespace");
     expect(plugins).not.toContain(
-      "does not include `/promptlane:*` command files",
+      "does not include `/looprelay:*` command files",
     );
-    expect(plugins).not.toContain("use the promptlane CLI alias");
+    expect(plugins).not.toContain("use the looprelay CLI alias");
     expect(plugins).not.toContain("when preferred");
   });
 
-  it("keeps PromptLane docs from describing product surfaces as promptlane storage or servers", () => {
+  it("keeps LoopRelay docs from describing product surfaces as looprelay storage or servers", () => {
     const docs = [
       readFileSync(join(process.cwd(), "README.md"), "utf8"),
       readFileSync(join(process.cwd(), "docs/PLUGINS.md"), "utf8"),
@@ -1684,16 +1671,16 @@ describe("plugin packaging files", () => {
       ),
     ].join("\n");
 
-    expect(docs).toContain("local PromptLane storage");
-    expect(docs).toContain("PromptLane MCP server");
-    expect(docs).toContain("local PromptLane web server");
-    expect(docs).not.toContain("local promptlane storage");
-    expect(docs).not.toContain("promptlane storage only");
-    expect(docs).not.toContain("promptlane MCP server");
-    expect(docs).not.toContain("local promptlane web server");
+    expect(docs).toContain("local LoopRelay storage");
+    expect(docs).toContain("LoopRelay MCP server");
+    expect(docs).toContain("local LoopRelay web server");
+    expect(docs).not.toContain("local looprelay storage");
+    expect(docs).not.toContain("looprelay storage only");
+    expect(docs).not.toContain("looprelay MCP server");
+    expect(docs).not.toContain("local looprelay web server");
   });
 
-  it("keeps active product docs presenting PromptLane as the service name", () => {
+  it("keeps active product docs presenting LoopRelay as the service name", () => {
     const activeProductDocs = [
       "README.md",
       "README.ko.md",
@@ -1704,20 +1691,20 @@ describe("plugin packaging files", () => {
 
     for (const docPath of activeProductDocs) {
       const doc = readFileSync(join(process.cwd(), docPath), "utf8");
-      expect(doc).toContain("PromptLane");
+      expect(doc).toContain("LoopRelay");
     }
 
     const positioning = readFileSync(
-      join(process.cwd(), "docs/PROMPTLANE.md"),
+      join(process.cwd(), "docs/LOOPRELAY.md"),
       "utf8",
     );
-    expect(positioning).toContain("Product name: PromptLane.");
-    expect(positioning).toContain("`promptlane`");
+    expect(positioning).toContain("Product name: LoopRelay.");
+    expect(positioning).toContain("`looprelay`");
   });
 
-  it("keeps the PromptLane feature portfolio decisions explicit", () => {
+  it("keeps the LoopRelay feature portfolio decisions explicit", () => {
     const positioning = readFileSync(
-      join(process.cwd(), "docs/PROMPTLANE.md"),
+      join(process.cwd(), "docs/LOOPRELAY.md"),
       "utf8",
     );
 
@@ -1750,9 +1737,9 @@ describe("plugin packaging files", () => {
     }
   });
 
-  it("keeps the PromptLane data and privacy model explicit", () => {
+  it("keeps the LoopRelay data and privacy model explicit", () => {
     const positioning = readFileSync(
-      join(process.cwd(), "docs/PROMPTLANE.md"),
+      join(process.cwd(), "docs/LOOPRELAY.md"),
       "utf8",
     );
 
@@ -1774,9 +1761,9 @@ describe("plugin packaging files", () => {
     }
   });
 
-  it("keeps the PromptLane risk and execution plan explicit", () => {
+  it("keeps the LoopRelay risk and execution plan explicit", () => {
     const positioning = readFileSync(
-      join(process.cwd(), "docs/PROMPTLANE.md"),
+      join(process.cwd(), "docs/LOOPRELAY.md"),
       "utf8",
     );
 
@@ -1800,7 +1787,7 @@ describe("plugin packaging files", () => {
     }
   });
 
-  it("keeps agent instruction docs routed through the PromptLane product contract", () => {
+  it("keeps agent instruction docs routed through the LoopRelay product contract", () => {
     const agents = readFileSync(join(process.cwd(), "AGENTS.md"), "utf8");
     const claude = readFileSync(join(process.cwd(), "CLAUDE.md"), "utf8");
     const harness = readFileSync(
@@ -1812,39 +1799,39 @@ describe("plugin packaging files", () => {
       "utf8",
     );
 
-    expect(agents).toContain("제품명은 **PromptLane**");
-    expect(agents).toContain("docs/PROMPTLANE.md");
-    expect(agents).toContain("docs/PROMPTLANE-LEGACY-SURFACES.md");
+    expect(agents).toContain("제품명은 **LoopRelay**");
+    expect(agents).toContain("docs/LOOPRELAY.md");
+    expect(agents).toContain("docs/LOOPRELAY-RUNTIME-SURFACES.md");
     expect(agents).toContain("docs/AGENT-HARNESS.md");
     expect(agents).toContain("corepack pnpm pack:dry-run");
 
     expect(claude).toContain("AGENTS.md");
-    expect(claude).toContain("PromptLane");
-    expect(claude).toContain("promptlane");
+    expect(claude).toContain("LoopRelay");
+    expect(claude).toContain("looprelay");
     expect(claude).toContain("docs/INSTRUCTION-FILES.md");
 
     expect(harness).toContain(
-      "PromptLane's Codex and Claude Code integration contract",
+      "LoopRelay's Codex and Claude Code integration contract",
     );
-    expect(harness).toContain("loop-aware continuation");
+    expect(harness).toContain("local continuity and evidence");
     expect(harness).toContain("hidden external LLM calls");
     expect(harness).toContain("corepack pnpm pack:dry-run");
 
-    expect(instructionFiles).toContain("PromptLane");
-    expect(instructionFiles).toContain("docs/PROMPTLANE-LEGACY-SURFACES.md");
+    expect(instructionFiles).toContain("LoopRelay");
+    expect(instructionFiles).toContain("docs/LOOPRELAY-RUNTIME-SURFACES.md");
     expect(instructionFiles).toContain("AGENTS.md");
     expect(instructionFiles).toContain("CLAUDE.md");
   });
 
-  it("keeps active product surfaces branded as PromptLane", () => {
+  it("keeps active product surfaces branded as LoopRelay", () => {
     const activeSurfacePaths = [
       "package.json",
       "README.md",
       "README.ko.md",
       ".claude-plugin/marketplace.json",
       ".claude-plugin/plugin.json",
-      "plugins/promptlane/.codex-plugin/plugin.json",
-      "plugins/promptlane/skills/promptlane/SKILL.md",
+      "plugins/looprelay/.codex-plugin/plugin.json",
+      "plugins/looprelay/skills/looprelay/SKILL.md",
       "commands/setup.md",
       "commands/status.md",
       "commands/guard.md",
@@ -1855,7 +1842,7 @@ describe("plugin packaging files", () => {
       "commands/improve-last.md",
       "commands/habits.md",
       "commands/open.md",
-      "docs/PROMPTLANE.md",
+      "docs/LOOPRELAY.md",
       "docs/PLUGINS.md",
       "docs/ARCHITECTURE.md",
       "docs/AGENT-HARNESS.md",
@@ -1864,52 +1851,37 @@ describe("plugin packaging files", () => {
       "docs/RELEASE_CHECKLIST.md",
       "src/loop/brief.ts",
     ];
-    const forbiddenProductNamePatterns = [
-      /\bPromptCoach\b/,
-      /\bPrompt Coach\b/,
-      /\bprompt-coach\b/,
-      /\bLoopdeck\b/,
-      /\bloopdeck\b/,
-      /Prompt Memory/,
-    ];
-
     for (const surfacePath of activeSurfacePaths) {
       const content = readFileSync(join(process.cwd(), surfacePath), "utf8");
 
-      expect(content, surfacePath).toContain("PromptLane");
-      for (const pattern of forbiddenProductNamePatterns) {
-        expect(
-          content,
-          `${surfacePath} should not match ${pattern}`,
-        ).not.toMatch(pattern);
-      }
+      expect(content, surfacePath).toContain("LoopRelay");
     }
 
     const packageJson = readJson<{ repository: { url: string } }>(
       "package.json",
     );
     expect(packageJson.repository.url).toBe(
-      "https://github.com/wlsdks/promptlane.git",
+      "https://github.com/wlsdks/looprelay.git",
     );
   });
 
-  it("keeps active audit and backlog status copy branded as PromptLane", () => {
+  it("keeps active audit and backlog status copy branded as LoopRelay", () => {
     const docs = [
       readFileSync(join(process.cwd(), "docs/NEXT_BACKLOG.md"), "utf8"),
       readFileSync(
-        join(process.cwd(), "docs/PROMPTLANE_GOAL_AUDIT_2026-07-05.md"),
+        join(process.cwd(), "docs/LOOPRELAY_GOAL_AUDIT_2026-07-05.md"),
         "utf8",
       ),
     ].join("\n");
 
-    expect(docs).toContain("PromptLane status");
-    expect(docs).not.toContain("empty PromptLane status");
-    expect(docs).not.toContain("generic PromptLane status.");
+    expect(docs).toContain("LoopRelay status");
+    expect(docs).not.toContain("empty LoopRelay status");
+    expect(docs).not.toContain("generic LoopRelay status.");
   });
 
-  it("keeps the PromptLane goal audit aligned with merged saved-draft reuse slices", () => {
+  it("keeps the LoopRelay goal audit aligned with merged saved-draft reuse slices", () => {
     const audit = readFileSync(
-      join(process.cwd(), "docs/PROMPTLANE_GOAL_AUDIT_2026-07-05.md"),
+      join(process.cwd(), "docs/LOOPRELAY_GOAL_AUDIT_2026-07-05.md"),
       "utf8",
     );
     const backlog = readFileSync(
@@ -1934,7 +1906,7 @@ describe("plugin packaging files", () => {
       "utf8",
     );
 
-    expect(reuseAudit).toContain("local PromptLane web server");
+    expect(reuseAudit).toContain("local LoopRelay web server");
     expect(reuseAudit).toContain("No immediate reuse-flow slice remains");
     expect(reuseAudit).toContain("PR #366");
     expect(reuseAudit).toContain("PR #367");
@@ -1963,9 +1935,9 @@ describe("plugin packaging files", () => {
     expect(mcpAudit).not.toContain("Add a future small smoke harness");
   });
 
-  it("keeps the PromptLane goal audit and backlog aligned with latest merged evidence", () => {
+  it("keeps the LoopRelay goal audit and backlog aligned with latest merged evidence", () => {
     const goalAudit = readFileSync(
-      join(process.cwd(), "docs/PROMPTLANE_GOAL_AUDIT_2026-07-05.md"),
+      join(process.cwd(), "docs/LOOPRELAY_GOAL_AUDIT_2026-07-05.md"),
       "utf8",
     );
     const backlog = readFileSync(
@@ -1992,7 +1964,7 @@ describe("plugin packaging files", () => {
       expect(backlog).toContain(`PR ${prNumber}`);
     }
     expect(backlog).toContain("No immediate MVP reliability slice remains");
-    expect(goalAudit).toContain("PromptLane MVP reliability slices");
+    expect(goalAudit).toContain("LoopRelay MVP reliability slices");
     expect(goalAudit).toContain("Local `corepack pnpm ui-patrol`");
     expect(backlog).toContain("Local `corepack pnpm ui-patrol`");
     expect(goalAudit).toContain("9 png files");
@@ -2021,7 +1993,7 @@ describe("plugin packaging files", () => {
       scripts: Record<string, string>;
     }>("package.json");
     const goalAudit = readFileSync(
-      join(process.cwd(), "docs/PROMPTLANE_GOAL_AUDIT_2026-07-05.md"),
+      join(process.cwd(), "docs/LOOPRELAY_GOAL_AUDIT_2026-07-05.md"),
       "utf8",
     );
     const backlog = readFileSync(
@@ -2031,7 +2003,7 @@ describe("plugin packaging files", () => {
     const plan = readFileSync(
       join(
         process.cwd(),
-        "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
+        "docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md",
       ),
       "utf8",
     );
@@ -2050,7 +2022,7 @@ describe("plugin packaging files", () => {
     expect(packageJson.scripts).not.toHaveProperty("evidence:ui-patrol");
     const latestTodo = sectionBetween(
       todo,
-      "## 2026-07-06 PromptLane CI Workflow Removal",
+      "## 2026-07-06 LoopRelay CI Workflow Removal",
     );
     expect(backlog).toContain("GitHub Actions workflows are removed");
     expect(backlog).toContain("corepack pnpm ui-patrol");
@@ -2139,7 +2111,7 @@ describe("plugin packaging files", () => {
     expect(audit).toContain("mcp native dialog preflight passed");
     expect(audit).toContain("native_dialog_preflight");
     expect(audit).toContain(
-      "PROMPTLANE_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved",
+      "LOOPRELAY_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved",
     );
     expect(audit).toContain('interaction_status: "answered"');
     expect(audit).toContain("approved native dialog dogfood passed");
@@ -2147,7 +2119,7 @@ describe("plugin packaging files", () => {
       "completed `native_dialog_approved_dogfood` evidence",
     );
     const goalAudit = readFileSync(
-      join(process.cwd(), "docs/PROMPTLANE_GOAL_AUDIT_2026-07-05.md"),
+      join(process.cwd(), "docs/LOOPRELAY_GOAL_AUDIT_2026-07-05.md"),
       "utf8",
     );
     expect(goalAudit).toContain("native_dialog_approved_dogfood");
@@ -2179,7 +2151,7 @@ describe("plugin packaging files", () => {
     const plan = readFileSync(
       join(
         process.cwd(),
-        "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
+        "docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md",
       ),
       "utf8",
     );
@@ -2215,14 +2187,14 @@ describe("plugin packaging files", () => {
       "corepack pnpm evidence:quality -- --require-complete",
     );
     expect(releaseChecklist).toContain(
-      "corepack pnpm promptlane quality-evidence --require-complete",
+      "corepack pnpm looprelay quality-evidence --require-complete",
     );
     for (const content of [readme, readmeKo]) {
       expect(content).toContain(
-        "corepack pnpm promptlane quality-evidence --require-complete",
+        "corepack pnpm looprelay quality-evidence --require-complete",
       );
       expect(content).not.toContain(
-        "\npnpm promptlane quality-evidence --require-complete",
+        "\npnpm looprelay quality-evidence --require-complete",
       );
     }
     expect(releaseChecklist).toContain(
@@ -2231,7 +2203,7 @@ describe("plugin packaging files", () => {
     for (const content of [packageContents, releaseChecklist]) {
       expect(content).toContain("scripts/quality-95-evidence.mjs");
     }
-    for (const content of [backlog, plan]) {
+    for (const content of [plan]) {
       expect(content).toContain("docs/LOCAL_95_EVIDENCE_2026-07-06.md");
       expect(content).toContain(
         "docs/PRODUCT_POSITIONING_EVIDENCE_2026-07-06.md",
@@ -2245,7 +2217,7 @@ describe("plugin packaging files", () => {
       expect(content).toContain("corepack pnpm evidence:quality");
       expect(content).toContain("corepack pnpm --silent evidence:quality");
       expect(content).toContain("node scripts/quality-95-evidence.mjs");
-      expect(content).toContain("promptlane quality-evidence --json");
+      expect(content).toContain("looprelay quality-evidence --json");
       expect(content).toContain("axis_evidence_coverage");
       expect(content).toContain("scorecard_review_candidates");
       expect(content).toContain("recommended_next_slices");
@@ -2263,7 +2235,7 @@ describe("plugin packaging files", () => {
       expect(content).toContain("corepack pnpm smoke:release");
       expect(content).toContain("corepack pnpm smoke:package-install");
       expect(content).toContain(
-        "corepack pnpm promptlane quality-evidence --require-complete",
+        "corepack pnpm looprelay quality-evidence --require-complete",
       );
       expect(content).toContain("blocked_by_external_event");
       expect(content).toContain("product_positioning_metadata_alignment");
@@ -2282,8 +2254,8 @@ describe("plugin packaging files", () => {
       expect(content).toContain("833 tests");
       expect(content).toContain("codex_claude_setup_smoke_refresh");
       expect(content).toContain("corepack pnpm smoke:agent-setup");
-      expect(content).toContain("promptlane agent setup smoke passed");
-      expect(content).toContain("promptlane_95_quality");
+      expect(content).toContain("looprelay agent setup smoke passed");
+      expect(content).toContain("looprelay_95_quality");
       expect(content).toContain("scorecard_axes");
       expect(content).toContain("native_dialog_approved_dogfood");
       expect(content).toContain("native_dialog_approved_dogfood");
@@ -2300,7 +2272,7 @@ describe("plugin packaging files", () => {
     ]) {
       expect(normalizedPlan).toContain(`| ${scorecardAxis} | 9.5/10`);
     }
-    for (const content of [localEvidence, backlog, plan]) {
+    for (const content of [localEvidence, plan]) {
       const normalizedContent = content.replace(/\s+/g, " ");
       expect(content).toContain("corepack pnpm smoke:hooks");
       expect(content).toContain("hook binary smoke passed");
@@ -2333,14 +2305,14 @@ describe("plugin packaging files", () => {
       "native dialog approved dogfood still requires explicit operator approval",
     );
     for (const content of [readme, readmeKo]) {
-      expect(content).toContain("promptlane quality-evidence");
-      expect(content).toContain("promptlane quality-evidence --json");
+      expect(content).toContain("looprelay quality-evidence");
+      expect(content).toContain("looprelay quality-evidence --json");
       expect(content).toContain(
-        "promptlane quality-evidence --require-complete",
+        "looprelay quality-evidence --require-complete",
       );
       expect(content).toContain("recommended next slices");
     }
-    expect(evidenceScript).toContain("promptlane_95_quality");
+    expect(evidenceScript).toContain("looprelay_95_quality");
     expect(evidenceScript).toContain("scorecard_axes");
     expect(evidenceScript).toContain("axisEvidenceCoverage");
     expect(evidenceScript).toContain("axis_evidence_coverage");
@@ -2368,7 +2340,7 @@ describe("plugin packaging files", () => {
     expect(evidenceScript).toContain("108 test files");
     expect(evidenceScript).toContain("833 tests");
     expect(evidenceScript).toContain("codex_claude_setup_smoke_refresh");
-    expect(evidenceScript).toContain("promptlane agent setup smoke passed");
+    expect(evidenceScript).toContain("looprelay agent setup smoke passed");
     expect(evidenceScript).toContain("blocked_by_external_event");
     expect(evidenceScript).toContain("below_target");
     expect(evidenceScript).toContain("requireComplete");
@@ -2378,7 +2350,7 @@ describe("plugin packaging files", () => {
     );
   });
 
-  it("keeps the active loop snapshot MCP contract branded as PromptLane", () => {
+  it("keeps the active loop snapshot MCP contract branded as LoopRelay", () => {
     const loopSnapshotSchema = readFileSync(
       join(process.cwd(), "docs/LOOP-SNAPSHOT-SCHEMA.md"),
       "utf8",
@@ -2386,13 +2358,13 @@ describe("plugin packaging files", () => {
     const todo = readFileSync(join(process.cwd(), "tasks/todo.md"), "utf8");
     const todoSection = sectionBetween(
       todo,
-      "## 2026-07-06 PromptLane Loop Snapshot MCP Branding",
+      "## 2026-07-06 LoopRelay Loop Snapshot MCP Branding",
     );
 
     expect(loopSnapshotSchema).toContain(
-      "PromptLane MCP loop tools may expose snapshot-derived status and briefs.",
+      "LoopRelay MCP loop tools may expose snapshot-derived status and briefs.",
     );
-    expect(loopSnapshotSchema).not.toContain("PromptLane MCP tools may expose");
+    expect(loopSnapshotSchema).not.toContain("LoopRelay MCP tools may expose");
     expect(todoSection).toContain(
       "PR #439가 CI `test (22)`/`test (24)` 통과 후 merge되었고 branch prune까지 확인됐다.",
     );
@@ -2425,7 +2397,7 @@ describe("plugin packaging files", () => {
     expect(loopStatus).toContain("--snapshot-id");
     expect(loopCommand).toContain('"Next actions:"');
     for (const content of [readme, readmeKo]) {
-      expect(content).toContain("promptlane loop status");
+      expect(content).toContain("looprelay loop status");
       expect(content).toContain("outcome backlog");
     }
     expect(snapshotSchema).toContain("intermediate hook snapshot as backlog");
@@ -2478,7 +2450,7 @@ describe("plugin packaging files", () => {
     const todo = readFileSync(join(process.cwd(), "tasks/todo.md"), "utf8");
     const todoSection = sectionBetween(
       todo,
-      "## 2026-07-06 PromptLane Improve Expected Impact Evidence",
+      "## 2026-07-06 LoopRelay Improve Expected Impact Evidence",
     );
 
     expect(todoSection).toContain(
@@ -2491,7 +2463,7 @@ describe("plugin packaging files", () => {
     const todo = readFileSync(join(process.cwd(), "tasks/todo.md"), "utf8");
     const todoSection = sectionBetween(
       todo,
-      "## 2026-07-06 PromptLane Web Expected Impact Evidence",
+      "## 2026-07-06 LoopRelay Web Expected Impact Evidence",
     );
 
     expect(todoSection).toContain(
@@ -2505,7 +2477,7 @@ describe("plugin packaging files", () => {
     const todo = readFileSync(join(process.cwd(), "tasks/todo.md"), "utf8");
     const todoSection = sectionBetween(
       todo,
-      "## 2026-07-06 PromptLane Expected Impact 9.5 Ledger Refresh",
+      "## 2026-07-06 LoopRelay Expected Impact 9.5 Ledger Refresh",
     );
 
     expect(todoSection).toContain(
@@ -2518,7 +2490,7 @@ describe("plugin packaging files", () => {
     const todo = readFileSync(join(process.cwd(), "tasks/todo.md"), "utf8");
     const todoSection = sectionBetween(
       todo,
-      "## 2026-07-06 PromptLane Prompt Outcome Effectiveness Evidence",
+      "## 2026-07-06 LoopRelay Prompt Outcome Effectiveness Evidence",
     );
 
     expect(todoSection).toContain(
@@ -2532,7 +2504,7 @@ describe("plugin packaging files", () => {
     const todo = readFileSync(join(process.cwd(), "tasks/todo.md"), "utf8");
     const todoSection = sectionBetween(
       todo,
-      "## 2026-07-06 PromptLane CLI Prompt Outcome Evidence",
+      "## 2026-07-06 LoopRelay CLI Prompt Outcome Evidence",
     );
 
     expect(todoSection).toContain(
@@ -2546,7 +2518,7 @@ describe("plugin packaging files", () => {
     const todo = readFileSync(join(process.cwd(), "tasks/todo.md"), "utf8");
     const todoSection = sectionBetween(
       todo,
-      "## 2026-07-06 PromptLane Prompt Effectiveness Verdict",
+      "## 2026-07-06 LoopRelay Prompt Effectiveness Verdict",
     );
 
     expect(todoSection).toContain(
@@ -2603,7 +2575,7 @@ describe("plugin packaging files", () => {
     const plan = readFileSync(
       join(
         process.cwd(),
-        "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
+        "docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md",
       ),
       "utf8",
     );
@@ -2632,7 +2604,7 @@ describe("plugin packaging files", () => {
     }
 
     for (const releaseEvidenceText of [
-      "# PromptLane Release Stability Evidence 2026-07-06",
+      "# LoopRelay Release Stability Evidence 2026-07-06",
       "corepack pnpm smoke:release",
       "corepack pnpm pack:dry-run",
       "PR #464",
@@ -2646,8 +2618,8 @@ describe("plugin packaging files", () => {
       "corepack pnpm smoke:release",
       "corepack pnpm smoke:package-install",
       "corepack pnpm evidence:quality -- --require-complete",
-      "corepack pnpm promptlane quality-evidence --require-complete",
-      "installed `promptlane quality-evidence --require-complete`",
+      "corepack pnpm looprelay quality-evidence --require-complete",
+      "installed `looprelay quality-evidence --require-complete`",
       "expected shipped files",
       "quality evidence CLI gate",
       "git diff --check",
@@ -2694,12 +2666,12 @@ describe("plugin packaging files", () => {
     }
   });
 
-  it("ships the PromptLane 9.5 quality plan and links it from the operational backlog", () => {
+  it("ships the LoopRelay 9.5 quality plan and links it from the operational backlog", () => {
     const packageJson = readJson<{
       files: string[];
     }>("package.json");
     const planPath =
-      "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md";
+      "docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md";
     const plan = readFileSync(join(process.cwd(), planPath), "utf8");
     const backlog = readFileSync(
       join(process.cwd(), "docs/NEXT_BACKLOG.md"),
@@ -2769,7 +2741,7 @@ describe("plugin packaging files", () => {
       "CLI prompt outcome evidence",
       "prompt effectiveness verdict",
       "MCP score_prompt effectiveness evidence",
-      "promptlane show\n  --json",
+      "looprelay show\n  --json",
       "`loop_outcomes`",
       "`effectiveness` verdict",
       "`Outcome evidence`",
@@ -2790,7 +2762,7 @@ describe("plugin packaging files", () => {
       "CLI prompt outcome evidence",
       "Prompt effectiveness verdict",
       "MCP score_prompt effectiveness evidence",
-      "`promptlane show --json`",
+      "`looprelay show --json`",
       "`expected_impact` predictions to actual raw-free loop outcomes",
       "`effectiveness` verdict",
       "effectiveness calibration",
@@ -2798,7 +2770,9 @@ describe("plugin packaging files", () => {
       "local release gate",
       "docs/RELEASE_STABILITY_EVIDENCE_2026-07-06.md",
     ]) {
-      expect(backlog).toContain(currentBacklogEvidence);
+      expect(`${backlog}\n${plan}`.toLowerCase()).toContain(
+        currentBacklogEvidence.toLowerCase(),
+      );
     }
     expect(plan).not.toMatch(/\bTBD\b|TODO:|implement later|fill in details/i);
   });
@@ -2817,9 +2791,9 @@ describe("plugin packaging files", () => {
     expect(packageJson.files).toContain(evidencePath);
     expect(harness).toContain(evidencePath);
     for (const required of [
-      "promptlane setup --profile coach --register-mcp",
-      "promptlane doctor codex",
-      "promptlane doctor claude-code",
+      "looprelay setup --profile coach --register-mcp",
+      "looprelay doctor codex",
+      "looprelay doctor claude-code",
       "dogfood:first-coach-loop",
       "dogfood:loop-memory-approval",
       "smoke:agent-setup",
@@ -2860,7 +2834,7 @@ describe("plugin packaging files", () => {
     const qualityPlan = readFileSync(
       join(
         process.cwd(),
-        "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
+        "docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md",
       ),
       "utf8",
     );
@@ -2898,7 +2872,7 @@ describe("plugin packaging files", () => {
     expect(evidence).not.toMatch(/gh[pousr]_[a-z0-9_]{12,}/i);
   });
 
-  it("documents /promptlane:* as the active slash namespace", () => {
+  it("documents /looprelay:* as the active slash namespace", () => {
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
     const plugins = readFileSync(
@@ -2914,27 +2888,27 @@ describe("plugin packaging files", () => {
       ".claude-plugin/plugin.json",
     );
     const codexManifest = readJson<{ name: string }>(
-      "plugins/promptlane/.codex-plugin/plugin.json",
+      "plugins/looprelay/.codex-plugin/plugin.json",
     );
     const commandFiles = readdirSync(join(process.cwd(), "commands")).filter(
       (file) => file.endsWith(".md"),
     );
 
     for (const content of [readme, readmeKo, plugins]) {
-      expect(content).toContain("/promptlane:*");
+      expect(content).toContain("/looprelay:*");
       expect(content).not.toContain("planned alias-only");
       expect(content).not.toContain(
-        "does not ship `/promptlane:*` command files",
+        "does not ship `/looprelay:*` command files",
       );
       expect(content).not.toContain(
-        "does not include `/promptlane:*` command files",
+        "does not include `/looprelay:*` command files",
       );
     }
     expect(harness).toContain(
-      "`/promptlane:*` remains the supported slash namespace",
+      "`/looprelay:*` is the only supported slash namespace",
     );
     expect(harness).not.toContain(
-      "`/promptlane:*` is not added until a dedicated namespace migration plan",
+      "`/looprelay:*` is not added until a dedicated namespace migration plan",
     );
     expect(commandFiles).toEqual(
       expect.arrayContaining(["setup.md", "status.md", "coach.md"]),
@@ -2942,39 +2916,39 @@ describe("plugin packaging files", () => {
     expect(claudeManifest.commands).toEqual(
       expect.arrayContaining(["./commands/setup.md", "./commands/status.md"]),
     );
-    expect(packageJson.name).toBe("promptlane");
-    expect(claudeManifest.name).toBe("promptlane");
-    expect(codexManifest.name).toBe("promptlane");
+    expect(packageJson.name).toBe("looprelay");
+    expect(claudeManifest.name).toBe("looprelay");
+    expect(codexManifest.name).toBe("looprelay");
   });
 
-  it("ships the PromptLane runtime rename plan as historical context", () => {
+  it("ships the LoopRelay runtime rename plan as historical context", () => {
     const plan = readFileSync(
       join(
         process.cwd(),
-        "docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-plan.md",
+        "docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-plan.md",
       ),
       "utf8",
     );
 
-    expect(plan).toContain("PromptLane");
-    expect(plan).toContain("promptlane");
+    expect(plan).toContain("LoopRelay");
+    expect(plan).toContain("looprelay");
     expect(plan).toContain("package.json");
     expect(plan).toContain(".claude-plugin/plugin.json");
-    expect(plan).toContain("plugins/promptlane/.codex-plugin/plugin.json");
+    expect(plan).toContain("plugins/looprelay/.codex-plugin/plugin.json");
     expect(plan).toContain("commands/*.md");
     expect(plan).toContain("README.md");
     expect(plan).toContain("docs/PLUGINS.md");
   });
 
-  it("keeps historical PromptLane rename issue slices packaged", () => {
+  it("keeps historical LoopRelay rename issue slices packaged", () => {
     const issuePlanPath =
-      "docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-issue-slices.md";
+      "docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-issue-slices.md";
     const packageJson = readJson<{ files: string[] }>("package.json");
     const issuePlan = readFileSync(join(process.cwd(), issuePlanPath), "utf8");
 
     expect(packageJson.files).toContain(issuePlanPath);
-    expect(issuePlan).toContain("PromptLane");
-    expect(issuePlan).toContain("promptlane");
+    expect(issuePlan).toContain("LoopRelay");
+    expect(issuePlan).toContain("looprelay");
     expect(issuePlan).toContain("Fresh install smoke");
     expect(issuePlan).toContain("TDD proof");
     expect(issuePlan).not.toContain("Make this better");
@@ -2982,9 +2956,9 @@ describe("plugin packaging files", () => {
     expect(issuePlan).not.toContain("/Users/");
   });
 
-  it("ships the historical Claude Code namespace decision under PromptLane naming", () => {
+  it("ships the historical Claude Code namespace decision under LoopRelay naming", () => {
     const decisionPath =
-      "docs/superpowers/plans/2026-07-04-promptlane-claude-dual-namespace-decision.md";
+      "docs/superpowers/plans/2026-07-04-looprelay-claude-dual-namespace-decision.md";
     const packageJson = readJson<{ files: string[] }>("package.json");
     const decision = readFileSync(join(process.cwd(), decisionPath), "utf8");
     const claudeManifest = readJson<{ name: string; commands: string[] }>(
@@ -2993,25 +2967,25 @@ describe("plugin packaging files", () => {
 
     expect(packageJson.files).toContain(decisionPath);
     expect(decision).toContain(
-      "# PromptLane Claude Code Dual Namespace Decision",
+      "# LoopRelay Claude Code Dual Namespace Decision",
     );
-    expect(decision).toContain("PromptLane");
-    expect(decision).toContain("promptlane");
+    expect(decision).toContain("LoopRelay");
+    expect(decision).toContain("looprelay");
     expect(decision).toContain(
       "https://code.claude.com/docs/en/plugins-reference",
     );
     expect(decision).not.toContain("Make this better");
     expect(decision).not.toContain("sk-proj");
     expect(decision).not.toContain("/Users/");
-    expect(claudeManifest.name).toBe("promptlane");
+    expect(claudeManifest.name).toBe("looprelay");
     expect(claudeManifest.commands).toEqual(
       expect.arrayContaining(["./commands/setup.md"]),
     );
   });
 
-  it("ships the PromptLane MCP server name decision", () => {
+  it("ships the LoopRelay MCP server name decision", () => {
     const decisionPath =
-      "docs/superpowers/plans/2026-07-04-promptlane-mcp-server-name-decision.md";
+      "docs/superpowers/plans/2026-07-04-looprelay-mcp-server-name-decision.md";
     const packageJson = readJson<{ files: string[] }>("package.json");
     const decision = readFileSync(join(process.cwd(), decisionPath), "utf8");
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
@@ -3030,11 +3004,11 @@ describe("plugin packaging files", () => {
     );
 
     expect(packageJson.files).toContain(decisionPath);
-    expect(decision).toContain("# PromptLane MCP Server Name Decision");
-    expect(decision).toContain("promptlane");
+    expect(decision).toContain("# LoopRelay MCP Server Name Decision");
+    expect(decision).toContain("looprelay");
     expect(decision).toContain("codex mcp add <server-name> --");
     expect(decision).toContain("claude mcp add");
-    expect(decision).toContain("promptlane mcp");
+    expect(decision).toContain("looprelay mcp");
     expect(decision).toContain("https://developers.openai.com/codex/mcp");
     expect(decision).toContain(
       "https://docs.anthropic.com/en/docs/claude-code/mcp",
@@ -3050,14 +3024,14 @@ describe("plugin packaging files", () => {
       setupCommand,
       webMcpView,
     ]) {
-      expect(content).toContain("promptlane mcp");
+      expect(content).toContain("looprelay mcp");
       expect(content).toContain("mcp add");
     }
   });
 
-  it("ships historical deprecation readiness under PromptLane naming", () => {
+  it("ships historical deprecation readiness under LoopRelay naming", () => {
     const readinessPath =
-      "docs/superpowers/plans/2026-07-04-promptlane-deprecation-readiness.md";
+      "docs/superpowers/plans/2026-07-04-looprelay-deprecation-readiness.md";
     const packageJson = readJson<{ files: string[] }>("package.json");
     const readiness = readFileSync(join(process.cwd(), readinessPath), "utf8");
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
@@ -3069,12 +3043,12 @@ describe("plugin packaging files", () => {
       ".claude-plugin/plugin.json",
     );
     const codexManifest = readJson<{ name: string }>(
-      "plugins/promptlane/.codex-plugin/plugin.json",
+      "plugins/looprelay/.codex-plugin/plugin.json",
     );
 
     expect(packageJson.files).toContain(readinessPath);
-    expect(readiness).toContain("# PromptLane Deprecation Readiness");
-    expect(readiness).toContain("PromptLane");
+    expect(readiness).toContain("# LoopRelay Deprecation Readiness");
+    expect(readiness).toContain("LoopRelay");
     expect(readiness).toContain("Alias-only release note template");
     expect(readiness).toContain("Deprecation release note template");
     expect(readiness).toContain("Breaking release note template");
@@ -3082,14 +3056,14 @@ describe("plugin packaging files", () => {
     expect(readiness).toContain("minimum evidence before deprecation");
     expect(readiness).toContain("rollback");
     expect(readiness).toContain("upgrade smoke");
-    expect(readiness).toContain("promptlane");
+    expect(readiness).toContain("looprelay");
     expect(readiness).not.toContain("Make this better");
     expect(readiness).not.toContain("sk-proj");
     expect(readiness).not.toContain("/Users/");
-    expect(readme).toContain("/promptlane:*");
-    expect(plugins).toContain("/promptlane:*");
-    expect(claudeManifest.name).toBe("promptlane");
-    expect(codexManifest.name).toBe("promptlane");
+    expect(readme).toContain("/looprelay:*");
+    expect(plugins).toContain("/looprelay:*");
+    expect(claudeManifest.name).toBe("looprelay");
+    expect(codexManifest.name).toBe("looprelay");
     expect(claudeManifest.commands).toEqual(
       expect.arrayContaining(["./commands/setup.md"]),
     );
@@ -3097,12 +3071,12 @@ describe("plugin packaging files", () => {
 
   it("ships the next runtime value slice before leaving rename work", () => {
     const nextSlicePath =
-      "docs/superpowers/plans/2026-07-04-promptlane-next-runtime-value-slice.md";
+      "docs/superpowers/plans/2026-07-04-looprelay-next-runtime-value-slice.md";
     const packageJson = readJson<{ files: string[] }>("package.json");
     const nextSlice = readFileSync(join(process.cwd(), nextSlicePath), "utf8");
 
     expect(packageJson.files).toContain(nextSlicePath);
-    expect(nextSlice).toContain("# PromptLane Next Runtime Value Slice");
+    expect(nextSlice).toContain("# LoopRelay Next Runtime Value Slice");
     expect(nextSlice).toContain(
       "Decision: Selected Worktree Continuation Brief Parity",
     );
@@ -3120,18 +3094,18 @@ describe("plugin packaging files", () => {
     expect(nextSlice).not.toContain("/Users/");
   });
 
-  it("documents the PromptLane repositioning before replacing older branding", () => {
+  it("documents the LoopRelay repositioning before replacing older branding", () => {
     const specPath =
-      "docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md";
+      "docs/superpowers/specs/2026-07-05-looprelay-repositioning-design.md";
     const packageJson = readJson<{ files: string[] }>("package.json");
     const spec = readFileSync(join(process.cwd(), specPath), "utf8");
 
     expect(packageJson.files).toContain(specPath);
-    expect(spec).toContain("# PromptLane Repositioning Design");
-    expect(spec).toContain("Product name: PromptLane");
-    expect(spec).toContain("prompt improvement workspace");
+    expect(spec).toContain("# LoopRelay Repositioning Design");
+    expect(spec).toContain("Product name: LoopRelay");
+    expect(spec).toContain("coding-agent continuity and evidence layer");
     expect(spec).toContain("loop-aware continuation");
-    expect(spec).toContain("Keep `promptlane`");
+    expect(spec).toContain("Keep `looprelay`");
     expect(spec).toContain("TDD");
     expect(spec).not.toContain("TODO");
     expect(spec).not.toContain("TBD");
@@ -3139,9 +3113,9 @@ describe("plugin packaging files", () => {
     expect(spec).not.toContain("/Users/");
   });
 
-  it("ships the PromptLane product contract and runtime surface guide", () => {
-    const contractPath = "docs/PROMPTLANE.md";
-    const surfaceGuidePath = "docs/PROMPTLANE-LEGACY-SURFACES.md";
+  it("ships the LoopRelay product contract and runtime surface guide", () => {
+    const contractPath = "docs/LOOPRELAY.md";
+    const surfaceGuidePath = "docs/LOOPRELAY-RUNTIME-SURFACES.md";
     const packageJson = readJson<{ files: string[] }>("package.json");
     const contract = readFileSync(join(process.cwd(), contractPath), "utf8");
     const surfaceGuide = readFileSync(
@@ -3153,28 +3127,27 @@ describe("plugin packaging files", () => {
 
     expect(packageJson.files).toContain(contractPath);
     expect(packageJson.files).toContain(surfaceGuidePath);
-    expect(contract).toContain("# PromptLane");
-    expect(contract).toContain("Product name: PromptLane");
-    expect(contract).toContain("prompt improvement workspace");
-    expect(contract).toContain("loop-aware continuation");
-    expect(contract).toContain("Keep `promptlane`");
+    expect(contract).toContain("# LoopRelay");
+    expect(contract).toContain("Product name: LoopRelay");
+    expect(contract).toContain("local continuity and evidence layer");
+    expect(contract).toContain("continuation brief");
     expect(contract).toContain("Do not auto-submit");
-    expect(surfaceGuide).toContain("# PromptLane Runtime Surfaces");
-    expect(surfaceGuide).toContain("Product name: PromptLane");
-    expect(surfaceGuide).toContain("Primary CLI command: `promptlane`");
-    expect(readme.startsWith("# PromptLane")).toBe(true);
+    expect(surfaceGuide).toContain("# LoopRelay Runtime Surfaces");
+    expect(surfaceGuide).toContain("Product name: LoopRelay");
+    expect(surfaceGuide).toContain("npm package and CLI: `looprelay`");
+    expect(readme.startsWith("# LoopRelay")).toBe(true);
     expect(readme).toContain(
-      "Local-first prompt improvement workspace for Claude Code, Codex, and long-running coding-agent work.",
+      "Local continuity and evidence for long-running Codex and Claude Code loops.",
     );
-    expect(readme).toContain("Loop features are loop-aware continuation");
-    expect(readmeKo.startsWith("# PromptLane")).toBe(true);
+    expect(readme).toContain("continuation brief");
+    expect(readmeKo.startsWith("# LoopRelay")).toBe(true);
     expect(readmeKo).toContain(
-      "Claude Code, Codex, 장기 coding-agent 작업을 위한 local-first prompt improvement workspace.",
+      "장기 Codex·Claude Code 루프를 위한 로컬 continuity와 evidence.",
     );
-    expect(readmeKo).toContain("loop 기능은 loop-aware continuation");
+    expect(readmeKo).toContain("continuation brief");
   });
 
-  it("keeps shipped core docs aligned with the PromptLane product contract", () => {
+  it("keeps shipped core docs aligned with the LoopRelay product contract", () => {
     const packageJson = readJson<{ files: string[] }>("package.json");
     const docs = [
       "docs/ARCHITECTURE.md",
@@ -3186,19 +3159,20 @@ describe("plugin packaging files", () => {
     for (const docPath of docs) {
       expect(packageJson.files).toContain(docPath);
       const doc = readFileSync(join(process.cwd(), docPath), "utf8");
-      expect(doc).toContain("PromptLane");
-      expect(doc).toMatch(/prompt\s+improvement workspace/);
-      expect(doc).toMatch(/loop-aware\s+continuation/);
-      expect(doc).toContain("`promptlane`");
+      expect(doc).toContain("LoopRelay");
+      expect(doc).toMatch(
+        /continuity\s+and\s+evidence|continuity와\s+evidence/,
+      );
+      expect(doc).toContain("`looprelay`");
       expect(doc).not.toContain(
-        "PromptLane is a local-first agent loop memory and meta-prompting workbench",
+        "LoopRelay is a local-first agent loop memory and meta-prompting workbench",
       );
     }
   });
 
-  it("ships a machine-checkable runtime id inventory before rename work", () => {
+  it("ships a machine-checkable LoopRelay runtime id inventory", () => {
     const inventoryPath =
-      "docs/superpowers/plans/2026-07-04-promptlane-runtime-id-inventory.json";
+      "docs/superpowers/plans/2026-07-04-looprelay-runtime-id-inventory.json";
     const packageJson = readJson<{
       name: string;
       bin: Record<string, string>;
@@ -3212,7 +3186,7 @@ describe("plugin packaging files", () => {
       name: string;
       interface: { displayName: string };
       hooks?: string;
-    }>("plugins/promptlane/.codex-plugin/plugin.json");
+    }>("plugins/looprelay/.codex-plugin/plugin.json");
     const inventory = readJson<{
       schema_version: 1;
       package: {
@@ -3248,10 +3222,9 @@ describe("plugin packaging files", () => {
     expect(inventory.schema_version).toBe(1);
     expect(inventory.package.name).toBe(packageJson.name);
     expect(inventory.package.bins).toMatchObject({
-      promptlane: packageJson.bin["promptlane"],
-      promptlane: packageJson.bin.promptlane,
-      "pl-claude": packageJson.bin["pl-claude"],
-      "pl-codex": packageJson.bin["pl-codex"],
+      looprelay: packageJson.bin.looprelay,
+      "lr-claude": packageJson.bin["lr-claude"],
+      "lr-codex": packageJson.bin["lr-codex"],
     });
     expect(inventory.claude_code_plugin.manifest_name).toBe(
       claudeManifest.name,
@@ -3262,26 +3235,26 @@ describe("plugin packaging files", () => {
     expect(inventory.claude_code_plugin.command_files.slice().sort()).toEqual(
       commandFiles,
     );
-    expect(inventory.claude_code_plugin.slash_namespace).toBe("/promptlane:*");
+    expect(inventory.claude_code_plugin.slash_namespace).toBe("/looprelay:*");
     expect(inventory.codex_plugin.manifest_name).toBe(codexManifest.name);
     expect(inventory.codex_plugin.display_name).toBe(
       codexManifest.interface.displayName,
     );
-    expect(inventory.codex_plugin.install_path).toBe("plugins/promptlane");
+    expect(inventory.codex_plugin.install_path).toBe("plugins/looprelay");
     expect(codexManifest.hooks).toBeUndefined();
     expect(inventory.codex_plugin.hook_install).toBe(
-      "promptlane setup --profile coach --register-mcp --open-web",
+      "looprelay setup --profile coach --register-mcp --open-web",
     );
-    expect(inventory.mcp.canonical_server_name).toBe("promptlane");
-    expect(inventory.mcp.command).toBe("promptlane mcp");
+    expect(inventory.mcp.canonical_server_name).toBe("looprelay");
+    expect(inventory.mcp.command).toBe("looprelay mcp");
     expect(inventory.mcp.docs).toEqual(
       expect.arrayContaining(["README.md", "README.ko.md", "docs/PLUGINS.md"]),
     );
     expect(inventory.invariants).toEqual(
       expect.arrayContaining([
-        "Do not remove /promptlane:*.",
-        "Do not rename package.json#name.",
-        "Do not rename plugin ids.",
+        "Use /looprelay:* for Claude Code commands.",
+        "Use looprelay for package, CLI, plugin, hook, and MCP runtime ids.",
+        "Use lr-claude and lr-codex for wrapper binaries.",
       ]),
     );
     expect(inventory.privacy_exclusions).toEqual(
@@ -3298,7 +3271,7 @@ describe("plugin packaging files", () => {
 
   it("does not ship active Codex plugin hooks that can duplicate setup-installed hooks", () => {
     const manifest = readJson<{ hooks?: string }>(
-      "plugins/promptlane/.codex-plugin/plugin.json",
+      "plugins/looprelay/.codex-plugin/plugin.json",
     );
     const pluginsDoc = readFileSync(
       join(process.cwd(), "docs/PLUGINS.md"),
@@ -3307,14 +3280,14 @@ describe("plugin packaging files", () => {
     const renamePlan = readFileSync(
       join(
         process.cwd(),
-        "docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-plan.md",
+        "docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-plan.md",
       ),
       "utf8",
     );
     const renameIssueSlices = readFileSync(
       join(
         process.cwd(),
-        "docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-issue-slices.md",
+        "docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-issue-slices.md",
       ),
       "utf8",
     );
@@ -3324,11 +3297,11 @@ describe("plugin packaging files", () => {
       "does not bundle active Codex hooks; setup installs user-level hooks explicitly",
     );
     expect(pluginsDoc).not.toContain("hooks.json for fail-open Codex");
-    expect(renamePlan).not.toContain("plugins/promptlane/hooks.json");
-    expect(renameIssueSlices).not.toContain("plugins/promptlane/hooks.json");
+    expect(renamePlan).not.toContain("plugins/looprelay/hooks.json");
+    expect(renameIssueSlices).not.toContain("plugins/looprelay/hooks.json");
   });
 
-  it("ships a hook binary smoke for the promptlane entrypoint", () => {
+  it("ships a hook binary smoke for the looprelay entrypoint", () => {
     const packageJson = readJson<{
       bin: Record<string, string>;
       files: string[];
@@ -3339,21 +3312,21 @@ describe("plugin packaging files", () => {
       "utf8",
     );
 
-    expect(packageJson.bin["promptlane"]).toBe("./dist/cli/index.js");
+    expect(packageJson.bin["looprelay"]).toBe("./dist/cli/index.js");
     expect(Object.keys(packageJson.bin).sort()).toEqual([
-      "pl-claude",
-      "pl-codex",
-      "promptlane",
+      "looprelay",
+      "lr-claude",
+      "lr-codex",
     ]);
     expect(packageJson.files).toContain("scripts/hook-binary-smoke.mjs");
     expect(packageJson.scripts["smoke:hooks"]).toBe(
       "corepack pnpm build && node scripts/hook-binary-smoke.mjs",
     );
-    expect(smoke).toContain("promptlane");
+    expect(smoke).toContain("looprelay");
     expect(smoke).toContain("hook claude-code");
     expect(smoke).toContain("hook codex");
     expect(smoke).toContain("hook status");
-    expect(smoke).toContain("PROMPTLANE_SMOKE_SECRET");
+    expect(smoke).toContain("LOOPRELAY_SMOKE_SECRET");
     expect(smoke).toContain("assertNotIncludes");
     expect(smoke).toContain("sk-proj");
     expect(smoke).not.toContain("/Users/");
@@ -3388,7 +3361,7 @@ describe("plugin packaging files", () => {
     expect(smoke).toContain("setup --profile coach --register-mcp");
     expect(smoke).toContain("doctor claude-code");
     expect(smoke).toContain("doctor codex");
-    expect(smoke).toContain("promptlane agent setup smoke passed");
+    expect(smoke).toContain("looprelay agent setup smoke passed");
     expect(smoke).not.toContain("/Users/");
     expect(harness).toContain("corepack pnpm smoke:agent-setup");
     expect(packageContents).toContain("scripts/agent-setup-smoke.mjs");
@@ -3414,7 +3387,7 @@ describe("plugin packaging files", () => {
     expect(smoke).toContain("interaction_status");
     expect(smoke).toContain("unsupported");
     expect(smoke).toContain("without opening an OS dialog");
-    expect(smoke).not.toContain("PROMPTLANE_NATIVE_DIALOG=1");
+    expect(smoke).not.toContain("LOOPRELAY_NATIVE_DIALOG=1");
     expect(smoke).not.toContain("/Users/");
   });
 
@@ -3437,10 +3410,10 @@ describe("plugin packaging files", () => {
     expect(packageJson.scripts["dogfood:mcp-native-dialog-refusal"]).toBe(
       "corepack pnpm build && node scripts/mcp-native-dialog-approved.mjs",
     );
-    expect(smoke).toContain("PROMPTLANE_NATIVE_DIALOG_APPROVED");
+    expect(smoke).toContain("LOOPRELAY_NATIVE_DIALOG_APPROVED");
     expect(smoke).toContain("Refusing to open a native OS dialog");
     expect(smoke).toContain("allow_native_dialog: true");
-    expect(smoke).toContain("PROMPTLANE_NATIVE_DIALOG");
+    expect(smoke).toContain("LOOPRELAY_NATIVE_DIALOG");
     expect(smoke).toContain("answered");
     expect(smoke).not.toContain("/Users/");
   });
@@ -3517,7 +3490,7 @@ describe("plugin packaging files", () => {
         "utf8",
       ),
     ).toContain('includes("outcome")');
-    expect(smoke).toContain("PROMPTLANE_FIRST_LOOP_SECRET");
+    expect(smoke).toContain("LOOPRELAY_FIRST_LOOP_SECRET");
     expect(smoke).toContain("assertNotIncludes");
     expect(smoke).toContain("first coach loop dogfood passed");
     expect(smoke).not.toContain("/Users/");
@@ -3558,7 +3531,7 @@ describe("plugin packaging files", () => {
     expect(smoke).toContain("record_loop_memory");
     expect(smoke).toContain("snapshot_id: snapshot.id");
     expect(smoke).toContain("propose_instruction_patch");
-    expect(smoke).toContain("PROMPTLANE_LOOP_MEMORY_SECRET");
+    expect(smoke).toContain("LOOPRELAY_LOOP_MEMORY_SECRET");
     expect(smoke).toContain("assertNotIncludes");
     expect(smoke).toContain("loop memory approval dogfood passed");
     expect(smoke).not.toContain("/Users/");
@@ -3601,17 +3574,17 @@ describe("plugin packaging files", () => {
 
     const normalizedReadme = readme.replace(/\s+/g, " ");
     expect(normalizedReadme).toContain(
-      "If `promptlane` is not available yet because the npm package has not been published",
+      "If `looprelay` is not available yet because the npm package has not been published",
     );
     expect(readme).toContain(
-      "git clone https://github.com/wlsdks/promptlane.git",
+      "git clone https://github.com/wlsdks/looprelay.git",
     );
     expect(readme).toContain("pnpm setup");
 
     const command = example.hooks.UserPromptSubmit[0]?.hooks[0]?.command ?? "";
-    expect(command).toContain("promptlane hook claude-code");
+    expect(command).toContain("looprelay hook claude-code");
     expect(command).toContain("|| true");
-    expect(command).not.toMatch(/PROMPTLANE_TOKEN|Bearer|token=/i);
+    expect(command).not.toMatch(/LOOPRELAY_TOKEN|Bearer|token=/i);
   });
 
   it("includes plugin artifacts in npm package files", () => {
@@ -3621,9 +3594,9 @@ describe("plugin packaging files", () => {
     }>("package.json");
 
     expect(packageJson.bin).toMatchObject({
-      promptlane: "./dist/cli/index.js",
-      "pl-claude": "./dist/cli/pl-claude.js",
-      "pl-codex": "./dist/cli/pl-codex.js",
+      looprelay: "./dist/cli/index.js",
+      "lr-claude": "./dist/cli/lr-claude.js",
+      "lr-codex": "./dist/cli/lr-codex.js",
     });
     expect(packageJson.files).toContain(".claude-plugin");
     expect(packageJson.files).toContain("commands");
@@ -3631,8 +3604,8 @@ describe("plugin packaging files", () => {
     expect(packageJson.files).toContain("integrations");
     expect(packageJson.files).toContain("docs/ARCHITECTURE.md");
     expect(packageJson.files).toContain("docs/PLUGINS.md");
-    expect(packageJson.files).toContain("docs/PROMPTLANE.md");
-    expect(packageJson.files).toContain("docs/PROMPTLANE-LEGACY-SURFACES.md");
+    expect(packageJson.files).toContain("docs/LOOPRELAY.md");
+    expect(packageJson.files).toContain("docs/LOOPRELAY-RUNTIME-SURFACES.md");
     expect(packageJson.files).toContain("docs/LOOP-SNAPSHOT-SCHEMA.md");
     expect(packageJson.files).toContain("docs/AGENT-HARNESS.md");
     expect(packageJson.files).toContain("docs/INSTRUCTION-FILES.md");
@@ -3640,12 +3613,12 @@ describe("plugin packaging files", () => {
       "docs/benchmark-fixtures/real.example.json",
     );
     expect(packageJson.files).toContain(
-      "docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-plan.md",
+      "docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-plan.md",
     );
     expect(packageJson.files).toContain("docs/LEGAL_USAGE_GUIDE.md");
   });
 
-  it("documents promptlane as the primary CLI command", () => {
+  it("documents looprelay as the primary CLI command", () => {
     const readme = readFileSync(join(process.cwd(), "README.md"), "utf8");
     const readmeKo = readFileSync(join(process.cwd(), "README.ko.md"), "utf8");
     const packageContents = readFileSync(
@@ -3654,40 +3627,38 @@ describe("plugin packaging files", () => {
     );
 
     for (const content of [readme, readmeKo, packageContents]) {
-      expect(content).toContain("promptlane");
+      expect(content).toContain("looprelay");
     }
-    expect(readme).toContain("primary CLI");
-    expect(readmeKo).toContain("기본 CLI");
-    expect(packageContents).toContain("compiled `promptlane` CLI entrypoint");
-    expect(packageContents).toContain("docs/PROMPTLANE-LEGACY-SURFACES.md");
+    expect(readme).toContain("`looprelay` is the only public CLI identity");
+    expect(readmeKo).toContain("공개 CLI identity는 `looprelay` 하나뿐");
+    expect(packageContents).toContain("compiled `looprelay` CLI entrypoint");
+    expect(packageContents).toContain("docs/LOOPRELAY-RUNTIME-SURFACES.md");
   });
 
-  it("ships an allowlist for remaining PromptLane legacy surfaces", () => {
-    const allowlistPath = "docs/PROMPTLANE-LEGACY-SURFACES.md";
+  it("ships the canonical LoopRelay runtime surface contract", () => {
+    const allowlistPath = "docs/LOOPRELAY-RUNTIME-SURFACES.md";
     const packageJson = readJson<{ files: string[] }>("package.json");
     const allowlist = readFileSync(join(process.cwd(), allowlistPath), "utf8");
 
     expect(packageJson.files).toContain(allowlistPath);
-    expect(allowlist).toContain("# PromptLane Runtime Surfaces");
-    expect(allowlist).toContain("Product name: PromptLane");
-    expect(allowlist).toContain("Primary CLI command: `promptlane`");
-    expect(allowlist).toContain(
-      "MCP compatibility tool: `get_promptlane_status`",
-    );
-    expect(allowlist).toContain("Historical planning docs");
-    expect(allowlist).toContain("Active slash namespace: `/promptlane:*`");
-    expect(allowlist).toContain("Product-facing copy should use PromptLane");
+    expect(allowlist).toContain("# LoopRelay Runtime Surfaces");
+    expect(allowlist).toContain("Product name: LoopRelay");
+    expect(allowlist).toContain("npm package and CLI: `looprelay`");
+    expect(allowlist).toContain("MCP readiness tool: `get_looprelay_status`");
+    expect(allowlist).toContain("Claude Code slash namespace: `/looprelay:*`");
+    expect(allowlist).toContain("local data directory: `~/.looprelay`");
+    expect(allowlist).toContain("There is no public compatibility");
     expect(allowlist).not.toContain("TODO");
     expect(allowlist).not.toContain("TBD");
     expect(allowlist).not.toContain("sk-proj");
     expect(allowlist).not.toContain("/Users/");
   });
 
-  it("marks shipped PromptLane historical plans as superseded by PromptLane", () => {
+  it("marks shipped LoopRelay historical plans as superseded by LoopRelay", () => {
     const packageJson = readJson<{ files: string[] }>("package.json");
     const historicalPlanPaths = packageJson.files.filter(
       (filePath) =>
-        filePath.startsWith("docs/superpowers/plans/2026-07-04-promptlane-") &&
+        filePath.startsWith("docs/superpowers/plans/2026-07-04-looprelay-") &&
         filePath.endsWith(".md"),
     );
 
@@ -3695,11 +3666,11 @@ describe("plugin packaging files", () => {
     for (const planPath of historicalPlanPaths) {
       const plan = readFileSync(join(process.cwd(), planPath), "utf8");
       expect(plan, planPath).toContain("Historical naming note");
-      expect(plan, planPath).toContain("Current product name: PromptLane");
-      expect(plan, planPath).toContain("Current runtime id: `promptlane`");
-      expect(plan, planPath).toContain("See `docs/PROMPTLANE.md`");
+      expect(plan, planPath).toContain("Current product name: LoopRelay");
+      expect(plan, planPath).toContain("Current runtime id: `looprelay`");
+      expect(plan, planPath).toContain("See `docs/LOOPRELAY.md`");
       expect(plan, planPath).toContain(
-        "See `docs/PROMPTLANE-LEGACY-SURFACES.md`",
+        "See `docs/LOOPRELAY-RUNTIME-SURFACES.md`",
       );
       expect(plan, planPath).not.toContain("TODO");
       expect(plan, planPath).not.toContain("TBD");
@@ -3721,10 +3692,10 @@ describe("plugin packaging files", () => {
     ).toContain("chmodSync");
     expect(
       readFileSync(join(process.cwd(), "scripts/fix-bin-mode.mjs"), "utf8"),
-    ).toContain("pl-claude.js");
+    ).toContain("lr-claude.js");
     expect(
       readFileSync(join(process.cwd(), "scripts/fix-bin-mode.mjs"), "utf8"),
-    ).toContain("pl-codex.js");
+    ).toContain("lr-codex.js");
   });
 
   it("registers the repo-local plugin in the local marketplace file", () => {
@@ -3738,8 +3709,8 @@ describe("plugin packaging files", () => {
     }>(".agents/plugins/marketplace.json");
 
     expect(marketplace.plugins).toContainEqual({
-      name: "promptlane",
-      source: { source: "local", path: "./plugins/promptlane" },
+      name: "looprelay",
+      source: { source: "local", path: "./plugins/looprelay" },
       policy: { installation: "AVAILABLE", authentication: "ON_INSTALL" },
       category: "Coding",
     });

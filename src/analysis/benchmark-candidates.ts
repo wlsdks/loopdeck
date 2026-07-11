@@ -156,16 +156,16 @@ function clampLimit(limit: number): number {
 
 function nextAction(status: BenchmarkCandidateReport["status"]): string {
   if (status === "ready") {
-    return "Review candidate prompt ids, then run promptlane benchmark prepare-fixture with explicit consent.";
+    return "Review candidate prompt ids, then run looprelay benchmark prepare-fixture with explicit consent.";
   }
   if (status === "empty_archive") {
-    return "Collect a loop snapshot after using PromptLane with Codex or Claude Code.";
+    return "Collect a loop snapshot after using LoopRelay with Codex or Claude Code.";
   }
   if (status === "no_completed_outcomes") {
-    return "Run promptlane loop status, then record the latest snapshot outcome after a verifiable checkpoint.";
+    return "Run looprelay loop status, then record the latest snapshot outcome after a verifiable checkpoint.";
   }
   if (status === "no_attributed_outcomes") {
-    return "Record improvement attribution only if a PromptLane improvement was actually used; otherwise collect another verified loop.";
+    return "Record improvement attribution only if a LoopRelay improvement was actually used; otherwise collect another verified loop.";
   }
   if (status === "incomplete_outcome_evidence") {
     return "Record at least one privacy-safe evidence ref on an attributed passed or failed outcome.";

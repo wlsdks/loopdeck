@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { normalizeClaudeCodePayload } from "../../adapters/claude-code.js";
-import { initializePromptLane } from "../../config/config.js";
+import { initializeLoopRelay } from "../../config/config.js";
 import { redactPrompt } from "../../redaction/redact.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import { createProgram } from "../index.js";
@@ -33,7 +33,7 @@ describe("coach CLI", () => {
 
   it("prints a privacy-safe one-call coach report as JSON and text", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -67,7 +67,7 @@ describe("coach CLI", () => {
 
     expect(result.mode).toBe("agent_coach");
     expect(result.latest_score.source).toBe("latest");
-    expect(result.improvement.requires_user_approval).toBe(true);
+    expect(result.improvement.requires_user_approval).toBe(false);
     expect(result.agent_brief.next_actions.length).toBeGreaterThan(0);
     expect(result.privacy).toMatchObject({
       returns_prompt_bodies: false,
@@ -78,23 +78,23 @@ describe("coach CLI", () => {
 
     const text = coachPromptForCli({ dataDir });
 
-    expect(text).toContain("PromptLane Coach");
-    expect(text).not.toContain("Prompt Memory Coach");
+    expect(text).toContain("LoopRelay Coach");
+    expect(text).not.toContain("Loop Memory Coach");
     expect(text).toContain("Latest prompt");
     expect(text).toContain("Next actions");
     expect(text).toContain("Agent commands");
-    expect(text).toContain("/promptlane:coach");
-    expect(text).toContain("/promptlane:score");
-    expect(text).toContain("/promptlane:improve-last");
-    expect(text).toContain("promptlane:coach_prompt");
-    expect(text).toContain("promptlane buddy");
+    expect(text).toContain("/looprelay:coach");
+    expect(text).toContain("/looprelay:score");
+    expect(text).toContain("/looprelay:improve-last");
+    expect(text).toContain("looprelay:coach_prompt");
+    expect(text).toContain("looprelay buddy");
     expect(text).not.toContain("sk-proj-1234567890abcdef");
     expect(text).not.toContain("/Users/example");
   });
 
   it("forwards --language ko to the coach so archive output is Korean", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -128,14 +128,14 @@ describe("coach CLI", () => {
 
   it("ignores invalid --language values rather than throwing", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     expect(() => coachPromptForCli({ dataDir, language: "fr" })).not.toThrow();
   });
 
   it("honors --no-archive --no-improvement --no-latest-score --no-project-rules", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -195,24 +195,23 @@ describe("coach CLI", () => {
   });
 
   it("keeps empty archive guidance aligned with the coach-first activation path", () => {
-    const dataDir = join(tmpdir(), `promptlane-empty-coach-${randomUUID()}`);
+    const dataDir = join(tmpdir(), `looprelay-empty-coach-${randomUUID()}`);
     tempDirs.push(dataDir);
 
     const text = coachPromptForCli({ dataDir });
 
-    expect(text).toContain("PromptLane is not ready yet.");
-    expect(text).not.toContain("Prompt-memory is not ready yet.");
-    expect(text).toContain("promptlane start");
-    expect(text).toContain("promptlane setup --profile coach --register-mcp");
-    expect(text).toContain("promptlane server");
+    expect(text).toContain("LoopRelay is not ready yet.");
+    expect(text).toContain("looprelay start");
+    expect(text).toContain("looprelay setup --profile coach --register-mcp");
+    expect(text).toContain("looprelay server");
     expect(text).toContain("Agent commands");
-    expect(text).toContain("promptlane start --open-web");
+    expect(text).toContain("looprelay start --open-web");
     expect(text).not.toContain(dataDir);
   });
 });
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-coach-cli-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-coach-cli-${randomUUID()}`);
   mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;

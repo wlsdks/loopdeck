@@ -12,7 +12,7 @@ import {
 let sandbox: string;
 
 beforeEach(() => {
-  sandbox = mkdtempSync(join(tmpdir(), "promptlane-hook-status-"));
+  sandbox = mkdtempSync(join(tmpdir(), "looprelay-hook-status-"));
 });
 
 afterEach(() => {
@@ -29,7 +29,7 @@ function writeClaudeSettings(mode: string | undefined): string {
           hooks: [
             {
               type: "command",
-              command: `PROMPTLANE_HOOK="promptlane hook claude-code" /bin/node /tmp/cli.js hook claude-code --data-dir "/tmp/data"${flag}`,
+              command: `LOOPRELAY_HOOK="looprelay hook claude-code" /bin/node /tmp/cli.js hook claude-code --data-dir "/tmp/data"${flag}`,
               timeout: 2,
             },
           ],
@@ -52,7 +52,7 @@ function writeCodexHooks(mode: string | undefined): string {
           hooks: [
             {
               type: "command",
-              command: `PROMPTLANE_HOOK="promptlane hook codex" /bin/node /tmp/cli.js hook codex --data-dir "/tmp/data"${flag}`,
+              command: `LOOPRELAY_HOOK="looprelay hook codex" /bin/node /tmp/cli.js hook codex --data-dir "/tmp/data"${flag}`,
               timeout: 2,
             },
           ],
@@ -157,6 +157,6 @@ describe("formatHookStatusReports", () => {
     expect(output).toContain("- claude-code: ask");
     expect(output).toContain("minScore=80");
     expect(output).toContain("- codex: not installed");
-    expect(output).toContain("/promptlane:guard");
+    expect(output).toContain("/looprelay:guard");
   });
 });

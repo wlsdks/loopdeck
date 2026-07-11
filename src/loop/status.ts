@@ -4,9 +4,9 @@ import type { LoopMemoryCandidateDecision } from "./memory-candidate.js";
 import type { LoopSnapshot } from "./types.js";
 import { quoteForShell } from "../shared/shell-quote.js";
 
-export type PromptLaneStatusLevel = "ready" | "empty";
+export type LoopRelayStatusLevel = "ready" | "empty";
 
-export type PromptLaneStatusPrivacy = {
+export type LoopRelayStatusPrivacy = {
   local_only: true;
   external_calls: false;
   returns_prompt_bodies: false;
@@ -14,7 +14,7 @@ export type PromptLaneStatusPrivacy = {
   returns_compact_content: false;
 };
 
-export type PromptLaneStatusSnapshot = {
+export type LoopRelayStatusSnapshot = {
   id: string;
   created_at: string;
   tool: string;
@@ -29,20 +29,20 @@ export type PromptLaneStatusSnapshot = {
   outcome_status: LoopSnapshot["outcome"]["status"];
 };
 
-export type PromptLaneStatusProjectMemory = {
+export type LoopRelayStatusProjectMemory = {
   approved_count: number;
   included_in_brief: boolean;
 };
 
-export type PromptLaneStatusMemoryCandidate = {
+export type LoopRelayStatusMemoryCandidate = {
   eligible: boolean;
   reason: LoopMemoryCandidateDecision["reason"];
   next_action:
-    | "promptlane loop memory-approve"
-    | "promptlane loop memory-candidate";
+    | "looprelay loop memory-approve"
+    | "looprelay loop memory-candidate";
 };
 
-export type PromptLaneStatusActivityWorktree = {
+export type LoopRelayStatusActivityWorktree = {
   worktree: string;
   branch?: string;
   sessions: number;
@@ -53,7 +53,7 @@ export type PromptLaneStatusActivityWorktree = {
   evidence_count: number;
 };
 
-export type PromptLaneStatusActivityMergeReadiness = {
+export type LoopRelayStatusActivityMergeReadiness = {
   status: "ready" | "needs_review" | "missing_evidence";
   evidence: "evidence present" | "missing evidence";
   next_action:
@@ -62,14 +62,14 @@ export type PromptLaneStatusActivityMergeReadiness = {
     | "record loop outcome evidence";
 };
 
-export type PromptLaneStatusActivityCommandCenterItem =
-  PromptLaneStatusActivityWorktree & {
+export type LoopRelayStatusActivityCommandCenterItem =
+  LoopRelayStatusActivityWorktree & {
     recommendation: "review before merge" | "ready for continuation";
     continuation_command: string;
-    merge_readiness: PromptLaneStatusActivityMergeReadiness;
+    merge_readiness: LoopRelayStatusActivityMergeReadiness;
   };
 
-export type PromptLaneStatusActivityReviewPacket = {
+export type LoopRelayStatusActivityReviewPacket = {
   title: "Review-before-merge packet";
   status: "ready" | "needs_review" | "blocked";
   summary: string;
@@ -87,25 +87,25 @@ export type PromptLaneStatusActivityReviewPacket = {
   ready_count: number;
   needs_review_count: number;
   missing_evidence_count: number;
-  actions: PromptLaneStatusActivityMergeReadiness["next_action"][];
+  actions: LoopRelayStatusActivityMergeReadiness["next_action"][];
   checklist: Array<{
     label:
       | "Record missing evidence before merge"
       | "Review non-passing worktrees before merge"
       | "Compare ready evidence before merge";
     status: "required";
-    action: PromptLaneStatusActivityMergeReadiness["next_action"];
+    action: LoopRelayStatusActivityMergeReadiness["next_action"];
   }>;
 };
 
-export type PromptLaneStatusActivityCommandCenter = {
+export type LoopRelayStatusActivityCommandCenter = {
   title: "Multi-worktree review";
   primary_action: string;
-  review_packet: PromptLaneStatusActivityReviewPacket;
-  review_items: PromptLaneStatusActivityCommandCenterItem[];
+  review_packet: LoopRelayStatusActivityReviewPacket;
+  review_items: LoopRelayStatusActivityCommandCenterItem[];
 };
 
-export type PromptLaneStatusActivityRecentDecision = {
+export type LoopRelayStatusActivityRecentDecision = {
   snapshot_id: string;
   worktree: string;
   decision: "merge" | "continue" | "defer";
@@ -114,7 +114,7 @@ export type PromptLaneStatusActivityRecentDecision = {
   created_at: string;
 };
 
-export type PromptLaneStatusActivity = {
+export type LoopRelayStatusActivity = {
   active_worktrees: number;
   active_sessions: number;
   latest_branch?: string;
@@ -123,29 +123,37 @@ export type PromptLaneStatusActivity = {
   next_action:
     | "compare loop snapshots by worktree before merging agent output"
     | "continue current worktree loop";
-  recent_decisions?: PromptLaneStatusActivityRecentDecision[];
-  worktrees: PromptLaneStatusActivityWorktree[];
-  command_center?: PromptLaneStatusActivityCommandCenter;
+  recent_decisions?: LoopRelayStatusActivityRecentDecision[];
+  worktrees: LoopRelayStatusActivityWorktree[];
+  command_center?: LoopRelayStatusActivityCommandCenter;
 };
 
-export type PromptLaneStatus = {
-  status: PromptLaneStatusLevel;
+export type LoopRelayFailurePattern = {
+  pattern: string;
+  occurrences: number;
+  outcome_statuses: Array<"failed" | "blocked" | "abandoned">;
+  next_action: string;
+};
+
+export type LoopRelayStatus = {
+  status: LoopRelayStatusLevel;
   snapshot_count: number;
-  activity: PromptLaneStatusActivity;
-  project_memory: PromptLaneStatusProjectMemory;
-  memory_candidate?: PromptLaneStatusMemoryCandidate;
-  latest_snapshot?: PromptLaneStatusSnapshot;
+  activity: LoopRelayStatusActivity;
+  project_memory: LoopRelayStatusProjectMemory;
+  memory_candidate?: LoopRelayStatusMemoryCandidate;
+  failure_patterns?: LoopRelayFailurePattern[];
+  latest_snapshot?: LoopRelayStatusSnapshot;
   latest_compact_boundary?: LoopBriefCompactBoundary;
   next_action: string;
   next_actions: string[];
-  privacy: PromptLaneStatusPrivacy;
+  privacy: LoopRelayStatusPrivacy;
 };
 
 type CompactBoundaryCandidate = Parameters<
   typeof latestCompactBoundaryAfterSnapshot
 >[1][number];
 
-export function createPromptLaneStatus(input: {
+export function createLoopRelayStatus(input: {
   snapshots: readonly LoopSnapshot[];
   compactBoundaries: readonly CompactBoundaryCandidate[];
   includeLatest?: boolean;
@@ -154,8 +162,8 @@ export function createPromptLaneStatus(input: {
     LoopMemoryCandidateDecision,
     "eligible" | "reason" | "snapshot_id"
   >;
-  mergeDecisions?: readonly PromptLaneStatusActivityRecentDecision[];
-}): PromptLaneStatus {
+  mergeDecisions?: readonly LoopRelayStatusActivityRecentDecision[];
+}): LoopRelayStatus {
   const latest = input.snapshots.at(0);
   const projectMemoryCount = input.projectMemoryCount ?? 0;
   const compactBoundary = latest
@@ -163,14 +171,15 @@ export function createPromptLaneStatus(input: {
     : undefined;
   const hasSnapshots = input.snapshots.length > 0;
   const nextAction = compactBoundary
-    ? "promptlane loop collect"
+    ? "looprelay loop collect"
     : hasSnapshots
-      ? "promptlane loop brief"
-      : "promptlane loop collect";
+      ? "looprelay loop brief"
+      : "looprelay loop collect";
   const activity = summarizeLoopActivity(
     input.snapshots,
     input.mergeDecisions ?? [],
   );
+  const failurePatterns = summarizeFailurePatterns(input.snapshots);
 
   return {
     status: hasSnapshots ? "ready" : "empty",
@@ -180,16 +189,19 @@ export function createPromptLaneStatus(input: {
       approved_count: projectMemoryCount,
       included_in_brief: Boolean(latest && projectMemoryCount > 0),
     },
+    ...(failurePatterns.length > 0
+      ? { failure_patterns: failurePatterns }
+      : {}),
     ...(input.memoryCandidate
       ? {
-          memory_candidate: toPromptLaneStatusMemoryCandidate(
+          memory_candidate: toLoopRelayStatusMemoryCandidate(
             input.memoryCandidate,
           ),
         }
       : {}),
     ...(latest && input.includeLatest !== false
       ? {
-          latest_snapshot: toPromptLaneStatusSnapshot(latest, {
+          latest_snapshot: toLoopRelayStatusSnapshot(latest, {
             includePromptIds: true,
           }),
         }
@@ -203,14 +215,60 @@ export function createPromptLaneStatus(input: {
       memoryCandidate: input.memoryCandidate,
       activity,
     }),
-    privacy: promptlaneStatusPrivacy(),
+    privacy: looprelayStatusPrivacy(),
   };
+}
+
+export function summarizeFailurePatterns(
+  snapshots: readonly LoopSnapshot[],
+): LoopRelayFailurePattern[] {
+  const failedStatuses = new Set(["failed", "blocked", "abandoned"] as const);
+  const patterns = new Map<
+    string,
+    { occurrences: number; statuses: Set<"failed" | "blocked" | "abandoned"> }
+  >();
+
+  for (const snapshot of snapshots) {
+    if (
+      !failedStatuses.has(
+        snapshot.outcome.status as "failed" | "blocked" | "abandoned",
+      )
+    ) {
+      continue;
+    }
+    for (const rawGap of new Set(snapshot.quality.top_gaps)) {
+      const pattern = rawGap.trim();
+      if (!pattern || /(?:\/Users\/|\/home\/|sk-|gh[pousr]_)/i.test(pattern)) {
+        continue;
+      }
+      const current = patterns.get(pattern) ?? {
+        occurrences: 0,
+        statuses: new Set<"failed" | "blocked" | "abandoned">(),
+      };
+      current.occurrences += 1;
+      current.statuses.add(
+        snapshot.outcome.status as "failed" | "blocked" | "abandoned",
+      );
+      patterns.set(pattern, current);
+    }
+  }
+
+  return [...patterns.entries()]
+    .filter(([, value]) => value.occurrences >= 2)
+    .sort((left, right) => right[1].occurrences - left[1].occurrences)
+    .slice(0, 5)
+    .map(([pattern, value]) => ({
+      pattern,
+      occurrences: value.occurrences,
+      outcome_statuses: [...value.statuses],
+      next_action: `Ask for or define ${pattern} before continuing this loop.`,
+    }));
 }
 
 export function summarizeLoopActivity(
   snapshots: readonly LoopSnapshot[],
-  mergeDecisions: readonly PromptLaneStatusActivityRecentDecision[] = [],
-): PromptLaneStatusActivity {
+  mergeDecisions: readonly LoopRelayStatusActivityRecentDecision[] = [],
+): LoopRelayStatusActivity {
   const latest = snapshots.at(0);
   const activeWorktrees = uniqueNonEmpty(
     snapshots.map((snapshot) => snapshot.worktree_label),
@@ -239,7 +297,7 @@ export function summarizeLoopActivity(
     worktrees,
     ...(needsReview
       ? {
-          command_center: createPromptLaneCommandCenter(
+          command_center: createLoopRelayCommandCenter(
             worktrees,
             mergeDecisions,
           ),
@@ -249,8 +307,8 @@ export function summarizeLoopActivity(
 }
 
 function toRecentDecision(
-  decision: PromptLaneStatusActivityRecentDecision,
-): PromptLaneStatusActivityRecentDecision {
+  decision: LoopRelayStatusActivityRecentDecision,
+): LoopRelayStatusActivityRecentDecision {
   return {
     snapshot_id: decision.snapshot_id,
     worktree: decision.worktree,
@@ -261,10 +319,10 @@ function toRecentDecision(
   };
 }
 
-export function createPromptLaneCommandCenter(
-  worktrees: PromptLaneStatusActivityWorktree[],
-  mergeDecisions: readonly PromptLaneStatusActivityRecentDecision[],
-): PromptLaneStatusActivityCommandCenter {
+export function createLoopRelayCommandCenter(
+  worktrees: LoopRelayStatusActivityWorktree[],
+  mergeDecisions: readonly LoopRelayStatusActivityRecentDecision[],
+): LoopRelayStatusActivityCommandCenter {
   const reviewItems = worktrees.map((worktree) => ({
     ...worktree,
     recommendation:
@@ -289,9 +347,9 @@ export function createPromptLaneCommandCenter(
 }
 
 function createReviewPacket(
-  reviewItems: PromptLaneStatusActivityCommandCenterItem[],
-  mergeDecisions: readonly PromptLaneStatusActivityRecentDecision[] = [],
-): PromptLaneStatusActivityReviewPacket {
+  reviewItems: LoopRelayStatusActivityCommandCenterItem[],
+  mergeDecisions: readonly LoopRelayStatusActivityRecentDecision[] = [],
+): LoopRelayStatusActivityReviewPacket {
   const readyCount = reviewItems.filter(
     (item) => item.merge_readiness.status === "ready",
   ).length;
@@ -345,9 +403,9 @@ function createReviewPacket(
 }
 
 function decisionAdvisoryForReviewPacket(
-  mergeDecisions: readonly PromptLaneStatusActivityRecentDecision[],
-  reviewItems: readonly PromptLaneStatusActivityCommandCenterItem[],
-): PromptLaneStatusActivityReviewPacket["decision_advisory"] | undefined {
+  mergeDecisions: readonly LoopRelayStatusActivityRecentDecision[],
+  reviewItems: readonly LoopRelayStatusActivityCommandCenterItem[],
+): LoopRelayStatusActivityReviewPacket["decision_advisory"] | undefined {
   const worktrees = new Set(reviewItems.map((item) => item.worktree));
   const decision = mergeDecisions.find((item) => worktrees.has(item.worktree));
   if (!decision) return undefined;
@@ -359,9 +417,9 @@ function decisionAdvisoryForReviewPacket(
 }
 
 function decisionAdvisoryNextAction(
-  decision: PromptLaneStatusActivityRecentDecision["decision"],
+  decision: LoopRelayStatusActivityRecentDecision["decision"],
 ): NonNullable<
-  PromptLaneStatusActivityReviewPacket["decision_advisory"]
+  LoopRelayStatusActivityReviewPacket["decision_advisory"]
 >["next_action"] {
   if (decision === "merge") {
     return "confirm recent merge decision before merge";
@@ -373,8 +431,8 @@ function decisionAdvisoryNextAction(
 }
 
 function checklistLabelForAction(
-  action: PromptLaneStatusActivityMergeReadiness["next_action"],
-): PromptLaneStatusActivityReviewPacket["checklist"][number]["label"] {
+  action: LoopRelayStatusActivityMergeReadiness["next_action"],
+): LoopRelayStatusActivityReviewPacket["checklist"][number]["label"] {
   if (action === "record loop outcome evidence") {
     return "Record missing evidence before merge";
   }
@@ -385,8 +443,8 @@ function checklistLabelForAction(
 }
 
 function mergeReadinessForWorktree(
-  worktree: PromptLaneStatusActivityWorktree,
-): PromptLaneStatusActivityMergeReadiness {
+  worktree: LoopRelayStatusActivityWorktree,
+): LoopRelayStatusActivityMergeReadiness {
   if (worktree.evidence_count === 0) {
     return {
       status: "missing_evidence",
@@ -411,10 +469,10 @@ function mergeReadinessForWorktree(
 }
 
 function continuationCommandForWorktree(
-  worktree: PromptLaneStatusActivityWorktree,
+  worktree: LoopRelayStatusActivityWorktree,
 ): string {
   const command = [
-    "promptlane",
+    "looprelay",
     "loop",
     "brief",
     "--worktree",
@@ -428,7 +486,7 @@ function continuationCommandForWorktree(
 
 function summarizeWorktreeActivity(
   snapshots: readonly LoopSnapshot[],
-): PromptLaneStatusActivityWorktree[] {
+): LoopRelayStatusActivityWorktree[] {
   const groups = new Map<
     string,
     {
@@ -474,22 +532,22 @@ function summarizeWorktreeActivity(
     );
 }
 
-export function toPromptLaneStatusMemoryCandidate(
+export function toLoopRelayStatusMemoryCandidate(
   decision: Pick<LoopMemoryCandidateDecision, "eligible" | "reason">,
-): PromptLaneStatusMemoryCandidate {
+): LoopRelayStatusMemoryCandidate {
   return {
     eligible: decision.eligible,
     reason: decision.reason,
     next_action: decision.eligible
-      ? "promptlane loop memory-approve"
-      : "promptlane loop memory-candidate",
+      ? "looprelay loop memory-approve"
+      : "looprelay loop memory-candidate",
   };
 }
 
-export function toPromptLaneStatusSnapshot(
+export function toLoopRelayStatusSnapshot(
   snapshot: LoopSnapshot,
   options: { includePromptIds?: boolean } = {},
-): PromptLaneStatusSnapshot {
+): LoopRelayStatusSnapshot {
   return {
     id: snapshot.id,
     created_at: snapshot.created_at,
@@ -510,7 +568,7 @@ export function toPromptLaneStatusSnapshot(
   };
 }
 
-export function promptlaneStatusPrivacy(): PromptLaneStatusPrivacy {
+export function looprelayStatusPrivacy(): LoopRelayStatusPrivacy {
   return {
     local_only: true,
     external_calls: false,
@@ -525,28 +583,28 @@ function nextActionsForStatus(input: {
   latest?: LoopSnapshot;
   compactBoundary?: LoopBriefCompactBoundary;
   memoryCandidate?: Pick<LoopMemoryCandidateDecision, "eligible">;
-  activity: PromptLaneStatusActivity;
+  activity: LoopRelayStatusActivity;
 }): string[] {
   if (!input.hasSnapshots) {
     return [
-      "Capture one Codex or Claude Code prompt, then run promptlane coach to confirm the first score.",
-      "Then run promptlane loop collect to create the first local loop snapshot.",
+      "Capture one Codex or Claude Code prompt, then run looprelay coach to confirm the first score.",
+      "Then run looprelay loop collect to create the first local loop snapshot.",
     ];
   }
 
   if (input.compactBoundary) {
     return withMemoryCandidateAction(input.memoryCandidate, [
       ...pendingOutcomeActions(input.latest),
-      "Run promptlane loop collect again after compaction to refresh the snapshot.",
-      "Then use promptlane loop brief or prepare_loop_brief for a continuation prompt.",
+      "Run looprelay loop collect again after compaction to refresh the snapshot.",
+      "Then use looprelay loop brief or prepare_loop_brief for a continuation prompt.",
     ]);
   }
 
   return withMemoryCandidateAction(input.memoryCandidate, [
-    "Use promptlane loop brief or prepare_loop_brief to get a copy-ready continuation prompt.",
+    "Use looprelay loop brief or prepare_loop_brief to get a copy-ready continuation prompt.",
     ...pendingOutcomeActions(input.latest),
     ...selectedContinuationActions(input.activity),
-    "Run promptlane loop collect again after the next agent turn to refresh the snapshot.",
+    "Run looprelay loop collect again after the next agent turn to refresh the snapshot.",
   ]);
 }
 
@@ -563,11 +621,11 @@ function pendingOutcomeActions(snapshot: LoopSnapshot | undefined): string[] {
   const attributionAction =
     safeAttributionPromptIds(snapshot.prompt_ids).length > 0
       ? [
-          "If a PromptLane improvement was actually used, add --used-improvement-prompt with one of the latest snapshot prompt ids; otherwise omit attribution.",
+          "If a LoopRelay improvement was actually used, add --used-improvement-prompt with one of the latest snapshot prompt ids; otherwise omit attribution.",
         ]
       : [];
   return [
-    `When this work reaches a verifiable checkpoint, review snapshot ${snapshotId} in the Loops view or record its outcome with promptlane loop outcome --snapshot-id ${snapshotId}.`,
+    `When this work reaches a verifiable checkpoint, review snapshot ${snapshotId} in the Loops view or record its outcome with looprelay loop outcome --snapshot-id ${snapshotId}.`,
     ...attributionAction,
   ];
 }
@@ -581,7 +639,7 @@ function safeAttributionPromptIds(promptIds: readonly string[]): string[] {
 }
 
 function selectedContinuationActions(
-  activity: PromptLaneStatusActivity,
+  activity: LoopRelayStatusActivity,
 ): string[] {
   return (
     activity.command_center?.review_items.map(
@@ -598,7 +656,7 @@ function withMemoryCandidateAction(
   if (!memoryCandidate?.eligible) return actions;
   return [
     ...actions,
-    "Run promptlane loop memory-approve after reviewing the latest passed loop outcome.",
+    "Run looprelay loop memory-approve after reviewing the latest passed loop outcome.",
   ];
 }
 

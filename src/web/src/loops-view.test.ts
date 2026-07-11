@@ -6,12 +6,12 @@ import { LoopsView } from "./loops-view.js";
 import type { LoopListResponse, LoopWorktreeResponse } from "./api.js";
 
 describe("LoopsView", () => {
-  it("renders server-provided PromptLane status and next action", () => {
+  it("renders server-provided LoopRelay status and next action", () => {
     const html = renderToStaticMarkup(
       createElement(LoopsView, { loading: false, loops: loopList() }),
     );
 
-    expect(html).toContain("PromptLane status ready");
+    expect(html).toContain("LoopRelay status ready");
     expect(html).toContain("Effectiveness evidence");
     expect(html).toContain("1 benchmark candidate ready");
     expect(html).toContain("<strong>1</strong> completed");
@@ -19,10 +19,10 @@ describe("LoopsView", () => {
     expect(html).toContain("<strong>1</strong> evidence complete");
     expect(html).toContain("<strong>1</strong> safe");
     expect(html).toContain(
-      "Review candidate prompt ids, then run promptlane benchmark prepare-fixture with explicit consent.",
+      "Review candidate prompt ids, then run looprelay benchmark prepare-fixture with explicit consent.",
     );
     expect(html).not.toContain("prmt_benchmark_candidate");
-    expect(html).toContain("Next: promptlane loop brief");
+    expect(html).toContain("Next: looprelay loop brief");
     expect(html).toContain("Approved memories 1");
     expect(html).toContain("Active worktrees 2");
     expect(html).toContain("Active sessions 2");
@@ -47,7 +47,7 @@ describe("LoopsView", () => {
     expect(html).toContain("Evidence evidence present");
     expect(html).toContain("Evidence refs 2");
     expect(html).toContain(
-      "promptlane loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
+      "looprelay loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
     );
     expect(html).toContain("Copy review brief");
     expect(html).toContain("agent-loop-worktree 2 snapshots / 2 sessions");
@@ -56,10 +56,10 @@ describe("LoopsView", () => {
     expect(html).toContain("Open main-worktree");
     expect(html).toContain("Memory candidate eligible");
     expect(html).toContain("Approve memory");
-    expect(html).toContain("promptlane loop memory-approve");
+    expect(html).toContain("looprelay loop memory-approve");
     expect(html).toContain("Review AGENTS.md patch");
     expect(html).toContain(
-      "promptlane loop instruction-patch --target-file AGENTS.md",
+      "looprelay loop instruction-patch --target-file AGENTS.md",
     );
     expect(html).not.toContain("Make this better");
     expect(html).not.toContain("Safe memory statement");
@@ -91,9 +91,9 @@ describe("LoopsView", () => {
 
   it("renders empty loop first-value next steps before the collect command", () => {
     const firstScoreAction =
-      "Capture one Codex or Claude Code prompt, then run promptlane coach to confirm the first score.";
+      "Capture one Codex or Claude Code prompt, then run looprelay coach to confirm the first score.";
     const collectAction =
-      "Then run promptlane loop collect to create the first local loop snapshot.";
+      "Then run looprelay loop collect to create the first local loop snapshot.";
     const loops = loopList();
     loops.status = {
       ...loops.status,
@@ -112,7 +112,7 @@ describe("LoopsView", () => {
       },
       memory_candidate: undefined,
       latest_snapshot: undefined,
-      next_action: "promptlane loop collect",
+      next_action: "looprelay loop collect",
       next_actions: [firstScoreAction, collectAction],
     };
     loops.items = [];
@@ -121,11 +121,11 @@ describe("LoopsView", () => {
       createElement(LoopsView, { loading: false, loops }),
     );
 
-    expect(html).toContain("PromptLane status empty");
+    expect(html).toContain("LoopRelay status empty");
     expect(html).toContain("Next steps");
     expect(html).toContain(firstScoreAction);
     expect(html.indexOf("confirm the first score")).toBeLessThan(
-      html.indexOf("promptlane loop collect"),
+      html.indexOf("looprelay loop collect"),
     );
     expect(html).not.toContain("Make this better");
     expect(html).not.toContain("/Users/example");
@@ -160,7 +160,7 @@ describe("LoopsView", () => {
       "uses the selected worktree/session/branch filters without auto-submitting",
     );
     expect(html).toContain(
-      "promptlane loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
+      "looprelay loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
     );
     expect(html).toContain("No file writes or external calls");
     expect(html).toContain("Command distinction");
@@ -216,7 +216,7 @@ describe("LoopsView", () => {
     expect(html).toContain("No ordering writes or external calls");
     expect(html).toContain("Safety review state");
     expect(html).toContain(
-      "reviewed guidance state is not stored or synchronized by PromptLane",
+      "reviewed guidance state is not stored or synchronized by LoopRelay",
     );
     expect(html).toContain(
       "operator re-checks safety guidance each time before manual agent submission",
@@ -283,7 +283,7 @@ describe("LoopsView", () => {
       "operator manually retries the selected brief copy action",
     );
     expect(html).toContain(
-      "PromptLane does not automatically retry clipboard writes or submit prompts",
+      "LoopRelay does not automatically retry clipboard writes or submit prompts",
     );
     expect(html).toContain(
       "keeps retry control with the operator before any Codex or Claude Code paste",
@@ -307,7 +307,7 @@ describe("LoopsView", () => {
       "operator verifies the active Codex or Claude Code request box before paste",
     );
     expect(html).toContain(
-      "PromptLane does not inspect agent UI state or target contents",
+      "LoopRelay does not inspect agent UI state or target contents",
     );
     expect(html).toContain(
       "keeps target selection manual before any continuation handoff",
@@ -318,10 +318,10 @@ describe("LoopsView", () => {
       "paste destination is a manual operator choice in Codex or Claude Code",
     );
     expect(html).toContain(
-      "PromptLane does not verify active windows, target contents, or paste success",
+      "LoopRelay does not verify active windows, target contents, or paste success",
     );
     expect(html).toContain(
-      "keeps destination verification outside PromptLane automation before submission",
+      "keeps destination verification outside LoopRelay automation before submission",
     );
     expect(html).toContain(
       "No paste destination boundary writes or external calls",
@@ -331,7 +331,7 @@ describe("LoopsView", () => {
       "operator submits the pasted brief manually in Codex or Claude Code",
     );
     expect(html).toContain(
-      "PromptLane does not press enter, click submit, or record submitted state",
+      "LoopRelay does not press enter, click submit, or record submitted state",
     );
     expect(html).toContain(
       "keeps final agent execution under operator control after paste",
@@ -341,10 +341,10 @@ describe("LoopsView", () => {
     );
     expect(html).toContain("Submission result non-persistence");
     expect(html).toContain(
-      "agent response and submission result stay outside PromptLane until the next explicit loop snapshot",
+      "agent response and submission result stay outside LoopRelay until the next explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not detect, store, or sync submitted state after handoff",
+      "LoopRelay does not detect, store, or sync submitted state after handoff",
     );
     expect(html).toContain(
       "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring",
@@ -357,7 +357,7 @@ describe("LoopsView", () => {
       "collect the next loop snapshot explicitly after the agent response is ready",
     );
     expect(html).toContain(
-      "PromptLane does not start collection from submission, transcript changes, or agent UI activity",
+      "LoopRelay does not start collection from submission, transcript changes, or agent UI activity",
     );
     expect(html).toContain(
       "keeps post-submission collection operator-triggered and local-first",
@@ -370,7 +370,7 @@ describe("LoopsView", () => {
       "collection result is not persisted until the operator records the next explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not store, sync, or infer collection result state from agent UI activity",
+      "LoopRelay does not store, sync, or infer collection result state from agent UI activity",
     );
     expect(html).toContain(
       "keeps collection evidence tied to explicit local snapshot recording",
@@ -383,7 +383,7 @@ describe("LoopsView", () => {
       "operator reruns the explicit loop collection flow when retry is needed",
     );
     expect(html).toContain(
-      "PromptLane does not automatically retry collection commands or hidden recovery actions",
+      "LoopRelay does not automatically retry collection commands or hidden recovery actions",
     );
     expect(html).toContain(
       "keeps retry control local and operator-triggered after collection uncertainty",
@@ -391,10 +391,10 @@ describe("LoopsView", () => {
     expect(html).toContain("No collection retry writes or external calls");
     expect(html).toContain("Retry outcome non-persistence");
     expect(html).toContain(
-      "retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
+      "retry attempt and outcome stay outside LoopRelay until the next explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not detect, store, or sync retry success or failure state",
+      "LoopRelay does not detect, store, or sync retry success or failure state",
     );
     expect(html).toContain(
       "keeps retry evidence tied to explicit local snapshot recording",
@@ -407,7 +407,7 @@ describe("LoopsView", () => {
       "operator checks freshness against the latest explicit loop snapshot evidence",
     );
     expect(html).toContain(
-      "PromptLane does not verify freshness from git status, transcripts, or agent UI activity",
+      "LoopRelay does not verify freshness from git status, transcripts, or agent UI activity",
     );
     expect(html).toContain(
       "keeps evidence freshness review tied to local snapshot metadata",
@@ -417,10 +417,10 @@ describe("LoopsView", () => {
     );
     expect(html).toContain("Freshness result non-persistence");
     expect(html).toContain(
-      "freshness result stays outside PromptLane until the next explicit loop snapshot",
+      "freshness result stays outside LoopRelay until the next explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not detect, store, or sync freshness result state",
+      "LoopRelay does not detect, store, or sync freshness result state",
     );
     expect(html).toContain(
       "keeps freshness evidence tied to explicit local snapshot recording",
@@ -433,7 +433,7 @@ describe("LoopsView", () => {
       "collect a new explicit loop snapshot when evidence freshness is uncertain",
     );
     expect(html).toContain(
-      "PromptLane does not verify freshness or start collection automatically",
+      "LoopRelay does not verify freshness or start collection automatically",
     );
     expect(html).toContain(
       "keeps freshness uncertainty resolution operator-triggered and local-first",
@@ -446,7 +446,7 @@ describe("LoopsView", () => {
       "review freshness uncertainty before merge decisions",
     );
     expect(html).toContain(
-      "PromptLane does not approve merges or verify freshness before merge",
+      "LoopRelay does not approve merges or verify freshness before merge",
     );
     expect(html).toContain(
       "keeps merge readiness separate from freshness uncertainty review",
@@ -457,7 +457,7 @@ describe("LoopsView", () => {
       "review freshness uncertainty before approving loop memory",
     );
     expect(html).toContain(
-      "PromptLane does not approve memory or verify freshness from this note",
+      "LoopRelay does not approve memory or verify freshness from this note",
     );
     expect(html).toContain(
       "keeps memory approval separate from freshness uncertainty review",
@@ -470,7 +470,7 @@ describe("LoopsView", () => {
       "collect a new explicit loop snapshot after approving loop memory",
     );
     expect(html).toContain(
-      "PromptLane does not start collection from memory approval or approval state changes",
+      "LoopRelay does not start collection from memory approval or approval state changes",
     );
     expect(html).toContain(
       "keeps post-approval collection operator-triggered and local-first",
@@ -482,10 +482,10 @@ describe("LoopsView", () => {
       "Post-memory-approval collection result non-persistence",
     );
     expect(html).toContain(
-      "post-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+      "post-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not detect, store, or sync post-approval collection result state",
+      "LoopRelay does not detect, store, or sync post-approval collection result state",
     );
     expect(html).toContain(
       "keeps post-approval collection evidence tied to explicit local snapshot recording",
@@ -498,7 +498,7 @@ describe("LoopsView", () => {
       "operator reruns the explicit post-approval loop collection flow when retry is needed",
     );
     expect(html).toContain(
-      "PromptLane does not automatically retry post-approval collection commands or hidden recovery actions",
+      "LoopRelay does not automatically retry post-approval collection commands or hidden recovery actions",
     );
     expect(html).toContain(
       "keeps post-approval collection retry control local and operator-triggered",
@@ -510,10 +510,10 @@ describe("LoopsView", () => {
       "Post-memory-approval retry outcome non-persistence",
     );
     expect(html).toContain(
-      "post-approval retry outcome stays outside PromptLane until the next explicit loop snapshot",
+      "post-approval retry outcome stays outside LoopRelay until the next explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not detect, store, or sync post-approval retry success or failure state",
+      "LoopRelay does not detect, store, or sync post-approval retry success or failure state",
     );
     expect(html).toContain(
       "keeps post-approval retry evidence tied to explicit local snapshot recording",
@@ -528,7 +528,7 @@ describe("LoopsView", () => {
       "operator checks retry evidence freshness against the latest explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not verify post-approval retry freshness from git status, transcripts, or agent UI activity",
+      "LoopRelay does not verify post-approval retry freshness from git status, transcripts, or agent UI activity",
     );
     expect(html).toContain(
       "keeps post-approval retry freshness review tied to local snapshot metadata",
@@ -540,10 +540,10 @@ describe("LoopsView", () => {
       "Post-memory-approval retry freshness result non-persistence",
     );
     expect(html).toContain(
-      "post-approval retry freshness result stays outside PromptLane until the next explicit loop snapshot",
+      "post-approval retry freshness result stays outside LoopRelay until the next explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not detect, store, or sync post-approval retry freshness result state",
+      "LoopRelay does not detect, store, or sync post-approval retry freshness result state",
     );
     expect(html).toContain(
       "keeps post-approval retry freshness evidence tied to explicit local snapshot recording",
@@ -558,7 +558,7 @@ describe("LoopsView", () => {
       "collect a new explicit loop snapshot when post-approval retry freshness is uncertain",
     );
     expect(html).toContain(
-      "PromptLane does not verify post-approval retry freshness or start collection automatically",
+      "LoopRelay does not verify post-approval retry freshness or start collection automatically",
     );
     expect(html).toContain(
       "keeps post-approval retry freshness uncertainty resolution operator-triggered and local-first",
@@ -573,7 +573,7 @@ describe("LoopsView", () => {
       "review post-approval retry freshness uncertainty before approving loop memory again",
     );
     expect(html).toContain(
-      "PromptLane does not approve memory or verify post-approval retry freshness from this advisory",
+      "LoopRelay does not approve memory or verify post-approval retry freshness from this advisory",
     );
     expect(html).toContain(
       "keeps renewed memory approval separate from retry freshness uncertainty review",
@@ -588,7 +588,7 @@ describe("LoopsView", () => {
       "collect a new explicit loop snapshot after approving loop memory again",
     );
     expect(html).toContain(
-      "PromptLane does not start collection from renewed memory approval or approval state changes",
+      "LoopRelay does not start collection from renewed memory approval or approval state changes",
     );
     expect(html).toContain(
       "keeps renewed-memory-approval collection operator-triggered and local-first",
@@ -600,10 +600,10 @@ describe("LoopsView", () => {
       "Post-memory-approval retry renewed-memory-approval collection result non-persistence",
     );
     expect(html).toContain(
-      "renewed-memory-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+      "renewed-memory-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not detect, store, or sync renewed-memory-approval collection result state",
+      "LoopRelay does not detect, store, or sync renewed-memory-approval collection result state",
     );
     expect(html).toContain(
       "keeps renewed-memory-approval collection evidence tied to explicit local snapshot recording",
@@ -618,7 +618,7 @@ describe("LoopsView", () => {
       "collect a new explicit loop snapshot when renewed-memory-approval collection result is uncertain",
     );
     expect(html).toContain(
-      "PromptLane does not verify renewed-memory-approval collection result or start collection automatically",
+      "LoopRelay does not verify renewed-memory-approval collection result or start collection automatically",
     );
     expect(html).toContain(
       "keeps renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
@@ -633,7 +633,7 @@ describe("LoopsView", () => {
       "review renewed-memory-approval freshness uncertainty before merge decisions",
     );
     expect(html).toContain(
-      "PromptLane does not approve merges or verify renewed-memory-approval freshness before merge",
+      "LoopRelay does not approve merges or verify renewed-memory-approval freshness before merge",
     );
     expect(html).toContain(
       "keeps merge readiness separate from renewed-memory-approval freshness uncertainty review",
@@ -648,7 +648,7 @@ describe("LoopsView", () => {
       "review renewed-memory-approval freshness uncertainty before continuation handoff",
     );
     expect(html).toContain(
-      "PromptLane does not approve handoffs or verify renewed-memory-approval freshness before handoff",
+      "LoopRelay does not approve handoffs or verify renewed-memory-approval freshness before handoff",
     );
     expect(html).toContain(
       "keeps continuation handoff separate from renewed-memory-approval freshness uncertainty review",
@@ -663,7 +663,7 @@ describe("LoopsView", () => {
       "review renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
     );
     expect(html).toContain(
-      "PromptLane does not approve paste targets or verify renewed-memory-approval freshness before paste",
+      "LoopRelay does not approve paste targets or verify renewed-memory-approval freshness before paste",
     );
     expect(html).toContain(
       "keeps paste readiness separate from renewed-memory-approval freshness uncertainty review",
@@ -678,7 +678,7 @@ describe("LoopsView", () => {
       "review renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
     );
     expect(html).toContain(
-      "PromptLane does not approve submissions or verify renewed-memory-approval freshness before submit",
+      "LoopRelay does not approve submissions or verify renewed-memory-approval freshness before submit",
     );
     expect(html).toContain(
       "keeps submission readiness separate from renewed-memory-approval freshness uncertainty review",
@@ -693,7 +693,7 @@ describe("LoopsView", () => {
       "collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain",
     );
     expect(html).toContain(
-      "PromptLane does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
+      "LoopRelay does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
     );
     expect(html).toContain(
       "keeps post-submit freshness review tied to explicit local snapshot collection",
@@ -705,10 +705,10 @@ describe("LoopsView", () => {
       "Post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence",
     );
     expect(html).toContain(
-      "post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
+      "post-submit collection result stays outside LoopRelay until the next explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not detect, store, or sync post-submit collection result state",
+      "LoopRelay does not detect, store, or sync post-submit collection result state",
     );
     expect(html).toContain(
       "keeps post-submit collection evidence tied to explicit local snapshot recording",
@@ -723,7 +723,7 @@ describe("LoopsView", () => {
       "operator reruns the explicit post-submit loop collection flow when retry is needed",
     );
     expect(html).toContain(
-      "PromptLane does not automatically retry post-submit collection commands or hidden recovery actions",
+      "LoopRelay does not automatically retry post-submit collection commands or hidden recovery actions",
     );
     expect(html).toContain(
       "keeps post-submit collection retry control local and operator-triggered",
@@ -735,10 +735,10 @@ describe("LoopsView", () => {
       "Post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence",
     );
     expect(html).toContain(
-      "post-submit retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
+      "post-submit retry attempt and outcome stay outside LoopRelay until the next explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not detect, store, or sync post-submit retry success or failure state",
+      "LoopRelay does not detect, store, or sync post-submit retry success or failure state",
     );
     expect(html).toContain(
       "keeps post-submit retry evidence tied to explicit local snapshot recording",
@@ -753,7 +753,7 @@ describe("LoopsView", () => {
       "operator checks post-submit retry evidence freshness against the latest explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
+      "LoopRelay does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
     );
     expect(html).toContain(
       "keeps post-submit retry evidence freshness review tied to local snapshot metadata",
@@ -765,10 +765,10 @@ describe("LoopsView", () => {
       "Post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence",
     );
     expect(html).toContain(
-      "post-submit retry freshness result stays outside PromptLane until the next explicit loop snapshot",
+      "post-submit retry freshness result stays outside LoopRelay until the next explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not detect, store, or sync post-submit retry freshness result state",
+      "LoopRelay does not detect, store, or sync post-submit retry freshness result state",
     );
     expect(html).toContain(
       "keeps post-submit retry freshness evidence tied to explicit local snapshot recording",
@@ -783,7 +783,7 @@ describe("LoopsView", () => {
       "collect a new explicit loop snapshot when post-submit retry freshness is uncertain",
     );
     expect(html).toContain(
-      "PromptLane does not verify post-submit retry freshness or start collection automatically",
+      "LoopRelay does not verify post-submit retry freshness or start collection automatically",
     );
     expect(html).toContain(
       "keeps post-submit retry freshness uncertainty resolution operator-triggered and local-first",
@@ -798,7 +798,7 @@ describe("LoopsView", () => {
       "review post-submit retry freshness uncertainty before approving loop memory again",
     );
     expect(html).toContain(
-      "PromptLane does not approve memory or verify post-submit retry freshness from this advisory",
+      "LoopRelay does not approve memory or verify post-submit retry freshness from this advisory",
     );
     expect(html).toContain(
       "keeps renewed memory approval separate from post-submit retry freshness uncertainty review",
@@ -813,7 +813,7 @@ describe("LoopsView", () => {
       "collect a new explicit loop snapshot after approving loop memory again after post-submit retry",
     );
     expect(html).toContain(
-      "PromptLane does not start collection from post-submit retry renewed memory approval or hidden approval signals",
+      "LoopRelay does not start collection from post-submit retry renewed memory approval or hidden approval signals",
     );
     expect(html).toContain(
       "keeps post-submit retry renewed-memory-approval collection operator-triggered and local-first",
@@ -825,10 +825,10 @@ describe("LoopsView", () => {
       "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence",
     );
     expect(html).toContain(
-      "post-submit retry renewed-memory-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+      "post-submit retry renewed-memory-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
+      "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
     );
     expect(html).toContain(
       "keeps post-submit retry renewed-memory-approval collection evidence tied to explicit local snapshot recording",
@@ -843,7 +843,7 @@ describe("LoopsView", () => {
       "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval collection result is uncertain",
     );
     expect(html).toContain(
-      "PromptLane does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
+      "LoopRelay does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
     );
     expect(html).toContain(
       "keeps post-submit retry renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
@@ -858,7 +858,7 @@ describe("LoopsView", () => {
       "review post-submit retry renewed-memory-approval freshness uncertainty before merge decisions",
     );
     expect(html).toContain(
-      "PromptLane does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
+      "LoopRelay does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
     );
     expect(html).toContain(
       "keeps merge readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
@@ -873,7 +873,7 @@ describe("LoopsView", () => {
       "review post-submit retry renewed-memory-approval freshness uncertainty before continuation handoff",
     );
     expect(html).toContain(
-      "PromptLane does not approve handoffs or verify post-submit retry renewed-memory-approval freshness before handoff",
+      "LoopRelay does not approve handoffs or verify post-submit retry renewed-memory-approval freshness before handoff",
     );
     expect(html).toContain(
       "keeps continuation handoff separate from post-submit retry renewed-memory-approval freshness uncertainty review",
@@ -888,7 +888,7 @@ describe("LoopsView", () => {
       "review post-submit retry renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
     );
     expect(html).toContain(
-      "PromptLane does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
+      "LoopRelay does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
     );
     expect(html).toContain(
       "keeps paste readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
@@ -903,7 +903,7 @@ describe("LoopsView", () => {
       "review post-submit retry renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
     );
     expect(html).toContain(
-      "PromptLane does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
+      "LoopRelay does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
     );
     expect(html).toContain(
       "keeps submission readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
@@ -918,7 +918,7 @@ describe("LoopsView", () => {
       "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain",
     );
     expect(html).toContain(
-      "PromptLane does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
+      "LoopRelay does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
     );
     expect(html).toContain(
       "keeps post-submit retry renewed-memory-approval freshness review tied to explicit local snapshot collection",
@@ -930,10 +930,10 @@ describe("LoopsView", () => {
       "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence",
     );
     expect(html).toContain(
-      "post-submit retry renewed-memory-approval post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
+      "post-submit retry renewed-memory-approval post-submit collection result stays outside LoopRelay until the next explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
+      "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
     );
     expect(html).toContain(
       "keeps post-submit retry renewed-memory-approval post-submit collection evidence tied to explicit local snapshot recording",
@@ -948,7 +948,7 @@ describe("LoopsView", () => {
       "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection result is uncertain",
     );
     expect(html).toContain(
-      "PromptLane does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
+      "LoopRelay does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
     );
     expect(html).toContain(
       "keeps post-submit retry renewed-memory-approval post-submit collection uncertainty resolution operator-triggered and local-first",
@@ -963,7 +963,7 @@ describe("LoopsView", () => {
       "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before merge decisions",
     );
     expect(html).toContain(
-      "PromptLane does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
+      "LoopRelay does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
     );
     expect(html).toContain(
       "keeps merge readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
@@ -978,7 +978,7 @@ describe("LoopsView", () => {
       "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before continuation handoff",
     );
     expect(html).toContain(
-      "PromptLane does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
+      "LoopRelay does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
     );
     expect(html).toContain(
       "keeps continuation handoff separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
@@ -993,7 +993,7 @@ describe("LoopsView", () => {
       "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before pasting into Codex or Claude Code",
     );
     expect(html).toContain(
-      "PromptLane does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
+      "LoopRelay does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
     );
     expect(html).toContain(
       "keeps paste readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
@@ -1008,7 +1008,7 @@ describe("LoopsView", () => {
       "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before submitting in Codex or Claude Code",
     );
     expect(html).toContain(
-      "PromptLane does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
+      "LoopRelay does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
     );
     expect(html).toContain(
       "keeps submission readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
@@ -1023,7 +1023,7 @@ describe("LoopsView", () => {
       "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
     );
     expect(html).toContain(
-      "PromptLane does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval post-submit collection freshness after submit",
+      "LoopRelay does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval post-submit collection freshness after submit",
     );
     expect(html).toContain(
       "keeps post-submit retry renewed-memory-approval post-submit collection freshness review tied to explicit local snapshot collection",
@@ -1035,10 +1035,10 @@ describe("LoopsView", () => {
       "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence",
     );
     expect(html).toContain(
-      "post-submit retry renewed-memory-approval post-submit collection freshness result stays outside PromptLane until the next explicit loop snapshot",
+      "post-submit retry renewed-memory-approval post-submit collection freshness result stays outside LoopRelay until the next explicit loop snapshot",
     );
     expect(html).toContain(
-      "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
+      "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
     );
     expect(html).toContain(
       "keeps post-submit retry renewed-memory-approval post-submit collection freshness evidence tied to explicit local snapshot recording",
@@ -1053,7 +1053,7 @@ describe("LoopsView", () => {
       "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
     );
     expect(html).toContain(
-      "PromptLane does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically",
+      "LoopRelay does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically",
     );
     expect(html).toContain(
       "keeps post-submit retry renewed-memory-approval post-submit collection freshness uncertainty resolution operator-triggered and local-first",
@@ -1068,7 +1068,7 @@ describe("LoopsView", () => {
       "paste the copied continuation brief into the active agent request box",
     );
     expect(html).toContain(
-      "keeps PromptLane as the local handoff source while the user controls submission",
+      "keeps LoopRelay as the local handoff source while the user controls submission",
     );
     expect(html).toContain(
       "No automatic submission, file writes, or external calls",
@@ -1106,7 +1106,7 @@ describe("LoopsView", () => {
       "transcript import is not used as the source of truth",
     );
     expect(html).toContain(
-      "PromptLane records explicit loop snapshots instead of importing agent transcripts",
+      "LoopRelay records explicit loop snapshots instead of importing agent transcripts",
     );
     expect(html).toContain(
       "No transcript storage, file writes, or external calls",
@@ -1209,7 +1209,7 @@ describe("LoopsView", () => {
     );
     expect(html).toContain("No command writes or external calls");
     expect(html).toContain(
-      "promptlane loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
+      "looprelay loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
     );
     expect(html).toContain("Missing evidence");
     expect(html).toContain(
@@ -1323,7 +1323,7 @@ function loopList(): LoopListResponse {
               evidence_count: 2,
               recommendation: "review before merge",
               continuation_command:
-                "promptlane loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
+                "looprelay loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
               merge_readiness: {
                 status: "needs_review",
                 evidence: "evidence present",
@@ -1340,7 +1340,7 @@ function loopList(): LoopListResponse {
               evidence_count: 1,
               recommendation: "ready for continuation",
               continuation_command:
-                "promptlane loop brief --worktree main-worktree",
+                "looprelay loop brief --worktree main-worktree",
               merge_readiness: {
                 status: "ready",
                 evidence: "evidence present",
@@ -1357,12 +1357,12 @@ function loopList(): LoopListResponse {
       memory_candidate: {
         eligible: true,
         reason: "passed_with_evidence",
-        next_action: "promptlane loop memory-approve",
+        next_action: "looprelay loop memory-approve",
       },
       latest_snapshot: loopSummary(),
-      next_action: "promptlane loop brief",
+      next_action: "looprelay loop brief",
       next_actions: [
-        "Use promptlane loop brief or prepare_loop_brief to get a copy-ready continuation prompt.",
+        "Use looprelay loop brief or prepare_loop_brief to get a copy-ready continuation prompt.",
       ],
       privacy: {
         local_only: true,
@@ -1394,7 +1394,7 @@ function loopList(): LoopListResponse {
       has_more: false,
       scope: { scanned_snapshots: 1, snapshot_limit: 100 },
       next_action:
-        "Review candidate prompt ids, then run promptlane benchmark prepare-fixture with explicit consent.",
+        "Review candidate prompt ids, then run looprelay benchmark prepare-fixture with explicit consent.",
       privacy: {
         local_only: true,
         external_calls: false,
@@ -1436,7 +1436,7 @@ function loopWorktree(): LoopWorktreeResponse {
     memory_candidate: {
       eligible: true,
       reason: "passed_with_evidence",
-      next_action: "promptlane loop memory-approve",
+      next_action: "looprelay loop memory-approve",
     },
     selection_scope: {
       label: "Selection scope",
@@ -1458,7 +1458,7 @@ function loopWorktree(): LoopWorktreeResponse {
       reason:
         "uses the selected worktree/session/branch filters without auto-submitting",
       command:
-        "promptlane loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
+        "looprelay loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
       writes_files: false,
       external_calls: false,
     },
@@ -1515,7 +1515,7 @@ function loopWorktree(): LoopWorktreeResponse {
     continuation_safety_non_persistence_note: {
       label: "Safety review state",
       state:
-        "reviewed guidance state is not stored or synchronized by PromptLane",
+        "reviewed guidance state is not stored or synchronized by LoopRelay",
       reminder:
         "operator re-checks safety guidance each time before manual agent submission",
       reason: "keeps continuation review local to the current operator session",
@@ -1575,7 +1575,7 @@ function loopWorktree(): LoopWorktreeResponse {
       label: "Copy retry",
       retry_scope: "operator manually retries the selected brief copy action",
       not_automatic:
-        "PromptLane does not automatically retry clipboard writes or submit prompts",
+        "LoopRelay does not automatically retry clipboard writes or submit prompts",
       reason:
         "keeps retry control with the operator before any Codex or Claude Code paste",
       writes_files: false,
@@ -1597,7 +1597,7 @@ function loopWorktree(): LoopWorktreeResponse {
       check:
         "operator verifies the active Codex or Claude Code request box before paste",
       not_inspection:
-        "PromptLane does not inspect agent UI state or target contents",
+        "LoopRelay does not inspect agent UI state or target contents",
       reason: "keeps target selection manual before any continuation handoff",
       writes_files: false,
       external_calls: false,
@@ -1607,9 +1607,9 @@ function loopWorktree(): LoopWorktreeResponse {
       boundary:
         "paste destination is a manual operator choice in Codex or Claude Code",
       not_verified:
-        "PromptLane does not verify active windows, target contents, or paste success",
+        "LoopRelay does not verify active windows, target contents, or paste success",
       reason:
-        "keeps destination verification outside PromptLane automation before submission",
+        "keeps destination verification outside LoopRelay automation before submission",
       writes_files: false,
       external_calls: false,
     },
@@ -1618,7 +1618,7 @@ function loopWorktree(): LoopWorktreeResponse {
       submission:
         "operator submits the pasted brief manually in Codex or Claude Code",
       not_automated:
-        "PromptLane does not press enter, click submit, or record submitted state",
+        "LoopRelay does not press enter, click submit, or record submitted state",
       reason: "keeps final agent execution under operator control after paste",
       writes_files: false,
       external_calls: false,
@@ -1626,9 +1626,9 @@ function loopWorktree(): LoopWorktreeResponse {
     continuation_safety_submission_result_non_persistence_note: {
       label: "Submission result non-persistence",
       result_scope:
-        "agent response and submission result stay outside PromptLane until the next explicit loop snapshot",
+        "agent response and submission result stay outside LoopRelay until the next explicit loop snapshot",
       not_stored:
-        "PromptLane does not detect, store, or sync submitted state after handoff",
+        "LoopRelay does not detect, store, or sync submitted state after handoff",
       reason:
         "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring",
       writes_files: false,
@@ -1639,7 +1639,7 @@ function loopWorktree(): LoopWorktreeResponse {
       reminder:
         "collect the next loop snapshot explicitly after the agent response is ready",
       not_background:
-        "PromptLane does not start collection from submission, transcript changes, or agent UI activity",
+        "LoopRelay does not start collection from submission, transcript changes, or agent UI activity",
       reason:
         "keeps post-submission collection operator-triggered and local-first",
       writes_files: false,
@@ -1650,7 +1650,7 @@ function loopWorktree(): LoopWorktreeResponse {
       result_scope:
         "collection result is not persisted until the operator records the next explicit loop snapshot",
       not_stored:
-        "PromptLane does not store, sync, or infer collection result state from agent UI activity",
+        "LoopRelay does not store, sync, or infer collection result state from agent UI activity",
       reason:
         "keeps collection evidence tied to explicit local snapshot recording",
       writes_files: false,
@@ -1661,7 +1661,7 @@ function loopWorktree(): LoopWorktreeResponse {
       retry:
         "operator reruns the explicit loop collection flow when retry is needed",
       not_automated:
-        "PromptLane does not automatically retry collection commands or hidden recovery actions",
+        "LoopRelay does not automatically retry collection commands or hidden recovery actions",
       reason:
         "keeps retry control local and operator-triggered after collection uncertainty",
       writes_files: false,
@@ -1670,9 +1670,9 @@ function loopWorktree(): LoopWorktreeResponse {
     continuation_safety_retry_outcome_non_persistence_note: {
       label: "Retry outcome non-persistence",
       outcome_scope:
-        "retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
+        "retry attempt and outcome stay outside LoopRelay until the next explicit loop snapshot",
       not_stored:
-        "PromptLane does not detect, store, or sync retry success or failure state",
+        "LoopRelay does not detect, store, or sync retry success or failure state",
       reason: "keeps retry evidence tied to explicit local snapshot recording",
       writes_files: false,
       external_calls: false,
@@ -1682,7 +1682,7 @@ function loopWorktree(): LoopWorktreeResponse {
       freshness_check:
         "operator checks freshness against the latest explicit loop snapshot evidence",
       not_verified:
-        "PromptLane does not verify freshness from git status, transcripts, or agent UI activity",
+        "LoopRelay does not verify freshness from git status, transcripts, or agent UI activity",
       reason: "keeps evidence freshness review tied to local snapshot metadata",
       writes_files: false,
       external_calls: false,
@@ -1690,9 +1690,9 @@ function loopWorktree(): LoopWorktreeResponse {
     continuation_safety_freshness_result_non_persistence_note: {
       label: "Freshness result non-persistence",
       result_scope:
-        "freshness result stays outside PromptLane until the next explicit loop snapshot",
+        "freshness result stays outside LoopRelay until the next explicit loop snapshot",
       not_stored:
-        "PromptLane does not detect, store, or sync freshness result state",
+        "LoopRelay does not detect, store, or sync freshness result state",
       reason:
         "keeps freshness evidence tied to explicit local snapshot recording",
       writes_files: false,
@@ -1703,7 +1703,7 @@ function loopWorktree(): LoopWorktreeResponse {
       reminder:
         "collect a new explicit loop snapshot when evidence freshness is uncertain",
       not_automated:
-        "PromptLane does not verify freshness or start collection automatically",
+        "LoopRelay does not verify freshness or start collection automatically",
       reason:
         "keeps freshness uncertainty resolution operator-triggered and local-first",
       writes_files: false,
@@ -1713,7 +1713,7 @@ function loopWorktree(): LoopWorktreeResponse {
       label: "Pre-merge freshness advisory",
       advisory: "review freshness uncertainty before merge decisions",
       not_decision:
-        "PromptLane does not approve merges or verify freshness before merge",
+        "LoopRelay does not approve merges or verify freshness before merge",
       reason:
         "keeps merge readiness separate from freshness uncertainty review",
       writes_files: false,
@@ -1723,7 +1723,7 @@ function loopWorktree(): LoopWorktreeResponse {
       label: "Pre-memory-approval freshness advisory",
       advisory: "review freshness uncertainty before approving loop memory",
       not_decision:
-        "PromptLane does not approve memory or verify freshness from this note",
+        "LoopRelay does not approve memory or verify freshness from this note",
       reason:
         "keeps memory approval separate from freshness uncertainty review",
       writes_files: false,
@@ -1734,7 +1734,7 @@ function loopWorktree(): LoopWorktreeResponse {
       reminder:
         "collect a new explicit loop snapshot after approving loop memory",
       not_automated:
-        "PromptLane does not start collection from memory approval or approval state changes",
+        "LoopRelay does not start collection from memory approval or approval state changes",
       reason:
         "keeps post-approval collection operator-triggered and local-first",
       writes_files: false,
@@ -1744,9 +1744,9 @@ function loopWorktree(): LoopWorktreeResponse {
       {
         label: "Post-memory-approval collection result non-persistence",
         result_scope:
-          "post-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+          "post-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
         not_stored:
-          "PromptLane does not detect, store, or sync post-approval collection result state",
+          "LoopRelay does not detect, store, or sync post-approval collection result state",
         reason:
           "keeps post-approval collection evidence tied to explicit local snapshot recording",
         writes_files: false,
@@ -1757,7 +1757,7 @@ function loopWorktree(): LoopWorktreeResponse {
       retry:
         "operator reruns the explicit post-approval loop collection flow when retry is needed",
       not_automated:
-        "PromptLane does not automatically retry post-approval collection commands or hidden recovery actions",
+        "LoopRelay does not automatically retry post-approval collection commands or hidden recovery actions",
       reason:
         "keeps post-approval collection retry control local and operator-triggered",
       writes_files: false,
@@ -1767,9 +1767,9 @@ function loopWorktree(): LoopWorktreeResponse {
       {
         label: "Post-memory-approval retry outcome non-persistence",
         outcome_scope:
-          "post-approval retry outcome stays outside PromptLane until the next explicit loop snapshot",
+          "post-approval retry outcome stays outside LoopRelay until the next explicit loop snapshot",
         not_stored:
-          "PromptLane does not detect, store, or sync post-approval retry success or failure state",
+          "LoopRelay does not detect, store, or sync post-approval retry success or failure state",
         reason:
           "keeps post-approval retry evidence tied to explicit local snapshot recording",
         writes_files: false,
@@ -1781,7 +1781,7 @@ function loopWorktree(): LoopWorktreeResponse {
         review:
           "operator checks retry evidence freshness against the latest explicit loop snapshot",
         not_verified:
-          "PromptLane does not verify post-approval retry freshness from git status, transcripts, or agent UI activity",
+          "LoopRelay does not verify post-approval retry freshness from git status, transcripts, or agent UI activity",
         reason:
           "keeps post-approval retry freshness review tied to local snapshot metadata",
         writes_files: false,
@@ -1791,9 +1791,9 @@ function loopWorktree(): LoopWorktreeResponse {
       {
         label: "Post-memory-approval retry freshness result non-persistence",
         result_scope:
-          "post-approval retry freshness result stays outside PromptLane until the next explicit loop snapshot",
+          "post-approval retry freshness result stays outside LoopRelay until the next explicit loop snapshot",
         not_stored:
-          "PromptLane does not detect, store, or sync post-approval retry freshness result state",
+          "LoopRelay does not detect, store, or sync post-approval retry freshness result state",
         reason:
           "keeps post-approval retry freshness evidence tied to explicit local snapshot recording",
         writes_files: false,
@@ -1806,7 +1806,7 @@ function loopWorktree(): LoopWorktreeResponse {
         reminder:
           "collect a new explicit loop snapshot when post-approval retry freshness is uncertain",
         not_automated:
-          "PromptLane does not verify post-approval retry freshness or start collection automatically",
+          "LoopRelay does not verify post-approval retry freshness or start collection automatically",
         reason:
           "keeps post-approval retry freshness uncertainty resolution operator-triggered and local-first",
         writes_files: false,
@@ -1819,7 +1819,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "review post-approval retry freshness uncertainty before approving loop memory again",
         not_decision:
-          "PromptLane does not approve memory or verify post-approval retry freshness from this advisory",
+          "LoopRelay does not approve memory or verify post-approval retry freshness from this advisory",
         reason:
           "keeps renewed memory approval separate from retry freshness uncertainty review",
         writes_files: false,
@@ -1832,7 +1832,7 @@ function loopWorktree(): LoopWorktreeResponse {
         reminder:
           "collect a new explicit loop snapshot after approving loop memory again",
         not_automated:
-          "PromptLane does not start collection from renewed memory approval or approval state changes",
+          "LoopRelay does not start collection from renewed memory approval or approval state changes",
         reason:
           "keeps renewed-memory-approval collection operator-triggered and local-first",
         writes_files: false,
@@ -1843,9 +1843,9 @@ function loopWorktree(): LoopWorktreeResponse {
         label:
           "Post-memory-approval retry renewed-memory-approval collection result non-persistence",
         result_scope:
-          "renewed-memory-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+          "renewed-memory-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
         not_stored:
-          "PromptLane does not detect, store, or sync renewed-memory-approval collection result state",
+          "LoopRelay does not detect, store, or sync renewed-memory-approval collection result state",
         reason:
           "keeps renewed-memory-approval collection evidence tied to explicit local snapshot recording",
         writes_files: false,
@@ -1858,7 +1858,7 @@ function loopWorktree(): LoopWorktreeResponse {
         reminder:
           "collect a new explicit loop snapshot when renewed-memory-approval collection result is uncertain",
         not_automated:
-          "PromptLane does not verify renewed-memory-approval collection result or start collection automatically",
+          "LoopRelay does not verify renewed-memory-approval collection result or start collection automatically",
         reason:
           "keeps renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
         writes_files: false,
@@ -1871,7 +1871,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "review renewed-memory-approval freshness uncertainty before merge decisions",
         not_decision:
-          "PromptLane does not approve merges or verify renewed-memory-approval freshness before merge",
+          "LoopRelay does not approve merges or verify renewed-memory-approval freshness before merge",
         reason:
           "keeps merge readiness separate from renewed-memory-approval freshness uncertainty review",
         writes_files: false,
@@ -1884,7 +1884,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "review renewed-memory-approval freshness uncertainty before continuation handoff",
         not_decision:
-          "PromptLane does not approve handoffs or verify renewed-memory-approval freshness before handoff",
+          "LoopRelay does not approve handoffs or verify renewed-memory-approval freshness before handoff",
         reason:
           "keeps continuation handoff separate from renewed-memory-approval freshness uncertainty review",
         writes_files: false,
@@ -1897,7 +1897,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "review renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
         not_decision:
-          "PromptLane does not approve paste targets or verify renewed-memory-approval freshness before paste",
+          "LoopRelay does not approve paste targets or verify renewed-memory-approval freshness before paste",
         reason:
           "keeps paste readiness separate from renewed-memory-approval freshness uncertainty review",
         writes_files: false,
@@ -1910,7 +1910,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "review renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
         not_decision:
-          "PromptLane does not approve submissions or verify renewed-memory-approval freshness before submit",
+          "LoopRelay does not approve submissions or verify renewed-memory-approval freshness before submit",
         reason:
           "keeps submission readiness separate from renewed-memory-approval freshness uncertainty review",
         writes_files: false,
@@ -1923,7 +1923,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain",
         not_automated:
-          "PromptLane does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
+          "LoopRelay does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
         reason:
           "keeps post-submit freshness review tied to explicit local snapshot collection",
         writes_files: false,
@@ -1934,9 +1934,9 @@ function loopWorktree(): LoopWorktreeResponse {
         label:
           "Post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence",
         result_scope:
-          "post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
+          "post-submit collection result stays outside LoopRelay until the next explicit loop snapshot",
         not_stored:
-          "PromptLane does not detect, store, or sync post-submit collection result state",
+          "LoopRelay does not detect, store, or sync post-submit collection result state",
         reason:
           "keeps post-submit collection evidence tied to explicit local snapshot recording",
         writes_files: false,
@@ -1949,7 +1949,7 @@ function loopWorktree(): LoopWorktreeResponse {
         retry:
           "operator reruns the explicit post-submit loop collection flow when retry is needed",
         not_automated:
-          "PromptLane does not automatically retry post-submit collection commands or hidden recovery actions",
+          "LoopRelay does not automatically retry post-submit collection commands or hidden recovery actions",
         reason:
           "keeps post-submit collection retry control local and operator-triggered",
         writes_files: false,
@@ -1960,9 +1960,9 @@ function loopWorktree(): LoopWorktreeResponse {
         label:
           "Post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence",
         outcome_scope:
-          "post-submit retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
+          "post-submit retry attempt and outcome stay outside LoopRelay until the next explicit loop snapshot",
         not_stored:
-          "PromptLane does not detect, store, or sync post-submit retry success or failure state",
+          "LoopRelay does not detect, store, or sync post-submit retry success or failure state",
         reason:
           "keeps post-submit retry evidence tied to explicit local snapshot recording",
         writes_files: false,
@@ -1975,7 +1975,7 @@ function loopWorktree(): LoopWorktreeResponse {
         freshness_scope:
           "operator checks post-submit retry evidence freshness against the latest explicit loop snapshot",
         not_verified:
-          "PromptLane does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
+          "LoopRelay does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
         reason:
           "keeps post-submit retry evidence freshness review tied to local snapshot metadata",
         writes_files: false,
@@ -1986,9 +1986,9 @@ function loopWorktree(): LoopWorktreeResponse {
         label:
           "Post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence",
         result_scope:
-          "post-submit retry freshness result stays outside PromptLane until the next explicit loop snapshot",
+          "post-submit retry freshness result stays outside LoopRelay until the next explicit loop snapshot",
         not_stored:
-          "PromptLane does not detect, store, or sync post-submit retry freshness result state",
+          "LoopRelay does not detect, store, or sync post-submit retry freshness result state",
         reason:
           "keeps post-submit retry freshness evidence tied to explicit local snapshot recording",
         writes_files: false,
@@ -2001,7 +2001,7 @@ function loopWorktree(): LoopWorktreeResponse {
         collection_trigger:
           "collect a new explicit loop snapshot when post-submit retry freshness is uncertain",
         not_automated:
-          "PromptLane does not verify post-submit retry freshness or start collection automatically",
+          "LoopRelay does not verify post-submit retry freshness or start collection automatically",
         reason:
           "keeps post-submit retry freshness uncertainty resolution operator-triggered and local-first",
         writes_files: false,
@@ -2014,7 +2014,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "review post-submit retry freshness uncertainty before approving loop memory again",
         not_decision:
-          "PromptLane does not approve memory or verify post-submit retry freshness from this advisory",
+          "LoopRelay does not approve memory or verify post-submit retry freshness from this advisory",
         reason:
           "keeps renewed memory approval separate from post-submit retry freshness uncertainty review",
         writes_files: false,
@@ -2027,7 +2027,7 @@ function loopWorktree(): LoopWorktreeResponse {
         reminder:
           "collect a new explicit loop snapshot after approving loop memory again after post-submit retry",
         not_automated:
-          "PromptLane does not start collection from post-submit retry renewed memory approval or hidden approval signals",
+          "LoopRelay does not start collection from post-submit retry renewed memory approval or hidden approval signals",
         reason:
           "keeps post-submit retry renewed-memory-approval collection operator-triggered and local-first",
         writes_files: false,
@@ -2038,9 +2038,9 @@ function loopWorktree(): LoopWorktreeResponse {
         label:
           "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence",
         result_scope:
-          "post-submit retry renewed-memory-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+          "post-submit retry renewed-memory-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
         not_stored:
-          "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
+          "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
         reason:
           "keeps post-submit retry renewed-memory-approval collection evidence tied to explicit local snapshot recording",
         writes_files: false,
@@ -2053,7 +2053,7 @@ function loopWorktree(): LoopWorktreeResponse {
         reminder:
           "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval collection result is uncertain",
         not_automated:
-          "PromptLane does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
+          "LoopRelay does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
         reason:
           "keeps post-submit retry renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
         writes_files: false,
@@ -2066,7 +2066,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "review post-submit retry renewed-memory-approval freshness uncertainty before merge decisions",
         not_decision:
-          "PromptLane does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
+          "LoopRelay does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
         reason:
           "keeps merge readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
         writes_files: false,
@@ -2079,7 +2079,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "review post-submit retry renewed-memory-approval freshness uncertainty before continuation handoff",
         not_decision:
-          "PromptLane does not approve handoffs or verify post-submit retry renewed-memory-approval freshness before handoff",
+          "LoopRelay does not approve handoffs or verify post-submit retry renewed-memory-approval freshness before handoff",
         reason:
           "keeps continuation handoff separate from post-submit retry renewed-memory-approval freshness uncertainty review",
         writes_files: false,
@@ -2092,7 +2092,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "review post-submit retry renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
         not_decision:
-          "PromptLane does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
+          "LoopRelay does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
         reason:
           "keeps paste readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
         writes_files: false,
@@ -2105,7 +2105,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "review post-submit retry renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
         not_decision:
-          "PromptLane does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
+          "LoopRelay does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
         reason:
           "keeps submission readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
         writes_files: false,
@@ -2118,7 +2118,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain",
         not_automated:
-          "PromptLane does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
+          "LoopRelay does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
         reason:
           "keeps post-submit retry renewed-memory-approval freshness review tied to explicit local snapshot collection",
         writes_files: false,
@@ -2129,9 +2129,9 @@ function loopWorktree(): LoopWorktreeResponse {
         label:
           "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence",
         result_scope:
-          "post-submit retry renewed-memory-approval post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
+          "post-submit retry renewed-memory-approval post-submit collection result stays outside LoopRelay until the next explicit loop snapshot",
         not_stored:
-          "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
+          "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
         reason:
           "keeps post-submit retry renewed-memory-approval post-submit collection evidence tied to explicit local snapshot recording",
         writes_files: false,
@@ -2144,7 +2144,7 @@ function loopWorktree(): LoopWorktreeResponse {
         reminder:
           "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection result is uncertain",
         not_automated:
-          "PromptLane does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
+          "LoopRelay does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
         reason:
           "keeps post-submit retry renewed-memory-approval post-submit collection uncertainty resolution operator-triggered and local-first",
         writes_files: false,
@@ -2157,7 +2157,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before merge decisions",
         not_decision:
-          "PromptLane does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
+          "LoopRelay does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
         reason:
           "keeps merge readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
         writes_files: false,
@@ -2170,7 +2170,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before continuation handoff",
         not_decision:
-          "PromptLane does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
+          "LoopRelay does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
         reason:
           "keeps continuation handoff separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
         writes_files: false,
@@ -2183,7 +2183,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before pasting into Codex or Claude Code",
         not_decision:
-          "PromptLane does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
+          "LoopRelay does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
         reason:
           "keeps paste readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
         writes_files: false,
@@ -2196,7 +2196,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before submitting in Codex or Claude Code",
         not_decision:
-          "PromptLane does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
+          "LoopRelay does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
         reason:
           "keeps submission readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
         writes_files: false,
@@ -2209,7 +2209,7 @@ function loopWorktree(): LoopWorktreeResponse {
         advisory:
           "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
         not_monitored:
-          "PromptLane does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval post-submit collection freshness after submit",
+          "LoopRelay does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval post-submit collection freshness after submit",
         reason:
           "keeps post-submit retry renewed-memory-approval post-submit collection freshness review tied to explicit local snapshot collection",
         writes_files: false,
@@ -2220,9 +2220,9 @@ function loopWorktree(): LoopWorktreeResponse {
         label:
           "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence",
         not_stored:
-          "post-submit retry renewed-memory-approval post-submit collection freshness result stays outside PromptLane until the next explicit loop snapshot",
+          "post-submit retry renewed-memory-approval post-submit collection freshness result stays outside LoopRelay until the next explicit loop snapshot",
         not_detected:
-          "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
+          "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
         reason:
           "keeps post-submit retry renewed-memory-approval post-submit collection freshness evidence tied to explicit local snapshot recording",
         writes_files: false,
@@ -2235,7 +2235,7 @@ function loopWorktree(): LoopWorktreeResponse {
         reminder:
           "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
         not_automated:
-          "PromptLane does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically",
+          "LoopRelay does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically",
         reason:
           "keeps post-submit retry renewed-memory-approval post-submit collection freshness uncertainty resolution operator-triggered and local-first",
         writes_files: false,
@@ -2247,7 +2247,7 @@ function loopWorktree(): LoopWorktreeResponse {
       instruction:
         "paste the copied continuation brief into the active agent request box",
       reason:
-        "keeps PromptLane as the local handoff source while the user controls submission",
+        "keeps LoopRelay as the local handoff source while the user controls submission",
       auto_submit: false,
       writes_files: false,
       external_calls: false,
@@ -2282,7 +2282,7 @@ function loopWorktree(): LoopWorktreeResponse {
       not_transcript_import:
         "transcript import is not used as the source of truth",
       reason:
-        "PromptLane records explicit loop snapshots instead of importing agent transcripts",
+        "LoopRelay records explicit loop snapshots instead of importing agent transcripts",
       stores_transcripts: false,
       writes_files: false,
       external_calls: false,
@@ -2391,7 +2391,7 @@ function loopWorktree(): LoopWorktreeResponse {
       command_hint: {
         label: "Copy review brief command",
         command:
-          "promptlane loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
+          "looprelay loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
         provenance: {
           label: "Command provenance",
           source: "existing command-center continuation command",

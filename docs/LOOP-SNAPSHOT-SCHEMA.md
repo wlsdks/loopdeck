@@ -2,7 +2,7 @@
 
 Last updated: 2026-07-05
 
-This document defines the privacy-safe loop snapshot contract used by PromptLane.
+This document defines the privacy-safe loop snapshot contract used by LoopRelay.
 It reflects the current `src/loop/types.ts` domain model and the SQLite
 `loop_snapshots` storage shape.
 
@@ -101,7 +101,7 @@ document in the same PR when the public schema contract changes.
 | `outcome.status`                      | Human/user-recorded loop outcome state                      | Enum only                                                          |
 | `outcome.summary`                     | Safe local outcome summary                                  | Must be raw-free before broad status exposure                      |
 | `outcome.evidence_refs`               | User-provided evidence references                           | Keep out of aggregate status summaries unless explicitly scoped    |
-| `outcome.used_improvement_prompt_ids` | Prompt ids whose PromptLane improvements were actually used | Optional ids only; every id must belong to `prompt_ids`            |
+| `outcome.used_improvement_prompt_ids` | Prompt ids whose LoopRelay improvements were actually used | Optional ids only; every id must belong to `prompt_ids`            |
 | `next_brief`                          | Continuation brief metadata                                 | Summary metadata only; generated brief text is returned on request |
 | `privacy`                             | Invariant flags                                             | Must stay `false`, `false`, `true` respectively                    |
 
@@ -158,14 +158,14 @@ Snapshots may store:
 - aggregate counts
 - enum status fields
 - safe evidence references when the user provides them for local review
-- prompt ids explicitly confirmed as having their PromptLane improvement used
+- prompt ids explicitly confirmed as having their LoopRelay improvement used
 
 ## Surface Rules
 
 ### CLI
 
-`promptlane loop status`, `loop collect`, and `loop brief` may read snapshots.
-`promptlane loop outcome` may update one latest or explicitly selected snapshot.
+`looprelay loop status`, `loop collect`, and `loop brief` may read snapshots.
+`looprelay loop outcome` may update one latest or explicitly selected snapshot.
 
 CLI output must:
 
@@ -178,11 +178,11 @@ CLI output must:
   intermediate hook snapshot as backlog
 - expose only opaque `prmt_...` ids from the latest snapshot for explicit
   `--used-improvement-prompt` attribution, which must stay empty when no
-  PromptLane improvement was actually used
+  LoopRelay improvement was actually used
 
 ### MCP
 
-PromptLane MCP loop tools may expose snapshot-derived status and briefs.
+LoopRelay MCP loop tools may expose snapshot-derived status and briefs.
 
 MCP output must:
 
@@ -213,7 +213,7 @@ Web output must:
 
 The selected-snapshot outcome form submits only prompt ids the operator
 explicitly selected. A linked passing outcome with no selected id remains
-unproven as PromptLane improvement evidence.
+unproven as LoopRelay improvement evidence.
 
 ### Hooks And Service Collection
 
@@ -284,7 +284,7 @@ When changing the schema:
 2. Add or update focused domain tests.
 3. Add or update SQLite migration/storage tests if persistence changes.
 4. Update CLI/MCP/web schema tests for affected public surfaces.
-5. Update this document and `docs/PROMPTLANE.md` if the product contract changes.
+5. Update this document and `docs/LOOPRELAY.md` if the product contract changes.
 6. Run the relevant focused tests, then the full gate before merge.
 
 Default full gate:

@@ -15,7 +15,7 @@ import { join, resolve } from "node:path";
 
 const repoRoot = resolve(new URL("..", import.meta.url).pathname);
 const cliPath = join(repoRoot, "dist", "cli", "index.js");
-const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-release-smoke-"));
+const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-release-smoke-"));
 const dataDir = join(tempRoot, "data");
 const homeDir = join(tempRoot, "home");
 const serverPort = 18_000 + Math.floor(Math.random() * 10_000);
@@ -278,7 +278,7 @@ try {
   );
   assertIncludes(
     qualityEvidence,
-    "corepack pnpm promptlane quality-evidence --require-complete",
+    "corepack pnpm looprelay quality-evidence --require-complete",
     "Quality evidence release gate should include the product CLI parity command.",
   );
   assertNotIncludes(
@@ -308,7 +308,7 @@ function runCli(args) {
   });
   if (result.status !== 0) {
     throw new Error(
-      `CLI failed: promptlane ${args.join(" ")}\n${result.stderr}`,
+      `CLI failed: looprelay ${args.join(" ")}\n${result.stderr}`,
     );
   }
   return result.stdout.trim();
@@ -521,7 +521,7 @@ function getMarkdownPath(promptId) {
 }
 
 function openDb() {
-  const db = new Database(join(dataDir, "promptlane.sqlite"));
+  const db = new Database(join(dataDir, "looprelay.sqlite"));
   const walMode = db.pragma("journal_mode = WAL", { simple: true });
   assertEqual(
     String(walMode).toLowerCase(),

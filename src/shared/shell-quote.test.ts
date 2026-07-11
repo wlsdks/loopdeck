@@ -7,13 +7,13 @@ describe("quoteForShell", () => {
     expect(quoteForShell("feature/branch-filter")).toBe(
       "feature/branch-filter",
     );
-    expect(quoteForShell("promptlane")).toBe("promptlane");
+    expect(quoteForShell("looprelay")).toBe("looprelay");
     expect(quoteForShell("--data-dir")).toBe("--data-dir");
   });
 
   it("single-quotes command arguments with whitespace", () => {
-    expect(quoteForShell("/tmp/promptlane custom")).toBe(
-      "'/tmp/promptlane custom'",
+    expect(quoteForShell("/tmp/looprelay custom")).toBe(
+      "'/tmp/looprelay custom'",
     );
   });
 

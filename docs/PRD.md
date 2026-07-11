@@ -1,4 +1,4 @@
-# promptlane PRD
+# looprelay PRD
 
 Date: 2026-05-01
 
@@ -6,7 +6,7 @@ Status: Public beta candidate
 
 ## 1. Product Positioning
 
-`promptlane` is an AI coding prompt memory and improvement workspace, local-first.
+`looprelay` is an AI coding loop memory and improvement workspace, local-first.
 
 It records prompts entered into AI coding tools such as Claude Code and Codex, stores them locally, helps users search and review them, analyzes weak prompting patterns, and helps users write better follow-up requests.
 
@@ -145,27 +145,27 @@ SQLite must be rebuildable from Markdown where applicable. User-owned policy and
 
 Required public commands:
 
-- `promptlane setup`
-- `promptlane init`
-- `promptlane doctor`
-- `promptlane hook`
-- `promptlane install-hook`
-- `promptlane uninstall-hook`
-- `promptlane statusline`
-- `promptlane install-statusline`
-- `promptlane uninstall-statusline`
-- `promptlane service`
-- `promptlane server`
-- `promptlane list`
-- `promptlane search`
-- `promptlane show`
-- `promptlane open`
-- `promptlane delete`
-- `promptlane rebuild-index`
-- `promptlane import`
-- `promptlane import-job`
-- `promptlane export`
-- `promptlane improve`
+- `looprelay setup`
+- `looprelay init`
+- `looprelay doctor`
+- `looprelay hook`
+- `looprelay install-hook`
+- `looprelay uninstall-hook`
+- `looprelay statusline`
+- `looprelay install-statusline`
+- `looprelay uninstall-statusline`
+- `looprelay service`
+- `looprelay server`
+- `looprelay list`
+- `looprelay search`
+- `looprelay show`
+- `looprelay open`
+- `looprelay delete`
+- `looprelay rebuild-index`
+- `looprelay import`
+- `looprelay import-job`
+- `looprelay export`
+- `looprelay improve`
 
 CLI behavior:
 
@@ -204,7 +204,7 @@ Required screens:
 
 - archive list
 - prompt detail
-- PromptLane panel
+- LoopRelay panel
 - quality/dashboard view
 - project policy screen
 - anonymized export screen
@@ -233,7 +233,7 @@ Analysis should identify:
 - sensitive content signals
 - reuse/bookmark/copy signals
 
-PromptLane should:
+LoopRelay should:
 
 - generate a clearer draft
 - preserve user intent
@@ -332,14 +332,14 @@ Required local gates:
 - `corepack pnpm smoke:package-install`
 - `corepack pnpm pack:dry-run`
 - `corepack pnpm evidence:quality -- --require-complete`
-- `corepack pnpm promptlane quality-evidence --require-complete`
+- `corepack pnpm looprelay quality-evidence --require-complete`
 - `git diff --check`
 
 Benchmark v1 measures:
 
 - privacy leak count
 - retrieval top-k
-- PromptLane gap fix rate
+- LoopRelay gap fix rate
 - Prompt Quality Score calibration
 - analytics usefulness
 - local runtime latency
@@ -353,7 +353,7 @@ The 1.0.0 release is acceptable when:
 - prompts are redacted before persistent storage
 - Markdown and SQLite records are created
 - CLI and web UI can list/search/show/delete prompts
-- PromptLane can produce and save copy-based improvement drafts
+- LoopRelay can produce and save copy-based improvement drafts
 - project capture policy is enforced
 - CLI import dry-run/execute/resume works
 - anonymized export preview/job flow works
@@ -363,7 +363,7 @@ The 1.0.0 release is acceptable when:
 
 ## 17. Open Questions
 
-- How should beta users provide feedback on PromptLane quality?
+- How should beta users provide feedback on LoopRelay quality?
 - When should semantic search be introduced, and should it be local-only?
 - Should web import upload be added before a stable release?
 - Which platforms should be considered officially supported after the beta?

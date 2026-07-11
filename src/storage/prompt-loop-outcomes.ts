@@ -99,8 +99,8 @@ function effectivenessSummary(
       (outcome) => outcome.status === "passed",
     );
     return linkedPassed
-      ? "The linked loop passed, but use of this PromptLane improvement was not recorded."
-      : "A loop outcome is linked, but use of this PromptLane improvement was not recorded.";
+      ? "The linked loop passed, but use of this LoopRelay improvement was not recorded."
+      : "A loop outcome is linked, but use of this LoopRelay improvement was not recorded.";
   }
 
   const status =

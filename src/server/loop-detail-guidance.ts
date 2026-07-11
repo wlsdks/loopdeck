@@ -1,4 +1,4 @@
-import type { PromptLaneStatusActivityMergeReadiness } from "../loop/status.js";
+import type { LoopRelayStatusActivityMergeReadiness } from "../loop/status.js";
 import { quoteForShell } from "../shared/shell-quote.js";
 
 type SnapshotAgeCandidate = {
@@ -228,15 +228,15 @@ export function snapshotAgeFor(input: {
 }
 
 export function readinessSummaryFor(
-  mergeReadiness: PromptLaneStatusActivityMergeReadiness,
+  mergeReadiness: LoopRelayStatusActivityMergeReadiness,
 ): {
   label: "Readiness summary";
-  status: PromptLaneStatusActivityMergeReadiness["status"];
+  status: LoopRelayStatusActivityMergeReadiness["status"];
   reason:
     | "selected worktree has recorded evidence and passing outcome"
     | "latest selected worktree outcome is not passing"
     | "latest selected worktree outcome has no evidence refs";
-  next_action: PromptLaneStatusActivityMergeReadiness["next_action"];
+  next_action: LoopRelayStatusActivityMergeReadiness["next_action"];
 } {
   if (mergeReadiness.status === "missing_evidence") {
     return {
@@ -295,7 +295,7 @@ function selectedBriefCommand(selection: {
   branch?: string;
 }): string {
   const parts = [
-    "promptlane",
+    "looprelay",
     "loop",
     "brief",
     "--worktree",

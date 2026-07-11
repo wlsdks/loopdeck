@@ -122,12 +122,12 @@ function LoopRow({ loop }: { loop: LoopSummary }) {
                 ? formatDate(loop.compact_boundary.created_at)
                 : ""}
             </span>
-            <code>promptlane loop collect</code>
+            <code>looprelay loop collect</code>
           </>
         ) : (
           <>
             <span className="status-pill good">Current</span>
-            <code>promptlane loop brief</code>
+            <code>looprelay loop brief</code>
           </>
         )}
         <button

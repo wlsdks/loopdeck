@@ -1,6 +1,6 @@
 # Package Contents
 
-This document describes what should be included when `promptlane` is
+This document describes what should be included when `looprelay` is
 published to npm.
 
 Check the current package with:
@@ -21,8 +21,8 @@ npm pack --dry-run --json --ignore-scripts
 
 The npm package intentionally includes:
 
-- `dist/cli`: the compiled `promptlane` CLI entrypoint plus experimental
-  `pl-claude` and `pl-codex` wrapper entrypoints
+- `dist/cli`: the compiled `looprelay` CLI entrypoint plus experimental
+  `lr-claude` and `lr-codex` wrapper entrypoints
 - `dist/server`: the compiled local Fastify server and web API
 - `dist/web`: the compiled React web UI assets
 - `dist/storage`, `dist/analysis`, `dist/hooks`, `dist/importer`,
@@ -32,10 +32,10 @@ The npm package intentionally includes:
 - public product and release docs under `docs/`
   - includes `docs/LEGAL_USAGE_GUIDE.md` so users can inspect the provider
     documentation boundary for agent-judge mode
-  - includes `docs/PROMPTLANE.md`, `docs/PROMPTLANE-RUNTIME-HISTORY.md`,
-    `docs/PROMPTLANE-LEGACY-SURFACES.md`, and `docs/LOOP-SNAPSHOT-SCHEMA.md` so
-    installed users can inspect the active PromptLane product contract, the
-    PromptLane legacy decision, the remaining legacy surface allowlist, and the
+  - includes `docs/LOOPRELAY.md`, `docs/LOOPRELAY-RUNTIME-HISTORY.md`,
+    `docs/LOOPRELAY-RUNTIME-SURFACES.md`, and `docs/LOOP-SNAPSHOT-SCHEMA.md` so
+    installed users can inspect the active LoopRelay product contract, the
+    LoopRelay legacy decision, the remaining legacy surface allowlist, and the
     loop snapshot privacy schema
   - includes `docs/AGENT-HARNESS.md` and `docs/INSTRUCTION-FILES.md` so
     installed plugin and CLI users can inspect the Codex/Claude Code harness
@@ -43,32 +43,32 @@ The npm package intentionally includes:
   - includes `docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md` and
     `docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md` so package users can inspect
     repeatable Codex/Claude Code integration and web user-flow evidence
-  - includes `docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-plan.md`
+  - includes `docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-plan.md`
     so package-local README and plugin docs can link to the compatibility gate
-  - includes `docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-issue-slices.md`
-    and `docs/superpowers/plans/2026-07-04-promptlane-runtime-id-inventory.json`
+  - includes `docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-issue-slices.md`
+    and `docs/superpowers/plans/2026-07-04-looprelay-runtime-id-inventory.json`
     so rename work starts from shippable slices and a machine-checkable runtime
     id inventory
-  - includes `docs/superpowers/plans/2026-07-04-promptlane-claude-dual-namespace-decision.md`
-    so the package records why `/promptlane:*` command files are deferred until a
+  - includes `docs/superpowers/plans/2026-07-04-looprelay-claude-dual-namespace-decision.md`
+    so the package records why `/looprelay:*` command files are deferred until a
     real Claude Code namespace alias path is proven
-  - includes `docs/superpowers/plans/2026-07-04-promptlane-mcp-server-name-decision.md`
-    so the package records why `promptlane` remains the canonical MCP server
-    name during the PromptLane compatibility window
-  - includes `docs/superpowers/plans/2026-07-04-promptlane-deprecation-readiness.md`
+  - includes `docs/superpowers/plans/2026-07-04-looprelay-mcp-server-name-decision.md`
+    so the package records why `looprelay` remains the canonical MCP server
+    name during the LoopRelay compatibility window
+  - includes `docs/superpowers/plans/2026-07-04-looprelay-deprecation-readiness.md`
     so future rename work has release-note, support, rollback, and upgrade-smoke
     gates before any old id is deprecated
   - includes `docs/benchmark-fixtures/real.example.json` as a copyable raw-free
     template for consent-bearing real benchmark fixtures; it is non-runnable
     with `template_only: true`; local
     `docs/benchmark-fixtures/real.json` or a file passed to
-    `promptlane benchmark --fixture-set real --fixture-file` remains
+    `looprelay benchmark --fixture-set real --fixture-file` remains
     operator-owned and is not shipped; installed users can create the starter
-    shape with `promptlane benchmark init-fixture --output` and must replace
+    shape with `looprelay benchmark init-fixture --output` and must replace
     every example and outcome before setting `template_only` to `false`
 - Claude Code plugin artifacts under `.claude-plugin`, `commands`, and
   `integrations/claude-code`
-- Codex plugin artifacts under `plugins/promptlane`
+- Codex plugin artifacts under `plugins/looprelay`
 - local verification scripts:
   - `scripts/benchmark.mjs`
   - `scripts/benchmark-runner.mjs`
@@ -98,7 +98,7 @@ The npm package should not include:
 - source TypeScript files under `src/`
 - test fixtures under `tests/`
 - GitHub workflow and issue template files under `.github/`
-- local runtime data such as `.promptlane/`, SQLite databases, logs,
+- local runtime data such as `.looprelay/`, SQLite databases, logs,
   spool files, quarantine files, and prompt archives
 - environment files such as `.env`
 - local package artifacts such as `*.tgz`

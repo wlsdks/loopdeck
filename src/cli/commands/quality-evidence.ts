@@ -79,7 +79,7 @@ type QualityEvidenceSummary = {
 export function registerQualityEvidenceCommand(program: Command): void {
   program
     .command("quality-evidence")
-    .description("Report PromptLane 9.5 quality evidence and blockers.")
+    .description("Report LoopRelay 9.5 quality evidence and blockers.")
     .option("--json", "Print JSON.")
     .option(
       "--operator-brief",
@@ -127,7 +127,7 @@ export function qualityEvidenceForCli(
     if (runtimeEvidence.status !== "ready") {
       summary.release_warnings.push({
         label: `live ${runtimeTool} runtime ${runtimeEvidence.status}`,
-        detail: `The installed ${runtimeTool} runtime is ${runtimeEvidence.ingest_state}; do not claim live integration readiness until promptlane doctor ${runtimeTool} reports ready.`,
+        detail: `The installed ${runtimeTool} runtime is ${runtimeEvidence.ingest_state}; do not claim live integration readiness until looprelay doctor ${runtimeTool} reports ready.`,
       });
     }
     if (options.requireRuntimeReady && runtimeEvidence.status !== "ready") {
@@ -140,7 +140,7 @@ export function qualityEvidenceForCli(
   if (options.requireComplete && result.status !== 0) {
     throw new UserError(
       result.stderr.trim() ||
-        "promptlane_95_quality pending; --require-complete refuses to pass.",
+        "looprelay_95_quality pending; --require-complete refuses to pass.",
     );
   }
 
@@ -165,7 +165,7 @@ function runQualityEvidenceScript(options: QualityEvidenceCliOptions): {
 
   if (!result.stdout.trim()) {
     throw new UserError(
-      result.stderr.trim() || "Unable to read PromptLane quality evidence.",
+      result.stderr.trim() || "Unable to read LoopRelay quality evidence.",
     );
   }
 
@@ -248,7 +248,7 @@ function formatSummary(summary: QualityEvidenceSummary): string {
       : ["- none"];
 
   return [
-    "PromptLane 9.5 quality evidence",
+    "LoopRelay 9.5 quality evidence",
     `Status: ${summary.status}`,
     `Evidence scope: ${summary.evidence_scope}`,
     `Live runtime evaluated: ${summary.live_runtime_evaluated ? "yes" : "no"}`,
@@ -327,7 +327,7 @@ function formatOperatorBrief(summary: QualityEvidenceSummary): string {
   const evidenceComplete = nativeDialog?.status === "complete";
 
   return [
-    "PromptLane native dialog operator brief",
+    "LoopRelay native dialog operator brief",
     `Status: ${nativeDialog?.status ?? "unknown"}`,
     ...(nativeDialog?.approval_status
       ? [`approval_status=${nativeDialog.approval_status}`]
@@ -340,7 +340,7 @@ function formatOperatorBrief(summary: QualityEvidenceSummary): string {
       : []),
     ...(slice?.command ? [`Command: ${slice.command}`] : []),
     "Refusal preflight: corepack pnpm dogfood:mcp-native-dialog-refusal",
-    "Expected refusal: command refuses before opening a native dialog unless PROMPTLANE_NATIVE_DIALOG_APPROVED=1 is set.",
+    "Expected refusal: command refuses before opening a native dialog unless LOOPRELAY_NATIVE_DIALOG_APPROVED=1 is set.",
     ...(slice?.preconditions && slice.preconditions.length > 0
       ? [`Preconditions: ${slice.preconditions.join("; ")}`]
       : []),

@@ -53,7 +53,7 @@ function emptyPromptHint(
   if (focus === "quality-gap") {
     return "Try adding verification criteria, output format, and scope.";
   }
-  return "Run promptlane setup --profile coach, send one Codex or Claude Code request, then check the first score and improvement suggestion.";
+  return "Run looprelay setup --profile coach, send one Codex or Claude Code request, then check the first score and improvement suggestion.";
 }
 
 function emptyPromptSecondaryHint(
@@ -75,10 +75,10 @@ function emptyPromptCommands(
   }
 
   return [
-    "promptlane start",
-    "promptlane setup --profile coach",
-    "promptlane doctor claude-code",
-    "promptlane doctor codex",
-    "promptlane coach",
+    "looprelay start",
+    "looprelay setup --profile coach",
+    "looprelay doctor claude-code",
+    "looprelay doctor codex",
+    "looprelay coach",
   ];
 }

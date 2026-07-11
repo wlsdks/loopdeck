@@ -14,25 +14,25 @@ describe("start guide", () => {
       "Send one real coding prompt",
       "See the first score",
     ]);
-    expect(output.indexOf("promptlane coach")).toBeLessThan(
+    expect(output.indexOf("looprelay coach")).toBeLessThan(
       output.indexOf("Troubleshooting"),
     );
-    expect(output.indexOf("promptlane doctor claude-code")).toBeGreaterThan(
+    expect(output.indexOf("looprelay doctor claude-code")).toBeGreaterThan(
       output.indexOf("Troubleshooting"),
     );
     expect(output.indexOf("claude mcp add")).toBeGreaterThan(
       output.indexOf("Troubleshooting"),
     );
-    expect(output).toContain("promptlane server");
-    expect(output).not.toContain("promptlane open");
+    expect(output).toContain("looprelay server");
+    expect(output).not.toContain("looprelay open");
 
     const sendStep = guide.steps.find(
       (step) => step.title === "Send one real coding prompt",
     );
-    expect(sendStep?.detail).toContain("/promptlane:improve-last");
-    expect(sendStep?.detail).toContain("PromptLane rewrite guidance");
-    expect(sendStep?.detail).not.toContain("promptlane rewrite");
-    expect(output).toContain("/promptlane:improve-last");
+    expect(sendStep?.detail).toContain("/looprelay:improve-last");
+    expect(sendStep?.detail).toContain("LoopRelay rewrite guidance");
+    expect(sendStep?.detail).not.toContain("looprelay rewrite");
+    expect(output).toContain("/looprelay:improve-last");
   });
 
   it("can focus on one tool without hiding the coach flow", () => {
@@ -45,9 +45,9 @@ describe("start guide", () => {
     expect(guide.tools).toEqual(["codex"]);
     expect(sendStep?.detail).toContain("Inside Codex");
     expect(sendStep?.detail).toContain("coach_prompt");
-    expect(output).toContain("codex mcp add promptlane");
-    expect(output).toContain("promptlane doctor codex");
-    expect(output).toContain("promptlane coach");
+    expect(output).toContain("codex mcp add looprelay");
+    expect(output).toContain("looprelay doctor codex");
+    expect(output).toContain("looprelay coach");
     expect(output).not.toContain("claude mcp add");
   });
 
@@ -70,7 +70,7 @@ describe("start guide", () => {
     const output = formatStartGuide(guide);
 
     expect(guide.steps[0].commands).toEqual([
-      "promptlane setup --profile coach --register-mcp --open-web",
+      "looprelay setup --profile coach --register-mcp --open-web",
     ]);
     expect(output).toContain("opens the web workspace automatically");
     expect(output.indexOf("--open-web")).toBeLessThan(
@@ -80,13 +80,13 @@ describe("start guide", () => {
 
   it("never leaks the local node binary or dist path even when invoked from a built CLI", () => {
     // Simulate running `node /Users/<who>/.../dist/cli/index.js start`. With
-    // the previous behavior `defaultPromptLaneEntry` would echo the
+    // the previous behavior `defaultLoopRelayEntry` would echo the
     // absolute interpreter and dist path into the guidance, leaking the
     // maintainer's home directory in the copy-paste-friendly command.
     const originalArgv = process.argv;
     process.argv = [
       "/Users/secret-dev/.nvm/versions/node/v20.20.0/bin/node",
-      "/Users/secret-dev/side-project/promptlane/dist/cli/index.js",
+      "/Users/secret-dev/side-project/looprelay/dist/cli/index.js",
       "start",
     ];
     try {
@@ -94,9 +94,9 @@ describe("start guide", () => {
       const output = formatStartGuide(guide);
 
       expect(output).toContain(
-        "claude mcp add --transport stdio promptlane -- promptlane mcp",
+        "claude mcp add --transport stdio looprelay -- looprelay mcp",
       );
-      expect(output).toContain("codex mcp add promptlane -- promptlane mcp");
+      expect(output).toContain("codex mcp add looprelay -- looprelay mcp");
       expect(output).not.toContain("/Users/secret-dev/");
       expect(output).not.toMatch(/\bdist\/cli\/index\.js\b/);
     } finally {

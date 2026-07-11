@@ -2,9 +2,9 @@ import {
   createBenchmarkCandidateReport,
   type BenchmarkCandidateReport,
 } from "../analysis/benchmark-candidates.js";
-import { loadHookAuth, loadPromptLaneConfig } from "../config/config.js";
+import { loadHookAuth, loadLoopRelayConfig } from "../config/config.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
-import type { PromptLaneMcpToolDefinition } from "./score-tool-definition-types.js";
+import type { LoopRelayMcpToolDefinition } from "./score-tool-definition-types.js";
 import type { ScorePromptToolOptions } from "./score-tool-types.js";
 import { storageUnavailableMessage } from "./storage-unavailable.js";
 
@@ -27,14 +27,14 @@ export type GetBenchmarkCandidatesToolResult =
       message: string;
     };
 
-export const GET_BENCHMARK_CANDIDATES_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
+export const GET_BENCHMARK_CANDIDATES_TOOL_DEFINITION: LoopRelayMcpToolDefinition =
   {
     name: "get_benchmark_candidates",
     description:
-      "Inspect local PromptLane benchmark readiness from at most the latest 100 loop snapshots. Use this before preparing a consent-bearing real benchmark fixture. Returns only opaque prompt and snapshot ids, outcome status, counts, staged readiness diagnostics, next action, and privacy flags. It never returns prompt bodies, raw paths, outcome summaries, evidence references, transcripts, or external LLM results.",
+      "Inspect local LoopRelay benchmark readiness from at most the latest 100 loop snapshots. Use this before preparing a consent-bearing real benchmark fixture. Returns only opaque prompt and snapshot ids, outcome status, counts, staged readiness diagnostics, next action, and privacy flags. It never returns prompt bodies, raw paths, outcome summaries, evidence references, transcripts, or external LLM results.",
     annotations: {
       ...LOCAL_READ_ONLY_TOOL_ANNOTATIONS,
-      title: "Inspect PromptLane benchmark readiness",
+      title: "Inspect LoopRelay benchmark readiness",
     },
     inputSchema: {
       type: "object",
@@ -173,7 +173,7 @@ export function getBenchmarkCandidatesTool(
   }
 
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const auth = loadHookAuth(options.dataDir);
     const storage = createSqlitePromptStorage({
       dataDir: config.data_dir,

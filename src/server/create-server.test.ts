@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { initializePromptLane } from "../config/config.js";
+import { initializeLoopRelay } from "../config/config.js";
 import type { LoopSnapshot } from "../loop/types.js";
 import { createServer } from "./create-server.js";
 import type { CompactBoundary } from "../storage/compact-boundaries.js";
@@ -48,9 +48,9 @@ afterEach(() => {
 });
 
 function createPersistedTestDataDir(): string {
-  const dataDir = join(tmpdir(), `promptlane-server-${randomUUID()}`);
+  const dataDir = join(tmpdir(), `looprelay-server-${randomUUID()}`);
   mkdirSync(dataDir, { recursive: true });
-  initializePromptLane({ dataDir });
+  initializeLoopRelay({ dataDir });
   persistedDataDirs.push(dataDir);
   return dataDir;
 }
@@ -122,7 +122,7 @@ describe("createServer P2 ingest boundary", () => {
       .csrf_token;
 
     expect(session.statusCode).toBe(200);
-    expect(cookie).toContain("promptlane_session=");
+    expect(cookie).toContain("looprelay_session=");
     expect(csrfToken).toBeTypeOf("string");
 
     const noCsrf = await server.inject({
@@ -350,7 +350,7 @@ describe("createServer P2 ingest boundary", () => {
     expect(response.statusCode).toBe(200);
     expect(response.json()).toMatchObject({
       data: {
-        data_dir: "/tmp/promptlane-test",
+        data_dir: "/tmp/looprelay-test",
         redaction_mode: "mask",
         server: {
           host: "127.0.0.1",
@@ -477,7 +477,7 @@ describe("createServer P2 ingest boundary", () => {
         items: [
           {
             project_id: "proj_memory",
-            label: "promptlane",
+            label: "looprelay",
             alias: "workbench",
             path_kind: "project_root",
             prompt_count: 2,
@@ -922,7 +922,7 @@ describe("createServer P2 ingest boundary", () => {
       },
     });
     expect(response.json<{ data: { prompt: string } }>().data.prompt).toContain(
-      "promptlane loop collect again",
+      "looprelay loop collect again",
     );
     expect(serialized).not.toContain("Make this better");
     expect(serialized).not.toContain("Compact summary with sk-proj-secret");
@@ -944,7 +944,7 @@ describe("createServer P2 ingest boundary", () => {
 
     expect(response.statusCode).toBe(404);
     expect(response.body).toContain(
-      "No loop snapshot found. Send one Codex or Claude Code prompt, run `promptlane coach` to confirm the first score, then run `promptlane loop collect` before retrying `promptlane loop brief`.",
+      "No loop snapshot found. Send one Codex or Claude Code prompt, run `looprelay coach` to confirm the first score, then run `looprelay loop collect` before retrying `looprelay loop brief`.",
     );
     expect(response.body).not.toContain("/Users/example");
     expect(response.body).not.toContain("sk-proj-secret");
@@ -967,7 +967,7 @@ describe("createServer P2 ingest boundary", () => {
     expect(response.statusCode).toBe(404);
     const detail = response.json<{ detail: string }>().detail;
     expect(response.body).toContain(
-      "Loop snapshot not found. Run `promptlane loop collect` after the next Codex or Claude Code turn, then retry `promptlane loop brief` for the latest safe continuation brief.",
+      "Loop snapshot not found. Run `looprelay loop collect` after the next Codex or Claude Code turn, then retry `looprelay loop brief` for the latest safe continuation brief.",
     );
     expect(detail).not.toContain("missing-loop");
     expect(response.body).not.toContain("/Users/example");
@@ -992,7 +992,7 @@ describe("createServer P2 ingest boundary", () => {
 
     expect(response.statusCode).toBe(404);
     expect(response.body).toContain(
-      "No loop snapshot matched the selected worktree/session/branch filters. Run `promptlane loop collect --worktree missing-worktree --branch feature/missing-loop` from that project, or retry `promptlane loop brief` with fewer filters.",
+      "No loop snapshot matched the selected worktree/session/branch filters. Run `looprelay loop collect --worktree missing-worktree --branch feature/missing-loop` from that project, or retry `looprelay loop brief` with fewer filters.",
     );
     expect(response.body).not.toContain("/Users/example");
     expect(response.body).not.toContain("sk-proj-secret");
@@ -1174,7 +1174,7 @@ describe("createServer P2 ingest boundary", () => {
           action: "copy selected continuation brief",
           reason:
             "uses the selected worktree/session/branch filters without auto-submitting",
-          command: "promptlane loop brief --worktree review-worktree",
+          command: "looprelay loop brief --worktree review-worktree",
           writes_files: false,
           external_calls: false,
         },
@@ -1233,7 +1233,7 @@ describe("createServer P2 ingest boundary", () => {
         continuation_safety_non_persistence_note: {
           label: "Safety review state",
           state:
-            "reviewed guidance state is not stored or synchronized by PromptLane",
+            "reviewed guidance state is not stored or synchronized by LoopRelay",
           reminder:
             "operator re-checks safety guidance each time before manual agent submission",
           reason:
@@ -1295,7 +1295,7 @@ describe("createServer P2 ingest boundary", () => {
           retry_scope:
             "operator manually retries the selected brief copy action",
           not_automatic:
-            "PromptLane does not automatically retry clipboard writes or submit prompts",
+            "LoopRelay does not automatically retry clipboard writes or submit prompts",
           reason:
             "keeps retry control with the operator before any Codex or Claude Code paste",
           writes_files: false,
@@ -1317,7 +1317,7 @@ describe("createServer P2 ingest boundary", () => {
           check:
             "operator verifies the active Codex or Claude Code request box before paste",
           not_inspection:
-            "PromptLane does not inspect agent UI state or target contents",
+            "LoopRelay does not inspect agent UI state or target contents",
           reason:
             "keeps target selection manual before any continuation handoff",
           writes_files: false,
@@ -1328,9 +1328,9 @@ describe("createServer P2 ingest boundary", () => {
           boundary:
             "paste destination is a manual operator choice in Codex or Claude Code",
           not_verified:
-            "PromptLane does not verify active windows, target contents, or paste success",
+            "LoopRelay does not verify active windows, target contents, or paste success",
           reason:
-            "keeps destination verification outside PromptLane automation before submission",
+            "keeps destination verification outside LoopRelay automation before submission",
           writes_files: false,
           external_calls: false,
         },
@@ -1339,7 +1339,7 @@ describe("createServer P2 ingest boundary", () => {
           submission:
             "operator submits the pasted brief manually in Codex or Claude Code",
           not_automated:
-            "PromptLane does not press enter, click submit, or record submitted state",
+            "LoopRelay does not press enter, click submit, or record submitted state",
           reason:
             "keeps final agent execution under operator control after paste",
           writes_files: false,
@@ -1348,9 +1348,9 @@ describe("createServer P2 ingest boundary", () => {
         continuation_safety_submission_result_non_persistence_note: {
           label: "Submission result non-persistence",
           result_scope:
-            "agent response and submission result stay outside PromptLane until the next explicit loop snapshot",
+            "agent response and submission result stay outside LoopRelay until the next explicit loop snapshot",
           not_stored:
-            "PromptLane does not detect, store, or sync submitted state after handoff",
+            "LoopRelay does not detect, store, or sync submitted state after handoff",
           reason:
             "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring",
           writes_files: false,
@@ -1361,7 +1361,7 @@ describe("createServer P2 ingest boundary", () => {
           reminder:
             "collect the next loop snapshot explicitly after the agent response is ready",
           not_background:
-            "PromptLane does not start collection from submission, transcript changes, or agent UI activity",
+            "LoopRelay does not start collection from submission, transcript changes, or agent UI activity",
           reason:
             "keeps post-submission collection operator-triggered and local-first",
           writes_files: false,
@@ -1372,7 +1372,7 @@ describe("createServer P2 ingest boundary", () => {
           result_scope:
             "collection result is not persisted until the operator records the next explicit loop snapshot",
           not_stored:
-            "PromptLane does not store, sync, or infer collection result state from agent UI activity",
+            "LoopRelay does not store, sync, or infer collection result state from agent UI activity",
           reason:
             "keeps collection evidence tied to explicit local snapshot recording",
           writes_files: false,
@@ -1383,7 +1383,7 @@ describe("createServer P2 ingest boundary", () => {
           retry:
             "operator reruns the explicit loop collection flow when retry is needed",
           not_automated:
-            "PromptLane does not automatically retry collection commands or hidden recovery actions",
+            "LoopRelay does not automatically retry collection commands or hidden recovery actions",
           reason:
             "keeps retry control local and operator-triggered after collection uncertainty",
           writes_files: false,
@@ -1392,9 +1392,9 @@ describe("createServer P2 ingest boundary", () => {
         continuation_safety_retry_outcome_non_persistence_note: {
           label: "Retry outcome non-persistence",
           outcome_scope:
-            "retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
+            "retry attempt and outcome stay outside LoopRelay until the next explicit loop snapshot",
           not_stored:
-            "PromptLane does not detect, store, or sync retry success or failure state",
+            "LoopRelay does not detect, store, or sync retry success or failure state",
           reason:
             "keeps retry evidence tied to explicit local snapshot recording",
           writes_files: false,
@@ -1405,7 +1405,7 @@ describe("createServer P2 ingest boundary", () => {
           freshness_check:
             "operator checks freshness against the latest explicit loop snapshot evidence",
           not_verified:
-            "PromptLane does not verify freshness from git status, transcripts, or agent UI activity",
+            "LoopRelay does not verify freshness from git status, transcripts, or agent UI activity",
           reason:
             "keeps evidence freshness review tied to local snapshot metadata",
           writes_files: false,
@@ -1414,9 +1414,9 @@ describe("createServer P2 ingest boundary", () => {
         continuation_safety_freshness_result_non_persistence_note: {
           label: "Freshness result non-persistence",
           result_scope:
-            "freshness result stays outside PromptLane until the next explicit loop snapshot",
+            "freshness result stays outside LoopRelay until the next explicit loop snapshot",
           not_stored:
-            "PromptLane does not detect, store, or sync freshness result state",
+            "LoopRelay does not detect, store, or sync freshness result state",
           reason:
             "keeps freshness evidence tied to explicit local snapshot recording",
           writes_files: false,
@@ -1427,7 +1427,7 @@ describe("createServer P2 ingest boundary", () => {
           reminder:
             "collect a new explicit loop snapshot when evidence freshness is uncertain",
           not_automated:
-            "PromptLane does not verify freshness or start collection automatically",
+            "LoopRelay does not verify freshness or start collection automatically",
           reason:
             "keeps freshness uncertainty resolution operator-triggered and local-first",
           writes_files: false,
@@ -1437,7 +1437,7 @@ describe("createServer P2 ingest boundary", () => {
           label: "Pre-merge freshness advisory",
           advisory: "review freshness uncertainty before merge decisions",
           not_decision:
-            "PromptLane does not approve merges or verify freshness before merge",
+            "LoopRelay does not approve merges or verify freshness before merge",
           reason:
             "keeps merge readiness separate from freshness uncertainty review",
           writes_files: false,
@@ -1447,7 +1447,7 @@ describe("createServer P2 ingest boundary", () => {
           label: "Pre-memory-approval freshness advisory",
           advisory: "review freshness uncertainty before approving loop memory",
           not_decision:
-            "PromptLane does not approve memory or verify freshness from this note",
+            "LoopRelay does not approve memory or verify freshness from this note",
           reason:
             "keeps memory approval separate from freshness uncertainty review",
           writes_files: false,
@@ -1458,7 +1458,7 @@ describe("createServer P2 ingest boundary", () => {
           reminder:
             "collect a new explicit loop snapshot after approving loop memory",
           not_automated:
-            "PromptLane does not start collection from memory approval or approval state changes",
+            "LoopRelay does not start collection from memory approval or approval state changes",
           reason:
             "keeps post-approval collection operator-triggered and local-first",
           writes_files: false,
@@ -1468,9 +1468,9 @@ describe("createServer P2 ingest boundary", () => {
           {
             label: "Post-memory-approval collection result non-persistence",
             result_scope:
-              "post-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+              "post-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
             not_stored:
-              "PromptLane does not detect, store, or sync post-approval collection result state",
+              "LoopRelay does not detect, store, or sync post-approval collection result state",
             reason:
               "keeps post-approval collection evidence tied to explicit local snapshot recording",
             writes_files: false,
@@ -1482,7 +1482,7 @@ describe("createServer P2 ingest boundary", () => {
             retry:
               "operator reruns the explicit post-approval loop collection flow when retry is needed",
             not_automated:
-              "PromptLane does not automatically retry post-approval collection commands or hidden recovery actions",
+              "LoopRelay does not automatically retry post-approval collection commands or hidden recovery actions",
             reason:
               "keeps post-approval collection retry control local and operator-triggered",
             writes_files: false,
@@ -1492,9 +1492,9 @@ describe("createServer P2 ingest boundary", () => {
           {
             label: "Post-memory-approval retry outcome non-persistence",
             outcome_scope:
-              "post-approval retry outcome stays outside PromptLane until the next explicit loop snapshot",
+              "post-approval retry outcome stays outside LoopRelay until the next explicit loop snapshot",
             not_stored:
-              "PromptLane does not detect, store, or sync post-approval retry success or failure state",
+              "LoopRelay does not detect, store, or sync post-approval retry success or failure state",
             reason:
               "keeps post-approval retry evidence tied to explicit local snapshot recording",
             writes_files: false,
@@ -1506,7 +1506,7 @@ describe("createServer P2 ingest boundary", () => {
             review:
               "operator checks retry evidence freshness against the latest explicit loop snapshot",
             not_verified:
-              "PromptLane does not verify post-approval retry freshness from git status, transcripts, or agent UI activity",
+              "LoopRelay does not verify post-approval retry freshness from git status, transcripts, or agent UI activity",
             reason:
               "keeps post-approval retry freshness review tied to local snapshot metadata",
             writes_files: false,
@@ -1517,9 +1517,9 @@ describe("createServer P2 ingest boundary", () => {
             label:
               "Post-memory-approval retry freshness result non-persistence",
             result_scope:
-              "post-approval retry freshness result stays outside PromptLane until the next explicit loop snapshot",
+              "post-approval retry freshness result stays outside LoopRelay until the next explicit loop snapshot",
             not_stored:
-              "PromptLane does not detect, store, or sync post-approval retry freshness result state",
+              "LoopRelay does not detect, store, or sync post-approval retry freshness result state",
             reason:
               "keeps post-approval retry freshness evidence tied to explicit local snapshot recording",
             writes_files: false,
@@ -1532,7 +1532,7 @@ describe("createServer P2 ingest boundary", () => {
             reminder:
               "collect a new explicit loop snapshot when post-approval retry freshness is uncertain",
             not_automated:
-              "PromptLane does not verify post-approval retry freshness or start collection automatically",
+              "LoopRelay does not verify post-approval retry freshness or start collection automatically",
             reason:
               "keeps post-approval retry freshness uncertainty resolution operator-triggered and local-first",
             writes_files: false,
@@ -1545,7 +1545,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "review post-approval retry freshness uncertainty before approving loop memory again",
             not_decision:
-              "PromptLane does not approve memory or verify post-approval retry freshness from this advisory",
+              "LoopRelay does not approve memory or verify post-approval retry freshness from this advisory",
             reason:
               "keeps renewed memory approval separate from retry freshness uncertainty review",
             writes_files: false,
@@ -1558,7 +1558,7 @@ describe("createServer P2 ingest boundary", () => {
             reminder:
               "collect a new explicit loop snapshot after approving loop memory again",
             not_automated:
-              "PromptLane does not start collection from renewed memory approval or approval state changes",
+              "LoopRelay does not start collection from renewed memory approval or approval state changes",
             reason:
               "keeps renewed-memory-approval collection operator-triggered and local-first",
             writes_files: false,
@@ -1569,9 +1569,9 @@ describe("createServer P2 ingest boundary", () => {
             label:
               "Post-memory-approval retry renewed-memory-approval collection result non-persistence",
             result_scope:
-              "renewed-memory-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+              "renewed-memory-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
             not_stored:
-              "PromptLane does not detect, store, or sync renewed-memory-approval collection result state",
+              "LoopRelay does not detect, store, or sync renewed-memory-approval collection result state",
             reason:
               "keeps renewed-memory-approval collection evidence tied to explicit local snapshot recording",
             writes_files: false,
@@ -1584,7 +1584,7 @@ describe("createServer P2 ingest boundary", () => {
             reminder:
               "collect a new explicit loop snapshot when renewed-memory-approval collection result is uncertain",
             not_automated:
-              "PromptLane does not verify renewed-memory-approval collection result or start collection automatically",
+              "LoopRelay does not verify renewed-memory-approval collection result or start collection automatically",
             reason:
               "keeps renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
             writes_files: false,
@@ -1597,7 +1597,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "review renewed-memory-approval freshness uncertainty before merge decisions",
             not_decision:
-              "PromptLane does not approve merges or verify renewed-memory-approval freshness before merge",
+              "LoopRelay does not approve merges or verify renewed-memory-approval freshness before merge",
             reason:
               "keeps merge readiness separate from renewed-memory-approval freshness uncertainty review",
             writes_files: false,
@@ -1610,7 +1610,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "review renewed-memory-approval freshness uncertainty before continuation handoff",
             not_decision:
-              "PromptLane does not approve handoffs or verify renewed-memory-approval freshness before handoff",
+              "LoopRelay does not approve handoffs or verify renewed-memory-approval freshness before handoff",
             reason:
               "keeps continuation handoff separate from renewed-memory-approval freshness uncertainty review",
             writes_files: false,
@@ -1623,7 +1623,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "review renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
             not_decision:
-              "PromptLane does not approve paste targets or verify renewed-memory-approval freshness before paste",
+              "LoopRelay does not approve paste targets or verify renewed-memory-approval freshness before paste",
             reason:
               "keeps paste readiness separate from renewed-memory-approval freshness uncertainty review",
             writes_files: false,
@@ -1636,7 +1636,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "review renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
             not_decision:
-              "PromptLane does not approve submissions or verify renewed-memory-approval freshness before submit",
+              "LoopRelay does not approve submissions or verify renewed-memory-approval freshness before submit",
             reason:
               "keeps submission readiness separate from renewed-memory-approval freshness uncertainty review",
             writes_files: false,
@@ -1649,7 +1649,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain",
             not_automated:
-              "PromptLane does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
+              "LoopRelay does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
             reason:
               "keeps post-submit freshness review tied to explicit local snapshot collection",
             writes_files: false,
@@ -1660,9 +1660,9 @@ describe("createServer P2 ingest boundary", () => {
             label:
               "Post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence",
             result_scope:
-              "post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
+              "post-submit collection result stays outside LoopRelay until the next explicit loop snapshot",
             not_stored:
-              "PromptLane does not detect, store, or sync post-submit collection result state",
+              "LoopRelay does not detect, store, or sync post-submit collection result state",
             reason:
               "keeps post-submit collection evidence tied to explicit local snapshot recording",
             writes_files: false,
@@ -1675,7 +1675,7 @@ describe("createServer P2 ingest boundary", () => {
             retry:
               "operator reruns the explicit post-submit loop collection flow when retry is needed",
             not_automated:
-              "PromptLane does not automatically retry post-submit collection commands or hidden recovery actions",
+              "LoopRelay does not automatically retry post-submit collection commands or hidden recovery actions",
             reason:
               "keeps post-submit collection retry control local and operator-triggered",
             writes_files: false,
@@ -1686,9 +1686,9 @@ describe("createServer P2 ingest boundary", () => {
             label:
               "Post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence",
             outcome_scope:
-              "post-submit retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
+              "post-submit retry attempt and outcome stay outside LoopRelay until the next explicit loop snapshot",
             not_stored:
-              "PromptLane does not detect, store, or sync post-submit retry success or failure state",
+              "LoopRelay does not detect, store, or sync post-submit retry success or failure state",
             reason:
               "keeps post-submit retry evidence tied to explicit local snapshot recording",
             writes_files: false,
@@ -1701,7 +1701,7 @@ describe("createServer P2 ingest boundary", () => {
             freshness_scope:
               "operator checks post-submit retry evidence freshness against the latest explicit loop snapshot",
             not_verified:
-              "PromptLane does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
+              "LoopRelay does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
             reason:
               "keeps post-submit retry evidence freshness review tied to local snapshot metadata",
             writes_files: false,
@@ -1712,9 +1712,9 @@ describe("createServer P2 ingest boundary", () => {
             label:
               "Post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence",
             result_scope:
-              "post-submit retry freshness result stays outside PromptLane until the next explicit loop snapshot",
+              "post-submit retry freshness result stays outside LoopRelay until the next explicit loop snapshot",
             not_stored:
-              "PromptLane does not detect, store, or sync post-submit retry freshness result state",
+              "LoopRelay does not detect, store, or sync post-submit retry freshness result state",
             reason:
               "keeps post-submit retry freshness evidence tied to explicit local snapshot recording",
             writes_files: false,
@@ -1727,7 +1727,7 @@ describe("createServer P2 ingest boundary", () => {
             collection_trigger:
               "collect a new explicit loop snapshot when post-submit retry freshness is uncertain",
             not_automated:
-              "PromptLane does not verify post-submit retry freshness or start collection automatically",
+              "LoopRelay does not verify post-submit retry freshness or start collection automatically",
             reason:
               "keeps post-submit retry freshness uncertainty resolution operator-triggered and local-first",
             writes_files: false,
@@ -1740,7 +1740,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "review post-submit retry freshness uncertainty before approving loop memory again",
             not_decision:
-              "PromptLane does not approve memory or verify post-submit retry freshness from this advisory",
+              "LoopRelay does not approve memory or verify post-submit retry freshness from this advisory",
             reason:
               "keeps renewed memory approval separate from post-submit retry freshness uncertainty review",
             writes_files: false,
@@ -1753,7 +1753,7 @@ describe("createServer P2 ingest boundary", () => {
             reminder:
               "collect a new explicit loop snapshot after approving loop memory again after post-submit retry",
             not_automated:
-              "PromptLane does not start collection from post-submit retry renewed memory approval or hidden approval signals",
+              "LoopRelay does not start collection from post-submit retry renewed memory approval or hidden approval signals",
             reason:
               "keeps post-submit retry renewed-memory-approval collection operator-triggered and local-first",
             writes_files: false,
@@ -1764,9 +1764,9 @@ describe("createServer P2 ingest boundary", () => {
             label:
               "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence",
             result_scope:
-              "post-submit retry renewed-memory-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+              "post-submit retry renewed-memory-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
             not_stored:
-              "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
+              "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
             reason:
               "keeps post-submit retry renewed-memory-approval collection evidence tied to explicit local snapshot recording",
             writes_files: false,
@@ -1779,7 +1779,7 @@ describe("createServer P2 ingest boundary", () => {
             reminder:
               "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval collection result is uncertain",
             not_automated:
-              "PromptLane does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
+              "LoopRelay does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
             reason:
               "keeps post-submit retry renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
             writes_files: false,
@@ -1792,7 +1792,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "review post-submit retry renewed-memory-approval freshness uncertainty before merge decisions",
             not_decision:
-              "PromptLane does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
+              "LoopRelay does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
             reason:
               "keeps merge readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
             writes_files: false,
@@ -1805,7 +1805,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "review post-submit retry renewed-memory-approval freshness uncertainty before continuation handoff",
             not_decision:
-              "PromptLane does not approve handoffs or verify post-submit retry renewed-memory-approval freshness before handoff",
+              "LoopRelay does not approve handoffs or verify post-submit retry renewed-memory-approval freshness before handoff",
             reason:
               "keeps continuation handoff separate from post-submit retry renewed-memory-approval freshness uncertainty review",
             writes_files: false,
@@ -1818,7 +1818,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "review post-submit retry renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
             not_decision:
-              "PromptLane does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
+              "LoopRelay does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
             reason:
               "keeps paste readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
             writes_files: false,
@@ -1831,7 +1831,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "review post-submit retry renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
             not_decision:
-              "PromptLane does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
+              "LoopRelay does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
             reason:
               "keeps submission readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
             writes_files: false,
@@ -1844,7 +1844,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain",
             not_automated:
-              "PromptLane does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
+              "LoopRelay does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
             reason:
               "keeps post-submit retry renewed-memory-approval freshness review tied to explicit local snapshot collection",
             writes_files: false,
@@ -1856,7 +1856,7 @@ describe("createServer P2 ingest boundary", () => {
           instruction:
             "paste the copied continuation brief into the active agent request box",
           reason:
-            "keeps PromptLane as the local handoff source while the user controls submission",
+            "keeps LoopRelay as the local handoff source while the user controls submission",
           auto_submit: false,
           writes_files: false,
           external_calls: false,
@@ -1890,9 +1890,9 @@ describe("createServer P2 ingest boundary", () => {
             label:
               "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence",
             result_scope:
-              "post-submit retry renewed-memory-approval post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
+              "post-submit retry renewed-memory-approval post-submit collection result stays outside LoopRelay until the next explicit loop snapshot",
             not_stored:
-              "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
+              "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
             reason:
               "keeps post-submit retry renewed-memory-approval post-submit collection evidence tied to explicit local snapshot recording",
             writes_files: false,
@@ -1905,7 +1905,7 @@ describe("createServer P2 ingest boundary", () => {
             reminder:
               "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection result is uncertain",
             not_automated:
-              "PromptLane does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
+              "LoopRelay does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
             reason:
               "keeps post-submit retry renewed-memory-approval post-submit collection uncertainty resolution operator-triggered and local-first",
             writes_files: false,
@@ -1918,7 +1918,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before merge decisions",
             not_decision:
-              "PromptLane does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
+              "LoopRelay does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
             reason:
               "keeps merge readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
             writes_files: false,
@@ -1931,7 +1931,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before continuation handoff",
             not_decision:
-              "PromptLane does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
+              "LoopRelay does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
             reason:
               "keeps continuation handoff separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
             writes_files: false,
@@ -1944,7 +1944,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before pasting into Codex or Claude Code",
             not_decision:
-              "PromptLane does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
+              "LoopRelay does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
             reason:
               "keeps paste readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
             writes_files: false,
@@ -1957,7 +1957,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before submitting in Codex or Claude Code",
             not_decision:
-              "PromptLane does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
+              "LoopRelay does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
             reason:
               "keeps submission readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
             writes_files: false,
@@ -1970,7 +1970,7 @@ describe("createServer P2 ingest boundary", () => {
             advisory:
               "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
             not_monitored:
-              "PromptLane does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval post-submit collection freshness after submit",
+              "LoopRelay does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval post-submit collection freshness after submit",
             reason:
               "keeps post-submit retry renewed-memory-approval post-submit collection freshness review tied to explicit local snapshot collection",
             writes_files: false,
@@ -1981,9 +1981,9 @@ describe("createServer P2 ingest boundary", () => {
             label:
               "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence",
             not_stored:
-              "post-submit retry renewed-memory-approval post-submit collection freshness result stays outside PromptLane until the next explicit loop snapshot",
+              "post-submit retry renewed-memory-approval post-submit collection freshness result stays outside LoopRelay until the next explicit loop snapshot",
             not_detected:
-              "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
+              "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
             reason:
               "keeps post-submit retry renewed-memory-approval post-submit collection freshness evidence tied to explicit local snapshot recording",
             writes_files: false,
@@ -1996,7 +1996,7 @@ describe("createServer P2 ingest boundary", () => {
             reminder:
               "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
             not_automated:
-              "PromptLane does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically",
+              "LoopRelay does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically",
             reason:
               "keeps post-submit retry renewed-memory-approval post-submit collection freshness uncertainty resolution operator-triggered and local-first",
             writes_files: false,
@@ -2009,7 +2009,7 @@ describe("createServer P2 ingest boundary", () => {
           not_transcript_import:
             "transcript import is not used as the source of truth",
           reason:
-            "PromptLane records explicit loop snapshots instead of importing agent transcripts",
+            "LoopRelay records explicit loop snapshots instead of importing agent transcripts",
           stores_transcripts: false,
           writes_files: false,
           external_calls: false,
@@ -2111,7 +2111,7 @@ describe("createServer P2 ingest boundary", () => {
           command_hint: {
             label: "Copy review brief command",
             command:
-              "promptlane loop brief --worktree review-worktree --branch codex/agent-loop-memory-design",
+              "looprelay loop brief --worktree review-worktree --branch codex/agent-loop-memory-design",
             provenance: {
               label: "Command provenance",
               source: "existing command-center continuation command",
@@ -2438,8 +2438,8 @@ describe("createServer P2 ingest boundary", () => {
           },
         },
         next_actions: [
-          "promptlane loop brief",
-          "promptlane loop instruction-patch --target-file AGENTS.md",
+          "looprelay loop brief",
+          "looprelay loop instruction-patch --target-file AGENTS.md",
         ],
         privacy: {
           local_only: true,
@@ -2588,8 +2588,8 @@ describe("createServer P2 ingest boundary", () => {
           used_improvement_prompt_ids: ["prmt_one"],
         },
         next_actions: [
-          "promptlane loop memory-candidate",
-          "promptlane loop brief",
+          "looprelay loop memory-candidate",
+          "looprelay loop brief",
         ],
         privacy: {
           local_only: true,
@@ -2704,7 +2704,7 @@ describe("createServer P2 ingest boundary", () => {
 
     expect(response.statusCode).toBe(404);
     expect(response.body).toContain(
-      "No loop snapshot found. Send one Codex or Claude Code prompt, run `promptlane coach` to confirm the first score, run `promptlane loop collect`, then record a passed loop outcome with safe evidence before retrying `promptlane loop memory-approve`.",
+      "No loop snapshot found. Send one Codex or Claude Code prompt, run `looprelay coach` to confirm the first score, run `looprelay loop collect`, then record a passed loop outcome with safe evidence before retrying `looprelay loop memory-approve`.",
     );
     expect(response.body).not.toContain("/Users/example");
     expect(response.body).not.toContain("sk-proj-secret");
@@ -2783,7 +2783,7 @@ describe("createServer P2 ingest boundary", () => {
         apply_gate: {
           web_apply_available: false,
           confirm_command:
-            "promptlane loop instruction-apply --target-file AGENTS.md --confirm-apply",
+            "looprelay loop instruction-apply --target-file AGENTS.md --confirm-apply",
           mcp_tool: "apply_instruction_patch",
           reason:
             "web review does not write files; apply through CLI or MCP with explicit confirmation",
@@ -2823,7 +2823,7 @@ describe("createServer P2 ingest boundary", () => {
 
     expect(response.statusCode).toBe(404);
     expect(response.body).toContain(
-      "No loop memory found. Capture one Codex or Claude Code prompt, confirm the first score, collect a loop snapshot, record a passed outcome with safe evidence, then run `promptlane loop memory-approve` before retrying `promptlane loop instruction-patch --target-file AGENTS.md`.",
+      "No loop memory found. Capture one Codex or Claude Code prompt, confirm the first score, collect a loop snapshot, record a passed outcome with safe evidence, then run `looprelay loop memory-approve` before retrying `looprelay loop instruction-patch --target-file AGENTS.md`.",
     );
     expect(response.body).not.toContain("/Users/example");
     expect(response.body).not.toContain("sk-proj-secret");
@@ -3244,7 +3244,7 @@ describe("createServer P2 ingest boundary", () => {
       status: 401,
       title: "Unauthorized",
       detail:
-        "Missing or invalid bearer token. Reinstall the agent hook with `promptlane install-hook claude-code` or `promptlane install-hook codex`, then run the matching `promptlane doctor` command if ingest still fails.",
+        "Missing or invalid bearer token. Reinstall the agent hook with `looprelay install-hook claude-code` or `looprelay install-hook codex`, then run the matching `looprelay doctor` command if ingest still fails.",
     });
     expect(response.body).not.toContain("ingest-token");
     expect(response.body).not.toContain("/Users/example");
@@ -3289,7 +3289,7 @@ describe("createServer P2 ingest boundary", () => {
       status: 415,
       title: "Unsupported Media Type",
       detail:
-        "The request content-type is not supported. Send JSON with `content-type: application/json`; if this came from an agent hook, reinstall the hook and run `promptlane doctor`.",
+        "The request content-type is not supported. Send JSON with `content-type: application/json`; if this came from an agent hook, reinstall the hook and run `looprelay doctor`.",
     });
     expect(response.body).not.toContain("<xml/>");
     expect(response.body).not.toContain("/Users/example");
@@ -3331,7 +3331,7 @@ describe("createServer P2 ingest boundary", () => {
       status: 404,
       title: "Not Found",
       detail:
-        "The requested route does not exist. Check `/api/v1/health` for server readiness or reopen the PromptLane web app route before retrying.",
+        "The requested route does not exist. Check `/api/v1/health` for server readiness or reopen the LoopRelay web app route before retrying.",
       instance: "/api/v1/this-route-does-not-exist",
     });
     expect(response.body).not.toContain("/Users/example");
@@ -3360,7 +3360,7 @@ describe("createServer P2 ingest boundary", () => {
       status: 400,
       title: "Bad Request",
       detail:
-        "The request body could not be parsed. Send valid JSON; if this came from an agent hook, reinstall the hook and run `promptlane doctor`.",
+        "The request body could not be parsed. Send valid JSON; if this came from an agent hook, reinstall the hook and run `looprelay doctor`.",
     });
     expect(response.body).not.toContain("this is not json");
     expect(response.body).not.toContain("/Users/example");
@@ -3424,7 +3424,7 @@ describe("createServer P2 ingest boundary", () => {
     expect(storage.events).toHaveLength(1);
     expect(storage.events[0]?.event.tool).toBe("claude-code");
     expect(storage.events[0]?.event.cwd).toBe(
-      "/Users/example/side-project/promptlane",
+      "/Users/example/side-project/looprelay",
     );
     expect(storage.events[0]?.redaction.stored_text).toContain(
       "[REDACTED:email]",
@@ -3466,8 +3466,8 @@ describe("createServer P2 ingest boundary", () => {
       source_event: "UserPromptSubmit",
       session_id: "codex-session-123",
       turn_id: "turn-456",
-      cwd: "/Users/example/side-project/promptlane",
-      transcript_path: "/Users/example/.codex/sessions/promptlane.jsonl",
+      cwd: "/Users/example/side-project/looprelay",
+      transcript_path: "/Users/example/.codex/sessions/looprelay.jsonl",
       model: "gpt-5.5",
       adapter_version: "codex-v1",
     });
@@ -4097,7 +4097,7 @@ type TestServerOptions = {
 
 function createTestServer(options: TestServerOptions = {}) {
   return createServer({
-    dataDir: options.dataDir ?? "/tmp/promptlane-test",
+    dataDir: options.dataDir ?? "/tmp/looprelay-test",
     autoJudge: options.autoJudge,
     auth: {
       appToken: "app-token",
@@ -4168,7 +4168,7 @@ function createMemoryStorage() {
         items: [
           {
             project_id: "proj_memory",
-            label: "promptlane",
+            label: "looprelay",
             alias: "workbench",
             path_kind: "project_root" as const,
             prompt_count: 2,
@@ -4197,7 +4197,7 @@ function createMemoryStorage() {
       policyUpdates.push({ projectId, patch, actor });
       return {
         project_id: projectId,
-        label: "promptlane",
+        label: "looprelay",
         alias: typeof patch.alias === "string" ? patch.alias : "workbench",
         path_kind: "project_root" as const,
         prompt_count: 2,
@@ -4530,7 +4530,7 @@ function loopSnapshot(patch: Partial<LoopSnapshot> = {}): LoopSnapshot {
     },
     next_brief: {
       generated: false,
-      summary: "Run promptlane loop brief to generate the next request.",
+      summary: "Run looprelay loop brief to generate the next request.",
     },
     privacy: {
       local_only: true,

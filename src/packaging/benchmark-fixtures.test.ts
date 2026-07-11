@@ -215,7 +215,7 @@ describe("benchmark fixture loading", () => {
     });
 
     expect(formatNoFixturesReportLines(report)).toEqual([
-      "promptlane benchmark benchmark-v1-real",
+      "looprelay benchmark benchmark-v1-real",
       "status: no_fixtures",
       "evidence_effectiveness: unproven",
       "evidence_release_blocking: no",
@@ -230,7 +230,7 @@ describe("benchmark fixture loading", () => {
   });
 
   it("loads consent-bearing redacted real fixtures instead of synthetic fixtures", async () => {
-    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
     const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
     mkdirSync(fixtureDir, { recursive: true });
     writeFileSync(
@@ -286,7 +286,7 @@ describe("benchmark fixture loading", () => {
   });
 
   it("preserves operator-confirmed raw-free outcomes for real effectiveness evidence", async () => {
-    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
     const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
     mkdirSync(fixtureDir, { recursive: true });
     writeFileSync(
@@ -336,8 +336,8 @@ describe("benchmark fixture loading", () => {
     });
   });
 
-  it("loads complete raw-free baseline and PromptLane effect pairs", async () => {
-    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+  it("loads complete raw-free baseline and LoopRelay effect pairs", async () => {
+    tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
     const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
     mkdirSync(fixtureDir, { recursive: true });
     writeFileSync(
@@ -355,7 +355,7 @@ describe("benchmark fixture loading", () => {
 
     expect(loaded.fixtures.map((fixture) => fixture.effect_pair)).toEqual([
       { id: "release_review", variant: "baseline" },
-      { id: "release_review", variant: "promptlane" },
+      { id: "release_review", variant: "looprelay" },
     ]);
   });
 
@@ -370,11 +370,11 @@ describe("benchmark fixture loading", () => {
     expect(() =>
       loadBenchmarkFixtures({ fixtureSet: "real", repoRoot: tempRoot }),
     ).toThrow(
-      "real effect_pair release_review must contain one baseline and one promptlane fixture.",
+      "real effect_pair release_review must contain one baseline and one looprelay fixture.",
     );
 
     fixture.fixtures.push(
-      effectPairCase("release_treatment", "promptlane", false),
+      effectPairCase("release_treatment", "looprelay", false),
     );
     writeFileSync(
       join(tempRoot, "docs", "benchmark-fixtures", "real.json"),
@@ -383,12 +383,12 @@ describe("benchmark fixture loading", () => {
     expect(() =>
       loadBenchmarkFixtures({ fixtureSet: "real", repoRoot: tempRoot }),
     ).toThrow(
-      "real effect_pair release_review promptlane outcome must set improvement_used to true.",
+      "real effect_pair release_review looprelay outcome must set improvement_used to true.",
     );
   });
 
   it("rejects unsafe real outcome evidence without echoing private content", async () => {
-    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
     const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
     mkdirSync(fixtureDir, { recursive: true });
     writeFileSync(
@@ -479,7 +479,7 @@ describe("benchmark fixture loading", () => {
   });
 
   it("rejects a real corpus without explicit template confirmation", async () => {
-    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
     const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
     const realFixturesPath = join(fixtureDir, "real.json");
     mkdirSync(fixtureDir, { recursive: true });
@@ -520,8 +520,8 @@ describe("benchmark fixture loading", () => {
   });
 
   it("loads an operator-owned real fixture file outside the package root", async () => {
-    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
-    const realFixturesPath = join(tempRoot, "private", "promptlane-real.json");
+    tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
+    const realFixturesPath = join(tempRoot, "private", "looprelay-real.json");
     mkdirSync(join(tempRoot, "private"), { recursive: true });
     copyFileSync(
       join(process.cwd(), "docs", "benchmark-fixtures", "real.example.json"),
@@ -547,7 +547,7 @@ describe("benchmark fixture loading", () => {
   });
 
   it("rejects malformed real fixture JSON without echoing its path or content", async () => {
-    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
     const realFixturesPath = join(tempRoot, "private-fixtures.json");
     writeFileSync(realFixturesPath, '{"private_prompt":"do not echo"');
 
@@ -577,7 +577,7 @@ describe("benchmark fixture loading", () => {
   });
 
   it("refuses to run the shipped fixture template as real evidence", async () => {
-    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
     const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
     mkdirSync(fixtureDir, { recursive: true });
     copyFileSync(
@@ -600,7 +600,7 @@ describe("benchmark fixture loading", () => {
   });
 
   it("rejects real fixtures without local benchmark consent metadata", async () => {
-    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
     const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
     mkdirSync(fixtureDir, { recursive: true });
     writeFileSync(
@@ -639,7 +639,7 @@ describe("benchmark fixture loading", () => {
   });
 
   it("rejects real fixture consent metadata with raw local paths", async () => {
-    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
     const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
     mkdirSync(fixtureDir, { recursive: true });
     writeFileSync(
@@ -679,7 +679,7 @@ describe("benchmark fixture loading", () => {
   });
 
   it("rejects real fixture queries with raw local paths", async () => {
-    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
     const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
     mkdirSync(fixtureDir, { recursive: true });
     writeFileSync(
@@ -720,7 +720,7 @@ describe("benchmark fixture loading", () => {
   });
 
   it("rejects real fixture labels with raw local paths", async () => {
-    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
     const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
     mkdirSync(fixtureDir, { recursive: true });
     writeFileSync(
@@ -761,7 +761,7 @@ describe("benchmark fixture loading", () => {
   });
 
   it("rejects duplicate real fixture labels", async () => {
-    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
     const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
     mkdirSync(fixtureDir, { recursive: true });
     writeFileSync(
@@ -809,7 +809,7 @@ describe("benchmark fixture loading", () => {
   });
 
   it("rejects real fixture labels that are not safe identifiers", async () => {
-    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
     const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
     mkdirSync(fixtureDir, { recursive: true });
     writeFileSync(
@@ -850,7 +850,7 @@ describe("benchmark fixture loading", () => {
   });
 
   it("rejects real fixtures with macOS volume and Windows user paths", async () => {
-    tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+    tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
     const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
     mkdirSync(fixtureDir, { recursive: true });
     writeFileSync(
@@ -897,7 +897,7 @@ function realEffectPairFixture() {
     consent_note: "Operator-confirmed redacted paired benchmark corpus.",
     fixtures: [
       effectPairCase("release_baseline", "baseline", false),
-      effectPairCase("release_treatment", "promptlane", true),
+      effectPairCase("release_treatment", "looprelay", true),
     ],
     coach_cases: ["Improve this redacted release verification prompt."],
   };
@@ -905,7 +905,7 @@ function realEffectPairFixture() {
 
 function effectPairCase(
   label: string,
-  variant: "baseline" | "promptlane",
+  variant: "baseline" | "looprelay",
   improvementUsed: boolean,
 ) {
   return {
@@ -925,7 +925,7 @@ function effectPairCase(
 }
 
 function writeRealFixture(fixture: ReturnType<typeof realEffectPairFixture>) {
-  tempRoot = mkdtempSync(join(tmpdir(), "promptlane-real-fixtures-"));
+  tempRoot = mkdtempSync(join(tmpdir(), "looprelay-real-fixtures-"));
   const fixtureDir = join(tempRoot, "docs", "benchmark-fixtures");
   mkdirSync(fixtureDir, { recursive: true });
   writeFileSync(

@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { initializePromptLane } from "../config/config.js";
+import { initializeLoopRelay } from "../config/config.js";
 import type { LoopSnapshot } from "../loop/types.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import { getBenchmarkCandidatesTool } from "./get-benchmark-candidates-tool.js";
@@ -21,7 +21,7 @@ afterEach(() => {
 describe("get_benchmark_candidates MCP tool", () => {
   it("returns body-free readiness candidates from local snapshots", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({ dataDir });
     storage.createLoopSnapshot(snapshot());
     storage.close();
@@ -67,7 +67,7 @@ describe("get_benchmark_candidates MCP tool", () => {
 });
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-mcp-benchmark-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-mcp-benchmark-${randomUUID()}`);
   tempDirs.push(dir);
   return dir;
 }

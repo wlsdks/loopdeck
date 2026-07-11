@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const planPath =
-  "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md";
+  "docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md";
 const nativeDialogAuditPath = "docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md";
 
 const args = parseArgs(process.argv.slice(2));
@@ -41,7 +41,7 @@ if (nativeDialog.status !== "complete") {
     id: "native_dialog_approved_dogfood",
     status: nativeDialog.status,
     next_action:
-      "Get explicit operator approval before running PROMPTLANE_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved.",
+      "Get explicit operator approval before running LOOPRELAY_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved.",
   });
 }
 
@@ -96,7 +96,7 @@ const releaseGate = [
     purpose: "Fail closed unless all 9.5 quality evidence remains complete.",
   },
   {
-    command: "corepack pnpm promptlane quality-evidence --require-complete",
+    command: "corepack pnpm looprelay quality-evidence --require-complete",
     purpose:
       "Verify the built product CLI exposes the same complete quality evidence.",
   },
@@ -108,7 +108,7 @@ const releaseGate = [
 const releaseWarnings = releaseWarningsForLocalEvidence();
 
 const summary = {
-  check: "promptlane_95_quality",
+  check: "looprelay_95_quality",
   status: blockers.length === 0 ? "complete" : "pending",
   evidence_scope: "repeatable_isolated_local_release",
   live_runtime_evaluated: false,
@@ -136,7 +136,7 @@ print(summary);
 
 if (args.requireComplete && summary.status !== "complete") {
   console.error(
-    `promptlane_95_quality pending: ${blockers.length} blocker(s) remain; --require-complete refuses to pass.`,
+    `looprelay_95_quality pending: ${blockers.length} blocker(s) remain; --require-complete refuses to pass.`,
   );
   process.exitCode = 1;
 }
@@ -169,12 +169,12 @@ function releaseWarningsForLocalEvidence() {
     {
       label: "paired effectiveness not evaluated",
       detail:
-        "A single attributed outcome or a same-corpus version trend does not prove PromptLane helped. Run promptlane benchmark pair-candidates --json, use prepare-pair with reviewed equivalent baseline and PromptLane ids, collect at least three matched effect_pair cases, and inspect details.paired_effectiveness; the report remains observational and causal_claim stays false.",
+        "A single attributed outcome or a same-corpus version trend does not prove LoopRelay helped. Run looprelay benchmark pair-candidates --json, use prepare-pair with reviewed equivalent baseline and LoopRelay ids, collect at least three matched effect_pair cases, and inspect details.paired_effectiveness; the report remains observational and causal_claim stays false.",
     },
     {
       label: "live agent runtime not evaluated",
       detail:
-        "The repeatable local release ledger does not inspect the maintainer's installed Codex or Claude Code hook runtime. Run promptlane quality-evidence --runtime-tool codex --require-runtime-ready before claiming live Codex integration readiness.",
+        "The repeatable local release ledger does not inspect the maintainer's installed Codex or Claude Code hook runtime. Run looprelay quality-evidence --runtime-tool codex --require-runtime-ready before claiming live Codex integration readiness.",
     },
   ];
 
@@ -186,7 +186,7 @@ function releaseWarningsForLocalEvidence() {
     {
       label: "real benchmark fixtures are missing",
       detail:
-        'docs/benchmark-fixtures/real.json is absent; quality evidence is complete for the local release gate, but do not claim real-user effectiveness trends. Create an operator-owned fixture from selected archive prompts with promptlane benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE", or create a manual template with promptlane benchmark init-fixture --output "$FIXTURE_FILE", then save one JSON snapshot with promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT" and rerun with --baseline-file "$BASELINE_REPORT" before claiming a trend.',
+        'docs/benchmark-fixtures/real.json is absent; quality evidence is complete for the local release gate, but do not claim real-user effectiveness trends. Create an operator-owned fixture from selected archive prompts with looprelay benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE", or create a manual template with looprelay benchmark init-fixture --output "$FIXTURE_FILE", then save one JSON snapshot with looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT" and rerun with --baseline-file "$BASELINE_REPORT" before claiming a trend.',
     },
     ...warnings,
   ];
@@ -207,7 +207,7 @@ function readNativeDialogEvidence() {
   const approvedAnswered =
     audit.includes("approved native dialog dogfood passed") &&
     audit.includes('interaction_status: "answered"') &&
-    audit.includes("PROMPTLANE_NATIVE_DIALOG_APPROVED=1");
+    audit.includes("LOOPRELAY_NATIVE_DIALOG_APPROVED=1");
 
   return {
     check: "native_dialog_approved_dogfood",
@@ -236,7 +236,7 @@ function readCompletedEvidence() {
   let plan = "";
   let localEvidence = "";
   let productEvidence = "";
-  let promptlane = "";
+  let looprelay = "";
   let readme = "";
   let packageJson = "";
   let codexPlugin = "";
@@ -252,11 +252,11 @@ function readCompletedEvidence() {
     productEvidence = readPackageFile(
       "docs/PRODUCT_POSITIONING_EVIDENCE_2026-07-06.md",
     );
-    promptlane = readPackageFile("docs/PROMPTLANE.md");
+    looprelay = readPackageFile("docs/LOOPRELAY.md");
     readme = readPackageFile("README.md");
     packageJson = readPackageFile("package.json");
     codexPlugin = readPackageFile(
-      "plugins/promptlane/.codex-plugin/plugin.json",
+      "plugins/looprelay/.codex-plugin/plugin.json",
     );
     claudePlugin = readPackageFile(".claude-plugin/plugin.json");
     claudeMarketplace = readPackageFile(".claude-plugin/marketplace.json");
@@ -284,28 +284,20 @@ function readCompletedEvidence() {
 
   return {
     product_positioning_metadata_alignment:
-      productEvidence.includes("wlsdks/promptlane") &&
-      productEvidence.includes("Prompt improvement is the first value") &&
-      productEvidence.includes(
-        "PromptLane is historical or compatibility-only",
-      ) &&
+      productEvidence.includes("wlsdks/looprelay") &&
       productEvidence.includes("GitHub repository metadata") &&
-      promptlane.includes("Product name: PromptLane.") &&
-      promptlane.includes("PromptLane starts with prompt improvement") &&
-      promptlane.includes("Loop features are loop-aware continuation") &&
-      readme.includes("Local-first prompt improvement workspace") &&
-      readme.includes("loop-aware continuation") &&
+      looprelay.includes("Product name: LoopRelay.") &&
+      looprelay.includes("local continuity and evidence layer") &&
+      looprelay.includes("session/worktree/branch") &&
+      readme.includes("Local continuity and evidence") &&
+      readme.includes("continuation brief") &&
       packageJson.includes(
-        "PromptLane local-first prompt improvement workspace for Codex, Claude Code, and long-running coding-agent work.",
+        "LoopRelay local continuity and evidence layer for long-running coding-agent loops.",
       ) &&
-      codexPlugin.includes('"displayName": "PromptLane"') &&
-      codexPlugin.includes("loop-aware continuation") &&
-      claudePlugin.includes(
-        "PromptLane is a local-first prompt improvement workspace",
-      ) &&
-      claudeMarketplace.includes(
-        "PromptLane is a local-first prompt improvement workspace",
-      ),
+      codexPlugin.includes('"displayName": "LoopRelay"') &&
+      codexPlugin.includes("repeated failure patterns") &&
+      claudePlugin.includes("Local continuity and evidence") &&
+      claudeMarketplace.includes("Local continuity and evidence"),
     manual_ui_patrol_artifact_evidence:
       uiPatrolEvidence.includes("workflow_dispatch run `28717406758`") &&
       uiPatrolEvidence.includes("ui-patrol-screenshots") &&
@@ -345,7 +337,7 @@ function readCompletedEvidence() {
     codex_claude_setup_smoke_refresh:
       plan.includes("codex_claude_setup_smoke_refresh") &&
       plan.includes("corepack pnpm smoke:agent-setup") &&
-      plan.includes("promptlane agent setup smoke passed"),
+      plan.includes("looprelay agent setup smoke passed"),
     local_95_evidence_sweep:
       plan.includes("docs/LOCAL_95_EVIDENCE_2026-07-06.md") &&
       localEvidence.includes("corepack pnpm smoke:hooks") &&
@@ -495,7 +487,7 @@ function recommendedNextSlices({
       axis: "scorecard_review",
       priority: 10,
       blocked_by_external_event: false,
-      command: "promptlane quality-evidence --json",
+      command: "looprelay quality-evidence --json",
       expected_effect:
         "Review axes whose local evidence is present and whose only remaining gap is scorecard_level_below_9_5.",
     });
@@ -513,7 +505,7 @@ function recommendedNextSlices({
       blocked_by_external_event: false,
       command: "corepack pnpm dogfood:web-user-flow",
       expected_effect:
-        "Refresh real PromptLane web workflow evidence before treating UI quality as current.",
+        "Refresh real LoopRelay web workflow evidence before treating UI quality as current.",
     });
   }
 
@@ -556,7 +548,7 @@ function recommendedNextSlices({
       blocked_by_external_event: true,
       blocked_reason: "operator_approval_required",
       command:
-        "PROMPTLANE_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved",
+        "LOOPRELAY_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved",
       preconditions: [
         "The operator explicitly approves opening a native OS dialog.",
       ],

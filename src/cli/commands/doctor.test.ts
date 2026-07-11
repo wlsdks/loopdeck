@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { initializePromptLane } from "../../config/config.js";
+import { initializeLoopRelay } from "../../config/config.js";
 import { writeLastHookStatus } from "../../hooks/hook-status.js";
 import { installClaudeCodeHook, installCodexHook } from "./install-hook.js";
 import { doctorClaudeCode, doctorCodex, formatDoctorResult } from "./doctor.js";
@@ -37,8 +37,8 @@ describe("doctorClaudeCode", () => {
     expect(result.settings.hookInstalled).toBe(false);
     expect(result.next_actions).toEqual(
       expect.arrayContaining([
-        expect.stringContaining("promptlane service start"),
-        expect.stringContaining("promptlane setup --profile coach"),
+        expect.stringContaining("looprelay service start"),
+        expect.stringContaining("looprelay setup --profile coach"),
         expect.stringContaining("Register MCP: claude mcp add"),
       ]),
     );
@@ -48,7 +48,7 @@ describe("doctorClaudeCode", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const settingsPath = join(dir, "settings.json");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     writeFileSync(settingsPath, "{not-json");
 
     const result = await doctorClaudeCode({
@@ -66,7 +66,7 @@ describe("doctorClaudeCode", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const settingsPath = join(dir, "settings.json");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     installClaudeCodeHook({ dataDir, settingsPath });
     writeLastHookStatus(dataDir, {
       ok: false,
@@ -101,14 +101,14 @@ describe("doctorClaudeCode", () => {
     const dataDir = join(dir, "data");
     const settingsPath = join(dir, "settings.json");
     const mcpConfigPath = join(dir, "claude.json");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     installClaudeCodeHook({ dataDir, settingsPath });
     writeFileSync(
       mcpConfigPath,
       JSON.stringify({
         mcpServers: {
-          promptlane: {
-            command: "promptlane",
+          looprelay: {
+            command: "looprelay",
             args: ["mcp"],
           },
         },
@@ -132,7 +132,7 @@ describe("doctorClaudeCode", () => {
     });
     expect(output).toContain("Status: unverified");
     expect(output).toContain(
-      "Send one Codex or Claude Code prompt, then run promptlane coach.",
+      "Send one Codex or Claude Code prompt, then run looprelay coach.",
     );
   });
 
@@ -148,15 +148,15 @@ describe("doctorClaudeCode", () => {
 
     const output = formatDoctorResult("claude-code", result);
 
-    expect(output).toContain("promptlane doctor: claude-code");
+    expect(output).toContain("looprelay doctor: claude-code");
     expect(output).toContain("Status: needs attention");
     expect(output).toContain("Local server: not reachable");
     expect(output).toContain("MCP command access: not detected");
     expect(output).toContain("Register MCP: claude mcp add");
     expect(output).toContain(
-      "Run promptlane service start or promptlane server.",
+      "Run looprelay service start or looprelay server.",
     );
-    expect(output).toContain("promptlane setup --profile coach");
+    expect(output).toContain("looprelay setup --profile coach");
     expect(output).toContain("Use --json for automation.");
   });
 
@@ -164,7 +164,7 @@ describe("doctorClaudeCode", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const settingsPath = join(dir, "settings.json");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     installClaudeCodeHook({ dataDir, settingsPath });
     writeLastHookStatus(dataDir, {
       ok: false,
@@ -187,7 +187,7 @@ describe("doctorClaudeCode", () => {
     expect(output).toContain("Status: needs attention");
     expect(output).toContain("Last ingest: failed (401)");
     expect(output).toContain(
-      "Reinstall the hook to refresh the local ingest token: promptlane install-hook claude-code.",
+      "Reinstall the hook to refresh the local ingest token: looprelay install-hook claude-code.",
     );
   });
 
@@ -195,7 +195,7 @@ describe("doctorClaudeCode", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const settingsPath = join(dir, "settings.json");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     installClaudeCodeHook({ dataDir, settingsPath });
     writeLastHookStatus(dataDir, {
       ok: false,
@@ -215,23 +215,23 @@ describe("doctorClaudeCode", () => {
 
     expect(output).toContain("Last ingest: failed (503)");
     expect(output).toContain(
-      "Run promptlane buddy --once to inspect the most recent failed hook ingest.",
+      "Run looprelay buddy --once to inspect the most recent failed hook ingest.",
     );
   });
 
-  it("detects Claude Code MCP registration when config includes promptlane mcp", async () => {
+  it("detects Claude Code MCP registration when config includes looprelay mcp", async () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const settingsPath = join(dir, "settings.json");
     const mcpConfigPath = join(dir, "claude.json");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     installClaudeCodeHook({ dataDir, settingsPath });
     writeFileSync(
       mcpConfigPath,
       JSON.stringify({
         mcpServers: {
-          promptlane: {
-            command: "promptlane",
+          looprelay: {
+            command: "looprelay",
             args: ["mcp"],
           },
         },
@@ -256,7 +256,7 @@ describe("doctorClaudeCode", () => {
     const dataDir = join(dir, "data");
     const settingsPath = join(dir, "settings.json");
     const commands: string[] = [];
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     installClaudeCodeHook({ dataDir, settingsPath });
 
     const result = await doctorClaudeCode({
@@ -268,7 +268,7 @@ describe("doctorClaudeCode", () => {
         commands.push([command, ...args].join(" "));
         return {
           status: 0,
-          stdout: "promptlane  promptlane mcp\n",
+          stdout: "looprelay  looprelay mcp\n",
         };
       },
     });
@@ -281,7 +281,7 @@ describe("doctorClaudeCode", () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
     const settingsPath = join(dir, "settings.json");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     installClaudeCodeHook({ dataDir, settingsPath });
 
     const result = await doctorClaudeCode({
@@ -303,7 +303,7 @@ describe("doctorCodex", () => {
   it("detects missing Codex feature flag and hook", async () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = await doctorCodex({
       dataDir,
@@ -328,11 +328,11 @@ describe("doctorCodex", () => {
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     installCodexHook({ dataDir, hooksPath, configPath });
     writeFileSync(
       configPath,
-      `${readFileSync(configPath, "utf8")}\n[mcp_servers.promptlane]\ncommand = "promptlane"\nargs = ["mcp"]\n`,
+      `${readFileSync(configPath, "utf8")}\n[mcp_servers.looprelay]\ncommand = "looprelay"\nargs = ["mcp"]\n`,
     );
     writeLastHookStatus(dataDir, {
       ok: true,
@@ -367,11 +367,11 @@ describe("doctorCodex", () => {
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     installCodexHook({ dataDir, hooksPath, configPath });
     writeFileSync(
       configPath,
-      `${readFileSync(configPath, "utf8")}\n[mcp_servers.promptlane]\ncommand = "promptlane"\nargs = ["mcp"]\n`,
+      `${readFileSync(configPath, "utf8")}\n[mcp_servers.looprelay]\ncommand = "looprelay"\nargs = ["mcp"]\n`,
     );
     writeLastHookStatus(dataDir, {
       ok: true,
@@ -410,7 +410,7 @@ describe("doctorCodex", () => {
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     installCodexHook({ dataDir, hooksPath, configPath });
 
     const result = await doctorCodex({
@@ -430,7 +430,7 @@ describe("doctorCodex", () => {
     expect(result.mcp.registered).toBe(false);
     expect(result.next_actions).toEqual(
       expect.arrayContaining([
-        expect.stringContaining("Register MCP: codex mcp add promptlane"),
+        expect.stringContaining("Register MCP: codex mcp add looprelay"),
       ]),
     );
     expect(formatDoctorResult("codex", result)).toContain(
@@ -445,7 +445,7 @@ describe("doctorCodex", () => {
     const configPath = join(dir, ".codex", "config.toml");
     const projectHooksPath = join(dir, "project", ".codex", "hooks.json");
     const projectConfigPath = join(dir, "project", ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     installCodexHook({ dataDir, hooksPath, configPath });
     installCodexHook({
       dataDir,
@@ -473,7 +473,7 @@ describe("doctorCodex", () => {
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     installCodexHook({ dataDir, hooksPath, configPath });
     const hooks = JSON.parse(readFileSync(hooksPath, "utf8")) as {
       hooks: {
@@ -503,7 +503,7 @@ describe("doctorCodex", () => {
       "duplicate hooks found (2 handlers)",
     );
     expect(formatDoctorResult("codex", result)).toContain(
-      "Run promptlane install-hook codex to normalize duplicate hooks in the same Codex hooks file.",
+      "Run looprelay install-hook codex to normalize duplicate hooks in the same Codex hooks file.",
     );
 
     installCodexHook({ dataDir, hooksPath, configPath });
@@ -533,7 +533,7 @@ describe("doctorCodex", () => {
     const dataDir = join(dir, "data");
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     installCodexHook({ dataDir, hooksPath, configPath });
     writeLastHookStatus(dataDir, {
       ok: false,
@@ -557,14 +557,14 @@ describe("doctorCodex", () => {
     expect(output).toContain("Status: needs attention");
     expect(output).toContain("Last ingest: failed (401)");
     expect(output).toContain(
-      "Reinstall the hook to refresh the local ingest token: promptlane install-hook codex.",
+      "Reinstall the hook to refresh the local ingest token: looprelay install-hook codex.",
     );
   });
 
   it("formats Codex doctor output with hook and feature flag status", async () => {
     const dir = createTempDir();
     const dataDir = join(dir, "data");
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = await doctorCodex({
       dataDir,
@@ -577,12 +577,12 @@ describe("doctorCodex", () => {
 
     const output = formatDoctorResult("codex", result);
 
-    expect(output).toContain("promptlane doctor: codex");
+    expect(output).toContain("looprelay doctor: codex");
     expect(output).toContain("Codex hook: missing");
     expect(output).toContain("hooks disabled");
     expect(output).toContain("MCP command access: not detected");
-    expect(output).toContain("Register MCP: codex mcp add promptlane");
-    expect(output).toContain("Run promptlane install-hook codex");
+    expect(output).toContain("Register MCP: codex mcp add looprelay");
+    expect(output).toContain("Run looprelay install-hook codex");
   });
 
   it("detects Codex MCP registration from read-only mcp list fallback", async () => {
@@ -591,7 +591,7 @@ describe("doctorCodex", () => {
     const hooksPath = join(dir, ".codex", "hooks.json");
     const configPath = join(dir, ".codex", "config.toml");
     const commands: string[] = [];
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     installCodexHook({ dataDir, hooksPath, configPath });
 
     const result = await doctorCodex({
@@ -604,7 +604,7 @@ describe("doctorCodex", () => {
         commands.push([command, ...args].join(" "));
         return {
           status: 0,
-          stdout: "Name             Command\npromptlane    promptlane mcp\n",
+          stdout: "Name             Command\nlooprelay    looprelay mcp\n",
         };
       },
     });
@@ -615,7 +615,7 @@ describe("doctorCodex", () => {
 });
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-doctor-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-doctor-${randomUUID()}`);
   mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;

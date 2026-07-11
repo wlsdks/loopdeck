@@ -122,7 +122,7 @@ describe("renderCodexHudInstall (dry-run / instructions)", () => {
     });
     expect(result.executed).toBe(false);
     expect(result.text.toLowerCase()).toContain("cmux");
-    expect(result.text).toContain("promptlane buddy");
+    expect(result.text).toContain("looprelay buddy");
   });
 
   it("none: returns instructions for a separate terminal pane", () => {
@@ -131,7 +131,7 @@ describe("renderCodexHudInstall (dry-run / instructions)", () => {
       multiplexer: "none",
     });
     expect(result.executed).toBe(false);
-    expect(result.text).toContain("promptlane buddy");
+    expect(result.text).toContain("looprelay buddy");
     expect(result.text.toLowerCase()).toContain("terminal");
   });
 
@@ -155,7 +155,7 @@ describe("renderCodexHudInstall (dry-run / instructions)", () => {
     const result = renderCodexHudInstall({
       ...baseOptions,
       multiplexer: "cmux",
-      dataDir: "/tmp/promptlane custom",
+      dataDir: "/tmp/looprelay custom",
       json: true,
     });
     const parsed = JSON.parse(result.text) as {
@@ -163,17 +163,17 @@ describe("renderCodexHudInstall (dry-run / instructions)", () => {
     };
 
     expect(parsed.instructions.buddy_command_pretty).toBe(
-      "promptlane buddy --style block --interval 5 --data-dir '/tmp/promptlane custom'",
+      "looprelay buddy --style block --interval 5 --data-dir '/tmp/looprelay custom'",
     );
     expect(parsed.instructions.buddy_argv).toContain("--data-dir");
-    expect(parsed.instructions.buddy_argv).toContain("/tmp/promptlane custom");
+    expect(parsed.instructions.buddy_argv).toContain("/tmp/looprelay custom");
   });
 
   it("no-multiplexer JSON instructions preserve custom data-dir in the runnable buddy command", () => {
     const result = renderCodexHudInstall({
       ...baseOptions,
       multiplexer: "none",
-      dataDir: "/tmp/promptlane custom",
+      dataDir: "/tmp/looprelay custom",
       json: true,
     });
     const parsed = JSON.parse(result.text) as {
@@ -181,10 +181,10 @@ describe("renderCodexHudInstall (dry-run / instructions)", () => {
     };
 
     expect(parsed.instructions.buddy_command_pretty).toBe(
-      "promptlane buddy --style block --interval 5 --data-dir '/tmp/promptlane custom'",
+      "looprelay buddy --style block --interval 5 --data-dir '/tmp/looprelay custom'",
     );
     expect(parsed.instructions.buddy_argv).toContain("--data-dir");
-    expect(parsed.instructions.buddy_argv).toContain("/tmp/promptlane custom");
+    expect(parsed.instructions.buddy_argv).toContain("/tmp/looprelay custom");
   });
 
   it("rejects unsupported --pane values", () => {

@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 import type { Command } from "commander";
 import { fileURLToPath } from "node:url";
 
-import { loadHookAuth, loadPromptLaneConfig } from "../../config/config.js";
+import { loadHookAuth, loadLoopRelayConfig } from "../../config/config.js";
 import {
   createJudgeWorker,
   type JudgeWorker,
@@ -25,19 +25,19 @@ export function registerServerCommand(program: Command): void {
   program
     .command("server")
     .description(
-      "Run the local PromptLane HTTP server (web UI, capture, MCP routes).",
+      "Run the local LoopRelay HTTP server (web UI, capture, MCP routes).",
     )
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .action(async (options: ServerCommandOptions) => {
-      const started = await startPromptLaneServer(options);
+      const started = await startLoopRelayServer(options);
       console.log(started.url);
     });
 }
 
-export async function startPromptLaneServer(
+export async function startLoopRelayServer(
   options: ServerCommandOptions = {},
 ): Promise<StartedServer> {
-  const config = loadPromptLaneConfig(options.dataDir);
+  const config = loadLoopRelayConfig(options.dataDir);
   const hookAuth = loadHookAuth(options.dataDir);
   const storage = createSqlitePromptStorage({
     dataDir: config.data_dir,
@@ -65,7 +65,7 @@ export async function startPromptLaneServer(
 
   const judgeWorker = createJudgeWorker({
     storage,
-    getSettings: () => loadPromptLaneConfig(options.dataDir).auto_judge,
+    getSettings: () => loadLoopRelayConfig(options.dataDir).auto_judge,
   });
   judgeWorker.start();
 

@@ -17,7 +17,7 @@ import { normalizeCodexPayload } from "../adapters/codex.js";
 import type { LoopSnapshot } from "../loop/types.js";
 import { redactPrompt } from "../redaction/redact.js";
 import { createServer } from "../server/create-server.js";
-import { initializePromptLane } from "../config/config.js";
+import { initializeLoopRelay } from "../config/config.js";
 import {
   createSqlitePromptStorage,
   restrictDatabaseFileMode,
@@ -38,7 +38,7 @@ afterEach(() => {
 describe("SQLite prompt storage", () => {
   it("does not chmod database files that are already owner-only", () => {
     const dataDir = createTempDir();
-    const databasePath = join(dataDir, "promptlane.sqlite");
+    const databasePath = join(dataDir, "looprelay.sqlite");
     writeFileSync(databasePath, "");
     chmodSync(databasePath, 0o600);
 
@@ -51,7 +51,7 @@ describe("SQLite prompt storage", () => {
 
   it("records compact boundaries without compact summaries, instructions, or raw paths", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -97,7 +97,7 @@ describe("SQLite prompt storage", () => {
 
   it("stores and reads privacy-safe loop snapshots", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -131,7 +131,7 @@ describe("SQLite prompt storage", () => {
       },
       next_brief: {
         generated: false,
-        summary: "Run promptlane loop brief to generate the next request.",
+        summary: "Run looprelay loop brief to generate the next request.",
       },
       privacy: {
         stores_prompt_bodies: false,
@@ -155,7 +155,7 @@ describe("SQLite prompt storage", () => {
 
   it("records loop snapshot outcomes without prompt bodies or raw paths", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -185,7 +185,7 @@ describe("SQLite prompt storage", () => {
       },
       next_brief: {
         generated: false,
-        summary: "Run promptlane loop brief to generate the next request.",
+        summary: "Run looprelay loop brief to generate the next request.",
       },
       privacy: {
         stores_prompt_bodies: false,
@@ -214,7 +214,7 @@ describe("SQLite prompt storage", () => {
 
   it("rejects unsafe loop outcomes before updating SQLite", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -258,7 +258,7 @@ describe("SQLite prompt storage", () => {
 
   it("rejects improvement attribution outside the selected snapshot", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -302,7 +302,7 @@ describe("SQLite prompt storage", () => {
 
   it("includes raw-free loop outcome evidence on prompt details", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -310,7 +310,7 @@ describe("SQLite prompt storage", () => {
     });
 
     const stored = await storeClaudePrompt(storage, {
-      prompt: "Use PromptLane to tighten the request and run pnpm test.",
+      prompt: "Use LoopRelay to tighten the request and run pnpm test.",
       receivedAt: "2026-07-04T01:00:00.000Z",
     });
     storage.createLoopSnapshot({
@@ -374,7 +374,7 @@ describe("SQLite prompt storage", () => {
 
   it("does not claim prompt improvement effectiveness from an unattributed loop outcome", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -382,7 +382,7 @@ describe("SQLite prompt storage", () => {
     });
 
     const stored = await storeClaudePrompt(storage, {
-      prompt: "Use PromptLane to clarify the task and prove it with tests.",
+      prompt: "Use LoopRelay to clarify the task and prove it with tests.",
       receivedAt: "2026-07-04T01:00:00.000Z",
     });
     storage.createLoopSnapshot({
@@ -429,7 +429,7 @@ describe("SQLite prompt storage", () => {
     expect(effectiveness).toEqual({
       verdict: "unproven",
       summary:
-        "The linked loop passed, but use of this PromptLane improvement was not recorded.",
+        "The linked loop passed, but use of this LoopRelay improvement was not recorded.",
       calibration: {
         linked_outcomes: 1,
         attributed_outcomes: 0,
@@ -447,14 +447,14 @@ describe("SQLite prompt storage", () => {
 
   it("proves prompt improvement effectiveness only with explicit prompt attribution", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
       now: () => new Date("2026-07-04T01:00:00.000Z"),
     });
     const stored = await storeClaudePrompt(storage, {
-      prompt: "Use the PromptLane improvement and verify the result.",
+      prompt: "Use the LoopRelay improvement and verify the result.",
       receivedAt: "2026-07-04T01:00:00.000Z",
     });
 
@@ -509,7 +509,7 @@ describe("SQLite prompt storage", () => {
 
   it("records approved loop memories without prompt bodies or raw paths", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -553,7 +553,7 @@ describe("SQLite prompt storage", () => {
 
   it("filters approved loop memories by source snapshot project", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -576,7 +576,7 @@ describe("SQLite prompt storage", () => {
     storage.recordLoopMemory({
       snapshot_id: "loop_project_a",
       title: "Project A memory",
-      statement: "Use the shared PromptLane status model for project A.",
+      statement: "Use the shared LoopRelay status model for project A.",
       evidence_refs: ["commit:a"],
       approved_by: "user",
     });
@@ -595,7 +595,7 @@ describe("SQLite prompt storage", () => {
 
     expect(projectMemories).toHaveLength(1);
     expect(projectMemories[0]?.statement).toBe(
-      "Use the shared PromptLane status model for project A.",
+      "Use the shared LoopRelay status model for project A.",
     );
     expect(JSON.stringify(projectMemories)).not.toContain("project B");
 
@@ -604,7 +604,7 @@ describe("SQLite prompt storage", () => {
 
   it("rejects unsafe approved loop memory statements", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -628,7 +628,7 @@ describe("SQLite prompt storage", () => {
 
   it("rejects approved loop memories without safe evidence references", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -662,7 +662,7 @@ describe("SQLite prompt storage", () => {
 
   it("initializes directories, applies migration, stores Markdown, indexes FTS, and deduplicates", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -708,7 +708,7 @@ describe("SQLite prompt storage", () => {
       { version: 18, name: "018_loop_memories" },
       { version: 19, name: "019_loop_merge_decisions" },
     ]);
-    const db = new Database(join(dataDir, "promptlane.sqlite"));
+    const db = new Database(join(dataDir, "looprelay.sqlite"));
     try {
       const indexes = db
         .prepare("PRAGMA index_list(prompts)")
@@ -749,7 +749,7 @@ describe("SQLite prompt storage", () => {
 
   it("keeps detected raw secrets out of Markdown, SQLite rows, redaction events, and FTS", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -774,7 +774,7 @@ describe("SQLite prompt storage", () => {
     });
     const row = storage.listPromptRows()[0]!;
     const markdown = readFileSync(row.markdown_path, "utf8");
-    const db = new Database(join(dataDir, "promptlane.sqlite"));
+    const db = new Database(join(dataDir, "looprelay.sqlite"));
     const promptRows = db.prepare("SELECT * FROM prompts").all();
     const redactionRows = db.prepare("SELECT * FROM redaction_events").all();
     db.close();
@@ -803,7 +803,7 @@ describe("SQLite prompt storage", () => {
 
   it("keeps Google API keys out of Markdown, SQLite rows, snippets, and FTS", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -826,7 +826,7 @@ describe("SQLite prompt storage", () => {
     });
     const row = storage.listPromptRows()[0]!;
     const markdown = readFileSync(row.markdown_path, "utf8");
-    const db = new Database(join(dataDir, "promptlane.sqlite"));
+    const db = new Database(join(dataDir, "looprelay.sqlite"));
     const promptRows = db.prepare("SELECT * FROM prompts").all();
     const redactionRows = db.prepare("SELECT * FROM redaction_events").all();
     db.close();
@@ -850,7 +850,7 @@ describe("SQLite prompt storage", () => {
 
   it("stores local rule-based analysis preview with prompt details", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -891,7 +891,7 @@ describe("SQLite prompt storage", () => {
 
   it("stores prompt tags, exposes quality gaps, filters by tag, and deletes tag links", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -922,7 +922,7 @@ describe("SQLite prompt storage", () => {
     );
 
     expect(storage.deletePrompt(ui.id)).toEqual({ deleted: true });
-    const db = new Database(join(dataDir, "promptlane.sqlite"));
+    const db = new Database(join(dataDir, "looprelay.sqlite"));
     expect(
       db
         .prepare(
@@ -935,7 +935,7 @@ describe("SQLite prompt storage", () => {
 
   it("builds a prompt quality dashboard without returning prompt bodies", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1110,7 +1110,7 @@ describe("SQLite prompt storage", () => {
 
   it("returns 30-day daily trend when getQualityDashboard is given trendDays=30", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1133,7 +1133,7 @@ describe("SQLite prompt storage", () => {
 
   it("clamps invalid trendDays to a sane range", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1153,7 +1153,7 @@ describe("SQLite prompt storage", () => {
 
   it("connects Claude ingest to real Markdown, SQLite, and FTS storage", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1196,7 +1196,7 @@ describe("SQLite prompt storage", () => {
 
   it("connects Codex ingest to real Markdown, SQLite, and FTS storage", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1249,7 +1249,7 @@ describe("SQLite prompt storage", () => {
 
   it("rebuilds FTS with redaction validation and quarantines hash mismatches", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1292,7 +1292,7 @@ describe("SQLite prompt storage", () => {
 
   it("flags hash mismatches even when the tampered body has no detectable secret", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1331,7 +1331,7 @@ describe("SQLite prompt storage", () => {
 
   it("marks missing markdown files during reconciliation", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1362,7 +1362,7 @@ describe("SQLite prompt storage", () => {
 
   it("lists, searches, reads, and deletes stored prompts", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1424,7 +1424,7 @@ describe("SQLite prompt storage", () => {
       prompt: "delete redaction event sk-proj-1234567890abcdef",
       receivedAt: "2026-05-01T10:03:00.000Z",
     });
-    const db = new Database(join(dataDir, "promptlane.sqlite"));
+    const db = new Database(join(dataDir, "looprelay.sqlite"));
     expect(
       db
         .prepare(
@@ -1462,7 +1462,7 @@ describe("SQLite prompt storage", () => {
 
   it("records local usefulness signals and removes them with prompt delete", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1534,7 +1534,7 @@ describe("SQLite prompt storage", () => {
       JSON.stringify(storage.getQualityDashboard().useful_prompts),
     ).not.toContain("/Users/example");
 
-    const db = new Database(join(dataDir, "promptlane.sqlite"));
+    const db = new Database(join(dataDir, "looprelay.sqlite"));
     expect(storage.deletePrompt(alpha.id)).toEqual({ deleted: true });
     expect(
       db
@@ -1555,7 +1555,7 @@ describe("SQLite prompt storage", () => {
 
   it("detects exact duplicate prompt groups without returning prompt bodies or raw paths", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1610,7 +1610,7 @@ describe("SQLite prompt storage", () => {
 
   it("filters prompt lists and searches by tool, sensitivity, cwd, and date range", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1687,7 +1687,7 @@ describe("SQLite prompt storage", () => {
 
   it("filters prompt lists and searches by saved, reused, duplicated, and quality-gap focus", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1783,7 +1783,7 @@ describe("SQLite prompt storage", () => {
 
   it("stores project policies with raw-free audit events and browser-safe project summaries", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1855,7 +1855,7 @@ describe("SQLite prompt storage", () => {
       version: 2,
     });
 
-    const db = new Database(join(dataDir, "promptlane.sqlite"));
+    const db = new Database(join(dataDir, "looprelay.sqlite"));
     const auditRows = db.prepare("SELECT * FROM policy_audit_events").all();
     db.close();
 
@@ -1874,14 +1874,14 @@ describe("SQLite prompt storage", () => {
       join(projectDir, "AGENTS.md"),
       [
         "# Project",
-        "promptlane is a local-first developer tool built with TypeScript and SQLite.",
+        "looprelay is a local-first developer tool built with TypeScript and SQLite.",
         "Agents must plan in tasks/todo.md, avoid reverting user changes, commit, and push.",
         "Run pnpm test, pnpm lint, pnpm build, and Playwright E2E after UI changes.",
         "Never log secrets, prompt bodies, raw paths, tokens, stdout, or stderr leaks.",
         "Respond in Korean and report verification evidence in the final summary.",
       ].join("\n"),
     );
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1922,7 +1922,7 @@ describe("SQLite prompt storage", () => {
 
   it("stores import dry-run jobs without prompt bodies or raw source paths", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -1963,7 +1963,7 @@ describe("SQLite prompt storage", () => {
     expect(storage.getImportJob(job.id)).toEqual(job);
     expect(storage.listImportJobs().items).toEqual([job]);
 
-    const db = new Database(join(dataDir, "promptlane.sqlite"));
+    const db = new Database(join(dataDir, "looprelay.sqlite"));
     const rows = db.prepare("SELECT * FROM import_jobs").all();
     db.close();
 
@@ -1973,7 +1973,7 @@ describe("SQLite prompt storage", () => {
 
   it("stores anonymized export preview jobs without raw prompt ids or paths", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -2026,7 +2026,7 @@ describe("SQLite prompt storage", () => {
     });
     expect(storage.getExportJob(job.id)).toEqual(job);
 
-    const db = new Database(join(dataDir, "promptlane.sqlite"));
+    const db = new Database(join(dataDir, "looprelay.sqlite"));
     const rows = db.prepare("SELECT * FROM export_jobs").all();
     db.close();
 
@@ -2037,7 +2037,7 @@ describe("SQLite prompt storage", () => {
 
   it("stores redacted prompt improvement drafts and deletes them with prompts", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -2077,7 +2077,7 @@ describe("SQLite prompt storage", () => {
 
     expect(storage.getPrompt(prompt.id)?.improvement_drafts).toEqual([draft]);
 
-    const db = new Database(join(dataDir, "promptlane.sqlite"));
+    const db = new Database(join(dataDir, "looprelay.sqlite"));
     const rowsBeforeDelete = db
       .prepare("SELECT * FROM prompt_improvement_drafts")
       .all();
@@ -2089,7 +2089,7 @@ describe("SQLite prompt storage", () => {
     expect(storage.deletePrompt(prompt.id)).toEqual({ deleted: true });
     expect(storage.getPrompt(prompt.id)).toBeUndefined();
 
-    const dbAfterDelete = new Database(join(dataDir, "promptlane.sqlite"));
+    const dbAfterDelete = new Database(join(dataDir, "looprelay.sqlite"));
     const rowsAfterDelete = dbAfterDelete
       .prepare("SELECT * FROM prompt_improvement_drafts")
       .all();
@@ -2099,7 +2099,7 @@ describe("SQLite prompt storage", () => {
 
   it("stores agent prompt judgments without prompt bodies and deletes them with prompts", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -2134,7 +2134,7 @@ describe("SQLite prompt storage", () => {
     );
     expect(storage.listAgentPromptJudgments(prompt.id)).toEqual([stored]);
 
-    const db = new Database(join(dataDir, "promptlane.sqlite"));
+    const db = new Database(join(dataDir, "looprelay.sqlite"));
     const rowsBeforeDelete = db
       .prepare("SELECT * FROM agent_prompt_judgments")
       .all();
@@ -2146,7 +2146,7 @@ describe("SQLite prompt storage", () => {
 
     expect(storage.deletePrompt(prompt.id)).toEqual({ deleted: true });
 
-    const dbAfterDelete = new Database(join(dataDir, "promptlane.sqlite"));
+    const dbAfterDelete = new Database(join(dataDir, "looprelay.sqlite"));
     const rowsAfterDelete = dbAfterDelete
       .prepare("SELECT * FROM agent_prompt_judgments")
       .all();
@@ -2156,7 +2156,7 @@ describe("SQLite prompt storage", () => {
 
   it("records coach feedback per prompt and aggregates summary counts", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -2200,7 +2200,7 @@ describe("SQLite prompt storage", () => {
 
   it("records and reads back judge scores per prompt and lists ones that need judging", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -2262,7 +2262,7 @@ describe("SQLite prompt storage", () => {
 
   it("clamps judge scores into 0-100 and rounds floats", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -2307,7 +2307,7 @@ describe("SQLite prompt storage", () => {
 
   it("rebuilds missing database rows from Markdown files", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -2320,7 +2320,7 @@ describe("SQLite prompt storage", () => {
     const row = storage.listPromptRows()[0]!;
     storage.close();
 
-    const db = new Database(join(dataDir, "promptlane.sqlite"));
+    const db = new Database(join(dataDir, "looprelay.sqlite"));
     db.prepare("DELETE FROM prompt_fts WHERE prompt_id = ?").run(stored.id);
     db.prepare("DELETE FROM prompts WHERE id = ?").run(stored.id);
     db.close();
@@ -2425,7 +2425,7 @@ describe("SQLite prompt storage", () => {
       return;
     }
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: "test-secret",
@@ -2437,7 +2437,7 @@ describe("SQLite prompt storage", () => {
     storage.close();
 
     const { statSync } = await import("node:fs");
-    const dbMode = statSync(join(dataDir, "promptlane.sqlite")).mode & 0o777;
+    const dbMode = statSync(join(dataDir, "looprelay.sqlite")).mode & 0o777;
     expect(dbMode).toBe(0o600);
   });
 });
@@ -2500,7 +2500,7 @@ function loopSnapshot(patch: Partial<LoopSnapshot> = {}): LoopSnapshot {
     },
     next_brief: {
       generated: false,
-      summary: "Run promptlane loop brief to generate the next request.",
+      summary: "Run looprelay loop brief to generate the next request.",
     },
     privacy: {
       stores_prompt_bodies: false,
@@ -2512,7 +2512,7 @@ function loopSnapshot(patch: Partial<LoopSnapshot> = {}): LoopSnapshot {
 }
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-storage-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-storage-${randomUUID()}`);
   mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;

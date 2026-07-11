@@ -9,7 +9,7 @@ body:
     id: problem
     attributes:
       label: Problem
-      description: What developer workflow problem should prompt-coach solve?
+      description: What developer workflow problem should looprelay solve?
     validations:
       required: true
   - type: textarea
@@ -25,7 +25,7 @@ body:
       label: Area
       options:
         - Prompt search
-        - Prompt Coach
+        - LoopRelay
         - Privacy/redaction
         - Claude Code adapter
         - Codex adapter

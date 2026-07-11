@@ -12,8 +12,8 @@ import { basename, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const tempHome = mkdtempSync(join(tmpdir(), "promptlane-smoke-home-"));
-const tempPrefix = mkdtempSync(join(tmpdir(), "promptlane-smoke-prefix-"));
+const tempHome = mkdtempSync(join(tmpdir(), "looprelay-smoke-home-"));
+const tempPrefix = mkdtempSync(join(tmpdir(), "looprelay-smoke-prefix-"));
 let tarballPath;
 
 try {
@@ -31,9 +31,9 @@ try {
   });
 
   for (const [binName, args] of [
-    ["promptlane", ["--help"]],
-    ["pl-claude", ["--pc-help"]],
-    ["pl-codex", ["--pc-help"]],
+    ["looprelay", ["--help"]],
+    ["lr-claude", ["--lr-help"]],
+    ["lr-codex", ["--lr-help"]],
   ]) {
     run(join(tempPrefix, "bin", binName), args, {
       cwd: tempHome,
@@ -42,7 +42,7 @@ try {
     });
   }
   const loopHelp = run(
-    join(tempPrefix, "bin", "promptlane"),
+    join(tempPrefix, "bin", "looprelay"),
     ["loop", "--help"],
     {
       cwd: tempHome,
@@ -54,7 +54,7 @@ try {
     throw new Error("installed loop CLI did not expose outcome recording");
   }
   const benchmarkHelp = run(
-    join(tempPrefix, "bin", "promptlane"),
+    join(tempPrefix, "bin", "looprelay"),
     ["benchmark", "--help"],
     {
       cwd: tempHome,
@@ -73,7 +73,7 @@ try {
     );
   }
   const startGuide = run(
-    join(tempPrefix, "bin", "promptlane"),
+    join(tempPrefix, "bin", "looprelay"),
     ["start", "--open-web", "--json"],
     {
       cwd: tempHome,
@@ -83,7 +83,7 @@ try {
   );
   validateStartGuide(startGuide.stdout);
   const qualityEvidenceHelp = run(
-    join(tempPrefix, "bin", "promptlane"),
+    join(tempPrefix, "bin", "looprelay"),
     ["quality-evidence", "--help"],
     {
       cwd: tempHome,
@@ -99,7 +99,7 @@ try {
     }
   }
   const qualityEvidence = run(
-    join(tempPrefix, "bin", "promptlane"),
+    join(tempPrefix, "bin", "looprelay"),
     ["quality-evidence", "--require-complete"],
     {
       cwd: tempHome,
@@ -109,7 +109,7 @@ try {
   );
   validateQualityEvidence(qualityEvidence.stdout);
   const pairedCandidatesHelp = run(
-    join(tempPrefix, "bin", "promptlane"),
+    join(tempPrefix, "bin", "looprelay"),
     ["benchmark", "pair-candidates", "--help"],
     {
       cwd: tempHome,
@@ -123,7 +123,7 @@ try {
     }
   }
   const pairedFixtureHelp = run(
-    join(tempPrefix, "bin", "promptlane"),
+    join(tempPrefix, "bin", "looprelay"),
     ["benchmark", "prepare-pair", "--help"],
     {
       cwd: tempHome,
@@ -133,7 +133,7 @@ try {
   );
   for (const option of [
     "--baseline-prompt-id",
-    "--promptlane-prompt-id",
+    "--looprelay-prompt-id",
     "--pair-id",
     "--query",
     "--confirm-consent",
@@ -145,7 +145,7 @@ try {
   }
   const fixtureFile = join(tempHome, "operator-owned-real-fixtures.json");
   const fixtureInit = run(
-    join(tempPrefix, "bin", "promptlane"),
+    join(tempPrefix, "bin", "looprelay"),
     ["benchmark", "init-fixture", "--output", fixtureFile],
     {
       cwd: tempHome,
@@ -155,9 +155,9 @@ try {
   );
   validateBenchmarkFixtureTemplate(fixtureInit.stdout, fixtureFile);
   confirmBenchmarkFixture(fixtureFile);
-  const baselineFile = join(tempHome, "promptlane-benchmark-baseline.json");
+  const baselineFile = join(tempHome, "looprelay-benchmark-baseline.json");
   const baselineEvidence = run(
-    join(tempPrefix, "bin", "promptlane"),
+    join(tempPrefix, "bin", "looprelay"),
     [
       "benchmark",
       "--fixture-set",
@@ -177,7 +177,7 @@ try {
   validateBenchmarkSnapshot(baselineEvidence.stdout, fixtureFile);
   validateBenchmarkReportFile(baselineEvidence.stdout, baselineFile);
   const comparisonEvidence = run(
-    join(tempPrefix, "bin", "promptlane"),
+    join(tempPrefix, "bin", "looprelay"),
     [
       "benchmark",
       "--fixture-set",
@@ -197,11 +197,11 @@ try {
   validateBenchmarkComparison(comparisonEvidence.stdout, baselineFile);
   const malformedBaselineFile = join(
     tempHome,
-    "promptlane-malformed-baseline.json",
+    "looprelay-malformed-baseline.json",
   );
   writeFileSync(malformedBaselineFile, '{"invalid":', { mode: 0o600 });
   const malformedComparison = run(
-    join(tempPrefix, "bin", "promptlane"),
+    join(tempPrefix, "bin", "looprelay"),
     [
       "benchmark",
       "--fixture-set",
@@ -226,7 +226,7 @@ try {
   );
   const mismatchedBaselineFile = join(
     tempHome,
-    "promptlane-mismatched-baseline.json",
+    "looprelay-mismatched-baseline.json",
   );
   const mismatchedBaseline = JSON.parse(baselineEvidence.stdout);
   mismatchedBaseline.corpus_fingerprint = "corpus_mismatch";
@@ -236,7 +236,7 @@ try {
     { mode: 0o600 },
   );
   const mismatchedComparison = run(
-    join(tempPrefix, "bin", "promptlane"),
+    join(tempPrefix, "bin", "looprelay"),
     [
       "benchmark",
       "--fixture-set",
@@ -264,7 +264,7 @@ try {
   rmSync(malformedBaselineFile, { force: true });
   rmSync(mismatchedBaselineFile, { force: true });
   const benchmarkEvidence = run(
-    join(tempPrefix, "bin", "promptlane"),
+    join(tempPrefix, "bin", "looprelay"),
     ["benchmark", "--fixture-set", "real", "--json"],
     {
       cwd: tempHome,
@@ -280,21 +280,20 @@ try {
         check: "package_install_smoke",
         status: "pass",
         tarball: basename(tarballPath),
-        bins: ["promptlane", "pl-claude", "pl-codex"],
-        first_success: "promptlane start --open-web --json",
-        release_gate: "promptlane quality-evidence --require-complete",
+        bins: ["looprelay", "lr-claude", "lr-codex"],
+        first_success: "looprelay start --open-web --json",
+        release_gate: "looprelay quality-evidence --require-complete",
         fixture_init:
-          "promptlane benchmark init-fixture --output <operator-owned>",
+          "looprelay benchmark init-fixture --output <operator-owned>",
         fixture_prepare:
-          "promptlane benchmark prepare-fixture --prompt-id <selected> --confirm-consent --output <operator-owned>",
+          "looprelay benchmark prepare-fixture --prompt-id <selected> --confirm-consent --output <operator-owned>",
         paired_fixture_prepare:
-          "promptlane benchmark prepare-pair --baseline-prompt-id <baseline> --promptlane-prompt-id <treatment> --confirm-consent --output <operator-owned>",
-        paired_fixture_candidates:
-          "promptlane benchmark pair-candidates --json",
-        fixture_candidates: "promptlane benchmark candidates --json",
-        effectiveness_signal: "promptlane benchmark --fixture-set real --json",
+          "looprelay benchmark prepare-pair --baseline-prompt-id <baseline> --looprelay-prompt-id <treatment> --confirm-consent --output <operator-owned>",
+        paired_fixture_candidates: "looprelay benchmark pair-candidates --json",
+        fixture_candidates: "looprelay benchmark candidates --json",
+        effectiveness_signal: "looprelay benchmark --fixture-set real --json",
         trend_comparison:
-          "promptlane benchmark --baseline-file <prior-report> --json",
+          "looprelay benchmark --baseline-file <prior-report> --json",
       },
       null,
       2,
@@ -362,10 +361,10 @@ function validateStartGuide(stdout) {
   const parsed = JSON.parse(stdout);
   const commands = parsed?.steps?.flatMap((step) => step.commands ?? []) ?? [];
   for (const expectedCommand of [
-    "promptlane setup --profile coach --register-mcp --open-web",
-    "promptlane coach",
-    "promptlane doctor claude-code",
-    "promptlane doctor codex",
+    "looprelay setup --profile coach --register-mcp --open-web",
+    "looprelay coach",
+    "looprelay doctor claude-code",
+    "looprelay doctor codex",
   ]) {
     if (!commands.includes(expectedCommand)) {
       throw new Error(`start guide did not include ${expectedCommand}`);
@@ -375,13 +374,13 @@ function validateStartGuide(stdout) {
 
 function validateQualityEvidence(stdout) {
   for (const expectedText of [
-    "PromptLane 9.5 quality evidence",
+    "LoopRelay 9.5 quality evidence",
     "Status: complete",
     "Evidence scope: repeatable_isolated_local_release",
     "paired effectiveness not evaluated",
     "live agent runtime not evaluated",
     "corepack pnpm smoke:package-install",
-    "corepack pnpm promptlane quality-evidence --require-complete",
+    "corepack pnpm looprelay quality-evidence --require-complete",
   ]) {
     if (!stdout.includes(expectedText)) {
       throw new Error(
@@ -449,7 +448,7 @@ function validateBenchmarkFixtureTemplate(stdout, fixtureFile) {
   if (
     effectPairs.length !== 2 ||
     !effectPairs.some((pair) => pair.variant === "baseline") ||
-    !effectPairs.some((pair) => pair.variant === "promptlane")
+    !effectPairs.some((pair) => pair.variant === "looprelay")
   ) {
     throw new Error(
       "installed fixture init omitted paired effectiveness guidance",

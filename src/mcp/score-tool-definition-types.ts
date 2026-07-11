@@ -8,7 +8,7 @@ type JsonValue =
 
 type JsonObject = { readonly [key: string]: JsonValue };
 
-export type PromptLaneMcpToolDefinition = {
+export type LoopRelayMcpToolDefinition = {
   readonly name: string;
   readonly description: string;
   readonly annotations: JsonObject;

@@ -24,7 +24,7 @@ describe("CLI entrypoint detection", () => {
   it("treats npm bin symlinks as the CLI entrypoint", () => {
     const dir = createTempDir();
     const target = join(dir, "dist", "cli", "index.js");
-    const link = join(dir, "node_modules", ".bin", "promptlane");
+    const link = join(dir, "node_modules", ".bin", "looprelay");
     mkdirSync(join(dir, "dist", "cli"), { recursive: true });
     mkdirSync(join(dir, "node_modules", ".bin"), { recursive: true });
     writeFileSync(target, "#!/usr/bin/env node\n");
@@ -51,7 +51,7 @@ describe("CLI command surface", () => {
       // The implicit `help` subcommand commander auto-generates does not need
       // a description from us — Commander labels it as "display help for
       // command" itself. Every other command must have one so
-      // `promptlane --help` is self-explanatory.
+      // `looprelay --help` is self-explanatory.
       if (command.name() === "help") continue;
       if (!command.description() || command.description().trim() === "") {
         missing.push(command.name());
@@ -60,7 +60,7 @@ describe("CLI command surface", () => {
     expect(missing).toEqual([]);
   });
 
-  it("brands loop schedule help as PromptLane", () => {
+  it("brands loop schedule help as LoopRelay", () => {
     const loopCommand = createProgram().commands.find(
       (command) => command.name() === "loop",
     );
@@ -69,7 +69,7 @@ describe("CLI command surface", () => {
     );
 
     expect(scheduleCommand?.description()).toBe(
-      "Manage opt-in PromptLane collection schedules.",
+      "Manage opt-in LoopRelay collection schedules.",
     );
   });
 });
@@ -79,20 +79,20 @@ describe("runCli error handling", () => {
     const stdout = createCaptureStream();
     const stderr = createCaptureStream();
 
-    const exitCode = await runCli(["node", "promptlane"], {
+    const exitCode = await runCli(["node", "looprelay"], {
       stdout: stdout.stream,
       stderr: stderr.stream,
     });
 
     expect(exitCode).toBe(0);
-    expect(stdout.text).toContain("Usage: promptlane");
+    expect(stdout.text).toContain("Usage: looprelay");
     expect(stderr.text).toBe("");
   });
 
   it("renders Commander input errors without throwing a stack trace", async () => {
     const stderr = createCaptureStream();
 
-    const exitCode = await runCli(["node", "promptlane", "missing-command"], {
+    const exitCode = await runCli(["node", "looprelay", "missing-command"], {
       stderr: stderr.stream,
     });
 
@@ -105,7 +105,7 @@ describe("runCli error handling", () => {
     const stderr = createCaptureStream();
 
     const exitCode = await runCli(
-      ["node", "promptlane", "start", "--tool", "made-up-tool"],
+      ["node", "looprelay", "start", "--tool", "made-up-tool"],
       { stderr: stderr.stream },
     );
 
@@ -119,7 +119,7 @@ describe("runCli error handling", () => {
     const missingFile = join(createTempDir(), "missing.jsonl");
 
     const exitCode = await runCli(
-      ["node", "promptlane", "import", "--dry-run", "--file", missingFile],
+      ["node", "looprelay", "import", "--dry-run", "--file", missingFile],
       { stderr: stderr.stream },
     );
 
@@ -137,7 +137,7 @@ describe("runCli error handling", () => {
     });
 
     await expect(
-      runCli(["node", "promptlane", "__throws-plain"], {
+      runCli(["node", "looprelay", "__throws-plain"], {
         stderr: stderr.stream,
         program,
       }),
@@ -150,18 +150,18 @@ describe("runCli error handling", () => {
     const program = createProgram();
     program.command("__throws-user").action(() => {
       throw new UserError(
-        "missing --target. Try: promptlane __throws-user --target X",
+        "missing --target. Try: looprelay __throws-user --target X",
       );
     });
 
-    const exitCode = await runCli(["node", "promptlane", "__throws-user"], {
+    const exitCode = await runCli(["node", "looprelay", "__throws-user"], {
       stderr: stderr.stream,
       program,
     });
 
     expect(exitCode).toBe(1);
     expect(stderr.text).toContain(
-      "missing --target. Try: promptlane __throws-user --target X",
+      "missing --target. Try: looprelay __throws-user --target X",
     );
   });
 
@@ -171,7 +171,7 @@ describe("runCli error handling", () => {
       process.exitCode = 1;
     });
 
-    const exitCode = await runCli(["node", "promptlane", "__sets-exit-code"], {
+    const exitCode = await runCli(["node", "looprelay", "__sets-exit-code"], {
       program,
     });
 
@@ -180,7 +180,7 @@ describe("runCli error handling", () => {
 });
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-cli-entry-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-cli-entry-${randomUUID()}`);
   mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;

@@ -1,9 +1,9 @@
 ---
-description: Toggle the PromptLane rewrite guard mode (off / context / ask / block-and-copy)
+description: Toggle the LoopRelay rewrite guard mode (off / context / ask / block-and-copy)
 allowed-tools: Bash, AskUserQuestion
 ---
 
-# PromptLane Rewrite Guard Picker
+# LoopRelay Rewrite Guard Picker
 
 This command flips the `UserPromptSubmit` rewrite guard between four modes
 without making the user remember CLI flags. Each mode controls what the hook
@@ -12,8 +12,8 @@ does when a captured prompt scores below the configured threshold.
 ## 1. Confirm the CLI is installed and show the current state
 
 ```bash
-command -v promptlane
-promptlane hook status
+command -v looprelay
+looprelay hook status
 ```
 
 If `command -v` returns nothing, stop and tell the user to install or
@@ -36,7 +36,7 @@ mode does so the user can choose without reading docs.
   (length ≥ 30, score < 60, not an acknowledgment), the hook tells the
   agent to ask one or two clarifying questions before answering. On
   Claude Code that means calling the native `AskUserQuestion` tool;
-  on Codex it means calling the promptlane
+  on Codex it means calling the looprelay
   `ask_clarifying_questions` MCP tool, which uses elicitation/create
   with a native dialog fallback.
 - **block-and-copy** — Hard. Submitted prompts under the score threshold
@@ -50,7 +50,7 @@ local server and status-line untouched so the picker stays scoped to the
 guard mode only:
 
 ```bash
-promptlane setup --profile coach --rewrite-guard <chosen> --no-service --skip-statusline
+looprelay setup --profile coach --rewrite-guard <chosen> --no-service --skip-statusline
 ```
 
 `<chosen>` is the literal value returned by `AskUserQuestion` (`off`,

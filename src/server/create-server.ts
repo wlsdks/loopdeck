@@ -119,7 +119,7 @@ export function createServer(options: CreateServerOptions): FastifyInstance {
         problem(
           415,
           "Unsupported Media Type",
-          "The request content-type is not supported. Send JSON with `content-type: application/json`; if this came from an agent hook, reinstall the hook and run `promptlane doctor`.",
+          "The request content-type is not supported. Send JSON with `content-type: application/json`; if this came from an agent hook, reinstall the hook and run `looprelay doctor`.",
           request.url,
         ).problem,
       );
@@ -132,7 +132,7 @@ export function createServer(options: CreateServerOptions): FastifyInstance {
         problem(
           400,
           "Bad Request",
-          "The request body could not be parsed. Send valid JSON; if this came from an agent hook, reinstall the hook and run `promptlane doctor`.",
+          "The request body could not be parsed. Send valid JSON; if this came from an agent hook, reinstall the hook and run `looprelay doctor`.",
           request.url,
         ).problem,
       );
@@ -156,7 +156,7 @@ export function createServer(options: CreateServerOptions): FastifyInstance {
       problem(
         404,
         "Not Found",
-        "The requested route does not exist. Check `/api/v1/health` for server readiness or reopen the PromptLane web app route before retrying.",
+        "The requested route does not exist. Check `/api/v1/health` for server readiness or reopen the LoopRelay web app route before retrying.",
         request.url,
       ).problem,
     );

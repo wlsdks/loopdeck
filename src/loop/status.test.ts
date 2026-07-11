@@ -2,11 +2,55 @@ import { describe, expect, it } from "vitest";
 
 import type { CompactBoundary } from "../storage/compact-boundaries.js";
 import type { LoopSnapshot } from "./types.js";
-import { createPromptLaneStatus } from "./status.js";
+import { createLoopRelayStatus } from "./status.js";
 
-describe("createPromptLaneStatus", () => {
+describe("createLoopRelayStatus", () => {
+  it("detects recurring failure patterns across completed loops", () => {
+    const status = createLoopRelayStatus({
+      snapshots: [
+        loopSnapshot({
+          id: "loop_failed_2",
+          quality: {
+            average_prompt_score: 44,
+            top_gaps: ["acceptance criteria"],
+            unresolved_questions: [],
+          },
+          outcome: {
+            status: "blocked",
+            summary: "The expected behavior was not defined.",
+            evidence_refs: ["review:blocked"],
+          },
+        }),
+        loopSnapshot({
+          id: "loop_failed_1",
+          quality: {
+            average_prompt_score: 47,
+            top_gaps: ["acceptance criteria"],
+            unresolved_questions: [],
+          },
+          outcome: {
+            status: "failed",
+            summary: "The result did not match the intended behavior.",
+            evidence_refs: ["test:failed"],
+          },
+        }),
+      ],
+      compactBoundaries: [],
+    });
+
+    expect(status.failure_patterns).toEqual([
+      {
+        pattern: "acceptance criteria",
+        occurrences: 2,
+        outcome_statuses: ["blocked", "failed"],
+        next_action:
+          "Ask for or define acceptance criteria before continuing this loop.",
+      },
+    ]);
+  });
+
   it("returns ready status with a safe latest snapshot and compact refresh action", () => {
-    const status = createPromptLaneStatus({
+    const status = createLoopRelayStatus({
       snapshots: [loopSnapshot()],
       compactBoundaries: [compactBoundary()],
     });
@@ -27,9 +71,9 @@ describe("createPromptLaneStatus", () => {
         trigger: "auto",
         after_latest_snapshot: true,
       },
-      next_action: "promptlane loop collect",
+      next_action: "looprelay loop collect",
       next_actions: expect.arrayContaining([
-        expect.stringContaining("promptlane loop collect"),
+        expect.stringContaining("looprelay loop collect"),
       ]),
       privacy: {
         local_only: true,
@@ -45,7 +89,7 @@ describe("createPromptLaneStatus", () => {
   });
 
   it("returns empty guidance without a latest snapshot", () => {
-    const status = createPromptLaneStatus({
+    const status = createLoopRelayStatus({
       snapshots: [],
       compactBoundaries: [],
     });
@@ -53,26 +97,26 @@ describe("createPromptLaneStatus", () => {
     expect(status).toMatchObject({
       status: "empty",
       snapshot_count: 0,
-      next_action: "promptlane loop collect",
+      next_action: "looprelay loop collect",
       next_actions: expect.arrayContaining([
-        "Capture one Codex or Claude Code prompt, then run promptlane coach to confirm the first score.",
-        expect.stringContaining("promptlane loop collect"),
+        "Capture one Codex or Claude Code prompt, then run looprelay coach to confirm the first score.",
+        expect.stringContaining("looprelay loop collect"),
       ]),
     });
     expect(
       status.next_actions.indexOf(
-        "Capture one Codex or Claude Code prompt, then run promptlane coach to confirm the first score.",
+        "Capture one Codex or Claude Code prompt, then run looprelay coach to confirm the first score.",
       ),
     ).toBeLessThan(
       status.next_actions.findIndex((action) =>
-        action.includes("promptlane loop collect"),
+        action.includes("looprelay loop collect"),
       ),
     );
     expect(status).not.toHaveProperty("latest_snapshot");
   });
 
   it("can hide latest snapshot details while preserving counts and actions", () => {
-    const status = createPromptLaneStatus({
+    const status = createLoopRelayStatus({
       snapshots: [loopSnapshot()],
       compactBoundaries: [],
       includeLatest: false,
@@ -81,11 +125,11 @@ describe("createPromptLaneStatus", () => {
     expect(status.status).toBe("ready");
     expect(status.snapshot_count).toBe(1);
     expect(status.latest_snapshot).toBeUndefined();
-    expect(status.next_action).toBe("promptlane loop brief");
+    expect(status.next_action).toBe("looprelay loop brief");
   });
 
   it("guides pending latest snapshots to an exact verifiable checkpoint outcome", () => {
-    const status = createPromptLaneStatus({
+    const status = createLoopRelayStatus({
       snapshots: [
         loopSnapshot({
           id: "loop_pending_checkpoint",
@@ -101,17 +145,17 @@ describe("createPromptLaneStatus", () => {
     const serialized = JSON.stringify(status);
 
     expect(status.next_actions).toContain(
-      "When this work reaches a verifiable checkpoint, review snapshot loop_pending_checkpoint in the Loops view or record its outcome with promptlane loop outcome --snapshot-id loop_pending_checkpoint.",
+      "When this work reaches a verifiable checkpoint, review snapshot loop_pending_checkpoint in the Loops view or record its outcome with looprelay loop outcome --snapshot-id loop_pending_checkpoint.",
     );
     expect(status.next_actions).toContain(
-      "If a PromptLane improvement was actually used, add --used-improvement-prompt with one of the latest snapshot prompt ids; otherwise omit attribution.",
+      "If a LoopRelay improvement was actually used, add --used-improvement-prompt with one of the latest snapshot prompt ids; otherwise omit attribution.",
     );
     expect(serialized).not.toContain("Make this better");
     expect(serialized).not.toContain("/Users/example");
   });
 
   it("returns only opaque prompt ids for explicit improvement attribution", () => {
-    const status = createPromptLaneStatus({
+    const status = createLoopRelayStatus({
       snapshots: [
         loopSnapshot({
           prompt_ids: [
@@ -135,7 +179,7 @@ describe("createPromptLaneStatus", () => {
   });
 
   it("does not request another checkpoint outcome for a completed latest snapshot", () => {
-    const status = createPromptLaneStatus({
+    const status = createLoopRelayStatus({
       snapshots: [loopSnapshot()],
       compactBoundaries: [],
     });
@@ -146,7 +190,7 @@ describe("createPromptLaneStatus", () => {
   });
 
   it("reports project-approved memory availability without memory contents", () => {
-    const status = createPromptLaneStatus({
+    const status = createLoopRelayStatus({
       snapshots: [loopSnapshot()],
       compactBoundaries: [],
       projectMemoryCount: 2,
@@ -165,11 +209,11 @@ describe("createPromptLaneStatus", () => {
     expect(status.memory_candidate).toEqual({
       eligible: true,
       reason: "passed_with_evidence",
-      next_action: "promptlane loop memory-approve",
+      next_action: "looprelay loop memory-approve",
     });
     expect(status.next_actions).toEqual(
       expect.arrayContaining([
-        expect.stringContaining("promptlane loop memory-approve"),
+        expect.stringContaining("looprelay loop memory-approve"),
       ]),
     );
     expect(serialized).not.toContain(
@@ -180,7 +224,7 @@ describe("createPromptLaneStatus", () => {
   });
 
   it("summarizes worktree and session activity without prompt bodies or raw paths", () => {
-    const status = createPromptLaneStatus({
+    const status = createLoopRelayStatus({
       snapshots: [
         loopSnapshot({
           id: "loop_latest",
@@ -289,7 +333,7 @@ describe("createPromptLaneStatus", () => {
             evidence_count: 1,
             recommendation: "ready for continuation",
             continuation_command:
-              "promptlane loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
+              "looprelay loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
             merge_readiness: {
               status: "ready",
               evidence: "evidence present",
@@ -307,7 +351,7 @@ describe("createPromptLaneStatus", () => {
             evidence_count: 1,
             recommendation: "ready for continuation",
             continuation_command:
-              "promptlane loop brief --worktree main-worktree --branch codex/agent-loop-memory-design",
+              "looprelay loop brief --worktree main-worktree --branch codex/agent-loop-memory-design",
             merge_readiness: {
               status: "ready",
               evidence: "evidence present",
@@ -322,14 +366,14 @@ describe("createPromptLaneStatus", () => {
     expect(serialized).not.toContain("sk-proj-secret");
     expect(status.next_actions).toEqual(
       expect.arrayContaining([
-        "Use selected continuation command: promptlane loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
-        "Use selected continuation command: promptlane loop brief --worktree main-worktree --branch codex/agent-loop-memory-design",
+        "Use selected continuation command: looprelay loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
+        "Use selected continuation command: looprelay loop brief --worktree main-worktree --branch codex/agent-loop-memory-design",
       ]),
     );
   });
 
   it("shell-quotes command-center continuation commands with spaces and quotes", () => {
-    const status = createPromptLaneStatus({
+    const status = createLoopRelayStatus({
       compactBoundaries: [],
       snapshots: [
         loopSnapshot({
@@ -349,15 +393,15 @@ describe("createPromptLaneStatus", () => {
 
     expect(status.activity.command_center?.review_items[0]).toMatchObject({
       continuation_command:
-        "promptlane loop brief --worktree 'agent loop worktree' --branch 'feature/agent loop '\\''quoted'\\'''",
+        "looprelay loop brief --worktree 'agent loop worktree' --branch 'feature/agent loop '\\''quoted'\\'''",
     });
     expect(status.next_actions).toContain(
-      "Use selected continuation command: promptlane loop brief --worktree 'agent loop worktree' --branch 'feature/agent loop '\\''quoted'\\'''",
+      "Use selected continuation command: looprelay loop brief --worktree 'agent loop worktree' --branch 'feature/agent loop '\\''quoted'\\'''",
     );
   });
 
   it("builds a raw-free multi-worktree command center for merge review", () => {
-    const status = createPromptLaneStatus({
+    const status = createLoopRelayStatus({
       snapshots: [
         loopSnapshot({
           id: "loop_needs_review",
@@ -442,7 +486,7 @@ describe("createPromptLaneStatus", () => {
           snapshots: 1,
           recommendation: "review before merge",
           continuation_command:
-            "promptlane loop brief --worktree agent-loop-worktree --branch feature/agent-loop",
+            "looprelay loop brief --worktree agent-loop-worktree --branch feature/agent-loop",
           merge_readiness: {
             status: "needs_review",
             evidence: "evidence present",
@@ -460,7 +504,7 @@ describe("createPromptLaneStatus", () => {
           snapshots: 1,
           recommendation: "ready for continuation",
           continuation_command:
-            "promptlane loop brief --worktree main-worktree --branch main",
+            "looprelay loop brief --worktree main-worktree --branch main",
           merge_readiness: {
             status: "ready",
             evidence: "evidence present",
@@ -478,7 +522,7 @@ describe("createPromptLaneStatus", () => {
           snapshots: 1,
           recommendation: "ready for continuation",
           continuation_command:
-            "promptlane loop brief --worktree missing-evidence-worktree --branch feature/missing-evidence",
+            "looprelay loop brief --worktree missing-evidence-worktree --branch feature/missing-evidence",
           merge_readiness: {
             status: "missing_evidence",
             evidence: "missing evidence",

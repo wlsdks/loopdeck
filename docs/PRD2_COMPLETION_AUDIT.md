@@ -11,7 +11,7 @@ Implemented areas:
 
 - Project Control Plane
 - transcript import execution/resume
-- PromptLane improvement drafts
+- LoopRelay improvement drafts
 - anonymized export preview/job flow
 - local quality dashboard
 - Benchmark v1 and browser E2E regression coverage
@@ -24,7 +24,7 @@ The remaining work is not core PRD2 implementation. It is release operations, cr
 | --------------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | Project identity/policy           | Complete                | `project_policies`, `policy_audit_events`, Projects API, policy UI, capture-disabled ingest/import, browser path masking   | Connect analysis/retention/external policy fields when those future execution paths exist |
 | Transcript import                 | Complete                | `import --dry-run`, `--save-job`, `--execute`, `--resume`, `import_records`, imported-only filters                         | Web import UI/API is not implemented                                                      |
-| Prompt Improvement Workspace      | Complete                | `improvePrompt`, `promptlane improve`, detail UI preview/copy/save, `prompt_improvement_drafts`, benchmark coach metric    | Real-user quality evaluation after beta                                                   |
+| Prompt Improvement Workspace      | Complete                | `improvePrompt`, `looprelay improve`, detail UI preview/copy/save, `prompt_improvement_drafts`, benchmark coach metric    | Real-user quality evaluation after beta                                                   |
 | Import execution/resume hardening | Complete                | idempotency keys, resume job, assistant/tool skip, malformed record tolerance, redaction reapplication                     | Directory/glob import remains intentionally excluded                                      |
 | Anonymized export preset          | Complete                | CLI/UI preview, `export_jobs`, job execution, anonymization, small-set warning, invalidation                               | Raw export remains intentionally unsupported                                              |
 | External/tool-assisted analysis   | Excluded from PRD2 core | PRD2 shipped without provider clients or hidden network paths; later MCP agent-judge is explicit and user-session mediated | Keep hidden/provider-routed LLM calls out of core                                         |

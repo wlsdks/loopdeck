@@ -2,7 +2,7 @@
 
 Last updated: 2026-07-05
 
-This document defines how PromptLane uses project instruction files for Codex,
+This document defines how LoopRelay uses project instruction files for Codex,
 Claude Code, and other coding agents.
 
 ## Source Of Truth
@@ -42,8 +42,8 @@ drift and wastes agent context.
 
 Keep repo-level instruction files short and route deeper work to docs:
 
-- Product planning: `docs/PROMPTLANE.md`, `docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md`
-- Legacy naming surfaces: `docs/PROMPTLANE.md`, `docs/PROMPTLANE-LEGACY-SURFACES.md`
+- Product planning: `docs/LOOPRELAY.md`, `docs/superpowers/specs/2026-07-05-looprelay-repositioning-design.md`
+- Legacy naming surfaces: `docs/LOOPRELAY.md`, `docs/LOOPRELAY-RUNTIME-SURFACES.md`
 - Current operational queue: `docs/NEXT_BACKLOG.md`
 - Harness details: `docs/AGENT-HARNESS.md`
 - Architecture: `docs/ARCHITECTURE.md`
@@ -68,9 +68,9 @@ Update `AGENTS.md` when one of these is true:
 Do not update `AGENTS.md` for temporary task state. Use `tasks/todo.md` or a
 design/plan doc instead.
 
-## PromptLane Memory And Patch Proposals
+## LoopRelay Memory And Patch Proposals
 
-PromptLane may propose instruction changes from approved loop memories, but the
+LoopRelay may propose instruction changes from approved loop memories, but the
 proposal path must stay review-first.
 
 Allowed:
@@ -100,18 +100,13 @@ Practical rule:
 - Put active execution state in `tasks/todo.md`.
 - Put one-off evidence in audit/spec/plan documents.
 
-## Compatibility Language
+## Runtime Identity
 
-During the PromptLane compatibility window, use this wording consistently:
+Use this wording consistently:
 
-- Product name: PromptLane
-- npm package: `promptlane`
-- primary compatibility CLI: `promptlane`
-- legacy CLI alias: `promptlane`
-- canonical MCP server name: `promptlane`
-- Claude Code slash namespace: `/promptlane:*`
-- `/promptlane:*` remains unshipped legacy alias planning unless a later migration
-  proves it is still needed
-
-Do not introduce deprecation language for `promptlane` runtime identifiers
-until the deprecation readiness plan says the evidence gates are satisfied.
+- Product name: LoopRelay
+- npm package: `looprelay`
+- primary CLI: `looprelay`
+- canonical MCP server name: `looprelay`
+- Claude Code slash namespace: `/looprelay:*`
+- no legacy CLI alias or alternate slash namespace

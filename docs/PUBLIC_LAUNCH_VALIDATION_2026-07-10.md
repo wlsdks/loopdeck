@@ -1,4 +1,4 @@
-# PromptLane 1.0 Public Launch Validation - 2026-07-10
+# LoopRelay 1.0 Public Launch Validation - 2026-07-10
 
 This document is the evidence ledger for the public-launch and usefulness
 validation phase. Product feature development is frozen unless evidence below
@@ -6,11 +6,11 @@ identifies a privacy, data-loss, installation, or first-value blocker.
 
 ## Current Verdict
 
-PromptLane 1.0.0 is not publicly launched yet.
+LoopRelay 1.0.0 is not publicly launched yet.
 
 - The annotated `v1.0.0` tag and `main` resolve to commit
   `106bbf899d8243f31e122a7496208b144bedc869`.
-- `promptlane@1.0.0` returned npm registry `E404` on 2026-07-10.
+- `looprelay@1.0.0` returned npm registry `E404` on 2026-07-10.
 - GitHub had no `v1.0.0` Release on 2026-07-10.
 - `corepack pnpm npm-publish:preflight -- --json` passed every package,
   privacy, worktree, tag, and remote-tag check. Its only failed check was npm
@@ -27,35 +27,35 @@ smokes.
 | Surface | Result | Evidence |
 | --- | --- | --- |
 | Codex CLI 0.142.5 prompt ingest | PASS | A new Codex prompt was captured at `2026-07-10T11:31:06Z`; immediate `doctor codex --json` reported recent ingest and `status: ready`. |
-| Codex PromptLane MCP call | PASS | The same live session called `get_promptlane_status` once; the structured result reported `status: ready`, local-only operation, no external calls, no prompt bodies, and no raw paths. |
+| Codex LoopRelay MCP call | PASS | The same live session called `get_looprelay_status` once; the structured result reported `status: ready`, local-only operation, no external calls, no prompt bodies, and no raw paths. |
 | Claude Code 2.1.204 prompt ingest | PASS | A new Claude Code prompt was captured at `2026-07-10T11:31:26Z`; `doctor claude-code --json` reported recent ingest and `status: ready`. |
-| Claude Code PromptLane MCP call | PASS | The same live session called `get_promptlane_status` once and received `status: ready` with the latest safe metadata attributed to `claude-code`. |
-| MCP registration | PASS | `codex mcp list` reported `promptlane` enabled and `claude mcp list` reported it connected before the live calls. |
+| Claude Code LoopRelay MCP call | PASS | The same live session called `get_looprelay_status` once and received `status: ready` with the latest safe metadata attributed to `claude-code`. |
+| MCP registration | PASS | `codex mcp list` reported `looprelay` enabled and `claude mcp list` reported it connected before the live calls. |
 
 Observed friction:
 
 - The first Codex attempt failed before MCP use because the locally configured
   `gpt-5.6-sol` requires a newer Codex CLI. Retrying with explicit model
   `gpt-5.4` completed the ingest and MCP call. This is environment/version
-  friction, not evidence of a PromptLane MCP failure.
+  friction, not evidence of a LoopRelay MCP failure.
 - The Claude Code call and final response completed, but the process returned
   non-zero because total cost reached `$0.2666307` against a `$0.25` cap. Treat
   this as first-run cost/predictability friction; do not count it as a failed
-  PromptLane tool call.
+  LoopRelay tool call.
 
 ## Clean Installation And First Value
 
 `corepack pnpm smoke:package-install` passed on 2026-07-10. It built a local
-`promptlane-1.0.0.tgz`, installed it with an isolated temporary environment,
+`looprelay-1.0.0.tgz`, installed it with an isolated temporary environment,
 and verified:
 
-- the `promptlane`, `pl-claude`, and `pl-codex` binaries;
-- the first-success command `promptlane start --open-web --json`;
+- the `looprelay`, `lr-claude`, and `lr-codex` binaries;
+- the first-success command `looprelay start --open-web --json`;
 - installed benchmark fixture, paired-fixture, candidate, and quality-evidence
   commands.
 
 A separate clean temporary HOME/prefix run installed the same local 1.0.0
-tarball and executed a benign `promptlane improve --text ... --json` request:
+tarball and executed a benign `looprelay improve --text ... --json` request:
 
 | Measurement | Observed result |
 | --- | ---: |
@@ -72,7 +72,7 @@ scoring behavior for this fixture, not real task effectiveness.
 
 This proves the pre-publish local tarball path through an actual improvement
 result. It does not prove registry installation. After npm publication, repeat
-installation from `promptlane@1.0.0` in a new temporary environment and record
+installation from `looprelay@1.0.0` in a new temporary environment and record
 elapsed time, installation failures, first-value time, and recovery steps.
 
 ## Usefulness Evidence
@@ -93,7 +93,7 @@ Korean localization, doctor readiness, and public-release truth audit.
 The combined ten-pair real-fixture benchmark reported:
 
 - `pair_count: 10` and `status: negative_direction`;
-- baseline pass rate `0.8`, PromptLane pass rate `0.5`, and observed delta
+- baseline pass rate `0.8`, LoopRelay pass rate `0.5`, and observed delta
   `-0.3`;
 - zero `improved`, three `regressed`, five `unchanged_passed`, and two
   `unchanged_failed` transitions;
@@ -102,7 +102,7 @@ The combined ten-pair real-fixture benchmark reported:
 - `causal_claim: false` and a non-release-blocking soft-signal failure;
 - privacy leak count `0`.
 
-| Pair | Task type | Baseline | PromptLane | Transition |
+| Pair | Task type | Baseline | LoopRelay | Transition |
 | ---: | --- | --- | --- | --- |
 | 1 | MCP status tool use | PASS | FAIL | regressed |
 | 2 | Repository release-state audit | PASS | FAIL | regressed |
@@ -132,7 +132,7 @@ Observed friction and scope decisions:
 - A baseline already scored `100` received a zero-delta rewrite anyway; the
   treatment took longer and failed to establish the required npm state. A
   no-op recommendation is preferable when `changed_sections` is empty.
-- Both sides of the read-only CLI pair failed because PromptLane attempted
+- Both sides of the read-only CLI pair failed because LoopRelay attempted
   `chmod` on its SQLite file inside a read-only Codex sandbox. Read-only
   diagnostics must not require a metadata write or permission mutation.
 - No privacy leak or data-loss event was observed. Installation and local first
@@ -150,14 +150,14 @@ MCP inventory, and release packaging. Every run used Codex CLI 0.142.5,
 `gpt-5.4`, a fresh ephemeral session, a read-only sandbox, the same structured
 output schema, and counterbalanced baseline/treatment order.
 
-Human end-state adjudication found both baseline and PromptLane correct on all
+Human end-state adjudication found both baseline and LoopRelay correct on all
 six tasks. An initial literal matcher reported one improvement and one
 regression, but review showed both were false negatives caused by equivalent
 phrasing (`all local quality checks` and `databasePath`). This manual review was
 not condition-blind, so it is recorded as a limitation rather than stronger
 evidence.
 
-| Metric | Baseline | PromptLane | Observed change |
+| Metric | Baseline | LoopRelay | Observed change |
 | --- | ---: | ---: | ---: |
 | Tasks passed | 6/6 | 6/6 | no lift |
 | Elapsed time | 238.307s | 413.510s | +73.5% |
@@ -166,7 +166,7 @@ evidence.
 | Output tokens | 8,979 | 16,103 | +79.3% |
 | Failed command events | 3 | 14 | +11 events |
 
-All six PromptLane inputs were rewrites with local score deltas from +20 to
+All six LoopRelay inputs were rewrites with local score deltas from +20 to
 +57, but none improved the adjudicated task outcome. Generic verification
 instructions also caused extra test attempts that could not write temporary
 files in the read-only sandbox. The first attempted parallel batch was invalid
@@ -202,7 +202,7 @@ Required before closing validation:
 1. Complete `npm login` interactively.
 2. From the immutable tagged commit, run the full release gate once and rerun
    `corepack pnpm npm-publish:preflight`.
-3. Publish `promptlane@1.0.0`, then create the GitHub Release from `v1.0.0`
+3. Publish `looprelay@1.0.0`, then create the GitHub Release from `v1.0.0`
    without retargeting the tag.
 4. Run a clean registry-install first-value smoke and record elapsed time and
    recovery observations.

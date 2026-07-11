@@ -11,7 +11,7 @@ beforeEach(() => {
 });
 
 describe("web api export client", () => {
-  it("lists PromptLane snapshots without raw prompt or compact content", async () => {
+  it("lists LoopRelay snapshots without raw prompt or compact content", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
       .mockResolvedValueOnce(
@@ -48,7 +48,7 @@ describe("web api export client", () => {
               memory_candidate: {
                 eligible: true,
                 reason: "passed_with_evidence",
-                next_action: "promptlane loop memory-approve",
+                next_action: "looprelay loop memory-approve",
               },
               latest_snapshot: {
                 id: "loop_web",
@@ -62,8 +62,8 @@ describe("web api export client", () => {
                 top_gaps: ["Goal clarity"],
                 outcome_status: "unknown",
               },
-              next_action: "promptlane loop collect",
-              next_actions: ["Run promptlane loop collect again"],
+              next_action: "looprelay loop collect",
+              next_actions: ["Run looprelay loop collect again"],
               privacy: {
                 local_only: true,
                 external_calls: false,
@@ -86,7 +86,7 @@ describe("web api export client", () => {
               has_more: false,
               scope: { scanned_snapshots: 1, snapshot_limit: 100 },
               next_action:
-                "Run promptlane loop status, then record the latest snapshot outcome after a verifiable checkpoint.",
+                "Run looprelay loop status, then record the latest snapshot outcome after a verifiable checkpoint.",
               privacy: {
                 local_only: true,
                 external_calls: false,
@@ -131,7 +131,7 @@ describe("web api export client", () => {
 
     expect(loops.items).toHaveLength(1);
     expect(loops.status.status).toBe("ready");
-    expect(loops.status.next_action).toBe("promptlane loop collect");
+    expect(loops.status.next_action).toBe("looprelay loop collect");
     expect(loops.status.activity).toMatchObject({
       active_worktrees: 2,
       active_sessions: 2,
@@ -152,7 +152,7 @@ describe("web api export client", () => {
     expect(loops.status.memory_candidate).toEqual({
       eligible: true,
       reason: "passed_with_evidence",
-      next_action: "promptlane loop memory-approve",
+      next_action: "looprelay loop memory-approve",
     });
     expect(loops.benchmark_readiness).toMatchObject({
       status: "no_completed_outcomes",
@@ -183,7 +183,7 @@ describe("web api export client", () => {
     expect(JSON.stringify(loops)).not.toContain("/Users/example");
   });
 
-  it("gets a copy-ready PromptLane brief without raw prompt or compact content", async () => {
+  it("gets a copy-ready LoopRelay brief without raw prompt or compact content", async () => {
     fetchMock
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
       .mockResolvedValueOnce(
@@ -333,7 +333,7 @@ describe("web api export client", () => {
               reason:
                 "uses the selected worktree/session/branch filters without auto-submitting",
               command:
-                "promptlane loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
+                "looprelay loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
               writes_files: false,
               external_calls: false,
             },
@@ -392,7 +392,7 @@ describe("web api export client", () => {
             continuation_safety_non_persistence_note: {
               label: "Safety review state",
               state:
-                "reviewed guidance state is not stored or synchronized by PromptLane",
+                "reviewed guidance state is not stored or synchronized by LoopRelay",
               reminder:
                 "operator re-checks safety guidance each time before manual agent submission",
               reason:
@@ -457,7 +457,7 @@ describe("web api export client", () => {
               retry_scope:
                 "operator manually retries the selected brief copy action",
               not_automatic:
-                "PromptLane does not automatically retry clipboard writes or submit prompts",
+                "LoopRelay does not automatically retry clipboard writes or submit prompts",
               reason:
                 "keeps retry control with the operator before any Codex or Claude Code paste",
               writes_files: false,
@@ -479,7 +479,7 @@ describe("web api export client", () => {
               check:
                 "operator verifies the active Codex or Claude Code request box before paste",
               not_inspection:
-                "PromptLane does not inspect agent UI state or target contents",
+                "LoopRelay does not inspect agent UI state or target contents",
               reason:
                 "keeps target selection manual before any continuation handoff",
               writes_files: false,
@@ -490,9 +490,9 @@ describe("web api export client", () => {
               boundary:
                 "paste destination is a manual operator choice in Codex or Claude Code",
               not_verified:
-                "PromptLane does not verify active windows, target contents, or paste success",
+                "LoopRelay does not verify active windows, target contents, or paste success",
               reason:
-                "keeps destination verification outside PromptLane automation before submission",
+                "keeps destination verification outside LoopRelay automation before submission",
               writes_files: false,
               external_calls: false,
             },
@@ -501,7 +501,7 @@ describe("web api export client", () => {
               submission:
                 "operator submits the pasted brief manually in Codex or Claude Code",
               not_automated:
-                "PromptLane does not press enter, click submit, or record submitted state",
+                "LoopRelay does not press enter, click submit, or record submitted state",
               reason:
                 "keeps final agent execution under operator control after paste",
               writes_files: false,
@@ -510,9 +510,9 @@ describe("web api export client", () => {
             continuation_safety_submission_result_non_persistence_note: {
               label: "Submission result non-persistence",
               result_scope:
-                "agent response and submission result stay outside PromptLane until the next explicit loop snapshot",
+                "agent response and submission result stay outside LoopRelay until the next explicit loop snapshot",
               not_stored:
-                "PromptLane does not detect, store, or sync submitted state after handoff",
+                "LoopRelay does not detect, store, or sync submitted state after handoff",
               reason:
                 "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring",
               writes_files: false,
@@ -523,7 +523,7 @@ describe("web api export client", () => {
               reminder:
                 "collect the next loop snapshot explicitly after the agent response is ready",
               not_background:
-                "PromptLane does not start collection from submission, transcript changes, or agent UI activity",
+                "LoopRelay does not start collection from submission, transcript changes, or agent UI activity",
               reason:
                 "keeps post-submission collection operator-triggered and local-first",
               writes_files: false,
@@ -534,7 +534,7 @@ describe("web api export client", () => {
               result_scope:
                 "collection result is not persisted until the operator records the next explicit loop snapshot",
               not_stored:
-                "PromptLane does not store, sync, or infer collection result state from agent UI activity",
+                "LoopRelay does not store, sync, or infer collection result state from agent UI activity",
               reason:
                 "keeps collection evidence tied to explicit local snapshot recording",
               writes_files: false,
@@ -545,7 +545,7 @@ describe("web api export client", () => {
               retry:
                 "operator reruns the explicit loop collection flow when retry is needed",
               not_automated:
-                "PromptLane does not automatically retry collection commands or hidden recovery actions",
+                "LoopRelay does not automatically retry collection commands or hidden recovery actions",
               reason:
                 "keeps retry control local and operator-triggered after collection uncertainty",
               writes_files: false,
@@ -554,9 +554,9 @@ describe("web api export client", () => {
             continuation_safety_retry_outcome_non_persistence_note: {
               label: "Retry outcome non-persistence",
               outcome_scope:
-                "retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
+                "retry attempt and outcome stay outside LoopRelay until the next explicit loop snapshot",
               not_stored:
-                "PromptLane does not detect, store, or sync retry success or failure state",
+                "LoopRelay does not detect, store, or sync retry success or failure state",
               reason:
                 "keeps retry evidence tied to explicit local snapshot recording",
               writes_files: false,
@@ -567,7 +567,7 @@ describe("web api export client", () => {
               freshness_check:
                 "operator checks freshness against the latest explicit loop snapshot evidence",
               not_verified:
-                "PromptLane does not verify freshness from git status, transcripts, or agent UI activity",
+                "LoopRelay does not verify freshness from git status, transcripts, or agent UI activity",
               reason:
                 "keeps evidence freshness review tied to local snapshot metadata",
               writes_files: false,
@@ -576,9 +576,9 @@ describe("web api export client", () => {
             continuation_safety_freshness_result_non_persistence_note: {
               label: "Freshness result non-persistence",
               result_scope:
-                "freshness result stays outside PromptLane until the next explicit loop snapshot",
+                "freshness result stays outside LoopRelay until the next explicit loop snapshot",
               not_stored:
-                "PromptLane does not detect, store, or sync freshness result state",
+                "LoopRelay does not detect, store, or sync freshness result state",
               reason:
                 "keeps freshness evidence tied to explicit local snapshot recording",
               writes_files: false,
@@ -589,7 +589,7 @@ describe("web api export client", () => {
               reminder:
                 "collect a new explicit loop snapshot when evidence freshness is uncertain",
               not_automated:
-                "PromptLane does not verify freshness or start collection automatically",
+                "LoopRelay does not verify freshness or start collection automatically",
               reason:
                 "keeps freshness uncertainty resolution operator-triggered and local-first",
               writes_files: false,
@@ -599,7 +599,7 @@ describe("web api export client", () => {
               label: "Pre-merge freshness advisory",
               advisory: "review freshness uncertainty before merge decisions",
               not_decision:
-                "PromptLane does not approve merges or verify freshness before merge",
+                "LoopRelay does not approve merges or verify freshness before merge",
               reason:
                 "keeps merge readiness separate from freshness uncertainty review",
               writes_files: false,
@@ -610,7 +610,7 @@ describe("web api export client", () => {
               advisory:
                 "review freshness uncertainty before approving loop memory",
               not_decision:
-                "PromptLane does not approve memory or verify freshness from this note",
+                "LoopRelay does not approve memory or verify freshness from this note",
               reason:
                 "keeps memory approval separate from freshness uncertainty review",
               writes_files: false,
@@ -621,7 +621,7 @@ describe("web api export client", () => {
               reminder:
                 "collect a new explicit loop snapshot after approving loop memory",
               not_automated:
-                "PromptLane does not start collection from memory approval or approval state changes",
+                "LoopRelay does not start collection from memory approval or approval state changes",
               reason:
                 "keeps post-approval collection operator-triggered and local-first",
               writes_files: false,
@@ -631,9 +631,9 @@ describe("web api export client", () => {
               {
                 label: "Post-memory-approval collection result non-persistence",
                 result_scope:
-                  "post-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+                  "post-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane does not detect, store, or sync post-approval collection result state",
+                  "LoopRelay does not detect, store, or sync post-approval collection result state",
                 reason:
                   "keeps post-approval collection evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -645,7 +645,7 @@ describe("web api export client", () => {
                 retry:
                   "operator reruns the explicit post-approval loop collection flow when retry is needed",
                 not_automated:
-                  "PromptLane does not automatically retry post-approval collection commands or hidden recovery actions",
+                  "LoopRelay does not automatically retry post-approval collection commands or hidden recovery actions",
                 reason:
                   "keeps post-approval collection retry control local and operator-triggered",
                 writes_files: false,
@@ -655,9 +655,9 @@ describe("web api export client", () => {
               {
                 label: "Post-memory-approval retry outcome non-persistence",
                 outcome_scope:
-                  "post-approval retry outcome stays outside PromptLane until the next explicit loop snapshot",
+                  "post-approval retry outcome stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane does not detect, store, or sync post-approval retry success or failure state",
+                  "LoopRelay does not detect, store, or sync post-approval retry success or failure state",
                 reason:
                   "keeps post-approval retry evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -669,7 +669,7 @@ describe("web api export client", () => {
                 review:
                   "operator checks retry evidence freshness against the latest explicit loop snapshot",
                 not_verified:
-                  "PromptLane does not verify post-approval retry freshness from git status, transcripts, or agent UI activity",
+                  "LoopRelay does not verify post-approval retry freshness from git status, transcripts, or agent UI activity",
                 reason:
                   "keeps post-approval retry freshness review tied to local snapshot metadata",
                 writes_files: false,
@@ -680,9 +680,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry freshness result non-persistence",
                 result_scope:
-                  "post-approval retry freshness result stays outside PromptLane until the next explicit loop snapshot",
+                  "post-approval retry freshness result stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane does not detect, store, or sync post-approval retry freshness result state",
+                  "LoopRelay does not detect, store, or sync post-approval retry freshness result state",
                 reason:
                   "keeps post-approval retry freshness evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -695,7 +695,7 @@ describe("web api export client", () => {
                 reminder:
                   "collect a new explicit loop snapshot when post-approval retry freshness is uncertain",
                 not_automated:
-                  "PromptLane does not verify post-approval retry freshness or start collection automatically",
+                  "LoopRelay does not verify post-approval retry freshness or start collection automatically",
                 reason:
                   "keeps post-approval retry freshness uncertainty resolution operator-triggered and local-first",
                 writes_files: false,
@@ -708,7 +708,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-approval retry freshness uncertainty before approving loop memory again",
                 not_decision:
-                  "PromptLane does not approve memory or verify post-approval retry freshness from this advisory",
+                  "LoopRelay does not approve memory or verify post-approval retry freshness from this advisory",
                 reason:
                   "keeps renewed memory approval separate from retry freshness uncertainty review",
                 writes_files: false,
@@ -721,7 +721,7 @@ describe("web api export client", () => {
                 reminder:
                   "collect a new explicit loop snapshot after approving loop memory again",
                 not_automated:
-                  "PromptLane does not start collection from renewed memory approval or approval state changes",
+                  "LoopRelay does not start collection from renewed memory approval or approval state changes",
                 reason:
                   "keeps renewed-memory-approval collection operator-triggered and local-first",
                 writes_files: false,
@@ -732,9 +732,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry renewed-memory-approval collection result non-persistence",
                 result_scope:
-                  "renewed-memory-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+                  "renewed-memory-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane does not detect, store, or sync renewed-memory-approval collection result state",
+                  "LoopRelay does not detect, store, or sync renewed-memory-approval collection result state",
                 reason:
                   "keeps renewed-memory-approval collection evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -747,7 +747,7 @@ describe("web api export client", () => {
                 reminder:
                   "collect a new explicit loop snapshot when renewed-memory-approval collection result is uncertain",
                 not_automated:
-                  "PromptLane does not verify renewed-memory-approval collection result or start collection automatically",
+                  "LoopRelay does not verify renewed-memory-approval collection result or start collection automatically",
                 reason:
                   "keeps renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
                 writes_files: false,
@@ -760,7 +760,7 @@ describe("web api export client", () => {
                 advisory:
                   "review renewed-memory-approval freshness uncertainty before merge decisions",
                 not_decision:
-                  "PromptLane does not approve merges or verify renewed-memory-approval freshness before merge",
+                  "LoopRelay does not approve merges or verify renewed-memory-approval freshness before merge",
                 reason:
                   "keeps merge readiness separate from renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -773,7 +773,7 @@ describe("web api export client", () => {
                 advisory:
                   "review renewed-memory-approval freshness uncertainty before continuation handoff",
                 not_decision:
-                  "PromptLane does not approve handoffs or verify renewed-memory-approval freshness before handoff",
+                  "LoopRelay does not approve handoffs or verify renewed-memory-approval freshness before handoff",
                 reason:
                   "keeps continuation handoff separate from renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -786,7 +786,7 @@ describe("web api export client", () => {
                 advisory:
                   "review renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
                 not_decision:
-                  "PromptLane does not approve paste targets or verify renewed-memory-approval freshness before paste",
+                  "LoopRelay does not approve paste targets or verify renewed-memory-approval freshness before paste",
                 reason:
                   "keeps paste readiness separate from renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -799,7 +799,7 @@ describe("web api export client", () => {
                 advisory:
                   "review renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
                 not_decision:
-                  "PromptLane does not approve submissions or verify renewed-memory-approval freshness before submit",
+                  "LoopRelay does not approve submissions or verify renewed-memory-approval freshness before submit",
                 reason:
                   "keeps submission readiness separate from renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -812,7 +812,7 @@ describe("web api export client", () => {
                 advisory:
                   "collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain",
                 not_automated:
-                  "PromptLane does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
+                  "LoopRelay does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
                 reason:
                   "keeps post-submit freshness review tied to explicit local snapshot collection",
                 writes_files: false,
@@ -823,9 +823,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence",
                 result_scope:
-                  "post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
+                  "post-submit collection result stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane does not detect, store, or sync post-submit collection result state",
+                  "LoopRelay does not detect, store, or sync post-submit collection result state",
                 reason:
                   "keeps post-submit collection evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -838,7 +838,7 @@ describe("web api export client", () => {
                 retry:
                   "operator reruns the explicit post-submit loop collection flow when retry is needed",
                 not_automated:
-                  "PromptLane does not automatically retry post-submit collection commands or hidden recovery actions",
+                  "LoopRelay does not automatically retry post-submit collection commands or hidden recovery actions",
                 reason:
                   "keeps post-submit collection retry control local and operator-triggered",
                 writes_files: false,
@@ -849,9 +849,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence",
                 outcome_scope:
-                  "post-submit retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
+                  "post-submit retry attempt and outcome stay outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane does not detect, store, or sync post-submit retry success or failure state",
+                  "LoopRelay does not detect, store, or sync post-submit retry success or failure state",
                 reason:
                   "keeps post-submit retry evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -864,7 +864,7 @@ describe("web api export client", () => {
                 freshness_scope:
                   "operator checks post-submit retry evidence freshness against the latest explicit loop snapshot",
                 not_verified:
-                  "PromptLane does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
+                  "LoopRelay does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
                 reason:
                   "keeps post-submit retry evidence freshness review tied to local snapshot metadata",
                 writes_files: false,
@@ -875,9 +875,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence",
                 result_scope:
-                  "post-submit retry freshness result stays outside PromptLane until the next explicit loop snapshot",
+                  "post-submit retry freshness result stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane does not detect, store, or sync post-submit retry freshness result state",
+                  "LoopRelay does not detect, store, or sync post-submit retry freshness result state",
                 reason:
                   "keeps post-submit retry freshness evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -890,7 +890,7 @@ describe("web api export client", () => {
                 collection_trigger:
                   "collect a new explicit loop snapshot when post-submit retry freshness is uncertain",
                 not_automated:
-                  "PromptLane does not verify post-submit retry freshness or start collection automatically",
+                  "LoopRelay does not verify post-submit retry freshness or start collection automatically",
                 reason:
                   "keeps post-submit retry freshness uncertainty resolution operator-triggered and local-first",
                 writes_files: false,
@@ -903,7 +903,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry freshness uncertainty before approving loop memory again",
                 not_decision:
-                  "PromptLane does not approve memory or verify post-submit retry freshness from this advisory",
+                  "LoopRelay does not approve memory or verify post-submit retry freshness from this advisory",
                 reason:
                   "keeps renewed memory approval separate from post-submit retry freshness uncertainty review",
                 writes_files: false,
@@ -916,7 +916,7 @@ describe("web api export client", () => {
                 reminder:
                   "collect a new explicit loop snapshot after approving loop memory again after post-submit retry",
                 not_automated:
-                  "PromptLane does not start collection from post-submit retry renewed memory approval or hidden approval signals",
+                  "LoopRelay does not start collection from post-submit retry renewed memory approval or hidden approval signals",
                 reason:
                   "keeps post-submit retry renewed-memory-approval collection operator-triggered and local-first",
                 writes_files: false,
@@ -927,9 +927,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence",
                 result_scope:
-                  "post-submit retry renewed-memory-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+                  "post-submit retry renewed-memory-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
+                  "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
                 reason:
                   "keeps post-submit retry renewed-memory-approval collection evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -942,7 +942,7 @@ describe("web api export client", () => {
                 reminder:
                   "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval collection result is uncertain",
                 not_automated:
-                  "PromptLane does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
+                  "LoopRelay does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
                 reason:
                   "keeps post-submit retry renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
                 writes_files: false,
@@ -953,9 +953,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence",
                 result_scope:
-                  "post-submit retry renewed-memory-approval post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
+                  "post-submit retry renewed-memory-approval post-submit collection result stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
+                  "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
                 reason:
                   "keeps post-submit retry renewed-memory-approval post-submit collection evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -968,7 +968,7 @@ describe("web api export client", () => {
                 reminder:
                   "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection result is uncertain",
                 not_automated:
-                  "PromptLane does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
+                  "LoopRelay does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
                 reason:
                   "keeps post-submit retry renewed-memory-approval post-submit collection uncertainty resolution operator-triggered and local-first",
                 writes_files: false,
@@ -981,7 +981,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before merge decisions",
                 not_decision:
-                  "PromptLane does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
+                  "LoopRelay does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
                 reason:
                   "keeps merge readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
                 writes_files: false,
@@ -994,7 +994,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before continuation handoff",
                 not_decision:
-                  "PromptLane does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
+                  "LoopRelay does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
                 reason:
                   "keeps continuation handoff separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
                 writes_files: false,
@@ -1007,7 +1007,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before pasting into Codex or Claude Code",
                 not_decision:
-                  "PromptLane does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
+                  "LoopRelay does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
                 reason:
                   "keeps paste readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
                 writes_files: false,
@@ -1020,7 +1020,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before submitting in Codex or Claude Code",
                 not_decision:
-                  "PromptLane does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
+                  "LoopRelay does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
                 reason:
                   "keeps submission readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
                 writes_files: false,
@@ -1033,7 +1033,7 @@ describe("web api export client", () => {
                 advisory:
                   "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
                 not_monitored:
-                  "PromptLane does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval post-submit collection freshness after submit",
+                  "LoopRelay does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval post-submit collection freshness after submit",
                 reason:
                   "keeps post-submit retry renewed-memory-approval post-submit collection freshness review tied to explicit local snapshot collection",
                 writes_files: false,
@@ -1044,9 +1044,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence",
                 not_stored:
-                  "post-submit retry renewed-memory-approval post-submit collection freshness result stays outside PromptLane until the next explicit loop snapshot",
+                  "post-submit retry renewed-memory-approval post-submit collection freshness result stays outside LoopRelay until the next explicit loop snapshot",
                 not_detected:
-                  "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
+                  "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
                 reason:
                   "keeps post-submit retry renewed-memory-approval post-submit collection freshness evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -1059,7 +1059,7 @@ describe("web api export client", () => {
                 reminder:
                   "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
                 not_automated:
-                  "PromptLane does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically",
+                  "LoopRelay does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically",
                 reason:
                   "keeps post-submit retry renewed-memory-approval post-submit collection freshness uncertainty resolution operator-triggered and local-first",
                 writes_files: false,
@@ -1072,7 +1072,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval freshness uncertainty before merge decisions",
                 not_decision:
-                  "PromptLane does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
+                  "LoopRelay does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
                 reason:
                   "keeps merge readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -1085,7 +1085,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval freshness uncertainty before continuation handoff",
                 not_decision:
-                  "PromptLane does not approve handoffs or verify post-submit retry renewed-memory-approval freshness before handoff",
+                  "LoopRelay does not approve handoffs or verify post-submit retry renewed-memory-approval freshness before handoff",
                 reason:
                   "keeps continuation handoff separate from post-submit retry renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -1098,7 +1098,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
                 not_decision:
-                  "PromptLane does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
+                  "LoopRelay does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
                 reason:
                   "keeps paste readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -1111,7 +1111,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
                 not_decision:
-                  "PromptLane does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
+                  "LoopRelay does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
                 reason:
                   "keeps submission readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -1124,7 +1124,7 @@ describe("web api export client", () => {
                 advisory:
                   "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain",
                 not_automated:
-                  "PromptLane does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
+                  "LoopRelay does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
                 reason:
                   "keeps post-submit retry renewed-memory-approval freshness review tied to explicit local snapshot collection",
                 writes_files: false,
@@ -1136,7 +1136,7 @@ describe("web api export client", () => {
               instruction:
                 "paste the copied continuation brief into the active agent request box",
               reason:
-                "keeps PromptLane as the local handoff source while the user controls submission",
+                "keeps LoopRelay as the local handoff source while the user controls submission",
               auto_submit: false,
               writes_files: false,
               external_calls: false,
@@ -1174,7 +1174,7 @@ describe("web api export client", () => {
               not_transcript_import:
                 "transcript import is not used as the source of truth",
               reason:
-                "PromptLane records explicit loop snapshots instead of importing agent transcripts",
+                "LoopRelay records explicit loop snapshots instead of importing agent transcripts",
               stores_transcripts: false,
               writes_files: false,
               external_calls: false,
@@ -1285,7 +1285,7 @@ describe("web api export client", () => {
               command_hint: {
                 label: "Copy review brief command",
                 command:
-                  "promptlane loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
+                  "looprelay loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
                 provenance: {
                   label: "Command provenance",
                   source: "existing command-center continuation command",
@@ -1358,7 +1358,7 @@ describe("web api export client", () => {
         reason:
           "uses the selected worktree/session/branch filters without auto-submitting",
         command:
-          "promptlane loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
+          "looprelay loop brief --worktree agent-loop-worktree --session session-web --branch feature/branch-filter",
         writes_files: false,
         external_calls: false,
       },
@@ -1417,7 +1417,7 @@ describe("web api export client", () => {
       continuation_safety_non_persistence_note: {
         label: "Safety review state",
         state:
-          "reviewed guidance state is not stored or synchronized by PromptLane",
+          "reviewed guidance state is not stored or synchronized by LoopRelay",
         reminder:
           "operator re-checks safety guidance each time before manual agent submission",
         reason:
@@ -1478,7 +1478,7 @@ describe("web api export client", () => {
         label: "Copy retry",
         retry_scope: "operator manually retries the selected brief copy action",
         not_automatic:
-          "PromptLane does not automatically retry clipboard writes or submit prompts",
+          "LoopRelay does not automatically retry clipboard writes or submit prompts",
         reason:
           "keeps retry control with the operator before any Codex or Claude Code paste",
         writes_files: false,
@@ -1500,7 +1500,7 @@ describe("web api export client", () => {
         check:
           "operator verifies the active Codex or Claude Code request box before paste",
         not_inspection:
-          "PromptLane does not inspect agent UI state or target contents",
+          "LoopRelay does not inspect agent UI state or target contents",
         reason: "keeps target selection manual before any continuation handoff",
         writes_files: false,
         external_calls: false,
@@ -1510,9 +1510,9 @@ describe("web api export client", () => {
         boundary:
           "paste destination is a manual operator choice in Codex or Claude Code",
         not_verified:
-          "PromptLane does not verify active windows, target contents, or paste success",
+          "LoopRelay does not verify active windows, target contents, or paste success",
         reason:
-          "keeps destination verification outside PromptLane automation before submission",
+          "keeps destination verification outside LoopRelay automation before submission",
         writes_files: false,
         external_calls: false,
       },
@@ -1521,7 +1521,7 @@ describe("web api export client", () => {
         submission:
           "operator submits the pasted brief manually in Codex or Claude Code",
         not_automated:
-          "PromptLane does not press enter, click submit, or record submitted state",
+          "LoopRelay does not press enter, click submit, or record submitted state",
         reason:
           "keeps final agent execution under operator control after paste",
         writes_files: false,
@@ -1530,9 +1530,9 @@ describe("web api export client", () => {
       continuation_safety_submission_result_non_persistence_note: {
         label: "Submission result non-persistence",
         result_scope:
-          "agent response and submission result stay outside PromptLane until the next explicit loop snapshot",
+          "agent response and submission result stay outside LoopRelay until the next explicit loop snapshot",
         not_stored:
-          "PromptLane does not detect, store, or sync submitted state after handoff",
+          "LoopRelay does not detect, store, or sync submitted state after handoff",
         reason:
           "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring",
         writes_files: false,
@@ -1543,7 +1543,7 @@ describe("web api export client", () => {
         reminder:
           "collect the next loop snapshot explicitly after the agent response is ready",
         not_background:
-          "PromptLane does not start collection from submission, transcript changes, or agent UI activity",
+          "LoopRelay does not start collection from submission, transcript changes, or agent UI activity",
         reason:
           "keeps post-submission collection operator-triggered and local-first",
         writes_files: false,
@@ -1554,7 +1554,7 @@ describe("web api export client", () => {
         result_scope:
           "collection result is not persisted until the operator records the next explicit loop snapshot",
         not_stored:
-          "PromptLane does not store, sync, or infer collection result state from agent UI activity",
+          "LoopRelay does not store, sync, or infer collection result state from agent UI activity",
         reason:
           "keeps collection evidence tied to explicit local snapshot recording",
         writes_files: false,
@@ -1565,7 +1565,7 @@ describe("web api export client", () => {
         retry:
           "operator reruns the explicit loop collection flow when retry is needed",
         not_automated:
-          "PromptLane does not automatically retry collection commands or hidden recovery actions",
+          "LoopRelay does not automatically retry collection commands or hidden recovery actions",
         reason:
           "keeps retry control local and operator-triggered after collection uncertainty",
         writes_files: false,
@@ -1574,9 +1574,9 @@ describe("web api export client", () => {
       continuation_safety_retry_outcome_non_persistence_note: {
         label: "Retry outcome non-persistence",
         outcome_scope:
-          "retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
+          "retry attempt and outcome stay outside LoopRelay until the next explicit loop snapshot",
         not_stored:
-          "PromptLane does not detect, store, or sync retry success or failure state",
+          "LoopRelay does not detect, store, or sync retry success or failure state",
         reason:
           "keeps retry evidence tied to explicit local snapshot recording",
         writes_files: false,
@@ -1587,7 +1587,7 @@ describe("web api export client", () => {
         freshness_check:
           "operator checks freshness against the latest explicit loop snapshot evidence",
         not_verified:
-          "PromptLane does not verify freshness from git status, transcripts, or agent UI activity",
+          "LoopRelay does not verify freshness from git status, transcripts, or agent UI activity",
         reason:
           "keeps evidence freshness review tied to local snapshot metadata",
         writes_files: false,
@@ -1596,9 +1596,9 @@ describe("web api export client", () => {
       continuation_safety_freshness_result_non_persistence_note: {
         label: "Freshness result non-persistence",
         result_scope:
-          "freshness result stays outside PromptLane until the next explicit loop snapshot",
+          "freshness result stays outside LoopRelay until the next explicit loop snapshot",
         not_stored:
-          "PromptLane does not detect, store, or sync freshness result state",
+          "LoopRelay does not detect, store, or sync freshness result state",
         reason:
           "keeps freshness evidence tied to explicit local snapshot recording",
         writes_files: false,
@@ -1609,7 +1609,7 @@ describe("web api export client", () => {
         reminder:
           "collect a new explicit loop snapshot when evidence freshness is uncertain",
         not_automated:
-          "PromptLane does not verify freshness or start collection automatically",
+          "LoopRelay does not verify freshness or start collection automatically",
         reason:
           "keeps freshness uncertainty resolution operator-triggered and local-first",
         writes_files: false,
@@ -1619,7 +1619,7 @@ describe("web api export client", () => {
         label: "Pre-merge freshness advisory",
         advisory: "review freshness uncertainty before merge decisions",
         not_decision:
-          "PromptLane does not approve merges or verify freshness before merge",
+          "LoopRelay does not approve merges or verify freshness before merge",
         reason:
           "keeps merge readiness separate from freshness uncertainty review",
         writes_files: false,
@@ -1629,7 +1629,7 @@ describe("web api export client", () => {
         label: "Pre-memory-approval freshness advisory",
         advisory: "review freshness uncertainty before approving loop memory",
         not_decision:
-          "PromptLane does not approve memory or verify freshness from this note",
+          "LoopRelay does not approve memory or verify freshness from this note",
         reason:
           "keeps memory approval separate from freshness uncertainty review",
         writes_files: false,
@@ -1640,7 +1640,7 @@ describe("web api export client", () => {
         reminder:
           "collect a new explicit loop snapshot after approving loop memory",
         not_automated:
-          "PromptLane does not start collection from memory approval or approval state changes",
+          "LoopRelay does not start collection from memory approval or approval state changes",
         reason:
           "keeps post-approval collection operator-triggered and local-first",
         writes_files: false,
@@ -1650,9 +1650,9 @@ describe("web api export client", () => {
         {
           label: "Post-memory-approval collection result non-persistence",
           result_scope:
-            "post-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+            "post-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
           not_stored:
-            "PromptLane does not detect, store, or sync post-approval collection result state",
+            "LoopRelay does not detect, store, or sync post-approval collection result state",
           reason:
             "keeps post-approval collection evidence tied to explicit local snapshot recording",
           writes_files: false,
@@ -1663,7 +1663,7 @@ describe("web api export client", () => {
         retry:
           "operator reruns the explicit post-approval loop collection flow when retry is needed",
         not_automated:
-          "PromptLane does not automatically retry post-approval collection commands or hidden recovery actions",
+          "LoopRelay does not automatically retry post-approval collection commands or hidden recovery actions",
         reason:
           "keeps post-approval collection retry control local and operator-triggered",
         writes_files: false,
@@ -1673,9 +1673,9 @@ describe("web api export client", () => {
         {
           label: "Post-memory-approval retry outcome non-persistence",
           outcome_scope:
-            "post-approval retry outcome stays outside PromptLane until the next explicit loop snapshot",
+            "post-approval retry outcome stays outside LoopRelay until the next explicit loop snapshot",
           not_stored:
-            "PromptLane does not detect, store, or sync post-approval retry success or failure state",
+            "LoopRelay does not detect, store, or sync post-approval retry success or failure state",
           reason:
             "keeps post-approval retry evidence tied to explicit local snapshot recording",
           writes_files: false,
@@ -1687,7 +1687,7 @@ describe("web api export client", () => {
           review:
             "operator checks retry evidence freshness against the latest explicit loop snapshot",
           not_verified:
-            "PromptLane does not verify post-approval retry freshness from git status, transcripts, or agent UI activity",
+            "LoopRelay does not verify post-approval retry freshness from git status, transcripts, or agent UI activity",
           reason:
             "keeps post-approval retry freshness review tied to local snapshot metadata",
           writes_files: false,
@@ -1697,9 +1697,9 @@ describe("web api export client", () => {
         {
           label: "Post-memory-approval retry freshness result non-persistence",
           result_scope:
-            "post-approval retry freshness result stays outside PromptLane until the next explicit loop snapshot",
+            "post-approval retry freshness result stays outside LoopRelay until the next explicit loop snapshot",
           not_stored:
-            "PromptLane does not detect, store, or sync post-approval retry freshness result state",
+            "LoopRelay does not detect, store, or sync post-approval retry freshness result state",
           reason:
             "keeps post-approval retry freshness evidence tied to explicit local snapshot recording",
           writes_files: false,
@@ -1712,7 +1712,7 @@ describe("web api export client", () => {
           reminder:
             "collect a new explicit loop snapshot when post-approval retry freshness is uncertain",
           not_automated:
-            "PromptLane does not verify post-approval retry freshness or start collection automatically",
+            "LoopRelay does not verify post-approval retry freshness or start collection automatically",
           reason:
             "keeps post-approval retry freshness uncertainty resolution operator-triggered and local-first",
           writes_files: false,
@@ -1725,7 +1725,7 @@ describe("web api export client", () => {
           advisory:
             "review post-approval retry freshness uncertainty before approving loop memory again",
           not_decision:
-            "PromptLane does not approve memory or verify post-approval retry freshness from this advisory",
+            "LoopRelay does not approve memory or verify post-approval retry freshness from this advisory",
           reason:
             "keeps renewed memory approval separate from retry freshness uncertainty review",
           writes_files: false,
@@ -1738,7 +1738,7 @@ describe("web api export client", () => {
           reminder:
             "collect a new explicit loop snapshot after approving loop memory again",
           not_automated:
-            "PromptLane does not start collection from renewed memory approval or approval state changes",
+            "LoopRelay does not start collection from renewed memory approval or approval state changes",
           reason:
             "keeps renewed-memory-approval collection operator-triggered and local-first",
           writes_files: false,
@@ -1749,9 +1749,9 @@ describe("web api export client", () => {
           label:
             "Post-memory-approval retry renewed-memory-approval collection result non-persistence",
           result_scope:
-            "renewed-memory-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+            "renewed-memory-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
           not_stored:
-            "PromptLane does not detect, store, or sync renewed-memory-approval collection result state",
+            "LoopRelay does not detect, store, or sync renewed-memory-approval collection result state",
           reason:
             "keeps renewed-memory-approval collection evidence tied to explicit local snapshot recording",
           writes_files: false,
@@ -1764,7 +1764,7 @@ describe("web api export client", () => {
           reminder:
             "collect a new explicit loop snapshot when renewed-memory-approval collection result is uncertain",
           not_automated:
-            "PromptLane does not verify renewed-memory-approval collection result or start collection automatically",
+            "LoopRelay does not verify renewed-memory-approval collection result or start collection automatically",
           reason:
             "keeps renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
           writes_files: false,
@@ -1777,7 +1777,7 @@ describe("web api export client", () => {
           advisory:
             "review renewed-memory-approval freshness uncertainty before merge decisions",
           not_decision:
-            "PromptLane does not approve merges or verify renewed-memory-approval freshness before merge",
+            "LoopRelay does not approve merges or verify renewed-memory-approval freshness before merge",
           reason:
             "keeps merge readiness separate from renewed-memory-approval freshness uncertainty review",
           writes_files: false,
@@ -1790,7 +1790,7 @@ describe("web api export client", () => {
           advisory:
             "review renewed-memory-approval freshness uncertainty before continuation handoff",
           not_decision:
-            "PromptLane does not approve handoffs or verify renewed-memory-approval freshness before handoff",
+            "LoopRelay does not approve handoffs or verify renewed-memory-approval freshness before handoff",
           reason:
             "keeps continuation handoff separate from renewed-memory-approval freshness uncertainty review",
           writes_files: false,
@@ -1803,7 +1803,7 @@ describe("web api export client", () => {
           advisory:
             "review renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
           not_decision:
-            "PromptLane does not approve paste targets or verify renewed-memory-approval freshness before paste",
+            "LoopRelay does not approve paste targets or verify renewed-memory-approval freshness before paste",
           reason:
             "keeps paste readiness separate from renewed-memory-approval freshness uncertainty review",
           writes_files: false,
@@ -1816,7 +1816,7 @@ describe("web api export client", () => {
           advisory:
             "review renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
           not_decision:
-            "PromptLane does not approve submissions or verify renewed-memory-approval freshness before submit",
+            "LoopRelay does not approve submissions or verify renewed-memory-approval freshness before submit",
           reason:
             "keeps submission readiness separate from renewed-memory-approval freshness uncertainty review",
           writes_files: false,
@@ -1829,7 +1829,7 @@ describe("web api export client", () => {
           advisory:
             "collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain",
           not_automated:
-            "PromptLane does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
+            "LoopRelay does not monitor submitted state, agent responses, or renewed-memory-approval freshness after submit",
           reason:
             "keeps post-submit freshness review tied to explicit local snapshot collection",
           writes_files: false,
@@ -1840,9 +1840,9 @@ describe("web api export client", () => {
           label:
             "Post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence",
           result_scope:
-            "post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
+            "post-submit collection result stays outside LoopRelay until the next explicit loop snapshot",
           not_stored:
-            "PromptLane does not detect, store, or sync post-submit collection result state",
+            "LoopRelay does not detect, store, or sync post-submit collection result state",
           reason:
             "keeps post-submit collection evidence tied to explicit local snapshot recording",
           writes_files: false,
@@ -1855,7 +1855,7 @@ describe("web api export client", () => {
           retry:
             "operator reruns the explicit post-submit loop collection flow when retry is needed",
           not_automated:
-            "PromptLane does not automatically retry post-submit collection commands or hidden recovery actions",
+            "LoopRelay does not automatically retry post-submit collection commands or hidden recovery actions",
           reason:
             "keeps post-submit collection retry control local and operator-triggered",
           writes_files: false,
@@ -1866,9 +1866,9 @@ describe("web api export client", () => {
           label:
             "Post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence",
           outcome_scope:
-            "post-submit retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
+            "post-submit retry attempt and outcome stay outside LoopRelay until the next explicit loop snapshot",
           not_stored:
-            "PromptLane does not detect, store, or sync post-submit retry success or failure state",
+            "LoopRelay does not detect, store, or sync post-submit retry success or failure state",
           reason:
             "keeps post-submit retry evidence tied to explicit local snapshot recording",
           writes_files: false,
@@ -1881,7 +1881,7 @@ describe("web api export client", () => {
           freshness_scope:
             "operator checks post-submit retry evidence freshness against the latest explicit loop snapshot",
           not_verified:
-            "PromptLane does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
+            "LoopRelay does not verify post-submit retry evidence freshness from git status, transcripts, or agent UI activity",
           reason:
             "keeps post-submit retry evidence freshness review tied to local snapshot metadata",
           writes_files: false,
@@ -1892,9 +1892,9 @@ describe("web api export client", () => {
           label:
             "Post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence",
           result_scope:
-            "post-submit retry freshness result stays outside PromptLane until the next explicit loop snapshot",
+            "post-submit retry freshness result stays outside LoopRelay until the next explicit loop snapshot",
           not_stored:
-            "PromptLane does not detect, store, or sync post-submit retry freshness result state",
+            "LoopRelay does not detect, store, or sync post-submit retry freshness result state",
           reason:
             "keeps post-submit retry freshness evidence tied to explicit local snapshot recording",
           writes_files: false,
@@ -1907,7 +1907,7 @@ describe("web api export client", () => {
           collection_trigger:
             "collect a new explicit loop snapshot when post-submit retry freshness is uncertain",
           not_automated:
-            "PromptLane does not verify post-submit retry freshness or start collection automatically",
+            "LoopRelay does not verify post-submit retry freshness or start collection automatically",
           reason:
             "keeps post-submit retry freshness uncertainty resolution operator-triggered and local-first",
           writes_files: false,
@@ -1920,7 +1920,7 @@ describe("web api export client", () => {
           advisory:
             "review post-submit retry freshness uncertainty before approving loop memory again",
           not_decision:
-            "PromptLane does not approve memory or verify post-submit retry freshness from this advisory",
+            "LoopRelay does not approve memory or verify post-submit retry freshness from this advisory",
           reason:
             "keeps renewed memory approval separate from post-submit retry freshness uncertainty review",
           writes_files: false,
@@ -1933,7 +1933,7 @@ describe("web api export client", () => {
           reminder:
             "collect a new explicit loop snapshot after approving loop memory again after post-submit retry",
           not_automated:
-            "PromptLane does not start collection from post-submit retry renewed memory approval or hidden approval signals",
+            "LoopRelay does not start collection from post-submit retry renewed memory approval or hidden approval signals",
           reason:
             "keeps post-submit retry renewed-memory-approval collection operator-triggered and local-first",
           writes_files: false,
@@ -1944,9 +1944,9 @@ describe("web api export client", () => {
           label:
             "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence",
           result_scope:
-            "post-submit retry renewed-memory-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+            "post-submit retry renewed-memory-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
           not_stored:
-            "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
+            "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval collection result state",
           reason:
             "keeps post-submit retry renewed-memory-approval collection evidence tied to explicit local snapshot recording",
           writes_files: false,
@@ -1959,7 +1959,7 @@ describe("web api export client", () => {
           reminder:
             "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval collection result is uncertain",
           not_automated:
-            "PromptLane does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
+            "LoopRelay does not verify post-submit retry renewed-memory-approval collection result or start collection automatically",
           reason:
             "keeps post-submit retry renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
           writes_files: false,
@@ -1970,9 +1970,9 @@ describe("web api export client", () => {
           label:
             "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence",
           result_scope:
-            "post-submit retry renewed-memory-approval post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
+            "post-submit retry renewed-memory-approval post-submit collection result stays outside LoopRelay until the next explicit loop snapshot",
           not_stored:
-            "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
+            "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection result state",
           reason:
             "keeps post-submit retry renewed-memory-approval post-submit collection evidence tied to explicit local snapshot recording",
           writes_files: false,
@@ -1985,7 +1985,7 @@ describe("web api export client", () => {
           reminder:
             "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection result is uncertain",
           not_automated:
-            "PromptLane does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
+            "LoopRelay does not verify post-submit retry renewed-memory-approval post-submit collection result or start collection automatically",
           reason:
             "keeps post-submit retry renewed-memory-approval post-submit collection uncertainty resolution operator-triggered and local-first",
           writes_files: false,
@@ -1998,7 +1998,7 @@ describe("web api export client", () => {
           advisory:
             "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before merge decisions",
           not_decision:
-            "PromptLane does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
+            "LoopRelay does not approve merges or verify post-submit retry renewed-memory-approval post-submit collection freshness before merge",
           reason:
             "keeps merge readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
           writes_files: false,
@@ -2011,7 +2011,7 @@ describe("web api export client", () => {
           advisory:
             "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before continuation handoff",
           not_decision:
-            "PromptLane does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
+            "LoopRelay does not approve handoffs or verify post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
           reason:
             "keeps continuation handoff separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
           writes_files: false,
@@ -2024,7 +2024,7 @@ describe("web api export client", () => {
           advisory:
             "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before pasting into Codex or Claude Code",
           not_decision:
-            "PromptLane does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
+            "LoopRelay does not approve paste targets or verify post-submit retry renewed-memory-approval post-submit collection freshness before paste",
           reason:
             "keeps paste readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
           writes_files: false,
@@ -2037,7 +2037,7 @@ describe("web api export client", () => {
           advisory:
             "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before submitting in Codex or Claude Code",
           not_decision:
-            "PromptLane does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
+            "LoopRelay does not approve submissions or verify post-submit retry renewed-memory-approval post-submit collection freshness before submit",
           reason:
             "keeps submission readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
           writes_files: false,
@@ -2050,7 +2050,7 @@ describe("web api export client", () => {
           advisory:
             "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
           not_monitored:
-            "PromptLane does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval post-submit collection freshness after submit",
+            "LoopRelay does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval post-submit collection freshness after submit",
           reason:
             "keeps post-submit retry renewed-memory-approval post-submit collection freshness review tied to explicit local snapshot collection",
           writes_files: false,
@@ -2061,9 +2061,9 @@ describe("web api export client", () => {
           label:
             "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence",
           not_stored:
-            "post-submit retry renewed-memory-approval post-submit collection freshness result stays outside PromptLane until the next explicit loop snapshot",
+            "post-submit retry renewed-memory-approval post-submit collection freshness result stays outside LoopRelay until the next explicit loop snapshot",
           not_detected:
-            "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
+            "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
           reason:
             "keeps post-submit retry renewed-memory-approval post-submit collection freshness evidence tied to explicit local snapshot recording",
           writes_files: false,
@@ -2076,7 +2076,7 @@ describe("web api export client", () => {
           reminder:
             "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
           not_automated:
-            "PromptLane does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically",
+            "LoopRelay does not verify post-submit retry renewed-memory-approval post-submit collection freshness or start collection automatically",
           reason:
             "keeps post-submit retry renewed-memory-approval post-submit collection freshness uncertainty resolution operator-triggered and local-first",
           writes_files: false,
@@ -2089,7 +2089,7 @@ describe("web api export client", () => {
           advisory:
             "review post-submit retry renewed-memory-approval freshness uncertainty before merge decisions",
           not_decision:
-            "PromptLane does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
+            "LoopRelay does not approve merges or verify post-submit retry renewed-memory-approval freshness before merge",
           reason:
             "keeps merge readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
           writes_files: false,
@@ -2102,7 +2102,7 @@ describe("web api export client", () => {
           advisory:
             "review post-submit retry renewed-memory-approval freshness uncertainty before continuation handoff",
           not_decision:
-            "PromptLane does not approve handoffs or verify post-submit retry renewed-memory-approval freshness before handoff",
+            "LoopRelay does not approve handoffs or verify post-submit retry renewed-memory-approval freshness before handoff",
           reason:
             "keeps continuation handoff separate from post-submit retry renewed-memory-approval freshness uncertainty review",
           writes_files: false,
@@ -2115,7 +2115,7 @@ describe("web api export client", () => {
           advisory:
             "review post-submit retry renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
           not_decision:
-            "PromptLane does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
+            "LoopRelay does not approve paste targets or verify post-submit retry renewed-memory-approval freshness before paste",
           reason:
             "keeps paste readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
           writes_files: false,
@@ -2128,7 +2128,7 @@ describe("web api export client", () => {
           advisory:
             "review post-submit retry renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
           not_decision:
-            "PromptLane does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
+            "LoopRelay does not approve submissions or verify post-submit retry renewed-memory-approval freshness before submit",
           reason:
             "keeps submission readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
           writes_files: false,
@@ -2141,7 +2141,7 @@ describe("web api export client", () => {
           advisory:
             "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain",
           not_automated:
-            "PromptLane does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
+            "LoopRelay does not monitor submitted state, agent responses, or post-submit retry renewed-memory-approval freshness after submit",
           reason:
             "keeps post-submit retry renewed-memory-approval freshness review tied to explicit local snapshot collection",
           writes_files: false,
@@ -2153,7 +2153,7 @@ describe("web api export client", () => {
         instruction:
           "paste the copied continuation brief into the active agent request box",
         reason:
-          "keeps PromptLane as the local handoff source while the user controls submission",
+          "keeps LoopRelay as the local handoff source while the user controls submission",
         auto_submit: false,
         writes_files: false,
         external_calls: false,
@@ -2189,7 +2189,7 @@ describe("web api export client", () => {
         not_transcript_import:
           "transcript import is not used as the source of truth",
         reason:
-          "PromptLane records explicit loop snapshots instead of importing agent transcripts",
+          "LoopRelay records explicit loop snapshots instead of importing agent transcripts",
         stores_transcripts: false,
         writes_files: false,
         external_calls: false,
@@ -2292,7 +2292,7 @@ describe("web api export client", () => {
         command_hint: {
           label: "Copy review brief command",
           command:
-            "promptlane loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
+            "looprelay loop brief --worktree agent-loop-worktree --branch codex/agent-loop-memory-design",
           provenance: {
             label: "Command provenance",
             source: "existing command-center continuation command",
@@ -2486,7 +2486,7 @@ describe("web api export client", () => {
               action: "copy selected continuation brief",
               reason:
                 "uses the selected worktree/session/branch filters without auto-submitting",
-              command: "promptlane loop brief --worktree agent-loop-worktree",
+              command: "looprelay loop brief --worktree agent-loop-worktree",
               writes_files: true,
               external_calls: false,
             },
@@ -2846,7 +2846,7 @@ describe("web api export client", () => {
             continuation_safety_non_persistence_note: {
               label: "Safety review state",
               state:
-                "reviewed guidance state is not stored or synchronized by PromptLane",
+                "reviewed guidance state is not stored or synchronized by LoopRelay",
               reminder:
                 "operator re-checks safety guidance each time before manual agent submission",
               reason:
@@ -3163,7 +3163,7 @@ describe("web api export client", () => {
               retry_scope:
                 "operator manually retries the selected brief copy action",
               not_automatic:
-                "PromptLane does not automatically retry clipboard writes or submit prompts",
+                "LoopRelay does not automatically retry clipboard writes or submit prompts",
               reason:
                 "keeps retry control with the operator before any Codex or Claude Code paste",
               writes_files: false,
@@ -3268,7 +3268,7 @@ describe("web api export client", () => {
               label: "Target-agent check",
               check:
                 "operator verifies the active Codex or Claude Code request box before paste",
-              not_inspection: "PromptLane inspects agent UI state before paste",
+              not_inspection: "LoopRelay inspects agent UI state before paste",
               reason:
                 "keeps target selection manual before any continuation handoff",
               writes_files: false,
@@ -3321,9 +3321,9 @@ describe("web api export client", () => {
               boundary:
                 "paste destination is a manual operator choice in Codex or Claude Code",
               not_verified:
-                "PromptLane verifies active windows, target contents, and paste success",
+                "LoopRelay verifies active windows, target contents, and paste success",
               reason:
-                "keeps destination verification outside PromptLane automation before submission",
+                "keeps destination verification outside LoopRelay automation before submission",
               writes_files: false,
               external_calls: false,
             },
@@ -3374,7 +3374,7 @@ describe("web api export client", () => {
               submission:
                 "operator submits the pasted brief manually in Codex or Claude Code",
               not_automated:
-                "PromptLane presses enter, clicks submit, and records submitted state",
+                "LoopRelay presses enter, clicks submit, and records submitted state",
               reason:
                 "keeps final agent execution under operator control after paste",
               writes_files: false,
@@ -3425,9 +3425,9 @@ describe("web api export client", () => {
             continuation_safety_submission_result_non_persistence_note: {
               label: "Submission result non-persistence",
               result_scope:
-                "agent response and submission result stay outside PromptLane until the next explicit loop snapshot",
+                "agent response and submission result stay outside LoopRelay until the next explicit loop snapshot",
               not_stored:
-                "PromptLane detects, stores, and syncs submitted state after handoff",
+                "LoopRelay detects, stores, and syncs submitted state after handoff",
               reason:
                 "keeps post-submission evidence tied to explicit loop collection instead of UI monitoring",
               writes_files: false,
@@ -3480,7 +3480,7 @@ describe("web api export client", () => {
               reminder:
                 "collect the next loop snapshot explicitly after the agent response is ready",
               not_background:
-                "PromptLane starts collection from submission, transcript changes, or agent UI activity",
+                "LoopRelay starts collection from submission, transcript changes, or agent UI activity",
               reason:
                 "keeps post-submission collection operator-triggered and local-first",
               writes_files: false,
@@ -3533,7 +3533,7 @@ describe("web api export client", () => {
               result_scope:
                 "collection result is not persisted until the operator records the next explicit loop snapshot",
               not_stored:
-                "PromptLane stores, syncs, and infers collection result state from agent UI activity",
+                "LoopRelay stores, syncs, and infers collection result state from agent UI activity",
               reason:
                 "keeps collection evidence tied to explicit local snapshot recording",
               writes_files: false,
@@ -3586,7 +3586,7 @@ describe("web api export client", () => {
               retry:
                 "operator reruns the explicit loop collection flow when retry is needed",
               not_automated:
-                "PromptLane automatically retries collection commands and hidden recovery actions",
+                "LoopRelay automatically retries collection commands and hidden recovery actions",
               reason:
                 "keeps retry control local and operator-triggered after collection uncertainty",
               writes_files: false,
@@ -3637,9 +3637,9 @@ describe("web api export client", () => {
             continuation_safety_retry_outcome_non_persistence_note: {
               label: "Retry outcome non-persistence",
               outcome_scope:
-                "retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
+                "retry attempt and outcome stay outside LoopRelay until the next explicit loop snapshot",
               not_stored:
-                "PromptLane detects, stores, and syncs retry success or failure state",
+                "LoopRelay detects, stores, and syncs retry success or failure state",
               reason:
                 "keeps retry evidence tied to explicit local snapshot recording",
               writes_files: false,
@@ -3692,7 +3692,7 @@ describe("web api export client", () => {
               freshness_check:
                 "operator checks freshness against the latest explicit loop snapshot evidence",
               not_verified:
-                "PromptLane verifies freshness from git status, transcripts, or agent UI activity",
+                "LoopRelay verifies freshness from git status, transcripts, or agent UI activity",
               reason:
                 "keeps evidence freshness review tied to local snapshot metadata",
               writes_files: false,
@@ -3743,9 +3743,9 @@ describe("web api export client", () => {
             continuation_safety_freshness_result_non_persistence_note: {
               label: "Freshness result non-persistence",
               result_scope:
-                "freshness result stays outside PromptLane until the next explicit loop snapshot",
+                "freshness result stays outside LoopRelay until the next explicit loop snapshot",
               not_stored:
-                "PromptLane detects, stores, and syncs freshness result state",
+                "LoopRelay detects, stores, and syncs freshness result state",
               reason:
                 "keeps freshness evidence tied to explicit local snapshot recording",
               writes_files: false,
@@ -3798,7 +3798,7 @@ describe("web api export client", () => {
               reminder:
                 "collect a new explicit loop snapshot when evidence freshness is uncertain",
               not_automated:
-                "PromptLane verifies freshness and starts collection automatically",
+                "LoopRelay verifies freshness and starts collection automatically",
               reason:
                 "keeps freshness uncertainty resolution operator-triggered and local-first",
               writes_files: false,
@@ -3850,7 +3850,7 @@ describe("web api export client", () => {
               label: "Pre-merge freshness advisory",
               advisory: "review freshness uncertainty before merge decisions",
               not_decision:
-                "PromptLane approves merges and verifies freshness before merge",
+                "LoopRelay approves merges and verifies freshness before merge",
               reason:
                 "keeps merge readiness separate from freshness uncertainty review",
               writes_files: false,
@@ -3903,7 +3903,7 @@ describe("web api export client", () => {
               advisory:
                 "review freshness uncertainty before approving loop memory",
               not_decision:
-                "PromptLane approves memory and verifies freshness from this note",
+                "LoopRelay approves memory and verifies freshness from this note",
               reason:
                 "keeps memory approval separate from freshness uncertainty review",
               writes_files: false,
@@ -3956,7 +3956,7 @@ describe("web api export client", () => {
               reminder:
                 "collect a new explicit loop snapshot after approving loop memory",
               not_automated:
-                "PromptLane starts collection from memory approval state changes",
+                "LoopRelay starts collection from memory approval state changes",
               reason:
                 "keeps post-approval collection operator-triggered and local-first",
               writes_files: false,
@@ -4008,9 +4008,9 @@ describe("web api export client", () => {
               {
                 label: "Post-memory-approval collection result non-persistence",
                 result_scope:
-                  "post-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+                  "post-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane detects, stores, and syncs post-approval collection result state",
+                  "LoopRelay detects, stores, and syncs post-approval collection result state",
                 reason:
                   "keeps post-approval collection evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -4064,7 +4064,7 @@ describe("web api export client", () => {
                 retry:
                   "operator reruns the explicit post-approval loop collection flow when retry is needed",
                 not_automated:
-                  "PromptLane automatically retries post-approval collection commands and hidden recovery actions",
+                  "LoopRelay automatically retries post-approval collection commands and hidden recovery actions",
                 reason:
                   "keeps post-approval collection retry control local and operator-triggered",
                 writes_files: false,
@@ -4116,9 +4116,9 @@ describe("web api export client", () => {
               {
                 label: "Post-memory-approval retry outcome non-persistence",
                 outcome_scope:
-                  "post-approval retry outcome stays outside PromptLane until the next explicit loop snapshot",
+                  "post-approval retry outcome stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane detects, stores, and syncs post-approval retry success or failure state",
+                  "LoopRelay detects, stores, and syncs post-approval retry success or failure state",
                 reason:
                   "keeps post-approval retry evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -4172,7 +4172,7 @@ describe("web api export client", () => {
                 review:
                   "operator checks retry evidence freshness against the latest explicit loop snapshot",
                 not_verified:
-                  "PromptLane verifies post-approval retry freshness from git status, transcripts, and agent UI activity",
+                  "LoopRelay verifies post-approval retry freshness from git status, transcripts, and agent UI activity",
                 reason:
                   "keeps post-approval retry freshness review tied to local snapshot metadata",
                 writes_files: false,
@@ -4225,9 +4225,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry freshness result non-persistence",
                 result_scope:
-                  "post-approval retry freshness result stays outside PromptLane until the next explicit loop snapshot",
+                  "post-approval retry freshness result stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane detects, stores, and syncs post-approval retry freshness result state",
+                  "LoopRelay detects, stores, and syncs post-approval retry freshness result state",
                 reason:
                   "keeps post-approval retry freshness evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -4282,7 +4282,7 @@ describe("web api export client", () => {
                 reminder:
                   "collect a new explicit loop snapshot when post-approval retry freshness is uncertain",
                 not_automated:
-                  "PromptLane verifies post-approval retry freshness and starts collection automatically",
+                  "LoopRelay verifies post-approval retry freshness and starts collection automatically",
                 reason:
                   "keeps post-approval retry freshness uncertainty resolution operator-triggered and local-first",
                 writes_files: false,
@@ -4337,7 +4337,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-approval retry freshness uncertainty before approving loop memory again",
                 not_decision:
-                  "PromptLane approves memory and verifies post-approval retry freshness from this advisory",
+                  "LoopRelay approves memory and verifies post-approval retry freshness from this advisory",
                 reason:
                   "keeps renewed memory approval separate from retry freshness uncertainty review",
                 writes_files: false,
@@ -4392,7 +4392,7 @@ describe("web api export client", () => {
                 reminder:
                   "collect a new explicit loop snapshot after approving loop memory again",
                 not_automated:
-                  "PromptLane starts collection from renewed memory approval state changes",
+                  "LoopRelay starts collection from renewed memory approval state changes",
                 reason:
                   "keeps renewed-memory-approval collection operator-triggered and local-first",
                 writes_files: false,
@@ -4445,9 +4445,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry renewed-memory-approval collection result non-persistence",
                 result_scope:
-                  "renewed-memory-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+                  "renewed-memory-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane detects, stores, and syncs renewed-memory-approval collection result state",
+                  "LoopRelay detects, stores, and syncs renewed-memory-approval collection result state",
                 reason:
                   "keeps renewed-memory-approval collection evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -4502,7 +4502,7 @@ describe("web api export client", () => {
                 reminder:
                   "collect a new explicit loop snapshot when renewed-memory-approval collection result is uncertain",
                 not_automated:
-                  "PromptLane verifies renewed-memory-approval collection result and starts collection automatically",
+                  "LoopRelay verifies renewed-memory-approval collection result and starts collection automatically",
                 reason:
                   "keeps renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
                 writes_files: false,
@@ -4557,7 +4557,7 @@ describe("web api export client", () => {
                 advisory:
                   "review renewed-memory-approval freshness uncertainty before merge decisions",
                 not_decision:
-                  "PromptLane approves merges and verifies renewed-memory-approval freshness before merge",
+                  "LoopRelay approves merges and verifies renewed-memory-approval freshness before merge",
                 reason:
                   "keeps merge readiness separate from renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -4612,7 +4612,7 @@ describe("web api export client", () => {
                 advisory:
                   "review renewed-memory-approval freshness uncertainty before continuation handoff",
                 not_decision:
-                  "PromptLane approves handoffs and verifies renewed-memory-approval freshness before handoff",
+                  "LoopRelay approves handoffs and verifies renewed-memory-approval freshness before handoff",
                 reason:
                   "keeps continuation handoff separate from renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -4667,7 +4667,7 @@ describe("web api export client", () => {
                 advisory:
                   "review renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
                 not_decision:
-                  "PromptLane approves paste targets and verifies renewed-memory-approval freshness before paste",
+                  "LoopRelay approves paste targets and verifies renewed-memory-approval freshness before paste",
                 reason:
                   "keeps paste readiness separate from renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -4722,7 +4722,7 @@ describe("web api export client", () => {
                 advisory:
                   "review renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
                 not_decision:
-                  "PromptLane approves submissions and verifies renewed-memory-approval freshness before submit",
+                  "LoopRelay approves submissions and verifies renewed-memory-approval freshness before submit",
                 reason:
                   "keeps submission readiness separate from renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -4777,7 +4777,7 @@ describe("web api export client", () => {
                 advisory:
                   "collect a new explicit loop snapshot after submission when renewed-memory-approval freshness is uncertain",
                 not_automated:
-                  "PromptLane monitors submitted state, agent responses, and renewed-memory-approval freshness after submit",
+                  "LoopRelay monitors submitted state, agent responses, and renewed-memory-approval freshness after submit",
                 reason:
                   "keeps post-submit freshness review tied to explicit local snapshot collection",
                 writes_files: false,
@@ -4830,9 +4830,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry renewed-memory-approval post-submit collection result non-persistence",
                 result_scope:
-                  "post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
+                  "post-submit collection result stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane detects, stores, and syncs post-submit collection result state",
+                  "LoopRelay detects, stores, and syncs post-submit collection result state",
                 reason:
                   "keeps post-submit collection evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -4887,7 +4887,7 @@ describe("web api export client", () => {
                 retry:
                   "operator reruns the explicit post-submit loop collection flow when retry is needed",
                 not_automated:
-                  "PromptLane automatically retries post-submit collection commands and hidden recovery actions",
+                  "LoopRelay automatically retries post-submit collection commands and hidden recovery actions",
                 reason:
                   "keeps post-submit collection retry control local and operator-triggered",
                 writes_files: false,
@@ -4940,9 +4940,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry renewed-memory-approval post-submit retry outcome non-persistence",
                 outcome_scope:
-                  "post-submit retry attempt and outcome stay outside PromptLane until the next explicit loop snapshot",
+                  "post-submit retry attempt and outcome stay outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane detects, stores, and syncs post-submit retry success or failure state",
+                  "LoopRelay detects, stores, and syncs post-submit retry success or failure state",
                 reason:
                   "keeps post-submit retry evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -4997,7 +4997,7 @@ describe("web api export client", () => {
                 freshness_scope:
                   "operator checks post-submit retry evidence freshness against the latest explicit loop snapshot",
                 not_verified:
-                  "PromptLane verifies post-submit retry evidence freshness from git status, transcripts, and agent UI activity",
+                  "LoopRelay verifies post-submit retry evidence freshness from git status, transcripts, and agent UI activity",
                 reason:
                   "keeps post-submit retry evidence freshness review tied to local snapshot metadata",
                 writes_files: false,
@@ -5050,9 +5050,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry renewed-memory-approval post-submit retry freshness result non-persistence",
                 result_scope:
-                  "post-submit retry freshness result stays outside PromptLane until the next explicit loop snapshot",
+                  "post-submit retry freshness result stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane detects, stores, and syncs post-submit retry freshness result state",
+                  "LoopRelay detects, stores, and syncs post-submit retry freshness result state",
                 reason:
                   "keeps post-submit retry freshness evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -5107,7 +5107,7 @@ describe("web api export client", () => {
                 collection_trigger:
                   "collect a new explicit loop snapshot when post-submit retry freshness is uncertain",
                 not_automated:
-                  "PromptLane verifies post-submit retry freshness and starts collection automatically",
+                  "LoopRelay verifies post-submit retry freshness and starts collection automatically",
                 reason:
                   "keeps post-submit retry freshness uncertainty resolution operator-triggered and local-first",
                 writes_files: false,
@@ -5162,7 +5162,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry freshness uncertainty before approving loop memory again",
                 not_decision:
-                  "PromptLane approves memory and verifies post-submit retry freshness from this advisory",
+                  "LoopRelay approves memory and verifies post-submit retry freshness from this advisory",
                 reason:
                   "keeps renewed memory approval separate from post-submit retry freshness uncertainty review",
                 writes_files: false,
@@ -5217,7 +5217,7 @@ describe("web api export client", () => {
                 reminder:
                   "collect a new explicit loop snapshot after approving loop memory again after post-submit retry",
                 not_automated:
-                  "PromptLane starts collection from post-submit retry renewed memory approval and hidden approval signals",
+                  "LoopRelay starts collection from post-submit retry renewed memory approval and hidden approval signals",
                 reason:
                   "keeps post-submit retry renewed-memory-approval collection operator-triggered and local-first",
                 writes_files: false,
@@ -5270,9 +5270,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval collection result non-persistence",
                 result_scope:
-                  "post-submit retry renewed-memory-approval collection result stays outside PromptLane until the next explicit loop snapshot",
+                  "post-submit retry renewed-memory-approval collection result stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane detects, stores, and syncs post-submit retry renewed-memory-approval collection result state",
+                  "LoopRelay detects, stores, and syncs post-submit retry renewed-memory-approval collection result state",
                 reason:
                   "keeps post-submit retry renewed-memory-approval collection evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -5327,7 +5327,7 @@ describe("web api export client", () => {
                 reminder:
                   "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval collection result is uncertain",
                 not_automated:
-                  "PromptLane verifies post-submit retry renewed-memory-approval collection result and starts collection automatically",
+                  "LoopRelay verifies post-submit retry renewed-memory-approval collection result and starts collection automatically",
                 reason:
                   "keeps post-submit retry renewed-memory-approval collection uncertainty resolution operator-triggered and local-first",
                 writes_files: false,
@@ -5382,7 +5382,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval freshness uncertainty before merge decisions",
                 not_decision:
-                  "PromptLane approves merges and verifies post-submit retry renewed-memory-approval freshness before merge",
+                  "LoopRelay approves merges and verifies post-submit retry renewed-memory-approval freshness before merge",
                 reason:
                   "keeps merge readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -5437,7 +5437,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval freshness uncertainty before continuation handoff",
                 not_decision:
-                  "PromptLane approves handoffs and verifies post-submit retry renewed-memory-approval freshness before handoff",
+                  "LoopRelay approves handoffs and verifies post-submit retry renewed-memory-approval freshness before handoff",
                 reason:
                   "keeps continuation handoff separate from post-submit retry renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -5492,7 +5492,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval freshness uncertainty before pasting into Codex or Claude Code",
                 not_decision:
-                  "PromptLane approves paste targets and verifies post-submit retry renewed-memory-approval freshness before paste",
+                  "LoopRelay approves paste targets and verifies post-submit retry renewed-memory-approval freshness before paste",
                 reason:
                   "keeps paste readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -5547,7 +5547,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval freshness uncertainty before submitting in Codex or Claude Code",
                 not_decision:
-                  "PromptLane approves submissions and verifies post-submit retry renewed-memory-approval freshness before submit",
+                  "LoopRelay approves submissions and verifies post-submit retry renewed-memory-approval freshness before submit",
                 reason:
                   "keeps submission readiness separate from post-submit retry renewed-memory-approval freshness uncertainty review",
                 writes_files: false,
@@ -5602,7 +5602,7 @@ describe("web api export client", () => {
                 advisory:
                   "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval freshness is uncertain",
                 not_automated:
-                  "PromptLane monitors submitted state, agent responses, and post-submit retry renewed-memory-approval freshness after submit",
+                  "LoopRelay monitors submitted state, agent responses, and post-submit retry renewed-memory-approval freshness after submit",
                 reason:
                   "keeps post-submit retry renewed-memory-approval freshness review tied to explicit local snapshot collection",
                 writes_files: false,
@@ -5655,9 +5655,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection result non-persistence",
                 result_scope:
-                  "post-submit retry renewed-memory-approval post-submit collection result stays outside PromptLane until the next explicit loop snapshot",
+                  "post-submit retry renewed-memory-approval post-submit collection result stays outside LoopRelay until the next explicit loop snapshot",
                 not_stored:
-                  "PromptLane detects, stores, and syncs post-submit retry renewed-memory-approval post-submit collection result state",
+                  "LoopRelay detects, stores, and syncs post-submit retry renewed-memory-approval post-submit collection result state",
                 reason:
                   "keeps post-submit retry renewed-memory-approval post-submit collection evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -5712,7 +5712,7 @@ describe("web api export client", () => {
                 reminder:
                   "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection result is uncertain",
                 not_automated:
-                  "PromptLane verifies post-submit retry renewed-memory-approval post-submit collection result and starts collection automatically",
+                  "LoopRelay verifies post-submit retry renewed-memory-approval post-submit collection result and starts collection automatically",
                 reason:
                   "keeps post-submit retry renewed-memory-approval post-submit collection uncertainty resolution operator-triggered and local-first",
                 writes_files: false,
@@ -5767,7 +5767,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before merge decisions",
                 not_decision:
-                  "PromptLane approves merges and verifies post-submit retry renewed-memory-approval post-submit collection freshness before merge",
+                  "LoopRelay approves merges and verifies post-submit retry renewed-memory-approval post-submit collection freshness before merge",
                 reason:
                   "keeps merge readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
                 writes_files: false,
@@ -5822,7 +5822,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before continuation handoff",
                 not_decision:
-                  "PromptLane approves handoffs and verifies post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
+                  "LoopRelay approves handoffs and verifies post-submit retry renewed-memory-approval post-submit collection freshness before handoff",
                 reason:
                   "keeps continuation handoff separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
                 writes_files: false,
@@ -5877,7 +5877,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before pasting into Codex or Claude Code",
                 not_decision:
-                  "PromptLane approves paste targets and verifies post-submit retry renewed-memory-approval post-submit collection freshness before paste",
+                  "LoopRelay approves paste targets and verifies post-submit retry renewed-memory-approval post-submit collection freshness before paste",
                 reason:
                   "keeps paste readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
                 writes_files: false,
@@ -5932,7 +5932,7 @@ describe("web api export client", () => {
                 advisory:
                   "review post-submit retry renewed-memory-approval post-submit collection freshness uncertainty before submitting in Codex or Claude Code",
                 not_decision:
-                  "PromptLane approves submissions and verifies post-submit retry renewed-memory-approval post-submit collection freshness before submit",
+                  "LoopRelay approves submissions and verifies post-submit retry renewed-memory-approval post-submit collection freshness before submit",
                 reason:
                   "keeps submission readiness separate from post-submit retry renewed-memory-approval post-submit collection freshness uncertainty review",
                 writes_files: false,
@@ -5987,7 +5987,7 @@ describe("web api export client", () => {
                 advisory:
                   "collect a new explicit loop snapshot after submission when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
                 not_monitored:
-                  "PromptLane monitors submitted state, agent responses, and post-submit retry renewed-memory-approval post-submit collection freshness after submit",
+                  "LoopRelay monitors submitted state, agent responses, and post-submit retry renewed-memory-approval post-submit collection freshness after submit",
                 reason:
                   "keeps post-submit retry renewed-memory-approval post-submit collection freshness review tied to explicit local snapshot collection",
                 writes_files: false,
@@ -6040,9 +6040,9 @@ describe("web api export client", () => {
                 label:
                   "Post-memory-approval retry renewed-memory-approval post-submit retry renewed-memory-approval post-submit collection freshness result non-persistence",
                 not_stored:
-                  "post-submit retry renewed-memory-approval post-submit collection freshness result is stored in PromptLane after submit",
+                  "post-submit retry renewed-memory-approval post-submit collection freshness result is stored in LoopRelay after submit",
                 not_detected:
-                  "PromptLane does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
+                  "LoopRelay does not detect, store, or sync post-submit retry renewed-memory-approval post-submit collection freshness result state",
                 reason:
                   "keeps post-submit retry renewed-memory-approval post-submit collection freshness evidence tied to explicit local snapshot recording",
                 writes_files: false,
@@ -6097,7 +6097,7 @@ describe("web api export client", () => {
                 reminder:
                   "collect a new explicit loop snapshot when post-submit retry renewed-memory-approval post-submit collection freshness is uncertain",
                 not_automated:
-                  "PromptLane verifies post-submit retry renewed-memory-approval post-submit collection freshness and starts collection automatically",
+                  "LoopRelay verifies post-submit retry renewed-memory-approval post-submit collection freshness and starts collection automatically",
                 reason:
                   "keeps post-submit retry renewed-memory-approval post-submit collection freshness uncertainty resolution operator-triggered and local-first",
                 writes_files: false,
@@ -6157,8 +6157,8 @@ describe("web api export client", () => {
             next_action:
               "use recorded memory as local context in future loop briefs",
             next_actions: [
-              "promptlane loop brief",
-              "promptlane loop instruction-patch --target-file AGENTS.md",
+              "looprelay loop brief",
+              "looprelay loop instruction-patch --target-file AGENTS.md",
             ],
             privacy: {
               local_only: true,
@@ -6176,8 +6176,8 @@ describe("web api export client", () => {
 
     expect(result.recorded).toBe(true);
     expect(result.next_actions).toEqual([
-      "promptlane loop brief",
-      "promptlane loop instruction-patch --target-file AGENTS.md",
+      "looprelay loop brief",
+      "looprelay loop instruction-patch --target-file AGENTS.md",
     ]);
     expect(fetchMock).toHaveBeenLastCalledWith("/api/v1/loops/memory/approve", {
       method: "POST",
@@ -6217,7 +6217,7 @@ describe("web api export client", () => {
             },
             next_action:
               "use recorded memory as local context in future loop briefs",
-            next_actions: ["promptlane loop brief"],
+            next_actions: ["looprelay loop brief"],
             privacy: {
               local_only: true,
               returns_prompt_bodies: false,
@@ -6276,8 +6276,8 @@ describe("web api export client", () => {
               used_improvement_prompt_ids: ["prmt_one"],
             },
             next_actions: [
-              "promptlane loop memory-candidate",
-              "promptlane loop brief",
+              "looprelay loop memory-candidate",
+              "looprelay loop brief",
             ],
             privacy: {
               local_only: true,
@@ -6378,7 +6378,7 @@ describe("web api export client", () => {
             },
             next_action:
               "use recorded memory as local context in future loop briefs",
-            next_actions: ["promptlane loop brief"],
+            next_actions: ["looprelay loop brief"],
             privacy: {
               local_only: true,
               returns_prompt_bodies: false,
@@ -6404,15 +6404,15 @@ describe("web api export client", () => {
           data: {
             target_file: "AGENTS.md",
             patch_kind: "append_section",
-            title: "Append approved PromptLane memory to AGENTS.md",
-            diff: "--- a/AGENTS.md\n+++ b/AGENTS.md\n@@\n+## PromptLane Memories\n+  source_memory: mem_web\n",
+            title: "Append approved LoopRelay memory to AGENTS.md",
+            diff: "--- a/AGENTS.md\n+++ b/AGENTS.md\n@@\n+## LoopRelay Memories\n+  source_memory: mem_web\n",
             writes_files: false,
             requires_user_approval: true,
             source_memory_id: "mem_web",
             apply_gate: {
               web_apply_available: false,
               confirm_command:
-                "promptlane loop instruction-apply --target-file AGENTS.md --confirm-apply",
+                "looprelay loop instruction-apply --target-file AGENTS.md --confirm-apply",
               mcp_tool: "apply_instruction_patch",
               reason:
                 "web review does not write files; apply through CLI or MCP with explicit confirmation",
@@ -6438,7 +6438,7 @@ describe("web api export client", () => {
     expect(proposal.apply_gate).toEqual({
       web_apply_available: false,
       confirm_command:
-        "promptlane loop instruction-apply --target-file AGENTS.md --confirm-apply",
+        "looprelay loop instruction-apply --target-file AGENTS.md --confirm-apply",
       mcp_tool: "apply_instruction_patch",
       reason:
         "web review does not write files; apply through CLI or MCP with explicit confirmation",
@@ -6476,15 +6476,15 @@ describe("web api export client", () => {
           data: {
             target_file: "AGENTS.md",
             patch_kind: "append_section",
-            title: "Append approved PromptLane memory to AGENTS.md",
-            diff: "--- a/AGENTS.md\n+++ b/AGENTS.md\n@@\n+## PromptLane Memories\n+  source_memory: mem_web\n",
+            title: "Append approved LoopRelay memory to AGENTS.md",
+            diff: "--- a/AGENTS.md\n+++ b/AGENTS.md\n@@\n+## LoopRelay Memories\n+  source_memory: mem_web\n",
             writes_files: false,
             requires_user_approval: true,
             source_memory_id: "mem_web",
             apply_gate: {
               web_apply_available: false,
               confirm_command:
-                "promptlane loop instruction-apply --target-file AGENTS.md --confirm-apply",
+                "looprelay loop instruction-apply --target-file AGENTS.md --confirm-apply",
               mcp_tool: "apply_instruction_patch",
               reason: 7,
             },
@@ -6519,7 +6519,7 @@ describe("web api export client", () => {
       if (url === "/api/v1/settings") {
         return jsonResponse({
           data: {
-            data_dir: "/Users/example/.promptlane",
+            data_dir: "/Users/example/.looprelay",
             excluded_project_roots: [],
             redaction_mode: "mask",
             server: { host: "127.0.0.1", port: 17373 },
@@ -6641,13 +6641,13 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(
         errorResponse(401, {
           detail:
-            "Missing or invalid app session. Open a new local PromptLane web session, then retry the archive score request.",
+            "Missing or invalid app session. Open a new local LoopRelay web session, then retry the archive score request.",
         }),
       );
     const { getArchiveScoreReport } = await import("./api.js");
 
     await expect(getArchiveScoreReport()).rejects.toThrow(
-      "Archive score report failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the archive score request.",
+      "Archive score report failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the archive score request.",
     );
   });
 
@@ -7197,13 +7197,13 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(
         errorResponse(401, {
           detail:
-            "Missing or invalid app session. Open a new local PromptLane web session, then retry the quality dashboard request.",
+            "Missing or invalid app session. Open a new local LoopRelay web session, then retry the quality dashboard request.",
         }),
       );
     const { getQualityDashboard } = await import("./api.js");
 
     await expect(getQualityDashboard()).rejects.toThrow(
-      "Quality dashboard failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the quality dashboard request.",
+      "Quality dashboard failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the quality dashboard request.",
     );
   });
 
@@ -7772,13 +7772,13 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(
         errorResponse(401, {
           detail:
-            "Missing or invalid app session. Open a new local PromptLane web session, then retry the prompt archive request.",
+            "Missing or invalid app session. Open a new local LoopRelay web session, then retry the prompt archive request.",
         }),
       );
     const { listPrompts } = await import("./api.js");
 
     await expect(listPrompts({})).rejects.toThrow(
-      "Prompt list failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the prompt archive request.",
+      "Prompt list failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the prompt archive request.",
     );
   });
 
@@ -7860,13 +7860,13 @@ describe("web api export client", () => {
     fetchMock.mockResolvedValueOnce(
       errorResponse(401, {
         detail:
-          "Missing or invalid app session. Open a new local PromptLane web session, then retry the request.",
+          "Missing or invalid app session. Open a new local LoopRelay web session, then retry the request.",
       }),
     );
     const { listPrompts } = await import("./api.js");
 
     await expect(listPrompts({})).rejects.toThrow(
-      "Session failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the request.",
+      "Session failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the request.",
     );
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
@@ -7906,13 +7906,13 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(
         errorResponse(401, {
           detail:
-            "Missing or invalid app session. Open a new local PromptLane web session, then retry the project list request.",
+            "Missing or invalid app session. Open a new local LoopRelay web session, then retry the project list request.",
         }),
       );
     const { listProjects } = await import("./api.js");
 
     await expect(listProjects()).rejects.toThrow(
-      "Project list failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the project list request.",
+      "Project list failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the project list request.",
     );
   });
 
@@ -7947,7 +7947,7 @@ describe("web api export client", () => {
             items: [
               {
                 project_id: "proj_abcdef123456",
-                label: "promptlane",
+                label: "looprelay",
                 path_kind: "project_root",
                 prompt_count: 1,
                 sensitive_count: 0,
@@ -7983,7 +7983,7 @@ describe("web api export client", () => {
             items: [
               {
                 project_id: "proj_abcdef123456",
-                label: "promptlane",
+                label: "looprelay",
                 path_kind: "project_root",
                 prompt_count: 1,
                 sensitive_count: 0,
@@ -8043,13 +8043,13 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(
         errorResponse(401, {
           detail:
-            "Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+            "Missing or invalid app session. Open a new local LoopRelay web session, then retry the settings request.",
         }),
       );
     const { getSettings } = await import("./api.js");
 
     await expect(getSettings()).rejects.toThrow(
-      "Settings failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+      "Settings failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the settings request.",
     );
   });
 
@@ -8059,13 +8059,13 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(
         errorResponse(401, {
           error:
-            "Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+            "Missing or invalid app session. Open a new local LoopRelay web session, then retry the settings request.",
         }),
       );
     const { getSettings } = await import("./api.js");
 
     await expect(getSettings()).rejects.toThrow(
-      "Settings failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+      "Settings failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the settings request.",
     );
   });
 
@@ -8076,13 +8076,13 @@ describe("web api export client", () => {
         errorResponse(401, {
           error: "invalid_session",
           error_description:
-            "Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+            "Missing or invalid app session. Open a new local LoopRelay web session, then retry the settings request.",
         }),
       );
     const { getSettings } = await import("./api.js");
 
     await expect(getSettings()).rejects.toThrow(
-      "Settings failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+      "Settings failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the settings request.",
     );
   });
 
@@ -8092,13 +8092,13 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(
         errorResponse(401, {
           errors:
-            "Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+            "Missing or invalid app session. Open a new local LoopRelay web session, then retry the settings request.",
         }),
       );
     const { getSettings } = await import("./api.js");
 
     await expect(getSettings()).rejects.toThrow(
-      "Settings failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+      "Settings failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the settings request.",
     );
   });
 
@@ -8108,13 +8108,13 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(
         textResponse(
           401,
-          "Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+          "Missing or invalid app session. Open a new local LoopRelay web session, then retry the settings request.",
         ),
       );
     const { getSettings } = await import("./api.js");
 
     await expect(getSettings()).rejects.toThrow(
-      "Settings failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+      "Settings failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the settings request.",
     );
   });
 
@@ -8123,14 +8123,14 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(jsonResponse({ data: { csrf_token: "csrf-1" } }))
       .mockResolvedValueOnce(
         new Response(
-          "Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+          "Missing or invalid app session. Open a new local LoopRelay web session, then retry the settings request.",
           { status: 401 },
         ),
       );
     const { getSettings } = await import("./api.js");
 
     await expect(getSettings()).rejects.toThrow(
-      "Settings failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+      "Settings failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the settings request.",
     );
   });
 
@@ -8140,13 +8140,13 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(
         errorResponse(
           401,
-          "Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+          "Missing or invalid app session. Open a new local LoopRelay web session, then retry the settings request.",
         ),
       );
     const { getSettings } = await import("./api.js");
 
     await expect(getSettings()).rejects.toThrow(
-      "Settings failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the settings request.",
+      "Settings failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the settings request.",
     );
   });
 
@@ -8474,7 +8474,7 @@ describe("web api export client", () => {
           detail: "The request payload is invalid.",
           errors: [
             {
-              path: "/Users/jinan/private/prompt-memory/prompts/raw.md",
+              path: "/Users/jinan/private/looprelay/prompts/raw.md",
               message: "Invalid prompt archive path.",
             },
           ],
@@ -8495,7 +8495,7 @@ describe("web api export client", () => {
           detail: "The request payload is invalid.",
           errors: [
             {
-              path: "~/prompt-memory/prompts/raw.md",
+              path: "~/looprelay/prompts/raw.md",
               message: "Invalid prompt archive path.",
             },
           ],
@@ -8516,7 +8516,7 @@ describe("web api export client", () => {
           detail: "The request payload is invalid.",
           errors: [
             {
-              path: "C:\\Users\\jinan\\prompt-memory\\prompts\\raw.md",
+              path: "C:\\Users\\jinan\\looprelay\\prompts\\raw.md",
               message: "Invalid prompt archive path.",
             },
           ],
@@ -8537,7 +8537,7 @@ describe("web api export client", () => {
           detail: "The request payload is invalid.",
           errors: [
             {
-              path: "\\\\server\\share\\prompt-memory\\prompts\\raw.md",
+              path: "\\\\server\\share\\looprelay\\prompts\\raw.md",
               message: "Invalid prompt archive path.",
             },
           ],
@@ -8558,7 +8558,7 @@ describe("web api export client", () => {
           detail: "The request payload is invalid.",
           errors: [
             {
-              path: "file:///Users/jinan/prompt-memory/prompts/raw.md",
+              path: "file:///Users/jinan/looprelay/prompts/raw.md",
               message: "Invalid prompt archive path.",
             },
           ],
@@ -8684,7 +8684,7 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(
         jsonResponse({
           data: {
-            data_dir: "/Users/example/.promptlane",
+            data_dir: "/Users/example/.looprelay",
             excluded_project_roots: [],
             redaction_mode: "mask",
             server: {
@@ -8706,13 +8706,13 @@ describe("web api export client", () => {
     fetchMock.mockResolvedValueOnce(
       errorResponse(503, {
         detail:
-          "PromptLane local server is starting. Retry `/api/v1/health` after startup completes.",
+          "LoopRelay local server is starting. Retry `/api/v1/health` after startup completes.",
       }),
     );
     const { getHealth } = await import("./api.js");
 
     await expect(getHealth()).rejects.toThrow(
-      "Health check failed (503): PromptLane local server is starting. Retry `/api/v1/health` after startup completes.",
+      "Health check failed (503): LoopRelay local server is starting. Retry `/api/v1/health` after startup completes.",
     );
   });
 
@@ -8738,7 +8738,7 @@ describe("web api export client", () => {
       jsonResponse({
         ok: true,
         version: "1.0.0",
-        instance_id: "/Users/private/.promptlane",
+        instance_id: "/Users/private/.looprelay",
       }),
     );
     const { getHealth } = await import("./api.js");
@@ -8778,13 +8778,13 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(
         errorResponse(401, {
           detail:
-            "Missing or invalid app session. Open a new local PromptLane web session, then retry the loop list request.",
+            "Missing or invalid app session. Open a new local LoopRelay web session, then retry the loop list request.",
         }),
       );
     const { listLoops } = await import("./api.js");
 
     await expect(listLoops()).rejects.toThrow(
-      "Loop list failed (401): Missing or invalid app session. Open a new local PromptLane web session, then retry the loop list request.",
+      "Loop list failed (401): Missing or invalid app session. Open a new local LoopRelay web session, then retry the loop list request.",
     );
   });
 
@@ -8816,7 +8816,7 @@ describe("web api export client", () => {
                 worktrees: [],
               },
               project_memory: { approved_count: 0, included_in_brief: false },
-              next_action: "promptlane loop collect",
+              next_action: "looprelay loop collect",
               next_actions: [],
               privacy: {
                 local_only: true,
@@ -8855,7 +8855,7 @@ describe("web api export client", () => {
               },
               project_memory: { approved_count: 0, included_in_brief: false },
               latest_snapshot: {},
-              next_action: "promptlane loop collect",
+              next_action: "looprelay loop collect",
               next_actions: [],
               privacy: {
                 local_only: true,
@@ -8894,7 +8894,7 @@ describe("web api export client", () => {
               },
               project_memory: { approved_count: 0, included_in_brief: false },
               latest_compact_boundary: {},
-              next_action: "promptlane loop collect",
+              next_action: "looprelay loop collect",
               next_actions: [],
               privacy: {
                 local_only: true,
@@ -8932,7 +8932,7 @@ describe("web api export client", () => {
                 worktrees: [],
               },
               project_memory: { approved_count: 0, included_in_brief: false },
-              next_action: "promptlane loop collect",
+              next_action: "looprelay loop collect",
               next_actions: [],
               privacy: {
                 local_only: true,
@@ -8970,7 +8970,7 @@ describe("web api export client", () => {
                 worktrees: [],
               },
               project_memory: { approved_count: 0, included_in_brief: false },
-              next_action: "promptlane loop collect",
+              next_action: "looprelay loop collect",
               next_actions: [],
               privacy: {
                 local_only: true,
@@ -9014,7 +9014,7 @@ describe("web api export client", () => {
                 worktrees: [],
               },
               project_memory: { approved_count: 0, included_in_brief: false },
-              next_action: "promptlane loop collect",
+              next_action: "looprelay loop collect",
               next_actions: [],
               privacy: {
                 local_only: true,
@@ -9068,7 +9068,7 @@ describe("web api export client", () => {
                 ],
               },
               project_memory: { approved_count: 0, included_in_brief: false },
-              next_action: "promptlane loop collect",
+              next_action: "looprelay loop collect",
               next_actions: [],
               privacy: {
                 local_only: true,
@@ -9115,7 +9115,7 @@ describe("web api export client", () => {
                 approved_count: "0",
                 included_in_brief: false,
               },
-              next_action: "promptlane loop collect",
+              next_action: "looprelay loop collect",
               next_actions: [],
               privacy: {
                 local_only: true,
@@ -9162,9 +9162,9 @@ describe("web api export client", () => {
               memory_candidate: {
                 eligible: "yes",
                 reason: "passed_with_evidence",
-                next_action: "promptlane loop memory-approve",
+                next_action: "looprelay loop memory-approve",
               },
-              next_action: "promptlane loop collect",
+              next_action: "looprelay loop collect",
               next_actions: [],
               privacy: {
                 local_only: true,
@@ -9208,8 +9208,8 @@ describe("web api export client", () => {
                 worktrees: [],
               },
               project_memory: { approved_count: 0, included_in_brief: false },
-              next_action: "promptlane loop collect",
-              next_actions: ["Run promptlane loop collect again"],
+              next_action: "looprelay loop collect",
+              next_actions: ["Run looprelay loop collect again"],
               privacy: {
                 local_only: true,
                 external_calls: false,
@@ -9275,7 +9275,7 @@ describe("web api export client", () => {
                 worktrees: [],
               },
               project_memory: { approved_count: 0, included_in_brief: false },
-              next_action: "promptlane loop collect",
+              next_action: "looprelay loop collect",
               next_actions: [],
               privacy: {
                 local_only: true,
@@ -9330,7 +9330,7 @@ describe("web api export client", () => {
                 worktrees: [],
               },
               project_memory: { approved_count: 0, included_in_brief: false },
-              next_action: "promptlane loop collect",
+              next_action: "looprelay loop collect",
               next_actions: [],
               privacy: {
                 local_only: true,
@@ -9363,13 +9363,13 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(
         errorResponse(404, {
           detail:
-            "Loop snapshot not found. Run `promptlane loop collect`, then reopen the continuation brief.",
+            "Loop snapshot not found. Run `looprelay loop collect`, then reopen the continuation brief.",
         }),
       );
     const { getLoopBrief } = await import("./api.js");
 
     await expect(getLoopBrief("loop_missing")).rejects.toThrow(
-      "Loop brief failed (404): Loop snapshot not found. Run `promptlane loop collect`, then reopen the continuation brief.",
+      "Loop brief failed (404): Loop snapshot not found. Run `looprelay loop collect`, then reopen the continuation brief.",
     );
   });
 
@@ -9470,7 +9470,7 @@ describe("web api export client", () => {
           anonymous_id: "anon_abcdef123456",
           tool: "claude-code",
           coarse_date: "2026-05-02",
-          project_alias: "promptlane",
+          project_alias: "looprelay",
           prompt: "Fix [REDACTED:path] with [REDACTED:api_key]",
           tags: ["backend"],
           quality_gaps: ["Verification criteria"],
@@ -9523,7 +9523,7 @@ describe("web api export client", () => {
                 anonymous_id: "anon_abcdef123456",
                 tool: "claude-code",
                 coarse_date: "2026-05-02",
-                project_alias: "promptlane",
+                project_alias: "looprelay",
                 prompt: "Fix [REDACTED:path] with [REDACTED:api_key]",
                 tags: ["backend"],
                 quality_gaps: ["Verification criteria"],
@@ -9787,7 +9787,7 @@ describe("web api export client", () => {
                 record_offset: 0,
                 session_id: "sess_safe",
                 turn_id: "turn_safe",
-                cwd_label: "promptlane",
+                cwd_label: "looprelay",
                 prompt_preview: "Fix [REDACTED:path]",
                 is_sensitive: true,
                 raw_path: "/Users/example/private/project",
@@ -9905,7 +9905,7 @@ describe("web api export client", () => {
                 id: "draft_1",
                 prompt_id: "prmt_detail",
                 draft_text: "Use a more specific goal.",
-                analyzer: "promptlane",
+                analyzer: "looprelay",
                 changed_sections: ["goal_clarity"],
                 safety_notes: [],
                 is_sensitive: false,
@@ -9978,7 +9978,7 @@ describe("web api export client", () => {
                   },
                 ],
               },
-              analyzer: "promptlane",
+              analyzer: "looprelay",
               created_at: "2026-07-04T01:00:00.000Z",
             },
           },
@@ -10153,7 +10153,7 @@ describe("web api export client", () => {
     await expect(
       savePromptImprovementDraft("prmt_x", {
         draft_text: "Use a more specific goal.",
-        analyzer: "promptlane",
+        analyzer: "looprelay",
         changed_sections: ["goal_clarity"],
         safety_notes: [],
       }),
@@ -10285,13 +10285,13 @@ describe("web api export client", () => {
       .mockResolvedValueOnce(
         errorResponse(403, {
           detail: "   ",
-          title: "Refresh the local PromptLane web session, then retry.",
+          title: "Refresh the local LoopRelay web session, then retry.",
         }),
       );
     const { deletePrompt } = await import("./api.js");
 
     await expect(deletePrompt("prmt_x")).rejects.toThrow(
-      "Delete failed (403): Refresh the local PromptLane web session, then retry.",
+      "Delete failed (403): Refresh the local LoopRelay web session, then retry.",
     );
   });
 

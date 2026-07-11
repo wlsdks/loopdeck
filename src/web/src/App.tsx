@@ -711,7 +711,7 @@ export function App() {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `promptlane-${exportPayload.job_id}.json`;
+    anchor.download = `looprelay-${exportPayload.job_id}.json`;
     anchor.click();
     URL.revokeObjectURL(url);
   }
@@ -746,7 +746,7 @@ export function App() {
         <div className="sidebar-header">
           <div className="brand">
             <Database size={16} />
-            <span className="sidebar-label">promptlane</span>
+            <span className="sidebar-label">looprelay</span>
           </div>
           <button
             aria-expanded={!sidebarCollapsed}
@@ -2227,7 +2227,7 @@ function SettingsView({
         <p className="muted">
           Use the CLI doctor command for detailed diagnostics.
         </p>
-        <code>promptlane doctor claude-code</code>
+        <code>looprelay doctor claude-code</code>
       </section>
     </div>
   );
@@ -2478,7 +2478,7 @@ function ExportView({
       ) : (
         <section className="panel empty">
           <h2>No preview yet.</h2>
-          <code>promptlane export --anonymized --preview</code>
+          <code>looprelay export --anonymized --preview</code>
         </section>
       )}
 

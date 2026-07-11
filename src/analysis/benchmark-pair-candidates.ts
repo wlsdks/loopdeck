@@ -4,7 +4,7 @@ import type { LoopSnapshot } from "../loop/types.js";
 type PairCandidateStatus =
   | "ready"
   | "needs_baseline"
-  | "needs_promptlane"
+  | "needs_looprelay"
   | "no_completed_outcomes"
   | "incomplete_outcome_evidence"
   | "unsafe_outcome_evidence"
@@ -20,18 +20,18 @@ type PairCandidate = {
 export type BenchmarkPairCandidateReport = {
   status: PairCandidateStatus;
   baseline_candidate_count: number;
-  promptlane_candidate_count: number;
+  looprelay_candidate_count: number;
   baseline_candidates: PairCandidate[];
-  promptlane_candidates: PairCandidate[];
+  looprelay_candidates: PairCandidate[];
   excluded_unsafe_candidates: number;
   diagnostics: {
     completed_snapshots: number;
     baseline_snapshots: number;
-    promptlane_snapshots: number;
+    looprelay_snapshots: number;
     evidence_complete_snapshots: number;
     safe_snapshots: number;
   };
-  has_more: { baseline: boolean; promptlane: boolean };
+  has_more: { baseline: boolean; looprelay: boolean };
   scope: { scanned_snapshots: number; snapshot_limit: 100 };
   next_action: string;
   privacy: {
@@ -53,13 +53,13 @@ export function createBenchmarkPairCandidateReport(
   requestedLimit = DEFAULT_CANDIDATE_LIMIT,
 ): BenchmarkPairCandidateReport {
   const baselineCandidates: PairCandidate[] = [];
-  const promptlaneCandidates: PairCandidate[] = [];
+  const looprelayCandidates: PairCandidate[] = [];
   const seenPromptIds = new Set<string>();
   let excludedUnsafeCandidates = 0;
   const diagnostics = {
     completed_snapshots: 0,
     baseline_snapshots: 0,
-    promptlane_snapshots: 0,
+    looprelay_snapshots: 0,
     evidence_complete_snapshots: 0,
     safe_snapshots: 0,
   };
@@ -85,7 +85,7 @@ export function createBenchmarkPairCandidateReport(
       (snapshot.outcome.used_improvement_prompt_ids ?? []).length === 0;
     const candidatePromptIds = isBaseline ? latestPromptIds : usedPromptIds;
     if (isBaseline) diagnostics.baseline_snapshots += 1;
-    else diagnostics.promptlane_snapshots += 1;
+    else diagnostics.looprelay_snapshots += 1;
 
     const evidenceIsComplete =
       snapshot.outcome.summary.trim().length > 0 &&
@@ -105,7 +105,7 @@ export function createBenchmarkPairCandidateReport(
     }
     if (safePromptIds.length > 0) diagnostics.safe_snapshots += 1;
 
-    const target = isBaseline ? baselineCandidates : promptlaneCandidates;
+    const target = isBaseline ? baselineCandidates : looprelayCandidates;
     for (const promptId of safePromptIds) {
       target.push({
         prompt_id: promptId,
@@ -120,20 +120,20 @@ export function createBenchmarkPairCandidateReport(
   const status = pairCandidateStatus({
     snapshotCount: scopedSnapshots.length,
     baselineCount: baselineCandidates.length,
-    promptlaneCount: promptlaneCandidates.length,
+    looprelayCount: looprelayCandidates.length,
     diagnostics,
   });
   return {
     status,
     baseline_candidate_count: baselineCandidates.length,
-    promptlane_candidate_count: promptlaneCandidates.length,
+    looprelay_candidate_count: looprelayCandidates.length,
     baseline_candidates: baselineCandidates.slice(0, limit),
-    promptlane_candidates: promptlaneCandidates.slice(0, limit),
+    looprelay_candidates: looprelayCandidates.slice(0, limit),
     excluded_unsafe_candidates: excludedUnsafeCandidates,
     diagnostics,
     has_more: {
       baseline: baselineCandidates.length > limit,
-      promptlane: promptlaneCandidates.length > limit,
+      looprelay: looprelayCandidates.length > limit,
     },
     scope: {
       scanned_snapshots: Math.min(snapshots.length, SNAPSHOT_LIMIT),
@@ -155,18 +155,18 @@ export function createBenchmarkPairCandidateReport(
 function pairCandidateStatus({
   snapshotCount,
   baselineCount,
-  promptlaneCount,
+  looprelayCount,
   diagnostics,
 }: {
   snapshotCount: number;
   baselineCount: number;
-  promptlaneCount: number;
+  looprelayCount: number;
   diagnostics: BenchmarkPairCandidateReport["diagnostics"];
 }): PairCandidateStatus {
   if (snapshotCount === 0) return "empty_archive";
-  if (baselineCount > 0 && promptlaneCount > 0) return "ready";
-  if (baselineCount === 0 && promptlaneCount > 0) return "needs_baseline";
-  if (baselineCount > 0) return "needs_promptlane";
+  if (baselineCount > 0 && looprelayCount > 0) return "ready";
+  if (baselineCount === 0 && looprelayCount > 0) return "needs_baseline";
+  if (baselineCount > 0) return "needs_looprelay";
   if (diagnostics.completed_snapshots === 0) return "no_completed_outcomes";
   if (diagnostics.evidence_complete_snapshots === 0) {
     return "incomplete_outcome_evidence";
@@ -176,16 +176,16 @@ function pairCandidateStatus({
 
 function pairCandidateNextAction(status: PairCandidateStatus): string {
   if (status === "ready") {
-    return "Review one baseline and one PromptLane candidate for task equivalence, then run promptlane benchmark prepare-pair with explicit consent.";
+    return "Review one baseline and one LoopRelay candidate for task equivalence, then run looprelay benchmark prepare-pair with explicit consent.";
   }
   if (status === "needs_baseline") {
-    return "Record a comparable completed loop without using a PromptLane improvement, then rerun pair-candidates.";
+    return "Record a comparable completed loop without using a LoopRelay improvement, then rerun pair-candidates.";
   }
-  if (status === "needs_promptlane") {
-    return "Use a PromptLane improvement in a comparable loop, explicitly attribute it when recording the outcome, then rerun pair-candidates.";
+  if (status === "needs_looprelay") {
+    return "Use a LoopRelay improvement in a comparable loop, explicitly attribute it when recording the outcome, then rerun pair-candidates.";
   }
   if (status === "empty_archive") {
-    return "Collect baseline and PromptLane loop snapshots before preparing a paired benchmark.";
+    return "Collect baseline and LoopRelay loop snapshots before preparing a paired benchmark.";
   }
   if (status === "no_completed_outcomes") {
     return "Record passed or failed outcomes after verifiable checkpoints, then rerun pair-candidates.";

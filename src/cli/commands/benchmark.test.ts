@@ -14,7 +14,7 @@ import { Writable } from "node:stream";
 import { describe, expect, it, vi } from "vitest";
 
 import { normalizeClaudeCodePayload } from "../../adapters/claude-code.js";
-import { initializePromptLane } from "../../config/config.js";
+import { initializeLoopRelay } from "../../config/config.js";
 import { redactPrompt } from "../../redaction/redact.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import {
@@ -30,7 +30,7 @@ import type { LoopSnapshot } from "../../loop/types.js";
 
 describe("benchmark CLI command", () => {
   it("creates the shipped real fixture template with private permissions", () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-fixture-init-"));
+    const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-fixture-init-"));
     const fixtureFile = join(tempRoot, "private", "real.json");
 
     try {
@@ -43,7 +43,7 @@ describe("benchmark CLI command", () => {
       };
 
       expect(output).toBe(
-        "Created PromptLane real benchmark fixture template. Replace every example, update consent_note, and set template_only to false before running the real soft signal.",
+        "Created LoopRelay real benchmark fixture template. Replace every example, update consent_note, and set template_only to false before running the real soft signal.",
       );
       expect(output).not.toContain(fixtureFile);
       expect(parsed.template_only).toBe(true);
@@ -59,7 +59,7 @@ describe("benchmark CLI command", () => {
   });
 
   it("creates a fixture through the public nested CLI command", async () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-fixture-cli-"));
+    const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-fixture-cli-"));
     const fixtureFile = join(tempRoot, "real.json");
     const consoleLog = vi.spyOn(console, "log").mockImplementation(() => {});
     const stderr = new Writable({
@@ -72,7 +72,7 @@ describe("benchmark CLI command", () => {
       const exitCode = await runCli(
         [
           "node",
-          "promptlane",
+          "looprelay",
           "benchmark",
           "init-fixture",
           "--output",
@@ -92,7 +92,7 @@ describe("benchmark CLI command", () => {
   });
 
   it("refuses to overwrite an existing real fixture file without exposing its path", () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-fixture-init-"));
+    const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-fixture-init-"));
     const fixtureFile = join(tempRoot, "operator-owned-real.json");
     const existingContent = '{"keep":"operator-owned"}\n';
     writeFileSync(fixtureFile, existingContent);
@@ -151,7 +151,7 @@ describe("benchmark CLI command", () => {
   });
 
   it("writes selected archive prompts to a private runnable real fixture", () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-fixture-prepare-"));
+    const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-fixture-prepare-"));
     const fixtureFile = join(tempRoot, "private", "real.json");
     const readPrompts = vi.fn(() => [storedPromptDetail()]);
 
@@ -180,7 +180,7 @@ describe("benchmark CLI command", () => {
       });
       expect(statSync(fixtureFile).mode & 0o777).toBe(0o600);
       expect(output).toBe(
-        "Created a consent-bearing PromptLane real benchmark fixture from 1 selected prompt. Run the real soft signal with --fixture-file pointing to the new local file.",
+        "Created a consent-bearing LoopRelay real benchmark fixture from 1 selected prompt. Run the real soft signal with --fixture-file pointing to the new local file.",
       );
       expect(output).not.toContain(fixtureFile);
       expect(output).not.toContain(storedPromptDetail().markdown);
@@ -200,7 +200,7 @@ describe("benchmark CLI command", () => {
           consentNote: "Operator approved this redacted matched pair.",
           fixtureFile: "/tmp/private-pair.json",
           pairIds: ["release_review"],
-          promptlanePromptIds: ["prmt_treatment"],
+          looprelayPromptIds: ["prmt_treatment"],
           queries: ["release verification"],
         },
         readPrompts,
@@ -222,19 +222,19 @@ describe("benchmark CLI command", () => {
           consentNote: "Operator approved these redacted matched pairs.",
           fixtureFile: "/tmp/private-pairs.json",
           pairIds: ["release_one"],
-          promptlanePromptIds: ["prmt_treatment_one"],
+          looprelayPromptIds: ["prmt_treatment_one"],
           queries: ["release one"],
         },
         readPrompts,
       ),
     ).toThrow(
-      "benchmark prepare-pair requires the same non-zero number of baseline ids, PromptLane ids, pair ids, and queries.",
+      "benchmark prepare-pair requires the same non-zero number of baseline ids, LoopRelay ids, pair ids, and queries.",
     );
     expect(readPrompts).not.toHaveBeenCalled();
   });
 
   it("writes a selected archive pair to a private runnable fixture", () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-pair-prepare-"));
+    const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-pair-prepare-"));
     const fixtureFile = join(tempRoot, "private", "paired.json");
     const baseline = storedPromptDetail();
     baseline.id = "prmt_baseline";
@@ -252,7 +252,7 @@ describe("benchmark CLI command", () => {
           consentNote: "Operator approved this redacted matched pair.",
           fixtureFile,
           pairIds: ["release_review"],
-          promptlanePromptIds: [treatment.id],
+          looprelayPromptIds: [treatment.id],
           queries: ["release verification"],
         },
         readPrompts,
@@ -269,7 +269,7 @@ describe("benchmark CLI command", () => {
         ),
       ).toEqual([
         { id: "release_review", variant: "baseline" },
-        { id: "release_review", variant: "promptlane" },
+        { id: "release_review", variant: "looprelay" },
       ]);
       expect(statSync(fixtureFile).mode & 0o777).toBe(0o600);
       expect(output).toBe(
@@ -284,7 +284,7 @@ describe("benchmark CLI command", () => {
   });
 
   it("combines repeated matched options into one runnable fixture", () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-pairs-prepare-"));
+    const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-pairs-prepare-"));
     const fixtureFile = join(tempRoot, "paired.json");
     const prompts = [
       pairedStoredPrompt("prmt_base_one", false, "failed"),
@@ -301,7 +301,7 @@ describe("benchmark CLI command", () => {
           consentNote: "Operator approved these redacted matched pairs.",
           fixtureFile,
           pairIds: ["release_one", "release_two"],
-          promptlanePromptIds: ["prmt_lane_one", "prmt_lane_two"],
+          looprelayPromptIds: ["prmt_lane_one", "prmt_lane_two"],
           queries: ["release one", "release two"],
         },
         () => prompts,
@@ -316,9 +316,9 @@ describe("benchmark CLI command", () => {
         ),
       ).toEqual([
         "release_one:baseline",
-        "release_one:promptlane",
+        "release_one:looprelay",
         "release_two:baseline",
-        "release_two:promptlane",
+        "release_two:looprelay",
       ]);
       expect(output).toContain("with 2 matched pairs");
     } finally {
@@ -327,11 +327,11 @@ describe("benchmark CLI command", () => {
   });
 
   it("prepares a fixture through the public nested CLI command", async () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-fixture-cli-"));
+    const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-fixture-cli-"));
     const dataDir = join(tempRoot, "data");
     const fixtureFile = join(tempRoot, "real.json");
     const pairFixtureFile = join(tempRoot, "paired.json");
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -423,7 +423,7 @@ describe("benchmark CLI command", () => {
       const exitCode = await runCli(
         [
           "node",
-          "promptlane",
+          "looprelay",
           "benchmark",
           "prepare-fixture",
           "--data-dir",
@@ -479,7 +479,7 @@ describe("benchmark CLI command", () => {
         await runCli(
           [
             "node",
-            "promptlane",
+            "looprelay",
             "benchmark",
             "pair-candidates",
             "--data-dir",
@@ -494,7 +494,7 @@ describe("benchmark CLI command", () => {
       ).toMatchObject({
         status: "ready",
         baseline_candidates: [{ prompt_id: baselineStored.id }],
-        promptlane_candidates: [{ prompt_id: stored.id }],
+        looprelay_candidates: [{ prompt_id: stored.id }],
         privacy: {
           returns_prompt_bodies: false,
           returns_snapshot_ids: false,
@@ -508,14 +508,14 @@ describe("benchmark CLI command", () => {
         await runCli(
           [
             "node",
-            "promptlane",
+            "looprelay",
             "benchmark",
             "prepare-pair",
             "--data-dir",
             dataDir,
             "--baseline-prompt-id",
             baselineStored.id,
-            "--promptlane-prompt-id",
+            "--looprelay-prompt-id",
             stored.id,
             "--pair-id",
             "release_review",
@@ -544,7 +544,7 @@ describe("benchmark CLI command", () => {
             outcome: { improvement_used: false, status: "failed" },
           },
           {
-            effect_pair: { id: "release_review", variant: "promptlane" },
+            effect_pair: { id: "release_review", variant: "looprelay" },
             outcome: { improvement_used: true, status: "passed" },
           },
         ],
@@ -555,7 +555,7 @@ describe("benchmark CLI command", () => {
         await runCli(
           [
             "node",
-            "promptlane",
+            "looprelay",
             "benchmark",
             "candidates",
             "--data-dir",
@@ -627,7 +627,7 @@ describe("benchmark CLI command", () => {
   });
 
   it("refuses to overwrite a prepared real fixture", () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-fixture-prepare-"));
+    const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-fixture-prepare-"));
     const fixtureFile = join(tempRoot, "real.json");
     writeFileSync(fixtureFile, '{"keep":true}\n', { mode: 0o600 });
     const readPrompts = vi.fn(() => [storedPromptDetail()]);
@@ -703,7 +703,7 @@ describe("benchmark CLI command", () => {
     benchmarkForCli(
       {
         fixtureSet: "real",
-        fixtureFile: "/tmp/operator-owned-promptlane-fixtures.json",
+        fixtureFile: "/tmp/operator-owned-looprelay-fixtures.json",
         json: true,
       },
       runBenchmark,
@@ -713,7 +713,7 @@ describe("benchmark CLI command", () => {
       "--fixture-set",
       "real",
       "--fixture-file",
-      "/tmp/operator-owned-promptlane-fixtures.json",
+      "/tmp/operator-owned-looprelay-fixtures.json",
       "--json",
     ]);
   });
@@ -747,7 +747,7 @@ describe("benchmark CLI command", () => {
   });
 
   it("saves a successful JSON report as a private local file", () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-report-file-"));
+    const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-report-file-"));
     const reportFile = join(tempRoot, "reports", "baseline.json");
     const report = {
       dataset: "benchmark-v1-real",
@@ -792,7 +792,7 @@ describe("benchmark CLI command", () => {
   });
 
   it("does not write failed or non-JSON benchmark output", () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-report-failure-"));
+    const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-report-failure-"));
     const failedReport = join(tempRoot, "failed.json");
     const malformedReport = join(tempRoot, "malformed.json");
     const previousExitCode = process.exitCode;
@@ -815,7 +815,7 @@ describe("benchmark CLI command", () => {
           { fixtureSet: "real", json: true, reportFile: malformedReport },
           () => ({ status: 0, stdout: "not-json", stderr: "" }),
         ),
-      ).toThrow("PromptLane benchmark returned invalid JSON output.");
+      ).toThrow("LoopRelay benchmark returned invalid JSON output.");
       expect(() => statSync(malformedReport)).toThrow();
     } finally {
       process.exitCode = previousExitCode;
@@ -824,7 +824,7 @@ describe("benchmark CLI command", () => {
   });
 
   it("refuses to overwrite an existing benchmark report without exposing its path", () => {
-    const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-report-existing-"));
+    const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-report-existing-"));
     const reportFile = join(tempRoot, "operator-baseline.json");
     const existing = '{"keep":"existing evidence"}\n';
     writeFileSync(reportFile, existing, { mode: 0o600 });
@@ -890,7 +890,7 @@ describe("benchmark CLI command", () => {
   it("reports a missing operator fixture without exposing its local path", () => {
     const fixtureFile = join(
       tmpdir(),
-      `promptlane-private-fixtures-${randomUUID()}.json`,
+      `looprelay-private-fixtures-${randomUUID()}.json`,
     );
 
     const output = benchmarkForCli({

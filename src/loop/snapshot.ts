@@ -49,7 +49,7 @@ export function createLoopSnapshotFromPrompts(
     },
     next_brief: {
       generated: false,
-      summary: "Run promptlane loop brief to generate the next request.",
+      summary: "Run looprelay loop brief to generate the next request.",
     },
     privacy: {
       stores_prompt_bodies: false,

@@ -12,12 +12,12 @@ const expectedTag = `v${version}`;
 const checks = [];
 
 check("package version exists", Boolean(version));
-check("package name is promptlane", packageName === "promptlane", packageName);
+check("package name is looprelay", packageName === "looprelay", packageName);
 check("package is publishable", packageJson.private !== true);
 check(
-  "package description uses PromptLane positioning",
+  "package description uses LoopRelay positioning",
   packageJson.description ===
-    "PromptLane local-first prompt improvement workspace for Codex, Claude Code, and long-running coding-agent work.",
+    "LoopRelay local continuity and evidence layer for long-running coding-agent loops.",
   packageJson.description,
 );
 check(
@@ -33,24 +33,26 @@ check(
 check("package license is set", packageJson.license === "MIT");
 check(
   "package repository points at GitHub project",
-  packageJson.repository?.url === "https://github.com/wlsdks/promptlane.git",
+  packageJson.repository?.url === "https://github.com/wlsdks/looprelay.git",
   packageJson.repository?.url,
 );
 check(
   "package homepage points at GitHub project",
-  packageJson.homepage === "https://github.com/wlsdks/promptlane",
+  packageJson.homepage === "https://github.com/wlsdks/looprelay",
   packageJson.homepage,
 );
 check(
   "package bugs points at GitHub issues",
-  packageJson.bugs?.url === "https://github.com/wlsdks/promptlane/issues",
+  packageJson.bugs?.url === "https://github.com/wlsdks/looprelay/issues",
   packageJson.bugs?.url,
 );
 check(
   "package keywords include public positioning terms",
   hasKeywords([
-    "promptlane",
-    "prompt-improvement",
+    "looprelay",
+    "agent-continuity",
+    "loop-engineering",
+    "evidence",
     "local-first",
     "codex",
     "claude-code",
@@ -67,9 +69,9 @@ check(
   packageJson.publishConfig?.access,
 );
 for (const [binName, expectedPath] of Object.entries({
-  promptlane: "./dist/cli/index.js",
-  "pl-claude": "./dist/cli/pl-claude.js",
-  "pl-codex": "./dist/cli/pl-codex.js",
+  looprelay: "./dist/cli/index.js",
+  "lr-claude": "./dist/cli/lr-claude.js",
+  "lr-codex": "./dist/cli/lr-codex.js",
 })) {
   const registeredPath = packageJson.bin?.[binName];
   check(
@@ -150,7 +152,7 @@ for (const [label, scriptName, expectedCommand] of [
   ],
   [
     "installed CLI package script is registered",
-    "promptlane",
+    "looprelay",
     "node dist/cli/index.js",
   ],
 ]) {
@@ -166,25 +168,25 @@ for (const filePath of [
   "commands",
   "plugins",
   "integrations",
-  "docs/PROMPTLANE.md",
+  "docs/LOOPRELAY.md",
   "docs/AGENT-HARNESS.md",
   "docs/INSTRUCTION-FILES.md",
   "docs/PLUGINS.md",
   "docs/ADAPTERS.md",
   "docs/LOOP-SNAPSHOT-SCHEMA.md",
-  "docs/PROMPTLANE-RUNTIME-HISTORY.md",
-  "docs/PROMPTLANE-LEGACY-SURFACES.md",
+  "docs/LOOPRELAY-RUNTIME-HISTORY.md",
+  "docs/LOOPRELAY-RUNTIME-SURFACES.md",
   "docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md",
   "docs/DOGFOOD_WEB_USER_FLOW_2026-07-05.md",
-  "docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-plan.md",
-  "docs/superpowers/plans/2026-07-04-promptlane-plugin-rename-issue-slices.md",
-  "docs/superpowers/plans/2026-07-04-promptlane-runtime-id-inventory.json",
-  "docs/superpowers/plans/2026-07-04-promptlane-claude-dual-namespace-decision.md",
-  "docs/superpowers/plans/2026-07-04-promptlane-mcp-server-name-decision.md",
-  "docs/superpowers/plans/2026-07-04-promptlane-deprecation-readiness.md",
-  "docs/superpowers/plans/2026-07-04-promptlane-next-runtime-value-slice.md",
-  "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
-  "docs/superpowers/specs/2026-07-05-promptlane-repositioning-design.md",
+  "docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-plan.md",
+  "docs/superpowers/plans/2026-07-04-looprelay-plugin-rename-issue-slices.md",
+  "docs/superpowers/plans/2026-07-04-looprelay-runtime-id-inventory.json",
+  "docs/superpowers/plans/2026-07-04-looprelay-claude-dual-namespace-decision.md",
+  "docs/superpowers/plans/2026-07-04-looprelay-mcp-server-name-decision.md",
+  "docs/superpowers/plans/2026-07-04-looprelay-deprecation-readiness.md",
+  "docs/superpowers/plans/2026-07-04-looprelay-next-runtime-value-slice.md",
+  "docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md",
+  "docs/superpowers/specs/2026-07-05-looprelay-repositioning-design.md",
   "docs/PRD.md",
   "docs/PRD_PHASE2.md",
   "docs/ARCHITECTURE.md",
@@ -260,8 +262,8 @@ for (const filePath of [
   "commands/score.md",
   "commands/setup.md",
   "commands/status.md",
-  "plugins/promptlane/.codex-plugin/plugin.json",
-  "plugins/promptlane/skills/promptlane/SKILL.md",
+  "plugins/looprelay/.codex-plugin/plugin.json",
+  "plugins/looprelay/skills/looprelay/SKILL.md",
   "integrations/claude-code/README.md",
   "integrations/claude-code/settings.example.json",
 ]) {
@@ -275,13 +277,13 @@ const claudeMarketplaceManifest = readOptionalJson(
   ".claude-plugin/marketplace.json",
 );
 const codexPluginManifest = readOptionalJson(
-  "plugins/promptlane/.codex-plugin/plugin.json",
+  "plugins/looprelay/.codex-plugin/plugin.json",
 );
 check(
   "Claude plugin manifest identity is stable",
-  claudePluginManifest?.name === "promptlane" &&
+  claudePluginManifest?.name === "looprelay" &&
     claudePluginManifest?.description ===
-      "PromptLane is a local-first prompt improvement workspace for Claude Code, Codex, and long-running coding-agent work.",
+      "Local continuity and evidence for long-running Claude Code and Codex loops.",
   claudePluginManifest?.name,
 );
 check(
@@ -309,10 +311,10 @@ check(
 );
 check(
   "Claude marketplace manifest points at local plugin",
-  claudeMarketplaceManifest?.name === "promptlane" &&
+  claudeMarketplaceManifest?.name === "looprelay" &&
     Array.isArray(claudeMarketplaceManifest?.plugins) &&
     claudeMarketplaceManifest.plugins.length === 1 &&
-    claudeMarketplaceManifest.plugins[0]?.name === "promptlane" &&
+    claudeMarketplaceManifest.plugins[0]?.name === "looprelay" &&
     claudeMarketplaceManifest.plugins[0]?.source === "./",
   claudeMarketplaceManifest?.plugins?.[0]?.source,
 );
@@ -323,9 +325,9 @@ check(
 );
 check(
   "Codex plugin manifest identity is stable",
-  codexPluginManifest?.name === "promptlane" &&
+  codexPluginManifest?.name === "looprelay" &&
     codexPluginManifest?.description ===
-      "PromptLane is a local-first prompt improvement workspace for Codex, Claude Code, and long-running coding-agent work.",
+      "Local continuity and evidence for long-running Codex and Claude Code loops.",
   codexPluginManifest?.name,
 );
 check(
@@ -334,23 +336,23 @@ check(
   codexPluginManifest?.skills,
 );
 check(
-  "Codex plugin manifest display metadata is PromptLane",
-  codexPluginManifest?.interface?.displayName === "PromptLane" &&
+  "Codex plugin manifest display metadata is LoopRelay",
+  codexPluginManifest?.interface?.displayName === "LoopRelay" &&
     codexPluginManifest?.interface?.shortDescription ===
-      "PromptLane local-first prompt improvement workspace for coding-agent workflows" &&
+      "Local continuity and evidence for long-running coding-agent loops" &&
     codexPluginManifest?.interface?.websiteURL ===
-      "https://github.com/wlsdks/promptlane",
+      "https://github.com/wlsdks/looprelay",
   codexPluginManifest?.interface?.displayName,
 );
-const codexSkillDoc = readText("plugins/promptlane/skills/promptlane/SKILL.md");
+const codexSkillDoc = readText("plugins/looprelay/skills/looprelay/SKILL.md");
 const claudeSetupCommandDoc = readText("commands/setup.md");
 const claudeCoachCommandDoc = readText("commands/coach.md");
 const claudeScoreCommandDoc = readText("commands/score.md");
 check(
-  "Codex plugin skill frontmatter is PromptLane",
-  codexSkillDoc.includes("---\nname: promptlane\n") &&
+  "Codex plugin skill frontmatter is LoopRelay",
+  codexSkillDoc.includes("---\nname: looprelay\n") &&
     codexSkillDoc.includes(
-      "description: Use when the user wants to install, verify, search, or troubleshoot PromptLane",
+      "description: Use when the user wants to install, verify, search, or troubleshoot LoopRelay",
     ),
 );
 check(
@@ -365,17 +367,17 @@ check(
 check(
   "Claude setup command documents npm install and setup path",
   includesAll(claudeSetupCommandDoc, [
-    "npm install -g promptlane",
+    "npm install -g looprelay",
     "pnpm setup",
-    "promptlane setup --profile coach --register-mcp",
+    "looprelay setup --profile coach --register-mcp",
     "--open-web",
   ]),
 );
 check(
   "Claude coach command documents MCP fallback and no auto-submit",
   includesAll(claudeCoachCommandDoc, [
-    "promptlane:coach_prompt",
-    "promptlane coach --json",
+    "looprelay:coach_prompt",
+    "looprelay coach --json",
     "Do not auto-submit rewritten prompts",
   ]),
 );
@@ -471,7 +473,7 @@ if (!options.skipGitTag) {
       tagIsAnnotated,
       tagIsAnnotated
         ? "release tag is annotated"
-        : `${expectedTag} is not an annotated tag. Rerun the full release gate, then create or refresh the annotated tag with git tag -fa ${expectedTag} -m "promptlane ${version}".`,
+        : `${expectedTag} is not an annotated tag. Rerun the full release gate, then create or refresh the annotated tag with git tag -fa ${expectedTag} -m "looprelay ${version}".`,
     );
     if (tagIsAnnotated) {
       const originTagTarget = run("git", [
@@ -665,12 +667,12 @@ function localOnlyPackageFileEntries() {
     "node_modules",
     "coverage",
     ".codex",
-    ".promptlane",
-    ".prompt-memory",
-    ".prompt-coach",
-    "promptlane-data",
-    "prompt-memory-data",
-    "prompt-coach-data",
+    ".looprelay",
+    ".looprelay",
+    ".looprelay",
+    "looprelay-data",
+    "looprelay-data",
+    "looprelay-data",
   ];
 
   return packageJson.files.filter((entry) => {
@@ -1082,7 +1084,7 @@ function releaseWarnings() {
     {
       label: "benchmark is synthetic regression evidence",
       detail:
-        'corepack pnpm --silent benchmark -- --json must pass before publish, but a synthetic pass is not real-world effectiveness proof. Create an operator-owned fixture from selected archive prompts with promptlane benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE", or create a manual template with promptlane benchmark init-fixture --output "$FIXTURE_FILE", then save one JSON snapshot with promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT" and rerun with --baseline-file "$BASELINE_REPORT" before claiming real-user prompt quality trends.',
+        'corepack pnpm --silent benchmark -- --json must pass before publish, but a synthetic pass is not real-world effectiveness proof. Create an operator-owned fixture from selected archive prompts with looprelay benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE", or create a manual template with looprelay benchmark init-fixture --output "$FIXTURE_FILE", then save one JSON snapshot with looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT" and rerun with --baseline-file "$BASELINE_REPORT" before claiming real-user prompt quality trends.',
     },
     ...realBenchmarkFixtureWarnings(),
   ];
@@ -1097,7 +1099,7 @@ function realBenchmarkFixtureWarnings() {
     {
       label: "real benchmark fixtures are missing",
       detail:
-        'docs/benchmark-fixtures/real.json is absent; publish can proceed after release gates pass, but do not claim real-user effectiveness trends. Create an operator-owned fixture from selected archive prompts with promptlane benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE", or create a manual template with promptlane benchmark init-fixture --output "$FIXTURE_FILE", then save one JSON snapshot with promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT" and rerun with --baseline-file "$BASELINE_REPORT".',
+        'docs/benchmark-fixtures/real.json is absent; publish can proceed after release gates pass, but do not claim real-user effectiveness trends. Create an operator-owned fixture from selected archive prompts with looprelay benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE", or create a manual template with looprelay benchmark init-fixture --output "$FIXTURE_FILE", then save one JSON snapshot with looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT" and rerun with --baseline-file "$BASELINE_REPORT".',
     },
   ];
 }
@@ -1132,14 +1134,14 @@ function nextAction({ passed, checks, skippedReleaseChecks = [] }) {
     label.endsWith("tag exists and points at HEAD"),
   );
   if (tagMismatch) {
-    return `${expectedTag} tag does not point at HEAD. Run git checkout ${expectedTag} to publish the tagged commit, or if promptlane@${version} is unpublished and HEAD is the intended release, rerun the full release gate and git tag -fa ${expectedTag}; if already published, bump version and create a new tag.`;
+    return `${expectedTag} tag does not point at HEAD. Run git checkout ${expectedTag} to publish the tagged commit, or if looprelay@${version} is unpublished and HEAD is the intended release, rerun the full release gate and git tag -fa ${expectedTag}; if already published, bump version and create a new tag.`;
   }
 
   const unannotatedTag = failedLabels.find((label) =>
     label.endsWith("tag is annotated"),
   );
   if (unannotatedTag) {
-    return `${expectedTag} tag is not annotated. Rerun the full release gate, then git tag -fa ${expectedTag} -m "promptlane ${version}" and rerun corepack pnpm npm-publish:preflight.`;
+    return `${expectedTag} tag is not annotated. Rerun the full release gate, then git tag -fa ${expectedTag} -m "looprelay ${version}" and rerun corepack pnpm npm-publish:preflight.`;
   }
 
   const originTagMismatch = failedLabels.find((label) =>
@@ -1195,7 +1197,7 @@ function tagMismatchDetail({ expectedTag, head, tagTarget, tagError }) {
   if (tagError) {
     return `${expectedTag} is missing. Run the full release gate, then create the annotated tag before publishing.`;
   }
-  return `tagged release commit ${tagTarget.slice(0, 12)} does not match HEAD ${head.slice(0, 12)}; run git checkout ${expectedTag}, rerun corepack pnpm npm-publish:preflight from the tagged checkout, then publish from that commit. If promptlane@${version} is unpublished and HEAD is the intended release, rerun the full gate, then git tag -fa ${expectedTag}. If promptlane@${version} is already published, bump version and create a new tag.`;
+  return `tagged release commit ${tagTarget.slice(0, 12)} does not match HEAD ${head.slice(0, 12)}; run git checkout ${expectedTag}, rerun corepack pnpm npm-publish:preflight from the tagged checkout, then publish from that commit. If looprelay@${version} is unpublished and HEAD is the intended release, rerun the full gate, then git tag -fa ${expectedTag}. If looprelay@${version} is already published, bump version and create a new tag.`;
 }
 
 function parseLsRemoteCommit(stdout) {
@@ -1228,7 +1230,7 @@ function formatSummary(summary) {
     (item) => `- ${item.label}${item.detail ? ` (${item.detail})` : ""}`,
   );
   return [
-    "PromptLane npm publish preflight",
+    "LoopRelay npm publish preflight",
     `Status: ${summary.status}`,
     `Package: ${summary.package}@${summary.version}`,
     `Expected tag: ${summary.expected_tag}`,

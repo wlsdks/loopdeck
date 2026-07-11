@@ -61,7 +61,7 @@ export function proposeInstructionPatchFromMemory(input: {
     `--- a/${targetFile}`,
     `+++ b/${targetFile}`,
     "@@",
-    "+## PromptLane Memories",
+    "+## LoopRelay Memories",
     "+",
     `+- ${statement}`,
     `+  evidence: ${evidence}`,
@@ -72,7 +72,7 @@ export function proposeInstructionPatchFromMemory(input: {
   return {
     target_file: targetFile,
     patch_kind: "append_section",
-    title: `Append approved PromptLane memory to ${targetFile}`,
+    title: `Append approved LoopRelay memory to ${targetFile}`,
     diff: `${patchLines.join("\n")}\n`,
     writes_files: false,
     requires_user_approval: true,
@@ -81,7 +81,7 @@ export function proposeInstructionPatchFromMemory(input: {
       "review this patch proposal, then apply it manually only if the instruction belongs in the project",
     apply_gate: {
       web_apply_available: false,
-      confirm_command: `promptlane loop instruction-apply --target-file ${targetFile} --confirm-apply`,
+      confirm_command: `looprelay loop instruction-apply --target-file ${targetFile} --confirm-apply`,
       mcp_tool: "apply_instruction_patch",
       reason:
         "web review does not write files; apply through CLI or MCP with explicit confirmation",
@@ -168,7 +168,7 @@ function formatInstructionMemoryBlock(memory: LoopMemory): string {
   const sourceMemoryId = safePatchLine(memory.id);
 
   return [
-    "## PromptLane Memories",
+    "## LoopRelay Memories",
     "",
     `- ${statement}`,
     `  evidence: ${evidence}`,

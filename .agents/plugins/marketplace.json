@@ -1,14 +1,14 @@
 {
-  "name": "promptlane-local",
+  "name": "looprelay-local",
   "interface": {
-    "displayName": "PromptLane Local"
+    "displayName": "LoopRelay Local"
   },
   "plugins": [
     {
-      "name": "promptlane",
+      "name": "looprelay",
       "source": {
         "source": "local",
-        "path": "./plugins/promptlane"
+        "path": "./plugins/looprelay"
       },
       "policy": {
         "installation": "AVAILABLE",

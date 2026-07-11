@@ -1,4 +1,4 @@
-import type { PromptLaneMcpToolDefinition } from "./score-tool-definitions.js";
+import type { LoopRelayMcpToolDefinition } from "./score-tool-definitions.js";
 
 const LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS = {
   destructiveHint: false,
@@ -69,14 +69,14 @@ const TOOL_ERROR_OUTPUT_SCHEMA = {
   },
 } as const;
 
-export const GET_PROMPTLANE_LOOP_STATUS_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
+export const GET_LOOPRELAY_LOOP_STATUS_TOOL_DEFINITION: LoopRelayMcpToolDefinition =
   {
-    name: "get_promptlane_loop_status",
+    name: "get_looprelay_loop_status",
     description:
-      "Check whether local PromptLane loop snapshots are available for the current PromptLane archive. Use this when Codex or Claude Code needs to know if a previous loop can be continued or whether the user should run `promptlane loop collect` first. Latest metadata includes opaque prompt ids so an agent can explicitly attribute a PromptLane improvement only when it was actually used. Returns safe loop metadata, available loop tools, next actions, and privacy flags. It never returns prompt bodies, raw absolute paths, secrets, transcripts, or external LLM results.",
+      "Check whether local LoopRelay loop snapshots are available for the current LoopRelay archive. Use this when Codex or Claude Code needs to know if a previous loop can be continued or whether the user should run `looprelay loop collect` first. Latest metadata includes opaque prompt ids so an agent can explicitly attribute a LoopRelay improvement only when it was actually used. Returns safe loop metadata, available loop tools, next actions, and privacy flags. It never returns prompt bodies, raw absolute paths, secrets, transcripts, or external LLM results.",
     annotations: {
       ...LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS,
-      title: "PromptLane loop status",
+      title: "LoopRelay loop status",
     },
     inputSchema: {
       type: "object",
@@ -367,8 +367,8 @@ export const GET_PROMPTLANE_LOOP_STATUS_TOOL_DEFINITION: PromptLaneMcpToolDefini
             next_action: {
               type: "string",
               enum: [
-                "promptlane loop memory-approve",
-                "promptlane loop memory-candidate",
+                "looprelay loop memory-approve",
+                "looprelay loop memory-candidate",
               ],
             },
           },
@@ -400,13 +400,13 @@ export const GET_PROMPTLANE_LOOP_STATUS_TOOL_DEFINITION: PromptLaneMcpToolDefini
     },
   } as const;
 
-export const PREPARE_LOOP_BRIEF_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
+export const PREPARE_LOOP_BRIEF_TOOL_DEFINITION: LoopRelayMcpToolDefinition = {
   name: "prepare_loop_brief",
   description:
-    "Prepare a copy-ready continuation prompt from a local PromptLane snapshot. Use this when Codex or Claude Code is resuming an agent loop, handing off work across sessions/worktrees, or needs the next prompt after `promptlane loop collect`. Omit filters for the latest snapshot, or pass worktree/session/branch filters to continue a selected loop. This is read-only and never auto-submits the prompt. It returns prompt ids and loop metadata only, never prompt bodies, raw paths, secrets, transcripts, or external LLM results.",
+    "Prepare a copy-ready continuation prompt from a local LoopRelay snapshot. Use this when Codex or Claude Code is resuming an agent loop, handing off work across sessions/worktrees, or needs the next prompt after `looprelay loop collect`. Omit filters for the latest snapshot, or pass worktree/session/branch filters to continue a selected loop. This is read-only and never auto-submits the prompt. It returns prompt ids and loop metadata only, never prompt bodies, raw paths, secrets, transcripts, or external LLM results.",
   annotations: {
     ...LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS,
-    title: "Prepare PromptLane continuation brief",
+    title: "Prepare LoopRelay continuation brief",
   },
   inputSchema: {
     type: "object",
@@ -479,109 +479,108 @@ export const PREPARE_LOOP_BRIEF_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
   },
 } as const;
 
-export const RECORD_LOOP_OUTCOME_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
-  {
-    name: "record_loop_outcome",
-    description:
-      "Record user-approved outcome metadata for a local PromptLane snapshot after Codex or Claude Code has verified a loop result. Use this to mark a specific snapshot, or the latest snapshot when snapshot_id is omitted, as passed, failed, blocked, abandoned, in progress, or unknown. Optionally identify snapshot prompt ids whose PromptLane improvements were actually used. This writes only status, summary, evidence references, and safe prompt ids; it never stores prompt bodies, raw absolute paths, secrets, transcripts, or external LLM results.",
-    annotations: {
-      ...LOCAL_LOOP_WRITE_TOOL_ANNOTATIONS,
-      title: "Record PromptLane outcome",
-    },
-    inputSchema: {
-      type: "object",
-      required: ["status", "summary"],
-      properties: {
-        snapshot_id: {
-          type: "string",
-          description:
-            "Optional local PromptLane snapshot id. Omit this to update the latest snapshot.",
-        },
-        latest: {
-          type: "boolean",
-          description:
-            "Set true to update the latest local loop snapshot. Defaults to true when snapshot_id is omitted.",
-        },
-        status: LOOP_OUTCOME_STATUS_SCHEMA,
-        summary: {
-          type: "string",
-          description:
-            "Concise user-approved result summary. Must not include prompt bodies or raw absolute paths.",
-        },
-        evidence_refs: {
-          type: "array",
-          items: { type: "string" },
-          description:
-            "Optional safe evidence labels, for example test command names, commit ids, or document ids. Do not include raw paths or secrets.",
-        },
-        used_improvement_prompt_ids: {
-          type: "array",
-          items: { type: "string" },
-          description:
-            "Optional prompt ids from this snapshot whose PromptLane improvement drafts were actually used for the recorded loop. Omit when use was not verified.",
-        },
+export const RECORD_LOOP_OUTCOME_TOOL_DEFINITION: LoopRelayMcpToolDefinition = {
+  name: "record_loop_outcome",
+  description:
+    "Record user-approved outcome metadata for a local LoopRelay snapshot after Codex or Claude Code has verified a loop result. Use this to mark a specific snapshot, or the latest snapshot when snapshot_id is omitted, as passed, failed, blocked, abandoned, in progress, or unknown. Optionally identify snapshot prompt ids whose LoopRelay improvements were actually used. This writes only status, summary, evidence references, and safe prompt ids; it never stores prompt bodies, raw absolute paths, secrets, transcripts, or external LLM results.",
+  annotations: {
+    ...LOCAL_LOOP_WRITE_TOOL_ANNOTATIONS,
+    title: "Record LoopRelay outcome",
+  },
+  inputSchema: {
+    type: "object",
+    required: ["status", "summary"],
+    properties: {
+      snapshot_id: {
+        type: "string",
+        description:
+          "Optional local LoopRelay snapshot id. Omit this to update the latest snapshot.",
       },
-      additionalProperties: false,
+      latest: {
+        type: "boolean",
+        description:
+          "Set true to update the latest local loop snapshot. Defaults to true when snapshot_id is omitted.",
+      },
+      status: LOOP_OUTCOME_STATUS_SCHEMA,
+      summary: {
+        type: "string",
+        description:
+          "Concise user-approved result summary. Must not include prompt bodies or raw absolute paths.",
+      },
+      evidence_refs: {
+        type: "array",
+        items: { type: "string" },
+        description:
+          "Optional safe evidence labels, for example test command names, commit ids, or document ids. Do not include raw paths or secrets.",
+      },
+      used_improvement_prompt_ids: {
+        type: "array",
+        items: { type: "string" },
+        description:
+          "Optional prompt ids from this snapshot whose LoopRelay improvement drafts were actually used for the recorded loop. Omit when use was not verified.",
+      },
     },
-    outputSchema: {
-      type: "object",
-      properties: {
-        recorded: { const: true },
-        snapshot_id: { type: "string" },
-        outcome: {
-          type: "object",
-          required: ["status", "summary", "evidence_refs"],
-          properties: {
-            status: LOOP_OUTCOME_STATUS_SCHEMA,
-            summary: { type: "string" },
-            evidence_refs: { type: "array", items: { type: "string" } },
-            used_improvement_prompt_ids: {
-              type: "array",
-              items: { type: "string" },
-            },
+    additionalProperties: false,
+  },
+  outputSchema: {
+    type: "object",
+    properties: {
+      recorded: { const: true },
+      snapshot_id: { type: "string" },
+      outcome: {
+        type: "object",
+        required: ["status", "summary", "evidence_refs"],
+        properties: {
+          status: LOOP_OUTCOME_STATUS_SCHEMA,
+          summary: { type: "string" },
+          evidence_refs: { type: "array", items: { type: "string" } },
+          used_improvement_prompt_ids: {
+            type: "array",
+            items: { type: "string" },
           },
         },
-        next_action: { type: "string" },
-        privacy: {
-          ...LOOP_TOOL_PRIVACY_SCHEMA,
-          required: [
-            ...LOOP_TOOL_PRIVACY_SCHEMA.required,
-            "stores_prompt_bodies",
-            "stores_raw_paths",
-          ],
-          properties: {
-            ...LOOP_TOOL_PRIVACY_SCHEMA.properties,
-            stores_prompt_bodies: { const: false },
-            stores_raw_paths: { const: false },
-          },
-        },
-        is_error: TOOL_ERROR_OUTPUT_SCHEMA.properties.is_error,
-        error_code: TOOL_ERROR_OUTPUT_SCHEMA.properties.error_code,
-        message: TOOL_ERROR_OUTPUT_SCHEMA.properties.message,
       },
-      oneOf: [
-        {
-          required: [
-            "recorded",
-            "snapshot_id",
-            "outcome",
-            "next_action",
-            "privacy",
-          ],
+      next_action: { type: "string" },
+      privacy: {
+        ...LOOP_TOOL_PRIVACY_SCHEMA,
+        required: [
+          ...LOOP_TOOL_PRIVACY_SCHEMA.required,
+          "stores_prompt_bodies",
+          "stores_raw_paths",
+        ],
+        properties: {
+          ...LOOP_TOOL_PRIVACY_SCHEMA.properties,
+          stores_prompt_bodies: { const: false },
+          stores_raw_paths: { const: false },
         },
-        TOOL_ERROR_OUTPUT_SCHEMA,
-      ],
+      },
+      is_error: TOOL_ERROR_OUTPUT_SCHEMA.properties.is_error,
+      error_code: TOOL_ERROR_OUTPUT_SCHEMA.properties.error_code,
+      message: TOOL_ERROR_OUTPUT_SCHEMA.properties.message,
     },
-  } as const;
+    oneOf: [
+      {
+        required: [
+          "recorded",
+          "snapshot_id",
+          "outcome",
+          "next_action",
+          "privacy",
+        ],
+      },
+      TOOL_ERROR_OUTPUT_SCHEMA,
+    ],
+  },
+} as const;
 
-export const PROPOSE_LOOP_MEMORY_CANDIDATE_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
+export const PROPOSE_LOOP_MEMORY_CANDIDATE_TOOL_DEFINITION: LoopRelayMcpToolDefinition =
   {
     name: "propose_loop_memory_candidate",
     description:
-      "Decide whether the latest or explicitly selected local PromptLane outcome is safe and evidence-backed enough to propose as a memory candidate. This is read-only and approval-gated: it never writes AGENTS.md, CLAUDE.md, memory files, prompt bodies, raw paths, secrets, transcripts, compact summaries, or external LLM results.",
+      "Decide whether the latest or explicitly selected local LoopRelay outcome is safe and evidence-backed enough to propose as a memory candidate. This is read-only and approval-gated: it never writes AGENTS.md, CLAUDE.md, memory files, prompt bodies, raw paths, secrets, transcripts, compact summaries, or external LLM results.",
     annotations: {
       ...LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS,
-      title: "Propose PromptLane memory candidate",
+      title: "Propose LoopRelay memory candidate",
     },
     inputSchema: {
       type: "object",
@@ -638,13 +637,13 @@ export const PROPOSE_LOOP_MEMORY_CANDIDATE_TOOL_DEFINITION: PromptLaneMcpToolDef
     },
   } as const;
 
-export const RECORD_LOOP_MEMORY_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
+export const RECORD_LOOP_MEMORY_TOOL_DEFINITION: LoopRelayMcpToolDefinition = {
   name: "record_loop_memory",
   description:
-    "Record a user-approved PromptLane memory from the latest or explicitly selected eligible loop outcome. This writes only the approved candidate statement and safe evidence refs into local PromptLane storage; it never writes AGENTS.md, CLAUDE.md, project docs, prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
+    "Record a user-approved LoopRelay memory from the latest or explicitly selected eligible loop outcome. This writes only the approved candidate statement and safe evidence refs into local LoopRelay storage; it never writes AGENTS.md, CLAUDE.md, project docs, prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
   annotations: {
     ...LOCAL_LOOP_WRITE_TOOL_ANNOTATIONS,
-    title: "Record approved PromptLane memory",
+    title: "Record approved LoopRelay memory",
   },
   inputSchema: {
     type: "object",
@@ -711,11 +710,11 @@ export const RECORD_LOOP_MEMORY_TOOL_DEFINITION: PromptLaneMcpToolDefinition = {
   },
 } as const;
 
-export const PROPOSE_INSTRUCTION_PATCH_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
+export const PROPOSE_INSTRUCTION_PATCH_TOOL_DEFINITION: LoopRelayMcpToolDefinition =
   {
     name: "propose_instruction_patch",
     description:
-      "Propose a reviewable unified diff for adding the latest approved PromptLane memory to AGENTS.md or CLAUDE.md. This is read-only: it returns a patch proposal string and never writes instruction files, project docs, prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
+      "Propose a reviewable unified diff for adding the latest approved LoopRelay memory to AGENTS.md or CLAUDE.md. This is read-only: it returns a patch proposal string and never writes instruction files, project docs, prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
     annotations: {
       ...LOCAL_LOOP_READ_ONLY_TOOL_ANNOTATIONS,
       title: "Propose instruction patch",
@@ -793,11 +792,11 @@ export const PROPOSE_INSTRUCTION_PATCH_TOOL_DEFINITION: PromptLaneMcpToolDefinit
     },
   } as const;
 
-export const APPLY_INSTRUCTION_PATCH_TOOL_DEFINITION: PromptLaneMcpToolDefinition =
+export const APPLY_INSTRUCTION_PATCH_TOOL_DEFINITION: LoopRelayMcpToolDefinition =
   {
     name: "apply_instruction_patch",
     description:
-      "Apply the latest approved PromptLane memory to AGENTS.md or CLAUDE.md only when confirm_apply is true. This writes one local instruction file, is idempotent by source memory id, and never returns prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
+      "Apply the latest approved LoopRelay memory to AGENTS.md or CLAUDE.md only when confirm_apply is true. This writes one local instruction file, is idempotent by source memory id, and never returns prompt bodies, raw paths, transcripts, compact summaries, or external LLM results.",
     annotations: {
       ...LOCAL_LOOP_WRITE_TOOL_ANNOTATIONS,
       idempotentHint: true,

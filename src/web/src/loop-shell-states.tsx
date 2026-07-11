@@ -12,10 +12,10 @@ export function LoopEmptyState({
   return (
     <section className="panel loops-empty">
       <div>
-        <span className="panel-eyebrow">PromptLane</span>
+        <span className="panel-eyebrow">LoopRelay</span>
         <h2>No loop snapshots yet</h2>
         {status && (
-          <p className="loops-status-line">PromptLane status {status}</p>
+          <p className="loops-status-line">LoopRelay status {status}</p>
         )}
         {nextActions.length > 0 ? (
           <div className="loop-next-actions">
@@ -28,8 +28,8 @@ export function LoopEmptyState({
           </div>
         ) : (
           <p>
-            Run <code>promptlane loop collect</code> after a Codex or Claude
-            Code turn to create the first local loop snapshot.
+            Run <code>looprelay loop collect</code> after a Codex or Claude Code
+            turn to create the first local loop snapshot.
           </p>
         )}
       </div>

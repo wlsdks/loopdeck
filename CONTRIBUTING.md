@@ -1,8 +1,8 @@
 # Contributing
 
-Thanks for helping improve promptlane.
+Thanks for helping improve looprelay.
 
-This project is a local-first developer tool for AI coding prompt memory,
+This project is a local-first developer tool for AI coding loop memory,
 search, analysis, and prompt improvement. Contributions should preserve the
 privacy boundary: prompt data stays local unless a user explicitly exports it.
 
@@ -50,7 +50,7 @@ pnpm smoke:release
 ## Privacy Requirements
 
 - Do not commit real prompts, API keys, OAuth tokens, session tokens, private
-  file paths, SQLite archives, or local promptlane data.
+  file paths, SQLite archives, or local looprelay data.
 - Use synthetic fixtures only.
 - Redact paths, secrets, and stable prompt identifiers in screenshots, logs,
   issue comments, and test output.
@@ -59,7 +59,7 @@ pnpm smoke:release
 
 ## Design Requirements
 
-promptlane is an operational developer tool. UI contributions should favor
+looprelay is an operational developer tool. UI contributions should favor
 dense, quiet workflows for search, review, deletion, settings, diagnostics, and
 prompt improvement. Avoid marketing-style landing pages in the app shell.
 

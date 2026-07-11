@@ -228,7 +228,7 @@ function formatCmuxInstructions(
     "",
     `    $ ${buddyCommandPretty}`,
     "",
-    "  If promptlane is not on PATH, use the absolute form:",
+    "  If looprelay is not on PATH, use the absolute form:",
     `    $ ${buddyCommand}`,
   ].join("\n");
 }
@@ -246,7 +246,7 @@ function formatNoneInstructions(
     "",
     `    $ ${buddyCommandPretty}`,
     "",
-    "  If promptlane is not on PATH, use the absolute form:",
+    "  If looprelay is not on PATH, use the absolute form:",
     `    $ ${buddyCommand}`,
   ].join("\n");
 }
@@ -274,7 +274,7 @@ function noneInstructions(
 
 function formatBuddyCommandPretty(options: CodexHudOptions): string {
   const args = [
-    "promptlane",
+    "looprelay",
     "buddy",
     "--style",
     options.style,
@@ -291,9 +291,9 @@ export function registerInstallCodexHudCommand(program: Command): void {
   program
     .command("install-codex-hud")
     .description(
-      "Install a side-pane HUD for Codex by spawning promptlane buddy in a tmux split (or printing instructions for cmux/no multiplexer).",
+      "Install a side-pane HUD for Codex by spawning looprelay buddy in a tmux split (or printing instructions for cmux/no multiplexer).",
     )
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option(
       "--pane <position>",
       "Where to place the buddy pane (right, left, top, bottom).",

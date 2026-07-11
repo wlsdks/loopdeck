@@ -4,8 +4,8 @@ import type { Readable, Writable } from "node:stream";
 import { VERSION } from "../shared/version.js";
 import { createRpcChannel, type RpcChannel } from "./rpc-channel.js";
 import {
-  PROMPTLANE_MCP_TOOL_DEFINITIONS,
-  getPromptLaneMcpToolHandler,
+  LOOPRELAY_MCP_TOOL_DEFINITIONS,
+  getLoopRelayMcpToolHandler,
 } from "./tool-registry.js";
 import type { ScorePromptToolOptions } from "./score-tool-types.js";
 
@@ -33,17 +33,17 @@ type JsonRpcResponse =
       };
     };
 
-export type PromptLaneMcpServerContext = {
+export type LoopRelayMcpServerContext = {
   channel: RpcChannel;
   clientCapabilities: Record<string, unknown>;
 };
 
-export type PromptLaneMcpServerOptions = ScorePromptToolOptions & {
-  ctx?: PromptLaneMcpServerContext;
+export type LoopRelayMcpServerOptions = ScorePromptToolOptions & {
+  ctx?: LoopRelayMcpServerContext;
 };
 
-export async function runPromptLaneMcpServer(
-  options: PromptLaneMcpServerOptions = {},
+export async function runLoopRelayMcpServer(
+  options: LoopRelayMcpServerOptions = {},
   input: Readable = process.stdin,
   output: Writable = process.stdout,
 ): Promise<void> {
@@ -52,11 +52,11 @@ export async function runPromptLaneMcpServer(
     crlfDelay: Number.POSITIVE_INFINITY,
   });
   const channel = options.ctx?.channel ?? createRpcChannel(output);
-  const ctx: PromptLaneMcpServerContext = options.ctx ?? {
+  const ctx: LoopRelayMcpServerContext = options.ctx ?? {
     channel,
     clientCapabilities: {},
   };
-  const optionsWithCtx: PromptLaneMcpServerOptions = { ...options, ctx };
+  const optionsWithCtx: LoopRelayMcpServerOptions = { ...options, ctx };
   const inflight = new Set<Promise<void>>();
 
   try {
@@ -122,7 +122,7 @@ export async function runPromptLaneMcpServer(
 
 export function handleMcpLine(
   line: string,
-  options: PromptLaneMcpServerOptions = {},
+  options: LoopRelayMcpServerOptions = {},
 ): Promise<JsonRpcResponse[]> {
   let parsed: unknown;
   try {
@@ -146,7 +146,7 @@ export function handleMcpLine(
 
 export async function handleMcpMessage(
   message: unknown,
-  options: PromptLaneMcpServerOptions = {},
+  options: LoopRelayMcpServerOptions = {},
 ): Promise<JsonRpcResponse | undefined> {
   if (!isJsonRpcRequest(message)) {
     return jsonRpcError(null, -32600, "Invalid JSON-RPC request.");
@@ -174,17 +174,17 @@ export async function handleMcpMessage(
           },
         },
         serverInfo: {
-          name: "promptlane",
+          name: "looprelay",
           version: VERSION,
         },
         instructions:
-          "Use coach_prompt for the default one-call Claude Code/Codex coaching workflow: status, latest prompt score, approval-ready rewrite, habit review, project instruction review, and next request guidance. Use get_promptlane_status only for readiness checks, get_benchmark_candidates for body-free real-effectiveness readiness before fixture preparation, get_paired_benchmark_candidates for body-free baseline and PromptLane candidate groups before an operator-reviewed paired study, score_prompt for one prompt, improve_prompt for one local deterministic rewrite, ask_clarifying_questions when you want promptlane to drive the elicitation flow itself (it asks the user via MCP elicitation/create when the client supports it and composes the final draft, otherwise falls back to clarifying_questions metadata), apply_clarifications when the user has answered the clarifying_questions returned by improve_prompt or coach_prompt and you need to compose the final draft from the user's verbatim answers, record_clarifications when you also want to save the user's verbatim answers and the resulting draft against a stored prompt in the archive, prepare_agent_rewrite and record_agent_rewrite when the user explicitly wants the active agent session to semantically rewrite a stored prompt, score_prompt_archive for habit-only review, review_project_instructions for AGENTS.md/CLAUDE.md-only checks, and prepare_agent_judge_batch plus record_agent_judgments when the active agent should judge accumulated prompts. ASK-FIRST RULE: whenever any tool returns a non-empty clarifying_questions array, ask the user those questions through your native ask UI (Claude Code AskUserQuestion, Codex ask_user_question), then call apply_clarifications first to compose and show the final approval-ready draft in chat; call record_clarifications only if the user also wants to save that draft against a stored prompt. Do not guess answers, do not skip questions, and never auto-submit a rewrite. This server is local-only and does not call external LLMs.",
+          "Use coach_prompt for the default one-call Claude Code/Codex coaching workflow: status, latest prompt score, approval-ready rewrite, habit review, project instruction review, and next request guidance. Use get_looprelay_status only for readiness checks, get_benchmark_candidates for body-free real-effectiveness readiness before fixture preparation, get_paired_benchmark_candidates for body-free baseline and LoopRelay candidate groups before an operator-reviewed paired study, score_prompt for one prompt, improve_prompt for one local deterministic rewrite, ask_clarifying_questions when you want looprelay to drive the elicitation flow itself (it asks the user via MCP elicitation/create when the client supports it and composes the final draft, otherwise falls back to clarifying_questions metadata), apply_clarifications when the user has answered the clarifying_questions returned by improve_prompt or coach_prompt and you need to compose the final draft from the user's verbatim answers, record_clarifications when you also want to save the user's verbatim answers and the resulting draft against a stored prompt in the archive, prepare_agent_rewrite and record_agent_rewrite when the user explicitly wants the active agent session to semantically rewrite a stored prompt, score_prompt_archive for habit-only review, review_project_instructions for AGENTS.md/CLAUDE.md-only checks, and prepare_agent_judge_batch plus record_agent_judgments when the active agent should judge accumulated prompts. ASK-FIRST RULE: whenever any tool returns a non-empty clarifying_questions array, ask the user those questions through your native ask UI (Claude Code AskUserQuestion, Codex ask_user_question), then call apply_clarifications first to compose and show the final approval-ready draft in chat; call record_clarifications only if the user also wants to save that draft against a stored prompt. Do not guess answers, do not skip questions, and never auto-submit a rewrite. This server is local-only and does not call external LLMs.",
       });
     case "ping":
       return jsonRpcResult(id, {});
     case "tools/list":
       return jsonRpcResult(id, {
-        tools: PROMPTLANE_MCP_TOOL_DEFINITIONS,
+        tools: LOOPRELAY_MCP_TOOL_DEFINITIONS,
       });
     case "tools/call":
       return await handleToolCall(id, message.params, options);
@@ -196,7 +196,7 @@ export async function handleMcpMessage(
 async function handleToolCall(
   id: JsonRpcId,
   params: unknown,
-  options: PromptLaneMcpServerOptions,
+  options: LoopRelayMcpServerOptions,
 ): Promise<JsonRpcResponse> {
   if (!isToolCallParams(params)) {
     return jsonRpcError(
@@ -206,7 +206,7 @@ async function handleToolCall(
     );
   }
 
-  const handler = getPromptLaneMcpToolHandler(params.name);
+  const handler = getLoopRelayMcpToolHandler(params.name);
   const handlerResult = handler?.(params.arguments, options);
 
   if (!handlerResult) {

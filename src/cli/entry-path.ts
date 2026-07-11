@@ -33,7 +33,7 @@ function findPackageRoot(startDir: string): string | undefined {
 
   while (current !== root) {
     const packageJsonPath = join(current, "package.json");
-    if (isPromptLanePackage(packageJsonPath)) {
+    if (isLoopRelayPackage(packageJsonPath)) {
       return current;
     }
 
@@ -43,7 +43,7 @@ function findPackageRoot(startDir: string): string | undefined {
   return undefined;
 }
 
-function isPromptLanePackage(packageJsonPath: string): boolean {
+function isLoopRelayPackage(packageJsonPath: string): boolean {
   if (!existsSync(packageJsonPath)) {
     return false;
   }
@@ -52,7 +52,7 @@ function isPromptLanePackage(packageJsonPath: string): boolean {
     const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8")) as {
       name?: string;
     };
-    return packageJson.name === "promptlane";
+    return packageJson.name === "looprelay";
   } catch {
     return false;
   }

@@ -11,7 +11,7 @@ import {
 
 const baseProject = {
   project_id: "proj_1",
-  label: "PromptLane",
+  label: "LoopRelay",
   path_kind: "project_root",
   prompt_count: 1,
   latest_ingest: "2026-07-08T00:00:00.000Z",
@@ -30,7 +30,7 @@ const baseProject = {
 } satisfies ProjectSummary;
 
 const loopDetail = {
-  worktree: "/workspace/promptlane",
+  worktree: "/workspace/looprelay",
   session_id: "session-1",
   branch: "main",
 } as unknown as LoopWorktreeResponse;
@@ -70,21 +70,21 @@ describe("workspace query", () => {
   it("reuses cached loop worktree detail only when route filters match", () => {
     expect(
       isCurrentLoopWorktreeDetail(loopDetail, {
-        worktree: "/workspace/promptlane",
+        worktree: "/workspace/looprelay",
         session: "session-1",
         branch: "main",
       }),
     ).toBe(true);
     expect(
       isCurrentLoopWorktreeDetail(loopDetail, {
-        worktree: "/workspace/promptlane",
+        worktree: "/workspace/looprelay",
         session: "session-2",
         branch: "main",
       }),
     ).toBe(false);
     expect(
       isCurrentLoopWorktreeDetail(undefined, {
-        worktree: "/workspace/promptlane",
+        worktree: "/workspace/looprelay",
       }),
     ).toBe(false);
   });
@@ -93,19 +93,19 @@ describe("workspace query", () => {
     expect(
       shouldNavigateLoopWorktree(
         { name: "list" },
-        { worktree: "/workspace/promptlane" },
+        { worktree: "/workspace/looprelay" },
       ),
     ).toBe(false);
     expect(
       shouldNavigateLoopWorktree(
-        { name: "loops", worktree: "/workspace/promptlane" },
-        { worktree: "/workspace/promptlane" },
+        { name: "loops", worktree: "/workspace/looprelay" },
+        { worktree: "/workspace/looprelay" },
       ),
     ).toBe(false);
     expect(
       shouldNavigateLoopWorktree(
-        { name: "loops", worktree: "/workspace/promptlane" },
-        { worktree: "/workspace/promptlane", branch: "feature" },
+        { name: "loops", worktree: "/workspace/looprelay" },
+        { worktree: "/workspace/looprelay", branch: "feature" },
       ),
     ).toBe(true);
   });

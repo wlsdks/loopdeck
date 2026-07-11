@@ -1,15 +1,15 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  defaultPromptLaneEntry,
+  defaultLoopRelayEntry,
   mcpRegistrationCommand,
   mcpRegistrationSpec,
 } from "./agent-access.js";
 
-describe("defaultPromptLaneEntry", () => {
-  it("falls back to a PATH-based promptlane binary when argv[1] is not a dist entrypoint", () => {
-    const entry = defaultPromptLaneEntry();
-    expect(entry).toEqual({ command: "promptlane", args: [] });
+describe("defaultLoopRelayEntry", () => {
+  it("falls back to a PATH-based looprelay binary when argv[1] is not a dist entrypoint", () => {
+    const entry = defaultLoopRelayEntry();
+    expect(entry).toEqual({ command: "looprelay", args: [] });
   });
 });
 
@@ -25,7 +25,7 @@ describe("mcpRegistrationSpec with an explicit entry", () => {
       args: [
         "mcp",
         "add",
-        "promptlane",
+        "looprelay",
         "--",
         "/usr/local/bin/node",
         "/Users/example/repo/dist/cli/index.js",
@@ -47,7 +47,7 @@ describe("mcpRegistrationSpec with an explicit entry", () => {
         "add",
         "--transport",
         "stdio",
-        "promptlane",
+        "looprelay",
         "--",
         "/usr/local/bin/node",
         "/Users/example/repo/dist/cli/index.js",
@@ -56,16 +56,16 @@ describe("mcpRegistrationSpec with an explicit entry", () => {
     });
   });
 
-  it("preserves the existing PATH-based phrasing when entry uses promptlane directly", () => {
+  it("preserves the existing PATH-based phrasing when entry uses looprelay directly", () => {
     expect(
-      mcpRegistrationCommand("codex", { command: "promptlane", args: [] }),
-    ).toBe("codex mcp add promptlane -- promptlane mcp");
+      mcpRegistrationCommand("codex", { command: "looprelay", args: [] }),
+    ).toBe("codex mcp add looprelay -- looprelay mcp");
     expect(
       mcpRegistrationCommand("claude-code", {
-        command: "promptlane",
+        command: "looprelay",
         args: [],
       }),
-    ).toBe("claude mcp add --transport stdio promptlane -- promptlane mcp");
+    ).toBe("claude mcp add --transport stdio looprelay -- looprelay mcp");
   });
 
   it("shell-quotes registration commands when the entry path contains spaces", () => {
@@ -75,7 +75,7 @@ describe("mcpRegistrationSpec with an explicit entry", () => {
         args: ["/Users/example/Prompt Lane/dist/cli/index.js"],
       }),
     ).toBe(
-      "codex mcp add promptlane -- /usr/local/bin/node '/Users/example/Prompt Lane/dist/cli/index.js' mcp",
+      "codex mcp add looprelay -- /usr/local/bin/node '/Users/example/Prompt Lane/dist/cli/index.js' mcp",
     );
     expect(
       mcpRegistrationCommand("claude-code", {
@@ -83,7 +83,7 @@ describe("mcpRegistrationSpec with an explicit entry", () => {
         args: ["/Users/example/Prompt Lane/dist/cli/index.js"],
       }),
     ).toBe(
-      "claude mcp add --transport stdio promptlane -- /usr/local/bin/node '/Users/example/Prompt Lane/dist/cli/index.js' mcp",
+      "claude mcp add --transport stdio looprelay -- /usr/local/bin/node '/Users/example/Prompt Lane/dist/cli/index.js' mcp",
     );
   });
 });

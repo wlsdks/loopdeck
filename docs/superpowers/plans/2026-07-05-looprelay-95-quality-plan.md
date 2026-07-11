@@ -1,12 +1,12 @@
-# PromptLane 9.5 Quality Plan Implementation Plan
+# LoopRelay 9.5 Quality Plan Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Raise PromptLane from pre-release beta evidence to a 9.5/10 local-first prompt improvement and agent-loop memory workbench.
+**Goal:** Raise LoopRelay from pre-release beta evidence to a 9.5/10 local-first prompt improvement and agent-loop memory workbench.
 
-**Architecture:** Treat 9.5 as a proof standard, not a slogan. Each score axis must have a measurable bar, current evidence, missing evidence, and one or more TDD slices that close the gap without changing the trust model. Keep `PromptLane` as product name and `promptlane` as runtime compatibility id until a dedicated migration proves otherwise.
+**Architecture:** Treat 9.5 as a proof standard, not a slogan. Each score axis must have a measurable bar, current evidence, missing evidence, and one or more TDD slices that close the gap without changing the trust model. Keep `LoopRelay` as product name and `looprelay` as runtime compatibility id until a dedicated migration proves otherwise.
 
-**Tech Stack:** TypeScript, Node.js, Commander CLI, Fastify, SQLite, React/Vite, Vitest, Playwright, pnpm, Codex and Claude Code hooks/MCP/plugin surfaces. GitHub Actions is intentionally absent; PromptLane uses local gates and local browser patrol evidence.
+**Tech Stack:** TypeScript, Node.js, Commander CLI, Fastify, SQLite, React/Vite, Vitest, Playwright, pnpm, Codex and Claude Code hooks/MCP/plugin surfaces. GitHub Actions is intentionally absent; LoopRelay uses local gates and local browser patrol evidence.
 
 ---
 
@@ -14,7 +14,7 @@
 
 | Axis                              | Current level after latest evidence | 9.5 bar                                                                                                                                                                                                                               | Evidence that must exist                                                                                                                                                 |
 | --------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Product planning and positioning  | 9.5/10                              | 9.5 bar: every active first-screen surface, plugin surface, README path, and backlog slice says PromptLane is prompt improvement first, loop-aware continuation second, with no product-facing PromptLane drift.                      | Packaging guard, README/plugin metadata, repo metadata, docs/PROMPTLANE.md, docs/NEXT_BACKLOG.md, goal audit, expected-impact evidence.                                  |
+| Product planning and positioning  | 9.5/10                              | 9.5 bar: every active first-screen surface, plugin surface, README path, and backlog slice says LoopRelay is prompt improvement first, loop-aware continuation second, with no product-facing LoopRelay drift.                      | Packaging guard, README/plugin metadata, repo metadata, docs/LOOPRELAY.md, docs/NEXT_BACKLOG.md, goal audit, expected-impact evidence.                                  |
 | Local-first privacy boundary      | 9.5/10                              | 9.5 bar: every hook, MCP, CLI, server, web, export, loop, and dogfood path proves no prompt body, raw path, provider credential, transcript body, compact summary, or external provider call leaks outside the allowed storage layer. | Focused privacy tests, raw-free fixtures, dogfood:first-coach-loop, dogfood:loop-memory-approval, smoke:mcp-coach-loop, browser E2E, release smoke.                      |
 | Codex and Claude Code integration | 9.5/10                              | 9.5 bar: setup, doctor, hook capture, MCP registration, plugin install guidance, slash commands, statusline, and recovery copy are all verified for both tools in isolated smoke and at least one real operator dogfood pass.         | smoke:agent-setup, smoke:hooks, dogfood:first-coach-loop, docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md, AGENT-HARNESS, native dialog approved dogfood.                        |
 | Setup, doctor, and MCP smoke      | 9.5/10                              | 9.5 bar: setup and doctor smoke proves capture readiness; MCP smoke proves score/improve/clarify/record loop; failure states produce raw-free recovery actions instead of generic errors.                                             | smoke:agent-setup, smoke:mcp-coach-loop, storage_unavailable tests, package checks.                                                                                      |
@@ -73,12 +73,12 @@ dogfood:web-user-flow` passed after main CI run `28750766036`, proving the
   rendering `Outcome evidence` in the web detail flow so expected-impact
   predictions can be checked against finished loop evidence.
 - PR #455 added CLI prompt outcome evidence by moving the same raw-free
-  `loop_outcomes` contract into storage `getPrompt()` so `promptlane show
+  `loop_outcomes` contract into storage `getPrompt()` so `looprelay show
 --json`, web detail, and future agent-native consumers share one effectiveness
   evidence source instead of web-only derivation.
 - PR #457 summarized those raw-free linked
   loop outcomes into an `effectiveness` verdict shared by storage
-  `getPrompt()`, `promptlane show --json`, and the web prompt detail, so
+  `getPrompt()`, `looprelay show --json`, and the web prompt detail, so
   users and agents can judge actual prompt impact without manually reconciling
   every outcome row.
 - PR #458 closed the prompt effectiveness verdict log after PR #457 passed PR
@@ -92,10 +92,10 @@ dogfood:web-user-flow` passed after main CI run `28750766036`, proving the
   raw-free `effectiveness` verdict and calibration counts through MCP
   `score_prompt` for stored prompt ids, so Codex and Claude Code can inspect
   prompt impact evidence without opening the web UI or shelling out to
-  `promptlane show --json`.
+  `looprelay show --json`.
 - The archive effectiveness summary slice adds `effectiveness_summary` to
-  `createArchiveScoreReport()`, `promptlane score --json`, the human
-  `promptlane score` report, `/api/v1/score`, and MCP
+  `createArchiveScoreReport()`, `looprelay score --json`, the human
+  `looprelay score` report, `/api/v1/score`, and MCP
   `score_prompt_archive`, so agents can judge measured vs unmeasured archive
   prompts, proven/mixed/unproven verdict counts, linked outcomes, tests run,
   safe evidence refs, and next action without prompt bodies or raw paths.
@@ -131,15 +131,15 @@ dogfood:web-user-flow` passed after main CI run `28750766036`, proving the
   or web-operations requirement without a dedicated product decision; local
   gates, local `ui-patrol`, and dogfood commands are authoritative.
 - PR #478 exposed the same 9.5 quality evidence as an installed product CLI:
-  `promptlane quality-evidence`, `promptlane quality-evidence --json`, and
-  `promptlane quality-evidence --require-complete`. The command lists
+  `looprelay quality-evidence`, `looprelay quality-evidence --json`, and
+  `looprelay quality-evidence --require-complete`. The command lists
   scorecard/direct evidence blockers when they exist, keeps output local and
   raw-free, and exits nonzero if completion evidence regresses. Future changes
   use the local gate instead of PR/main test CI.
 
 ## 9.5 Evidence Completion State
 
-- `corepack pnpm evidence:quality` emits the `promptlane_95_quality` summary
+- `corepack pnpm evidence:quality` emits the `looprelay_95_quality` summary
   and includes `scorecard_axes`, `axis_evidence_coverage`,
   `native_dialog_approved_dogfood`, `release_gate`, blockers, and recommended
   next slices. Use `corepack pnpm evidence:quality -- --require-complete` when
@@ -148,9 +148,9 @@ dogfood:web-user-flow` passed after main CI run `28750766036`, proving the
   `corepack pnpm --silent evidence:quality` or
   `node scripts/quality-95-evidence.mjs` when another tool needs to parse the
   JSON directly. Installed CLI users can run
-  `promptlane quality-evidence --json` or
-  `promptlane quality-evidence --require-complete`. They can run
-  `promptlane quality-evidence --operator-brief` when they only need the
+  `looprelay quality-evidence --json` or
+  `looprelay quality-evidence --require-complete`. They can run
+  `looprelay quality-evidence --operator-brief` when they only need the
   focused native-dialog approval status and do not want to open the dialog.
   The JSON includes `axis_evidence_coverage`, which separates satisfied local
   proof such as `local_95_evidence_sweep`,
@@ -171,9 +171,9 @@ dogfood:web-user-flow` passed after main CI run `28750766036`, proving the
   Important: do not claim real-user effectiveness trends until consent-bearing
   redacted real fixtures are collected in an operator-owned local file and run
   after
-  `promptlane benchmark init-fixture --output "$FIXTURE_FILE"`, replacing all
+  `looprelay benchmark init-fixture --output "$FIXTURE_FILE"`, replacing all
   examples, updating `consent_note`, setting `template_only` to `false`, and with
-  `promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"`.
+  `looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"`.
   Real prompts without operator-confirmed `passed` or `failed` outcomes remain
   `unproven`; synthetic outcome seeds are not real effectiveness evidence.
   A real trend requires a second run with
@@ -190,7 +190,7 @@ dogfood:web-user-flow` passed after main CI run `28750766036`, proving the
 - `codex_claude_setup_smoke_refresh` was run after becoming the first
   recommendation: `corepack pnpm smoke:agent-setup` rebuilt server/web assets,
   exercised setup dry-run, setup with MCP registration, Claude Code doctor, and
-  Codex doctor, then completed with `promptlane agent setup smoke passed` on
+  Codex doctor, then completed with `looprelay agent setup smoke passed` on
   current main-derived work. This refreshes local Codex/Claude setup evidence
   without opening provider CLIs; approved native-dialog dogfood is recorded
   separately and remains explicit-approval-only.
@@ -214,10 +214,10 @@ dogfood:web-user-flow` passed after main CI run `28750766036`, proving the
   and approved native-dialog dogfood were also recorded.
 - `docs/PRODUCT_POSITIONING_EVIDENCE_2026-07-06.md` records current GitHub
   repository metadata, README/package/plugin metadata, product contract,
-  backlog, goal audit, and PromptLane legacy decision evidence. Product planning
+  backlog, goal audit, and LoopRelay legacy decision evidence. Product planning
   and positioning is now 9.5/10 because those surfaces consistently present
-  PromptLane as prompt improvement first and loop-aware continuation second
-  while keeping `promptlane` as the compatibility runtime ID.
+  LoopRelay as prompt improvement first and loop-aware continuation second
+  while keeping `looprelay` as the compatibility runtime ID.
   `quality-evidence` records this as
   `product_positioning_metadata_alignment`.
 - `docs/UI_PATROL_EVIDENCE_2026-07-06.md` records current local web operations
@@ -248,10 +248,10 @@ dogfood:web-user-flow` passed after main CI run `28750766036`, proving the
   `corepack pnpm e2e:browser`, `corepack pnpm smoke:release`,
   `corepack pnpm smoke:package-install`,
   `corepack pnpm evidence:quality -- --require-complete`,
-  `corepack pnpm promptlane quality-evidence --require-complete`, and
+  `corepack pnpm looprelay quality-evidence --require-complete`, and
   `git diff --check`.
-- The human `promptlane quality-evidence` output renders the complete evidence
-  status directly. `promptlane quality-evidence --operator-brief` renders the
+- The human `looprelay quality-evidence` output renders the complete evidence
+  status directly. `looprelay quality-evidence --operator-brief` renders the
   current approval status, refusal preflight command, completion evidence, and
   guardrails without opening a native dialog. The refusal preflight command is
   `corepack pnpm dogfood:mcp-native-dialog-refusal`. When future blockers
@@ -262,7 +262,7 @@ dogfood:web-user-flow` passed after main CI run `28750766036`, proving the
   agents can use the product CLI itself to decide whether 9.5 is still blocked
   before claiming completion.
 - The approved native OS ask UI dogfood was completed after explicit operator
-  approval: `PROMPTLANE_NATIVE_DIALOG_APPROVED=1 corepack pnpm
+  approval: `LOOPRELAY_NATIVE_DIALOG_APPROVED=1 corepack pnpm
 dogfood:mcp-native-dialog-approved` completed with `approved native dialog
 dogfood passed` and `interaction_status: "answered"`. This closes
   `native_dialog_approved_dogfood` while preserving the rule that the command
@@ -293,7 +293,7 @@ dogfood passed` and `interaction_status: "answered"`. This closes
 - Modify: `package.json`
 - Modify: `docs/NEXT_BACKLOG.md`
 - Modify: `src/packaging/plugin-files.test.ts`
-- Create: `docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md`
+- Create: `docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md`
 
 - [ ] **Step 1: Write the failing packaging guard**
 
@@ -301,10 +301,10 @@ Add a Vitest case in `src/packaging/plugin-files.test.ts` requiring:
 
 ```ts
 expect(packageJson.files).toContain(
-  "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
+  "docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md",
 );
 expect(backlog).toContain(
-  "docs/superpowers/plans/2026-07-05-promptlane-95-quality-plan.md",
+  "docs/superpowers/plans/2026-07-05-looprelay-95-quality-plan.md",
 );
 expect(plan).toContain("Product planning and positioning");
 expect(plan).toContain("dogfood:first-coach-loop");
@@ -348,9 +348,9 @@ Expected: pass.
 Add a packaging test requiring `docs/DOGFOOD_CODEX_CLAUDE_2026-07-05.md` to contain:
 
 ```md
-promptlane setup --profile coach --register-mcp
-promptlane doctor codex
-promptlane doctor claude-code
+looprelay setup --profile coach --register-mcp
+looprelay doctor codex
+looprelay doctor claude-code
 dogfood:first-coach-loop
 ```
 
@@ -378,7 +378,7 @@ corepack pnpm smoke:mcp-coach-loop
 For native ask UI, only run after explicit approval:
 
 ```bash
-PROMPTLANE_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved
+LOOPRELAY_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved
 ```
 
 - [ ] **Step 4: Record actual evidence**
@@ -435,7 +435,7 @@ Expected: fail because the script does not exist.
 The script must:
 
 1. create isolated HOME and data-dir
-2. initialize PromptLane
+2. initialize LoopRelay
 3. start local server
 4. capture a Codex prompt through `hook codex`
 5. run `loop collect --json`

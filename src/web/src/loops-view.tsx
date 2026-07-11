@@ -137,10 +137,10 @@ export function LoopsView({
     <section className="loops-view" aria-label="Loop snapshots">
       <div className="panel loops-summary">
         <div>
-          <span className="panel-eyebrow">PromptLane</span>
+          <span className="panel-eyebrow">LoopRelay</span>
           <h2>{items.length} loop snapshots</h2>
           <p className="loops-status-line">
-            PromptLane status {loops.status.status}
+            LoopRelay status {loops.status.status}
           </p>
           <LoopActivitySummary
             approvalBusy={approvalBusy}

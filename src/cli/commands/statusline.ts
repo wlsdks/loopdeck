@@ -23,7 +23,7 @@ import {
   directionGlyph,
   type ArchiveTrend,
 } from "../../analysis/archive-trend.js";
-import { loadHookAuth, loadPromptLaneConfig } from "../../config/config.js";
+import { loadHookAuth, loadLoopRelayConfig } from "../../config/config.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import { doctorClaudeCode } from "./doctor.js";
 import type { ClaudeSettings } from "./install-hook.js";
@@ -58,12 +58,14 @@ export type StatusLineInstallResult = {
 
 type ChainedStatusLineOptions = {
   previous: string;
-  promptLane: string;
+  // commander lowercases a single-word flag: `--looprelay` parses to
+  // `options.looprelay` (camelCase only kicks in on dashed flags).
+  looprelay: string;
 };
 
 type RenderChainedStatusLineOptions = {
   previousCommand: string;
-  promptLaneCommand: string;
+  loopRelayCommand: string;
   stdin?: string;
   runCommand?: StatusLineCommandRunner;
 };
@@ -75,7 +77,7 @@ type StatusLineCommandRunner = (
   stdout?: string | Buffer | null;
 };
 
-const STATUSLINE_MARKER = "promptlane statusline claude-code";
+const STATUSLINE_MARKER = "looprelay statusline claude-code";
 
 export function registerStatusLineCommand(program: Command): void {
   registerRenderStatusLineCommand(program);
@@ -87,9 +89,9 @@ export function registerStatusLineCommand(program: Command): void {
 function registerRenderStatusLineCommand(program: Command): void {
   program
     .command("statusline")
-    .description("Render the PromptLane status line for Claude Code.")
+    .description("Render the LoopRelay status line for Claude Code.")
     .argument("<tool>", "Tool to render a status line for.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--settings-path <path>", "Override Claude Code settings path.")
     .action(async (tool: string, options: StatusLineOptions) => {
       if (tool !== "claude-code") {
@@ -106,14 +108,11 @@ function registerChainedStatusLineCommand(program: Command): void {
   program
     .command("statusline-chain")
     .description(
-      "Render a chained status line that combines PromptLane with another tool's existing status line.",
+      "Render a chained status line that combines LoopRelay with another tool's existing status line.",
     )
     .argument("<tool>", "Tool to render a chained status line for.")
     .requiredOption("--previous <base64url>", "Previous status line command.")
-    .requiredOption(
-      "--promptlane <base64url>",
-      "PromptLane status line command.",
-    )
+    .requiredOption("--looprelay <base64url>", "LoopRelay status line command.")
     .action((tool: string, options: ChainedStatusLineOptions) => {
       if (tool !== "claude-code") {
         throw new UserError(
@@ -124,7 +123,7 @@ function registerChainedStatusLineCommand(program: Command): void {
       console.log(
         renderChainedClaudeCodeStatusLine({
           previousCommand: decodeStatusLineCommand(options.previous),
-          promptLaneCommand: decodeStatusLineCommand(options.promptLane),
+          loopRelayCommand: decodeStatusLineCommand(options.looprelay),
           stdin: readStatusLineStdin(),
         }),
       );
@@ -134,10 +133,10 @@ function registerChainedStatusLineCommand(program: Command): void {
 function registerInstallStatusLineCommand(program: Command): void {
   program
     .command("install-statusline")
-    .description("Install the PromptLane status line for Claude Code.")
+    .description("Install the LoopRelay status line for Claude Code.")
     .argument("<tool>", "Tool to install status line for.")
     .option("--settings-path <path>", "Override Claude Code settings path.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--dry-run", "Preview settings change without writing.")
     .action((tool: string, options: StatusLineInstallOptions) => {
       if (tool !== "claude-code") {
@@ -165,7 +164,7 @@ function registerInstallStatusLineCommand(program: Command): void {
 function registerUninstallStatusLineCommand(program: Command): void {
   program
     .command("uninstall-statusline")
-    .description("Uninstall the PromptLane status line for Claude Code.")
+    .description("Uninstall the LoopRelay status line for Claude Code.")
     .argument("<tool>", "Tool to uninstall status line for.")
     .option("--settings-path <path>", "Override Claude Code settings path.")
     .action((tool: string, options: StatusLineInstallOptions) => {
@@ -244,11 +243,11 @@ export function renderChainedClaudeCodeStatusLine(
   const previous = normalizePreviousStatusLineOutput(
     runCommand(options.previousCommand, options.stdin).stdout,
   );
-  const promptLane = normalizePromptLaneStatusLineOutput(
-    runCommand(options.promptLaneCommand, options.stdin).stdout,
+  const loopRelay = normalizeLoopRelayStatusLineOutput(
+    runCommand(options.loopRelayCommand, options.stdin).stdout,
   );
 
-  return [previous, promptLane].filter(Boolean).join("\n");
+  return [previous, loopRelay].filter(Boolean).join("\n");
 }
 
 function formatLatestScoreForStatusLine(
@@ -266,7 +265,7 @@ function formatLatestScoreForStatusLine(
   const score = `${STATUSLINE_PREFIX} score ${result.quality_score.value}/${result.quality_score.max} ${result.quality_score.band}${trendSuffix}`;
 
   return gap
-    ? `${score} | weakest: ${gap.label} | run: /promptlane:improve-last`
+    ? `${score} | weakest: ${gap.label} | run: /looprelay:improve-last`
     : score;
 }
 
@@ -274,7 +273,7 @@ function readArchiveTrend(
   options: StatusLineOptions,
 ): ArchiveTrend | undefined {
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const auth = loadHookAuth(options.dataDir);
     const storage = createSqlitePromptStorage({
       dataDir: config.data_dir,
@@ -367,7 +366,7 @@ function ensureStatusLine(
   const currentCommand = settings.statusLine?.command;
   const previousCommand = currentCommand
     ? (extractPreviousStatusLineCommand(currentCommand) ??
-      (isPromptLaneStatusLine(currentCommand) ? undefined : currentCommand))
+      (isLoopRelayStatusLine(currentCommand) ? undefined : currentCommand))
     : undefined;
 
   return {
@@ -384,7 +383,7 @@ function ensureStatusLine(
 function removeStatusLine(settings: StatusLineSettings): StatusLineSettings {
   const command = settings.statusLine?.command;
 
-  if (!command || !isPromptLaneStatusLine(command)) {
+  if (!command || !isLoopRelayStatusLine(command)) {
     return settings;
   }
 
@@ -413,16 +412,16 @@ function buildStatusLineCommand(dataDir?: string): string {
 
 function buildChainedStatusLineCommand(
   previousCommand: string,
-  promptLaneCommand: string,
+  loopRelayCommand: string,
 ): string {
   return `${markerAssignment(STATUSLINE_MARKER)} ${quoteForShell(
     process.execPath,
   )} ${quoteForShell(cliEntryPath())} statusline-chain claude-code --previous ${quoteForShell(
     encodeStatusLineCommand(previousCommand),
-  )} --promptlane ${quoteForShell(encodeStatusLineCommand(promptLaneCommand))}`;
+  )} --looprelay ${quoteForShell(encodeStatusLineCommand(loopRelayCommand))}`;
 }
 
-function isPromptLaneStatusLine(command: string | undefined): boolean {
+function isLoopRelayStatusLine(command: string | undefined): boolean {
   return Boolean(command?.includes(STATUSLINE_MARKER));
 }
 
@@ -507,7 +506,7 @@ function normalizePreviousStatusLineOutput(
     .trim();
 }
 
-function normalizePromptLaneStatusLineOutput(
+function normalizeLoopRelayStatusLineOutput(
   output: string | Buffer | null | undefined,
 ): string {
   if (!output) {
@@ -523,7 +522,7 @@ function normalizePromptLaneStatusLineOutput(
 }
 
 function markerAssignment(marker: string): string {
-  return `PROMPTLANE_STATUSLINE=${quoteForShell(marker)}`;
+  return `LOOPRELAY_STATUSLINE=${quoteForShell(marker)}`;
 }
 
 function cliEntryPath(): string {
@@ -544,7 +543,7 @@ function writeSettingsWithBackup(
 ): string | undefined {
   mkdirSync(dirname(settingsPath), { recursive: true, mode: 0o700 });
   const backupPath = existsSync(settingsPath)
-    ? `${settingsPath}.promptlane.${Date.now()}.bak`
+    ? `${settingsPath}.looprelay.${Date.now()}.bak`
     : undefined;
 
   if (backupPath) {

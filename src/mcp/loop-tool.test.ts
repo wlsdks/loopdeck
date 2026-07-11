@@ -4,12 +4,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { initializePromptLane } from "../config/config.js";
+import { initializeLoopRelay } from "../config/config.js";
 import type { LoopSnapshot } from "../loop/types.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import {
   applyInstructionPatchTool,
-  getPromptLaneLoopStatusTool,
+  getLoopRelayLoopStatusTool,
   prepareLoopBriefTool,
   proposeInstructionPatchTool,
   proposeLoopMemoryCandidateTool,
@@ -26,7 +26,7 @@ afterEach(() => {
   }
 });
 
-describe("PromptLane MCP tools", () => {
+describe("LoopRelay MCP tools", () => {
   it("returns latest loop status without prompt bodies or raw paths", () => {
     const dataDir = seedLoopSnapshot({
       outcome: {
@@ -40,7 +40,7 @@ describe("PromptLane MCP tools", () => {
     seedLoopMergeDecision(dataDir);
     seedOtherProjectMemory(dataDir);
 
-    const result = getPromptLaneLoopStatusTool({}, { dataDir });
+    const result = getLoopRelayLoopStatusTool({}, { dataDir });
     const serialized = JSON.stringify(result);
 
     expect(result).toMatchObject({
@@ -131,7 +131,7 @@ describe("PromptLane MCP tools", () => {
       memory_candidate: {
         eligible: true,
         reason: "passed_with_evidence",
-        next_action: "promptlane loop memory-approve",
+        next_action: "looprelay loop memory-approve",
       },
       latest_snapshot: {
         id: "loop_mcp",
@@ -142,7 +142,7 @@ describe("PromptLane MCP tools", () => {
         average_prompt_score: 58,
         outcome_status: "passed",
       },
-      next_action: "promptlane loop brief",
+      next_action: "looprelay loop brief",
       next_actions: expect.arrayContaining([
         expect.stringContaining("prepare_loop_brief"),
       ]),
@@ -167,33 +167,33 @@ describe("PromptLane MCP tools", () => {
   });
 
   it("returns concrete setup guidance when loop storage is unavailable", () => {
-    const dataDir = join(tmpdir(), `promptlane-missing-${randomUUID()}`);
-    const result = getPromptLaneLoopStatusTool({}, { dataDir });
+    const dataDir = join(tmpdir(), `looprelay-missing-${randomUUID()}`);
+    const result = getLoopRelayLoopStatusTool({}, { dataDir });
     const serialized = JSON.stringify(result);
 
     expect(result).toMatchObject({
       status: "setup_needed",
       snapshot_count: 0,
-      next_action: "promptlane setup --profile coach --register-mcp",
+      next_action: "looprelay setup --profile coach --register-mcp",
     });
     expect(result.next_actions).toEqual(
       expect.arrayContaining([
-        "Run promptlane setup --profile coach --register-mcp before using PromptLane loop MCP tools.",
-        "Send one Codex or Claude Code prompt, then call coach_prompt or rerun get_promptlane_status.",
-        "Then run promptlane loop collect from the project you want to continue.",
+        "Run looprelay setup --profile coach --register-mcp before using LoopRelay loop MCP tools.",
+        "Send one Codex or Claude Code prompt, then call coach_prompt or rerun get_looprelay_status.",
+        "Then run looprelay loop collect from the project you want to continue.",
       ]),
     );
     expect(
       result.next_actions.indexOf(
-        "Send one Codex or Claude Code prompt, then call coach_prompt or rerun get_promptlane_status.",
+        "Send one Codex or Claude Code prompt, then call coach_prompt or rerun get_looprelay_status.",
       ),
     ).toBeLessThan(
       result.next_actions.indexOf(
-        "Then run promptlane loop collect from the project you want to continue.",
+        "Then run looprelay loop collect from the project you want to continue.",
       ),
     );
     expect(result.next_actions).toContain(
-      "For custom storage, initialize it with promptlane init --data-dir <path> and pass the same --data-dir to the MCP server.",
+      "For custom storage, initialize it with looprelay init --data-dir <path> and pass the same --data-dir to the MCP server.",
     );
     expect(serialized).not.toContain(dataDir);
     expect(serialized).not.toContain(tmpdir());
@@ -202,7 +202,7 @@ describe("PromptLane MCP tools", () => {
   it("reports compact boundaries newer than the latest loop snapshot", () => {
     const dataDir = seedLoopSnapshot({ withCompactBoundary: true });
 
-    const result = getPromptLaneLoopStatusTool({}, { dataDir });
+    const result = getLoopRelayLoopStatusTool({}, { dataDir });
     const serialized = JSON.stringify(result);
 
     expect(result).toMatchObject({
@@ -215,7 +215,7 @@ describe("PromptLane MCP tools", () => {
         after_latest_snapshot: true,
       },
       next_actions: expect.arrayContaining([
-        expect.stringContaining("promptlane loop collect"),
+        expect.stringContaining("looprelay loop collect"),
       ]),
     });
     expect(serialized).not.toContain("Compact summary with sk-proj-secret");
@@ -336,7 +336,7 @@ describe("PromptLane MCP tools", () => {
       is_error: true,
       error_code: "not_found",
       message:
-        "No loop snapshot matched the selected worktree/session/branch filters. Run `promptlane loop collect --worktree missing-worktree --branch feature/missing-loop` from that project, or retry `promptlane loop brief` with fewer filters.",
+        "No loop snapshot matched the selected worktree/session/branch filters. Run `looprelay loop collect --worktree missing-worktree --branch feature/missing-loop` from that project, or retry `looprelay loop brief` with fewer filters.",
     });
   });
 
@@ -355,14 +355,14 @@ describe("PromptLane MCP tools", () => {
     });
     expect(result.prompt).toContain("## Compaction Boundary");
     expect(result.prompt).toContain("PostCompact at 2026-07-04T01:05:00.000Z");
-    expect(result.prompt).toContain("Run promptlane loop collect again");
+    expect(result.prompt).toContain("Run looprelay loop collect again");
     expect(serialized).not.toContain("Compact summary with sk-proj-secret");
     expect(serialized).not.toContain("/Users/example");
   });
 
   it("returns actionable guidance when no loop snapshot exists", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = prepareLoopBriefTool({}, { dataDir });
 
@@ -370,7 +370,7 @@ describe("PromptLane MCP tools", () => {
       is_error: true,
       error_code: "not_found",
       message:
-        "No loop snapshot found. Send one Codex or Claude Code prompt, call coach_prompt or rerun get_promptlane_status to confirm the first score, then run `promptlane loop collect` before retrying prepare_loop_brief.",
+        "No loop snapshot found. Send one Codex or Claude Code prompt, call coach_prompt or rerun get_looprelay_status to confirm the first score, then run `looprelay loop collect` before retrying prepare_loop_brief.",
     });
   });
 
@@ -456,7 +456,7 @@ describe("PromptLane MCP tools", () => {
 
   it("guides first-time outcome recording through prompt capture before collect", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = recordLoopOutcomeTool(
       {
@@ -472,7 +472,7 @@ describe("PromptLane MCP tools", () => {
       is_error: true,
       error_code: "not_found",
       message:
-        "No loop snapshot found. Send one Codex or Claude Code prompt, call coach_prompt or rerun get_promptlane_status to confirm the first score, then run `promptlane loop collect` before retrying record_loop_outcome.",
+        "No loop snapshot found. Send one Codex or Claude Code prompt, call coach_prompt or rerun get_looprelay_status to confirm the first score, then run `looprelay loop collect` before retrying record_loop_outcome.",
     });
   });
 
@@ -516,7 +516,7 @@ describe("PromptLane MCP tools", () => {
 
   it("guides first-time memory candidate users through prompt capture, collect, and outcome evidence", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = proposeLoopMemoryCandidateTool({}, { dataDir });
 
@@ -524,7 +524,7 @@ describe("PromptLane MCP tools", () => {
       is_error: true,
       error_code: "not_found",
       message:
-        "No loop snapshot found. Send one Codex or Claude Code prompt, call coach_prompt or rerun get_promptlane_status to confirm the first score, run `promptlane loop collect`, then record a passed loop outcome with safe evidence before retrying propose_loop_memory_candidate.",
+        "No loop snapshot found. Send one Codex or Claude Code prompt, call coach_prompt or rerun get_looprelay_status to confirm the first score, run `looprelay loop collect`, then record a passed loop outcome with safe evidence before retrying propose_loop_memory_candidate.",
     });
   });
 
@@ -655,7 +655,7 @@ describe("PromptLane MCP tools", () => {
       apply_gate: {
         web_apply_available: false,
         confirm_command:
-          "promptlane loop instruction-apply --target-file AGENTS.md --confirm-apply",
+          "looprelay loop instruction-apply --target-file AGENTS.md --confirm-apply",
         mcp_tool: "apply_instruction_patch",
         reason:
           "web review does not write files; apply through CLI or MCP with explicit confirmation",
@@ -668,7 +668,7 @@ describe("PromptLane MCP tools", () => {
         writes_instruction_files: false,
       },
     });
-    expect(result.diff).toContain("## PromptLane Memories");
+    expect(result.diff).toContain("## LoopRelay Memories");
     expect(result.diff).toContain("Scheduler lifecycle should stay plist-only");
     expect(serialized).not.toContain("Make this better");
     expect(serialized).not.toContain("/Users/example");
@@ -676,7 +676,7 @@ describe("PromptLane MCP tools", () => {
 
   it("guides instruction patch tools to approve evidence-backed memory first", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const result = proposeInstructionPatchTool(
       {
@@ -689,7 +689,7 @@ describe("PromptLane MCP tools", () => {
       is_error: true,
       error_code: "not_found",
       message:
-        "No loop memory found. Capture one Codex or Claude Code prompt, call coach_prompt or rerun get_promptlane_status, collect a loop snapshot, record a passed outcome with safe evidence, then call record_loop_memory before retrying propose_instruction_patch.",
+        "No loop memory found. Capture one Codex or Claude Code prompt, call coach_prompt or rerun get_looprelay_status, collect a loop snapshot, record a passed outcome with safe evidence, then call record_loop_memory before retrying propose_instruction_patch.",
     });
   });
 
@@ -776,7 +776,7 @@ function seedLoopSnapshot(
   } = {},
 ): string {
   const dataDir = createTempDir();
-  const init = initializePromptLane({ dataDir });
+  const init = initializeLoopRelay({ dataDir });
   const storage = createSqlitePromptStorage({
     dataDir,
     hmacSecret: init.hookAuth.web_session_secret,
@@ -837,7 +837,7 @@ function loopSnapshot(patch: Partial<LoopSnapshot> = {}): LoopSnapshot {
     },
     next_brief: {
       generated: false,
-      summary: "Run promptlane loop brief to generate the next request.",
+      summary: "Run looprelay loop brief to generate the next request.",
     },
     privacy: {
       stores_prompt_bodies: false,
@@ -849,7 +849,7 @@ function loopSnapshot(patch: Partial<LoopSnapshot> = {}): LoopSnapshot {
 }
 
 function seedOtherProjectMemory(dataDir: string): void {
-  const init = initializePromptLane({ dataDir });
+  const init = initializeLoopRelay({ dataDir });
   const storage = createSqlitePromptStorage({
     dataDir,
     hmacSecret: init.hookAuth.web_session_secret,
@@ -885,7 +885,7 @@ function seedOtherProjectMemory(dataDir: string): void {
 }
 
 function seedLoopMergeDecision(dataDir: string): void {
-  const init = initializePromptLane({ dataDir });
+  const init = initializeLoopRelay({ dataDir });
   const storage = createSqlitePromptStorage({
     dataDir,
     hmacSecret: init.hookAuth.web_session_secret,
@@ -906,7 +906,7 @@ function seedLoopMergeDecision(dataDir: string): void {
 }
 
 function seedNewerOtherWorktreeSnapshot(dataDir: string): void {
-  const init = initializePromptLane({ dataDir });
+  const init = initializeLoopRelay({ dataDir });
   const storage = createSqlitePromptStorage({
     dataDir,
     hmacSecret: init.hookAuth.web_session_secret,
@@ -932,7 +932,7 @@ function seedNewerOtherWorktreeSnapshot(dataDir: string): void {
 }
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-loop-mcp-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-loop-mcp-${randomUUID()}`);
   mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;

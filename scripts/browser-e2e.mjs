@@ -17,7 +17,7 @@ import { chromium } from "playwright";
 
 const repoRoot = resolve(new URL("..", import.meta.url).pathname);
 const cliPath = join(repoRoot, "dist", "cli", "index.js");
-const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-browser-e2e-"));
+const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-browser-e2e-"));
 const dataDir = join(tempRoot, "data");
 const homeDir = join(tempRoot, "home");
 const screenshotDir = process.env.SCREENSHOT_DIR
@@ -42,8 +42,8 @@ try {
   writeFileSync(
     join(privateProjectDir, "AGENTS.md"),
     [
-      "# promptlane",
-      "promptlane is a local-first developer tool built with TypeScript and SQLite.",
+      "# looprelay",
+      "looprelay is a local-first developer tool built with TypeScript and SQLite.",
       "Agents plan in tasks/todo.md, avoid reverting user changes, commit, and push.",
       "Run pnpm test, pnpm lint, pnpm build, and Playwright E2E after UI changes.",
       "Never expose secrets, prompt bodies, raw paths, tokens, stdout, or stderr leaks.",
@@ -153,12 +153,12 @@ try {
   );
   await assertText(
     page,
-    "promptlane:score_prompt prompt_id=",
+    "looprelay:score_prompt prompt_id=",
     "Detail should expose a stored prompt MCP score command.",
   );
   await assertText(
     page,
-    "promptlane:prepare_agent_rewrite prompt_id=",
+    "looprelay:prepare_agent_rewrite prompt_id=",
     "Detail should expose a stored prompt agent rewrite command.",
   );
   await captureScreenshot(page, "detail-desktop");
@@ -466,7 +466,7 @@ try {
   );
   await assertText(
     page,
-    "get_promptlane_status",
+    "get_looprelay_status",
     "MCP page should expose the preflight status tool.",
   );
   await assertText(
@@ -526,7 +526,7 @@ try {
   await page
     .getByRole("textbox", { name: "Summary" })
     .fill(
-      "Selected browser worktree checks passed with the PromptLane improvement.",
+      "Selected browser worktree checks passed with the LoopRelay improvement.",
     );
   await page
     .getByRole("textbox", { name: "Evidence" })
@@ -540,7 +540,7 @@ try {
     readUsedImprovementPromptIds(selectedMemorySnapshot.id).includes(
       attributedPromptId,
     ),
-    "Web outcome recording should persist the checked PromptLane improvement attribution.",
+    "Web outcome recording should persist the checked LoopRelay improvement attribution.",
   );
   await page.reload();
   await page.getByRole("heading", { name: "Loops", level: 1 }).waitFor();
@@ -592,7 +592,7 @@ try {
   await page.getByText("[local path]").first().waitFor();
   await assertText(
     page,
-    "Run promptlane setup --profile coach, then send one Codex or Claude Code prompt.",
+    "Run looprelay setup --profile coach, then send one Codex or Claude Code prompt.",
     "Settings should show an actionable next step when hook capture is waiting.",
   );
   await assertBrowserSafe(page, "settings");
@@ -643,7 +643,7 @@ function step(message) {
 }
 
 function insertJudgeScoreForClaudePrompt({ score, reason }) {
-  const dbPath = join(dataDir, "promptlane.sqlite");
+  const dbPath = join(dataDir, "looprelay.sqlite");
   const db = new Database(dbPath);
   try {
     const row = db
@@ -674,7 +674,7 @@ function insertJudgeScoreForClaudePrompt({ score, reason }) {
 }
 
 function insertLoopOutcomeForClaudePrompt() {
-  const dbPath = join(dataDir, "promptlane.sqlite");
+  const dbPath = join(dataDir, "looprelay.sqlite");
   const db = new Database(dbPath);
   try {
     const row = db
@@ -799,7 +799,7 @@ function seedSelectedMemoryWorktrees() {
     "--json",
   ]);
 
-  const db = new Database(join(dataDir, "promptlane.sqlite"));
+  const db = new Database(join(dataDir, "looprelay.sqlite"));
   try {
     db.prepare("UPDATE loop_snapshots SET session_id = ? WHERE id = ?").run(
       "browser-selected-session",
@@ -813,7 +813,7 @@ function seedSelectedMemoryWorktrees() {
 }
 
 function readUsedImprovementPromptIds(snapshotId) {
-  const db = new Database(join(dataDir, "promptlane.sqlite"));
+  const db = new Database(join(dataDir, "looprelay.sqlite"));
   try {
     const row = db
       .prepare("SELECT outcome_json FROM loop_snapshots WHERE id = ?")
@@ -836,7 +836,7 @@ function runCli(args) {
   });
   if (result.status !== 0) {
     throw new Error(
-      `CLI failed: promptlane ${args.join(" ")}\n${result.stderr}`,
+      `CLI failed: looprelay ${args.join(" ")}\n${result.stderr}`,
     );
   }
   return result.stdout.trim();
@@ -915,8 +915,8 @@ async function captureScreenshot(page, name) {
 
 async function forceClipboardFailure(page) {
   await page.evaluate(() => {
-    if (!window.__promptLaneE2eClipboard) {
-      Object.defineProperty(window, "__promptLaneE2eClipboard", {
+    if (!window.__loopRelayE2eClipboard) {
+      Object.defineProperty(window, "__loopRelayE2eClipboard", {
         configurable: true,
         value: {
           clipboard: navigator.clipboard,
@@ -939,7 +939,7 @@ async function forceClipboardFailure(page) {
 
 async function restoreClipboard(page) {
   await page.evaluate(() => {
-    const clipboardState = window.__promptLaneE2eClipboard;
+    const clipboardState = window.__loopRelayE2eClipboard;
     if (!clipboardState) {
       return;
     }
@@ -951,7 +951,7 @@ async function restoreClipboard(page) {
       configurable: true,
       value: clipboardState.clipboard,
     });
-    Reflect.deleteProperty(window, "__promptLaneE2eClipboard");
+    Reflect.deleteProperty(window, "__loopRelayE2eClipboard");
   });
 }
 
@@ -962,7 +962,7 @@ async function assertText(page, expected, message) {
 
 async function currentPromptDetail(page) {
   const text = await page.locator("body").innerText();
-  const match = text.match(/promptlane:score_prompt prompt_id=(\S+)/);
+  const match = text.match(/looprelay:score_prompt prompt_id=(\S+)/);
   assert(match, "Detail view should expose the selected prompt id.");
   return page.evaluate(async (promptId) => {
     const response = await fetch(`/api/v1/prompts/${promptId}`);

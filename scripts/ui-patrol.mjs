@@ -7,7 +7,7 @@ import { join, resolve } from "node:path";
 const repoRoot = resolve(new URL("..", import.meta.url).pathname);
 const screenshotDir = process.env.SCREENSHOT_DIR
   ? resolve(process.env.SCREENSHOT_DIR)
-  : mkdtempSync(join(tmpdir(), "promptlane-ui-patrol-"));
+  : mkdtempSync(join(tmpdir(), "looprelay-ui-patrol-"));
 
 mkdirSync(screenshotDir, { recursive: true });
 

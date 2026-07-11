@@ -50,7 +50,7 @@ describe("localizeElement", () => {
 
   it("translates empty loop next actions from server-provided status text", () => {
     const statusLabelNode = {
-      nodeValue: "PromptLane status ",
+      nodeValue: "LoopRelay status ",
       parentElement: { closest: () => undefined },
     };
     const emptyStatusNode = {
@@ -59,7 +59,7 @@ describe("localizeElement", () => {
     };
     const actionNode = {
       nodeValue:
-        "Capture one Codex or Claude Code prompt, then run promptlane coach to confirm the first score.",
+        "Capture one Codex or Claude Code prompt, then run looprelay coach to confirm the first score.",
       parentElement: { closest: () => undefined },
     };
     const privacyNode = {
@@ -87,10 +87,10 @@ describe("localizeElement", () => {
 
     localizeElement(root, "ko");
 
-    expect(statusLabelNode.nodeValue).toBe("PromptLane 상태 ");
+    expect(statusLabelNode.nodeValue).toBe("LoopRelay 상태 ");
     expect(emptyStatusNode.nodeValue).toBe("비어 있음");
     expect(actionNode.nodeValue).toBe(
-      "Codex 또는 Claude Code 프롬프트를 하나 캡처한 뒤 promptlane coach로 첫 점수를 확인하세요.",
+      "Codex 또는 Claude Code 프롬프트를 하나 캡처한 뒤 looprelay coach로 첫 점수를 확인하세요.",
     );
     expect(privacyNode.nodeValue).toBe(
       "로컬 전용입니다. 프롬프트 본문, raw path, compact summary는 여기에 표시하지 않습니다.",
@@ -148,7 +148,7 @@ describe("localizeElement", () => {
       "evidence complete",
       "safe",
       "No completed outcomes",
-      "Run promptlane loop status, then record the latest snapshot outcome after a verifiable checkpoint.",
+      "Run looprelay loop status, then record the latest snapshot outcome after a verifiable checkpoint.",
     ];
     const nodes = values.map((nodeValue) => ({
       nodeValue,
@@ -172,7 +172,7 @@ describe("localizeElement", () => {
       "증거 완비",
       "안전",
       "완료된 outcome 없음",
-      "promptlane loop status를 실행한 뒤 검증 가능한 checkpoint에서 최신 snapshot outcome을 기록하세요.",
+      "looprelay loop status를 실행한 뒤 검증 가능한 checkpoint에서 최신 snapshot outcome을 기록하세요.",
     ]);
   });
 });

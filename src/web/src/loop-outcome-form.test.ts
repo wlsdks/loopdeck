@@ -15,7 +15,7 @@ describe("LoopOutcomeForm", () => {
       }),
     );
 
-    expect(html).toContain("PromptLane improvements used");
+    expect(html).toContain("LoopRelay improvements used");
     expect(html).toContain('name="used-improvement-prmt_one"');
     expect(html).toContain('name="used-improvement-prmt_two"');
     expect(html).toContain("prmt_one");

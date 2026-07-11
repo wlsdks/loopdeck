@@ -4,15 +4,15 @@ import { homedir } from "node:os";
 import { join } from "node:path";
 import type { Command } from "commander";
 
-import { loadHookAuth, loadPromptLaneConfig } from "../../config/config.js";
+import { loadHookAuth, loadLoopRelayConfig } from "../../config/config.js";
 import { diagnoseIngestFailure } from "./doctor-diagnose-ingest.js";
 import {
   readLastHookStatus,
   type LastHookStatus,
 } from "../../hooks/hook-status.js";
 import {
-  countPromptLaneCodexHooks,
-  hasPromptLaneHook,
+  countLoopRelayCodexHooks,
+  hasLoopRelayHook,
   isCodexHooksFeatureEnabled,
   type ClaudeSettings,
   type CodexHooksSettings,
@@ -117,7 +117,7 @@ export function registerDoctorCommand(program: Command): void {
       "Diagnose Claude Code or Codex setup (server, ingest token, hook, MCP).",
     )
     .argument("<tool>", "Tool to inspect.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--settings-path <path>", "Override Claude Code settings path.")
     .option("--hooks-path <path>", "Override Codex hooks.json path.")
     .option("--config-path <path>", "Override Codex config.toml path.")
@@ -190,7 +190,7 @@ export function formatDoctorResult(
       : formatClaudeSettings(result as DoctorClaudeCodeResult);
   const status = doctorStatus(result);
   const lines = [
-    `promptlane doctor: ${tool}`,
+    `looprelay doctor: ${tool}`,
     `Status: ${formatDoctorStatus(status)}`,
     "",
     "Checks:",
@@ -270,14 +270,14 @@ function doctorNextSteps(
   const steps: string[] = [];
   if (!result.server.ok) {
     steps.push(
-      "Run promptlane service start or promptlane server. If the service is not installed, run promptlane setup --profile coach.",
+      "Run looprelay service start or looprelay server. If the service is not installed, run looprelay setup --profile coach.",
     );
   }
   if (!result.token.ok) {
-    steps.push("Run promptlane init or promptlane setup --profile coach.");
+    steps.push("Run looprelay init or looprelay setup --profile coach.");
   }
   if (!result.settings.ok) {
-    steps.push(`Run promptlane install-hook ${tool}.`);
+    steps.push(`Run looprelay install-hook ${tool}.`);
   }
   if (
     result.server.ok &&
@@ -290,7 +290,7 @@ function doctorNextSteps(
   if (result.ingest.state === "stale") {
     const label = tool === "codex" ? "Codex" : "Claude Code";
     steps.push(
-      `Send one new ${label} prompt, then rerun promptlane doctor ${tool}.`,
+      `Send one new ${label} prompt, then rerun looprelay doctor ${tool}.`,
     );
     steps.push(
       tool === "codex"
@@ -310,10 +310,10 @@ function doctorNextSteps(
     (result as DoctorCodexResult).settings.duplicateHooks
   ) {
     steps.push(
-      "Run promptlane install-hook codex to normalize duplicate hooks in the same Codex hooks file.",
+      "Run looprelay install-hook codex to normalize duplicate hooks in the same Codex hooks file.",
     );
     steps.push(
-      "If Codex hook sources still show both user and project, remove one PromptLane hook registration manually.",
+      "If Codex hook sources still show both user and project, remove one LoopRelay hook registration manually.",
     );
   }
   if (result.lastIngestStatus && !result.lastIngestStatus.ok) {
@@ -339,7 +339,7 @@ function configuredDataDirFor(
   options: DoctorClaudeCodeOptions | DoctorCodexOptions | undefined,
 ): string {
   try {
-    return loadPromptLaneConfig(options?.dataDir).data_dir;
+    return loadLoopRelayConfig(options?.dataDir).data_dir;
   } catch {
     return options?.dataDir ?? "";
   }
@@ -460,7 +460,7 @@ function inspectSettings(
     const settings = JSON.parse(
       readFileSync(settingsPath, "utf8"),
     ) as ClaudeSettings;
-    const hookInstalled = hasPromptLaneHook(settings);
+    const hookInstalled = hasLoopRelayHook(settings);
     return { ok: hookInstalled, invalid: false, hookInstalled };
   } catch {
     return { ok: false, invalid: true, hookInstalled: false };
@@ -487,7 +487,7 @@ function inspectCodexSettings(
   }
 
   const hookSources: string[] = [];
-  let promptLaneHookCount = 0;
+  let loopRelayHookCount = 0;
   let invalid = false;
   let codexHooksEnabled = false;
 
@@ -497,8 +497,8 @@ function inspectCodexSettings(
         const settings = JSON.parse(
           readFileSync(source.hooksPath, "utf8"),
         ) as CodexHooksSettings;
-        const sourceHookCount = countPromptLaneCodexHooks(settings);
-        promptLaneHookCount += sourceHookCount;
+        const sourceHookCount = countLoopRelayCodexHooks(settings);
+        loopRelayHookCount += sourceHookCount;
         if (sourceHookCount > 0) {
           hookSources.push(source.name);
         }
@@ -521,7 +521,7 @@ function inspectCodexSettings(
   }
 
   const hookInstalled = hookSources.length > 0;
-  const duplicateHooks = promptLaneHookCount > 1;
+  const duplicateHooks = loopRelayHookCount > 1;
 
   return {
     ok: hookInstalled && codexHooksEnabled && !duplicateHooks && !invalid,
@@ -529,7 +529,7 @@ function inspectCodexSettings(
     hookInstalled,
     codexHooksEnabled,
     duplicateHooks,
-    hookCount: promptLaneHookCount,
+    hookCount: loopRelayHookCount,
     hookSources,
   };
 }
@@ -544,7 +544,7 @@ function inspectMcpRegistration(options: {
     try {
       if (
         existsSync(path) &&
-        looksLikePromptLaneMcpConfig(readFileSync(path, "utf8"))
+        looksLikeLoopRelayMcpConfig(readFileSync(path, "utf8"))
       ) {
         return true;
       }
@@ -558,10 +558,10 @@ function inspectMcpRegistration(options: {
     : false;
 }
 
-function looksLikePromptLaneMcpConfig(text: string): boolean {
+function looksLikeLoopRelayMcpConfig(text: string): boolean {
   const normalized = text.toLowerCase();
   return (
-    normalized.includes("promptlane") &&
+    normalized.includes("looprelay") &&
     /(^|[\s"'[\],=:.-])mcp($|[\s"'[\],=:.-])/.test(normalized)
   );
 }
@@ -577,7 +577,7 @@ function inspectMcpRegistrationFromCli(
       return false;
     }
 
-    return String(result.stdout).toLowerCase().includes("promptlane");
+    return String(result.stdout).toLowerCase().includes("looprelay");
   } catch {
     return false;
   }
@@ -603,7 +603,7 @@ async function inspectServer(
   }
 
   try {
-    const config = loadPromptLaneConfig(options.dataDir);
+    const config = loadLoopRelayConfig(options.dataDir);
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 500);
 

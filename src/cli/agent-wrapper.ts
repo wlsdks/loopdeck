@@ -245,9 +245,9 @@ export function parseWrapperArgs(
   env: NodeJS.ProcessEnv = process.env,
 ): ParsedWrapperArgs {
   const wrapper: AgentWrapperOptions = {
-    mode: parseWrapperMode(env.PROMPTLANE_WRAPPER_MODE) ?? "ask",
-    minScore: parseMinScore(env.PROMPTLANE_WRAPPER_MIN_SCORE),
-    language: parseLanguage(env.PROMPTLANE_WRAPPER_LANGUAGE),
+    mode: parseWrapperMode(env.LOOPRELAY_WRAPPER_MODE) ?? "ask",
+    minScore: parseMinScore(env.LOOPRELAY_WRAPPER_MIN_SCORE),
+    language: parseLanguage(env.LOOPRELAY_WRAPPER_LANGUAGE),
     dryRun: false,
     agentPath: defaultAgentCommand(tool, env),
   };
@@ -259,19 +259,19 @@ export function parseWrapperArgs(
       agentArgs.push(...argv.slice(index + 1));
       break;
     }
-    if (arg === "--pc-help") {
+    if (arg === "--lr-help") {
       agentArgs.push(arg);
       continue;
     }
-    if (arg === "--pc-dry-run") {
+    if (arg === "--lr-dry-run") {
       wrapper.dryRun = true;
       continue;
     }
-    if (arg === "--pc-auto") {
+    if (arg === "--lr-auto") {
       wrapper.mode = "auto";
       continue;
     }
-    if (arg === "--pc-off") {
+    if (arg === "--lr-off") {
       wrapper.mode = "off";
       continue;
     }
@@ -302,17 +302,17 @@ function defaultAgentCommand(
   env: NodeJS.ProcessEnv,
 ): string {
   if (tool === "claude") {
-    return env.PROMPTLANE_CLAUDE_BIN ?? "claude";
+    return env.LOOPRELAY_CLAUDE_BIN ?? "claude";
   }
 
-  return env.PROMPTLANE_CODEX_BIN ?? "codex";
+  return env.LOOPRELAY_CODEX_BIN ?? "codex";
 }
 
 function parseInlineWrapperOption(
   arg: string,
 ): { key: string; value: string } | undefined {
   const index = arg.indexOf("=");
-  if (index < 0 || !arg.startsWith("--pc-")) {
+  if (index < 0 || !arg.startsWith("--lr-")) {
     return undefined;
   }
 
@@ -324,10 +324,10 @@ function parseInlineWrapperOption(
 
 function isWrapperOptionWithValue(arg: string): boolean {
   return (
-    arg === "--pc-mode" ||
-    arg === "--pc-min-score" ||
-    arg === "--pc-language" ||
-    arg === "--pc-agent-path"
+    arg === "--lr-mode" ||
+    arg === "--lr-min-score" ||
+    arg === "--lr-language" ||
+    arg === "--lr-agent-path"
   );
 }
 
@@ -336,19 +336,19 @@ function applyWrapperOption(
   key: string,
   value: string,
 ): void {
-  if (key === "--pc-mode") {
+  if (key === "--lr-mode") {
     const parsedMode = parseWrapperMode(value);
     if (parsedMode === undefined) {
       throw new UserError(
-        `Unsupported --pc-mode: ${value}. Use ask, auto, or off.`,
+        `Unsupported --lr-mode: ${value}. Use ask, auto, or off.`,
       );
     }
     wrapper.mode = parsedMode;
-  } else if (key === "--pc-min-score") {
+  } else if (key === "--lr-min-score") {
     wrapper.minScore = parseMinScore(value);
-  } else if (key === "--pc-language") {
+  } else if (key === "--lr-language") {
     wrapper.language = parseLanguage(value);
-  } else if (key === "--pc-agent-path") {
+  } else if (key === "--lr-agent-path") {
     wrapper.agentPath = value;
   }
 }
@@ -524,7 +524,7 @@ async function askForApproval(options: {
 }): Promise<boolean> {
   options.stdout.write(
     [
-      `promptlane: score ${options.score}/100 below ${options.threshold}.`,
+      `looprelay: score ${options.score}/100 below ${options.threshold}.`,
       "Improved prompt:",
       options.prompt,
       "",
@@ -585,7 +585,7 @@ function normalizeExitStatus(
 }
 
 function isHelpRequested(args: string[]): boolean {
-  return args.includes("--pc-help");
+  return args.includes("--lr-help");
 }
 
 function writeWrapperHelp(
@@ -594,24 +594,24 @@ function writeWrapperHelp(
 ): void {
   stdout.write(
     [
-      `pm-${tool}`,
+      `lr-${tool}`,
       "",
-      `Usage: pm-${tool} [--pc-mode ask|auto|off] [--pc-min-score 0-100] [--pc-language en|ko] [--pc-dry-run] -- [${tool} args] [prompt]`,
+      `Usage: lr-${tool} [--lr-mode ask|auto|off] [--lr-min-score 0-100] [--lr-language en|ko] [--lr-dry-run] -- [${tool} args] [prompt]`,
       "",
       "The wrapper rewrites only the supported initial prompt argument before launching the real CLI.",
       "It does not intercept every message typed later inside the interactive session.",
       "",
       "Examples:",
       `  # Ask before each rewrite (default)`,
-      `  pm-${tool} -- "Fix src/foo.ts and run pnpm test"`,
+      `  lr-${tool} -- "Fix src/foo.ts and run pnpm test"`,
       `  # Skip the rewrite entirely`,
-      `  pm-${tool} --pc-mode off -- "Quick log check"`,
+      `  lr-${tool} --lr-mode off -- "Quick log check"`,
       `  # Auto-apply rewrites only when score is below 50`,
-      `  pm-${tool} --pc-mode auto --pc-min-score 50 -- "Refactor the importer"`,
+      `  lr-${tool} --lr-mode auto --lr-min-score 50 -- "Refactor the importer"`,
       `  # Force the Korean draft for an English-mixed prompt`,
-      `  pm-${tool} --pc-language ko -- "AGENTS.md 갱신해줘"`,
+      `  lr-${tool} --lr-language ko -- "AGENTS.md 갱신해줘"`,
       `  # Print the rewrite plan without launching ${tool}`,
-      `  pm-${tool} --pc-dry-run -- "Plan the next refactor"`,
+      `  lr-${tool} --lr-dry-run -- "Plan the next refactor"`,
       "",
     ].join("\n"),
   );

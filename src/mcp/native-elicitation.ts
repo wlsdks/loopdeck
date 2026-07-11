@@ -62,7 +62,7 @@ async function runWithOsascript(
     const dialogCommand = [
       `set theResult to display dialog ${quoteOsascript(dialogText)}`,
       `default answer ${quoteOsascript(exampleDefault)}`,
-      `with title "promptlane"`,
+      `with title "looprelay"`,
       `buttons {"Cancel", "Submit"}`,
       `default button "Submit"`,
       `cancel button "Cancel"`,
@@ -104,7 +104,7 @@ async function runWithZenity(
     const text = formatDialogText(prompt);
     const args = [
       "--entry",
-      `--title=promptlane`,
+      `--title=looprelay`,
       `--text=${text}`,
       `--timeout=${timeoutS}`,
     ];
@@ -147,7 +147,7 @@ async function runWithPowershell(
     const script =
       `Add-Type -AssemblyName Microsoft.VisualBasic;` +
       `[Microsoft.VisualBasic.Interaction]::InputBox(` +
-      `'${quotePowershell(text)}','promptlane','${quotePowershell(exampleDefault)}'` +
+      `'${quotePowershell(text)}','looprelay','${quotePowershell(exampleDefault)}'` +
       `)`;
     const result = await runner(
       "powershell",

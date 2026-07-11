@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Make CLI, MCP, server API, and web PromptLane status surfaces share one privacy-safe loop status model instead of each surface rebuilding snapshot readiness logic.
+**Goal:** Make CLI, MCP, server API, and web LoopRelay status surfaces share one privacy-safe loop status model instead of each surface rebuilding snapshot readiness logic.
 
-**Architecture:** Add a pure `src/loop/status.ts` model that accepts already-loaded loop snapshots and compact boundaries, returns a raw-free `PromptLaneStatus`, and exposes a safe snapshot summary mapper. CLI `loop status`, MCP `get_promptlane_status`, and `/api/v1/loops` will call the same model; the web view will consume the server-provided status instead of inferring readiness from list length.
+**Architecture:** Add a pure `src/loop/status.ts` model that accepts already-loaded loop snapshots and compact boundaries, returns a raw-free `LoopRelayStatus`, and exposes a safe snapshot summary mapper. CLI `loop status`, MCP `get_looprelay_status`, and `/api/v1/loops` will call the same model; the web view will consume the server-provided status instead of inferring readiness from list length.
 
 **Tech Stack:** TypeScript, Node.js, Commander CLI, Fastify routes, React web client, Vitest, SQLite storage ports.
 
@@ -12,7 +12,7 @@
 
 ## File Structure
 
-- Create `src/loop/status.ts`: pure PromptLane status model, privacy contract, safe snapshot summary mapper, next-action decision.
+- Create `src/loop/status.ts`: pure LoopRelay status model, privacy contract, safe snapshot summary mapper, next-action decision.
 - Create `src/loop/status.test.ts`: model-level tests for ready, empty, compact refresh, include-latest behavior, and raw-value exclusion.
 - Modify `src/cli/commands/loop.ts`: replace local `createLoopStatus` and `toSafeLoopStatusSnapshot` with the shared model.
 - Modify `src/cli/commands/loop.test.ts`: keep existing behavior and add JSON assertion proving CLI uses the shared status shape.
@@ -42,11 +42,11 @@ import { describe, expect, it } from "vitest";
 
 import type { CompactBoundaryRow } from "../storage/ports.js";
 import type { LoopSnapshot } from "./types.js";
-import { createPromptLaneStatus } from "./status.js";
+import { createLoopRelayStatus } from "./status.js";
 
-describe("createPromptLaneStatus", () => {
+describe("createLoopRelayStatus", () => {
   it("returns ready status with a safe latest snapshot and compact refresh action", () => {
-    const status = createPromptLaneStatus({
+    const status = createLoopRelayStatus({
       snapshots: [loopSnapshot()],
       compactBoundaries: [compactBoundary()],
     });
@@ -66,9 +66,9 @@ describe("createPromptLaneStatus", () => {
         trigger: "auto",
         after_latest_snapshot: true,
       },
-      next_action: "promptlane loop collect",
+      next_action: "looprelay loop collect",
       next_actions: expect.arrayContaining([
-        expect.stringContaining("promptlane loop collect"),
+        expect.stringContaining("looprelay loop collect"),
       ]),
       privacy: {
         local_only: true,
@@ -84,7 +84,7 @@ describe("createPromptLaneStatus", () => {
   });
 
   it("returns empty guidance without a latest snapshot", () => {
-    const status = createPromptLaneStatus({
+    const status = createLoopRelayStatus({
       snapshots: [],
       compactBoundaries: [],
     });
@@ -93,15 +93,15 @@ describe("createPromptLaneStatus", () => {
       status: "empty",
       snapshot_count: 0,
       latest_snapshot: undefined,
-      next_action: "promptlane loop collect",
+      next_action: "looprelay loop collect",
       next_actions: expect.arrayContaining([
-        expect.stringContaining("promptlane loop collect"),
+        expect.stringContaining("looprelay loop collect"),
       ]),
     });
   });
 
   it("can hide latest snapshot details while preserving counts and actions", () => {
-    const status = createPromptLaneStatus({
+    const status = createLoopRelayStatus({
       snapshots: [loopSnapshot()],
       compactBoundaries: [],
       includeLatest: false,
@@ -110,7 +110,7 @@ describe("createPromptLaneStatus", () => {
     expect(status.status).toBe("ready");
     expect(status.snapshot_count).toBe(1);
     expect(status.latest_snapshot).toBeUndefined();
-    expect(status.next_action).toBe("promptlane loop brief");
+    expect(status.next_action).toBe("looprelay loop brief");
   });
 });
 
@@ -179,9 +179,9 @@ import { latestCompactBoundaryAfterSnapshot } from "./brief.js";
 import type { LoopBriefCompactBoundary } from "./brief.js";
 import type { LoopSnapshot } from "./types.js";
 
-export type PromptLaneStatusLevel = "ready" | "empty";
+export type LoopRelayStatusLevel = "ready" | "empty";
 
-export type PromptLaneStatusPrivacy = {
+export type LoopRelayStatusPrivacy = {
   local_only: true;
   external_calls: false;
   returns_prompt_bodies: false;
@@ -189,7 +189,7 @@ export type PromptLaneStatusPrivacy = {
   returns_compact_content: false;
 };
 
-export type PromptLaneStatusSnapshot = {
+export type LoopRelayStatusSnapshot = {
   id: string;
   created_at: string;
   tool: string;
@@ -203,52 +203,52 @@ export type PromptLaneStatusSnapshot = {
   outcome_status: LoopSnapshot["outcome"]["status"];
 };
 
-export type PromptLaneStatus = {
-  status: PromptLaneStatusLevel;
+export type LoopRelayStatus = {
+  status: LoopRelayStatusLevel;
   snapshot_count: number;
-  latest_snapshot?: PromptLaneStatusSnapshot;
+  latest_snapshot?: LoopRelayStatusSnapshot;
   latest_compact_boundary?: LoopBriefCompactBoundary;
   next_action: string;
   next_actions: string[];
-  privacy: PromptLaneStatusPrivacy;
+  privacy: LoopRelayStatusPrivacy;
 };
 
 type CompactBoundaryCandidate = Parameters<
   typeof latestCompactBoundaryAfterSnapshot
 >[1][number];
 
-export function createPromptLaneStatus(input: {
+export function createLoopRelayStatus(input: {
   snapshots: readonly LoopSnapshot[];
   compactBoundaries: readonly CompactBoundaryCandidate[];
   includeLatest?: boolean;
-}): PromptLaneStatus {
+}): LoopRelayStatus {
   const latest = input.snapshots.at(0);
   const compactBoundary = latest
     ? latestCompactBoundaryAfterSnapshot(latest, input.compactBoundaries)
     : undefined;
   const hasSnapshots = input.snapshots.length > 0;
   const nextAction = compactBoundary
-    ? "promptlane loop collect"
+    ? "looprelay loop collect"
     : hasSnapshots
-      ? "promptlane loop brief"
-      : "promptlane loop collect";
+      ? "looprelay loop brief"
+      : "looprelay loop collect";
 
   return {
     status: hasSnapshots ? "ready" : "empty",
     snapshot_count: input.snapshots.length,
     ...(latest && input.includeLatest !== false
-      ? { latest_snapshot: toPromptLaneStatusSnapshot(latest) }
+      ? { latest_snapshot: toLoopRelayStatusSnapshot(latest) }
       : {}),
     ...(compactBoundary ? { latest_compact_boundary: compactBoundary } : {}),
     next_action: nextAction,
     next_actions: nextActionsForStatus({ hasSnapshots, compactBoundary }),
-    privacy: promptlaneStatusPrivacy(),
+    privacy: looprelayStatusPrivacy(),
   };
 }
 
-export function toPromptLaneStatusSnapshot(
+export function toLoopRelayStatusSnapshot(
   snapshot: LoopSnapshot,
-): PromptLaneStatusSnapshot {
+): LoopRelayStatusSnapshot {
   return {
     id: snapshot.id,
     created_at: snapshot.created_at,
@@ -266,7 +266,7 @@ export function toPromptLaneStatusSnapshot(
   };
 }
 
-export function promptlaneStatusPrivacy(): PromptLaneStatusPrivacy {
+export function looprelayStatusPrivacy(): LoopRelayStatusPrivacy {
   return {
     local_only: true,
     external_calls: false,
@@ -282,21 +282,21 @@ function nextActionsForStatus(input: {
 }): string[] {
   if (!input.hasSnapshots) {
     return [
-      "Run promptlane loop collect to create the first local loop snapshot.",
+      "Run looprelay loop collect to create the first local loop snapshot.",
       "Capture at least one Claude Code or Codex prompt before expecting useful loop context.",
     ];
   }
 
   if (input.compactBoundary) {
     return [
-      "Run promptlane loop collect again after compaction to refresh the snapshot.",
-      "Then use promptlane loop brief or prepare_loop_brief for a continuation prompt.",
+      "Run looprelay loop collect again after compaction to refresh the snapshot.",
+      "Then use looprelay loop brief or prepare_loop_brief for a continuation prompt.",
     ];
   }
 
   return [
-    "Use promptlane loop brief or prepare_loop_brief to get a copy-ready continuation prompt.",
-    "Run promptlane loop collect again after the next agent turn to refresh the snapshot.",
+    "Use looprelay loop brief or prepare_loop_brief to get a copy-ready continuation prompt.",
+    "Run looprelay loop collect again after the next agent turn to refresh the snapshot.",
   ];
 }
 ```
@@ -331,7 +331,7 @@ const parsed = JSON.parse(json) as {
 
 expect(parsed.latest_snapshot?.outcome_status).toBe("unknown");
 expect(parsed.next_actions).toEqual(
-  expect.arrayContaining([expect.stringContaining("promptlane loop collect")]),
+  expect.arrayContaining([expect.stringContaining("looprelay loop collect")]),
 );
 expect(parsed.privacy?.returns_compact_content).toBe(false);
 ```
@@ -353,16 +353,16 @@ In `src/cli/commands/loop.ts`:
 1. Import:
 
 ```typescript
-import { createPromptLaneStatus } from "../../loop/status.js";
-import type { PromptLaneStatus } from "../../loop/status.js";
+import { createLoopRelayStatus } from "../../loop/status.js";
+import type { LoopRelayStatus } from "../../loop/status.js";
 ```
 
-2. Change `loopStatusForCli` to call `createPromptLaneStatus`:
+2. Change `loopStatusForCli` to call `createLoopRelayStatus`:
 
 ```typescript
 export function loopStatusForCli(options: LoopCliOptions = {}): string {
   return withStorage(options.dataDir, (storage) => {
-    const status = createPromptLaneStatus({
+    const status = createLoopRelayStatus({
       snapshots: storage.listLoopSnapshots({ limit: 100 }).items,
       compactBoundaries: storage.listCompactBoundaries({ limit: 20 }).items,
     });
@@ -375,7 +375,7 @@ export function loopStatusForCli(options: LoopCliOptions = {}): string {
 3. Change formatter signature:
 
 ```typescript
-function formatLoopStatus(status: PromptLaneStatus): string {
+function formatLoopStatus(status: LoopRelayStatus): string {
 ```
 
 4. Delete the local `createLoopStatus` and `toSafeLoopStatusSnapshot` functions.
@@ -406,7 +406,7 @@ expect(result).toMatchObject({
   latest_snapshot: {
     outcome_status: "unknown",
   },
-  next_action: "promptlane loop brief",
+  next_action: "looprelay loop brief",
   privacy: {
     returns_compact_content: false,
   },
@@ -428,21 +428,21 @@ Expected: FAIL because the MCP result does not yet include the shared model fiel
 In `src/mcp/loop-tool-types.ts`, import and reuse the shared type:
 
 ```typescript
-import type { PromptLaneStatus } from "../loop/status.js";
+import type { LoopRelayStatus } from "../loop/status.js";
 ```
 
 Define:
 
 ```typescript
-export type GetPromptLaneStatusToolResult = PromptLaneStatus & {
+export type GetLoopRelayStatusToolResult = LoopRelayStatus & {
   available_tools: string[];
 };
 ```
 
-In `src/mcp/loop-tool.ts`, import `createPromptLaneStatus` and replace the status object construction:
+In `src/mcp/loop-tool.ts`, import `createLoopRelayStatus` and replace the status object construction:
 
 ```typescript
-const status = createPromptLaneStatus({
+const status = createLoopRelayStatus({
   snapshots,
   compactBoundaries: storage.listCompactBoundaries({ limit: 20 }).items,
   includeLatest: args.include_latest !== false,
@@ -463,7 +463,7 @@ Keep the `catch` branch as a `setup_needed` MCP-specific result only if TypeScri
     available_tools: string[];
     next_action: string;
     next_actions: string[];
-    privacy: PromptLaneStatus["privacy"];
+    privacy: LoopRelayStatus["privacy"];
   }
 ```
 
@@ -512,8 +512,8 @@ In `src/web/src/api.test.ts`, update the mocked `/api/v1/loops` response to incl
 In `src/web/src/loops-view.test.tsx`, add a render assertion:
 
 ```typescript
-expect(screen.getByText("PromptLane status ready")).toBeInTheDocument();
-expect(screen.getByText("Next: promptlane loop brief")).toBeInTheDocument();
+expect(screen.getByText("LoopRelay status ready")).toBeInTheDocument();
+expect(screen.getByText("Next: looprelay loop brief")).toBeInTheDocument();
 ```
 
 - [ ] **Step 2: Run focused API/web tests and verify RED**
@@ -521,7 +521,7 @@ expect(screen.getByText("Next: promptlane loop brief")).toBeInTheDocument();
 Run:
 
 ```bash
-PATH=/Users/jinan/.nvm/versions/node/v22.15.0/bin:$PATH corepack pnpm vitest run src/server/create-server.test.ts src/web/src/api.test.ts src/web/src/loops-view.test.tsx --testNamePattern "loops|PromptLane status"
+PATH=/Users/jinan/.nvm/versions/node/v22.15.0/bin:$PATH corepack pnpm vitest run src/server/create-server.test.ts src/web/src/api.test.ts src/web/src/loops-view.test.tsx --testNamePattern "loops|LoopRelay status"
 ```
 
 Expected: FAIL because `/api/v1/loops` does not yet include `status`.
@@ -532,8 +532,8 @@ In `src/server/routes/loops.ts`, import:
 
 ```typescript
 import {
-  createPromptLaneStatus,
-  toPromptLaneStatusSnapshot,
+  createLoopRelayStatus,
+  toLoopRelayStatusSnapshot,
 } from "../../loop/status.js";
 ```
 
@@ -543,7 +543,7 @@ Build once:
 const snapshots = options.storage.listLoopSnapshots?.({ limit: 100 }).items ?? [];
 const boundaries =
   options.storage.listCompactBoundaries?.({ limit: 100 }).items ?? [];
-const status = createPromptLaneStatus({
+const status = createLoopRelayStatus({
   snapshots,
   compactBoundaries: boundaries,
 });
@@ -555,7 +555,7 @@ Return:
 data: {
   status,
   items: snapshots.map((snapshot) => ({
-    ...toPromptLaneStatusSnapshot(snapshot),
+    ...toLoopRelayStatusSnapshot(snapshot),
     compact_boundary: latestCompactBoundaryAfterSnapshot(snapshot, boundaries),
   })),
 }
@@ -587,7 +587,7 @@ In `src/web/src/loops-view.tsx`, render near the header:
 
 ```tsx
 <p className="loops-view__status">
-  PromptLane status {loops.status.status}
+  LoopRelay status {loops.status.status}
 </p>
 <p className="loops-view__next">Next: {loops.status.next_action}</p>
 ```
@@ -599,7 +599,7 @@ Use existing CSS classes or add component-owned classes only in `src/web/src/loo
 Run:
 
 ```bash
-PATH=/Users/jinan/.nvm/versions/node/v22.15.0/bin:$PATH corepack pnpm vitest run src/server/create-server.test.ts src/web/src/api.test.ts src/web/src/loops-view.test.tsx --testNamePattern "loops|PromptLane status"
+PATH=/Users/jinan/.nvm/versions/node/v22.15.0/bin:$PATH corepack pnpm vitest run src/server/create-server.test.ts src/web/src/api.test.ts src/web/src/loops-view.test.tsx --testNamePattern "loops|LoopRelay status"
 ```
 
 Expected: PASS.
@@ -616,7 +616,7 @@ In `tasks/todo.md`, add:
 
 ```markdown
 - [x] Task 14 RED: CLI/MCP/API/web loop status surfaces expose drift because status shape is not shared
-- [x] Task 14 GREEN: `src/loop/status.ts` shared model powers CLI `loop status`, MCP `get_promptlane_status`, `/api/v1/loops`, and web Loops status header
+- [x] Task 14 GREEN: `src/loop/status.ts` shared model powers CLI `loop status`, MCP `get_looprelay_status`, `/api/v1/loops`, and web Loops status header
 - [ ] 다음 slice: package/CLI alias migration plan 또는 loop memory in continuation brief
 ```
 
@@ -646,11 +646,11 @@ git commit -m "feat: share loop status model across surfaces"
 git push origin codex/agent-loop-memory-design
 ```
 
-Expected: branch pushes to `wlsdks/promptlane`.
+Expected: branch pushes to `wlsdks/looprelay`.
 
 ## Self-Review
 
 - Spec coverage: This plan implements the current next slice from `tasks/todo.md`: CLI/MCP/web status model commonization. It preserves the privacy/local-first boundary and does not attempt package or CLI alias migration.
 - Placeholder scan: No TBD/TODO placeholders remain; every step has exact files, code shape, and commands.
-- Type consistency: The shared model exposes `PromptLaneStatus`, `PromptLaneStatusSnapshot`, and `PromptLaneStatusPrivacy`; CLI, MCP, API, and web consume those names consistently.
+- Type consistency: The shared model exposes `LoopRelayStatus`, `LoopRelayStatusSnapshot`, and `LoopRelayStatusPrivacy`; CLI, MCP, API, and web consume those names consistently.
 - Scope check: The plan intentionally does not add vector memory, hidden automation, full trace ingestion, package rename, or new provider integrations.

@@ -15,14 +15,14 @@ import { fileURLToPath } from "node:url";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const cliPath = join(repoRoot, "dist", "cli", "index.js");
-const tempRoot = mkdtempSync(join(tmpdir(), "promptlane-loop-memory-"));
+const tempRoot = mkdtempSync(join(tmpdir(), "looprelay-loop-memory-"));
 const dataDir = join(tempRoot, "data");
 const homeDir = join(tempRoot, "home");
 const projectDir = join(homeDir, "project");
 const instructionFile = join(projectDir, "AGENTS.md");
 const serverPort = 20_000 + Math.floor(Math.random() * 20_000);
 const serverBaseUrl = `http://127.0.0.1:${serverPort}`;
-const secret = "PROMPTLANE_LOOP_MEMORY_SECRET sk-proj-loopmemory1234567890";
+const secret = "LOOPRELAY_LOOP_MEMORY_SECRET sk-proj-loopmemory1234567890";
 const timeoutMs = 10_000;
 const cliEnv = {
   ...process.env,
@@ -45,11 +45,11 @@ try {
   mkdirSync(projectDir, { recursive: true });
   writeFileSync(instructionFile, "# Dogfood Instructions\n", { mode: 0o600 });
 
-  step("init isolated PromptLane archive");
+  step("init isolated LoopRelay archive");
   runCli(["init", "--data-dir", dataDir]);
   configureSmokePort();
 
-  step("start local PromptLane server");
+  step("start local LoopRelay server");
   serverProcess = startServer();
   await waitForHealth(`${serverBaseUrl}/api/v1/health`);
 
@@ -106,7 +106,7 @@ try {
     protocolVersion: "2025-06-18",
     capabilities: {},
     clientInfo: {
-      name: "promptlane-loop-memory-approval-dogfood",
+      name: "looprelay-loop-memory-approval-dogfood",
       version: "0.0.0",
     },
   });
@@ -247,8 +247,8 @@ try {
   );
   assertIncludes(
     patch.diff,
-    "PromptLane Memories",
-    "Instruction patch should propose the PromptLane memories section.",
+    "LoopRelay Memories",
+    "Instruction patch should propose the LoopRelay memories section.",
   );
   assertEqual(
     instructionAfter,
@@ -313,12 +313,12 @@ function runCli(args, options = {}) {
   });
   if (result.status !== 0) {
     throw new Error(
-      `CLI failed: promptlane ${args.join(" ")}\n${result.stderr}`,
+      `CLI failed: looprelay ${args.join(" ")}\n${result.stderr}`,
     );
   }
   if (result.stderr.trim()) {
     throw new Error(
-      `CLI printed unexpected stderr: promptlane ${args.join(" ")}\n${result.stderr}`,
+      `CLI printed unexpected stderr: looprelay ${args.join(" ")}\n${result.stderr}`,
     );
   }
   return result.stdout.trim();

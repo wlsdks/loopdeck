@@ -52,7 +52,7 @@ export function createLoopBrief(input: {
     source_snapshot_id: snapshot.id,
     prompt: [
       "## Goal",
-      "Continue the current coding-agent loop using the local PromptLane snapshot.",
+      "Continue the current coding-agent loop using the local LoopRelay snapshot.",
       "",
       "## Context",
       `project: ${snapshot.cwd_label}`,
@@ -73,7 +73,7 @@ export function createLoopBrief(input: {
         ? [
             "## Compaction Boundary",
             `${input.compactBoundary.event_name} at ${input.compactBoundary.created_at} (${input.compactBoundary.trigger}).`,
-            "Run promptlane loop collect again if the next turn needs post-compact context.",
+            "Run looprelay loop collect again if the next turn needs post-compact context.",
             "",
           ]
         : []),

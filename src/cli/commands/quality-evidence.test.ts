@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { qualityEvidenceForCli } from "./quality-evidence.js";
 
 describe("quality-evidence CLI command", () => {
-  it("prints the PromptLane 9.5 quality evidence summary as JSON and text", () => {
+  it("prints the LoopRelay 9.5 quality evidence summary as JSON and text", () => {
     const json = qualityEvidenceForCli({ json: true });
     const parsed = JSON.parse(json) as {
       check: string;
@@ -62,7 +62,7 @@ describe("quality-evidence CLI command", () => {
       next_recheck_utc?: string;
     };
 
-    expect(parsed.check).toBe("promptlane_95_quality");
+    expect(parsed.check).toBe("looprelay_95_quality");
     expect(parsed.status).toBe("complete");
     expect(parsed.evidence_scope).toBe("repeatable_isolated_local_release");
     expect(parsed.live_runtime_evaluated).toBe(false);
@@ -174,7 +174,7 @@ describe("quality-evidence CLI command", () => {
         {
           label: "real benchmark fixtures are missing",
           detail:
-            'docs/benchmark-fixtures/real.json is absent; quality evidence is complete for the local release gate, but do not claim real-user effectiveness trends. Create an operator-owned fixture from selected archive prompts with promptlane benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE", or create a manual template with promptlane benchmark init-fixture --output "$FIXTURE_FILE", then save one JSON snapshot with promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT" and rerun with --baseline-file "$BASELINE_REPORT" before claiming a trend.',
+            'docs/benchmark-fixtures/real.json is absent; quality evidence is complete for the local release gate, but do not claim real-user effectiveness trends. Create an operator-owned fixture from selected archive prompts with looprelay benchmark prepare-fixture --prompt-id "$PROMPT_ID" --consent-note "$CONSENT_NOTE" --confirm-consent --output "$FIXTURE_FILE", or create a manual template with looprelay benchmark init-fixture --output "$FIXTURE_FILE", then save one JSON snapshot with looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE" --json --report-file "$BASELINE_REPORT" and rerun with --baseline-file "$BASELINE_REPORT" before claiming a trend.',
         },
         expect.objectContaining({
           label: "paired effectiveness not evaluated",
@@ -227,7 +227,7 @@ describe("quality-evidence CLI command", () => {
           "Fail closed unless all 9.5 quality evidence remains complete.",
       },
       {
-        command: "corepack pnpm promptlane quality-evidence --require-complete",
+        command: "corepack pnpm looprelay quality-evidence --require-complete",
         purpose:
           "Verify the built product CLI exposes the same complete quality evidence.",
       },
@@ -261,7 +261,7 @@ describe("quality-evidence CLI command", () => {
 
     const text = qualityEvidenceForCli();
 
-    expect(text).toContain("PromptLane 9.5 quality evidence");
+    expect(text).toContain("LoopRelay 9.5 quality evidence");
     expect(text).toContain("Status: complete");
     expect(text).toContain("Evidence scope: repeatable_isolated_local_release");
     expect(text).toContain("Live runtime evaluated: no");
@@ -315,10 +315,10 @@ describe("quality-evidence CLI command", () => {
     expect(text).toContain("causal_claim stays false");
     expect(text).toContain("do not claim real-user effectiveness trends");
     expect(text).toContain(
-      'promptlane benchmark init-fixture --output "$FIXTURE_FILE"',
+      'looprelay benchmark init-fixture --output "$FIXTURE_FILE"',
     );
     expect(text).toContain(
-      'promptlane benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"',
+      'looprelay benchmark --fixture-set real --fixture-file "$FIXTURE_FILE"',
     );
     expect(text).toContain("Release gate");
     expect(text).toContain(
@@ -337,7 +337,7 @@ describe("quality-evidence CLI command", () => {
       "- corepack pnpm benchmark -- --json - Verify local benchmark and privacy leak counters.",
     );
     expect(text).toContain(
-      "- corepack pnpm promptlane quality-evidence --require-complete - Verify the built product CLI exposes the same complete quality evidence.",
+      "- corepack pnpm looprelay quality-evidence --require-complete - Verify the built product CLI exposes the same complete quality evidence.",
     );
     expect(text).toContain(
       "- git diff --check - Reject whitespace and patch hygiene regressions.",
@@ -398,7 +398,7 @@ describe("quality-evidence CLI command", () => {
       age_seconds: 7200,
       checked_at: "2026-07-10T00:00:00.000Z",
       next_action:
-        "Send one new codex prompt, then rerun promptlane quality-evidence --runtime-tool codex --require-runtime-ready.",
+        "Send one new codex prompt, then rerun looprelay quality-evidence --runtime-tool codex --require-runtime-ready.",
       privacy: {
         local_only: true,
         returns_prompt_bodies: false,
@@ -468,7 +468,7 @@ describe("quality-evidence CLI command", () => {
   it("prints a focused operator brief for the approval-gated native dialog dogfood", () => {
     const brief = qualityEvidenceForCli({ operatorBrief: true });
 
-    expect(brief).toContain("PromptLane native dialog operator brief");
+    expect(brief).toContain("LoopRelay native dialog operator brief");
     expect(brief).toContain("Status: complete");
     expect(brief).toContain(
       "approval_status=operator_approved_answer_recorded",
@@ -480,13 +480,13 @@ describe("quality-evidence CLI command", () => {
       "Completion record: docs/NATIVE_DIALOG_DOGFOOD_AUDIT_2026-07-05.md",
     );
     expect(brief).not.toContain(
-      "Command: PROMPTLANE_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved",
+      "Command: LOOPRELAY_NATIVE_DIALOG_APPROVED=1 corepack pnpm dogfood:mcp-native-dialog-approved",
     );
     expect(brief).toContain(
       "Refusal preflight: corepack pnpm dogfood:mcp-native-dialog-refusal",
     );
     expect(brief).toContain(
-      "Expected refusal: command refuses before opening a native dialog unless PROMPTLANE_NATIVE_DIALOG_APPROVED=1 is set.",
+      "Expected refusal: command refuses before opening a native dialog unless LOOPRELAY_NATIVE_DIALOG_APPROVED=1 is set.",
     );
     expect(brief).not.toContain(
       "Preconditions: The operator explicitly approves opening a native OS dialog.",

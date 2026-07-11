@@ -52,7 +52,7 @@ export type PrepareAgentJudgeBatchToolResult =
       agent_instructions: string;
       privacy: {
         local_only: true;
-        external_calls_by_promptlane: false;
+        external_calls_by_looprelay: false;
         intended_external_evaluator: "current_agent_session";
         returns_redacted_prompt_bodies: boolean;
         returns_raw_prompt_bodies: false;
@@ -75,7 +75,7 @@ export type RecordAgentJudgmentsToolResult =
       next_action: string;
       privacy: {
         local_only: true;
-        external_calls_by_promptlane: false;
+        external_calls_by_looprelay: false;
         stores_prompt_bodies: false;
         stores_raw_paths: false;
         stores_judgment_results: true;

@@ -9,9 +9,9 @@ this repository is a 1.0.0 stable release candidate.
 
 The product identity is:
 
-> AI coding prompt memory and improvement workspace, local-first.
+> AI coding loop memory and improvement workspace, local-first.
 
-In practical terms, `promptlane` is a developer tool that records prompts entered into AI coding tools such as Claude Code and Codex, stores them locally, helps users find them again, analyzes weak prompting patterns, and helps users rewrite the next request more clearly.
+In practical terms, `looprelay` is a developer tool that records prompts entered into AI coding tools such as Claude Code and Codex, stores them locally, helps users find them again, analyzes weak prompting patterns, and helps users rewrite the next request more clearly.
 
 ## Verification Gates
 
@@ -42,16 +42,16 @@ Benchmark v1 result from the audit run:
 
 Available:
 
-- `promptlane setup`
-- `promptlane init`
-- `promptlane doctor`
-- `promptlane hook`
-- `promptlane install-hook`
-- `promptlane uninstall-hook`
-- `promptlane statusline`
-- `promptlane install-statusline`
-- `promptlane uninstall-statusline`
-- `promptlane service`
+- `looprelay setup`
+- `looprelay init`
+- `looprelay doctor`
+- `looprelay hook`
+- `looprelay install-hook`
+- `looprelay uninstall-hook`
+- `looprelay statusline`
+- `looprelay install-statusline`
+- `looprelay uninstall-statusline`
+- `looprelay service`
 - Claude Code hook support
 - Codex beta hook support
 - fail-open hook wrapper
@@ -76,7 +76,7 @@ Available:
 - SQLite index
 - SQLite FTS search index
 - hard delete across Markdown, DB rows, FTS, events, and drafts
-- `promptlane rebuild-index`
+- `looprelay rebuild-index`
 
 Storage model:
 
@@ -91,10 +91,10 @@ Verdict:
 
 Available:
 
-- `promptlane list`
-- `promptlane search`
-- `promptlane show`
-- `promptlane open`
+- `looprelay list`
+- `looprelay search`
+- `looprelay show`
+- `looprelay open`
 - web archive list
 - web prompt detail
 - tool, project, tag, quality-gap, and imported-only filters
@@ -110,11 +110,11 @@ Verdict:
 
 - complete for the "find an old useful prompt again" value proposition
 
-### 4. PromptLane And Improvement Drafts
+### 4. LoopRelay And Improvement Drafts
 
 Available:
 
-- `promptlane improve`
+- `looprelay improve`
 - local rule-based prompt improvement
 - analysis preview and improvement draft in the prompt detail UI
 - copy improvement draft
@@ -130,7 +130,7 @@ Storage and safety:
 
 Verdict:
 
-- the copy-based PromptLane workflow is implemented
+- the copy-based LoopRelay workflow is implemented
 - quality is still a rule-based baseline and should be improved with beta feedback
 
 ### 5. Prompt Habit Analysis
@@ -181,11 +181,11 @@ Verdict:
 
 Available:
 
-- `promptlane import --dry-run`
-- `promptlane import --save-job`
-- `promptlane import --execute`
-- `promptlane import --resume`
-- `promptlane import-job`
+- `looprelay import --dry-run`
+- `looprelay import --save-job`
+- `looprelay import --execute`
+- `looprelay import --resume`
+- `looprelay import-job`
 - malformed line tolerance
 - assistant/tool/unsupported role skip
 - large line skip
@@ -208,8 +208,8 @@ Verdict:
 
 Available:
 
-- `promptlane export --anonymized --preview`
-- `promptlane export --anonymized --job`
+- `looprelay export --anonymized --preview`
+- `looprelay export --anonymized --job`
 - web export preview
 - web export execution
 - included/excluded field summary
@@ -235,7 +235,7 @@ Available:
 
 - archive list
 - prompt detail
-- PromptLane panel
+- LoopRelay panel
 - project policy screen
 - export screen
 - dashboard/quality view
@@ -312,7 +312,7 @@ Verdict:
 ## Remaining Risks
 
 - Benchmark v1 uses synthetic fixtures, so it does not fully represent real-user usefulness.
-- PromptLane is rule-based and may not improve complex coding requests deeply enough.
+- LoopRelay is rule-based and may not improve complex coding requests deeply enough.
 - Settings/local diagnostics can expose some raw paths to the local user.
 - `better-sqlite3` has platform-specific native install risk.
 - Codex support should remain labeled as a beta adapter.
@@ -323,4 +323,4 @@ Verdict:
 2. Decide whether to tag and publish 1.0.0.
 3. Lock Node 22/24 release gates in GitHub Actions.
 4. Expand macOS/Windows/Linux arm64 smoke coverage.
-5. Design beta feedback collection for PromptLane quality.
+5. Design beta feedback collection for LoopRelay quality.

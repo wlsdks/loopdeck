@@ -44,7 +44,7 @@ describe("mcp catalog", () => {
   it("keeps tool catalog privacy-safe", () => {
     expect(MCP_TOOL_CATALOG).toHaveLength(10);
     expect(MCP_TOOL_CATALOG.map((tool) => tool.name)).toEqual([
-      "get_promptlane_status",
+      "get_looprelay_status",
       "coach_prompt",
       "score_prompt",
       "improve_prompt",
@@ -62,7 +62,7 @@ describe("mcp catalog", () => {
 
   it("keeps the recommended flow coach-first after readiness", () => {
     expect(MCP_FLOW_STEPS.map((step) => step.tool)).toEqual([
-      "get_promptlane_status",
+      "get_looprelay_status",
       "coach_prompt",
       "score_prompt",
       "improve_prompt",
@@ -75,12 +75,12 @@ describe("mcp catalog", () => {
     const readiness = createMcpReadiness({});
 
     expect(readiness.tone).toBe("muted");
-    expect(readiness.firstCall).toBe("get_promptlane_status");
+    expect(readiness.firstCall).toBe("get_looprelay_status");
   });
 
   it("promotes one-call coaching after prompts are captured", () => {
     const settings: SettingsResponse = {
-      data_dir: "/tmp/promptlane",
+      data_dir: "/tmp/looprelay",
       excluded_project_roots: [],
       redaction_mode: "mask",
       server: { host: "127.0.0.1", port: 17373 },
@@ -104,15 +104,15 @@ describe("mcp catalog", () => {
     expect(readiness.firstCall).toBe("coach_prompt");
   });
 
-  it("uses PromptLane-facing setup copy when the local server is unavailable", () => {
+  it("uses LoopRelay-facing setup copy when the local server is unavailable", () => {
     const readiness = createMcpReadiness({
       health: { ok: false, version: "0.1.0" },
     });
 
     expect(readiness.status).toBe("Server unavailable");
     expect(readiness.summary).toBe(
-      "Start the local PromptLane server before using Claude Code or Codex MCP tools.",
+      "Start the local LoopRelay server before using Claude Code or Codex MCP tools.",
     );
-    expect(readiness.summary).not.toContain("local promptlane server");
+    expect(readiness.summary).not.toContain("local looprelay server");
   });
 });

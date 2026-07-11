@@ -1,8 +1,8 @@
 # DESIGN.md
 
-`promptlane`의 전용 웹 UI 디자인 시스템이다. AI 에이전트는 UI 작업 전에 이 문서를 읽고, 로컬 우선 프롬프트 아카이브에 맞는 조용하고 정밀한 developer tool UI를 만든다.
+`looprelay`의 전용 웹 UI 디자인 시스템이다. AI 에이전트는 UI 작업 전에 이 문서를 읽고, 로컬 우선 프롬프트 아카이브에 맞는 조용하고 정밀한 developer tool UI를 만든다.
 
-이 문서는 `/Users/jinan/side-project/oh-my-ontology`의 Linear-base dark indigo 디자인 시스템을 1차 기준으로 삼는다. 로컬 디자인 가이드 컬렉션 `/Users/jinan/ai/awesome-design-md`는 보조 reference다. 특정 브랜드를 복제하지 않지만, `oh-my-ontology`의 절제된 흑백, 단일 인디고, mono caption, hairline surface hierarchy를 `promptlane`의 developer tool 화면에 맞게 적용한다.
+이 문서는 `/Users/jinan/side-project/oh-my-ontology`의 Linear-base dark indigo 디자인 시스템을 1차 기준으로 삼는다. 로컬 디자인 가이드 컬렉션 `/Users/jinan/ai/awesome-design-md`는 보조 reference다. 특정 브랜드를 복제하지 않지만, `oh-my-ontology`의 절제된 흑백, 단일 인디고, mono caption, hairline surface hierarchy를 `looprelay`의 developer tool 화면에 맞게 적용한다.
 
 UI를 크게 바꾸는 작업, 특히 Dashboard, onboarding, detail coach 화면은 먼저 `/Users/jinan/ai/awesome-design-md`에서 관련 reference를 확인한다. 로컬 파일이 stub이면 `getdesign`으로 해당 reference를 확인하고, 적용한 판단은 `docs/design-references/` 또는 이 문서에 남긴다.
 
@@ -38,26 +38,26 @@ UI를 크게 바꾸는 작업, 특히 Dashboard, onboarding, detail coach 화면
 
 | Token | Hex | Role |
 | --- | --- | --- |
-| `--pc-bg` | `#F6F4EF` | Workbench page background |
-| `--pc-rail` | `#FBFAF6` | Sidebar and fixed chrome |
-| `--pc-surface` | `#FFFFFF` | Primary data surfaces |
-| `--pc-surface-muted` | `#EEECE6` | Inset blocks, inactive controls |
-| `--pc-surface-raised` | `#FFFEFA` | Slightly raised panels |
-| `--pc-border` | `#D8D4CA` | Default separators |
-| `--pc-border-strong` | `#B9B2A5` | Active/focus borders |
-| `--pc-text` | `#171816` | Primary body text |
-| `--pc-text-muted` | `#64665F` | Secondary copy |
-| `--pc-text-subtle` | `#8A887F` | Metadata, labels |
-| `--pc-accent` | `#1F6F64` | Primary selection/action |
-| `--pc-accent-strong` | `#154F48` | Strong active text |
-| `--pc-accent-weak` | `#DDECE7` | Selected rows/nav |
-| `--pc-info` | `#315F8C` | Informational diagnostics |
-| `--pc-warning` | `#9A5B00` | Weak quality signal |
-| `--pc-warning-weak` | `#F5E6C8` | Warning background |
-| `--pc-danger` | `#B42318` | Delete/destructive state |
-| `--pc-danger-weak` | `#FDE7E4` | Danger background |
-| `--pc-code-bg` | `#E9E8E1` | Prompt/code/suggestion blocks |
-| `--pc-shadow` | `0 1px 2px rgb(27 25 20 / 0.06)` | Minimal elevation |
+| `--lr-bg` | `#F6F4EF` | Workbench page background |
+| `--lr-rail` | `#FBFAF6` | Sidebar and fixed chrome |
+| `--lr-surface` | `#FFFFFF` | Primary data surfaces |
+| `--lr-surface-muted` | `#EEECE6` | Inset blocks, inactive controls |
+| `--lr-surface-raised` | `#FFFEFA` | Slightly raised panels |
+| `--lr-border` | `#D8D4CA` | Default separators |
+| `--lr-border-strong` | `#B9B2A5` | Active/focus borders |
+| `--lr-text` | `#171816` | Primary body text |
+| `--lr-text-muted` | `#64665F` | Secondary copy |
+| `--lr-text-subtle` | `#8A887F` | Metadata, labels |
+| `--lr-accent` | `#1F6F64` | Primary selection/action |
+| `--lr-accent-strong` | `#154F48` | Strong active text |
+| `--lr-accent-weak` | `#DDECE7` | Selected rows/nav |
+| `--lr-info` | `#315F8C` | Informational diagnostics |
+| `--lr-warning` | `#9A5B00` | Weak quality signal |
+| `--lr-warning-weak` | `#F5E6C8` | Warning background |
+| `--lr-danger` | `#B42318` | Delete/destructive state |
+| `--lr-danger-weak` | `#FDE7E4` | Danger background |
+| `--lr-code-bg` | `#E9E8E1` | Prompt/code/suggestion blocks |
+| `--lr-shadow` | `0 1px 2px rgb(27 25 20 / 0.06)` | Minimal elevation |
 
 ### Color Rules
 
@@ -106,7 +106,7 @@ font-family: "JetBrains Mono", SFMono-Regular, ui-monospace, Menlo, Consolas,
 ### Navigation
 
 - Left rail width: 232-240px desktop.
-- Active nav uses `--pc-accent-weak` background and `--pc-accent-strong` text.
+- Active nav uses `--lr-accent-weak` background and `--lr-accent-strong` text.
 - Nav buttons are 36px tall on desktop, at least 40px touch target on mobile.
 - Icons from lucide are preferred. Do not draw custom SVG icons when lucide has one.
 
@@ -140,7 +140,7 @@ font-family: "JetBrains Mono", SFMono-Regular, ui-monospace, Menlo, Consolas,
 ### Inputs
 
 - Height: 36px desktop, 40px mobile.
-- Focus border uses `--pc-accent`.
+- Focus border uses `--lr-accent`.
 - Date inputs and selects must have enough width for Korean placeholder text.
 
 ### Prompt Reader
@@ -161,7 +161,7 @@ font-family: "JetBrains Mono", SFMono-Regular, ui-monospace, Menlo, Consolas,
 ## 6. Depth & Elevation
 
 - Default elevation is border-only.
-- Use `--pc-shadow` only on active surfaces, modals, and table/panel containers.
+- Use `--lr-shadow` only on active surfaces, modals, and table/panel containers.
 - Avoid blurred background effects, decorative orbs, bokeh, and gradient blobs.
 - Separators should be visible enough for scanability but never heavy black.
 

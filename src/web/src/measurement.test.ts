@@ -55,7 +55,7 @@ describe("createArchiveMeasurement", () => {
     });
     expect(measurement.nextAction).toEqual({
       label: "Capture prompts first",
-      detail: "Run promptlane setup, then send a few real coding requests.",
+      detail: "Run looprelay setup, then send a few real coding requests.",
       target: "capture",
     });
   });

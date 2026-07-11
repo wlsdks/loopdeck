@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { normalizeClaudeCodePayload } from "../../adapters/claude-code.js";
-import { initializePromptLane } from "../../config/config.js";
+import { initializeLoopRelay } from "../../config/config.js";
 import { redactPrompt } from "../../redaction/redact.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import { createProgram } from "../index.js";
@@ -33,7 +33,7 @@ describe("buddy CLI", () => {
 
   it("renders latest score, habit signal, and privacy notes without prompt bodies", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -58,8 +58,8 @@ describe("buddy CLI", () => {
 
     const output = renderBuddyForCli({ dataDir });
 
-    expect(output).toContain("PromptLane Buddy");
-    expect(output).not.toContain("Prompt Memory Buddy");
+    expect(output).toContain("LoopRelay Buddy");
+    expect(output).not.toContain("Loop Memory Buddy");
     expect(output).toContain("Latest prompt");
     expect(output).toContain("Habit");
     expect(output).toContain("Next move");
@@ -71,7 +71,7 @@ describe("buddy CLI", () => {
 
   it("prints a machine-readable snapshot for automation", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const json = renderBuddyForCli({ dataDir, json: true });
     const result = JSON.parse(json) as {
@@ -96,10 +96,10 @@ describe("buddy CLI", () => {
 
     expect(result.next_move).toBe(result.next_actions[0]);
     expect(result.next_actions).toContain(
-      "Run promptlane setup --profile coach --register-mcp before using archive-backed MCP tools.",
+      "Run looprelay setup --profile coach --register-mcp before using archive-backed MCP tools.",
     );
     expect(result.next_actions).toContain(
-      "For custom storage, initialize it with promptlane init --data-dir <path> and pass the same --data-dir to the MCP server.",
+      "For custom storage, initialize it with looprelay init --data-dir <path> and pass the same --data-dir to the MCP server.",
     );
     expect(json).not.toContain(dataDir);
     expect(json).not.toContain(tmpdir());
@@ -115,7 +115,7 @@ describe("buddy CLI", () => {
     expect(output).toContain("Next move");
     expect(output).toContain("Also do");
     expect(output).toContain(
-      "For custom storage, initialize it with promptlane init --data-dir <path> and pass the same --data-dir to the MCP server.",
+      "For custom storage, initialize it with looprelay init --data-dir <path> and pass the same --data-dir to the MCP server.",
     );
     expect(output).not.toContain(dataDir);
     expect(output).not.toContain(tmpdir());
@@ -123,7 +123,7 @@ describe("buddy CLI", () => {
 
   it("renders a single-line snapshot when --style line is used", async () => {
     const dataDir = createTempDir();
-    const init = initializePromptLane({ dataDir });
+    const init = initializeLoopRelay({ dataDir });
     const storage = createSqlitePromptStorage({
       dataDir,
       hmacSecret: init.hookAuth.web_session_secret,
@@ -156,20 +156,20 @@ describe("buddy CLI", () => {
 
   it("--style block matches the default multi-line block format", async () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const def = renderBuddyForCli({ dataDir });
     const block = renderBuddyForCli({ dataDir, style: "block" });
 
-    expect(block).toContain("PromptLane Buddy");
-    expect(block).not.toContain("Prompt Memory Buddy");
-    expect(def.startsWith("PromptLane Buddy")).toBe(true);
+    expect(block).toContain("LoopRelay Buddy");
+    expect(block).not.toContain("Loop Memory Buddy");
+    expect(def.startsWith("LoopRelay Buddy")).toBe(true);
     expect(def.split("\n").length).toBe(block.split("\n").length);
   });
 
   it("--style json is equivalent shape to --json", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     const fromStyle = JSON.parse(
       renderBuddyForCli({ dataDir, style: "json" }),
@@ -185,7 +185,7 @@ describe("buddy CLI", () => {
 
   it("rejects unsupported --style values", () => {
     const dataDir = createTempDir();
-    initializePromptLane({ dataDir });
+    initializeLoopRelay({ dataDir });
 
     expect(() =>
       renderBuddyForCli({ dataDir, style: "weird" as never }),
@@ -194,7 +194,7 @@ describe("buddy CLI", () => {
 });
 
 function createTempDir(): string {
-  const dir = join(tmpdir(), `promptlane-buddy-cli-${randomUUID()}`);
+  const dir = join(tmpdir(), `looprelay-buddy-cli-${randomUUID()}`);
   mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;

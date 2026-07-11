@@ -17,13 +17,13 @@ file layouts:
   the JSON schema and tool name; `src/mcp/score-tool-types.ts` owns the
   TypeScript argument/result contract; `src/mcp/score-tool.ts` owns the
   handler orchestration; `src/mcp/server.ts` owns JSON-RPC dispatch via
-  `PROMPTLANE_MCP_TOOL_HANDLERS`. The same axis applies to
+  `LOOPRELAY_MCP_TOOL_HANDLERS`. The same axis applies to
   `agent-judge-tool-*`, `agent-rewrite-tool-*`, and `loop-tool-*`.
 
-  Tools currently in this layout: `get_promptlane_status`, `score_prompt`,
+  Tools currently in this layout: `get_looprelay_status`, `score_prompt`,
   `improve_prompt`, `score_prompt_archive`, `review_project_instructions`,
   `coach_prompt`, `prepare_agent_judge_batch`, `record_agent_judgments`,
-  `prepare_agent_rewrite`, `record_agent_rewrite`, `get_promptlane_status`,
+  `prepare_agent_rewrite`, `record_agent_rewrite`, `get_looprelay_status`,
   `prepare_loop_brief`, `record_loop_outcome`,
   `propose_loop_memory_candidate`, `record_loop_memory`,
   `propose_instruction_patch`, `apply_instruction_patch` (17 tools).
@@ -37,7 +37,7 @@ file layouts:
 Adding a new tool currently requires the contributor to know that:
 
 1. The handler must be added to (or registered through)
-   `PROMPTLANE_MCP_TOOL_HANDLERS` in `src/mcp/server.ts`.
+   `LOOPRELAY_MCP_TOOL_HANDLERS` in `src/mcp/server.ts`.
 2. The tool definition must live in a `*-tool-definitions.ts` file or in the
    per-tool module.
 3. The TypeScript contract must live in a `*-tool-types.ts` file or in the
@@ -76,7 +76,7 @@ Pros: no churn, clarifies the existing decision, removes ambiguity for new
 tools.
 
 Cons: split-vs-per-tool stays as a permanent fork in the conventions; the
-`PROMPTLANE_MCP_TOOL_HANDLERS` literal in `server.ts` remains a manual
+`LOOPRELAY_MCP_TOOL_HANDLERS` literal in `server.ts` remains a manual
 list.
 
 ### Option B — migrate everything to per-tool modules
@@ -102,7 +102,7 @@ import. `server.ts` imports the registry instead of the literal handler map.
 The split layout can stay where it is; the change is purely the dispatch
 indirection.
 
-Pros: removes the manual `PROMPTLANE_MCP_TOOL_HANDLERS` list. Keeps the
+Pros: removes the manual `LOOPRELAY_MCP_TOOL_HANDLERS` list. Keeps the
 existing privacy review surface intact. No wholesale rewrite.
 
 Cons: side-effectful module imports; some teams treat that as an anti-pattern
@@ -125,7 +125,7 @@ Existing split-layout tools stay where they are until a feature or risk-driven
 change touches them. Do not migrate the legacy split-layout tools only for
 style consistency.
 
-`src/mcp/server.ts` may keep the explicit `PROMPTLANE_MCP_TOOL_HANDLERS`
+`src/mcp/server.ts` may keep the explicit `LOOPRELAY_MCP_TOOL_HANDLERS`
 map for now. The next structural improvement is a registry that removes the
 manual definition/handler sync point without forcing a wholesale rewrite of
 the legacy tools. That registry must be explicit data, not import-time global
@@ -133,11 +133,11 @@ mutation.
 
 Option B is rejected for the current phase. It creates too much churn in the
 highest-risk agent-facing surface and would obscure privacy review during the
-PromptLane transition.
+LoopRelay transition.
 
 ## Consequences
 
-- New tools such as PromptLane or clarification tools should be added as
+- New tools such as LoopRelay or clarification tools should be added as
   per-tool modules.
 - Existing prompt scoring, archive scoring, project instruction review,
   agent-judge, and agent-rewrite tools can remain in their split files.
@@ -161,13 +161,13 @@ Implement Option C only when at least one of these is true:
 The registry shape should be close to:
 
 ```ts
-type RegisteredPromptLaneTool = {
-  definition: PromptLaneMcpToolDefinition;
-  handler: PromptLaneToolHandler;
+type RegisteredLoopRelayTool = {
+  definition: LoopRelayMcpToolDefinition;
+  handler: LoopRelayToolHandler;
 };
 ```
 
-Each tool module should export one `RegisteredPromptLaneTool`, and the MCP
+Each tool module should export one `RegisteredLoopRelayTool`, and the MCP
 server should derive both `tools/list` and `tools/call` dispatch from that
 same array.
 

@@ -1,9 +1,9 @@
 import { homedir, platform } from "node:os";
 import { isAbsolute, resolve, sep } from "node:path";
 
-export const DEFAULT_DATA_DIR = "~/.promptlane";
+export const DEFAULT_DATA_DIR = "~/.looprelay";
 
-export type PromptLanePaths = {
+export type LoopRelayPaths = {
   dataDir: string;
   configPath: string;
   hookAuthPath: string;
@@ -27,16 +27,14 @@ export function resolveHomePath(input: string, home = homedir()): string {
   return resolve(input);
 }
 
-export function getPromptLanePaths(
-  dataDir = DEFAULT_DATA_DIR,
-): PromptLanePaths {
+export function getLoopRelayPaths(dataDir = DEFAULT_DATA_DIR): LoopRelayPaths {
   const root = resolveHomePath(dataDir);
 
   return {
     dataDir: root,
     configPath: resolve(root, "config.json"),
     hookAuthPath: resolve(root, "hook-auth.json"),
-    databasePath: resolve(root, "promptlane.sqlite"),
+    databasePath: resolve(root, "looprelay.sqlite"),
     promptsDir: resolve(root, "prompts"),
     logsDir: resolve(root, "logs"),
     diagnosticLogPath: resolve(root, "logs", "diagnostic.log"),

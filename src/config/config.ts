@@ -9,7 +9,7 @@ import { dirname } from "node:path";
 
 import { z } from "zod";
 
-import { getPromptLanePaths, supportsPosixMode } from "../storage/paths.js";
+import { getLoopRelayPaths, supportsPosixMode } from "../storage/paths.js";
 import {
   generateAppToken,
   generateIngestToken,
@@ -51,7 +51,7 @@ export const ExperimentalRulesSchema = z
 
 export type ExperimentalRulesSetting = z.infer<typeof ExperimentalRulesSchema>;
 
-export const PromptLaneConfigSchema = z.object({
+export const LoopRelayConfigSchema = z.object({
   schema_version: z.literal(1),
   data_dir: z.string().min(1),
   database_path: z.string().min(1),
@@ -74,7 +74,7 @@ export const HookAuthSchema = z.object({
   created_at: z.string().min(1),
 });
 
-export type PromptLaneConfig = z.infer<typeof PromptLaneConfigSchema>;
+export type LoopRelayConfig = z.infer<typeof LoopRelayConfigSchema>;
 export type HookAuth = z.infer<typeof HookAuthSchema>;
 
 export type InitOptions = {
@@ -83,7 +83,7 @@ export type InitOptions = {
 };
 
 export type InitResult = {
-  config: PromptLaneConfig;
+  config: LoopRelayConfig;
   hookAuth: HookAuth;
   created: {
     config: boolean;
@@ -94,8 +94,8 @@ export type InitResult = {
 const OWNER_ONLY_DIR_MODE = 0o700;
 const OWNER_ONLY_FILE_MODE = 0o600;
 
-export function initializePromptLane(options: InitOptions = {}): InitResult {
-  const paths = getPromptLanePaths(options.dataDir);
+export function initializeLoopRelay(options: InitOptions = {}): InitResult {
+  const paths = getLoopRelayPaths(options.dataDir);
   const createdAt = (options.now ?? new Date()).toISOString();
 
   ensureOwnerOnlyDir(paths.dataDir);
@@ -106,11 +106,11 @@ export function initializePromptLane(options: InitOptions = {}): InitResult {
 
   const existingConfig = readJsonIfExists(
     paths.configPath,
-    PromptLaneConfigSchema,
+    LoopRelayConfigSchema,
   );
   const config =
     existingConfig ??
-    PromptLaneConfigSchema.parse({
+    LoopRelayConfigSchema.parse({
       schema_version: 1,
       data_dir: paths.dataDir,
       database_path: paths.databasePath,
@@ -146,15 +146,15 @@ export function initializePromptLane(options: InitOptions = {}): InitResult {
   };
 }
 
-export function loadPromptLaneConfig(dataDir?: string): PromptLaneConfig {
-  const paths = getPromptLanePaths(dataDir);
-  return PromptLaneConfigSchema.parse(
+export function loadLoopRelayConfig(dataDir?: string): LoopRelayConfig {
+  const paths = getLoopRelayPaths(dataDir);
+  return LoopRelayConfigSchema.parse(
     JSON.parse(readFileSync(paths.configPath, "utf8")),
   );
 }
 
 export function loadHookAuth(dataDir?: string): HookAuth {
-  const paths = getPromptLanePaths(dataDir);
+  const paths = getLoopRelayPaths(dataDir);
   return HookAuthSchema.parse(
     JSON.parse(readFileSync(paths.hookAuthPath, "utf8")),
   );
@@ -164,7 +164,7 @@ export function writeHookAuth(
   dataDir: string | undefined,
   hookAuth: HookAuth,
 ): void {
-  const paths = getPromptLanePaths(dataDir);
+  const paths = getLoopRelayPaths(dataDir);
   writeOwnerOnlyJson(paths.hookAuthPath, HookAuthSchema.parse(hookAuth));
 }
 
@@ -172,13 +172,13 @@ export function updateAutoJudgeSettings(
   dataDir: string | undefined,
   patch: Partial<AutoJudgeSettings>,
 ): AutoJudgeSettings {
-  const paths = getPromptLanePaths(dataDir);
-  const current = loadPromptLaneConfig(dataDir);
+  const paths = getLoopRelayPaths(dataDir);
+  const current = loadLoopRelayConfig(dataDir);
   const next = AutoJudgeSettingsSchema.parse({
     ...current.auto_judge,
     ...patch,
   });
-  const updatedConfig = PromptLaneConfigSchema.parse({
+  const updatedConfig = LoopRelayConfigSchema.parse({
     ...current,
     auto_judge: next,
   });

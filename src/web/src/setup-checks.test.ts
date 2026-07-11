@@ -19,7 +19,7 @@ describe("setup checks", () => {
       checks.find((check) => check.label === "Hook Capture"),
     ).toMatchObject({
       detail:
-        "Run promptlane setup --profile coach, then send one Codex or Claude Code prompt.",
+        "Run looprelay setup --profile coach, then send one Codex or Claude Code prompt.",
     });
     expect(
       checks.find((check) => check.label === "First prompt stored"),
@@ -47,7 +47,7 @@ describe("setup checks", () => {
       }),
       health: { ok: true, version: "1.2.3" },
       settings: settingsFixture({
-        data_dir: "/Users/example/.promptlane",
+        data_dir: "/Users/example/.looprelay",
         last_ingest_status: {
           checked_at: "2026-07-08T00:00:00.000Z",
           ok: true,
@@ -63,7 +63,7 @@ describe("setup checks", () => {
       status: "good",
     });
     expect(checks.find((check) => check.label === "Local storage")).toEqual({
-      detail: "[local path]/.promptlane",
+      detail: "[local path]/.looprelay",
       label: "Local storage",
       status: "good",
     });

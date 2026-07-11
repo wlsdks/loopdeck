@@ -202,7 +202,7 @@ export function scorePairedEffectiveness(fixtures) {
   }
 
   const pairs = [...grouped.values()].filter(
-    (pair) => pair.baseline?.outcome && pair.promptlane?.outcome,
+    (pair) => pair.baseline?.outcome && pair.looprelay?.outcome,
   );
   const transitions = {
     improved: 0,
@@ -211,14 +211,14 @@ export function scorePairedEffectiveness(fixtures) {
     unchanged_failed: 0,
   };
   let baselinePassed = 0;
-  let promptlanePassed = 0;
+  let looprelayPassed = 0;
   for (const pair of pairs) {
     const baselinePass = pair.baseline.outcome.status === "passed";
-    const promptlanePass = pair.promptlane.outcome.status === "passed";
+    const looprelayPass = pair.looprelay.outcome.status === "passed";
     if (baselinePass) baselinePassed += 1;
-    if (promptlanePass) promptlanePassed += 1;
-    if (!baselinePass && promptlanePass) transitions.improved += 1;
-    else if (baselinePass && !promptlanePass) transitions.regressed += 1;
+    if (looprelayPass) looprelayPassed += 1;
+    if (!baselinePass && looprelayPass) transitions.improved += 1;
+    else if (baselinePass && !looprelayPass) transitions.regressed += 1;
     else if (baselinePass) transitions.unchanged_passed += 1;
     else transitions.unchanged_failed += 1;
   }
@@ -245,12 +245,12 @@ export function scorePairedEffectiveness(fixtures) {
     minimum_directional_pairs: minimumDirectionalPairs,
     baseline_pass_rate:
       pairCount === 0 ? null : roundScore(baselinePassed / pairCount),
-    promptlane_pass_rate:
-      pairCount === 0 ? null : roundScore(promptlanePassed / pairCount),
+    looprelay_pass_rate:
+      pairCount === 0 ? null : roundScore(looprelayPassed / pairCount),
     pass_rate_delta:
       pairCount === 0
         ? null
-        : roundScore((promptlanePassed - baselinePassed) / pairCount),
+        : roundScore((looprelayPassed - baselinePassed) / pairCount),
     transitions,
   };
 }

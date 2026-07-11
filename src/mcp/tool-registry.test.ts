@@ -1,25 +1,25 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  PROMPTLANE_MCP_TOOL_DEFINITIONS,
-  PROMPTLANE_MCP_TOOL_REGISTRY,
-  getPromptLaneMcpToolHandler,
-  listPromptLaneMcpToolNames,
+  LOOPRELAY_MCP_TOOL_DEFINITIONS,
+  LOOPRELAY_MCP_TOOL_REGISTRY,
+  getLoopRelayMcpToolHandler,
+  listLoopRelayMcpToolNames,
 } from "./tool-registry.js";
 
-describe("PromptLane MCP tool registry", () => {
+describe("LoopRelay MCP tool registry", () => {
   it("owns one unique handler for every listed tool definition", () => {
-    const names = listPromptLaneMcpToolNames();
+    const names = listLoopRelayMcpToolNames();
 
-    expect(PROMPTLANE_MCP_TOOL_REGISTRY).toHaveLength(22);
-    expect(PROMPTLANE_MCP_TOOL_DEFINITIONS).toHaveLength(22);
+    expect(LOOPRELAY_MCP_TOOL_REGISTRY).toHaveLength(22);
+    expect(LOOPRELAY_MCP_TOOL_DEFINITIONS).toHaveLength(22);
     expect(new Set(names).size).toBe(names.length);
     expect(names).toContain("get_paired_benchmark_candidates");
-    for (const definition of PROMPTLANE_MCP_TOOL_DEFINITIONS) {
-      expect(getPromptLaneMcpToolHandler(definition.name)).toEqual(
+    for (const definition of LOOPRELAY_MCP_TOOL_DEFINITIONS) {
+      expect(getLoopRelayMcpToolHandler(definition.name)).toEqual(
         expect.any(Function),
       );
     }
-    expect(getPromptLaneMcpToolHandler("unknown_tool")).toBeUndefined();
+    expect(getLoopRelayMcpToolHandler("unknown_tool")).toBeUndefined();
   });
 });

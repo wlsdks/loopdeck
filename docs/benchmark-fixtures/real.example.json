@@ -20,19 +20,19 @@
       }
     },
     {
-      "label": "real_release_review_promptlane",
+      "label": "real_release_review_looprelay",
       "adapter": "codex",
       "query": "release readiness review",
       "prompt": "Review the redacted release readiness notes and return the next verification step with explicit checks.",
       "effect_pair": {
         "id": "release_review",
-        "variant": "promptlane"
+        "variant": "looprelay"
       },
       "outcome": {
         "status": "passed",
-        "summary": "Replace with the redacted result after explicitly using the PromptLane improvement.",
+        "summary": "Replace with the redacted result after explicitly using the LoopRelay improvement.",
         "improvement_used": true,
-        "evidence_refs": ["test:replace-with-safe-promptlane-evidence"],
+        "evidence_refs": ["test:replace-with-safe-looprelay-evidence"],
         "tests_run": 1
       }
     },

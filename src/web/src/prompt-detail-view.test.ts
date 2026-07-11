@@ -161,7 +161,7 @@ describe("PromptDetailView", () => {
     expect(html).toContain("Effectiveness");
     expect(html).toContain("Unproven");
     expect(html).toContain(
-      "The linked loop passed, but use of this PromptLane improvement was not recorded.",
+      "The linked loop passed, but use of this LoopRelay improvement was not recorded.",
     );
     expect(html).toContain("0 attributed · 0 passed / 0 failed");
   });

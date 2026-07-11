@@ -170,7 +170,7 @@ export function PromptDetailView({
         )}
         <JudgeScorePanel prompt={prompt} />
         <LoopOutcomeEvidencePanel prompt={prompt} />
-        <PromptLanePanel
+        <LoopRelayPanel
           answersByAxis={answersByAxis}
           copied={copiedImprovement}
           improvement={improvement}
@@ -346,8 +346,8 @@ function effectivenessFromOutcomes(
   const summary =
     attributed.length === 0
       ? outcomes.some((outcome) => outcome.status === "passed")
-        ? "The linked loop passed, but use of this PromptLane improvement was not recorded."
-        : "A loop outcome is linked, but use of this PromptLane improvement was not recorded."
+        ? "The linked loop passed, but use of this LoopRelay improvement was not recorded."
+        : "A loop outcome is linked, but use of this LoopRelay improvement was not recorded."
       : `Attributed improvement evidence ${status} with ${testCopy} across ${outcomeCopy}.`;
 
   return {
@@ -366,7 +366,7 @@ function effectivenessFromOutcomes(
   };
 }
 
-function PromptLanePanel({
+function LoopRelayPanel({
   answersByAxis,
   copied,
   improvement,

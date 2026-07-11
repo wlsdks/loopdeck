@@ -10,10 +10,7 @@ import { dirname, join } from "node:path";
 import type { Command } from "commander";
 
 import { resolveCliEntryPath } from "../entry-path.js";
-import {
-  initializePromptLane,
-  revokeIngestToken,
-} from "../../config/config.js";
+import { initializeLoopRelay, revokeIngestToken } from "../../config/config.js";
 import { quoteForShell } from "../../shared/shell-quote.js";
 import { UserError } from "../user-error.js";
 
@@ -70,38 +67,21 @@ export type CodexHookInstallResult = {
   nextConfig: string;
 };
 
-const PROMPTLANE_MARKER = "promptlane hook claude-code";
-const LEGACY_PROMPT_COACH_MARKER = "prompt-coach hook claude-code";
-const CODEX_PROMPTLANE_MARKER = "promptlane hook codex";
-const LEGACY_CODEX_PROMPT_COACH_MARKER = "prompt-coach hook codex";
-const LEGACY_CODEX_PROMPT_MEMORY_MARKER = "prompt-memory hook codex";
-const CODEX_PROMPTLANE_STOP_MARKER = "promptlane hook stop codex";
-const LEGACY_CODEX_PROMPT_COACH_STOP_MARKER = "prompt-coach hook stop codex";
-const CODEX_PROMPTLANE_PRE_COMPACT_MARKER = "promptlane hook pre-compact codex";
-const LEGACY_CODEX_PROMPT_COACH_PRE_COMPACT_MARKER =
-  "prompt-coach hook pre-compact codex";
-const CODEX_PROMPTLANE_POST_COMPACT_MARKER =
-  "promptlane hook post-compact codex";
-const LEGACY_CODEX_PROMPT_COACH_POST_COMPACT_MARKER =
-  "prompt-coach hook post-compact codex";
-const PROMPTLANE_SESSION_MARKER = "promptlane hook session-start claude-code";
-const LEGACY_PROMPT_COACH_SESSION_MARKER =
-  "prompt-coach hook session-start claude-code";
-const CODEX_PROMPTLANE_SESSION_MARKER = "promptlane hook session-start codex";
-const LEGACY_CODEX_PROMPT_COACH_SESSION_MARKER =
-  "prompt-coach hook session-start codex";
-const LEGACY_CODEX_PROMPT_MEMORY_SESSION_MARKER =
-  "prompt-memory hook session-start codex";
+const LOOPRELAY_MARKER = "looprelay hook claude-code";
+const CODEX_LOOPRELAY_MARKER = "looprelay hook codex";
+const CODEX_LOOPRELAY_STOP_MARKER = "looprelay hook stop codex";
+const CODEX_LOOPRELAY_PRE_COMPACT_MARKER = "looprelay hook pre-compact codex";
+const CODEX_LOOPRELAY_POST_COMPACT_MARKER = "looprelay hook post-compact codex";
+const LOOPRELAY_SESSION_MARKER = "looprelay hook session-start claude-code";
+const CODEX_LOOPRELAY_SESSION_MARKER = "looprelay hook session-start codex";
 const CODEX_HOOKS_FEATURE_KEY = "hooks";
 
 export function registerInstallHookCommands(program: Command): void {
   program
     .command("install-hook")
-    .description(
-      "Install the PromptLane capture hook for Claude Code or Codex.",
-    )
+    .description("Install the LoopRelay capture hook for Claude Code or Codex.")
     .argument("<tool>", "Tool to install hook for.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--settings-path <path>", "Override Claude Code settings path.")
     .option("--hooks-path <path>", "Override Codex hooks.json path.")
     .option("--config-path <path>", "Override Codex config.toml path.")
@@ -166,10 +146,10 @@ export function registerInstallHookCommands(program: Command): void {
   program
     .command("uninstall-hook")
     .description(
-      "Uninstall the PromptLane capture hook for Claude Code or Codex.",
+      "Uninstall the LoopRelay capture hook for Claude Code or Codex.",
     )
     .argument("<tool>", "Tool to uninstall hook for.")
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--settings-path <path>", "Override Claude Code settings path.")
     .option("--hooks-path <path>", "Override Codex hooks.json path.")
     .option("--config-path <path>", "Override Codex config.toml path.")
@@ -217,7 +197,7 @@ export function installClaudeCodeHook(
   options: HookInstallOptions = {},
 ): HookInstallResult {
   if (!options.dryRun) {
-    initializePromptLane({ dataDir: options.dataDir });
+    initializeLoopRelay({ dataDir: options.dataDir });
   }
 
   const settingsPath = options.settingsPath ?? defaultClaudeSettingsPath();
@@ -242,7 +222,7 @@ export function installClaudeCodeHook(
   if (changed) {
     mkdirSync(dirname(settingsPath), { recursive: true, mode: 0o700 });
     if (existsSync(settingsPath)) {
-      backupPath = `${settingsPath}.promptlane.${Date.now()}.bak`;
+      backupPath = `${settingsPath}.looprelay.${Date.now()}.bak`;
       copyFileSync(settingsPath, backupPath);
     }
     writeFileSync(settingsPath, `${JSON.stringify(next, null, 2)}\n`, {
@@ -271,7 +251,7 @@ export function uninstallClaudeCodeHook(
   if (changed) {
     mkdirSync(dirname(settingsPath), { recursive: true, mode: 0o700 });
     if (existsSync(settingsPath)) {
-      backupPath = `${settingsPath}.promptlane.${Date.now()}.bak`;
+      backupPath = `${settingsPath}.looprelay.${Date.now()}.bak`;
       copyFileSync(settingsPath, backupPath);
     }
     writeFileSync(settingsPath, `${JSON.stringify(next, null, 2)}\n`, {
@@ -293,7 +273,7 @@ export function installCodexHook(
   options: HookInstallOptions = {},
 ): CodexHookInstallResult {
   if (!options.dryRun) {
-    initializePromptLane({ dataDir: options.dataDir });
+    initializeLoopRelay({ dataDir: options.dataDir });
   }
 
   const hooksPath = options.hooksPath ?? defaultCodexHooksPath();
@@ -305,15 +285,15 @@ export function installCodexHook(
     buildCodexHookCommand(options.dataDir, options),
     {
       stopCommand: buildCodexLifecycleHookCommand(
-        CODEX_PROMPTLANE_STOP_MARKER,
+        CODEX_LOOPRELAY_STOP_MARKER,
         options.dataDir,
       ),
       preCompactCommand: buildCodexLifecycleHookCommand(
-        CODEX_PROMPTLANE_PRE_COMPACT_MARKER,
+        CODEX_LOOPRELAY_PRE_COMPACT_MARKER,
         options.dataDir,
       ),
       postCompactCommand: buildCodexLifecycleHookCommand(
-        CODEX_PROMPTLANE_POST_COMPACT_MARKER,
+        CODEX_LOOPRELAY_POST_COMPACT_MARKER,
         options.dataDir,
       ),
       sessionStartCommand: options.openWeb
@@ -386,51 +366,49 @@ export function uninstallCodexHook(
   };
 }
 
-export function hasPromptLaneHook(settings: ClaudeSettings): boolean {
+export function hasLoopRelayHook(settings: ClaudeSettings): boolean {
   return Boolean(
     settings.hooks?.UserPromptSubmit?.some((group) =>
-      group.hooks?.some((hook) => hook.command.includes(PROMPTLANE_MARKER)),
+      group.hooks?.some((hook) => hook.command.includes(LOOPRELAY_MARKER)),
     ),
   );
 }
 
-export function hasPromptLaneSessionStartHook(
+export function hasLoopRelaySessionStartHook(
   settings: ClaudeSettings,
 ): boolean {
   return Boolean(
     settings.hooks?.SessionStart?.some((group) =>
       group.hooks?.some((hook) =>
-        hook.command.includes(PROMPTLANE_SESSION_MARKER),
+        hook.command.includes(LOOPRELAY_SESSION_MARKER),
       ),
     ),
   );
 }
 
-export function hasPromptLaneCodexHook(settings: CodexHooksSettings): boolean {
-  return countPromptLaneCodexHooks(settings) > 0;
+export function hasLoopRelayCodexHook(settings: CodexHooksSettings): boolean {
+  return countLoopRelayCodexHooks(settings) > 0;
 }
 
-export function countPromptLaneCodexHooks(
-  settings: CodexHooksSettings,
-): number {
+export function countLoopRelayCodexHooks(settings: CodexHooksSettings): number {
   return (
     settings.hooks?.UserPromptSubmit?.reduce(
       (count, group) =>
         count +
-        (group.hooks?.filter((hook) => isCodexPromptLaneHook(hook.command))
+        (group.hooks?.filter((hook) => isCodexLoopRelayHook(hook.command))
           .length ?? 0),
       0,
     ) ?? 0
   );
 }
 
-export function hasPromptLaneCodexSessionStartHook(
+export function hasLoopRelayCodexSessionStartHook(
   settings: CodexHooksSettings,
 ): boolean {
   return Boolean(
     settings.hooks?.SessionStart?.some((group) =>
       group.hooks?.some((hook) =>
-        hook.command.includes(CODEX_PROMPTLANE_SESSION_MARKER),
+        hook.command.includes(CODEX_LOOPRELAY_SESSION_MARKER),
       ),
     ),
   );
@@ -461,31 +439,31 @@ function ensureHook(
   options: { sessionStartCommand?: string } = {},
 ): ClaudeSettings & { hooks: Record<string, ClaudeHookGroup[]> } {
   const hooks = { ...(settings.hooks ?? {}) };
-  hooks.UserPromptSubmit = ensurePromptLaneHookGroups(
+  hooks.UserPromptSubmit = ensureLoopRelayHookGroups(
     hooks.UserPromptSubmit ?? [],
     command,
-    isClaudePromptLaneHook,
+    isClaudeLoopRelayHook,
   );
-  hooks.Stop = ensurePromptLaneHookGroups(
+  hooks.Stop = ensureLoopRelayHookGroups(
     hooks.Stop ?? [],
     command,
-    isClaudePromptLaneHook,
+    isClaudeLoopRelayHook,
   );
-  hooks.PreCompact = ensurePromptLaneHookGroups(
+  hooks.PreCompact = ensureLoopRelayHookGroups(
     hooks.PreCompact ?? [],
     command,
-    isClaudePromptLaneHook,
+    isClaudeLoopRelayHook,
   );
-  hooks.PostCompact = ensurePromptLaneHookGroups(
+  hooks.PostCompact = ensureLoopRelayHookGroups(
     hooks.PostCompact ?? [],
     command,
-    isClaudePromptLaneHook,
+    isClaudeLoopRelayHook,
   );
   if (options.sessionStartCommand) {
     hooks.SessionStart = ensureSessionStartHook(
       hooks.SessionStart ?? [],
       options.sessionStartCommand,
-      PROMPTLANE_SESSION_MARKER,
+      LOOPRELAY_SESSION_MARKER,
     );
   }
 
@@ -499,25 +477,25 @@ function removeHook(
   settings: ClaudeSettings,
 ): ClaudeSettings & { hooks: Record<string, ClaudeHookGroup[]> } {
   const hooks = { ...(settings.hooks ?? {}) };
-  hooks.UserPromptSubmit = removePromptLaneHookGroups(
+  hooks.UserPromptSubmit = removeLoopRelayHookGroups(
     hooks.UserPromptSubmit ?? [],
-    isClaudePromptLaneHook,
+    isClaudeLoopRelayHook,
   );
-  hooks.Stop = removePromptLaneHookGroups(
+  hooks.Stop = removeLoopRelayHookGroups(
     hooks.Stop ?? [],
-    isClaudePromptLaneHook,
+    isClaudeLoopRelayHook,
   );
-  hooks.PreCompact = removePromptLaneHookGroups(
+  hooks.PreCompact = removeLoopRelayHookGroups(
     hooks.PreCompact ?? [],
-    isClaudePromptLaneHook,
+    isClaudeLoopRelayHook,
   );
-  hooks.PostCompact = removePromptLaneHookGroups(
+  hooks.PostCompact = removeLoopRelayHookGroups(
     hooks.PostCompact ?? [],
-    isClaudePromptLaneHook,
+    isClaudeLoopRelayHook,
   );
   hooks.SessionStart = removeSessionStartHook(
     hooks.SessionStart ?? [],
-    PROMPTLANE_SESSION_MARKER,
+    LOOPRELAY_SESSION_MARKER,
   );
 
   return {
@@ -537,22 +515,22 @@ function ensureCodexHook(
   },
 ): CodexHooksSettings & { hooks: Record<string, ClaudeHookGroup[]> } {
   const hooks = { ...(settings.hooks ?? {}) };
-  hooks.UserPromptSubmit = ensurePromptLaneHookGroups(
+  hooks.UserPromptSubmit = ensureLoopRelayHookGroups(
     hooks.UserPromptSubmit ?? [],
     command,
-    isCodexPromptLaneHook,
+    isCodexLoopRelayHook,
   );
-  hooks.Stop = ensurePromptLaneHookGroups(
+  hooks.Stop = ensureLoopRelayHookGroups(
     hooks.Stop ?? [],
     options.stopCommand,
     isCodexStopHook,
   );
-  hooks.PreCompact = ensurePromptLaneHookGroups(
+  hooks.PreCompact = ensureLoopRelayHookGroups(
     hooks.PreCompact ?? [],
     options.preCompactCommand,
     isCodexPreCompactHook,
   );
-  hooks.PostCompact = ensurePromptLaneHookGroups(
+  hooks.PostCompact = ensureLoopRelayHookGroups(
     hooks.PostCompact ?? [],
     options.postCompactCommand,
     isCodexPostCompactHook,
@@ -563,9 +541,9 @@ function ensureCodexHook(
       options.sessionStartCommand,
     );
   } else {
-    hooks.SessionStart = removePromptLaneHookGroups(
+    hooks.SessionStart = removeLoopRelayHookGroups(
       hooks.SessionStart ?? [],
-      isLegacyCodexSessionStartHook,
+      isCodexSessionStartHook,
     );
   }
 
@@ -579,20 +557,20 @@ function removeCodexHook(
   settings: CodexHooksSettings,
 ): CodexHooksSettings & { hooks: Record<string, ClaudeHookGroup[]> } {
   const hooks = { ...(settings.hooks ?? {}) };
-  hooks.UserPromptSubmit = removePromptLaneHookGroups(
+  hooks.UserPromptSubmit = removeLoopRelayHookGroups(
     hooks.UserPromptSubmit ?? [],
-    isCodexPromptLaneHook,
+    isCodexLoopRelayHook,
   );
-  hooks.Stop = removePromptLaneHookGroups(hooks.Stop ?? [], isCodexStopHook);
-  hooks.PreCompact = removePromptLaneHookGroups(
+  hooks.Stop = removeLoopRelayHookGroups(hooks.Stop ?? [], isCodexStopHook);
+  hooks.PreCompact = removeLoopRelayHookGroups(
     hooks.PreCompact ?? [],
     isCodexPreCompactHook,
   );
-  hooks.PostCompact = removePromptLaneHookGroups(
+  hooks.PostCompact = removeLoopRelayHookGroups(
     hooks.PostCompact ?? [],
     isCodexPostCompactHook,
   );
-  hooks.SessionStart = removePromptLaneHookGroups(
+  hooks.SessionStart = removeLoopRelayHookGroups(
     hooks.SessionStart ?? [],
     isCodexSessionStartHook,
   );
@@ -603,17 +581,17 @@ function removeCodexHook(
   };
 }
 
-function ensurePromptLaneHookGroups(
+function ensureLoopRelayHookGroups(
   groups: ClaudeHookGroup[],
   command: string,
-  isPromptLaneHook: (command: string) => boolean,
+  isLoopRelayHook: (command: string) => boolean,
 ): ClaudeHookGroup[] {
   let found = false;
   const next = [...groups]
     .map((group) => ({
       ...group,
       hooks: group.hooks.flatMap((hook) => {
-        if (!isPromptLaneHook(hook.command)) {
+        if (!isLoopRelayHook(hook.command)) {
           return [hook];
         }
 
@@ -642,14 +620,14 @@ function ensurePromptLaneHookGroups(
   return next;
 }
 
-function removePromptLaneHookGroups(
+function removeLoopRelayHookGroups(
   groups: ClaudeHookGroup[],
-  isPromptLaneHook: (command: string) => boolean,
+  isLoopRelayHook: (command: string) => boolean,
 ): ClaudeHookGroup[] {
   return [...groups]
     .map((group) => ({
       ...group,
-      hooks: group.hooks.filter((hook) => !isPromptLaneHook(hook.command)),
+      hooks: group.hooks.filter((hook) => !isLoopRelayHook(hook.command)),
     }))
     .filter((group) => group.hooks.length > 0);
 }
@@ -740,11 +718,7 @@ function removeSessionStartHook(
 }
 
 function isSessionStartHookForMarker(command: string, marker: string): boolean {
-  return (
-    command.includes(marker) ||
-    (marker === PROMPTLANE_SESSION_MARKER &&
-      command.includes(LEGACY_PROMPT_COACH_SESSION_MARKER))
-  );
+  return command.includes(marker);
 }
 
 function ensureCodexHooksFeature(config: string): string {
@@ -831,7 +805,7 @@ function buildHookCommandWithOptions(
   const dataDirArg = dataDir ? ` --data-dir ${JSON.stringify(dataDir)}` : "";
   const rewriteArgs = buildRewriteGuardArgs(options);
   const marker =
-    tool === "claude-code" ? PROMPTLANE_MARKER : CODEX_PROMPTLANE_MARKER;
+    tool === "claude-code" ? LOOPRELAY_MARKER : CODEX_LOOPRELAY_MARKER;
   return `${markerAssignment(marker)} ${quoteForShell(
     process.execPath,
   )} ${quoteForShell(cliEntryPath())} hook ${tool}${dataDirArg}${rewriteArgs}`;
@@ -844,8 +818,8 @@ function buildSessionStartHookCommand(
   const dataDirArg = dataDir ? ` --data-dir ${JSON.stringify(dataDir)}` : "";
   const marker =
     tool === "claude-code"
-      ? PROMPTLANE_SESSION_MARKER
-      : CODEX_PROMPTLANE_SESSION_MARKER;
+      ? LOOPRELAY_SESSION_MARKER
+      : CODEX_LOOPRELAY_SESSION_MARKER;
   return `${markerAssignment(marker)} ${quoteForShell(
     process.execPath,
   )} ${quoteForShell(cliEntryPath())} hook session-start ${tool}${dataDirArg} --open-web`;
@@ -893,62 +867,41 @@ function isRewriteGuardMode(
   );
 }
 
-function isClaudePromptLaneHook(command: string): boolean {
-  return (
-    command.includes(PROMPTLANE_MARKER) ||
-    command.includes(LEGACY_PROMPT_COACH_MARKER)
-  );
+function isClaudeLoopRelayHook(command: string): boolean {
+  return command.includes(LOOPRELAY_MARKER);
 }
 
-function isCodexPromptLaneHook(command: string): boolean {
-  return (
-    command.includes(CODEX_PROMPTLANE_MARKER) ||
-    command.includes(LEGACY_CODEX_PROMPT_COACH_MARKER) ||
-    command.includes(LEGACY_CODEX_PROMPT_MEMORY_MARKER)
-  );
+function isCodexLoopRelayHook(command: string): boolean {
+  return command.includes(CODEX_LOOPRELAY_MARKER);
 }
 
 function isCodexStopHook(command: string): boolean {
   return (
-    command.includes(CODEX_PROMPTLANE_STOP_MARKER) ||
-    command.includes(LEGACY_CODEX_PROMPT_COACH_STOP_MARKER) ||
-    isCodexPromptLaneHook(command)
+    command.includes(CODEX_LOOPRELAY_STOP_MARKER) ||
+    isCodexLoopRelayHook(command)
   );
 }
 
 function isCodexPreCompactHook(command: string): boolean {
   return (
-    command.includes(CODEX_PROMPTLANE_PRE_COMPACT_MARKER) ||
-    command.includes(LEGACY_CODEX_PROMPT_COACH_PRE_COMPACT_MARKER) ||
-    isCodexPromptLaneHook(command)
+    command.includes(CODEX_LOOPRELAY_PRE_COMPACT_MARKER) ||
+    isCodexLoopRelayHook(command)
   );
 }
 
 function isCodexPostCompactHook(command: string): boolean {
   return (
-    command.includes(CODEX_PROMPTLANE_POST_COMPACT_MARKER) ||
-    command.includes(LEGACY_CODEX_PROMPT_COACH_POST_COMPACT_MARKER) ||
-    isCodexPromptLaneHook(command)
+    command.includes(CODEX_LOOPRELAY_POST_COMPACT_MARKER) ||
+    isCodexLoopRelayHook(command)
   );
 }
 
 function isCodexSessionStartHook(command: string): boolean {
-  return (
-    command.includes(CODEX_PROMPTLANE_SESSION_MARKER) ||
-    command.includes(LEGACY_CODEX_PROMPT_COACH_SESSION_MARKER) ||
-    command.includes(LEGACY_CODEX_PROMPT_MEMORY_SESSION_MARKER)
-  );
-}
-
-function isLegacyCodexSessionStartHook(command: string): boolean {
-  return (
-    command.includes(LEGACY_CODEX_PROMPT_COACH_SESSION_MARKER) ||
-    command.includes(LEGACY_CODEX_PROMPT_MEMORY_SESSION_MARKER)
-  );
+  return command.includes(CODEX_LOOPRELAY_SESSION_MARKER);
 }
 
 function markerAssignment(marker: string): string {
-  return `PROMPTLANE_HOOK=${quoteForShell(marker)}`;
+  return `LOOPRELAY_HOOK=${quoteForShell(marker)}`;
 }
 
 function cliEntryPath(): string {
@@ -1003,7 +956,7 @@ function backupIfExists(path: string): string | undefined {
     return undefined;
   }
 
-  const backupPath = `${path}.promptlane.${Date.now()}.bak`;
+  const backupPath = `${path}.looprelay.${Date.now()}.bak`;
   copyFileSync(path, backupPath);
   return backupPath;
 }

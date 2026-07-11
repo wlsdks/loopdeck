@@ -22,7 +22,7 @@ import {
   createBenchmarkCandidateReport,
   type BenchmarkCandidateReport,
 } from "../../analysis/benchmark-candidates.js";
-import { loadHookAuth, loadPromptLaneConfig } from "../../config/config.js";
+import { loadHookAuth, loadLoopRelayConfig } from "../../config/config.js";
 import type { LoopSnapshot } from "../../loop/types.js";
 import type { PromptDetail } from "../../storage/ports.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
@@ -84,7 +84,7 @@ export function registerBenchmarkCommand(program: Command): void {
   const benchmarkCommand = program
     .command("benchmark")
     .description(
-      "Measure local PromptLane regression and effectiveness evidence.",
+      "Measure local LoopRelay regression and effectiveness evidence.",
     );
   benchmarkCommand
     .command("init-fixture")
@@ -120,7 +120,7 @@ export function registerBenchmarkCommand(program: Command): void {
       "--output <path>",
       "Write the prepared real fixture to this new local file.",
     )
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option(
       "--confirm-consent",
       "Confirm the selected redacted prompts are approved for local benchmarking.",
@@ -144,7 +144,7 @@ export function registerBenchmarkCommand(program: Command): void {
     .description(
       "List body-free prompt ids with safe attributed outcome evidence.",
     )
-    .option("--data-dir <path>", "Override the promptlane data directory.")
+    .option("--data-dir <path>", "Override the looprelay data directory.")
     .option("--limit <count>", "Maximum candidate ids to return.", "20")
     .option("--json", "Print JSON.")
     .action((_options: BenchmarkCandidateCommandOptions, command: Command) => {
@@ -167,7 +167,7 @@ export function registerBenchmarkCommand(program: Command): void {
     )
     .option(
       "--baseline-file <path>",
-      "Compare with a prior PromptLane benchmark JSON report.",
+      "Compare with a prior LoopRelay benchmark JSON report.",
     )
     .option(
       "--report-file <path>",
@@ -191,7 +191,7 @@ export function initializeBenchmarkFixtureForCli(
     template = readFileSync(benchmarkFixtureTemplatePath(), "utf8");
   } catch {
     throw new UserError(
-      "Unable to read the shipped PromptLane benchmark fixture template.",
+      "Unable to read the shipped LoopRelay benchmark fixture template.",
     );
   }
 
@@ -209,11 +209,11 @@ export function initializeBenchmarkFixtureForCli(
       );
     }
     throw new UserError(
-      "Unable to create the PromptLane benchmark fixture template.",
+      "Unable to create the LoopRelay benchmark fixture template.",
     );
   }
 
-  return "Created PromptLane real benchmark fixture template. Replace every example, update consent_note, and set template_only to false before running the real soft signal.";
+  return "Created LoopRelay real benchmark fixture template. Replace every example, update consent_note, and set template_only to false before running the real soft signal.";
 }
 
 export function prepareBenchmarkFixtureForCli(
@@ -286,7 +286,7 @@ export function prepareBenchmarkFixtureForCli(
       );
     }
     throw new UserError(
-      "Unable to create the prepared PromptLane benchmark fixture.",
+      "Unable to create the prepared LoopRelay benchmark fixture.",
     );
   }
 
@@ -294,7 +294,7 @@ export function prepareBenchmarkFixtureForCli(
     promptIds.length === 1
       ? "1 selected prompt"
       : `${promptIds.length} selected prompts`;
-  return `Created a consent-bearing PromptLane real benchmark fixture from ${promptCopy}. Run the real soft signal with --fixture-file pointing to the new local file.`;
+  return `Created a consent-bearing LoopRelay real benchmark fixture from ${promptCopy}. Run the real soft signal with --fixture-file pointing to the new local file.`;
 }
 
 export function benchmarkCandidatesForCli(
@@ -343,8 +343,8 @@ export function benchmarkForCli(
   if (!result.stdout.trim()) {
     throw new UserError(
       result.status === 0
-        ? "PromptLane benchmark returned no output."
-        : "PromptLane benchmark failed before producing a report.",
+        ? "LoopRelay benchmark returned no output."
+        : "LoopRelay benchmark failed before producing a report.",
     );
   }
   if (result.status !== 0) {
@@ -360,16 +360,16 @@ function writeBenchmarkReport(reportFile: string, output: string): void {
   try {
     report = JSON.parse(output);
   } catch {
-    throw new UserError("PromptLane benchmark returned invalid JSON output.");
+    throw new UserError("LoopRelay benchmark returned invalid JSON output.");
   }
   if (typeof report !== "object" || report === null || Array.isArray(report)) {
-    throw new UserError("PromptLane benchmark returned invalid JSON output.");
+    throw new UserError("LoopRelay benchmark returned invalid JSON output.");
   }
 
   const reportDirectory = dirname(reportFile);
   const temporaryFile = join(
     reportDirectory,
-    `.${basename(reportFile)}.promptlane-${randomUUID()}.tmp`,
+    `.${basename(reportFile)}.looprelay-${randomUUID()}.tmp`,
   );
   try {
     mkdirSync(reportDirectory, { recursive: true });
@@ -385,7 +385,7 @@ function writeBenchmarkReport(reportFile: string, output: string): void {
         "Benchmark report file already exists. Choose a new --report-file.",
       );
     }
-    throw new UserError("Unable to create the PromptLane benchmark report.");
+    throw new UserError("Unable to create the LoopRelay benchmark report.");
   } finally {
     try {
       unlinkSync(temporaryFile);
@@ -402,7 +402,7 @@ function runBenchmarkScript(args: string[]): BenchmarkRunResult {
   });
 
   if (result.error) {
-    throw new UserError("Unable to start the local PromptLane benchmark.");
+    throw new UserError("Unable to start the local LoopRelay benchmark.");
   }
   return {
     status: result.status ?? 1,
@@ -415,7 +415,7 @@ function readBenchmarkPrompts(
   promptIds: string[],
   dataDir?: string,
 ): PromptDetail[] {
-  const config = loadPromptLaneConfig(dataDir);
+  const config = loadLoopRelayConfig(dataDir);
   const auth = loadHookAuth(dataDir);
   const storage = createSqlitePromptStorage({
     dataDir: config.data_dir,
@@ -435,7 +435,7 @@ function readBenchmarkPrompts(
 }
 
 function readBenchmarkSnapshots(dataDir?: string): LoopSnapshot[] {
-  const config = loadPromptLaneConfig(dataDir);
+  const config = loadLoopRelayConfig(dataDir);
   const auth = loadHookAuth(dataDir);
   const storage = createSqlitePromptStorage({
     dataDir: config.data_dir,

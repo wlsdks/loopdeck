@@ -10,7 +10,7 @@ import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const NAMESPACE = "promptlane";
+const NAMESPACE = "looprelay";
 
 export type SlashCommandInstallOptions = {
   sourceDir: string;
@@ -27,7 +27,7 @@ export type SlashCommandInstallResult = {
   removed: string[];
 };
 
-export function installPromptLaneSlashCommands(
+export function installLoopRelaySlashCommands(
   options: SlashCommandInstallOptions,
 ): SlashCommandInstallResult {
   const namespaceDir = join(options.targetDir, NAMESPACE);
@@ -101,7 +101,7 @@ export function defaultClaudeCommandsDir(): string {
   return join(homedir(), ".claude", "commands");
 }
 
-export function defaultPromptLaneSlashCommandsSource(): string {
+export function defaultLoopRelaySlashCommandsSource(): string {
   // dist/cli/commands/install-slash-commands.js  →  ../../../commands
   // src/cli/commands/install-slash-commands.ts   →  ../../../commands
   return join(

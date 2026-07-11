@@ -141,7 +141,7 @@ export function LoopOutcomeForm({
       </div>
       {promptIds.length > 0 && (
         <fieldset className="loop-improvement-attribution">
-          <legend>PromptLane improvements used</legend>
+          <legend>LoopRelay improvements used</legend>
           <div>
             {promptIds.map((promptId) => (
               <label key={promptId}>
