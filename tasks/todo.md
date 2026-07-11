@@ -1,5 +1,18 @@
 # 작업 계획
 
+## 2026-07-11 First-Coach Dogfood Project Context
+
+- [x] RED: the live dogfood collected a snapshot using `projectDir` but ran the
+  filtered brief from the LoopRelay repository, producing a false not-found.
+- [x] GREEN: execute dogfood CLI subprocesses from the isolated project unless
+  a command explicitly supplies another cwd.
+- [x] CHECK: a passed CLI snapshot intentionally becomes an explicit checkpoint,
+  so its brief omits inherited prompt ids and prioritizes its outcome contract.
+- [x] GREEN: update the dogfood assertion to verify that selected contract
+  instead of the obsolete prompt-id formatter.
+- [ ] VERIFY: rerun the full first-coach dogfood path and the follow-on memory
+  approval dogfood without the release gate.
+
 ## 2026-07-11 Independent Human Candidate Refresh
 
 - [x] CHECK: the versioned human handoff still targeted `12c0bbcc`, predating

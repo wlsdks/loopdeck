@@ -213,8 +213,18 @@ try {
   );
   assertIncludes(
     brief.prompt,
+    "## Selected Continuation Contract",
+    "Passed outcome should prioritize the selected continuation contract.",
+  );
+  assertIncludes(
+    brief.prompt,
+    "Focused first-loop checks passed.",
+    "Loop brief should preserve the passed checkpoint summary.",
+  );
+  assertNotIncludes(
+    brief.prompt,
     "prompt ids:",
-    "Loop brief should carry prompt id context.",
+    "Explicit checkpoints should omit inherited prompt diagnostics.",
   );
   assertEqual(
     brief.privacy.returns_prompt_bodies,
@@ -248,6 +258,7 @@ function step(message) {
 function runCli(args, options = {}) {
   const result = spawnSync(process.execPath, [cliPath, ...args], {
     env: cliEnv,
+    cwd: options.cwd ?? projectDir,
     encoding: "utf8",
     input: options.input,
     stdio: ["pipe", "pipe", "pipe"],
