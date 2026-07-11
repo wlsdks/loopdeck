@@ -33,6 +33,10 @@ Primary value:
 
 ## Usefulness Validation
 
+- Current reproducible corpus: 0 valid matched pairs. The older ten-pair
+  prompt-rewrite aggregate is historical negative evidence, but its prompt
+  records were intentionally removed and cannot satisfy this cycle's live
+  evidence-integrity requirement.
 - Collect at least 10 matched pairs across at least three real task types.
 - Separate baseline work from LoopRelay-assisted work explicitly.
 - Record completion rate, failure transition, continuation reuse, adopted

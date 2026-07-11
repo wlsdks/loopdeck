@@ -5,19 +5,23 @@ import type { LoopSnapshot } from "../loop/types.js";
 
 describe("createBenchmarkPairCandidateReport", () => {
   it("separates safe baseline and explicitly attributed LoopRelay candidates", () => {
-    const report = createBenchmarkPairCandidateReport([
-      snapshot({
-        id: "loop_treatment",
-        promptIds: ["prmt_lane", "prmt_mixed_unattributed"],
-        usedPromptIds: ["prmt_lane"],
-      }),
-      snapshot({
-        id: "loop_baseline",
-        promptIds: ["prmt_base_one", "prmt_base_two"],
-        status: "failed",
-        usedPromptIds: [],
-      }),
-    ]);
+    const report = createBenchmarkPairCandidateReport(
+      [
+        snapshot({
+          id: "loop_treatment",
+          promptIds: ["prmt_lane", "prmt_mixed_unattributed"],
+          usedPromptIds: ["prmt_lane"],
+        }),
+        snapshot({
+          id: "loop_baseline",
+          promptIds: ["prmt_base_one", "prmt_base_two"],
+          status: "failed",
+          usedPromptIds: [],
+        }),
+      ],
+      20,
+      () => true,
+    );
 
     expect(report).toEqual({
       status: "ready",
@@ -46,6 +50,7 @@ describe("createBenchmarkPairCandidateReport", () => {
         },
       ],
       excluded_unsafe_candidates: 0,
+      excluded_missing_candidates: 0,
       diagnostics: {
         completed_snapshots: 2,
         baseline_snapshots: 1,
@@ -154,6 +159,35 @@ describe("createBenchmarkPairCandidateReport", () => {
       looprelay_candidates: [{ prompt_id: "prmt_three" }],
       has_more: { baseline: true, looprelay: false },
     });
+  });
+
+  it("excludes missing prompt records from both sides of a pair", () => {
+    const report = createBenchmarkPairCandidateReport(
+      [
+        snapshot({
+          id: "loop_treatment",
+          promptIds: ["prmt_treatment_orphan"],
+          usedPromptIds: ["prmt_treatment_orphan"],
+        }),
+        snapshot({
+          id: "loop_baseline",
+          promptIds: ["prmt_baseline_orphan"],
+          usedPromptIds: [],
+        }),
+      ],
+      20,
+      () => false,
+    );
+
+    expect(report).toMatchObject({
+      status: "missing_prompt_records",
+      baseline_candidate_count: 0,
+      looprelay_candidate_count: 0,
+      excluded_missing_candidates: 2,
+      next_action:
+        "Rebuild the local prompt index or collect new comparable loops whose prompt records are still available.",
+    });
+    expect(JSON.stringify(report)).not.toContain("_orphan");
   });
 });
 

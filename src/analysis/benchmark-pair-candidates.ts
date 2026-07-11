@@ -8,6 +8,7 @@ type PairCandidateStatus =
   | "no_completed_outcomes"
   | "incomplete_outcome_evidence"
   | "unsafe_outcome_evidence"
+  | "missing_prompt_records"
   | "empty_archive";
 
 type PairCandidate = {
@@ -24,6 +25,7 @@ export type BenchmarkPairCandidateReport = {
   baseline_candidates: PairCandidate[];
   looprelay_candidates: PairCandidate[];
   excluded_unsafe_candidates: number;
+  excluded_missing_candidates: number;
   diagnostics: {
     completed_snapshots: number;
     baseline_snapshots: number;
@@ -51,11 +53,13 @@ const DEFAULT_CANDIDATE_LIMIT = 20;
 export function createBenchmarkPairCandidateReport(
   snapshots: LoopSnapshot[],
   requestedLimit = DEFAULT_CANDIDATE_LIMIT,
+  promptExists: (promptId: string) => boolean = () => true,
 ): BenchmarkPairCandidateReport {
   const baselineCandidates: PairCandidate[] = [];
   const looprelayCandidates: PairCandidate[] = [];
   const seenPromptIds = new Set<string>();
   let excludedUnsafeCandidates = 0;
+  let excludedMissingCandidates = 0;
   const diagnostics = {
     completed_snapshots: 0,
     baseline_snapshots: 0,
@@ -103,10 +107,14 @@ export function createBenchmarkPairCandidateReport(
       excludedUnsafeCandidates += safePromptIds.length;
       continue;
     }
+    const livePromptIds = safePromptIds.filter((promptId) =>
+      promptExists(promptId),
+    );
+    excludedMissingCandidates += safePromptIds.length - livePromptIds.length;
     if (safePromptIds.length > 0) diagnostics.safe_snapshots += 1;
 
     const target = isBaseline ? baselineCandidates : looprelayCandidates;
-    for (const promptId of safePromptIds) {
+    for (const promptId of livePromptIds) {
       target.push({
         prompt_id: promptId,
         outcome_status: snapshot.outcome.status,
@@ -122,6 +130,7 @@ export function createBenchmarkPairCandidateReport(
     baselineCount: baselineCandidates.length,
     looprelayCount: looprelayCandidates.length,
     diagnostics,
+    missingPromptCount: excludedMissingCandidates,
   });
   return {
     status,
@@ -130,6 +139,7 @@ export function createBenchmarkPairCandidateReport(
     baseline_candidates: baselineCandidates.slice(0, limit),
     looprelay_candidates: looprelayCandidates.slice(0, limit),
     excluded_unsafe_candidates: excludedUnsafeCandidates,
+    excluded_missing_candidates: excludedMissingCandidates,
     diagnostics,
     has_more: {
       baseline: baselineCandidates.length > limit,
@@ -157,11 +167,13 @@ function pairCandidateStatus({
   baselineCount,
   looprelayCount,
   diagnostics,
+  missingPromptCount,
 }: {
   snapshotCount: number;
   baselineCount: number;
   looprelayCount: number;
   diagnostics: BenchmarkPairCandidateReport["diagnostics"];
+  missingPromptCount: number;
 }): PairCandidateStatus {
   if (snapshotCount === 0) return "empty_archive";
   if (baselineCount > 0 && looprelayCount > 0) return "ready";
@@ -170,6 +182,9 @@ function pairCandidateStatus({
   if (diagnostics.completed_snapshots === 0) return "no_completed_outcomes";
   if (diagnostics.evidence_complete_snapshots === 0) {
     return "incomplete_outcome_evidence";
+  }
+  if (missingPromptCount > 0 && diagnostics.safe_snapshots > 0) {
+    return "missing_prompt_records";
   }
   return "unsafe_outcome_evidence";
 }
@@ -192,6 +207,9 @@ function pairCandidateNextAction(status: PairCandidateStatus): string {
   }
   if (status === "incomplete_outcome_evidence") {
     return "Add a redacted outcome summary and at least one privacy-safe evidence ref before preparing a pair.";
+  }
+  if (status === "missing_prompt_records") {
+    return "Rebuild the local prompt index or collect new comparable loops whose prompt records are still available.";
   }
   return "Replace sensitive outcome evidence or malformed prompt ids before preparing a pair.";
 }

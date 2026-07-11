@@ -628,6 +628,7 @@ export type BenchmarkReadiness = {
     | "no_attributed_outcomes"
     | "incomplete_outcome_evidence"
     | "unsafe_outcome_evidence"
+    | "missing_prompt_records"
     | "empty_archive";
   candidate_count: number;
   candidates: Array<{
@@ -638,6 +639,7 @@ export type BenchmarkReadiness = {
     evidence_ref_count: number;
   }>;
   excluded_unsafe_candidates: number;
+  excluded_missing_candidates: number;
   diagnostics: {
     completed_snapshots: number;
     attributed_snapshots: number;
@@ -668,6 +670,7 @@ function isBenchmarkReadiness(value: unknown): value is BenchmarkReadiness {
     "no_attributed_outcomes",
     "incomplete_outcome_evidence",
     "unsafe_outcome_evidence",
+    "missing_prompt_records",
     "empty_archive",
   ];
   return (
@@ -678,6 +681,8 @@ function isBenchmarkReadiness(value: unknown): value is BenchmarkReadiness {
     report.candidates.every(isBenchmarkCandidate) &&
     Number.isInteger(report.excluded_unsafe_candidates) &&
     report.excluded_unsafe_candidates >= 0 &&
+    Number.isInteger(report.excluded_missing_candidates) &&
+    report.excluded_missing_candidates >= 0 &&
     isBenchmarkDiagnostics(report.diagnostics) &&
     typeof report.has_more === "boolean" &&
     isBenchmarkScope(report.scope) &&

@@ -20,6 +20,7 @@ describe("createBenchmarkCandidateReport", () => {
         }),
       ],
       2,
+      () => true,
     );
 
     expect(report).toEqual({
@@ -42,6 +43,7 @@ describe("createBenchmarkCandidateReport", () => {
         },
       ],
       excluded_unsafe_candidates: 0,
+      excluded_missing_candidates: 0,
       diagnostics: {
         completed_snapshots: 2,
         attributed_snapshots: 2,
@@ -151,6 +153,42 @@ describe("createBenchmarkCandidateReport", () => {
       scope: { scanned_snapshots: 0, snapshot_limit: 100 },
       next_action:
         "Collect a loop snapshot after using LoopRelay with Codex or Claude Code.",
+    });
+  });
+
+  it("excludes snapshot-only prompt ids that are missing from the live archive", () => {
+    const report = createBenchmarkCandidateReport(
+      [
+        snapshot({
+          id: "loop_orphans",
+          promptIds: ["prmt_present", "prmt_orphan"],
+          usedPromptIds: ["prmt_present", "prmt_orphan"],
+        }),
+      ],
+      20,
+      (promptId) => promptId === "prmt_present",
+    );
+
+    expect(report).toMatchObject({
+      status: "ready",
+      candidate_count: 1,
+      candidates: [{ prompt_id: "prmt_present" }],
+      excluded_missing_candidates: 1,
+    });
+    expect(JSON.stringify(report)).not.toContain("prmt_orphan");
+
+    expect(
+      createBenchmarkCandidateReport(
+        [snapshot({ id: "loop_orphan_only" })],
+        20,
+        () => false,
+      ),
+    ).toMatchObject({
+      status: "missing_prompt_records",
+      candidate_count: 0,
+      excluded_missing_candidates: 1,
+      next_action:
+        "Rebuild the local prompt index or collect a new verified loop whose prompt record is still available.",
     });
   });
 });

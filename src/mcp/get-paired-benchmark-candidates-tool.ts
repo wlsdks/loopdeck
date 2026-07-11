@@ -68,6 +68,7 @@ export const GET_PAIRED_BENCHMARK_CANDIDATES_TOOL_DEFINITION: LoopRelayMcpToolDe
             "no_completed_outcomes",
             "incomplete_outcome_evidence",
             "unsafe_outcome_evidence",
+            "missing_prompt_records",
             "empty_archive",
           ],
         },
@@ -76,6 +77,7 @@ export const GET_PAIRED_BENCHMARK_CANDIDATES_TOOL_DEFINITION: LoopRelayMcpToolDe
         baseline_candidates: { type: "array", items: CANDIDATE_SCHEMA },
         looprelay_candidates: { type: "array", items: CANDIDATE_SCHEMA },
         excluded_unsafe_candidates: { type: "integer", minimum: 0 },
+        excluded_missing_candidates: { type: "integer", minimum: 0 },
         diagnostics: {
           type: "object",
           required: [
@@ -151,6 +153,7 @@ export const GET_PAIRED_BENCHMARK_CANDIDATES_TOOL_DEFINITION: LoopRelayMcpToolDe
             "baseline_candidates",
             "looprelay_candidates",
             "excluded_unsafe_candidates",
+            "excluded_missing_candidates",
             "diagnostics",
             "has_more",
             "scope",
@@ -187,6 +190,7 @@ export function getPairedBenchmarkCandidatesTool(
       return createBenchmarkPairCandidateReport(
         storage.listLoopSnapshots({ limit: 100 }).items,
         limit,
+        (promptId) => storage.getPrompt(promptId) !== undefined,
       );
     } finally {
       storage.close();

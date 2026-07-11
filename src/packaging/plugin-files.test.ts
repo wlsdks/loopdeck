@@ -844,6 +844,7 @@ describe("plugin packaging files", () => {
       "no_attributed_outcomes",
       "incomplete_outcome_evidence",
       "unsafe_outcome_evidence",
+      "missing_prompt_records",
     ]) {
       expect(benchmarkCommand).toContain("report.diagnostics");
       expect(benchmarkSpec).toContain(status);

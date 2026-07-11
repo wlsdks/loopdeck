@@ -35,6 +35,7 @@ import type {
   LoopMergeDecisionStoragePort,
   LoopMemoryStoragePort,
   LoopSnapshotStoragePort,
+  PromptReadStoragePort,
 } from "../../storage/ports.js";
 import { requireAppAccess, type ServerAuthConfig } from "../auth.js";
 import { problem } from "../errors.js";
@@ -57,7 +58,8 @@ export type LoopRouteOptions = {
     LoopSnapshotStoragePort &
       CompactBoundaryStoragePort &
       LoopMemoryStoragePort &
-      LoopMergeDecisionStoragePort
+      LoopMergeDecisionStoragePort &
+      PromptReadStoragePort
   >;
 };
 
@@ -78,6 +80,7 @@ type LoopOutcomeRouteStorage = Pick<
 >;
 
 type LoopReadRouteStorage = Pick<LoopSnapshotStoragePort, "listLoopSnapshots"> &
+  Pick<PromptReadStoragePort, "getPrompt"> &
   Pick<CompactBoundaryStoragePort, "listCompactBoundaries"> &
   Pick<LoopMemoryStoragePort, "listLoopMemories"> &
   Pick<LoopMergeDecisionStoragePort, "listLoopMergeDecisions">;
@@ -142,7 +145,11 @@ export function registerLoopRoutes(
     return {
       data: {
         status,
-        benchmark_readiness: createBenchmarkCandidateReport(snapshots, 5),
+        benchmark_readiness: createBenchmarkCandidateReport(
+          snapshots,
+          5,
+          (promptId) => storage.getPrompt(promptId) !== undefined,
+        ),
         items: snapshots.map((snapshot) => {
           const compactBoundary = latestCompactBoundaryAfterSnapshot(
             snapshot,
@@ -2301,6 +2308,7 @@ function requireLoopReadStorage(
     storage,
     [
       "listLoopSnapshots",
+      "getPrompt",
       "listCompactBoundaries",
       "listLoopMemories",
       "listLoopMergeDecisions",

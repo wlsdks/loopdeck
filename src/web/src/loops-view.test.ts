@@ -1385,6 +1385,7 @@ function loopList(): LoopListResponse {
         },
       ],
       excluded_unsafe_candidates: 0,
+      excluded_missing_candidates: 0,
       diagnostics: {
         completed_snapshots: 1,
         attributed_snapshots: 1,

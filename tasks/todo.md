@@ -11179,3 +11179,17 @@
       the smallest safe fix.
 - [x] FINAL: Run the complete local gate, identity/privacy scans, update PR
       evidence, and report unresolved risks without overstating usefulness.
+
+## 2026-07-11 Usefulness Evidence Integrity And Compatibility
+
+- [x] CONTRACT: Require benchmark candidates to resolve to a live local prompt
+      record; snapshot-only ids are not valid usefulness evidence.
+- [x] RED/GREEN: Exclude orphan prompt ids consistently from single and paired
+      candidate reports while returning body-free recovery diagnostics.
+- [x] ALIGN: Apply the same existence check to CLI, MCP, and web discovery.
+- [x] LIVE: Recompute the local archive's valid baseline and LoopRelay candidate
+      counts and invalidate any snapshot-only pair claims.
+- [x] COMPAT: Re-run clean Node 22/24 package, Codex, Claude Code, doctor, and
+      MCP regression checks after the integrity fix.
+- [ ] EVIDENCE: Begin collecting genuine matched pairs across at least three
+      real task types without treating observational data as causal proof.

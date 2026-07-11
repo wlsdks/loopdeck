@@ -592,8 +592,13 @@ describe("benchmark CLI command", () => {
     const json = benchmarkCandidatesForCli(
       { json: true, limit: "10" },
       () => snapshots,
+      (promptIds) => new Set(promptIds),
     );
-    const text = benchmarkCandidatesForCli({}, () => snapshots);
+    const text = benchmarkCandidatesForCli(
+      {},
+      () => snapshots,
+      (promptIds) => new Set(promptIds),
+    );
 
     expect(JSON.parse(json)).toMatchObject({
       status: "ready",

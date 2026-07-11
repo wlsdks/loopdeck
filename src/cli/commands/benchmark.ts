@@ -79,6 +79,10 @@ type BenchmarkPromptReader = (
   dataDir?: string,
 ) => PromptDetail[];
 type BenchmarkSnapshotReader = (dataDir?: string) => LoopSnapshot[];
+type BenchmarkPromptIdReader = (
+  promptIds: string[],
+  dataDir?: string,
+) => Set<string>;
 
 export function registerBenchmarkCommand(program: Command): void {
   const benchmarkCommand = program
@@ -300,11 +304,18 @@ export function prepareBenchmarkFixtureForCli(
 export function benchmarkCandidatesForCli(
   options: BenchmarkCandidateCommandOptions = {},
   readSnapshots: BenchmarkSnapshotReader = readBenchmarkSnapshots,
+  readPromptIds: BenchmarkPromptIdReader = readExistingBenchmarkPromptIds,
 ): string {
   const limit = parseCandidateLimit(options.limit);
+  const snapshots = readSnapshots(options.dataDir);
+  const promptIds = Array.from(
+    new Set(snapshots.flatMap((snapshot) => snapshot.prompt_ids)),
+  );
+  const existingPromptIds = readPromptIds(promptIds, options.dataDir);
   const report = createBenchmarkCandidateReport(
-    readSnapshots(options.dataDir),
+    snapshots,
     limit,
+    (promptId) => existingPromptIds.has(promptId),
   );
   return options.json
     ? JSON.stringify(report, null, 2)
@@ -448,6 +459,25 @@ function readBenchmarkSnapshots(dataDir?: string): LoopSnapshot[] {
   }
 }
 
+function readExistingBenchmarkPromptIds(
+  promptIds: string[],
+  dataDir?: string,
+): Set<string> {
+  const config = loadLoopRelayConfig(dataDir);
+  const auth = loadHookAuth(dataDir);
+  const storage = createSqlitePromptStorage({
+    dataDir: config.data_dir,
+    hmacSecret: auth.web_session_secret,
+  });
+  try {
+    return new Set(
+      promptIds.filter((promptId) => storage.getPrompt(promptId) !== undefined),
+    );
+  } finally {
+    storage.close();
+  }
+}
+
 function parseCandidateLimit(value: string | undefined): number {
   const parsed = Number(value ?? 20);
   if (!Number.isInteger(parsed) || parsed < 1 || parsed > 100) {
@@ -471,6 +501,9 @@ function formatBenchmarkCandidates(report: BenchmarkCandidateReport): string {
     lines.push(
       `excluded unsafe candidates ${report.excluded_unsafe_candidates}`,
     );
+  }
+  if (report.excluded_missing_candidates > 0) {
+    lines.push(`excluded missing candidates ${report.excluded_missing_candidates}`);
   }
   lines.push(`Next: ${report.next_action}`);
   lines.push(

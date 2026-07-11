@@ -118,6 +118,22 @@ The combined ten-pair real-fixture benchmark reported:
 The consent-bearing fixture was used locally and removed after measurement
 because it contains prompt text. Only this raw-free aggregate is committed.
 
+Integrity recheck on 2026-07-11: the aggregate above remains a historical,
+non-causal result, but it is not a reproducible current matched-pair corpus.
+All 20 snapshot prompt ids used by current candidate discovery were orphaned
+after the prompt-bearing fixture was removed. LoopRelay now excludes those ids
+and reports `missing_prompt_records`; the current live archive therefore has
+zero valid baseline candidates and zero valid treatment candidates. These ten
+pairs must not be counted toward the new continuity-focused validation target.
+
+The same recheck passed clean tarball installation on Node 22.15.0 and
+24.16.0. Fresh Codex 0.142.5 (`gpt-5.4`) and Claude Code 2.1.204 sessions each
+called `get_looprelay_status` and returned `ready`; both doctors then reported
+recent verified ingest, HTTP 200, and registered MCP. The operator's configured
+Codex default model `gpt-5.6-sol` required a newer Codex version, so the live
+check pinned `gpt-5.4`; this is an environment compatibility warning, not a
+LoopRelay readiness pass for that unsupported model/CLI combination.
+
 Observed friction and scope decisions:
 
 - Stored-prompt rewrites lost the concrete task target in two pairs and caused

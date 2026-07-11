@@ -6,7 +6,9 @@ import { randomUUID } from "node:crypto";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { initializeLoopRelay } from "../config/config.js";
+import { normalizeCodexPayload } from "../adapters/codex.js";
 import type { LoopSnapshot } from "../loop/types.js";
+import { redactPrompt } from "../redaction/redact.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import { getBenchmarkCandidatesTool } from "./get-benchmark-candidates-tool.js";
 
@@ -19,11 +21,24 @@ afterEach(() => {
 });
 
 describe("get_benchmark_candidates MCP tool", () => {
-  it("returns body-free readiness candidates from local snapshots", () => {
+  it("returns body-free readiness candidates from local snapshots", async () => {
     const dataDir = createTempDir();
-    initializeLoopRelay({ dataDir });
-    const storage = createSqlitePromptStorage({ dataDir });
-    storage.createLoopSnapshot(snapshot());
+    const init = initializeLoopRelay({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: init.hookAuth.web_session_secret,
+    });
+    const event = normalizeCodexPayload({
+      session_id: "session-benchmark",
+      cwd: "/private/project",
+      hook_event_name: "UserPromptSubmit",
+      prompt: "Inspect the focused behavior.",
+    });
+    const stored = await storage.storePrompt({
+      event,
+      redaction: redactPrompt(event.prompt, "mask"),
+    });
+    storage.createLoopSnapshot(snapshot(stored.id));
     storage.close();
 
     const result = getBenchmarkCandidatesTool({ limit: 10 }, { dataDir });
@@ -34,7 +49,7 @@ describe("get_benchmark_candidates MCP tool", () => {
       candidate_count: 1,
       candidates: [
         {
-          prompt_id: "prmt_mcp_candidate",
+          prompt_id: stored.id,
           snapshot_id: "loop_mcp_candidate",
           outcome_status: "passed",
         },
@@ -72,7 +87,7 @@ function createTempDir(): string {
   return dir;
 }
 
-function snapshot(): LoopSnapshot {
+function snapshot(promptId: string): LoopSnapshot {
   return {
     id: "loop_mcp_candidate",
     created_at: "2026-07-10T00:00:00.000Z",
@@ -80,14 +95,14 @@ function snapshot(): LoopSnapshot {
     source: "cli",
     cwd_label: "private-project",
     project_id: "proj_mcp_candidate",
-    prompt_ids: ["prmt_mcp_candidate"],
+    prompt_ids: [promptId],
     event_counts: { prompts: 1, tests_run: 2 },
     quality: { top_gaps: [], unresolved_questions: [] },
     outcome: {
       status: "passed",
       summary: "Private outcome summary",
       evidence_refs: ["test:private-ref"],
-      used_improvement_prompt_ids: ["prmt_mcp_candidate"],
+      used_improvement_prompt_ids: [promptId],
     },
     next_brief: { generated: false, summary: "Continue local work." },
     privacy: {

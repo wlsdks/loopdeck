@@ -12,8 +12,13 @@ describe("benchmark pair-candidates CLI", () => {
     const json = benchmarkPairCandidatesForCli(
       { json: true, limit: "10" },
       () => snapshots,
+      (promptIds) => new Set(promptIds),
     );
-    const text = benchmarkPairCandidatesForCli({}, () => snapshots);
+    const text = benchmarkPairCandidatesForCli(
+      {},
+      () => snapshots,
+      (promptIds) => new Set(promptIds),
+    );
 
     expect(JSON.parse(json)).toMatchObject({
       status: "ready",

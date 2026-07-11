@@ -104,8 +104,11 @@ directional report. The command does not infer task equivalence or causality.
 The report also exposes body-free stage counts for completed, attributed,
 evidence-complete, and safe snapshots. A non-ready status distinguishes
 `no_completed_outcomes`, `no_attributed_outcomes`,
-`incomplete_outcome_evidence`, and `unsafe_outcome_evidence` so missing real
-effectiveness evidence is not mislabeled as an attribution failure.
+`incomplete_outcome_evidence`, `unsafe_outcome_evidence`, and
+`missing_prompt_records` so missing real effectiveness evidence is not
+mislabeled as an attribution failure. Snapshot prompt ids count only when the
+corresponding live local prompt record still exists; orphan ids are excluded
+from CLI, MCP, and web readiness results without returning prompt bodies.
 
 The web Loops view reads the same bounded candidate model through
 `/api/v1/loops` and displays only staged readiness counts, status, and the next

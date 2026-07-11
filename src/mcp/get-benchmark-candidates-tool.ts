@@ -60,6 +60,7 @@ export const GET_BENCHMARK_CANDIDATES_TOOL_DEFINITION: LoopRelayMcpToolDefinitio
             "no_attributed_outcomes",
             "incomplete_outcome_evidence",
             "unsafe_outcome_evidence",
+            "missing_prompt_records",
             "empty_archive",
           ],
         },
@@ -86,6 +87,7 @@ export const GET_BENCHMARK_CANDIDATES_TOOL_DEFINITION: LoopRelayMcpToolDefinitio
           },
         },
         excluded_unsafe_candidates: { type: "integer", minimum: 0 },
+        excluded_missing_candidates: { type: "integer", minimum: 0 },
         diagnostics: {
           type: "object",
           required: [
@@ -145,6 +147,7 @@ export const GET_BENCHMARK_CANDIDATES_TOOL_DEFINITION: LoopRelayMcpToolDefinitio
             "candidate_count",
             "candidates",
             "excluded_unsafe_candidates",
+            "excluded_missing_candidates",
             "diagnostics",
             "has_more",
             "scope",
@@ -183,6 +186,7 @@ export function getBenchmarkCandidatesTool(
       return createBenchmarkCandidateReport(
         storage.listLoopSnapshots({ limit: 100 }).items,
         limit,
+        (promptId) => storage.getPrompt(promptId) !== undefined,
       );
     } finally {
       storage.close();

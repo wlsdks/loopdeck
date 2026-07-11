@@ -52,6 +52,9 @@ function readinessLabel(readiness: BenchmarkReadiness): string {
   if (readiness.status === "unsafe_outcome_evidence") {
     return "Outcome evidence needs redaction";
   }
+  if (readiness.status === "missing_prompt_records") {
+    return "Prompt records need recovery";
+  }
   return "No loop snapshots";
 }
 

@@ -8,10 +8,12 @@ export type BenchmarkCandidateReport = {
     | "no_attributed_outcomes"
     | "incomplete_outcome_evidence"
     | "unsafe_outcome_evidence"
+    | "missing_prompt_records"
     | "empty_archive";
   candidate_count: number;
   candidates: BenchmarkCandidate[];
   excluded_unsafe_candidates: number;
+  excluded_missing_candidates: number;
   diagnostics: {
     completed_snapshots: number;
     attributed_snapshots: number;
@@ -47,9 +49,11 @@ const DEFAULT_CANDIDATE_LIMIT = 20;
 export function createBenchmarkCandidateReport(
   snapshots: LoopSnapshot[],
   requestedLimit = DEFAULT_CANDIDATE_LIMIT,
+  promptExists: (promptId: string) => boolean = () => true,
 ): BenchmarkCandidateReport {
   const candidatesByPromptId = new Map<string, BenchmarkCandidate>();
   const unsafePromptIds = new Set<string>();
+  const missingPromptIds = new Set<string>();
   const diagnostics = {
     completed_snapshots: 0,
     attributed_snapshots: 0,
@@ -89,7 +93,12 @@ export function createBenchmarkCandidateReport(
         unsafePromptIds.add(promptId);
         continue;
       }
+      if (!promptExists(promptId)) {
+        missingPromptIds.add(promptId);
+        continue;
+      }
       unsafePromptIds.delete(promptId);
+      missingPromptIds.delete(promptId);
       candidatesByPromptId.set(promptId, {
         prompt_id: promptId,
         snapshot_id: snapshot.id,
@@ -106,6 +115,7 @@ export function createBenchmarkCandidateReport(
     scopedSnapshots.length,
     allCandidates.length,
     diagnostics,
+    missingPromptIds.size,
   );
 
   return {
@@ -113,6 +123,9 @@ export function createBenchmarkCandidateReport(
     candidate_count: allCandidates.length,
     candidates: allCandidates.slice(0, limit),
     excluded_unsafe_candidates: Array.from(unsafePromptIds).filter(
+      (promptId) => !candidatesByPromptId.has(promptId),
+    ).length,
+    excluded_missing_candidates: Array.from(missingPromptIds).filter(
       (promptId) => !candidatesByPromptId.has(promptId),
     ).length,
     diagnostics,
@@ -136,6 +149,7 @@ function candidateStatus(
   snapshotCount: number,
   candidateCount: number,
   diagnostics: BenchmarkCandidateReport["diagnostics"],
+  missingPromptCount: number,
 ): BenchmarkCandidateReport["status"] {
   if (snapshotCount === 0) return "empty_archive";
   if (candidateCount > 0) return "ready";
@@ -145,6 +159,9 @@ function candidateStatus(
   }
   if (diagnostics.evidence_complete_snapshots === 0) {
     return "incomplete_outcome_evidence";
+  }
+  if (missingPromptCount > 0 && diagnostics.safe_snapshots > 0) {
+    return "missing_prompt_records";
   }
   return "unsafe_outcome_evidence";
 }
@@ -169,6 +186,9 @@ function nextAction(status: BenchmarkCandidateReport["status"]): string {
   }
   if (status === "incomplete_outcome_evidence") {
     return "Record at least one privacy-safe evidence ref on an attributed passed or failed outcome.";
+  }
+  if (status === "missing_prompt_records") {
+    return "Rebuild the local prompt index or collect a new verified loop whose prompt record is still available.";
   }
   return "Replace sensitive outcome evidence with privacy-safe labels before preparing a benchmark fixture.";
 }

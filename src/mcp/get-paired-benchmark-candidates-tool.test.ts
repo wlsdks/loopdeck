@@ -6,7 +6,9 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { initializeLoopRelay } from "../config/config.js";
+import { normalizeCodexPayload } from "../adapters/codex.js";
 import type { LoopSnapshot } from "../loop/types.js";
+import { redactPrompt } from "../redaction/redact.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import {
   GET_PAIRED_BENCHMARK_CANDIDATES_TOOL_DEFINITION,
@@ -57,12 +59,17 @@ describe("get_paired_benchmark_candidates MCP tool", () => {
     ).not.toContain('"snapshot_id"');
   });
 
-  it("returns separate body-free baseline and LoopRelay candidates", () => {
+  it("returns separate body-free baseline and LoopRelay candidates", async () => {
     const dataDir = createTempDir();
-    initializeLoopRelay({ dataDir });
-    const storage = createSqlitePromptStorage({ dataDir });
-    storage.createLoopSnapshot(snapshot("loop_lane", "prmt_lane", true));
-    storage.createLoopSnapshot(snapshot("loop_base", "prmt_base", false));
+    const init = initializeLoopRelay({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: init.hookAuth.web_session_secret,
+    });
+    const laneId = await storePrompt(storage, "session-lane");
+    const baseId = await storePrompt(storage, "session-base");
+    storage.createLoopSnapshot(snapshot("loop_lane", laneId, true));
+    storage.createLoopSnapshot(snapshot("loop_base", baseId, false));
     storage.close();
 
     const result = getPairedBenchmarkCandidatesTool({ limit: 10 }, { dataDir });
@@ -70,8 +77,8 @@ describe("get_paired_benchmark_candidates MCP tool", () => {
 
     expect(result).toMatchObject({
       status: "ready",
-      baseline_candidates: [{ prompt_id: "prmt_base" }],
-      looprelay_candidates: [{ prompt_id: "prmt_lane" }],
+      baseline_candidates: [{ prompt_id: baseId }],
+      looprelay_candidates: [{ prompt_id: laneId }],
       privacy: {
         local_only: true,
         external_calls: false,
@@ -100,6 +107,24 @@ function createTempDir(): string {
   const dir = join(tmpdir(), `looprelay-mcp-paired-${randomUUID()}`);
   tempDirs.push(dir);
   return dir;
+}
+
+async function storePrompt(
+  storage: ReturnType<typeof createSqlitePromptStorage>,
+  sessionId: string,
+): Promise<string> {
+  const event = normalizeCodexPayload({
+    session_id: sessionId,
+    cwd: "/private/project",
+    hook_event_name: "UserPromptSubmit",
+    prompt: "Inspect the focused behavior.",
+  });
+  return (
+    await storage.storePrompt({
+      event,
+      redaction: redactPrompt(event.prompt, "mask"),
+    })
+  ).id;
 }
 
 function snapshot(
