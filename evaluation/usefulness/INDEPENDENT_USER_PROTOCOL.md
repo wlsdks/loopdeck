@@ -7,6 +7,10 @@ The maintainer provides one candidate tarball and its SHA-256. The participant
 uses a fresh temporary directory and does not share prompts, command output,
 paths, usernames, repository names, or free-form notes.
 
+For the currently validated candidate, use the versioned handoff file in this
+directory and verify its checksum before starting. A handoff is validation-only
+and never authorizes publishing or moving an existing tag.
+
 ## Participant flow
 
 1. Start a timer before installation.
@@ -42,7 +46,9 @@ pnpm --silent evidence:participant-intake -- --template
 
 Replace only the typed values. Use a random label such as `participant-k7m2`;
 never use a name, email, handle, hostname, or project label. Do not add fields or
-notes. Validate the file before sending it to the maintainer:
+notes. `independence_confirmed` defaults to `false`; change it to `true` only
+after personally confirming the independence rule below. Validate the file
+before sending it to the maintainer:
 
 ```bash
 pnpm --silent evidence:participant-intake -- participant-result.json

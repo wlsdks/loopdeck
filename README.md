@@ -48,7 +48,11 @@ See the [raw-free pair ledger](reports/usefulness-pairs.json),
 [evaluation protocol](docs/ENGINEERING_USEFULNESS_VALIDATION_2026-07-11.md).
 Independent humans use the
 [install-to-first-value protocol](evaluation/usefulness/INDEPENDENT_USER_PROTOCOL.md);
-agent operators do not satisfy that gate.
+agent operators do not satisfy that gate. The current validation-only
+[participant handoff](evaluation/usefulness/PARTICIPANT_HANDOFF_12c0bbcc.md)
+pins candidate commit `12c0bbcc` and its checksum. Its isolated maintainer
+smoke reached first value in 8.36 seconds with zero raw-path hits, but still
+counts as 0/3 independent humans and does not authorize release.
 
 ### Sol-planned, Terra-executed reproduction
 

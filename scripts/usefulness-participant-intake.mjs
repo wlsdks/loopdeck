@@ -60,7 +60,7 @@ export function normalizeParticipantResult(input) {
 export function participantTemplate() {
   return {
     participant_id: "participant-ab12",
-    independence_confirmed: true,
+    independence_confirmed: false,
     install_success: false,
     first_value_success: false,
     install_elapsed_ms: 0,

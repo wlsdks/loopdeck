@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-11 LoopRelay Independent Human Candidate
+
+- [x] CHECK: the ten-pair real-task threshold is complete, but independent
+  humans remain 0/3 and maintainer or agent-operator runs must not count.
+- [x] PACK: preserve one validation-only tarball from commit `12c0bbcc` with a
+  committed SHA-256 manifest; do not authorize release or move `v1.0.0`.
+- [x] SMOKE: reproduce install-to-first-value with an empty HOME, isolated npm
+  prefix, supported Node runtime, and fresh Git repository.
+- [x] RED/GREEN: require participants to affirm independence explicitly instead
+  of shipping a result template that defaults the assertion to true.
+- [x] DOCS: link the versioned participant handoff and record the 8.36-second
+  maintainer smoke without presenting it as independent-human evidence.
+- [x] VERIFY: run focused participant-intake, privacy, lint, checksum, and diff
+  gates; do not run the one-time full release gate.
+
 ## 2026-07-10 LoopRelay Health Instance Contract
 
 - [x] CHECK: live health returns a boot `instance_id` used by SessionStart web

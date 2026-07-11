@@ -502,8 +502,18 @@ raw-free cost and tool metrics. The synthetic fixture contract and output
 schema are under `evaluation/usefulness/`; raw Codex events and answer bodies
 remain outside Git.
 
-Three independent human install-to-first-value sessions are still required. Rendered
-desktop/mobile QA is also pending because the in-app browser runtime did not
-start in this session. Neither requirement may be replaced with maintainer
-dogfood. The full release gate must run only once, on the final candidate after
-these blockers are closed.
+Three independent human install-to-first-value sessions are still required.
+Candidate commit `12c0bbcc` has a validation-only tarball with the SHA-256
+recorded in `reports/independent-user-candidate.json` and a versioned handoff at
+`evaluation/usefulness/PARTICIPANT_HANDOFF_12c0bbcc.md`. Its isolated maintainer
+smoke used an empty HOME, isolated npm prefix, Node 22.22.0, and a fresh Git
+repository. Installation and first continuation value succeeded in 8.36
+seconds with zero raw-path hits and no privacy, data-loss, or install blocker.
+It deliberately counts as zero independent humans. One earlier harness-only
+`jq` precedence failure is retained as excluded setup error because the product
+commands in that attempt succeeded.
+
+Rendered desktop/mobile QA is also pending because the in-app browser runtime
+did not start in this session. Neither requirement may be replaced with
+maintainer dogfood. The full release gate must run only once, on the final
+candidate after these blockers are closed.
