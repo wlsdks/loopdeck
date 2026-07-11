@@ -11191,5 +11191,18 @@
       counts and invalidate any snapshot-only pair claims.
 - [x] COMPAT: Re-run clean Node 22/24 package, Codex, Claude Code, doctor, and
       MCP regression checks after the integrity fix.
-- [ ] EVIDENCE: Begin collecting genuine matched pairs across at least three
+- [x] EVIDENCE: Begin collecting genuine matched pairs across at least three
       real task types without treating observational data as causal proof.
+
+## 2026-07-11 Human-Visible Engineering Value Validation
+
+- [x] BASELINE: Measure the current Loops first-view comprehension and primary
+      action flow in the rendered app and CLI without changing product code.
+- [x] RUBRIC: Evaluate task recovery, repeated-failure prevention, evidence
+      confidence, time-to-next-action, and operator friction with human review.
+- [x] RED/GREEN: Make the smallest runtime change that lets an operator see
+      what is managed, what needs attention, and whether value is evidenced.
+- [x] PAIR: Collect the first reproducible baseline/treatment pair for a real
+      continuity task, preserving live prompt records and explicit consent.
+- [ ] QA: Verify the target interaction on desktop and mobile with no console,
+      overflow, privacy, or compatibility regression.

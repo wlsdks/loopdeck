@@ -228,7 +228,10 @@ describe("loop CLI command", () => {
       cwd: "/Users/example/private-project",
     });
 
-    const text = loopBriefForCli({ dataDir });
+    const text = loopBriefForCli({
+      dataDir,
+      cwd: "/Users/example/private-project",
+    });
 
     expect(text).toContain("Continue agent loop");
     expect(text).toContain("## Goal");
@@ -263,7 +266,10 @@ describe("loop CLI command", () => {
     loopMemoryApproveForCli({ dataDir, approvedBy: "user" });
     seedOtherProjectMemory(dataDir);
 
-    const text = loopBriefForCli({ dataDir });
+    const text = loopBriefForCli({
+      dataDir,
+      cwd: "/Users/example/private-project",
+    });
 
     expect(text).toContain("## Approved Loop Memories");
     expect(text).toContain(
@@ -274,6 +280,34 @@ describe("loop CLI command", () => {
     );
     expect(text).not.toContain("Make this better");
     expect(text).not.toContain("/Users/example");
+  });
+
+  it("selects the latest brief from the current project by default", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    const current = JSON.parse(
+      loopCollectForCli({
+        dataDir,
+        cwd: "/Users/example/private-project",
+        cwdPrefix: "/Users/example/private-project",
+        json: true,
+        now: new Date("2026-07-04T01:00:00.000Z"),
+      }),
+    ) as { id: string };
+    loopCollectForCli({
+      dataDir,
+      cwd: "/Users/example/other-project",
+      cwdPrefix: "/Users/example/other-project",
+      now: new Date("2026-07-04T02:00:00.000Z"),
+    });
+
+    const text = loopBriefForCli({
+      dataDir,
+      cwd: "/Users/example/private-project",
+    });
+    expect(text).toContain(`Continue agent loop ${current.id}`);
+    expect(text).toContain("project: private-project");
+    expect(text).not.toContain("other-project");
   });
 
   it("prints a continuation brief for the selected worktree session and branch", async () => {
@@ -295,6 +329,7 @@ describe("loop CLI command", () => {
 
     const text = loopBriefForCli({
       dataDir,
+      cwd: "/Users/example/private-project",
       worktree: "selected-worktree",
       session: "session-loop-cli",
       branch: "feature/selected-loop",
@@ -390,7 +425,10 @@ describe("loop CLI command", () => {
     });
     seedCompactBoundary(dataDir);
 
-    const text = loopBriefForCli({ dataDir });
+    const text = loopBriefForCli({
+      dataDir,
+      cwd: "/Users/example/private-project",
+    });
 
     expect(text).toContain("## Compaction Boundary");
     expect(text).toContain("PostCompact at 2026-07-04T01:05:00.000Z");
@@ -425,7 +463,12 @@ describe("loop CLI command", () => {
     seedOtherProjectMemory(dataDir);
     seedCompactBoundary(dataDir);
 
-    const text = loopStatusForCli({ dataDir });
+    const text = loopStatusForCli({
+      dataDir,
+      allProjects: true,
+      cwd: "/Users/example/private-project",
+      verbose: true,
+    });
 
     expect(text).toContain("LoopRelay status ready");
     expect(text).toContain("snapshots 2");
@@ -474,7 +517,12 @@ describe("loop CLI command", () => {
     expect(text).not.toContain("Compact summary with sk-proj-secret");
     expect(text).not.toContain("/Users/example");
 
-    const json = loopStatusForCli({ dataDir, json: true });
+    const json = loopStatusForCli({
+      allProjects: true,
+      dataDir,
+      cwd: "/Users/example/private-project",
+      json: true,
+    });
     const parsed = JSON.parse(json) as {
       latest_snapshot?: { outcome_status?: string };
       activity?: {
@@ -657,7 +705,11 @@ describe("loop CLI command", () => {
       }),
     ) as { id: string };
 
-    const text = loopStatusForCli({ dataDir });
+    const text = loopStatusForCli({
+      dataDir,
+      cwd: "/Users/example/private-project",
+      verbose: true,
+    });
 
     expect(text).toContain("Next actions:");
     expect(text).toContain(
@@ -677,9 +729,49 @@ describe("loop CLI command", () => {
 
     const text = loopStatusForCli({ dataDir });
 
-    expect(text).toContain("LoopRelay status empty");
-    expect(text).toContain("snapshots 0");
+    expect(text).toContain("LoopRelay · empty");
+    expect(text).toContain("Managed: 0 snapshots");
     expect(text).toContain("Next: looprelay loop collect");
+  });
+
+  it("defaults to a compact current-project summary and preserves global verbose diagnostics", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    loopCollectForCli({
+      dataDir,
+      cwd: "/Users/example/private-project",
+      cwdPrefix: "/Users/example/private-project",
+      now: new Date("2026-07-04T01:00:00.000Z"),
+    });
+    loopCollectForCli({
+      dataDir,
+      cwd: "/Users/example/other-project",
+      cwdPrefix: "/Users/example/other-project",
+      now: new Date("2026-07-04T02:00:00.000Z"),
+    });
+
+    const compact = loopStatusForCli({
+      dataDir,
+      cwd: "/Users/example/private-project",
+    });
+    expect(compact).toContain("LoopRelay · ready");
+    expect(compact).toContain("Managed: 1 snapshot · 1 session");
+    expect(compact).toContain("Attention:");
+    expect(compact).toContain("Evidence: completed outcomes needed");
+    expect(compact).toContain("Latest: private-project · unknown");
+    expect(compact).toContain("Next: looprelay loop outcome --snapshot-id");
+    expect(compact).not.toContain("other-project");
+    expect(compact).not.toContain("prompt ids");
+    expect(compact.split("\n")).toHaveLength(8);
+
+    const global = loopStatusForCli({
+      allProjects: true,
+      dataDir,
+      cwd: "/Users/example/private-project",
+      verbose: true,
+    });
+    expect(global).toContain("snapshots 2");
+    expect(global).toContain("project other-project");
   });
 
   it("prints a privacy-safe memory candidate decision for the latest passed loop", async () => {

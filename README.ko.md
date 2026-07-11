@@ -680,6 +680,10 @@ MCP server는 22개의 tool을 제공합니다.
 - `record_agent_judgments`: 현재 agent 세션이 만든 advisory score와 제안을 prompt body/raw path 없이 저장합니다.
 
 CLI만 사용하는 경우에도 검증 결과를 기록한 뒤 승인형 memory 흐름을 이어갈 수 있습니다.
+기본 `looprelay loop status`와 `looprelay loop brief`는 현재 프로젝트만
+선택하므로 다른 로컬 프로젝트의 더 최신 session이 continuation을 가로채지
+않습니다. status는 Managed/Attention/Evidence/Latest/Next 요약만 보여주며,
+상세 진단은 `--verbose`, 전체 프로젝트 관제는 `--all-projects`로 명시합니다.
 `looprelay loop status`는 최신 snapshot이 `unknown` 또는 `in_progress`이면
 검증 가능한 checkpoint에 도달한 뒤 해당 snapshot id로 outcome을 기록하라고
 안내합니다. 중간 hook snapshot 전체를 outcome backlog로 표시하지 않습니다.

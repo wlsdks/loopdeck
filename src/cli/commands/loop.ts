@@ -1,5 +1,9 @@
 import type { Command } from "commander";
 
+import {
+  createBenchmarkPairCandidateReport,
+  type BenchmarkPairCandidateReport,
+} from "../../analysis/benchmark-pair-candidates.js";
 import { loadHookAuth, loadLoopRelayConfig } from "../../config/config.js";
 import {
   createLoopBrief,
@@ -37,11 +41,13 @@ import {
 } from "../../loop/status.js";
 import type { LoopSnapshot, LoopSnapshotSource } from "../../loop/types.js";
 import type { LoopMergeDecisionValue } from "../../storage/loop-decisions.js";
+import { createProjectKey } from "../../storage/project-id.js";
 import { createSqlitePromptStorage } from "../../storage/sqlite.js";
 import { registerLoopScheduleCommand } from "./loop-schedule.js";
 import { UserError } from "../user-error.js";
 
 type LoopCliOptions = {
+  allProjects?: boolean;
   branch?: string;
   cwd?: string;
   cwdPrefix?: string;
@@ -66,6 +72,7 @@ type LoopCliOptions = {
   usedImprovementPrompt?: string[];
   usedImprovementPromptIds?: string[];
   snapshotId?: string;
+  verbose?: boolean;
 };
 
 export function registerLoopCommand(program: Command): void {
@@ -77,6 +84,8 @@ export function registerLoopCommand(program: Command): void {
     .command("status")
     .description("Show local LoopRelay snapshot readiness.")
     .option("--data-dir <path>", "Override the looprelay data directory.")
+    .option("--all-projects", "Include snapshots from every local project.")
+    .option("--verbose", "Show detailed worktree and evidence diagnostics.")
     .option("--json", "Print JSON.")
     .action((options: LoopCliOptions) => {
       console.log(loopStatusForCli(options));
@@ -116,6 +125,7 @@ export function registerLoopCommand(program: Command): void {
       "--branch <name>",
       "Select the newest snapshot for this branch label.",
     )
+    .option("--all-projects", "Allow selection across every local project.")
     .action((options: LoopCliOptions) => {
       console.log(loopBriefForCli(options));
     });
@@ -270,8 +280,17 @@ export function loopCollectForCli(options: LoopCliOptions = {}): string {
 }
 
 export function loopStatusForCli(options: LoopCliOptions = {}): string {
-  return withStorage(options.dataDir, (storage) => {
-    const snapshots = storage.listLoopSnapshots({ limit: 100 }).items;
+  return withStorage(options.dataDir, (storage, hmacSecret) => {
+    const allSnapshots = storage.listLoopSnapshots({ limit: 100 }).items;
+    const currentProjectId = createProjectKey(
+      options.cwd ?? process.cwd(),
+      hmacSecret,
+    );
+    const snapshots = options.allProjects
+      ? allSnapshots
+      : allSnapshots.filter(
+          (snapshot) => snapshot.project_id === currentProjectId,
+        );
     const latest = snapshots.at(0);
     const status = createLoopRelayStatus({
       snapshots,
@@ -281,29 +300,52 @@ export function loopStatusForCli(options: LoopCliOptions = {}): string {
             .length
         : 0,
       memoryCandidate: latest ? decideLoopMemoryCandidate(latest) : undefined,
-      mergeDecisions: storage.listLoopMergeDecisions({ limit: 3 }).items,
+      mergeDecisions: storage.listLoopMergeDecisions({
+        limit: 3,
+        ...(latest && !options.allProjects
+          ? { projectId: latest.project_id }
+          : {}),
+      }).items,
     });
+    const pairReadiness = createBenchmarkPairCandidateReport(
+      snapshots,
+      20,
+      (promptId) => storage.getPrompt(promptId) !== undefined,
+    );
 
     return options.json
       ? JSON.stringify(status, null, 2)
-      : formatLoopStatus(status);
+      : options.verbose
+        ? formatVerboseLoopStatus(status)
+        : formatLoopStatus(
+            status,
+            pairReadiness,
+            options.allProjects === true,
+          );
   });
 }
 
 export function loopBriefForCli(options: LoopCliOptions = {}): string {
-  return withStorage(options.dataDir, (storage) => {
+  return withStorage(options.dataDir, (storage, hmacSecret) => {
     const selection = {
       worktree: options.worktree,
       sessionId: options.session,
       branch: options.branch,
     };
     const hasSelection = hasLoopSnapshotSelection(selection);
+    const currentProjectId = createProjectKey(
+      options.cwd ?? process.cwd(),
+      hmacSecret,
+    );
+    const snapshots = storage
+      .listLoopSnapshots({ limit: 100 })
+      .items.filter(
+        (snapshot) =>
+          options.allProjects || snapshot.project_id === currentProjectId,
+      );
     const snapshot = hasSelection
-      ? selectLoopSnapshot(
-          storage.listLoopSnapshots({ limit: 100 }).items,
-          selection,
-        )
-      : storage.getLatestLoopSnapshot();
+      ? selectLoopSnapshot(snapshots, selection)
+      : snapshots.at(0);
     if (!snapshot) {
       throw new UserError(
         hasSelection
@@ -680,7 +722,74 @@ function formatLoopSnapshot(snapshot: LoopSnapshot): string {
   ].join("\n");
 }
 
-function formatLoopStatus(status: LoopRelayStatus): string {
+function formatLoopStatus(
+  status: LoopRelayStatus,
+  pairReadiness: BenchmarkPairCandidateReport,
+  allProjects: boolean,
+): string {
+  const latest = status.latest_snapshot;
+  const failureCount = status.failure_patterns?.reduce(
+    (total, pattern) => total + pattern.occurrences,
+    0,
+  );
+  const attention = status.activity.needs_review
+    ? "Worktree review needed"
+    : failureCount
+      ? `${failureCount} recurring failure ${failureCount === 1 ? "occurrence" : "occurrences"}`
+      : latest && latest.outcome_status !== "passed"
+        ? "Outcome checkpoint pending"
+        : "No immediate review";
+  const snapshotLabel = status.snapshot_count === 1 ? "snapshot" : "snapshots";
+  const sessionLabel =
+    status.activity.active_sessions === 1 ? "session" : "sessions";
+  const checkpointAction = status.next_actions
+    .find((action) => action.includes("looprelay loop outcome --snapshot-id"))
+    ?.match(/looprelay loop outcome --snapshot-id [A-Za-z0-9_-]+/)?.[0];
+  const nextAction =
+    latest && (latest.outcome_status === "unknown" || latest.outcome_status === "in_progress")
+      ? checkpointAction ?? status.next_action
+      : status.next_action;
+
+  return [
+    `LoopRelay · ${status.status}`,
+    `Scope: ${allProjects ? "all local projects" : "current project"}`,
+    `Managed: ${status.snapshot_count} ${snapshotLabel} · ${status.activity.active_sessions} ${sessionLabel} · ${status.project_memory.approved_count} approved lessons`,
+    `Attention: ${attention}`,
+    `Evidence: ${formatPairReadiness(pairReadiness)}`,
+    `Latest: ${latest ? `${latest.project} · ${latest.outcome_status}` : "none"}`,
+    `Next: ${nextAction}`,
+    "Privacy: local-only; prompt bodies and raw paths stay hidden.",
+  ].join("\n");
+}
+
+function formatPairReadiness(
+  readiness: BenchmarkPairCandidateReport,
+): string {
+  if (readiness.status === "ready") {
+    return `${readiness.baseline_candidate_count} baseline · ${readiness.looprelay_candidate_count} LoopRelay · pair review ready`;
+  }
+  if (readiness.status === "no_completed_outcomes") {
+    return "completed outcomes needed";
+  }
+  if (readiness.status === "incomplete_outcome_evidence") {
+    return "outcome evidence incomplete";
+  }
+  if (readiness.status === "missing_prompt_records") {
+    return "prompt records need recovery";
+  }
+  if (readiness.status === "needs_baseline") {
+    return "comparable baseline needed";
+  }
+  if (readiness.status === "needs_looprelay") {
+    return "LoopRelay-assisted outcome needed";
+  }
+  if (readiness.status === "unsafe_outcome_evidence") {
+    return "outcome evidence needs redaction";
+  }
+  return "no evaluated loops yet";
+}
+
+function formatVerboseLoopStatus(status: LoopRelayStatus): string {
   return [
     `LoopRelay status ${status.status}`,
     `snapshots ${status.snapshot_count}`,

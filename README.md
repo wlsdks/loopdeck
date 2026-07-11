@@ -880,10 +880,15 @@ rejected instead of falling back to global latest.
 Outcome summaries and evidence refs are trimmed, deduplicated, and rejected
 before persistence when they contain secrets or raw local paths. The outcome
 command defaults to the latest snapshot and accepts `--snapshot-id` or optional
-`--worktree`, `--session`, and `--branch` selectors. `looprelay loop brief` accepts optional
+`--worktree`, `--session`, and `--branch` selectors. Plain
+`looprelay loop status` and `looprelay loop brief` default to the current
+project so a newer unrelated local session cannot take over the continuation
+flow. Status prints a compact Managed/Attention/Evidence/Latest/Next summary;
+use `--verbose` for detailed diagnostics or `--all-projects` for explicit
+cross-project inspection. `looprelay loop brief` accepts optional
 `--worktree`, `--session`, and `--branch` filters so a continuation prompt can
 resume the same worktree/session/branch selected in the Loops view instead of
-falling back to the global latest snapshot. Use
+falling back to an unrelated latest snapshot. Use
 `looprelay loop instruction-patch --target-file AGENTS.md` to generate the
 review-only instruction patch from the latest approved memory. Use
 `looprelay loop instruction-apply --target-file AGENTS.md --confirm-apply`
