@@ -318,8 +318,22 @@ try {
     );
   }
 
-  await page.getByRole("button", { name: "Dashboard" }).click();
-  await page.getByRole("heading", { name: "Quality dashboard" }).waitFor();
+  await page.getByRole("button", { name: "Overview" }).click();
+  await page.getByRole("heading", { name: "Overview" }).waitFor();
+  await page.getByRole("heading", { name: "Loop health" }).waitFor();
+  await page.getByText("Evidence confidence").waitFor();
+  await page.getByText("Active worktrees").waitFor();
+  await captureScreenshot(page, "overview-loaded");
+  await page.getByRole("button", { name: "Open loop" }).click();
+  await page.getByRole("heading", { name: "Loops", level: 1 }).waitFor();
+  await page.getByRole("button", { name: "Overview" }).click();
+  await page.getByRole("heading", { name: "Overview" }).waitFor();
+  await assertChartVisible(page, "overview", 1);
+  await assertBrowserSafe(page, "overview");
+  await captureScreenshot(page, "overview-desktop");
+
+  await page.getByLabel("Evidence").click();
+  await page.getByRole("heading", { name: "Evidence" }).waitFor();
   // Archive score review is rendered inside a <details> panel that is
   // collapsed by default; open it before asserting on its contents.
   await page.getByRole("heading", { name: "Archive score review" }).click();
@@ -327,33 +341,33 @@ try {
   await assertText(
     page,
     "Average archive score",
-    "Dashboard should show average archive score after opening Archive score review.",
+    "Evidence should show average archive score after opening Archive score review.",
   );
   await assertText(
     page,
     "Effectiveness evidence",
-    "Dashboard should show archive-level prompt effectiveness evidence.",
+    "Evidence should show archive-level prompt effectiveness evidence.",
   );
   await assertText(
     page,
     "measured 1 / unmeasured 1",
-    "Dashboard should show measured vs unmeasured prompt effectiveness coverage.",
+    "Evidence should show measured vs unmeasured prompt effectiveness coverage.",
   );
   await assertText(
     page,
     "Link recent prompts to loop outcomes before claiming archive-wide effectiveness.",
-    "Dashboard should show the archive effectiveness next action.",
+    "Evidence should show the archive effectiveness next action.",
   );
-  await assertChartVisible(page, "dashboard", 1);
-  await assertBrowserSafe(page, "dashboard");
-  await captureScreenshot(page, "dashboard-desktop");
+  await assertChartVisible(page, "evidence", 1);
+  await assertBrowserSafe(page, "evidence");
+  await captureScreenshot(page, "evidence-desktop");
 
-  await page.getByRole("button", { name: "Coach", exact: true }).click();
-  await page.getByRole("heading", { name: "Prompt coach" }).waitFor();
+  await page.getByRole("button", { name: "Insights", exact: true }).click();
+  await page.getByRole("heading", { name: "Insights" }).waitFor();
   await assertTextAny(
     page,
-    ["Prompt improvement workspace", "프롬프트 개선 작업공간"],
-    "Coach should use the prompt improvement product identity.",
+    ["Patterns, practice, and adoption signals", "패턴, 연습, 채택 신호"],
+    "Insights should use the observed-improvement product identity.",
   );
   await page.getByText("Prompt habit command center").waitFor();
   await assertText(
@@ -403,11 +417,8 @@ try {
   await assertBrowserSafe(page, "coach");
   await captureScreenshot(page, "coach-desktop");
 
-  // The standalone Scores tab was dropped in PR #174 (dashboard nav-card
-  // cleanup). Archive score review now lives inside the Dashboard panel and
-  // is already exercised above. Practice plan, benchmark, insights, and
-  // import surfaces were removed at the same time, so there is nothing left
-  // to assert on between Coach and Projects.
+  // Evidence and Insights now have separate navigation ownership: archive
+  // evidence is checked above, while behavior and practice remain here.
 
   await page.getByRole("button", { name: "Projects", exact: true }).click();
   await page.getByRole("heading", { name: "Projects" }).waitFor();
@@ -605,6 +616,10 @@ try {
   await captureScreenshot(page, "settings-desktop");
 
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(`${serverBaseUrl}/dashboard`);
+  await page.getByRole("heading", { name: "Overview" }).waitFor();
+  await page.getByRole("heading", { name: "Loop health" }).waitFor();
+  await page.getByText("Evidence confidence").waitFor();
   const viewport = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
     innerWidth: window.innerWidth,
@@ -613,6 +628,10 @@ try {
     viewport.scrollWidth <= viewport.innerWidth,
     `Mobile layout should not overflow horizontally. scrollWidth=${viewport.scrollWidth}, innerWidth=${viewport.innerWidth}.`,
   );
+  await captureScreenshot(page, "overview-mobile");
+
+  await page.goto(`${serverBaseUrl}/settings`);
+  await page.getByRole("heading", { name: "Settings" }).waitFor();
   await captureScreenshot(page, "settings-mobile");
 
   assertEqual(

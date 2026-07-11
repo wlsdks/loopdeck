@@ -38,12 +38,14 @@ const loopDetail = {
 describe("workspace query", () => {
   it("loads projects only when the projects view has no cached rows", () => {
     expect(shouldLoadProjects("list", 0)).toBe(false);
+    expect(shouldLoadProjects("dashboard", 0)).toBe(true);
     expect(shouldLoadProjects("projects", 0)).toBe(true);
     expect(shouldLoadProjects("projects", 2)).toBe(false);
   });
 
   it("loads loop summaries only when the loops view has no cached response", () => {
     expect(shouldLoadLoops("list", false)).toBe(false);
+    expect(shouldLoadLoops("dashboard", false)).toBe(true);
     expect(shouldLoadLoops("loops", false)).toBe(true);
     expect(shouldLoadLoops("loops", true)).toBe(false);
   });
@@ -89,13 +91,13 @@ describe("workspace query", () => {
     ).toBe(false);
   });
 
-  it("navigates after selecting a different loop worktree scope", () => {
+  it("navigates to loops after selecting a worktree from any workspace", () => {
     expect(
       shouldNavigateLoopWorktree(
         { name: "list" },
         { worktree: "/workspace/looprelay" },
       ),
-    ).toBe(false);
+    ).toBe(true);
     expect(
       shouldNavigateLoopWorktree(
         { name: "loops", worktree: "/workspace/looprelay" },

@@ -32,19 +32,22 @@ export function getVisibleChrome(view: View): VisibleChrome {
     return { eyebrow: "Agent loop memory", title: "Loops" };
   }
   if (view.name === "scores") {
-    return { eyebrow: "Prompt habit analysis", title: "Prompt scores" };
+    return { eyebrow: "Observed outcomes and coverage", title: "Evidence" };
   }
   if (view.name === "coach") {
     return {
-      eyebrow: "Prompt improvement workspace",
-      title: "Prompt coach",
+      eyebrow: "Patterns, practice, and adoption signals",
+      title: "Insights",
     };
   }
   if (view.name === "detail") {
     return { eyebrow: "Local prompt archive", title: "Prompt detail" };
   }
   if (view.name === "dashboard") {
-    return { eyebrow: "Local prompt archive", title: "Quality dashboard" };
+    return {
+      eyebrow: "Local continuity and evidence layer",
+      title: "Overview",
+    };
   }
   return { eyebrow: "Local prompt archive", title: "Prompt archive" };
 }

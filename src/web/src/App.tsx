@@ -1,20 +1,4 @@
-import {
-  AlertTriangle,
-  BarChart3,
-  Copy,
-  Database,
-  Download,
-  FileText,
-  FolderCog,
-  ListChecks,
-  PanelLeftClose,
-  PanelLeftOpen,
-  RefreshCw,
-  Search,
-  Settings,
-  ShieldCheck,
-  Target,
-} from "lucide-react";
+import { Copy, Download, RefreshCw, Search } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { PromptImprovement } from "../../analysis/improve.js";
@@ -80,6 +64,7 @@ import {
   selectedLoopBriefErrorMessage,
 } from "./error-message.js";
 import { CoachFeedbackPanel } from "./coach-feedback-panel.js";
+import { CommandCenter } from "./command-center.js";
 import { createPromptHabitCoach } from "./habit-coach.js";
 import { HabitCoachPanel } from "./habit-coach-panel.js";
 import "./archive-effectiveness-summary.css";
@@ -90,6 +75,7 @@ import {
   type ArchiveMeasurement,
 } from "./measurement.js";
 import { PromptDetailView } from "./prompt-detail-view.js";
+import { PrimaryNavigation } from "./primary-navigation.js";
 import {
   GapRateChart,
   QualityTrendChart,
@@ -143,6 +129,7 @@ import {
   readSidebarCollapsed,
 } from "./sidebar-storage.js";
 import { useWorkspaceQuery } from "./workspace-query.js";
+import "./command-center.css";
 
 const LIVE_MEASUREMENT_REFRESH_MS = 12_000;
 export function App() {
@@ -200,6 +187,7 @@ export function App() {
   const navigate = useCallback((next: View): void => {
     const path = pathForView(next);
     window.history.pushState({}, "", path);
+    setError(undefined);
     setView(next);
   }, []);
   const { loading, nextCursor, prompts, refreshList, updatePrompt } =
@@ -737,110 +725,15 @@ export function App() {
       <a className="skip-link" href="#workspace">
         Skip to content
       </a>
-      <aside className="sidebar" aria-label="Primary navigation">
-        <div className="sidebar-header">
-          <div className="brand">
-            <Database size={16} />
-            <span className="sidebar-label">looprelay</span>
-          </div>
-          <button
-            aria-expanded={!sidebarCollapsed}
-            aria-label={
-              sidebarCollapsed ? "Expand navigation" : "Collapse navigation"
-            }
-            className="sidebar-toggle"
-            onClick={toggleSidebar}
-            type="button"
-          >
-            {sidebarCollapsed ? (
-              <PanelLeftOpen size={16} />
-            ) : (
-              <PanelLeftClose size={16} />
-            )}
-          </button>
-        </div>
-        <button
-          aria-label="Prompts"
-          className={`nav-button ${view.name === "list" ? "active" : ""}`}
-          onClick={() => navigate({ name: "list" })}
-        >
-          <FileText size={16} />
-          <span className="sidebar-label">Prompts</span>
-        </button>
-        <button
-          aria-label="Dashboard"
-          className={`nav-button ${view.name === "dashboard" ? "active" : ""}`}
-          onClick={() => navigate({ name: "dashboard" })}
-        >
-          <BarChart3 size={16} />
-          <span className="sidebar-label">Dashboard</span>
-        </button>
-        <button
-          aria-label="Coach"
-          className={`nav-button ${view.name === "coach" ? "active" : ""}`}
-          onClick={() => navigate({ name: "coach" })}
-        >
-          <Target size={16} />
-          <span className="sidebar-label">Coach</span>
-        </button>
-        <button
-          aria-label="Loops"
-          className={`nav-button ${view.name === "loops" ? "active" : ""}`}
-          onClick={() => navigate({ name: "loops" })}
-        >
-          <ListChecks size={16} />
-          <span className="sidebar-label">Loops</span>
-        </button>
-        <button
-          aria-label="Projects"
-          className={`nav-button ${view.name === "projects" ? "active" : ""}`}
-          onClick={() => navigate({ name: "projects" })}
-        >
-          <FolderCog size={16} />
-          <span className="sidebar-label">Projects</span>
-        </button>
-        <button
-          aria-label="Settings"
-          className={`nav-button ${
-            view.name === "settings" ||
-            view.name === "mcp" ||
-            view.name === "exports"
-              ? "active"
-              : ""
-          }`}
-          onClick={() => navigate({ name: "settings" })}
-        >
-          <Settings size={16} />
-          <span className="sidebar-label">Settings</span>
-        </button>
-        <div
-          className="capture-status"
-          aria-label={health?.ok ? "Server OK" : "Checking status"}
-        >
-          {health?.ok ? <ShieldCheck size={16} /> : <AlertTriangle size={16} />}
-          <span className="sidebar-label">
-            {health?.ok ? "Server OK" : "Checking status"}
-          </span>
-        </div>
-        <div className="language-switch" aria-label="Language">
-          <button
-            aria-pressed={language === "en"}
-            className={language === "en" ? "active" : ""}
-            onClick={() => setLanguage("en")}
-            type="button"
-          >
-            EN
-          </button>
-          <button
-            aria-pressed={language === "ko"}
-            className={language === "ko" ? "active" : ""}
-            onClick={() => setLanguage("ko")}
-            type="button"
-          >
-            KO
-          </button>
-        </div>
-      </aside>
+      <PrimaryNavigation
+        health={health}
+        language={language}
+        onNavigate={navigate}
+        onSetLanguage={setLanguage}
+        onToggleSidebar={toggleSidebar}
+        sidebarCollapsed={sidebarCollapsed}
+        view={view}
+      />
 
       <section className="workspace" id="workspace">
         <header className="topbar">
@@ -1038,7 +931,29 @@ export function App() {
             queueNavigation={queueNavigation}
           />
         )}
-        {(view.name === "dashboard" || view.name === "scores") && (
+        {view.name === "dashboard" && (
+          <CommandCenter
+            archiveScore={archiveScore}
+            dashboard={dashboard}
+            health={health}
+            loading={!dashboard}
+            loops={loops}
+            onChangeTrendDays={(days) => {
+              setTrendDays(days);
+              setDashboard(undefined);
+            }}
+            onMeasure={() => void measureArchive()}
+            onOpenEvidence={() => navigate({ name: "scores" })}
+            onOpenInsights={() => navigate({ name: "coach" })}
+            onOpenLoop={(worktree, branch) =>
+              void openLoopWorktree({ worktree, ...(branch ? { branch } : {}) })
+            }
+            onOpenProjects={() => navigate({ name: "projects" })}
+            projects={projects}
+            trendDays={trendDays}
+          />
+        )}
+        {view.name === "scores" && (
           <DashboardView
             archiveScore={archiveScore}
             coachFeedback={coachFeedback}

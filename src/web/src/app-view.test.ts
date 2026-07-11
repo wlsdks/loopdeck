@@ -16,6 +16,14 @@ describe("app view model", () => {
       eyebrow: "Agent-native coach tools",
       title: "MCP tools",
     });
+    expect(getVisibleChrome({ name: "dashboard" })).toEqual({
+      eyebrow: "Local continuity and evidence layer",
+      title: "Overview",
+    });
+    expect(getVisibleChrome({ name: "scores" })).toEqual({
+      eyebrow: "Observed outcomes and coverage",
+      title: "Evidence",
+    });
   });
 
   it("derives detail queue navigation from visible prompts", () => {
