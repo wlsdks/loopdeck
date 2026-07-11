@@ -170,7 +170,7 @@
     "esbuild": "0.28.1",
     "lucide-react": "^1.14.0",
     "playwright": "^1.59.1",
-    "prettier": "^3.5.3",
+    "prettier": "^3.9.5",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "typescript": "^6.0.3",
