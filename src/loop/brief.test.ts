@@ -28,6 +28,8 @@ describe("createLoopBrief", () => {
     expect(brief.prompt).toContain(
       "Run one unseen real-repository pair and keep it separate from synthetic cohorts.",
     );
+    expect(brief.prompt).toContain("## Checkpoint Evidence");
+    expect(brief.prompt).toContain("- commit:6c2be8b2");
     expect(
       brief.prompt.indexOf("## Selected Continuation Contract"),
     ).toBeLessThan(brief.prompt.indexOf("## Context"));
@@ -132,6 +134,27 @@ describe("createLoopBrief", () => {
       returns_prompt_bodies: false,
       returns_raw_paths: false,
     });
+  });
+
+  it("omits unsafe checkpoint evidence refs", () => {
+    const brief = createLoopBrief({
+      snapshot: loopSnapshot({
+        source: "cli",
+        outcome: {
+          status: "blocked",
+          summary: "Wait for verified release evidence.",
+          evidence_refs: [
+            "npm:release-missing",
+            "/Users/example/private-release.txt",
+            "sk-proj-secret",
+          ],
+        },
+      }),
+    });
+
+    expect(brief.prompt).toContain("- npm:release-missing");
+    expect(brief.prompt).not.toContain("/Users/example");
+    expect(brief.prompt).not.toContain("sk-proj-secret");
   });
 });
 

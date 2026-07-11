@@ -62,6 +62,7 @@ export function createLoopBrief(input: {
             "authority: explicit local checkpoint",
             safeOutcomeSummary(snapshot.outcome.summary),
             "",
+            ...checkpointEvidenceLines(snapshot.outcome.evidence_refs),
           ]
         : []),
       "## Context",
@@ -129,6 +130,18 @@ function safeOutcomeSummary(summary: string): string {
     return "Outcome summary omitted because it may contain local paths or secrets.";
   }
   return summary;
+}
+
+function checkpointEvidenceLines(evidenceRefs: readonly string[]): string[] {
+  const safeEvidenceRefs = evidenceRefs.filter(
+    (evidenceRef) => evidenceRef.trim() && !looksUnsafe(evidenceRef),
+  );
+  if (safeEvidenceRefs.length === 0) return [];
+  return [
+    "## Checkpoint Evidence",
+    ...safeEvidenceRefs.map((evidenceRef) => `- ${evidenceRef.trim()}`),
+    "",
+  ];
 }
 
 function approvedMemoryLines(

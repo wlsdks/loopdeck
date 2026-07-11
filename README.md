@@ -98,6 +98,14 @@ withheld edits. Position-swapped Sol review scored LoopRelay 8/8 and baseline
 is 10 pairs with at least two per type, and only one type currently meets that
 minimum. See the [generated real-task summary](reports/usefulness-real-task-summary.json).
 
+The fifth pair tested the live release boundary. Both conditions blocked
+release and both failed the exact-fact rubric; LoopRelay recovered more
+evidence blockers but cost slightly more and omitted public-artifact absence
+facts. This exposed that safe checkpoint evidence refs were stored but not
+rendered in the brief. They are now included under a privacy-filtered
+`Checkpoint Evidence` section. The aggregate is now five pairs across four
+types, still `INSUFFICIENT DATA` and still not a release authorization.
+
 After the npm package is published:
 
 ```sh

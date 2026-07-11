@@ -278,6 +278,70 @@
         "treatment-avoided-repository-rediscovery",
         "judge-preference-consistent-score-calibration-varied"
       ]
+    },
+    {
+      "id": "real-release-continuity-005",
+      "task_type": "release_verification_continuity",
+      "order": "looprelay_first",
+      "execution": {
+        "agent": "codex",
+        "agent_version": "0.144.1",
+        "model": "gpt-5.6-terra",
+        "reasoning_effort": "medium",
+        "sandbox": "read-only",
+        "fresh_session": true,
+        "repository_state": "commit:21059b35",
+        "ground_truth": "sol-preregistered-live-release-state"
+      },
+      "baseline": {
+        "passed": false,
+        "core_task_recovered": false,
+        "actionability": 0.5,
+        "elapsed_ms": 63590,
+        "time_to_first_value_ms": 63590,
+        "tool_calls": 4,
+        "failed_tool_calls": 1,
+        "input_tokens": 187355,
+        "cached_input_tokens": 108800,
+        "output_tokens": 1662,
+        "reasoning_output_tokens": 564,
+        "friction_count": 1,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false
+      },
+      "looprelay": {
+        "passed": false,
+        "core_task_recovered": false,
+        "actionability": 0.75,
+        "elapsed_ms": 65610,
+        "time_to_first_value_ms": 65610,
+        "tool_calls": 6,
+        "failed_tool_calls": 0,
+        "input_tokens": 218393,
+        "cached_input_tokens": 120320,
+        "output_tokens": 1950,
+        "reasoning_output_tokens": 698,
+        "friction_count": 1,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false,
+        "adopted": true
+      },
+      "human_preference": "looprelay",
+      "judge": {
+        "position_consistent": true,
+        "preference": "tie",
+        "baseline_pass": false,
+        "looprelay_pass": false
+      },
+      "finding_labels": [
+        "baseline-found-tag-head-mismatch",
+        "baseline-missed-evidence-gates-and-public-artifact-state",
+        "treatment-recovered-evidence-gates",
+        "treatment-missed-public-artifact-absence-and-suggested-versions",
+        "brief-omitted-checkpoint-evidence-refs"
+      ]
     }
   ]
 }

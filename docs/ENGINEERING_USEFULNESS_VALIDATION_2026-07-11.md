@@ -248,6 +248,31 @@ fail/fail pairs retained. The generated graph intentionally reports
 pairs per type, while only session recovery currently has two. These numbers
 are not pooled with either synthetic cohort and do not support a causal claim.
 
+## First Real Release-Continuity Pair
+
+Live read-only checks found that npm `looprelay@1.0.0` and GitHub Release
+`v1.0.0` do not exist, while the immutable local `v1.0.0` tag already targets
+main commit `106bbf899d8243f31e122a7496208b144bedc869`. The validation branch was
+at `21059b35`, independent-human evidence remained 0/3, and real-task evidence
+was 4/10 with only one of three types meeting per-type coverage. The correct
+release decision was therefore blocked: do not move the tag, publish, create a
+release, or run the final gate; finish evidence and later choose an unspecified
+new version that preserves the old tag.
+
+Both Terra conditions correctly blocked release but failed the full frozen
+rubric. Baseline found the tag/HEAD mismatch but omitted both public-artifact
+states and all exact evidence gates. Treatment recovered the evidence gates
+and immutable target, but also omitted the explicit npm/GitHub absence facts
+and suggested example later versions despite the no-guessing constraint. Sol
+returned fail/fail and tie in both position orders. Treatment cost 65.61s, six
+tools, and 218,393 input tokens versus 63.59s, four tools, and 187,355 for
+baseline, so no efficiency benefit was observed.
+
+The run exposed that explicit checkpoints stored safe evidence refs but briefs
+discarded them. A focused privacy-preserving fix now renders a `Checkpoint
+Evidence` section and filters raw paths and secrets. The release pair remains
+fail/fail; a remediation rerun is required before claiming recovery.
+
 ## Independent Codex Operator Holdout
 
 Three fresh Codex CLI 0.142.5 / GPT-5.4 sessions acted as first-time operators

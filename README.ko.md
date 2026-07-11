@@ -95,6 +95,14 @@ brief의 stale generic Node gate를 제거하는 근거로 사용했습니다.
 최소 2쌍이며 현재 이 최소선을 충족한 유형은 하나뿐입니다. 자세한 집계는
 [생성된 real-task summary](reports/usefulness-real-task-summary.json)에 있습니다.
 
+다섯 번째 pair는 실제 release boundary를 검사했습니다. 두 조건 모두 release를
+blocked로 판단했지만 exact-fact rubric은 둘 다 실패했습니다. LoopRelay가 더
+많은 evidence blocker를 복구했으나 비용이 조금 더 들었고 public artifact
+부재 사실을 빠뜨렸습니다. 이 과정에서 안전한 checkpoint evidence ref가
+저장되지만 brief에는 표시되지 않는 결함을 발견했습니다. 이제 privacy filter를
+거친 `Checkpoint Evidence` section에 포함됩니다. 집계는 5쌍·4개 유형이지만
+여전히 `INSUFFICIENT DATA`이며 release 승인으로 해석하지 않습니다.
+
 npm package가 publish된 뒤:
 
 ```sh

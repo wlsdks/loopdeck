@@ -11359,3 +11359,17 @@
       calibration range of 4/8 to 5/8 rather than selecting a favorable score.
 - [x] GRAPH: Generate the first separate real-task summary and graph at four
       pairs across three task types, with small-sample limits visible.
+
+## 2026-07-11 First Real Release-Continuity Pair
+
+- [x] STATE: Verify npm `looprelay@1.0.0` and GitHub Release `v1.0.0` are
+      absent while immutable local tag `v1.0.0` targets an older main commit.
+- [x] CHECKPOINT: Record tag identity, public artifact state, evidence gates,
+      and the prohibition on release mutation or final-gate execution.
+- [x] PREREGISTER: Freeze exact release-state facts with Sol before Terra.
+- [x] RUN: Execute treatment-first on `21059b35`; retain strict fail/fail and
+      treatment cost overhead without hiding its more complete blocker set.
+- [x] RED/GREEN: Include safe checkpoint evidence refs in explicit briefs so
+      release facts are not discarded while paths and secrets remain omitted.
+- [ ] RERUN: Recheck the same live release boundary after evidence-ref
+      remediation, as a paired fix verification rather than a new task claim.
