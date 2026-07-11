@@ -71,6 +71,27 @@ See the [cross-model ledger](reports/usefulness-sol-terra-pairs.json) and
 
 ![LoopRelay real-task baseline versus assisted results](docs/assets/usefulness-real-task-results.svg)
 
+The preregistered real-task threshold is now complete: 10 counterbalanced
+matched pairs, five task types, and two pairs per type. Strict success was 0%
+for baseline and 30% for LoopRelay; actionability was 49% versus 83%. LoopRelay
+averaged 7.2s less TTFV, 3.3 fewer tools, and 95,945 fewer input tokens. Three
+failures improved, seven pairs remained failed, and human review preferred
+LoopRelay 8 times and baseline twice. This is directional maintainer-run
+evidence, not a causal or public-readiness claim. Every task-type interval still
+spans the full plausible range, several failures came from read-only test
+startup or strict plan/outcome mismatch, and independent humans remain 0/3.
+
+Evidence-based scope at N=10:
+
+- `retain`: exact session/checkpoint recovery and focused ambiguity questions
+  when material decisions are absent from Git.
+- `narrow`: failure prevention until a different case produces strict success;
+  lower rediscovery cost alone did not prevent 0/2 failure.
+- `narrow`: implementation continuation to tasks with a genuinely hidden
+  selected contract; a fully specified task received only overhead.
+- `narrow`: release continuity to fact handoff only; sequencing remained 0/2.
+- Keep all paths opt-in until three independent humans complete first value.
+
 The first separate real-repository session-recovery pair was strict fail/fail:
 baseline selected a different valid backlog item, while treatment recovered
 the selected task but omitted secondary brief constraints. That failure led to
@@ -93,10 +114,10 @@ The fourth pair tested the ambiguous request to update “the latest usefulness
 graph.” Baseline asked about the result set and graph but omitted several
 reporting decisions; LoopRelay asked all six preregistered questions and
 withheld edits. Position-swapped Sol review scored LoopRelay 8/8 and baseline
-4/8 to 5/8. Across four real-task pairs and three task types, strict success is
-0% versus 50%, but the graph remains `INSUFFICIENT DATA`: the active threshold
-is 10 pairs with at least two per type, and only one type currently meets that
-minimum. See the [generated real-task summary](reports/usefulness-real-task-summary.json).
+4/8 to 5/8. At that four-pair checkpoint, strict success was 0% versus 50% and
+the graph correctly remained `INSUFFICIENT DATA`. See the
+[generated real-task summary](reports/usefulness-real-task-summary.json) for
+the current ten-pair result.
 
 The fifth pair tested the live release boundary. Both conditions blocked
 release and both failed the exact-fact rubric; LoopRelay recovered more
@@ -106,9 +127,9 @@ rendered in the brief. They are now included under a privacy-filtered
 `Checkpoint Evidence` section. The follow-up recovered every release fact and
 reduced rediscovery, but still inserted a final gate before the required
 version decision, so it remains fail/fail. Selected contracts now explicitly
-forbid fallback steps between stated actions. The aggregate is nine pairs
-across five types, with 0% baseline and 33.3% LoopRelay strict success; it
-remains `INSUFFICIENT DATA` and is not a release authorization.
+forbid fallback steps between stated actions. The final aggregate is ten pairs
+across five types, with 0% baseline and 30% LoopRelay strict success. It is
+directional evidence but not a release authorization.
 
 The seventh pair covered ordinary implementation continuation for this
 evidence pipeline. Baseline chose plausible but different command and flag
@@ -130,9 +151,16 @@ version.” Both conditions formally failed. Baseline inferred patch/minor
 candidates and proposed release steps before clarification. LoopRelay asked
 more of the required decisions and cut TTFV by 11.4s, but omitted an explicit
 changelog-content question and mislabeled 8/10 real tasks as users. Sol
-preferred LoopRelay while retaining score ranges of 1–2/5 versus 3–4/5. Four
-of five task types now meet the two-pair minimum; the graph remains
-`INSUFFICIENT DATA` until the final distinct implementation pair is complete.
+preferred LoopRelay while retaining score ranges of 1–2/5 versus 3–4/5. Before
+the final pair, four of five task types met the two-pair minimum.
+
+The tenth pair deliberately supplied a fully specified test-only task. Both
+conditions produced equivalent minimal plans and both formally failed an
+outcome-oriented rubric that required edits despite the evaluation's no-edit
+boundary. LoopRelay added 15.55s, one tool, and 90,616 input tokens with no
+quality gain. Human review preferred baseline; the Sol preference changed with
+position. This is direct evidence against injecting LoopRelay into ordinary,
+fully specified implementation work.
 
 Regenerate only the separate real-task artifacts without rewriting the 30-pair
 README result blocks:

@@ -37,6 +37,10 @@ Primary value:
   five task types with six pairs per type. A separate five-pair
   Sol-planned/Terra-executed reproduction is retained as a distinct cohort and
   is not pooled with the GPT-5.4 aggregate.
+- Current unseen real-task corpus: 10 Sol-preregistered/Terra-executed pairs
+  across five task types with two pairs per type. It is directional only,
+  remains separate from both synthetic cohorts, and does not satisfy the
+  independent-human public-readiness gate.
 - Collect unseen real-task pairs and three independent human
   install-to-first-value flows; do not inflate confidence with additional
   repeats of the current synthetic fixtures.
@@ -89,6 +93,22 @@ Evidence-based 1.0.x scope:
   agent ask native focused questions and retain diagnosis as explicit opt-in.
 - Do not add a large feature until three independent humans complete install
   and first value. The 30-pair cohort does not satisfy that gate.
+
+Current real-task decisions (10-pair maintainer-run cohort):
+
+- `retain`: exact checkpoint/session recovery when selected state is absent
+  from Git.
+- `retain`: focused ambiguity questions only when required decisions are
+  genuinely unresolved.
+- `narrow`: failure prevention; both real cases remained strict fail/fail and
+  one baseline found a material adjacent privacy risk that treatment missed.
+- `narrow`: implementation continuation; use only for hidden selected
+  contracts, never for fully specified ordinary work where treatment added
+  cost without quality.
+- `narrow`: release continuity to factual handoff; both cases stayed fail/fail
+  because action sequencing was not preserved.
+- `hold`: all large feature work and public release interpretation until three
+  independent humans complete install-to-first-value without critical blockers.
 
 No item above authorizes automatic prompt submission, hidden provider calls,
 private transcript scraping, automatic memory writes, or automatic instruction

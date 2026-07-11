@@ -196,7 +196,7 @@ describe("usefulness report generator", () => {
       all_task_types_meet_pair_minimum: true,
     });
     expect(report.by_task_type.ambiguity_clarification.decision).toMatchObject({
-      action: "retain",
+      action: "narrow",
       evidence_status: "directional",
     });
     expect(renderReadmeResultBlock(report, "en")).toContain(
@@ -436,7 +436,7 @@ describe("real-task usefulness ledger", () => {
     };
 
     expect(ledger.causal_claim).toBe(false);
-    expect(ledger.pairs).toHaveLength(9);
+    expect(ledger.pairs).toHaveLength(10);
     expect(ledger.pairs[0]).toMatchObject({
       baseline: { passed: false, core_task_recovered: false },
       looprelay: { passed: false, core_task_recovered: true },
@@ -520,20 +520,43 @@ describe("real-task usefulness ledger", () => {
         clarification_score_max: 4,
       },
     });
+    expect(ledger.pairs[9]).toMatchObject({
+      baseline: {
+        passed: false,
+        core_task_recovered: true,
+        implementation_plan_score: 2,
+      },
+      looprelay: {
+        passed: false,
+        core_task_recovered: true,
+        implementation_plan_score: 2,
+      },
+      human_preference: "baseline",
+      judge: { position_consistent: false, preference: "inconsistent" },
+    });
     expect(createUsefulnessReport(JSON.parse(source))).toMatchObject({
-      status: "insufficient_data",
-      pair_count: 9,
+      status: "directional_evidence_ready",
+      pair_count: 10,
       task_type_count: 5,
       baseline: { success_rate: 0 },
-      looprelay: { success_rate: 0.333333 },
-      transitions: { improved: 3, unchanged_failed: 6 },
+      looprelay: { success_rate: 0.3 },
+      transitions: { improved: 3, unchanged_failed: 7 },
+      by_task_type: {
+        session_recovery: { decision: { action: "retain" } },
+        ambiguity_clarification: { decision: { action: "retain" } },
+        implementation_continuation: { decision: { action: "narrow" } },
+        failure_prevention: { decision: { action: "narrow" } },
+        release_verification_continuity: {
+          decision: { action: "narrow" },
+        },
+      },
     });
     const svg = readFileSync(
       join(process.cwd(), "docs/assets/usefulness-real-task-results.svg"),
       "utf8",
     );
-    expect(svg).toContain("9 matched pairs · 5 task types");
-    expect(svg).toContain("INSUFFICIENT DATA");
+    expect(svg).toContain("10 matched pairs · 5 task types");
+    expect(svg).not.toContain("INSUFFICIENT DATA");
     expect(source).not.toMatch(/\/Users\/|\/home\//);
     expect(source).not.toMatch(/"(?:prompt|response|transcript|output)"\s*:/i);
   });

@@ -618,6 +618,74 @@
         "treatment-mislabeled-real-task-evidence-as-users",
         "formal-fail-fail-with-treatment-preference"
       ]
+    },
+    {
+      "id": "real-implementation-continuation-010",
+      "task_type": "implementation_continuation",
+      "order": "baseline_first",
+      "execution": {
+        "agent": "codex",
+        "agent_version": "0.144.1",
+        "model": "gpt-5.6-terra",
+        "reasoning_effort": "medium",
+        "sandbox": "read-only",
+        "fresh_session": true,
+        "repository_state": "commit:6858e0ff",
+        "ground_truth": "sol-preregistered-fully-specified-test-plan"
+      },
+      "baseline": {
+        "passed": false,
+        "core_task_recovered": true,
+        "implementation_plan_score": 2,
+        "actionability": 0.8,
+        "elapsed_ms": 35730,
+        "time_to_first_value_ms": 35730,
+        "tool_calls": 4,
+        "failed_tool_calls": 1,
+        "input_tokens": 129492,
+        "cached_input_tokens": 107520,
+        "output_tokens": 1195,
+        "reasoning_output_tokens": 337,
+        "friction_count": 1,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false
+      },
+      "looprelay": {
+        "passed": false,
+        "core_task_recovered": true,
+        "implementation_plan_score": 2,
+        "actionability": 0.8,
+        "elapsed_ms": 51280,
+        "time_to_first_value_ms": 51280,
+        "tool_calls": 5,
+        "failed_tool_calls": 1,
+        "input_tokens": 220108,
+        "cached_input_tokens": 154624,
+        "output_tokens": 1941,
+        "reasoning_output_tokens": 551,
+        "friction_count": 1,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false,
+        "adopted": true
+      },
+      "human_preference": "baseline",
+      "judge": {
+        "position_consistent": false,
+        "preference": "inconsistent",
+        "baseline_pass": false,
+        "looprelay_pass": false,
+        "baseline_score_range": [2, 2],
+        "looprelay_score_range": [2, 2]
+      },
+      "finding_labels": [
+        "fully-specified-task-left-no-hidden-state-gap",
+        "both-proposed-equivalent-test-only-plan",
+        "both-formally-failed-outcome-oriented-rubric",
+        "treatment-added-time-tool-and-token-overhead",
+        "judge-preference-position-inconsistent"
+      ]
     }
   ]
 }

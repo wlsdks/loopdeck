@@ -11427,3 +11427,18 @@
       4/5, score calibration variance, and treatment preference.
 - [x] VERIFY: Regenerate N=9 artifacts, update limitations, run focused tests,
       and commit before the final implementation pair.
+
+## 2026-07-11 Second Real Implementation-Continuation Pair
+
+- [x] CONTRACT: Use a fully specified test-only CLI regression with no hidden
+      state so repository-only baseline should be sufficient.
+- [x] PREREGISTER: Freeze identical substantive criteria with Sol while
+      preserving the outcome-oriented rubric mismatch.
+- [x] RUN: Execute baseline-first on `6858e0ff`; retain equivalent plans,
+      formal fail/fail, treatment overhead, and one rejected checkpoint setup.
+- [x] SCORE: Preserve equal 2/10 scores, position-inconsistent judge
+      preference, and baseline human preference on equal quality/lower cost.
+- [x] GREEN: Add exactly one CLI regression using existing helpers; make no
+      production or documentation change for the behavior itself.
+- [x] FINALIZE: Regenerate N=10 evidence, analyze per-type decisions and costs,
+      update README/report/backlog, and run focused evidence gates only.

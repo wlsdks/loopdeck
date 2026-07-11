@@ -373,6 +373,61 @@ meeting the two-pair minimum. It remains `INSUFFICIENT DATA`; one distinct
 implementation-continuation pair is required before directional scope
 decisions are regenerated.
 
+## Second Real Implementation-Continuation Pair
+
+The final pair deliberately removed any hidden-state advantage. The task fully
+specified one CLI regression, its safe and credential-shaped cases, the
+existing test file and helpers, the test-only-if-green constraint, and the
+focused verification commands. Both conditions produced essentially the same
+minimal plan. The frozen rubric nevertheless required observable edits while
+the evaluation prompt prohibited edits, so both scored 2/10 and formally
+failed. Sol preference was position-inconsistent; human review preferred
+baseline on equal quality and lower cost.
+
+LoopRelay added no useful information and cost 15.55s, one tool call, 90,616
+input tokens, 746 output tokens, and 214 reasoning tokens. This is negative
+evidence for generic implementation injection. The actual main-agent change
+then added exactly one existing-helper CLI regression; it passed with the
+focused redaction test and required no production behavior change. One setup
+checkpoint containing a credential-shaped description was correctly rejected
+and retained as operator friction.
+
+## Ten-Pair Real-Task Conclusion
+
+The preregistered real-task threshold is complete: ten matched pairs, five
+task types, two pairs per type, and balanced 5/5 execution order. Baseline
+strict success was 0/10 and LoopRelay was 3/10. Actionability moved from 49% to
+83%; mean TTFV decreased by 7.2s, tools by 3.3, and input tokens by 95,945.
+There were three improved transitions, no regressions, and seven unchanged
+failures. Human review preferred LoopRelay eight times and baseline twice;
+position consistency was 90% and judge/human agreement 77.8% where the judge
+was consistent.
+
+These numbers are directional, not causal. Baseline's 0% is partly an artifact
+of deliberately strict preregistration, read-only Vitest startup failures, and
+two rubrics that demanded observable implementation from no-edit evaluation
+runs. Each task type has only two pairs and its conservative interval spans
+the full plausible range. The work was maintainer-selected and independent
+humans remain 0/3. No public-readiness claim follows from crossing N=10.
+
+The supported scope is narrower than general agent productivity:
+
+- retain exact checkpoint/session recovery when the selected state is absent
+  from Git;
+- retain focused ambiguity questions when material reporting or release
+  decisions are genuinely unresolved;
+- narrow failure prevention until a different case reaches strict success;
+- narrow implementation continuation to hidden selected contracts and skip it
+  for fully specified repository work;
+- narrow release continuity to factual handoff because sequencing stayed 0/2;
+- keep all intervention opt-in until three independent humans complete first
+  value without a critical blocker.
+
+The report generator now marks all-fail task types as `narrow`, and also marks
+positive but uncertain lift as `narrow` when both elapsed time and input-token
+cost increase. This prevents a cheap 0%→0% result or an expensive underpowered
+lift from being mislabeled `retain`.
+
 ## Independent Codex Operator Holdout
 
 Three fresh Codex CLI 0.142.5 / GPT-5.4 sessions acted as first-time operators

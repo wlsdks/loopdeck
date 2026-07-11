@@ -469,6 +469,17 @@ function taskTypeDecision({
   ) {
     return { action: "remove", evidence_status: "directional" };
   }
+  if (transitions.unchanged_failed === pairCount) {
+    return { action: "narrow", evidence_status: "directional" };
+  }
+  if (
+    successRateDelta > 0 &&
+    uncertainty.lower <= 0 &&
+    delta.mean_elapsed_ms > 0 &&
+    delta.mean_input_tokens > 0
+  ) {
+    return { action: "narrow", evidence_status: "directional" };
+  }
   if (
     successRateDelta < 0 ||
     (successRateDelta === 0 &&

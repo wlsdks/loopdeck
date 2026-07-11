@@ -69,6 +69,32 @@ describe("loop CLI command", () => {
     expect(json).not.toContain("/Users/example");
   });
 
+  it("accepts safe option names while rejecting credential-shaped checkpoint summaries", () => {
+    const dataDir = createTempDir();
+    const safeSummary = "Add --skip-readme for the focused evidence command.";
+    const safe = JSON.parse(
+      loopCheckpointForCli({
+        dataDir,
+        json: true,
+        status: "in_progress",
+        summary: safeSummary,
+      }),
+    ) as { snapshot: { outcome: { summary: string } } };
+
+    expect(safe.snapshot.outcome.summary).toBe(safeSummary);
+
+    const credential = ["sk", "-", "0123456789abcdef"].join("");
+    expect(() =>
+      loopCheckpointForCli({
+        dataDir,
+        status: "in_progress",
+        summary: `Use ${credential} for the request.`,
+      }),
+    ).toThrow(
+      "Loop outcome summary and evidence refs must not include secrets or raw local paths.",
+    );
+  });
+
   it("rejects unsafe first-session checkpoint summaries before storage", () => {
     expect(() =>
       loopCheckpointForCli({
