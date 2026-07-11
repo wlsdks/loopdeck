@@ -20,6 +20,45 @@ afterEach(() => {
 });
 
 describe("usefulness report generator", () => {
+  it("treats a participant privacy blocker as a critical release blocker", () => {
+    const input = ledger();
+    input.independent_users = [
+      {
+        id: "participant-k7m2",
+        independence_confirmed: true,
+        install_success: true,
+        first_value_success: true,
+        install_elapsed_ms: 10,
+        time_to_first_value_ms: 20,
+        recovery_count: 0,
+        friction_count: 0,
+        privacy_blocker: true,
+        data_loss_blocker: false,
+      },
+    ];
+
+    const report = createUsefulnessReport(input);
+
+    expect(report.critical_blockers).toBe(1);
+    expect(report.independent_humans).toEqual({
+      result_count: 1,
+      independence_confirmed_count: 1,
+      successful_flow_count: 0,
+      install_success_rate: 1,
+      first_value_success_rate: 1,
+      mean_install_elapsed_ms: 10,
+      mean_time_to_first_value_ms: 20,
+      recovery_count: 0,
+      friction_count: 0,
+      privacy_blocker_count: 1,
+      data_loss_blocker_count: 0,
+    });
+    expect(report.public_readiness).toEqual({
+      ready: false,
+      reason: "critical_blocker",
+    });
+  });
+
   it("aggregates paired outcomes, costs, friction, and task coverage", () => {
     const report = createUsefulnessReport(ledger());
 
@@ -31,6 +70,12 @@ describe("usefulness report generator", () => {
       independent_user_count: 0,
       independent_agent_operator_count: 0,
       independent_agent_operator_success_rate: null,
+      independent_humans: {
+        result_count: 0,
+        successful_flow_count: 0,
+        install_success_rate: null,
+        first_value_success_rate: null,
+      },
       public_readiness: {
         ready: false,
         reason: "independent_users_missing",
@@ -227,7 +272,7 @@ describe("usefulness report generator", () => {
     input.independent_users[0].privacy_blocker = true;
     expect(createUsefulnessReport(input).public_readiness).toEqual({
       ready: false,
-      reason: "independent_user_flow_failed",
+      reason: "critical_blocker",
     });
   });
 

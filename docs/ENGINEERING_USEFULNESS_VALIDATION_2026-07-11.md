@@ -114,6 +114,12 @@ recovered one failure. This confirms that question serialization is unstable
 across both conditions, while the accumulated result still favors narrowing
 generic diagnosis rather than making it the default.
 
+The generated decision still marks the aggregate failure-prevention path
+`narrow`: its 100pp observed lift remains underpowered, while mean elapsed time,
+input tokens, tools, and TTFV all increased. Outcome linking remains useful
+evidence infrastructure, but automatic prevention intervention is not yet a
+default product claim.
+
 ## Interpretation And Scope
 
 The aggregate result is directional, not causal. The strongest signal is in
@@ -512,6 +518,15 @@ seconds with zero raw-path hits and no privacy, data-loss, or install blocker.
 It deliberately counts as zero independent humans. One earlier harness-only
 `jq` precedence failure is retained as excluded setup error because the product
 commands in that attempt succeeded.
+
+Returned raw-free results are appended with
+`pnpm evidence:participant-intake -- --append-to reports/usefulness-pairs.json
+participant-result.json`. The operation validates the result, rejects duplicate
+labels, retains failed flows, and atomically replaces the ledger. Regenerated
+summaries report independent-human install and first-value success rates, mean
+install and TTFV, recovery and friction counts, and privacy/data-loss blockers
+without pooling them with matched pairs or agent operators. Any participant
+privacy or data-loss flag is also a critical release blocker.
 
 Rendered desktop/mobile QA is also pending because the in-app browser runtime
 did not start in this session. Neither requirement may be replaced with

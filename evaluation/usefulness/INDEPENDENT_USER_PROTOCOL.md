@@ -58,6 +58,20 @@ The normalized JSON is the only evidence returned. A privacy or data-loss
 blocker must be marked `true`; it must not be explained with raw content in the
 result file. The maintainer follows up privately and blocks release.
 
+The maintainer appends every returned result, including failures, through the
+validated atomic path and then regenerates the report:
+
+```bash
+pnpm --silent evidence:participant-intake -- \
+  --append-to reports/usefulness-pairs.json participant-result.json
+pnpm evidence:usefulness
+```
+
+Duplicate participant labels fail without replacing the ledger. The generated
+summary keeps independent-human install success, first-value success, mean
+install/TTFV, recovery, friction, and blocker counts separate from matched-pair
+and agent-operator cohorts.
+
 ## Independence and counting
 
 - `independence_confirmed` is true only for a human who did not implement or

@@ -1,9 +1,17 @@
-import { readFileSync } from "node:fs";
+import {
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { spawnSync } from "node:child_process";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
 import {
+  appendParticipantResult,
   normalizeParticipantResult,
   participantTemplate,
 } from "../../scripts/usefulness-participant-intake.mjs";
@@ -69,6 +77,61 @@ describe("independent-user usefulness intake", () => {
     });
   });
 
+  it("appends validated failures without mutating the source ledger", () => {
+    const ledger = { independent_users: [] };
+    const failed = valid();
+    failed.install_success = false;
+    failed.first_value_success = false;
+    failed.data_loss_blocker = true;
+
+    const next = appendParticipantResult(ledger, failed);
+
+    expect(ledger.independent_users).toEqual([]);
+    expect(next.independent_users).toEqual([
+      expect.objectContaining({
+        id: "participant-k7m2",
+        install_success: false,
+        first_value_success: false,
+        data_loss_blocker: true,
+      }),
+    ]);
+  });
+
+  it("rejects duplicate participant labels before ledger replacement", () => {
+    const normalized = normalizeParticipantResult(valid());
+    expect(() =>
+      appendParticipantResult({ independent_users: [normalized] }, valid()),
+    ).toThrow("participant label already exists");
+  });
+
+  it("atomically appends through the CLI and leaves duplicates unchanged", () => {
+    const directory = mkdtempSync(join(tmpdir(), "looprelay-intake-"));
+    const ledgerPath = join(directory, "ledger.json");
+    const resultPath = join(directory, "result.json");
+    writeFileSync(ledgerPath, `${JSON.stringify({ independent_users: [] })}\n`);
+    writeFileSync(resultPath, `${JSON.stringify(valid())}\n`);
+
+    try {
+      const first = runIntake("--append-to", ledgerPath, resultPath);
+      expect(first.status).toBe(0);
+      expect(JSON.parse(first.stdout)).toEqual({
+        appended: true,
+        id: "participant-k7m2",
+      });
+      const afterFirst = readFileSync(ledgerPath, "utf8");
+      expect(JSON.parse(afterFirst).independent_users).toHaveLength(1);
+
+      const duplicate = runIntake("--append-to", ledgerPath, resultPath);
+      expect(duplicate.status).toBe(1);
+      expect(duplicate.stderr).toBe(
+        "participant intake failed; verify the raw-free input and retry\n",
+      );
+      expect(readFileSync(ledgerPath, "utf8")).toBe(afterFirst);
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
   it("ships a raw-free validation-only candidate handoff", () => {
     const manifestSource = readFileSync(
       join(process.cwd(), "reports/independent-user-candidate.json"),
@@ -126,4 +189,12 @@ function valid() {
     privacy_blocker: false,
     data_loss_blocker: false,
   };
+}
+
+function runIntake(...args: string[]) {
+  return spawnSync(
+    process.execPath,
+    [join(process.cwd(), "scripts/usefulness-participant-intake.mjs"), ...args],
+    { encoding: "utf8" },
+  );
 }

@@ -72,9 +72,10 @@ Candidate focused slices:
 
 Current evidence decisions (30-pair maintainer-run cohort):
 
-- `retain`: session recovery and external failure-outcome recovery remain
-  opt-in continuity workflows; their observed lift is positive but uncertainty
-  is still wide.
+- `retain`: session recovery remains an opt-in continuity workflow.
+- `narrow`: keep external failure outcomes as evidence input, but do not claim
+  default failure-prevention intervention. Its observed lift is positive but
+  uncertain, while elapsed, tool, token, and TTFV costs all increased.
 - `narrow`: skip generic implementation-continuation context when repository
   state and focused tests already identify the next action. Five pairs show no
   improvement, one regression, and material time/token overhead.

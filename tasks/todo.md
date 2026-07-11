@@ -1,5 +1,20 @@
 # 작업 계획
 
+## 2026-07-11 LoopRelay Independent Human Evidence Intake
+
+- [x] CHECK: the protocol promised validated append and duplicate rejection,
+  but the CLI only normalized one result and left ledger editing manual.
+- [x] RED: pure and CLI tests require failed/blocker results to be retained,
+  duplicate labels to leave the ledger unchanged, and errors to remain raw-free.
+- [x] GREEN: append through an atomic ledger replacement without printing paths
+  or accepting unsupported participant fields.
+- [x] RED/GREEN: participant privacy/data-loss flags contribute to critical
+  release blockers and human metrics remain separate from agent cohorts.
+- [x] DOCS: publish the maintainer append/regeneration flow without changing the
+  0/3 evidence claim.
+- [x] VERIFY: regenerate all cohort summaries and run focused tests, lint,
+  privacy, artifact-drift, and diff gates without the full release gate.
+
 ## 2026-07-11 LoopRelay Independent Human Candidate
 
 - [x] CHECK: the ten-pair real-task threshold is complete, but independent

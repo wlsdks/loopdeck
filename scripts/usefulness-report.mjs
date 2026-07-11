@@ -24,6 +24,13 @@ export function createUsefulnessReport(input) {
   const minimums = input.minimums;
   const independentUsers = input.independent_users ?? [];
   const independentAgentOperators = input.independent_agent_operators ?? [];
+  const participantCriticalBlockers = independentUsers.reduce(
+    (count, user) =>
+      count + Number(user.privacy_blocker) + Number(user.data_loss_blocker),
+    0,
+  );
+  const criticalBlockers =
+    (input.critical_blockers ?? 0) + participantCriticalBlockers;
   const requiredPairsPerTaskType = minimums.pairs_per_task_type ?? 1;
   const taskTypesMeetingPairMinimum = Array.from(taskTypes).filter(
     (taskType) =>
@@ -44,6 +51,7 @@ export function createUsefulnessReport(input) {
     pair_count: pairs.length,
     task_type_count: taskTypes.size,
     independent_user_count: independentUsers.length,
+    independent_humans: aggregateIndependentUsers(independentUsers),
     independent_agent_operator_count: independentAgentOperators.length,
     independent_agent_operator_success_rate:
       independentAgentOperators.length === 0
@@ -56,7 +64,7 @@ export function createUsefulnessReport(input) {
     public_readiness: publicReadiness(
       independentUsers,
       minimums.independent_users,
-      input.critical_blockers ?? 0,
+      criticalBlockers,
     ),
     task_types: Array.from(taskTypes).sort(),
     coverage: {
@@ -138,8 +146,63 @@ export function createUsefulnessReport(input) {
         ),
       ),
     },
-    critical_blockers: input.critical_blockers ?? 0,
+    critical_blockers: criticalBlockers,
     note: "Observational matched-pair evidence only. Null and negative results are retained.",
+  };
+}
+
+function aggregateIndependentUsers(users) {
+  if (users.length === 0) {
+    return {
+      result_count: 0,
+      independence_confirmed_count: 0,
+      successful_flow_count: 0,
+      install_success_rate: null,
+      first_value_success_rate: null,
+      mean_install_elapsed_ms: null,
+      mean_time_to_first_value_ms: null,
+      recovery_count: 0,
+      friction_count: 0,
+      privacy_blocker_count: 0,
+      data_loss_blocker_count: 0,
+    };
+  }
+  return {
+    result_count: users.length,
+    independence_confirmed_count: users.filter(
+      (user) => user.independence_confirmed,
+    ).length,
+    successful_flow_count: users.filter(
+      (user) =>
+        user.independence_confirmed &&
+        user.install_success &&
+        user.first_value_success &&
+        !user.privacy_blocker &&
+        !user.data_loss_blocker,
+    ).length,
+    install_success_rate: roundMetric(
+      mean(users.map((user) => Number(user.install_success))),
+    ),
+    first_value_success_rate: roundMetric(
+      mean(users.map((user) => Number(user.first_value_success))),
+    ),
+    mean_install_elapsed_ms: roundMetric(
+      mean(users.map((user) => user.install_elapsed_ms)),
+    ),
+    mean_time_to_first_value_ms: roundMetric(
+      mean(users.map((user) => user.time_to_first_value_ms)),
+    ),
+    recovery_count: users.reduce(
+      (total, user) => total + user.recovery_count,
+      0,
+    ),
+    friction_count: users.reduce(
+      (total, user) => total + user.friction_count,
+      0,
+    ),
+    privacy_blocker_count: users.filter((user) => user.privacy_blocker).length,
+    data_loss_blocker_count: users.filter((user) => user.data_loss_blocker)
+      .length,
   };
 }
 
