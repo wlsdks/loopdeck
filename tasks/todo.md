@@ -1,5 +1,13 @@
 # 작업 계획
 
+## 2026-07-12 Independent First-Value Measurement
+
+- [x] RED: require the candidate assessor to reject raw isolated-path exposure
+  even when checkpoint and brief otherwise look successful.
+- [x] GREEN/VERIFY: add and run a raw-free clean-install → checkpoint → brief
+  measurement smoke; retain it as maintainer-only evidence, not an independent
+  participant result.
+
 ## 2026-07-11 Adaptive Agent Guide
 
 - [x] SOL PLAN: define the local-only, non-autonomous model-profile policy,

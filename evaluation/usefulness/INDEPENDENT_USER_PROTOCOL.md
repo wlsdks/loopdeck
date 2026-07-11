@@ -7,6 +7,16 @@ The maintainer provides one candidate tarball and its SHA-256. The participant
 uses a fresh temporary directory and does not share prompts, command output,
 paths, usernames, repository names, or free-form notes.
 
+Before handing a candidate to a participant, the maintainer runs this
+raw-free preflight from the candidate checkout. It validates the same isolated
+install, checkpoint, and continuation-brief flow and reports install/first-value
+timings, but it is maintainer-only evidence and never counts toward the
+independent-user requirement.
+
+```bash
+pnpm smoke:candidate-first-value
+```
+
 For the currently validated candidate, use the versioned handoff file in this
 directory and verify its checksum before starting. A handoff is validation-only
 and never authorizes publishing or moving an existing tag.
