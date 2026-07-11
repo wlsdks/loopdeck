@@ -11285,3 +11285,6 @@
         supplies the required clarification dimensions.
   - [x] Extract raw-free elapsed, TTFV, tool, failed-tool, input, cached-input,
         output, and reasoning-token metrics from private Codex JSONL events.
+  - [x] Add the fifth session-recovery pair. Preserve the unchanged failure
+        where Codex saw the correct brief but asked for confirmation, and mark
+        session recovery `retain` because the 95% bound still crosses zero.

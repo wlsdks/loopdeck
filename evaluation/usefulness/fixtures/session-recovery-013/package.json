@@ -1,0 +1,9 @@
+{
+  "name": "session-recovery-fixture",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test:retry": "node --test test/retry-policy.test.js",
+    "test:cache": "node --test test/cache-policy.test.js"
+  }
+}

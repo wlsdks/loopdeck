@@ -15,7 +15,7 @@
 ![LoopRelay 미사용 대비 사용 조건 엔지니어링 결과](docs/assets/usefulness-results.svg)
 
 <!-- USEFULNESS_RESULTS_START -->
-현재 결과는 maintainer-run observational evidence이며 인과관계를 주장하지 않습니다. 12개 matched pair와 5개 작업 유형을 포함합니다. 독립 사용자 검증은 0/3명입니다. 별도의 독립 Codex agent operator는 3개이며 첫 가치 성공률은 100%입니다. Agent operator는 사람 사용자로 계산하지 않습니다.
+현재 결과는 maintainer-run observational evidence이며 인과관계를 주장하지 않습니다. 13개 matched pair와 5개 작업 유형을 포함합니다. 독립 사용자 검증은 0/3명입니다. 별도의 독립 Codex agent operator는 3개이며 첫 가치 성공률은 100%입니다. Agent operator는 사람 사용자로 계산하지 않습니다.
 
 | 작업 유형 | 쌍 | Baseline 성공률 | LoopRelay 성공률 | 차이 | 보수적 95% 범위 | Input token 차이 | 판단 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
@@ -23,14 +23,14 @@
 | Failure prevention | 3 | 0% | 100% | +100pp | -56.8..100pp | -24370 | Collect more |
 | Implementation continuation | 3 | 100% | 66.7% | -33.3pp | -100..100pp | +99523.3 | Collect more |
 | Release verification continuity | 1 | 100% | 100% | 0pp | -100..100pp | +48916 | Collect more |
-| Session recovery | 4 | 25% | 100% | +75pp | -60.8..100pp | +9586.3 | Collect more |
+| Session recovery | 5 | 20% | 80% | +60pp | -61.5..100pp | -3240.4 | Retain |
 
-전체 성공률은 50%에서 91.7%로 변했고 actionability는 66.7%에서 90%로 변했습니다. 평균 input token 비용은 33.6% 변했습니다. Cached token과 TTFV의 조건별 측정 coverage는 각각 16.7%, 16.7%이며 누락값을 0으로 해석하지 않습니다. 현재 0/5개 목표 유형만 유형별 최소 5쌍을 충족하므로 모든 유형별 판단은 충분한 표본 전까지 잠정적입니다. 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 독립 사용자 검증 전까지 causal claim은 false입니다.
+전체 성공률은 46.2%에서 84.6%로 변했고 actionability는 64.6%에서 88.5%로 변했습니다. 평균 input token 비용은 25.2% 변했습니다. Cached token과 TTFV의 조건별 측정 coverage는 각각 23.1%, 23.1%이며 누락값을 0으로 해석하지 않습니다. 현재 1/5개 목표 유형만 유형별 최소 5쌍을 충족하므로 모든 유형별 판단은 충분한 표본 전까지 잠정적입니다. 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 독립 사용자 검증 전까지 causal claim은 false입니다.
 <!-- USEFULNESS_RESULTS_END -->
 
 이 그래프는 수작업 마케팅 수치가 아니라 commit된 raw-free matched-pair
 ledger에서 생성됩니다. 결과 품질과 운영 비용을 함께 보여주고 null·negative
-결과도 유지하며, 최소 3개 작업 유형의 10쌍이 모이기 전에는
+결과도 유지하며, 최소 5개 작업 유형의 30쌍과 유형별 5쌍이 모이기 전에는
 `INSUFFICIENT DATA`를 표시합니다. 관찰 연구이므로 `causal_claim`은 항상
 false입니다.
 

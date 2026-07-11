@@ -3,7 +3,7 @@
   "design": "matched_observational",
   "status": "insufficient_data",
   "causal_claim": false,
-  "pair_count": 12,
+  "pair_count": 13,
   "task_type_count": 5,
   "independent_user_count": 0,
   "independent_agent_operator_count": 3,
@@ -21,7 +21,7 @@
   ],
   "coverage": {
     "required_pairs_per_task_type": 5,
-    "task_types_meeting_pair_minimum": 0,
+    "task_types_meeting_pair_minimum": 1,
     "all_task_types_meet_pair_minimum": false
   },
   "by_task_type": {
@@ -150,34 +150,34 @@
       }
     },
     "session_recovery": {
-      "pair_count": 4,
-      "baseline_success_rate": 0.25,
-      "looprelay_success_rate": 1,
-      "success_rate_delta": 0.75,
-      "baseline_actionability": 0.45,
-      "looprelay_actionability": 0.95,
+      "pair_count": 5,
+      "baseline_success_rate": 0.2,
+      "looprelay_success_rate": 0.8,
+      "success_rate_delta": 0.6,
+      "baseline_actionability": 0.44,
+      "looprelay_actionability": 0.9,
       "transitions": {
         "improved": 3,
         "regressed": 0,
         "unchanged_passed": 1,
-        "unchanged_failed": 0
+        "unchanged_failed": 1
       },
       "delta": {
-        "mean_elapsed_ms": 180,
-        "mean_tool_calls": 0,
-        "mean_input_tokens": 9586.25,
-        "mean_cached_input_tokens": null,
-        "mean_time_to_first_value_ms": null,
+        "mean_elapsed_ms": -5615,
+        "mean_tool_calls": -1.4,
+        "mean_input_tokens": -3240.4,
+        "mean_cached_input_tokens": -54912,
+        "mean_time_to_first_value_ms": -23000,
         "friction_free_rate": 0
       },
       "uncertainty": {
         "method": "paired_difference_hoeffding_95",
-        "lower": -0.608102,
+        "lower": -0.614723,
         "upper": 1
       },
       "decision": {
-        "action": "collect_more",
-        "evidence_status": "underpowered"
+        "action": "retain",
+        "evidence_status": "directional"
       }
     }
   },
@@ -188,63 +188,63 @@
     "independent_users": 3
   },
   "baseline": {
-    "success_rate": 0.5,
-    "mean_actionability": 0.666667,
-    "mean_elapsed_ms": 29441.818182,
-    "mean_tool_calls": 3.666667,
-    "mean_input_tokens": 84742.25,
-    "mean_cached_input_tokens": 72256,
-    "mean_output_tokens": 960.666667,
-    "mean_time_to_first_value_ms": 36075,
-    "friction_free_rate": 0.75,
+    "success_rate": 0.461538,
+    "mean_actionability": 0.646154,
+    "mean_elapsed_ms": 30900,
+    "mean_tool_calls": 4.384615,
+    "mean_input_tokens": 87461.846154,
+    "mean_cached_input_tokens": 82005.333333,
+    "mean_output_tokens": 1013.538462,
+    "mean_time_to_first_value_ms": 39696.666667,
+    "friction_free_rate": 0.769231,
     "privacy_blocker_count": 0,
     "data_loss_blocker_count": 0,
     "install_blocker_count": 0
   },
   "looprelay": {
-    "success_rate": 0.916667,
-    "mean_actionability": 0.9,
-    "mean_elapsed_ms": 28607.272727,
-    "mean_tool_calls": 3.916667,
-    "mean_input_tokens": 113174.75,
-    "mean_cached_input_tokens": 110400,
-    "mean_output_tokens": 958,
-    "mean_time_to_first_value_ms": 38880,
-    "friction_free_rate": 0.833333,
+    "success_rate": 0.846154,
+    "mean_actionability": 0.884615,
+    "mean_elapsed_ms": 28218.333333,
+    "mean_tool_calls": 4.076923,
+    "mean_input_tokens": 109511.307692,
+    "mean_cached_input_tokens": 89130.666667,
+    "mean_output_tokens": 952.615385,
+    "mean_time_to_first_value_ms": 33900,
+    "friction_free_rate": 0.846154,
     "privacy_blocker_count": 0,
     "data_loss_blocker_count": 0,
     "install_blocker_count": 0
   },
   "measurement_coverage": {
-    "cached_input_tokens": 0.166667,
-    "time_to_first_value_ms": 0.166667,
-    "continuation_accuracy": 0.166667,
-    "blocker_flags": 0.166667
+    "cached_input_tokens": 0.230769,
+    "time_to_first_value_ms": 0.230769,
+    "continuation_accuracy": 0.230769,
+    "blocker_flags": 0.230769
   },
   "delta": {
-    "success_rate": 0.416667,
-    "mean_actionability": 0.233333,
-    "mean_elapsed_ms": -834.545455,
-    "mean_tool_calls": 0.25,
-    "mean_input_tokens": 28432.5,
-    "mean_cached_input_tokens": 38144,
-    "mean_time_to_first_value_ms": 2805,
-    "friction_free_rate": 0.083333
+    "success_rate": 0.384616,
+    "mean_actionability": 0.238461,
+    "mean_elapsed_ms": -2681.666667,
+    "mean_tool_calls": -0.307692,
+    "mean_input_tokens": 22049.461538,
+    "mean_cached_input_tokens": 7125.333334,
+    "mean_time_to_first_value_ms": -5796.666667,
+    "friction_free_rate": 0.076923
   },
   "transitions": {
     "improved": 6,
     "regressed": 1,
     "unchanged_passed": 5,
-    "unchanged_failed": 0
+    "unchanged_failed": 1
   },
   "preference": {
     "baseline": 4,
-    "looprelay": 7,
+    "looprelay": 8,
     "tie": 1
   },
   "adoption_rate": 1,
   "bias": {
-    "baseline_first": 6,
+    "baseline_first": 7,
     "looprelay_first": 6,
     "position_consistency": 0.9,
     "human_review_agreement": 0.444444

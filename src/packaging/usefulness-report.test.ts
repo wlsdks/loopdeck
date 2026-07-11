@@ -169,7 +169,7 @@ describe("usefulness report generator", () => {
       all_task_types_meet_pair_minimum: true,
     });
     expect(report.by_task_type.ambiguity_clarification.decision).toMatchObject({
-      action: "strengthen",
+      action: "retain",
       evidence_status: "directional",
     });
   });

@@ -22,6 +22,14 @@ inputs plus a locally generated LoopRelay diagnosis or continuation brief. A
 LoopRelay artifact may not replace repository evidence and must be marked
 adopted only when it was actually supplied to the agent.
 
+`loop brief --json` may be consumed through a direct or wrapped response during
+local version transitions. A harness must normalize it and reject an empty
+brief before starting treatment:
+
+```bash
+jq -er '.prompt // .brief.prompt | select(type == "string" and length > 0)'
+```
+
 After a run, extract only body-free metrics:
 
 ```bash

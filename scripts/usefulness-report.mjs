@@ -406,6 +406,7 @@ function taskTypeReport(pairs, requiredPairs) {
       looprelay.friction_free_rate - baseline.friction_free_rate,
     ),
   };
+  const uncertainty = pairedDifferenceInterval(pairs);
   return {
     pair_count: pairs.length,
     baseline_success_rate: baseline.success_rate,
@@ -415,13 +416,14 @@ function taskTypeReport(pairs, requiredPairs) {
     looprelay_actionability: looprelay.mean_actionability,
     transitions,
     delta,
-    uncertainty: pairedDifferenceInterval(pairs),
+    uncertainty,
     decision: taskTypeDecision({
       pairCount: pairs.length,
       requiredPairs,
       successRateDelta,
       transitions,
       delta,
+      uncertainty,
     }),
   };
 }
@@ -432,17 +434,23 @@ function taskTypeDecision({
   successRateDelta,
   transitions,
   delta,
+  uncertainty,
 }) {
   if (pairCount < requiredPairs) {
     return { action: "collect_more", evidence_status: "underpowered" };
   }
-  if (successRateDelta >= 0.2 && transitions.improved > transitions.regressed) {
+  if (
+    successRateDelta >= 0.2 &&
+    transitions.improved > transitions.regressed &&
+    uncertainty.lower > 0
+  ) {
     return { action: "strengthen", evidence_status: "directional" };
   }
   if (
     successRateDelta <= -0.2 &&
     transitions.regressed > transitions.improved &&
-    delta.mean_input_tokens >= 0
+    delta.mean_input_tokens >= 0 &&
+    uncertainty.upper < 0
   ) {
     return { action: "remove", evidence_status: "directional" };
   }

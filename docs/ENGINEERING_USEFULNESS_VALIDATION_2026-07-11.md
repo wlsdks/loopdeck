@@ -5,10 +5,10 @@ evidence workflows. It is not a causal product claim.
 
 ## Method
 
-Twelve matched pairs use fixed Codex model and reasoning settings, identical
+Thirteen matched pairs use fixed Codex model and reasoning settings, identical
 fixture commits within each pair, a read-only boundary, one output schema, and
-the same model context limit. Six pairs ran baseline first and six ran LoopRelay
-first. The seed corpus covers session recovery (4), implementation continuation
+the same model context limit. Seven pairs ran baseline first and six ran LoopRelay
+first. The seed corpus covers session recovery (5), implementation continuation
 (3), repeated-failure prevention (3), release-verification continuity (1), and
 ambiguity clarification (1). It is below the active threshold of 30 total pairs
 and five pairs per task type.
@@ -31,16 +31,16 @@ therefore a bias diagnostic, not the source of success labels.
 | Failure prevention | 3 | 0% | 100% | +100pp |
 | Implementation continuation | 3 | 100% | 66.7% | -33.3pp |
 | Release-verification continuity | 1 | 100% | 100% | 0pp |
-| Session recovery | 4 | 25% | 100% | +75pp |
-| **Aggregate** | **12** | **50%** | **91.7%** | **+41.7pp** |
+| Session recovery | 5 | 20% | 80% | +60pp |
+| **Aggregate** | **13** | **46.2%** | **84.6%** | **+38.5pp** |
 
-- Actionability increased from 66.7% to 90%.
-- Mean elapsed time decreased by 0.83 seconds among runs with timing data.
-- Mean tool calls increased from 3.67 to 3.92.
-- Mean input tokens increased from 84,742 to 113,175 (+33.6%).
-- Six failures improved, one successful baseline regressed, and three pairs
-  remained successful.
-- Human preference was LoopRelay 7, baseline 4, tie 1.
+- Actionability increased from 64.6% to 88.5%.
+- Mean elapsed time decreased by 2.68 seconds among runs with timing data.
+- Mean tool calls decreased from 4.38 to 4.08.
+- Mean input tokens increased from 87,462 to 109,511 (+25.2%).
+- Six failures improved, one successful baseline regressed, five pairs remained
+  successful, and one pair remained failed.
+- Human preference was LoopRelay 8, baseline 4, tie 1.
 - Position-swapped judge choices were consistent for 9/10 pairs, but agreed
   with the ground-truth-based human preference on only 4/9 consistent pairs.
   This disagreement is evidence against using an ungrounded LLM preference as
@@ -56,8 +56,19 @@ tokens, while asking equally sufficient questions. This is evidence against
 adding a generic LoopRelay diagnosis when repository instructions already say
 which clarification dimensions are required.
 
+The fifth session-recovery pair did not produce a treatment success. Baseline
+safely asked for all missing prior-session state. LoopRelay supplied the exact
+selected work item, rejected approach, and next test, but Codex treated the
+brief as conflicting with a repository statement that merely said the state
+was absent from Git, then asked for confirmation. The treatment still reduced
+time from 46.94s to 23.94s and tool calls from 13 to 6. This supports retaining
+local recovery while strengthening evidence attribution; it does not support a
+stronger success claim. One earlier treatment attempt passed `null` because the
+evaluation harness assumed the wrong JSON nesting. It is recorded as excluded
+harness friction and does not contribute outcome metrics.
+
 Cached-token, TTFV, continuation-accuracy, and blocker flags are available for
-the two new pairs only (16.7% condition coverage). The report exposes this
+the three new pairs only (23.1% condition coverage). The report exposes this
 coverage instead of silently treating missing historical measurements as zero.
 
 ## Interpretation And Scope
