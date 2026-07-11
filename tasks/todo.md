@@ -11302,3 +11302,18 @@
       reproducible candidate-tarball install-to-first-value protocol.
 - [ ] USERS: Collect three validated independent-human results; do not replace
       them with maintainer or agent-operator runs.
+
+## 2026-07-11 Sol-Planned Terra-Executed Holdout
+
+- [x] MODEL: Verify live `gpt-5.6-sol` and `gpt-5.6-terra` availability with
+      fresh ephemeral read-only Codex 0.144.1 sessions.
+- [x] PREREGISTER: Use Sol to freeze repository-grounded baseline and
+      condition-specific treatment rubrics before observing Terra outputs.
+- [x] RUN: Execute five counterbalanced Terra matched pairs across all five
+      long-horizon task types; retain two model-capacity failures and retries.
+- [x] RED/GREEN: Make raw-free metric extraction tolerate Codex diagnostic
+      preamble lines while still rejecting malformed JSON event records.
+- [x] REPORT: Publish the separate cross-model cohort, costs, failures, and
+      product-scope implications without mixing it into the GPT-5.4 cohort.
+- [x] VERIFY: Run focused evidence tests, static quality checks, and diff
+      hygiene; do not run the final release gate.

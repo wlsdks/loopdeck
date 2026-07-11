@@ -46,6 +46,24 @@ pnpm evidence:usefulness
 [설치부터 첫 가치 프로토콜](evaluation/usefulness/INDEPENDENT_USER_PROTOCOL.md)을
 사용하며 agent operator는 이 gate를 충족하지 않습니다.
 
+### Sol 설계, Terra 실행 재현 검사
+
+![Sol 설계 및 Terra 실행 matched-pair 결과](docs/assets/usefulness-sol-terra-results.svg)
+
+별도 Codex 0.144.1 cohort에서 `gpt-5.6-sol`이 결과 관찰 전에 rubric을
+사전등록하고, `gpt-5.6-terra`가 두 조건을 모두 실행했습니다. 교차 배정한
+5쌍에서 baseline은 4/5, LoopRelay는 5/5 성공했습니다. 평균 TTFV는
+47.4초 대 30.4초, 평균 input token은 85,171 대 42,415였고, human review는
+4쌍에서 LoopRelay를 선호하고 1쌍은 동률이었습니다. Terra 최초 호출 2건은
+model capacity로 실패한 뒤 재시도에 성공했으며 end-to-end 지연과 friction을
+그대로 기록했습니다. 이 작은 fixture 재사용 cohort는 cross-model 재현
+검사일 뿐 독립 사용자 또는 인과 결과가 아니며 기존 GPT-5.4 30쌍 aggregate와
+합치지 않습니다.
+
+[cross-model ledger](reports/usefulness-sol-terra-pairs.json)와
+[생성된 cross-model summary](reports/usefulness-sol-terra-summary.json)를 함께
+확인할 수 있습니다.
+
 npm package가 publish된 뒤:
 
 ```sh

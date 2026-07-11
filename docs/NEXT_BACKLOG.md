@@ -33,13 +33,13 @@ Primary value:
 
 ## Usefulness Validation
 
-- Current long-horizon seed corpus: 10 raw-free maintainer-run matched pairs
-  across three continuity task types. It is retained as observational seed
-  evidence but does not meet the active 30-pair, five-type, five-pairs-per-type
-  threshold. This is separate from the older prompt-rewrite aggregate whose
-  prompt records were intentionally removed and which remains historical-only.
-- Collect at least 30 matched pairs across five real task types, with at least
-  five pairs per type.
+- Current long-horizon corpus: 30 raw-free maintainer-run matched pairs across
+  five task types with six pairs per type. A separate five-pair
+  Sol-planned/Terra-executed reproduction is retained as a distinct cohort and
+  is not pooled with the GPT-5.4 aggregate.
+- Collect unseen real-task pairs and three independent human
+  install-to-first-value flows; do not inflate confidence with additional
+  repeats of the current synthetic fixtures.
 - Separate baseline work from LoopRelay-assisted work explicitly.
 - Record completion rate, failure transition, continuation reuse, adopted
   guidance, time to first value, and user friction.

@@ -50,6 +50,23 @@ Independent humans use the
 [install-to-first-value protocol](evaluation/usefulness/INDEPENDENT_USER_PROTOCOL.md);
 agent operators do not satisfy that gate.
 
+### Sol-planned, Terra-executed reproduction
+
+![Sol-planned and Terra-executed matched-pair results](docs/assets/usefulness-sol-terra-results.svg)
+
+A separate Codex 0.144.1 cohort used `gpt-5.6-sol` to preregister the rubric
+before any outputs were observed and `gpt-5.6-terra` for both conditions. In
+five counterbalanced pairs, baseline passed 4/5 and LoopRelay passed 5/5. Mean
+TTFV was 47.4s versus 30.4s, mean input tokens were 85,171 versus 42,415, and
+human review preferred LoopRelay in four pairs with one tie. Two initial Terra
+calls hit model capacity and succeeded on retry; their end-to-end delay and
+friction remain recorded. This small fixture-reuse cohort is a cross-model
+reproduction check, not an independent-user or causal result, and is not mixed
+into the 30-pair GPT-5.4 aggregate.
+
+See the [cross-model ledger](reports/usefulness-sol-terra-pairs.json) and
+[generated cross-model summary](reports/usefulness-sol-terra-summary.json).
+
 After the npm package is published:
 
 ```sh

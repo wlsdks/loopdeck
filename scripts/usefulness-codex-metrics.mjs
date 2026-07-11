@@ -34,6 +34,14 @@ export function extractCodexMetrics({ events, elapsedMs }) {
   };
 }
 
+export function parseCodexEventLines(source) {
+  return source
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.startsWith("{"))
+    .map((line) => JSON.parse(line));
+}
+
 function requiredUsageMetric(usage, key) {
   const value = usage[key];
   if (!Number.isFinite(value) || value < 0) {
@@ -46,12 +54,13 @@ function runCli() {
   const eventsPath = process.argv[2];
   const elapsedMs = Number(process.argv[3]);
   if (!eventsPath) {
-    throw new Error("usage: usefulness-codex-metrics <events.jsonl> <elapsed-ms>");
+    throw new Error(
+      "usage: usefulness-codex-metrics <events.jsonl> <elapsed-ms>",
+    );
   }
-  const events = readFileSync(resolve(eventsPath), "utf8")
-    .split("\n")
-    .filter(Boolean)
-    .map((line) => JSON.parse(line));
+  const events = parseCodexEventLines(
+    readFileSync(resolve(eventsPath), "utf8"),
+  );
   process.stdout.write(
     `${JSON.stringify(extractCodexMetrics({ events, elapsedMs }))}\n`,
   );

@@ -129,6 +129,34 @@ productivity improvement.
 The supported product claim is narrower: LoopRelay is useful when essential
 prior-session or prior-failure evidence is absent from Git.
 
+## Sol-Planned, Terra-Executed Reproduction
+
+A separate five-pair reproduction used Codex CLI 0.144.1 with
+`gpt-5.6-sol` at medium reasoning to preregister repository-grounded and
+condition-specific rubrics before observing any execution output. Both
+baseline and LoopRelay conditions then ran in fresh ephemeral read-only
+`gpt-5.6-terra` sessions at medium reasoning. Three pairs ran baseline first
+and two ran LoopRelay first. Reused fixtures covered all five task types, so
+this cohort tests model robustness rather than adding unseen tasks.
+
+Baseline passed 4/5 and LoopRelay passed 5/5. The sole transition was ambiguity
+clarification: baseline asked for target, behavior, and test level but did not
+explicitly request acceptance criteria; the treatment asked for all four
+preregistered fields. The other four pairs were pass/pass. Mean TTFV fell from
+47.4s to 30.4s, tool calls from 2.4 to 1.0, and input tokens from 85,171 to
+42,415. These cost differences are directional: one baseline and one treatment
+call initially failed on Terra capacity and were retried. Their end-to-end
+delay and recovery friction remain in the ledger, preventing a clean latency
+claim.
+
+This reproduction weakens any claim that LoopRelay is needed to make a capable
+agent safe on every task: Terra already handled session uncertainty,
+failure-outcome absence, focused implementation, and release blockers from
+repository evidence. It strengthens the narrower claim that a concise trusted
+packet can reduce rediscovery and turn unavailable prior decisions into a
+specific next action. The next study should use unseen real tasks and
+independent humans rather than adding more synthetic fixture repeats.
+
 ## Independent Codex Operator Holdout
 
 Three fresh Codex CLI 0.142.5 / GPT-5.4 sessions acted as first-time operators
