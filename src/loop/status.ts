@@ -484,6 +484,14 @@ function continuationCommandForWorktree(
 function summarizeWorktreeActivity(
   snapshots: readonly LoopSnapshot[],
 ): LoopRelayStatusActivityWorktree[] {
+  const explicitWorktreesByBranch = new Map<string, Set<string>>();
+  for (const snapshot of snapshots) {
+    if (!snapshot.branch || !snapshot.worktree_label) continue;
+    const worktrees =
+      explicitWorktreesByBranch.get(snapshot.branch) ?? new Set();
+    worktrees.add(snapshot.worktree_label);
+    explicitWorktreesByBranch.set(snapshot.branch, worktrees);
+  }
   const groups = new Map<
     string,
     {
@@ -494,7 +502,12 @@ function summarizeWorktreeActivity(
   >();
 
   for (const snapshot of snapshots) {
-    const worktree = snapshot.worktree_label || "unknown";
+    const branchWorktrees = snapshot.branch
+      ? explicitWorktreesByBranch.get(snapshot.branch)
+      : undefined;
+    const inferredWorktree =
+      branchWorktrees?.size === 1 ? [...branchWorktrees][0] : undefined;
+    const worktree = snapshot.worktree_label || inferredWorktree || "unknown";
     const existing = groups.get(worktree);
 
     if (!existing) {

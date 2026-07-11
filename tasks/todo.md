@@ -11244,3 +11244,17 @@
       command, including first-use initialization.
 - [x] RERUN: Repeat the same three holdouts against the remediated tarball and
       publish agent-operator results separately from human-user evidence.
+
+## 2026-07-11 Live Codex Connected Continuity Loop
+
+- [x] CHECKPOINT: Create a real current-branch checkpoint and recover the exact
+      snapshot/task summary from a fresh Codex session through MCP only.
+- [x] EXECUTE: Use the recovered brief for a read-only implementation review;
+      retain the Vite temporary-write sandbox failure as operator friction.
+- [x] RED/GREEN: Coalesce legacy unknown-worktree snapshots into the sole
+      explicit same-branch worktree instead of showing a false merge review.
+- [x] OUTCOME: In a fresh Codex MCP process, confirm one worktree/no review and
+      record the selected checkpoint as passed with focused evidence.
+- [x] MEMORY: After a newer hook snapshot exists, prove explicit worktree
+      selection still recovers the passed checkpoint and proposes, but does not
+      write, an eligible memory candidate.

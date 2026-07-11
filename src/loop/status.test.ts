@@ -399,6 +399,34 @@ describe("createLoopRelayStatus", () => {
     expect(status.activity.command_center).toBeUndefined();
   });
 
+  it("coalesces legacy unknown worktree snapshots into the sole explicit worktree on the same branch", () => {
+    const status = createLoopRelayStatus({
+      snapshots: [
+        loopSnapshot({
+          id: "loop_explicit_checkpoint",
+          branch: "codex/looprelay-rebrand",
+          worktree_label: "primary",
+          session_id: undefined,
+        }),
+        loopSnapshot({
+          id: "loop_legacy_session",
+          branch: "codex/looprelay-rebrand",
+          worktree_label: undefined,
+          session_id: "session-one",
+        }),
+      ],
+      compactBoundaries: [],
+    });
+
+    expect(status.activity).toMatchObject({
+      active_worktrees: 1,
+      active_sessions: 1,
+      needs_review: false,
+      worktrees: [{ worktree: "primary", sessions: 1, snapshots: 2 }],
+    });
+    expect(status.activity.command_center).toBeUndefined();
+  });
+
   it("shell-quotes command-center continuation commands with spaces and quotes", () => {
     const status = createLoopRelayStatus({
       compactBoundaries: [],

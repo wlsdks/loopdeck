@@ -79,6 +79,36 @@ These are independent agent operators, not independent human users. They show
 that Codex can now install and operate the supported first-value flow, but they
 do not satisfy the human 3-user gate or justify a causal productivity claim.
 
+## Live Codex Connected Loop
+
+A subsequent real Codex CLI 0.142.5 / GPT-5.4 sequence exercised the current
+checkout through the registered LoopRelay MCP server:
+
+1. CLI `loop checkpoint` recorded a real in-progress validation task on the
+   current branch and `primary` worktree.
+2. A fresh Codex session called `get_looprelay_loop_status` and
+   `prepare_loop_brief` before reading repository files. It selected the exact
+   checkpoint and recovered the task summary and verification contract.
+3. A read-only Codex session inspected the implementation and attempted the
+   focused Vitest checks. The tests could not start because Vite needs temporary
+   writes; this sandbox friction is retained rather than counted as a product
+   pass. The same focused tests passed outside that read-only agent sandbox.
+4. Live use exposed a false multi-worktree review: legacy `unknown` worktree
+   snapshots and the explicit `primary` checkpoint shared one branch but were
+   counted separately. A focused regression now coalesces an unknown label into
+   the sole explicit worktree on that branch.
+5. A new Codex MCP process confirmed one active worktree and no review warning,
+   then recorded the exact checkpoint as passed with focused-test and Node-build
+   evidence.
+6. After a newer Stop-hook snapshot existed, another fresh Codex process still
+   selected the passed `primary` checkpoint and returned an eligible memory
+   candidate. It did not write or approve memory automatically.
+
+Post-run doctor reported verified recent ingest, HTTP 200, registered MCP, and
+`ready`. MCP results remained local-only and returned neither prompt bodies nor
+raw paths. This is end-to-end agent-operation evidence, not independent-human
+evidence.
+
 ## Reproduction And Remaining Gates
 
 Run `pnpm evidence:usefulness` to validate the raw-free ledger and regenerate
