@@ -91,6 +91,34 @@
       "judge": {
         "position_consistent": null
       }
+    },
+    {
+      "id": "session-recovery-004",
+      "task_type": "session_recovery",
+      "order": "looprelay_first",
+      "baseline": {
+        "passed": false,
+        "actionability": 0.6,
+        "elapsed_ms": 23450,
+        "tool_calls": 3,
+        "input_tokens": 76422,
+        "output_tokens": 711,
+        "friction_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "actionability": 1,
+        "elapsed_ms": 22100,
+        "tool_calls": 3,
+        "input_tokens": 82899,
+        "output_tokens": 708,
+        "friction_count": 0,
+        "adopted": true
+      },
+      "human_preference": "looprelay",
+      "judge": {
+        "position_consistent": null
+      }
     }
   ]
 }

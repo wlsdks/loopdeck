@@ -8,10 +8,12 @@ import type {
 import type { LoopMemoryCandidateDecision } from "../loop/memory-candidate.js";
 
 export type GetLoopRelayLoopStatusToolArguments = {
+  cwd: string;
   include_latest?: boolean;
 };
 
 export type PrepareLoopBriefToolArguments = {
+  cwd: string;
   latest?: boolean;
   worktree?: string;
   session_id?: string;

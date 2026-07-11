@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { initializeLoopRelay } from "../config/config.js";
 import type { LoopSnapshot } from "../loop/types.js";
+import { createProjectKey } from "../storage/project-id.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
 import {
   applyInstructionPatchTool,
@@ -18,6 +19,7 @@ import {
 } from "./loop-tool.js";
 
 const tempDirs: string[] = [];
+const PRIVATE_CWD = "/Users/example/private-project";
 
 afterEach(() => {
   while (tempDirs.length > 0) {
@@ -40,7 +42,7 @@ describe("LoopRelay MCP tools", () => {
     seedLoopMergeDecision(dataDir);
     seedOtherProjectMemory(dataDir);
 
-    const result = getLoopRelayLoopStatusTool({}, { dataDir });
+    const result = getLoopRelayLoopStatusTool({ cwd: PRIVATE_CWD }, { dataDir });
     const serialized = JSON.stringify(result);
 
     expect(result).toMatchObject({
@@ -50,11 +52,10 @@ describe("LoopRelay MCP tools", () => {
         included_in_brief: true,
       },
       activity: {
-        active_worktrees: 2,
-        active_sessions: 2,
-        needs_review: true,
-        next_action:
-          "compare loop snapshots by worktree before merging agent output",
+        active_worktrees: 1,
+        active_sessions: 1,
+        needs_review: false,
+        next_action: "continue current worktree loop",
         recent_decisions: [
           {
             snapshot_id: "loop_mcp",
@@ -75,58 +76,7 @@ describe("LoopRelay MCP tools", () => {
             latest_outcome_status: "passed",
             evidence_count: 2,
           },
-          {
-            worktree: "other-worktree",
-            sessions: 1,
-            snapshots: 1,
-            latest_snapshot_id: "loop_other_project",
-            latest_outcome_status: "passed",
-            evidence_count: 1,
-          },
         ],
-        command_center: {
-          review_packet: {
-            title: "Review-before-merge packet",
-            status: "ready",
-            summary: "2 ready, 0 needs review, 0 missing evidence",
-            next_action: "compare ready evidence before merge",
-            decision_advisory: {
-              summary: "recent continue decision recorded for worktree-mcp",
-              next_action: "honor recent continue decision before merge",
-            },
-            ready_count: 2,
-            needs_review_count: 0,
-            missing_evidence_count: 0,
-            actions: ["compare evidence before merge"],
-            checklist: [
-              {
-                label: "Compare ready evidence before merge",
-                status: "required",
-                action: "compare evidence before merge",
-              },
-            ],
-          },
-          review_items: [
-            {
-              worktree: "worktree-mcp",
-              evidence_count: 2,
-              merge_readiness: {
-                status: "ready",
-                evidence: "evidence present",
-                next_action: "compare evidence before merge",
-              },
-            },
-            {
-              worktree: "other-worktree",
-              evidence_count: 1,
-              merge_readiness: {
-                status: "ready",
-                evidence: "evidence present",
-                next_action: "compare evidence before merge",
-              },
-            },
-          ],
-        },
       },
       memory_candidate: {
         eligible: true,
@@ -168,7 +118,7 @@ describe("LoopRelay MCP tools", () => {
 
   it("returns concrete setup guidance when loop storage is unavailable", () => {
     const dataDir = join(tmpdir(), `looprelay-missing-${randomUUID()}`);
-    const result = getLoopRelayLoopStatusTool({}, { dataDir });
+    const result = getLoopRelayLoopStatusTool({ cwd: PRIVATE_CWD }, { dataDir });
     const serialized = JSON.stringify(result);
 
     expect(result).toMatchObject({
@@ -202,7 +152,7 @@ describe("LoopRelay MCP tools", () => {
   it("reports compact boundaries newer than the latest loop snapshot", () => {
     const dataDir = seedLoopSnapshot({ withCompactBoundary: true });
 
-    const result = getLoopRelayLoopStatusTool({}, { dataDir });
+    const result = getLoopRelayLoopStatusTool({ cwd: PRIVATE_CWD }, { dataDir });
     const serialized = JSON.stringify(result);
 
     expect(result).toMatchObject({
@@ -225,7 +175,7 @@ describe("LoopRelay MCP tools", () => {
   it("prepares a continuation brief from the latest loop snapshot", () => {
     const dataDir = seedLoopSnapshot();
 
-    const result = prepareLoopBriefTool({}, { dataDir });
+    const result = prepareLoopBriefTool({ cwd: PRIVATE_CWD }, { dataDir });
     const serialized = JSON.stringify(result);
 
     expect(result).toMatchObject({
@@ -258,7 +208,7 @@ describe("LoopRelay MCP tools", () => {
     recordLoopMemoryTool({ latest: true, approved_by: "user" }, { dataDir });
     seedOtherProjectMemory(dataDir);
 
-    const result = prepareLoopBriefTool({}, { dataDir });
+    const result = prepareLoopBriefTool({ cwd: PRIVATE_CWD }, { dataDir });
     const serialized = JSON.stringify(result);
 
     expect(result).toMatchObject({
@@ -289,6 +239,7 @@ describe("LoopRelay MCP tools", () => {
 
     const result = prepareLoopBriefTool(
       {
+        cwd: PRIVATE_CWD,
         worktree: "worktree-mcp",
         session_id: "session-mcp",
         branch: "codex/agent-loop-memory-design",
@@ -321,6 +272,7 @@ describe("LoopRelay MCP tools", () => {
 
     const result = prepareLoopBriefTool(
       {
+        cwd: PRIVATE_CWD,
         worktree: "missing-worktree",
         session_id: "missing-session",
         branch: "feature/missing-loop",
@@ -343,7 +295,7 @@ describe("LoopRelay MCP tools", () => {
   it("includes compact boundary awareness in continuation briefs", () => {
     const dataDir = seedLoopSnapshot({ withCompactBoundary: true });
 
-    const result = prepareLoopBriefTool({}, { dataDir });
+    const result = prepareLoopBriefTool({ cwd: PRIVATE_CWD }, { dataDir });
     const serialized = JSON.stringify(result);
 
     expect(result).toMatchObject({
@@ -364,7 +316,7 @@ describe("LoopRelay MCP tools", () => {
     const dataDir = createTempDir();
     initializeLoopRelay({ dataDir });
 
-    const result = prepareLoopBriefTool({}, { dataDir });
+    const result = prepareLoopBriefTool({ cwd: PRIVATE_CWD }, { dataDir });
 
     expect(result).toEqual({
       is_error: true,
@@ -800,7 +752,13 @@ function seedLoopSnapshot(
       );
     } else {
       storage.createLoopSnapshot(
-        loopSnapshot(options.outcome ? { outcome: options.outcome } : {}),
+        loopSnapshot({
+          project_id: createProjectKey(
+            PRIVATE_CWD,
+            init.hookAuth.web_session_secret,
+          ),
+          ...(options.outcome ? { outcome: options.outcome } : {}),
+        }),
       );
     }
   } finally {
@@ -861,7 +819,7 @@ function seedOtherProjectMemory(dataDir: string): void {
     storage.createLoopSnapshot({
       ...latest,
       id: "loop_other_project",
-      created_at: "2026-07-03T01:00:00.000Z",
+      created_at: "2026-07-05T01:00:00.000Z",
       session_id: "session-other-project",
       cwd_label: "other-project",
       project_id: "proj_other",
@@ -894,7 +852,10 @@ function seedLoopMergeDecision(dataDir: string): void {
   try {
     storage.recordLoopMergeDecision({
       snapshot_id: "loop_mcp",
-      project_id: "proj_mcp",
+      project_id: createProjectKey(
+        PRIVATE_CWD,
+        init.hookAuth.web_session_secret,
+      ),
       worktree: "worktree-mcp",
       decision: "continue",
       reason: "Needs one more verification pass before merge.",
@@ -919,6 +880,10 @@ function seedNewerOtherWorktreeSnapshot(dataDir: string): void {
         session_id: "session-other-mcp",
         branch: "feature/other-loop",
         worktree_label: "other-worktree",
+        project_id: createProjectKey(
+          PRIVATE_CWD,
+          init.hookAuth.web_session_secret,
+        ),
         outcome: {
           status: "passed",
           summary: "Other worktree has a newer snapshot.",

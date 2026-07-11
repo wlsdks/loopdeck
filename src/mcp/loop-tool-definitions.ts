@@ -81,12 +81,18 @@ export const GET_LOOPRELAY_LOOP_STATUS_TOOL_DEFINITION: LoopRelayMcpToolDefiniti
     inputSchema: {
       type: "object",
       properties: {
+        cwd: {
+          type: "string",
+          description:
+            "Current project working directory used only to select its local loop snapshots. The path is never returned.",
+        },
         include_latest: {
           type: "boolean",
           description:
             "Whether to include safe metadata for the latest loop snapshot. Defaults to true.",
         },
       },
+      required: ["cwd"],
       additionalProperties: false,
     },
     outputSchema: {
@@ -411,6 +417,11 @@ export const PREPARE_LOOP_BRIEF_TOOL_DEFINITION: LoopRelayMcpToolDefinition = {
   inputSchema: {
     type: "object",
     properties: {
+      cwd: {
+        type: "string",
+        description:
+          "Current project working directory used only to select its local loop snapshots. The path is never returned.",
+      },
       latest: {
         type: "boolean",
         description:
@@ -432,6 +443,7 @@ export const PREPARE_LOOP_BRIEF_TOOL_DEFINITION: LoopRelayMcpToolDefinition = {
           "Optional branch label. Selects the newest matching local loop snapshot.",
       },
     },
+    required: ["cwd"],
     additionalProperties: false,
   },
   outputSchema: {

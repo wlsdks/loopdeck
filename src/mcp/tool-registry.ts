@@ -38,6 +38,8 @@ import {
 } from "./loop-tool.js";
 import type {
   ApplyInstructionPatchToolArguments,
+  GetLoopRelayLoopStatusToolArguments,
+  PrepareLoopBriefToolArguments,
   ProposeInstructionPatchToolArguments,
   ProposeLoopMemoryCandidateToolArguments,
   RecordLoopMemoryToolArguments,
@@ -148,7 +150,11 @@ export const LOOPRELAY_MCP_TOOL_REGISTRY: readonly RegisteredLoopRelayTool[] = [
   },
   {
     definition: GET_LOOPRELAY_LOOP_STATUS_TOOL_DEFINITION,
-    handler: (args, options) => getLoopRelayLoopStatusTool(args, options),
+    handler: (args, options) =>
+      getLoopRelayLoopStatusTool(
+        args as GetLoopRelayLoopStatusToolArguments,
+        options,
+      ),
   },
   {
     definition: GET_BENCHMARK_CANDIDATES_TOOL_DEFINITION,
@@ -168,7 +174,8 @@ export const LOOPRELAY_MCP_TOOL_REGISTRY: readonly RegisteredLoopRelayTool[] = [
   },
   {
     definition: PREPARE_LOOP_BRIEF_TOOL_DEFINITION,
-    handler: (args, options) => prepareLoopBriefTool(args, options),
+    handler: (args, options) =>
+      prepareLoopBriefTool(args as PrepareLoopBriefToolArguments, options),
   },
   {
     definition: RECORD_LOOP_OUTCOME_TOOL_DEFINITION,

@@ -3,7 +3,7 @@
   "design": "matched_observational",
   "status": "insufficient_data",
   "causal_claim": false,
-  "pair_count": 3,
+  "pair_count": 4,
   "task_type_count": 3,
   "task_types": [
     "failure_prevention",
@@ -15,46 +15,46 @@
     "task_types": 3
   },
   "baseline": {
-    "success_rate": 0.666667,
-    "mean_actionability": 0.533333,
-    "mean_elapsed_ms": 42650,
-    "mean_tool_calls": 2.666667,
-    "mean_input_tokens": 99283,
-    "mean_output_tokens": 1286.666667,
-    "friction_free_rate": 0
+    "success_rate": 0.5,
+    "mean_actionability": 0.55,
+    "mean_elapsed_ms": 36250,
+    "mean_tool_calls": 2.75,
+    "mean_input_tokens": 93567.75,
+    "mean_output_tokens": 1142.75,
+    "friction_free_rate": 0.25
   },
   "looprelay": {
-    "success_rate": 0.666667,
-    "mean_actionability": 0.666667,
-    "mean_elapsed_ms": 35190,
+    "success_rate": 0.75,
+    "mean_actionability": 0.75,
+    "mean_elapsed_ms": 30826.666667,
     "mean_tool_calls": 3,
-    "mean_input_tokens": 122045,
-    "mean_output_tokens": 1223.666667,
-    "friction_free_rate": 0.333333
+    "mean_input_tokens": 112258.5,
+    "mean_output_tokens": 1094.75,
+    "friction_free_rate": 0.5
   },
   "delta": {
-    "success_rate": 0,
-    "mean_actionability": 0.133334,
-    "mean_elapsed_ms": -7460,
-    "mean_tool_calls": 0.333333,
-    "mean_input_tokens": 22762,
-    "friction_free_rate": 0.333333
+    "success_rate": 0.25,
+    "mean_actionability": 0.2,
+    "mean_elapsed_ms": -5423.333333,
+    "mean_tool_calls": 0.25,
+    "mean_input_tokens": 18690.75,
+    "friction_free_rate": 0.25
   },
   "transitions": {
-    "improved": 1,
+    "improved": 2,
     "regressed": 1,
     "unchanged_passed": 1,
     "unchanged_failed": 0
   },
   "preference": {
     "baseline": 1,
-    "looprelay": 2,
+    "looprelay": 3,
     "tie": 0
   },
   "adoption_rate": 1,
   "bias": {
     "baseline_first": 2,
-    "looprelay_first": 1,
+    "looprelay_first": 2,
     "position_consistency": null
   },
   "critical_blockers": 0,

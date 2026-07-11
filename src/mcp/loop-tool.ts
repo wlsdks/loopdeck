@@ -29,6 +29,7 @@ import {
   looprelayStatusPrivacy,
 } from "../loop/status.js";
 import { createSqlitePromptStorage } from "../storage/sqlite.js";
+import { createProjectKey } from "../storage/project-id.js";
 import { MCP_FIRST_PROMPT_NEXT_STEP } from "./first-prompt-next-step.js";
 import type { ScorePromptToolOptions } from "./score-tool-types.js";
 import type {
@@ -74,7 +75,10 @@ export function getLoopRelayLoopStatusTool(
     });
 
     try {
-      const snapshots = storage.listLoopSnapshots({ limit: 100 }).items;
+      const projectId = createProjectKey(args.cwd, auth.web_session_secret);
+      const snapshots = storage
+        .listLoopSnapshots({ limit: 100 })
+        .items.filter((snapshot) => snapshot.project_id === projectId);
       const latest = snapshots.at(0);
       const status = createLoopRelayStatus({
         snapshots,
@@ -85,7 +89,10 @@ export function getLoopRelayLoopStatusTool(
               .length
           : 0,
         memoryCandidate: latest ? decideLoopMemoryCandidate(latest) : undefined,
-        mergeDecisions: storage.listLoopMergeDecisions({ limit: 3 }).items,
+        mergeDecisions: storage.listLoopMergeDecisions({
+          limit: 3,
+          projectId,
+        }).items,
       });
 
       return {
@@ -138,12 +145,13 @@ export function prepareLoopBriefTool(
     });
 
     try {
+      const projectId = createProjectKey(args.cwd, auth.web_session_secret);
+      const snapshots = storage
+        .listLoopSnapshots({ limit: 100 })
+        .items.filter((snapshot) => snapshot.project_id === projectId);
       const snapshot = hasSelection
-        ? selectLoopSnapshot(
-            storage.listLoopSnapshots({ limit: 100 }).items,
-            selection,
-          )
-        : storage.getLatestLoopSnapshot();
+        ? selectLoopSnapshot(snapshots, selection)
+        : snapshots.at(0);
       if (!snapshot) {
         return loopToolError(
           "not_found",
