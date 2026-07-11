@@ -1,0 +1,8 @@
+{
+  "name": "parser-failure-fixture",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test:parser": "node --test test/parser-plan.test.js"
+  }
+}

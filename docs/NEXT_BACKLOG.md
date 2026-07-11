@@ -62,6 +62,17 @@ Candidate focused slices:
 - improve safe selection when multiple worktrees or sessions are active
 - sharpen question generation for missing scope, constraints, and acceptance criteria
 
+Current provisional evidence decisions (17-pair seed cohort):
+
+- `retain`: session recovery and external failure-outcome recovery remain
+  opt-in continuity workflows; their observed lift is positive but uncertainty
+  is still wide.
+- `narrow`: skip generic implementation-continuation context when repository
+  state and focused tests already identify the next action. Five pairs show no
+  improvement, one regression, and material time/token overhead.
+- `collect_more`: release-verification continuity and ambiguity clarification
+  remain at one pair each and cannot support a product decision.
+
 No item above authorizes automatic prompt submission, hidden provider calls,
 private transcript scraping, automatic memory writes, or automatic instruction
 file edits.

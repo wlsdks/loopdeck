@@ -11288,3 +11288,6 @@
   - [x] Add the fifth session-recovery pair. Preserve the unchanged failure
         where Codex saw the correct brief but asked for confirmation, and mark
         session recovery `retain` because the 95% bound still crosses zero.
+  - [x] Add two repeated-failure and two ordinary-implementation pairs on
+        identical commits. Reach N=5 for both types: retain external failure
+        recovery and narrow generic implementation continuation.

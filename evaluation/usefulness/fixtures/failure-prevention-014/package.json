@@ -1,0 +1,8 @@
+{
+  "name": "failure-prevention-fixture",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test:integration": "node --test test/integration-plan.test.js"
+  }
+}

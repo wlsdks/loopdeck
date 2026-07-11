@@ -1,0 +1,9 @@
+{
+  "name": "default-config-fixture",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:config": "node --test test/default-config.test.js"
+  }
+}

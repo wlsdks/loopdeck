@@ -499,6 +499,218 @@
       "judge": {
         "position_consistent": null
       }
+    },
+    {
+      "id": "failure-prevention-014",
+      "task_type": "failure_prevention",
+      "order": "looprelay_first",
+      "measurement_contract": "codex-ephemeral-v2",
+      "execution": {
+        "agent": "codex",
+        "agent_version": "0.144.1",
+        "model": "gpt-5.4",
+        "reasoning_effort": "medium",
+        "sandbox": "read-only",
+        "fresh_session": true,
+        "fixture_commit": "2283361446e0fcffe08a2db554f700017f89a3a9",
+        "budget_contract": "same-model-context-limit",
+        "ground_truth": "deterministic-fixture"
+      },
+      "baseline": {
+        "passed": false,
+        "actionability": 0.4,
+        "elapsed_ms": 26650,
+        "time_to_first_value_ms": 26650,
+        "tool_calls": 5,
+        "input_tokens": 47801,
+        "cached_input_tokens": 25728,
+        "output_tokens": 850,
+        "continuation_accuracy": 0,
+        "failure_prevention_accuracy": 0,
+        "friction_count": 0,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false
+      },
+      "looprelay": {
+        "passed": true,
+        "actionability": 1,
+        "elapsed_ms": 62120,
+        "time_to_first_value_ms": 62120,
+        "tool_calls": 8,
+        "input_tokens": 66979,
+        "cached_input_tokens": 60416,
+        "output_tokens": 1756,
+        "continuation_accuracy": 1,
+        "failure_prevention_accuracy": 1,
+        "friction_count": 0,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false,
+        "adopted": true
+      },
+      "human_preference": "looprelay",
+      "judge": {
+        "position_consistent": null
+      }
+    },
+    {
+      "id": "implementation-continuation-015",
+      "task_type": "implementation_continuation",
+      "order": "baseline_first",
+      "measurement_contract": "codex-ephemeral-v2",
+      "execution": {
+        "agent": "codex",
+        "agent_version": "0.144.1",
+        "model": "gpt-5.4",
+        "reasoning_effort": "medium",
+        "sandbox": "read-only",
+        "fresh_session": true,
+        "fixture_commit": "3dc58cad13f25acb6772d46f5f4a36f9f26c7a52",
+        "budget_contract": "same-model-context-limit",
+        "ground_truth": "deterministic-fixture"
+      },
+      "baseline": {
+        "passed": true,
+        "actionability": 1,
+        "elapsed_ms": 31450,
+        "time_to_first_value_ms": 31450,
+        "tool_calls": 9,
+        "input_tokens": 66491,
+        "cached_input_tokens": 54784,
+        "output_tokens": 1035,
+        "continuation_accuracy": 1,
+        "friction_count": 0,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false
+      },
+      "looprelay": {
+        "passed": true,
+        "actionability": 1,
+        "elapsed_ms": 43450,
+        "time_to_first_value_ms": 43450,
+        "tool_calls": 9,
+        "input_tokens": 80831,
+        "cached_input_tokens": 71040,
+        "output_tokens": 1394,
+        "continuation_accuracy": 1,
+        "friction_count": 1,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false,
+        "adopted": true
+      },
+      "human_preference": "baseline",
+      "judge": {
+        "position_consistent": null
+      }
+    },
+    {
+      "id": "failure-prevention-016",
+      "task_type": "failure_prevention",
+      "order": "baseline_first",
+      "measurement_contract": "codex-ephemeral-v2",
+      "execution": {
+        "agent": "codex",
+        "agent_version": "0.144.1",
+        "model": "gpt-5.4",
+        "reasoning_effort": "medium",
+        "sandbox": "read-only",
+        "fresh_session": true,
+        "fixture_commit": "fd6f9a243a0795fd2c221afa499da0962e140d83",
+        "budget_contract": "same-model-context-limit",
+        "ground_truth": "deterministic-fixture"
+      },
+      "baseline": {
+        "passed": false,
+        "actionability": 0.3,
+        "elapsed_ms": 23610,
+        "time_to_first_value_ms": 23610,
+        "tool_calls": 6,
+        "input_tokens": 47595,
+        "cached_input_tokens": 32896,
+        "output_tokens": 721,
+        "continuation_accuracy": 0,
+        "failure_prevention_accuracy": 0,
+        "friction_count": 0,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false
+      },
+      "looprelay": {
+        "passed": true,
+        "actionability": 1,
+        "elapsed_ms": 28200,
+        "time_to_first_value_ms": 28200,
+        "tool_calls": 8,
+        "input_tokens": 62893,
+        "cached_input_tokens": 52736,
+        "output_tokens": 1067,
+        "continuation_accuracy": 1,
+        "failure_prevention_accuracy": 1,
+        "friction_count": 0,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false,
+        "adopted": true
+      },
+      "human_preference": "looprelay",
+      "judge": {
+        "position_consistent": null
+      }
+    },
+    {
+      "id": "implementation-continuation-017",
+      "task_type": "implementation_continuation",
+      "order": "looprelay_first",
+      "measurement_contract": "codex-ephemeral-v2",
+      "execution": {
+        "agent": "codex",
+        "agent_version": "0.144.1",
+        "model": "gpt-5.4",
+        "reasoning_effort": "medium",
+        "sandbox": "read-only",
+        "fresh_session": true,
+        "fixture_commit": "600d5e637c2cb0292f3d8f42cc71c97ab2129ae8",
+        "budget_contract": "same-model-context-limit",
+        "ground_truth": "deterministic-fixture"
+      },
+      "baseline": {
+        "passed": true,
+        "actionability": 1,
+        "elapsed_ms": 35540,
+        "time_to_first_value_ms": 35540,
+        "tool_calls": 10,
+        "input_tokens": 82861,
+        "cached_input_tokens": 58240,
+        "output_tokens": 1224,
+        "continuation_accuracy": 1,
+        "friction_count": 0,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false
+      },
+      "looprelay": {
+        "passed": true,
+        "actionability": 1,
+        "elapsed_ms": 53760,
+        "time_to_first_value_ms": 53760,
+        "tool_calls": 7,
+        "input_tokens": 65790,
+        "cached_input_tokens": 58368,
+        "output_tokens": 1406,
+        "continuation_accuracy": 1,
+        "friction_count": 0,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false,
+        "adopted": true
+      },
+      "human_preference": "baseline",
+      "judge": {
+        "position_consistent": null
+      }
     }
   ]
 }

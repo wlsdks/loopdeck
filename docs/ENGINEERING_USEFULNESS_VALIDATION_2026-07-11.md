@@ -5,11 +5,11 @@ evidence workflows. It is not a causal product claim.
 
 ## Method
 
-Thirteen matched pairs use fixed Codex model and reasoning settings, identical
+Seventeen matched pairs use fixed Codex model and reasoning settings, identical
 fixture commits within each pair, a read-only boundary, one output schema, and
-the same model context limit. Seven pairs ran baseline first and six ran LoopRelay
+the same model context limit. Nine pairs ran baseline first and eight ran LoopRelay
 first. The seed corpus covers session recovery (5), implementation continuation
-(3), repeated-failure prevention (3), release-verification continuity (1), and
+(5), repeated-failure prevention (5), release-verification continuity (1), and
 ambiguity clarification (1). It is below the active threshold of 30 total pairs
 and five pairs per task type.
 
@@ -28,19 +28,19 @@ therefore a bias diagnostic, not the source of success labels.
 | Task type | Pairs | Baseline success | LoopRelay success | Difference |
 | --- | ---: | ---: | ---: | ---: |
 | Ambiguity clarification | 1 | 100% | 100% | 0pp |
-| Failure prevention | 3 | 0% | 100% | +100pp |
-| Implementation continuation | 3 | 100% | 66.7% | -33.3pp |
+| Failure prevention | 5 | 0% | 100% | +100pp |
+| Implementation continuation | 5 | 100% | 80% | -20pp |
 | Release-verification continuity | 1 | 100% | 100% | 0pp |
 | Session recovery | 5 | 20% | 80% | +60pp |
-| **Aggregate** | **13** | **46.2%** | **84.6%** | **+38.5pp** |
+| **Aggregate** | **17** | **47.1%** | **88.2%** | **+41.2pp** |
 
-- Actionability increased from 64.6% to 88.5%.
-- Mean elapsed time decreased by 2.68 seconds among runs with timing data.
-- Mean tool calls decreased from 4.38 to 4.08.
-- Mean input tokens increased from 87,462 to 109,511 (+25.2%).
-- Six failures improved, one successful baseline regressed, five pairs remained
-  successful, and one pair remained failed.
-- Human preference was LoopRelay 8, baseline 4, tie 1.
+- Actionability increased from 65.3% to 91.2%.
+- Mean elapsed time increased by 2.38 seconds among runs with timing data.
+- Mean tool calls decreased from 5.12 to 5.00.
+- Mean input tokens increased from 81,280 to 100,008 (+23.0%).
+- Eight failures improved, one successful baseline regressed, seven pairs
+  remained successful, and one pair remained failed.
+- Human preference was LoopRelay 10, baseline 6, tie 1.
 - Position-swapped judge choices were consistent for 9/10 pairs, but agreed
   with the ground-truth-based human preference on only 4/9 consistent pairs.
   This disagreement is evidence against using an ungrounded LLM preference as
@@ -68,8 +68,24 @@ evaluation harness assumed the wrong JSON nesting. It is recorded as excluded
 harness friction and does not contribute outcome metrics.
 
 Cached-token, TTFV, continuation-accuracy, and blocker flags are available for
-the three new pairs only (23.1% condition coverage). The report exposes this
+the seven new pairs only (41.2% condition coverage). The report exposes this
 coverage instead of silently treating missing historical measurements as zero.
+
+Two additional failure-prevention fixtures covered an upstream quota failure
+and malformed-payload parsing. Baseline correctly refused to guess the missing
+external outcome in both cases; LoopRelay recovered the rejected approach and
+replacement strategy in both cases. Across all five failure-prevention pairs,
+observed success is 0% versus 100%. The conservative bound still crosses zero,
+so the automated decision is `retain`, not `strengthen`.
+
+Two additional ordinary implementation fixtures were fully specified by local
+tests. Both conditions found the same minimal changes. In these new pairs,
+LoopRelay added 12.0s and 18.2s respectively without improving success. Across
+five implementation-continuation pairs, observed success is 100% versus 80%,
+mean elapsed cost is +13.6s, input-token cost is +59,168, and one treatment
+regressed. The provisional product decision is `narrow`: do not inject a
+continuation brief when repository state and focused tests already determine
+the next action.
 
 ## Interpretation And Scope
 

@@ -1,0 +1,9 @@
+{
+  "name": "implementation-continuation-fixture",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:normalize": "node --test test/normalize-label.test.js"
+  }
+}
