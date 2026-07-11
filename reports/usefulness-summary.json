@@ -1,7 +1,7 @@
 {
   "version": 1,
   "design": "matched_observational",
-  "status": "directional_evidence_ready",
+  "status": "insufficient_data",
   "causal_claim": false,
   "pair_count": 10,
   "task_type_count": 3,
@@ -17,6 +17,11 @@
     "implementation_continuation",
     "session_recovery"
   ],
+  "coverage": {
+    "required_pairs_per_task_type": 5,
+    "task_types_meeting_pair_minimum": 0,
+    "all_task_types_meet_pair_minimum": false
+  },
   "by_task_type": {
     "failure_prevention": {
       "pair_count": 3,
@@ -24,7 +29,28 @@
       "looprelay_success_rate": 1,
       "success_rate_delta": 1,
       "baseline_actionability": 0.466667,
-      "looprelay_actionability": 1
+      "looprelay_actionability": 1,
+      "transitions": {
+        "improved": 3,
+        "regressed": 0,
+        "unchanged_passed": 0,
+        "unchanged_failed": 0
+      },
+      "delta": {
+        "mean_elapsed_ms": -17710,
+        "mean_tool_calls": -1.333333,
+        "mean_input_tokens": -24370,
+        "friction_free_rate": 0.333333
+      },
+      "uncertainty": {
+        "method": "paired_difference_hoeffding_95",
+        "lower": -0.568201,
+        "upper": 1
+      },
+      "decision": {
+        "action": "collect_more",
+        "evidence_status": "underpowered"
+      }
     },
     "implementation_continuation": {
       "pair_count": 3,
@@ -32,7 +58,28 @@
       "looprelay_success_rate": 0.666667,
       "success_rate_delta": -0.333333,
       "baseline_actionability": 0.933333,
-      "looprelay_actionability": 0.733333
+      "looprelay_actionability": 0.733333,
+      "transitions": {
+        "improved": 0,
+        "regressed": 1,
+        "unchanged_passed": 2,
+        "unchanged_failed": 0
+      },
+      "delta": {
+        "mean_elapsed_ms": 12600,
+        "mean_tool_calls": 1,
+        "mean_input_tokens": 99523.333333,
+        "friction_free_rate": 0
+      },
+      "uncertainty": {
+        "method": "paired_difference_hoeffding_95",
+        "lower": -1,
+        "upper": 1
+      },
+      "decision": {
+        "action": "collect_more",
+        "evidence_status": "underpowered"
+      }
     },
     "session_recovery": {
       "pair_count": 4,
@@ -40,12 +87,34 @@
       "looprelay_success_rate": 1,
       "success_rate_delta": 0.75,
       "baseline_actionability": 0.45,
-      "looprelay_actionability": 0.95
+      "looprelay_actionability": 0.95,
+      "transitions": {
+        "improved": 3,
+        "regressed": 0,
+        "unchanged_passed": 1,
+        "unchanged_failed": 0
+      },
+      "delta": {
+        "mean_elapsed_ms": 180,
+        "mean_tool_calls": 0,
+        "mean_input_tokens": 9586.25,
+        "friction_free_rate": 0
+      },
+      "uncertainty": {
+        "method": "paired_difference_hoeffding_95",
+        "lower": -0.608102,
+        "upper": 1
+      },
+      "decision": {
+        "action": "collect_more",
+        "evidence_status": "underpowered"
+      }
     }
   },
   "minimums": {
-    "pairs": 10,
-    "task_types": 3,
+    "pairs": 30,
+    "task_types": 5,
+    "pairs_per_task_type": 5,
     "independent_users": 3
   },
   "baseline": {

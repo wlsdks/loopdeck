@@ -11262,3 +11262,19 @@
       fall back to unrelated snapshots or expose raw paths/prompt bodies.
 - [x] EMPTY: Align empty activity guidance across domain, MCP schema, and web
       parsing so zero worktrees means `create first local loop snapshot`.
+
+## 2026-07-11 Long-Horizon Matched-Pair Validation
+
+- [x] AUDIT: Identify that the current report checks only aggregate pair/type
+      counts, omits per-type cost and transition evidence, and cannot represent
+      release-continuity or ambiguity-clarification tasks.
+- [x] RED: Require five long-horizon task types, per-type sample coverage,
+      paired transitions, cost deltas, uncertainty, and evidence-qualified
+      strengthen/retain/narrow/remove decisions.
+- [x] GREEN: Extend the raw-free report and SVG generator without converting
+      observational evidence into a causal claim.
+- [x] DATA: Raise the active target to 30 pairs, five task types, and at least
+      five pairs per type while retaining the current ten pairs as a disclosed
+      seed cohort.
+- [ ] RUN: Execute fresh counterbalanced Codex pairs and append only
+      deterministic, privacy-safe outcome evidence.

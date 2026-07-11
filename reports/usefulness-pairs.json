@@ -3,8 +3,9 @@
   "design": "matched_observational",
   "causal_claim": false,
   "minimums": {
-    "pairs": 10,
-    "task_types": 3,
+    "pairs": 30,
+    "task_types": 5,
+    "pairs_per_task_type": 5,
     "independent_users": 3
   },
   "independent_users": [],

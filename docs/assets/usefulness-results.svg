@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="920" height="820" viewBox="0 0 920 820" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="843" viewBox="0 0 920 843" role="img" aria-labelledby="title desc">
   <title id="title">LoopRelay engineering usefulness</title>
   <desc id="desc">Baseline and LoopRelay matched-pair engineering outcomes and costs.</desc>
-  <rect width="920" height="820" rx="12" fill="#fbfaf6"/>
+  <rect width="920" height="843" rx="12" fill="#fbfaf6"/>
   <text x="36" y="42" font-family="system-ui,sans-serif" font-size="22" font-weight="700" fill="#171816">LoopRelay engineering usefulness</text>
   <text x="36" y="70" font-family="system-ui,sans-serif" font-size="13" fill="#64665f">10 matched pairs · 3 task types · causal claim: false</text>
-  <rect x="704" y="25" width="180" height="30" rx="15" fill="#dadece"/>
-  <text x="794" y="45" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#154f48">DIRECTIONAL EVIDENCE</text>
+  <rect x="704" y="25" width="180" height="30" rx="15" fill="#f5e6c8"/>
+  <text x="794" y="45" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#7a4700">INSUFFICIENT DATA</text>
   <rect x="36" y="92" width="12" height="12" rx="2" fill="#8a887f"/><text x="56" y="103" font-family="system-ui,sans-serif" font-size="12" fill="#64665f">Baseline</text>
   <rect x="126" y="92" width="12" height="12" rx="2" fill="#1f6f64"/><text x="146" y="103" font-family="system-ui,sans-serif" font-size="12" fill="#64665f">LoopRelay</text>
   <text x="36" y="162" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#171816">Success rate</text>
@@ -40,25 +40,28 @@
   <text x="660" y="539" font-family="ui-monospace,monospace" font-size="11" fill="#171816">110k</text>
   <line x1="36" y1="570" x2="884" y2="570" stroke="#d8d4ca"/>
   <text x="36" y="598" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#171816">Success rate by task type</text>
-  <text x="36" y="638" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#171816">Failure prevention</text>
+  <text x="36" y="635" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#171816">Failure prevention</text>
+  <text x="36" y="649" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="#64665f">COLLECT MORE · N=3</text>
   <rect x="250" y="625" width="0" height="16" rx="3" fill="#8a887f"/>
   <text x="470" y="638" font-family="ui-monospace,monospace" font-size="11" fill="#171816">0%</text>
   <rect x="530" y="625" width="210" height="16" rx="3" fill="#1f6f64"/>
   <text x="750" y="638" font-family="ui-monospace,monospace" font-size="11" fill="#171816">100%</text>
   <text x="884" y="638" text-anchor="end" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="#154f48">+100pp</text>
-  <text x="36" y="684" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#171816">Implementation continuation</text>
+  <text x="36" y="681" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#171816">Implementation continuation</text>
+  <text x="36" y="695" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="#64665f">COLLECT MORE · N=3</text>
   <rect x="250" y="671" width="210" height="16" rx="3" fill="#8a887f"/>
   <text x="470" y="684" font-family="ui-monospace,monospace" font-size="11" fill="#171816">100%</text>
   <rect x="530" y="671" width="140.00007000000002" height="16" rx="3" fill="#1f6f64"/>
   <text x="750" y="684" font-family="ui-monospace,monospace" font-size="11" fill="#171816">66.7%</text>
   <text x="884" y="684" text-anchor="end" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="#b42318">-33.3pp</text>
-  <text x="36" y="730" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#171816">Session recovery</text>
+  <text x="36" y="727" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#171816">Session recovery</text>
+  <text x="36" y="741" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="#64665f">COLLECT MORE · N=4</text>
   <rect x="250" y="717" width="52.5" height="16" rx="3" fill="#8a887f"/>
   <text x="470" y="730" font-family="ui-monospace,monospace" font-size="11" fill="#171816">25%</text>
   <rect x="530" y="717" width="210" height="16" rx="3" fill="#1f6f64"/>
   <text x="750" y="730" font-family="ui-monospace,monospace" font-size="11" fill="#171816">100%</text>
   <text x="884" y="730" text-anchor="end" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="#154f48">+75pp</text>
-  <line x1="36" y1="770" x2="884" y2="770" stroke="#d8d4ca"/>
-  <text x="36" y="795" font-family="system-ui,sans-serif" font-size="12" fill="#64665f">Higher is better for success, actionability, and friction-free. Lower is better for time, calls, and tokens.</text>
-  <text x="884" y="795" text-anchor="end" font-family="system-ui,sans-serif" font-size="12" fill="#64665f">minimum 10 pairs / 3 task types</text>
+  <line x1="36" y1="793" x2="884" y2="793" stroke="#d8d4ca"/>
+  <text x="36" y="818" font-family="system-ui,sans-serif" font-size="12" fill="#64665f">Higher is better for success, actionability, and friction-free. Lower is better for time, calls, and tokens.</text>
+  <text x="884" y="818" text-anchor="end" font-family="system-ui,sans-serif" font-size="12" fill="#64665f">target N=30 · types=5 · N/type=5</text>
 </svg>

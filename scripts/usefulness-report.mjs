@@ -11,6 +11,8 @@ const TASK_TYPES = new Set([
   "session_recovery",
   "implementation_continuation",
   "failure_prevention",
+  "release_verification_continuity",
+  "ambiguity_clarification",
 ]);
 
 export function createUsefulnessReport(input) {
@@ -22,8 +24,17 @@ export function createUsefulnessReport(input) {
   const minimums = input.minimums;
   const independentUsers = input.independent_users ?? [];
   const independentAgentOperators = input.independent_agent_operators ?? [];
+  const requiredPairsPerTaskType = minimums.pairs_per_task_type ?? 1;
+  const taskTypesMeetingPairMinimum = Array.from(taskTypes).filter(
+    (taskType) =>
+      pairs.filter((pair) => pair.task_type === taskType).length >=
+      requiredPairsPerTaskType,
+  ).length;
+  const allTaskTypesMeetPairMinimum =
+    taskTypes.size >= minimums.task_types &&
+    taskTypesMeetingPairMinimum === taskTypes.size;
   const enoughData =
-    pairs.length >= minimums.pairs && taskTypes.size >= minimums.task_types;
+    pairs.length >= minimums.pairs && allTaskTypesMeetPairMinimum;
 
   return {
     version: 1,
@@ -48,12 +59,20 @@ export function createUsefulnessReport(input) {
       input.critical_blockers ?? 0,
     ),
     task_types: Array.from(taskTypes).sort(),
+    coverage: {
+      required_pairs_per_task_type: requiredPairsPerTaskType,
+      task_types_meeting_pair_minimum: taskTypesMeetingPairMinimum,
+      all_task_types_meet_pair_minimum: allTaskTypesMeetPairMinimum,
+    },
     by_task_type: Object.fromEntries(
       Array.from(taskTypes)
         .sort()
         .map((taskType) => [
           taskType,
-          taskTypeReport(pairs.filter((pair) => pair.task_type === taskType)),
+          taskTypeReport(
+            pairs.filter((pair) => pair.task_type === taskType),
+            requiredPairsPerTaskType,
+          ),
         ]),
     ),
     minimums,
@@ -161,15 +180,18 @@ export function renderUsefulnessSvg(report) {
       renderTaskTypeRow(taskType, values, 625 + index * 46),
     )
     .join("\n");
+  const taskStart = 625;
+  const footerY = taskStart + Object.keys(report.by_task_type).length * 46 + 30;
+  const svgHeight = footerY + 50;
   const badge =
     report.status === "insufficient_data"
       ? "INSUFFICIENT DATA"
       : "DIRECTIONAL EVIDENCE";
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="920" height="820" viewBox="0 0 920 820" role="img" aria-labelledby="title desc">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="920" height="${svgHeight}" viewBox="0 0 920 ${svgHeight}" role="img" aria-labelledby="title desc">
   <title id="title">LoopRelay engineering usefulness</title>
   <desc id="desc">Baseline and LoopRelay matched-pair engineering outcomes and costs.</desc>
-  <rect width="920" height="820" rx="12" fill="#fbfaf6"/>
+  <rect width="920" height="${svgHeight}" rx="12" fill="#fbfaf6"/>
   <text x="36" y="42" font-family="system-ui,sans-serif" font-size="22" font-weight="700" fill="#171816">LoopRelay engineering usefulness</text>
   <text x="36" y="70" font-family="system-ui,sans-serif" font-size="13" fill="#64665f">${report.pair_count} matched pairs · ${report.task_type_count} task types · causal claim: false</text>
   <rect x="704" y="25" width="180" height="30" rx="15" fill="${report.status === "insufficient_data" ? "#f5e6c8" : "#dadece"}"/>
@@ -180,9 +202,9 @@ ${rows}
   <line x1="36" y1="570" x2="884" y2="570" stroke="#d8d4ca"/>
   <text x="36" y="598" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#171816">Success rate by task type</text>
 ${taskRows}
-  <line x1="36" y1="770" x2="884" y2="770" stroke="#d8d4ca"/>
-  <text x="36" y="795" font-family="system-ui,sans-serif" font-size="12" fill="#64665f">Higher is better for success, actionability, and friction-free. Lower is better for time, calls, and tokens.</text>
-  <text x="884" y="795" text-anchor="end" font-family="system-ui,sans-serif" font-size="12" fill="#64665f">minimum ${report.minimums.pairs} pairs / ${report.minimums.task_types} task types</text>
+  <line x1="36" y1="${footerY}" x2="884" y2="${footerY}" stroke="#d8d4ca"/>
+  <text x="36" y="${footerY + 25}" font-family="system-ui,sans-serif" font-size="12" fill="#64665f">Higher is better for success, actionability, and friction-free. Lower is better for time, calls, and tokens.</text>
+  <text x="884" y="${footerY + 25}" text-anchor="end" font-family="system-ui,sans-serif" font-size="12" fill="#64665f">target N=${report.minimums.pairs} · types=${report.minimums.task_types} · N/type=${report.coverage.required_pairs_per_task_type}</text>
 </svg>\n`;
 }
 
@@ -190,7 +212,9 @@ export function renderReadmeResultBlock(report, locale) {
   const taskRows = Object.entries(report.by_task_type)
     .map(([taskType, values]) => {
       const delta = values.success_rate_delta * 100;
-      return `| ${humanize(taskType)} | ${values.pair_count} | ${percent(values.baseline_success_rate * 100)} | ${percent(values.looprelay_success_rate * 100)} | ${delta > 0 ? "+" : ""}${round(delta)}pp |`;
+      const tokenDelta = values.delta.mean_input_tokens;
+      const interval = `${round(values.uncertainty.lower * 100)}..${round(values.uncertainty.upper * 100)}pp`;
+      return `| ${humanize(taskType)} | ${values.pair_count} | ${percent(values.baseline_success_rate * 100)} | ${percent(values.looprelay_success_rate * 100)} | ${delta > 0 ? "+" : ""}${round(delta)}pp | ${interval} | ${tokenDelta > 0 ? "+" : ""}${round(tokenDelta)} | ${humanize(values.decision.action)} |`;
     })
     .join("\n");
   const tokenDeltaPercent =
@@ -202,20 +226,20 @@ export function renderReadmeResultBlock(report, locale) {
   if (locale === "ko") {
     return `현재 결과는 maintainer-run observational evidence이며 인과관계를 주장하지 않습니다. ${report.pair_count}개 matched pair와 ${report.task_type_count}개 작업 유형을 포함합니다. 독립 사용자 검증은 ${report.independent_user_count}/${report.minimums.independent_users}명입니다. 별도의 독립 Codex agent operator는 ${report.independent_agent_operator_count}개이며 첫 가치 성공률은 ${report.independent_agent_operator_success_rate === null ? "N/A" : percent(report.independent_agent_operator_success_rate * 100)}입니다. Agent operator는 사람 사용자로 계산하지 않습니다.
 
-| 작업 유형 | 쌍 | Baseline 성공률 | LoopRelay 성공률 | 차이 |
-| --- | ---: | ---: | ---: | ---: |
+| 작업 유형 | 쌍 | Baseline 성공률 | LoopRelay 성공률 | 차이 | 보수적 95% 범위 | Input token 차이 | 판단 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 ${taskRows}
 
-전체 성공률은 ${percent(report.baseline.success_rate * 100)}에서 ${percent(report.looprelay.success_rate * 100)}로 변했고 actionability는 ${percent(report.baseline.mean_actionability * 100)}에서 ${percent(report.looprelay.mean_actionability * 100)}로 변했습니다. 평균 input token 비용은 ${round(tokenDeltaPercent)}% 변했습니다. 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 독립 사용자 검증 전까지 causal claim은 false입니다.`;
+전체 성공률은 ${percent(report.baseline.success_rate * 100)}에서 ${percent(report.looprelay.success_rate * 100)}로 변했고 actionability는 ${percent(report.baseline.mean_actionability * 100)}에서 ${percent(report.looprelay.mean_actionability * 100)}로 변했습니다. 평균 input token 비용은 ${round(tokenDeltaPercent)}% 변했습니다. 현재 ${report.coverage.task_types_meeting_pair_minimum}/${report.minimums.task_types}개 목표 유형만 유형별 최소 ${report.coverage.required_pairs_per_task_type}쌍을 충족하므로 모든 유형별 판단은 충분한 표본 전까지 잠정적입니다. 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 독립 사용자 검증 전까지 causal claim은 false입니다.`;
   }
 
   return `Current results are maintainer-run observational evidence, not a causal claim. They include ${report.pair_count} matched pairs across ${report.task_type_count} task types and ${report.independent_user_count}/${report.minimums.independent_users} independent users. A separate cohort has ${report.independent_agent_operator_count} independent agent operators with ${report.independent_agent_operator_success_rate === null ? "N/A" : percent(report.independent_agent_operator_success_rate * 100)} first-value success; agent operators do not count as human users.
 
-| Task type | Pairs | Baseline success | LoopRelay success | Delta |
-| --- | ---: | ---: | ---: | ---: |
+| Task type | Pairs | Baseline success | LoopRelay success | Delta | Conservative 95% bound | Input-token delta | Decision |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 ${taskRows}
 
-Aggregate success moved from ${percent(report.baseline.success_rate * 100)} to ${percent(report.looprelay.success_rate * 100)}, while actionability moved from ${percent(report.baseline.mean_actionability * 100)} to ${percent(report.looprelay.mean_actionability * 100)}. Mean input-token cost changed by ${round(tokenDeltaPercent)}%. Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. The causal claim remains false until independent-user validation is complete.`;
+Aggregate success moved from ${percent(report.baseline.success_rate * 100)} to ${percent(report.looprelay.success_rate * 100)}, while actionability moved from ${percent(report.baseline.mean_actionability * 100)} to ${percent(report.looprelay.mean_actionability * 100)}. Mean input-token cost changed by ${round(tokenDeltaPercent)}%. Only ${report.coverage.task_types_meeting_pair_minimum}/${report.minimums.task_types} target task types currently meet the per-type minimum of ${report.coverage.required_pairs_per_task_type} pairs, so every task-specific decision remains provisional until coverage is complete. Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. The causal claim remains false until independent-user validation is complete.`;
 }
 
 function renderMetric(metric, y) {
@@ -233,7 +257,9 @@ function renderTaskTypeRow(taskType, values, y) {
   const baseline = values.baseline_success_rate * 100;
   const looprelay = values.looprelay_success_rate * 100;
   const delta = values.success_rate_delta * 100;
-  return `  <text x="36" y="${y + 13}" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#171816">${humanize(taskType)}</text>
+  const decision = values.decision.action.replaceAll("_", " ").toUpperCase();
+  return `  <text x="36" y="${y + 10}" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#171816">${humanize(taskType)}</text>
+  <text x="36" y="${y + 24}" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="#64665f">${decision} · N=${values.pair_count}</text>
   <rect x="250" y="${y}" width="${baseline * 2.1}" height="16" rx="3" fill="#8a887f"/>
   <text x="470" y="${y + 13}" font-family="ui-monospace,monospace" font-size="11" fill="#171816">${percent(baseline)}</text>
   <rect x="530" y="${y}" width="${looprelay * 2.1}" height="16" rx="3" fill="#1f6f64"/>
@@ -272,18 +298,98 @@ function transitionCounts(pairs) {
   return counts;
 }
 
-function taskTypeReport(pairs) {
+function taskTypeReport(pairs, requiredPairs) {
   const baseline = aggregateCondition(pairs.map((pair) => pair.baseline));
   const looprelay = aggregateCondition(pairs.map((pair) => pair.looprelay));
+  const successRateDelta = roundMetric(
+    looprelay.success_rate - baseline.success_rate,
+  );
+  const transitions = transitionCounts(pairs);
+  const delta = {
+    mean_elapsed_ms: nullableDelta(
+      baseline.mean_elapsed_ms,
+      looprelay.mean_elapsed_ms,
+    ),
+    mean_tool_calls: roundMetric(
+      looprelay.mean_tool_calls - baseline.mean_tool_calls,
+    ),
+    mean_input_tokens: roundMetric(
+      looprelay.mean_input_tokens - baseline.mean_input_tokens,
+    ),
+    friction_free_rate: roundMetric(
+      looprelay.friction_free_rate - baseline.friction_free_rate,
+    ),
+  };
   return {
     pair_count: pairs.length,
     baseline_success_rate: baseline.success_rate,
     looprelay_success_rate: looprelay.success_rate,
-    success_rate_delta: roundMetric(
-      looprelay.success_rate - baseline.success_rate,
-    ),
+    success_rate_delta: successRateDelta,
     baseline_actionability: baseline.mean_actionability,
     looprelay_actionability: looprelay.mean_actionability,
+    transitions,
+    delta,
+    uncertainty: pairedDifferenceInterval(pairs),
+    decision: taskTypeDecision({
+      pairCount: pairs.length,
+      requiredPairs,
+      successRateDelta,
+      transitions,
+      delta,
+    }),
+  };
+}
+
+function taskTypeDecision({
+  pairCount,
+  requiredPairs,
+  successRateDelta,
+  transitions,
+  delta,
+}) {
+  if (pairCount < requiredPairs) {
+    return { action: "collect_more", evidence_status: "underpowered" };
+  }
+  if (successRateDelta >= 0.2 && transitions.improved > transitions.regressed) {
+    return { action: "strengthen", evidence_status: "directional" };
+  }
+  if (
+    successRateDelta <= -0.2 &&
+    transitions.regressed > transitions.improved &&
+    delta.mean_input_tokens >= 0
+  ) {
+    return { action: "remove", evidence_status: "directional" };
+  }
+  if (
+    successRateDelta < 0 ||
+    (successRateDelta === 0 &&
+      (delta.mean_input_tokens > 0 || delta.mean_tool_calls > 0))
+  ) {
+    return { action: "narrow", evidence_status: "directional" };
+  }
+  return { action: "retain", evidence_status: "directional" };
+}
+
+function pairedDifferenceInterval(pairs) {
+  const values = pairs.map(
+    (pair) => Number(pair.looprelay.passed) - Number(pair.baseline.passed),
+  );
+  if (values.length < 2) {
+    return {
+      method: "paired_difference_hoeffding_95",
+      lower: -1,
+      upper: 1,
+    };
+  }
+  const average = mean(values);
+  // Paired outcomes are bounded to [-1, 1]. A Hoeffding bound stays
+  // deliberately conservative for tiny or zero-variance cohorts, where a
+  // normal interval can misleadingly collapse to a single point.
+  const margin = Math.sqrt((2 * Math.log(40)) / values.length);
+  return {
+    method: "paired_difference_hoeffding_95",
+    lower: roundMetric(Math.max(-1, average - margin)),
+    upper: roundMetric(Math.min(1, average + margin)),
   };
 }
 
@@ -302,6 +408,7 @@ function validateLedger(input) {
   if (
     !Number.isInteger(input.minimums?.pairs) ||
     !Number.isInteger(input.minimums?.task_types) ||
+    !Number.isInteger(input.minimums?.pairs_per_task_type ?? 1) ||
     !Number.isInteger(input.minimums?.independent_users)
   ) {
     throw new Error("integer minimums are required");

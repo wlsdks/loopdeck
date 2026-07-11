@@ -35,6 +35,11 @@ describe("usefulness report generator", () => {
         reason: "independent_users_missing",
       },
       minimums: { pairs: 10, task_types: 3, independent_users: 3 },
+      coverage: {
+        required_pairs_per_task_type: 2,
+        task_types_meeting_pair_minimum: 0,
+        all_task_types_meet_pair_minimum: false,
+      },
       baseline: {
         success_rate: 0.666667,
         mean_actionability: 0.6,
@@ -58,6 +63,27 @@ describe("usefulness report generator", () => {
           baseline_success_rate: 0,
           looprelay_success_rate: 1,
           success_rate_delta: 1,
+          transitions: {
+            improved: 1,
+            regressed: 0,
+            unchanged_passed: 0,
+            unchanged_failed: 0,
+          },
+          delta: {
+            mean_elapsed_ms: 2_000,
+            mean_tool_calls: 1,
+            mean_input_tokens: 500,
+            friction_free_rate: 1,
+          },
+          decision: {
+            action: "collect_more",
+            evidence_status: "underpowered",
+          },
+          uncertainty: {
+            method: "paired_difference_hoeffding_95",
+            lower: -1,
+            upper: 1,
+          },
         },
       },
     });
@@ -72,6 +98,7 @@ describe("usefulness report generator", () => {
     expect(svg).toContain("Success rate");
     expect(svg).toContain("Tool calls");
     expect(svg).toContain("Implementation continuation");
+    expect(svg).toContain("COLLECT MORE");
     expect(svg).toContain("causal claim: false");
     expect(svg).not.toContain("/Users/example");
   });
@@ -84,6 +111,7 @@ describe("usefulness report generator", () => {
     expect(markdown).toContain("Implementation continuation");
     expect(markdown).toContain("+100pp");
     expect(markdown).toContain("maintainer-run observational evidence");
+    expect(markdown).toContain("Conservative 95% bound");
     expect(markdown).toContain("causal claim remains false");
     expect(markdown).toContain("0/3 independent users");
     expect(markdown).toContain("0 independent agent operators");
@@ -102,6 +130,33 @@ describe("usefulness report generator", () => {
     expect(() =>
       createUsefulnessReport({ ...ledger(), note: "/Users/example/private" }),
     ).toThrow("sensitive or raw-path content");
+  });
+
+  it("accepts all long-horizon task types and requires per-type coverage", () => {
+    const input = ledger();
+    input.minimums = {
+      pairs: 5,
+      task_types: 5,
+      pairs_per_task_type: 1,
+      independent_users: 3,
+    };
+    input.pairs.push(
+      pair("release_verification_continuity", "looprelay_first", true, true, 0.8, 0.8, 0, 0),
+      pair("ambiguity_clarification", "baseline_first", false, true, 0.4, 0.8, 1, 0),
+    );
+
+    const report = createUsefulnessReport(input);
+
+    expect(report.status).toBe("directional_evidence_ready");
+    expect(report.coverage).toEqual({
+      required_pairs_per_task_type: 1,
+      task_types_meeting_pair_minimum: 5,
+      all_task_types_meet_pair_minimum: true,
+    });
+    expect(report.by_task_type.ambiguity_clarification.decision).toMatchObject({
+      action: "strengthen",
+      evidence_status: "directional",
+    });
   });
 
   it("keeps public readiness blocked until three successful independent flows", () => {
@@ -155,7 +210,12 @@ function ledger() {
     version: 1,
     design: "matched_observational",
     causal_claim: false,
-    minimums: { pairs: 10, task_types: 3, independent_users: 3 },
+    minimums: {
+      pairs: 10,
+      task_types: 3,
+      pairs_per_task_type: 2,
+      independent_users: 3,
+    },
     independent_users: [],
     independent_agent_operators: [],
     pairs: [
