@@ -45,9 +45,9 @@ pnpm evidence:usefulness
 독립 인간 사용자는
 [설치부터 첫 가치 프로토콜](evaluation/usefulness/INDEPENDENT_USER_PROTOCOL.md)을
 사용하며 agent operator는 이 gate를 충족하지 않습니다. 현재 validation-only
-[참가자 handoff](evaluation/usefulness/PARTICIPANT_HANDOFF_d1676748.md)는 후보
-커밋 `d1676748`와 checksum을 고정합니다. 격리 maintainer smoke는 8.507초에
-첫 가치에 도달했고 raw-path hit는 0건이었지만, 독립 인간 수는 여전히 0/3이며
+[참가자 handoff](evaluation/usefulness/PARTICIPANT_HANDOFF_07a3ba86.md)는 후보
+커밋 `07a3ba86`와 checksum을 고정합니다. 격리 maintainer smoke는 설치 6.396초,
+첫 가치 7.098초였고 raw-path hit는 0건이었지만, 독립 인간 수는 여전히 0/3이며
 release를 승인하지 않습니다.
 
 ### Sol 설계, Terra 실행 재현 검사

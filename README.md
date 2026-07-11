@@ -49,9 +49,10 @@ See the [raw-free pair ledger](reports/usefulness-pairs.json),
 Independent humans use the
 [install-to-first-value protocol](evaluation/usefulness/INDEPENDENT_USER_PROTOCOL.md);
 agent operators do not satisfy that gate. The current validation-only
-[participant handoff](evaluation/usefulness/PARTICIPANT_HANDOFF_d1676748.md)
-pins candidate commit `d1676748` and its checksum. Its isolated maintainer
-smoke reached first value in 8.507 seconds with zero raw-path hits, but still
+[participant handoff](evaluation/usefulness/PARTICIPANT_HANDOFF_07a3ba86.md)
+pins candidate commit `07a3ba86` and its checksum. Its isolated maintainer
+smoke reached first value in 7.098 seconds (installation: 6.396 seconds) with
+zero raw-path hits, but still
 counts as 0/3 independent humans and does not authorize release.
 
 ### Sol-planned, Terra-executed reproduction

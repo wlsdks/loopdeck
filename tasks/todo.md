@@ -8,6 +8,16 @@
   measurement smoke; retain it as maintainer-only evidence, not an independent
   participant result.
 
+## 2026-07-12 Independent Participant Candidate Refresh
+
+- [x] RUNTIME: confirm both Codex and Claude Code doctors report verified
+  recent ingest, installed hooks, registered MCP, and `ready` status.
+- [x] PACK: produce the checksum-pinned, validation-only tarball for commit
+  `07a3ba86`; retain its 6.396-second install and 7.098-second first-value
+  maintainer preflight separately from human evidence.
+- [x] HANDOFF: publish the raw-free participant handoff and candidate manifest;
+  preserve release authorization as false and independent-human count as 0/3.
+
 ## 2026-07-11 Adaptive Agent Guide
 
 - [x] SOL PLAN: define the local-only, non-autonomous model-profile policy,

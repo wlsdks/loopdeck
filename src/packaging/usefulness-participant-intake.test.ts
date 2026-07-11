@@ -188,13 +188,13 @@ describe("independent-user usefulness intake", () => {
     const handoff = readFileSync(
       join(
         process.cwd(),
-        "evaluation/usefulness/PARTICIPANT_HANDOFF_d1676748.md",
+        "evaluation/usefulness/PARTICIPANT_HANDOFF_07a3ba86.md",
       ),
       "utf8",
     );
 
     expect(manifest).toMatchObject({
-      candidate_commit: "d1676748e6c72b4c933c0b7ec3cb5d7c6f70742b",
+      candidate_commit: "07a3ba86508207185f0fe2854e4391ae03e59da5",
       release_authorized: false,
       maintainer_smoke: {
         counts_as_independent_user: false,
