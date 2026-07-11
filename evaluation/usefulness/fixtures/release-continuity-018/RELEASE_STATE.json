@@ -1,0 +1,10 @@
+{
+  "candidate_commit": "candidate-018",
+  "artifact_commit": "candidate-017",
+  "focused_tests": "passed",
+  "npm_auth": "present",
+  "independent_users": 3,
+  "required_independent_users": 3,
+  "critical_blockers": 0,
+  "release_policy": "Block the final release gate when candidate_commit and artifact_commit differ. Rebuild the artifact from the candidate commit first."
+}

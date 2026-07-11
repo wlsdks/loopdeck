@@ -3,60 +3,60 @@
   <desc id="desc">Baseline and LoopRelay matched-pair engineering outcomes and costs.</desc>
   <rect width="920" height="1075" rx="12" fill="#fbfaf6"/>
   <text x="36" y="42" font-family="system-ui,sans-serif" font-size="22" font-weight="700" fill="#171816">LoopRelay engineering usefulness</text>
-  <text x="36" y="70" font-family="system-ui,sans-serif" font-size="13" fill="#64665f">17 matched pairs · 5 task types · causal claim: false</text>
+  <text x="36" y="70" font-family="system-ui,sans-serif" font-size="13" fill="#64665f">21 matched pairs · 5 task types · causal claim: false</text>
   <rect x="704" y="25" width="180" height="30" rx="15" fill="#f5e6c8"/>
   <text x="794" y="45" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#7a4700">INSUFFICIENT DATA</text>
   <rect x="36" y="92" width="12" height="12" rx="2" fill="#8a887f"/><text x="56" y="103" font-family="system-ui,sans-serif" font-size="12" fill="#64665f">Baseline</text>
   <rect x="126" y="92" width="12" height="12" rx="2" fill="#1f6f64"/><text x="146" y="103" font-family="system-ui,sans-serif" font-size="12" fill="#64665f">LoopRelay</text>
   <text x="36" y="162" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#171816">Success rate</text>
-  <rect x="250" y="150" width="213.33321244445247" height="18" rx="3" fill="#8a887f"/>
-  <text x="473.33321244445244" y="164" font-family="ui-monospace,monospace" font-size="11" fill="#171816">47.1%</text>
+  <rect x="250" y="150" width="266.6668222221963" height="18" rx="3" fill="#8a887f"/>
+  <text x="526.6668222221963" y="164" font-family="ui-monospace,monospace" font-size="11" fill="#171816">57.1%</text>
   <rect x="250" y="175" width="400" height="18" rx="3" fill="#1f6f64"/>
-  <text x="660" y="189" font-family="ui-monospace,monospace" font-size="11" fill="#171816">88.2%</text>
+  <text x="660" y="189" font-family="ui-monospace,monospace" font-size="11" fill="#171816">85.7%</text>
   <text x="36" y="232" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#171816">Actionability</text>
-  <rect x="250" y="220" width="286.4514430801796" height="18" rx="3" fill="#8a887f"/>
-  <text x="546.4514430801796" y="234" font-family="ui-monospace,monospace" font-size="11" fill="#171816">65.3%</text>
+  <rect x="250" y="220" width="319.57688888888896" height="18" rx="3" fill="#8a887f"/>
+  <text x="579.576888888889" y="234" font-family="ui-monospace,monospace" font-size="11" fill="#171816">71.9%</text>
   <rect x="250" y="245" width="400" height="18" rx="3" fill="#1f6f64"/>
-  <text x="660" y="259" font-family="ui-monospace,monospace" font-size="11" fill="#171816">91.2%</text>
+  <text x="660" y="259" font-family="ui-monospace,monospace" font-size="11" fill="#171816">90%</text>
   <text x="36" y="302" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#171816">Friction-free</text>
-  <rect x="250" y="290" width="400" height="18" rx="3" fill="#8a887f"/>
-  <text x="660" y="304" font-family="ui-monospace,monospace" font-size="11" fill="#171816">82.4%</text>
+  <rect x="250" y="290" width="352.9412346020625" height="18" rx="3" fill="#8a887f"/>
+  <text x="612.9412346020624" y="304" font-family="ui-monospace,monospace" font-size="11" fill="#171816">71.4%</text>
   <rect x="250" y="315" width="400" height="18" rx="3" fill="#1f6f64"/>
-  <text x="660" y="329" font-family="ui-monospace,monospace" font-size="11" fill="#171816">82.4%</text>
+  <text x="660" y="329" font-family="ui-monospace,monospace" font-size="11" fill="#171816">81%</text>
   <text x="36" y="372" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#171816">Elapsed time</text>
-  <rect x="250" y="360" width="371.0348759859356" height="18" rx="3" fill="#8a887f"/>
-  <text x="631.0348759859356" y="374" font-family="ui-monospace,monospace" font-size="11" fill="#171816">30.5s</text>
+  <rect x="250" y="360" width="381.51479650666056" height="18" rx="3" fill="#8a887f"/>
+  <text x="641.5147965066606" y="374" font-family="ui-monospace,monospace" font-size="11" fill="#171816">31s</text>
   <rect x="250" y="385" width="400" height="18" rx="3" fill="#1f6f64"/>
-  <text x="660" y="399" font-family="ui-monospace,monospace" font-size="11" fill="#171816">32.9s</text>
+  <text x="660" y="399" font-family="ui-monospace,monospace" font-size="11" fill="#171816">32.5s</text>
   <text x="36" y="442" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#171816">Tool calls</text>
-  <rect x="250" y="430" width="400" height="18" rx="3" fill="#8a887f"/>
-  <text x="660" y="444" font-family="ui-monospace,monospace" font-size="11" fill="#171816">5.1</text>
-  <rect x="250" y="455" width="390.80460219315637" height="18" rx="3" fill="#1f6f64"/>
-  <text x="650.8046021931564" y="469" font-family="ui-monospace,monospace" font-size="11" fill="#171816">5</text>
+  <rect x="250" y="430" width="389.18919941563246" height="18" rx="3" fill="#8a887f"/>
+  <text x="649.1891994156324" y="444" font-family="ui-monospace,monospace" font-size="11" fill="#171816">5.1</text>
+  <rect x="250" y="455" width="400" height="18" rx="3" fill="#1f6f64"/>
+  <text x="660" y="469" font-family="ui-monospace,monospace" font-size="11" fill="#171816">5.3</text>
   <text x="36" y="512" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#171816">Input tokens</text>
-  <rect x="250" y="500" width="325.0913454199361" height="18" rx="3" fill="#8a887f"/>
-  <text x="585.091345419936" y="514" font-family="ui-monospace,monospace" font-size="11" fill="#171816">81.3k</text>
+  <rect x="250" y="500" width="336.85631331394285" height="18" rx="3" fill="#8a887f"/>
+  <text x="596.8563133139428" y="514" font-family="ui-monospace,monospace" font-size="11" fill="#171816">79.9k</text>
   <rect x="250" y="525" width="400" height="18" rx="3" fill="#1f6f64"/>
-  <text x="660" y="539" font-family="ui-monospace,monospace" font-size="11" fill="#171816">100k</text>
-  <text x="36" y="582" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#171816">Cached tokens (41.2% known)</text>
-  <rect x="250" y="570" width="327.61044176678433" height="18" rx="3" fill="#8a887f"/>
-  <text x="587.6104417667843" y="584" font-family="ui-monospace,monospace" font-size="11" fill="#171816">59.7k</text>
+  <text x="660" y="539" font-family="ui-monospace,monospace" font-size="11" fill="#171816">94.8k</text>
+  <text x="36" y="582" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#171816">Cached tokens (52.4% known)</text>
+  <rect x="250" y="570" width="356.0862354906046" height="18" rx="3" fill="#8a887f"/>
+  <text x="616.0862354906046" y="584" font-family="ui-monospace,monospace" font-size="11" fill="#171816">62.5k</text>
   <rect x="250" y="595" width="400" height="18" rx="3" fill="#1f6f64"/>
-  <text x="660" y="609" font-family="ui-monospace,monospace" font-size="11" fill="#171816">72.9k</text>
-  <text x="36" y="652" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#171816">TTFV (41.2% known)</text>
-  <rect x="250" y="640" width="326.85406078006923" height="18" rx="3" fill="#8a887f"/>
-  <text x="586.8540607800692" y="654" font-family="ui-monospace,monospace" font-size="11" fill="#171816">33.8s</text>
+  <text x="660" y="609" font-family="ui-monospace,monospace" font-size="11" fill="#171816">70.2k</text>
+  <text x="36" y="652" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#171816">TTFV (52.4% known)</text>
+  <rect x="250" y="640" width="356.5655904807186" height="18" rx="3" fill="#8a887f"/>
+  <text x="616.5655904807186" y="654" font-family="ui-monospace,monospace" font-size="11" fill="#171816">33.4s</text>
   <rect x="250" y="665" width="400" height="18" rx="3" fill="#1f6f64"/>
-  <text x="660" y="679" font-family="ui-monospace,monospace" font-size="11" fill="#171816">41.3s</text>
+  <text x="660" y="679" font-family="ui-monospace,monospace" font-size="11" fill="#171816">37.5s</text>
   <line x1="36" y1="710" x2="884" y2="710" stroke="#d8d4ca"/>
   <text x="36" y="738" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#171816">Success rate by task type</text>
   <text x="36" y="775" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#171816">Ambiguity clarification</text>
-  <text x="36" y="789" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="#64665f">COLLECT MORE · N=1</text>
+  <text x="36" y="789" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="#64665f">COLLECT MORE · N=3</text>
   <rect x="250" y="765" width="210" height="16" rx="3" fill="#8a887f"/>
   <text x="470" y="778" font-family="ui-monospace,monospace" font-size="11" fill="#171816">100%</text>
-  <rect x="530" y="765" width="210" height="16" rx="3" fill="#1f6f64"/>
-  <text x="750" y="778" font-family="ui-monospace,monospace" font-size="11" fill="#171816">100%</text>
-  <text x="884" y="778" text-anchor="end" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="#64665f">0pp</text>
+  <rect x="530" y="765" width="140.00007000000002" height="16" rx="3" fill="#1f6f64"/>
+  <text x="750" y="778" font-family="ui-monospace,monospace" font-size="11" fill="#171816">66.7%</text>
+  <text x="884" y="778" text-anchor="end" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="#b42318">-33.3pp</text>
   <text x="36" y="821" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#171816">Failure prevention</text>
   <text x="36" y="835" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="#64665f">RETAIN · N=5</text>
   <rect x="250" y="811" width="0" height="16" rx="3" fill="#8a887f"/>
@@ -72,7 +72,7 @@
   <text x="750" y="870" font-family="ui-monospace,monospace" font-size="11" fill="#171816">80%</text>
   <text x="884" y="870" text-anchor="end" font-family="ui-monospace,monospace" font-size="11" font-weight="700" fill="#b42318">-20pp</text>
   <text x="36" y="913" font-family="system-ui,sans-serif" font-size="12" font-weight="600" fill="#171816">Release verification continuity</text>
-  <text x="36" y="927" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="#64665f">COLLECT MORE · N=1</text>
+  <text x="36" y="927" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="#64665f">COLLECT MORE · N=3</text>
   <rect x="250" y="903" width="210" height="16" rx="3" fill="#8a887f"/>
   <text x="470" y="916" font-family="ui-monospace,monospace" font-size="11" fill="#171816">100%</text>
   <rect x="530" y="903" width="210" height="16" rx="3" fill="#1f6f64"/>

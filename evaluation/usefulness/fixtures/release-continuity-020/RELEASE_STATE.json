@@ -1,0 +1,12 @@
+{
+  "candidate_commit": "candidate-020",
+  "artifact_commit": "candidate-020",
+  "focused_tests": "passed",
+  "package_smoke": "passed",
+  "npm_auth": "present",
+  "independent_users": 3,
+  "required_independent_users": 3,
+  "critical_blockers": 0,
+  "final_gate_run": false,
+  "release_policy": "When commits match, npm auth is present, three independent users completed first value, and critical blockers are zero, the candidate is ready to run the final gate exactly once. Readiness is not publication."
+}

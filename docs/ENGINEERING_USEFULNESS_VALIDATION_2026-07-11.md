@@ -5,12 +5,12 @@ evidence workflows. It is not a causal product claim.
 
 ## Method
 
-Seventeen matched pairs use fixed Codex model and reasoning settings, identical
+Twenty-one matched pairs use fixed Codex model and reasoning settings, identical
 fixture commits within each pair, a read-only boundary, one output schema, and
-the same model context limit. Nine pairs ran baseline first and eight ran LoopRelay
+the same model context limit. Eleven pairs ran baseline first and ten ran LoopRelay
 first. The seed corpus covers session recovery (5), implementation continuation
-(5), repeated-failure prevention (5), release-verification continuity (1), and
-ambiguity clarification (1). It is below the active threshold of 30 total pairs
+(5), repeated-failure prevention (5), release-verification continuity (3), and
+ambiguity clarification (3). It is below the active threshold of 30 total pairs
 and five pairs per task type.
 
 Human review used deterministic repository state and scored correct outcome,
@@ -27,20 +27,20 @@ therefore a bias diagnostic, not the source of success labels.
 
 | Task type | Pairs | Baseline success | LoopRelay success | Difference |
 | --- | ---: | ---: | ---: | ---: |
-| Ambiguity clarification | 1 | 100% | 100% | 0pp |
+| Ambiguity clarification | 3 | 100% | 66.7% | -33.3pp |
 | Failure prevention | 5 | 0% | 100% | +100pp |
 | Implementation continuation | 5 | 100% | 80% | -20pp |
-| Release-verification continuity | 1 | 100% | 100% | 0pp |
+| Release-verification continuity | 3 | 100% | 100% | 0pp |
 | Session recovery | 5 | 20% | 80% | +60pp |
-| **Aggregate** | **17** | **47.1%** | **88.2%** | **+41.2pp** |
+| **Aggregate** | **21** | **57.1%** | **85.7%** | **+28.6pp** |
 
-- Actionability increased from 65.3% to 91.2%.
-- Mean elapsed time increased by 2.38 seconds among runs with timing data.
-- Mean tool calls decreased from 5.12 to 5.00.
-- Mean input tokens increased from 81,280 to 100,008 (+23.0%).
-- Eight failures improved, one successful baseline regressed, seven pairs
+- Actionability increased from 71.9% to 90.0%.
+- Mean elapsed time increased by 1.50 seconds among runs with timing data.
+- Mean tool calls increased from 5.14 to 5.29.
+- Mean input tokens increased from 79,861 to 94,831 (+18.7%).
+- Eight failures improved, two successful baselines regressed, ten pairs
   remained successful, and one pair remained failed.
-- Human preference was LoopRelay 10, baseline 6, tie 1.
+- Human preference was LoopRelay 11, baseline 8, tie 2.
 - Position-swapped judge choices were consistent for 9/10 pairs, but agreed
   with the ground-truth-based human preference on only 4/9 consistent pairs.
   This disagreement is evidence against using an ungrounded LLM preference as
@@ -68,7 +68,7 @@ evaluation harness assumed the wrong JSON nesting. It is recorded as excluded
 harness friction and does not contribute outcome metrics.
 
 Cached-token, TTFV, continuation-accuracy, and blocker flags are available for
-the seven new pairs only (41.2% condition coverage). The report exposes this
+the eleven new pairs only (52.4% condition coverage). The report exposes this
 coverage instead of silently treating missing historical measurements as zero.
 
 Two additional failure-prevention fixtures covered an upstream quota failure
@@ -86,6 +86,21 @@ mean elapsed cost is +13.6s, input-token cost is +59,168, and one treatment
 regressed. The provisional product decision is `narrow`: do not inject a
 continuation brief when repository state and focused tests already determine
 the next action.
+
+Two additional release-continuity pairs covered an artifact/candidate mismatch
+and a fully satisfied final-gate prerequisite state. Both conditions made the
+same correct release decision in all three release pairs. LoopRelay is 5.4s
+faster on average, but adds 2.7 tool calls and 19,112 input tokens. This remains
+`collect_more`; current evidence supports neither default injection nor removal.
+
+Two additional ambiguity pairs covered database migration scope and performance
+targets. The migration pair was pass/pass. In the performance pair, LoopRelay
+found all four missing dimensions but returned them as one JSON-encoded string
+inside the questions array, while baseline returned four directly usable
+questions. That treatment is retained as a contract regression. Across three
+ambiguity pairs, success is 100% versus 66.7%, elapsed cost is +4.6s, and input
+cost is +5,344. The type remains `collect_more` until N=5, with a provisional
+narrowing signal for generic diagnosis when repository policy is already clear.
 
 ## Interpretation And Scope
 

@@ -1,0 +1,7 @@
+{
+  "request_label": "improve-performance",
+  "possible_surfaces": ["api-latency", "web-startup"],
+  "possible_metrics": ["p95-ms", "bundle-kb"],
+  "missing_required_scope": ["affected surface", "baseline measurement", "target threshold", "measurement environment"],
+  "safe_policy": "Ask for all required scope. Do not choose a surface, metric, or threshold by assumption."
+}

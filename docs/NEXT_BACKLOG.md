@@ -62,7 +62,7 @@ Candidate focused slices:
 - improve safe selection when multiple worktrees or sessions are active
 - sharpen question generation for missing scope, constraints, and acceptance criteria
 
-Current provisional evidence decisions (17-pair seed cohort):
+Current provisional evidence decisions (21-pair seed cohort):
 
 - `retain`: session recovery and external failure-outcome recovery remain
   opt-in continuity workflows; their observed lift is positive but uncertainty
@@ -71,7 +71,9 @@ Current provisional evidence decisions (17-pair seed cohort):
   state and focused tests already identify the next action. Five pairs show no
   improvement, one regression, and material time/token overhead.
 - `collect_more`: release-verification continuity and ambiguity clarification
-  remain at one pair each and cannot support a product decision.
+  are at three pairs each and cannot support a final product decision. Current
+  ambiguity evidence already shows one treatment regression and positive
+  time/token cost, so generic diagnosis has a provisional narrowing signal.
 
 No item above authorizes automatic prompt submission, hidden provider calls,
 private transcript scraping, automatic memory writes, or automatic instruction

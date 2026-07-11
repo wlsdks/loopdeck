@@ -11291,3 +11291,6 @@
   - [x] Add two repeated-failure and two ordinary-implementation pairs on
         identical commits. Reach N=5 for both types: retain external failure
         recovery and narrow generic implementation continuation.
+  - [x] Add two release-continuity and two ambiguity-clarification pairs on
+        identical commits. Reach 21 total pairs and preserve the malformed
+        treatment-question contract as a real regression.

@@ -345,6 +345,10 @@ function measurementCoverage(pairs) {
       conditions,
       (value) => value.failure_prevention_accuracy,
     ),
+    clarification_accuracy: metricCoverage(
+      conditions,
+      (value) => value.clarification_accuracy,
+    ),
     blocker_flags: mean(
       conditions.map((value) =>
         ["privacy_blocker", "data_loss_blocker", "install_blocker"].every(
@@ -657,6 +661,7 @@ function validateCondition(value, treatment) {
     "time_to_first_value_ms",
     "continuation_accuracy",
     "failure_prevention_accuracy",
+    "clarification_accuracy",
   ]) {
     if (
       value[key] !== undefined &&
@@ -679,6 +684,13 @@ function validateCondition(value, treatment) {
     value.failure_prevention_accuracy > 1
   ) {
     throw new Error("failure_prevention_accuracy must be 0..1");
+  }
+  if (
+    value.clarification_accuracy !== undefined &&
+    value.clarification_accuracy !== null &&
+    value.clarification_accuracy > 1
+  ) {
+    throw new Error("clarification_accuracy must be 0..1");
   }
   for (const key of [
     "privacy_blocker",
