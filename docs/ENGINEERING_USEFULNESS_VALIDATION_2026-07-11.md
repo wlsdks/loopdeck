@@ -157,6 +157,35 @@ packet can reduce rediscovery and turn unavailable prior decisions into a
 specific next action. The next study should use unseen real tasks and
 independent humans rather than adding more synthetic fixture repeats.
 
+## First Unseen Real-Repository Pair
+
+The first separate real-task pair used the active LoopRelay repository rather
+than a synthetic fixture. An explicit product checkpoint selected one exact
+next action: run a real-repository session-recovery pair, avoid repeating the
+synthetic fixtures, preserve capacity retries, and keep the result separate
+from earlier aggregates. Sol froze the rubric before two fresh Terra sessions
+ran on commit `6c2be8b2`, treatment first.
+
+Neither condition passed the deliberately strict preregistered rubric. The
+baseline did not recover the selected task and instead proposed the valid but
+different independent-human study visible in repository docs. The treatment
+recovered the selected commit, real-task pair, synthetic-fixture prohibition,
+cohort boundary, and capacity-friction rule, but omitted secondary generic
+brief constraints from its response. Position-swapped Sol review consistently
+scored both as failed and therefore tied them. Human review preferred the
+treatment because it alone recovered the selected work, while retaining the
+formal fail/fail outcome.
+
+The treatment used five tools and 239,763 input tokens versus seven tools and
+335,179 input tokens for baseline, but TTFV was slower at 67.68s versus 52.03s.
+This is one pair and supports no latency claim. It exposed a concrete product
+problem: explicit CLI checkpoints inherited project-wide prompt IDs, scores,
+and prompt-gap diagnostics, placing secondary information beside the selected
+continuation contract. A focused change now gives explicit in-progress
+checkpoints a top-level evidence authority and omits those project-wide
+diagnostics; the live brief shrank from 1,491 to 1,035 characters. A follow-up
+pair must test whether that sharper brief improves strict recovery.
+
 ## Independent Codex Operator Holdout
 
 Three fresh Codex CLI 0.142.5 / GPT-5.4 sessions acted as first-time operators

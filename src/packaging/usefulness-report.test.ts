@@ -158,8 +158,26 @@ describe("usefulness report generator", () => {
       independent_users: 3,
     };
     input.pairs.push(
-      pair("release_verification_continuity", "looprelay_first", true, true, 0.8, 0.8, 0, 0),
-      pair("ambiguity_clarification", "baseline_first", false, true, 0.4, 0.8, 1, 0),
+      pair(
+        "release_verification_continuity",
+        "looprelay_first",
+        true,
+        true,
+        0.8,
+        0.8,
+        0,
+        0,
+      ),
+      pair(
+        "ambiguity_clarification",
+        "baseline_first",
+        false,
+        true,
+        0.4,
+        0.8,
+        1,
+        0,
+      ),
     );
 
     const report = createUsefulnessReport(input);
@@ -347,3 +365,28 @@ function pair(
     judge: { position_consistent: true, preference },
   };
 }
+
+describe("real-task usefulness ledger", () => {
+  it("retains the first strict outcome without prompt bodies or private paths", () => {
+    const source = readFileSync(
+      join(process.cwd(), "reports/usefulness-real-task-pairs.json"),
+      "utf8",
+    );
+    const ledger = JSON.parse(source) as {
+      causal_claim: boolean;
+      pairs: Array<{
+        baseline: { passed: boolean; core_task_recovered: boolean };
+        looprelay: { passed: boolean; core_task_recovered: boolean };
+      }>;
+    };
+
+    expect(ledger.causal_claim).toBe(false);
+    expect(ledger.pairs).toHaveLength(1);
+    expect(ledger.pairs[0]).toMatchObject({
+      baseline: { passed: false, core_task_recovered: false },
+      looprelay: { passed: false, core_task_recovered: true },
+    });
+    expect(source).not.toMatch(/\/Users\/|\/home\//);
+    expect(source).not.toMatch(/"(?:prompt|response|transcript|output)"\s*:/i);
+  });
+});

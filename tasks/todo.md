@@ -11317,3 +11317,18 @@
       product-scope implications without mixing it into the GPT-5.4 cohort.
 - [x] VERIFY: Run focused evidence tests, static quality checks, and diff
       hygiene; do not run the final release gate.
+
+## 2026-07-11 First Unseen Real-Repository Pair
+
+- [x] CHECKPOINT: Record the selected current validation action with the live
+      product instead of hand-writing a treatment packet.
+- [x] PREREGISTER: Freeze the real session-recovery rubric with Sol before any
+      Terra output is observed.
+- [x] RUN: Execute treatment-first fresh Terra conditions on commit `6c2be8b2`
+      and preserve body-free time, tool, token, friction, and outcome evidence.
+- [x] SCORE: Retain the strict fail/fail result, the baseline task switch, the
+      treatment core-task recovery, and position-consistent Sol tie.
+- [x] RED/GREEN: Prioritize explicit checkpoint authority and state while
+      removing inherited project prompt diagnostics from its continuation brief.
+- [ ] RERUN: Repeat the pair on the focused brief and keep it separate from the
+      first attempt and all synthetic cohorts.

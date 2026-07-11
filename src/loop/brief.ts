@@ -34,6 +34,8 @@ export function createLoopBrief(input: {
   approvedMemories?: readonly LoopBriefApprovedMemory[];
 }): LoopBrief {
   const snapshot = input.snapshot;
+  const explicitCheckpoint =
+    snapshot.source === "cli" && snapshot.outcome.status !== "unknown";
   const gaps =
     snapshot.quality.top_gaps.length > 0
       ? snapshot.quality.top_gaps.map((gap) => `- ${gap}`).join("\n")
@@ -54,6 +56,14 @@ export function createLoopBrief(input: {
       "## Goal",
       "Continue the current coding-agent loop using the local LoopRelay snapshot.",
       "",
+      ...(explicitCheckpoint
+        ? [
+            "## Selected Continuation Contract",
+            "authority: explicit local checkpoint",
+            safeOutcomeSummary(snapshot.outcome.summary),
+            "",
+          ]
+        : []),
       "## Context",
       `project: ${snapshot.cwd_label}`,
       `tool: ${snapshot.tool}`,
@@ -63,12 +73,17 @@ export function createLoopBrief(input: {
       snapshot.worktree_label
         ? `worktree: ${snapshot.worktree_label}`
         : undefined,
-      `prompt ids: ${promptIds}`,
-      `average prompt score: ${average}`,
+      ...(!explicitCheckpoint
+        ? [`prompt ids: ${promptIds}`, `average prompt score: ${average}`]
+        : []),
       "",
-      "## Current Loop State",
-      safeOutcomeSummary(snapshot.outcome.summary),
-      "",
+      ...(!explicitCheckpoint
+        ? [
+            "## Current Loop State",
+            safeOutcomeSummary(snapshot.outcome.summary),
+            "",
+          ]
+        : []),
       ...(input.compactBoundary
         ? [
             "## Compaction Boundary",
@@ -78,16 +93,19 @@ export function createLoopBrief(input: {
           ]
         : []),
       ...approvedMemoryLines(input.approvedMemories ?? []),
-      "## Prompt Habits To Improve",
-      gaps,
-      "",
-      "## Scope",
+      ...(!explicitCheckpoint ? ["## Prompt Habits To Improve", gaps, ""] : []),
+      explicitCheckpoint ? "## Fallback Working Defaults" : "## Scope",
+      ...(explicitCheckpoint
+        ? [
+            "Apply these only when the selected continuation contract does not override them.",
+          ]
+        : []),
       "Keep the next change tied to this loop. Do not rename packages, change agent settings, or edit instruction files unless that is the explicit task.",
       "",
-      "## Verification",
+      ...(explicitCheckpoint ? [] : ["## Verification"]),
       "Run the narrowest relevant test first, then the Node 22 pnpm gate when behavior changes. Report command output and remaining risk.",
       "",
-      "## Output",
+      ...(explicitCheckpoint ? [] : ["## Output"]),
       "Return a short Markdown summary with changes, verification, and risks.",
     ]
       .filter((line): line is string => line !== undefined)

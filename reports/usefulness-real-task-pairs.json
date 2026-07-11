@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "design": "matched_observational",
+  "causal_claim": false,
+  "cohort": "unseen-real-repository-tasks",
+  "planner": {
+    "agent": "codex",
+    "agent_version": "0.144.1",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "medium",
+    "preregistered_before_execution": true
+  },
+  "critical_blockers": 0,
+  "pairs": [
+    {
+      "id": "real-session-recovery-001",
+      "task_type": "session_recovery",
+      "order": "looprelay_first",
+      "execution": {
+        "agent": "codex",
+        "agent_version": "0.144.1",
+        "model": "gpt-5.6-terra",
+        "reasoning_effort": "medium",
+        "sandbox": "read-only",
+        "fresh_session": true,
+        "repository_state": "commit:6c2be8b2",
+        "ground_truth": "sol-preregistered-product-checkpoint"
+      },
+      "baseline": {
+        "passed": false,
+        "core_task_recovered": false,
+        "actionability": 0.4,
+        "elapsed_ms": 52030,
+        "time_to_first_value_ms": 52030,
+        "tool_calls": 7,
+        "failed_tool_calls": 1,
+        "input_tokens": 335179,
+        "cached_input_tokens": 278272,
+        "output_tokens": 1584,
+        "reasoning_output_tokens": 312,
+        "friction_count": 1,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false
+      },
+      "looprelay": {
+        "passed": false,
+        "core_task_recovered": true,
+        "actionability": 0.8,
+        "elapsed_ms": 67680,
+        "time_to_first_value_ms": 67680,
+        "tool_calls": 5,
+        "failed_tool_calls": 0,
+        "input_tokens": 239763,
+        "cached_input_tokens": 185344,
+        "output_tokens": 1677,
+        "reasoning_output_tokens": 635,
+        "friction_count": 1,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false,
+        "adopted": true
+      },
+      "human_preference": "looprelay",
+      "judge": {
+        "position_consistent": true,
+        "preference": "tie",
+        "baseline_pass": false,
+        "looprelay_pass": false
+      },
+      "finding_labels": [
+        "baseline-switched-to-independent-user-study",
+        "treatment-recovered-selected-real-task",
+        "treatment-omitted-secondary-brief-constraints",
+        "explicit-checkpoint-brief-mixed-project-diagnostics"
+      ]
+    }
+  ]
+}

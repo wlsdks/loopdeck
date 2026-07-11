@@ -4,6 +4,43 @@ import { createLoopBrief } from "./brief.js";
 import type { LoopSnapshot } from "./types.js";
 
 describe("createLoopBrief", () => {
+  it("prioritizes an explicit checkpoint contract over project-wide prompt diagnostics", () => {
+    const brief = createLoopBrief({
+      snapshot: loopSnapshot({
+        source: "cli",
+        prompt_ids: ["prmt_old_one", "prmt_old_two"],
+        quality: {
+          average_prompt_score: 42,
+          top_gaps: ["Background context", "Output format"],
+          unresolved_questions: [],
+        },
+        outcome: {
+          status: "in_progress",
+          summary:
+            "Run one unseen real-repository pair and keep it separate from synthetic cohorts.",
+          evidence_refs: ["commit:6c2be8b2"],
+        },
+      }),
+    });
+
+    expect(brief.prompt).toContain("## Selected Continuation Contract");
+    expect(brief.prompt).toContain("authority: explicit local checkpoint");
+    expect(brief.prompt).toContain(
+      "Run one unseen real-repository pair and keep it separate from synthetic cohorts.",
+    );
+    expect(
+      brief.prompt.indexOf("## Selected Continuation Contract"),
+    ).toBeLessThan(brief.prompt.indexOf("## Context"));
+    expect(brief.prompt).toContain("## Fallback Working Defaults");
+    expect(brief.prompt).toContain(
+      "Apply these only when the selected continuation contract does not override them.",
+    );
+    expect(brief.prompt).not.toContain("prompt ids:");
+    expect(brief.prompt).not.toContain("average prompt score:");
+    expect(brief.prompt).not.toContain("## Prompt Habits To Improve");
+    expect(brief.prompt).not.toContain("Background context");
+  });
+
   it("creates a copy-ready continuation prompt without prompt bodies or raw paths", () => {
     const brief = createLoopBrief({
       snapshot: loopSnapshot({
