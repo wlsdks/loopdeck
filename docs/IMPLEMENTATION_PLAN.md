@@ -150,15 +150,14 @@ Web screens:
 
 Before the first stable npm publish:
 
-- keep package version aligned at `1.0.0`
+- select a new package version because immutable `v1.0.0` predates the LoopRelay rename
 - run the full release gate on a Node.js version that satisfies
   package.json#engines.node (`>=22.12 <25`)
 - ensure `corepack pnpm pack:dry-run` includes built CLI/server/web files
 - check that `dist/cli/index.js` is executable
 - verify `npm whoami`
 - verify package name availability or ownership
-- create or refresh the annotated git tag before npm publish preflight:
-  `git tag -fa v1.0.0 -m "looprelay 1.0.0"`
+- create a new annotated git tag after the full gate and never move it
 - run `corepack pnpm npm-publish:preflight`
 - publish with `npm publish --tag latest`
 

@@ -11165,3 +11165,17 @@
       metadata, and prove all public surfaces resolve to the new repository.
 - [x] ZERO-SCAN: Require zero previous product identity remnants outside Git
       history before declaring the migration complete.
+## 2026-07-11 LoopRelay Deep Runtime Audit
+
+- [x] BASELINE: Confirm clean branch, open PR, immutable tag, installed service,
+      MCP registrations, and preserved local data before mutation.
+- [x] REVIEW: Run PR and TypeScript quality analyzers, then manually classify
+      security, correctness, privacy, packaging, and maintainability findings.
+- [x] CLEAN-SMOKE: Reproduce clean HOME setup through first continuation,
+      outcome, approved memory, and instruction proposal without hidden writes.
+- [x] LIVE: Re-run fresh Codex and Claude Code hook ingest, MCP calls, service,
+      doctor, and recurring-failure detection against the installed checkout.
+- [x] FIX: Add regression tests first for every actionable defect and implement
+      the smallest safe fix.
+- [x] FINAL: Run the complete local gate, identity/privacy scans, update PR
+      evidence, and report unresolved risks without overstating usefulness.

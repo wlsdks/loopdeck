@@ -33,15 +33,13 @@ Use this checklist before publishing a stable public release or npm package.
 - [ ] `corepack pnpm evidence:quality -- --require-complete`
 - [ ] `corepack pnpm looprelay quality-evidence --require-complete`
 - [ ] `corepack pnpm looprelay quality-evidence --runtime-tool codex --require-runtime-ready`
-- [ ] Create or refresh annotated tag `v1.0.0` before `corepack pnpm npm-publish:preflight`.
-- [ ] Push the annotated tag with `git push origin v1.0.0 --force` before `corepack pnpm npm-publish:preflight`.
+- [ ] Select a new package version because immutable `v1.0.0` predates the LoopRelay rename.
+- [ ] After the full gate, create a new annotated tag and push it without force.
 - [ ] `corepack pnpm npm-publish:preflight`
 - [ ] `git diff --check`
 
-Before `looprelay@1.0.0` is published, the tag may be refreshed after the full
-local gate confirms the intended release commit. After `looprelay@1.0.0` is
-published, do not retarget `v1.0.0`; bump the package version and create a new
-tag.
+Never retarget an existing release tag. Package version, local annotated tag,
+origin tag, npm artifact, and GitHub Release must resolve to one commit.
 
 For machine-readable inspection of the 9.5 quality summary, use
 `corepack pnpm --silent evidence:quality` or
@@ -124,6 +122,7 @@ Confirm `corepack pnpm pack:dry-run` includes:
 - [ ] `scripts/quality-95-evidence.mjs`
 - [ ] `scripts/npm-publish-preflight.mjs`
 - [ ] `scripts/package-install-smoke.mjs`
+- [ ] `scripts/npm-pack-output.mjs`
 - [ ] `scripts/pack-dry-run.mjs`
 - [ ] `scripts/quality-gate.mjs`
 - [ ] `scripts/release-smoke.mjs`

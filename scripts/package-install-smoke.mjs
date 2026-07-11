@@ -11,6 +11,8 @@ import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { readTarballName } from "./npm-pack-output.mjs";
+
 const repoRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const tempHome = mkdtempSync(join(tmpdir(), "looprelay-smoke-home-"));
 const tempPrefix = mkdtempSync(join(tmpdir(), "looprelay-smoke-prefix-"));
@@ -346,15 +348,6 @@ function run(command, args, options = {}) {
   return {
     stdout: result.stdout ?? "",
   };
-}
-
-function readTarballName(stdout) {
-  const parsed = JSON.parse(stdout);
-  const filename = parsed?.[0]?.filename;
-  if (typeof filename !== "string" || !filename.endsWith(".tgz")) {
-    throw new Error("npm pack did not return a tarball filename");
-  }
-  return filename;
 }
 
 function validateStartGuide(stdout) {

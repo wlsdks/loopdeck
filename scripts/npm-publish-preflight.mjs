@@ -473,7 +473,7 @@ if (!options.skipGitTag) {
       tagIsAnnotated,
       tagIsAnnotated
         ? "release tag is annotated"
-        : `${expectedTag} is not an annotated tag. Rerun the full release gate, then create or refresh the annotated tag with git tag -fa ${expectedTag} -m "looprelay ${version}".`,
+        : `${expectedTag} already exists but is not annotated and must not be moved; bump the package version, run the full release gate, and create a new annotated release tag.`,
     );
     if (tagIsAnnotated) {
       const originTagTarget = run("git", [
@@ -1134,21 +1134,21 @@ function nextAction({ passed, checks, skippedReleaseChecks = [] }) {
     label.endsWith("tag exists and points at HEAD"),
   );
   if (tagMismatch) {
-    return `${expectedTag} tag does not point at HEAD. Run git checkout ${expectedTag} to publish the tagged commit, or if looprelay@${version} is unpublished and HEAD is the intended release, rerun the full release gate and git tag -fa ${expectedTag}; if already published, bump version and create a new tag.`;
+    return `${expectedTag} tag does not point at HEAD and must not be moved. Run git checkout ${expectedTag} only to publish that immutable tagged commit, or bump version and create a new tag from the intended release commit.`;
   }
 
   const unannotatedTag = failedLabels.find((label) =>
     label.endsWith("tag is annotated"),
   );
   if (unannotatedTag) {
-    return `${expectedTag} tag is not annotated. Rerun the full release gate, then git tag -fa ${expectedTag} -m "looprelay ${version}" and rerun corepack pnpm npm-publish:preflight.`;
+    return `${expectedTag} tag is not annotated and must not be moved; bump the package version, rerun the full release gate, and create a new annotated release tag.`;
   }
 
   const originTagMismatch = failedLabels.find((label) =>
     label.endsWith("origin tag matches local release tag"),
   );
   if (originTagMismatch) {
-    return `origin ${expectedTag} tag does not match local ${expectedTag}. Rerun the full release gate, then git push origin ${expectedTag} --force and rerun corepack pnpm npm-publish:preflight before publishing.`;
+    return `origin ${expectedTag} tag does not match local ${expectedTag} and must not be moved; bump the package version, rerun the full release gate, and create a new release tag before publishing.`;
   }
 
   return "Fix blocked checks before publishing.";
@@ -1197,7 +1197,7 @@ function tagMismatchDetail({ expectedTag, head, tagTarget, tagError }) {
   if (tagError) {
     return `${expectedTag} is missing. Run the full release gate, then create the annotated tag before publishing.`;
   }
-  return `tagged release commit ${tagTarget.slice(0, 12)} does not match HEAD ${head.slice(0, 12)}; run git checkout ${expectedTag}, rerun corepack pnpm npm-publish:preflight from the tagged checkout, then publish from that commit. If looprelay@${version} is unpublished and HEAD is the intended release, rerun the full gate, then git tag -fa ${expectedTag}. If looprelay@${version} is already published, bump version and create a new tag.`;
+  return `tagged release commit ${tagTarget.slice(0, 12)} does not match HEAD ${head.slice(0, 12)}; ${expectedTag} is immutable. Run git checkout ${expectedTag} only to publish that tagged commit, or bump version and create a new tag from the intended release commit.`;
 }
 
 function parseLsRemoteCommit(stdout) {
@@ -1211,12 +1211,12 @@ function originTagMismatchDetail({
   originError,
 }) {
   if (originError) {
-    return `could not verify origin/${expectedTag}: ${originError}. Rerun the full release gate, then push the annotated tag with git push origin ${expectedTag} --force before publishing.`;
+    return `could not verify origin/${expectedTag}: ${originError}. Do not force-push a release tag; restore connectivity and verify the immutable remote tag before publishing.`;
   }
   if (!originCommit) {
-    return `origin/${expectedTag} is missing. Rerun the full release gate, then push the annotated tag with git push origin ${expectedTag} --force before publishing.`;
+    return `origin/${expectedTag} is missing. Rerun the full release gate, then push the new annotated tag with git push origin ${expectedTag} before publishing.`;
   }
-  return `origin/${expectedTag} commit ${originCommit.slice(0, 12)} does not match local release tag ${localCommit.slice(0, 12)}. Rerun the full release gate, then push the annotated tag with git push origin ${expectedTag} --force before publishing.`;
+  return `origin/${expectedTag} commit ${originCommit.slice(0, 12)} does not match local release tag ${localCommit.slice(0, 12)}. The remote tag must not be moved; bump the package version and create a new release tag.`;
 }
 
 function formatSummary(summary) {

@@ -396,16 +396,16 @@ describe("plugin packaging files", () => {
     expect(publishing).not.toContain("# stark97");
     expect(publishing).not.toContain("# E404 Not Found");
     expect(publishing).toContain("git checkout v1.0.0");
-    expect(publishing).toContain("If main has moved past `v1.0.0`");
+    expect(publishing).toContain("Release tags are immutable");
     expect(publishing).toContain(
-      "`v1.0.0` must point at the commit you are publishing",
+      "`v1.0.0` must point at the commit being published",
     );
-    expect(publishing).toContain("Before `looprelay@1.0.0` is published");
-    expect(publishing).toContain("git tag -fa v1.0.0");
-    expect(publishing).toContain("After `looprelay@1.0.0` is published");
+    expect(publishing).toContain("must never be moved");
+    expect(publishing).not.toContain("git tag -fa v1.0.0");
+    expect(publishing).not.toContain("git push origin v1.0.0 --force");
     expect(publishing).toMatch(/bump the\s+package version/);
     expect(publishing).toContain(
-      "annotated git tag `v1.0.0` is created or refreshed before `corepack pnpm npm-publish:preflight`",
+      "a new annotated git tag matching `package.json#version` is created after the full gate",
     );
     expect(publishing).toContain(
       "`corepack pnpm npm-publish:preflight` verifies the local tag and `origin` tag",
@@ -417,26 +417,22 @@ describe("plugin packaging files", () => {
     expect(publishing).not.toContain(
       "If the newer main commit must be published instead, bump the package version",
     );
-    expect(publishing).not.toContain("tag predates");
+    expect(publishing).toContain("tag predates");
     expect(publishing).not.toContain("Do not expect `corepack pnpm");
     expect(preflightScript).toContain("git checkout ${expectedTag}");
     expect(preflightScript).toContain("tagged release commit");
-    expect(preflightScript).toContain("tagged checkout");
-    expect(preflightScript).toContain("If looprelay@${version} is unpublished");
-    expect(preflightScript).toContain("git tag -fa ${expectedTag}");
-    expect(preflightScript).toContain(
-      "If looprelay@${version} is already published",
-    );
+    expect(preflightScript).toContain("must not be moved");
+    expect(preflightScript).not.toContain("git tag -fa ${expectedTag}");
     expect(preflightScript).toContain(
       "${expectedTag} tag does not point at HEAD",
     );
-    expect(preflightScript).toContain(
-      "git tag -fa ${expectedTag}; if already published",
-    );
+    expect(preflightScript).toContain("bump version and create a new tag");
     expect(preflightScript).toContain(
       "${expectedTag} origin tag matches local release tag",
     );
-    expect(preflightScript).toContain("git push origin ${expectedTag} --force");
+    expect(preflightScript).not.toContain(
+      "git push origin ${expectedTag} --force",
+    );
     expect(preflightScript).toContain("release_warnings");
     expect(preflightScript).toContain(
       "benchmark is synthetic regression evidence",
@@ -474,8 +470,9 @@ describe("plugin packaging files", () => {
       "corepack pnpm smoke:package-install",
       "corepack pnpm evidence:quality -- --require-complete",
       "corepack pnpm looprelay quality-evidence --require-complete",
-      'git tag -fa v1.0.0 -m "looprelay 1.0.0"',
-      "git push origin v1.0.0 --force",
+      "# after selecting a new version:",
+      'git tag -a v<new-version> -m "looprelay <new-version>"',
+      "git push origin v<new-version>",
       "corepack pnpm npm-publish:preflight",
       "git diff --check",
     ]);
@@ -664,7 +661,7 @@ describe("plugin packaging files", () => {
       "wrapper strips pnpm-only npm env before `npm pack`",
     );
     expect(releaseChecklist).toContain(
-      "Create or refresh annotated tag `v1.0.0` before `corepack pnpm npm-publish:preflight`",
+      "Select a new package version because immutable `v1.0.0` predates the LoopRelay rename",
     );
     expect(releaseChecklist).not.toContain(
       "After every gate above passes, create and push annotated tag `v1.0.0`.",
@@ -980,17 +977,19 @@ describe("plugin packaging files", () => {
     expect(changelog).not.toContain("on every push to");
     expect(publishing).toContain("npm publish --tag latest");
     expect(publishing).toContain("npm install -g looprelay");
-    expect(publishing).toContain('git tag -fa v1.0.0 -m "looprelay 1.0.0"');
-    expect(publishing).toContain("git push origin v1.0.0 --force");
-    expect(publishing).not.toContain('git tag -a v1.0.0 -m "looprelay 1.0.0"');
+    expect(publishing).not.toContain('git tag -fa v1.0.0 -m "looprelay 1.0.0"');
+    expect(publishing).not.toContain("git push origin v1.0.0 --force");
+    expect(publishing).toContain(
+      'git tag -a v<new-version> -m "looprelay <new-version>"',
+    );
     expect(publishing).not.toContain("looprelay@beta");
     expect(releaseChecklist).toContain("stable public release");
-    expect(releaseChecklist).toContain("annotated tag `v1.0.0`");
+    expect(releaseChecklist).toContain("create a new annotated tag");
     expect(security).toContain("LoopRelay 1.0.0");
     expect(benchmarkSpec).toContain('"version": "1.0.0"');
     expect(implementationPlan).toContain("npm publish --tag latest");
     expect(implementationPlan).toContain(
-      "create or refresh the annotated git tag before npm publish preflight",
+      "create a new annotated git tag after the full gate",
     );
     expect(implementationPlan).toContain(
       "package.json#engines.node (`>=22.12 <25`)",

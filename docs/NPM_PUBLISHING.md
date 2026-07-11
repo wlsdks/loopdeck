@@ -116,8 +116,8 @@ stays parseable JSON even when the preflight blocks:
 corepack pnpm --silent npm-publish:preflight -- --json
 ```
 
-If main has moved past `v1.0.0`, publish from the tagged release commit rather
-than the newer main commit:
+Release tags are immutable. If HEAD has moved past an existing tag, either
+publish the exact tagged commit or bump the package version and create a new tag:
 
 ```sh
 git checkout v1.0.0
@@ -125,20 +125,9 @@ corepack pnpm npm-publish:preflight
 npm publish --tag latest
 ```
 
-`v1.0.0` must point at the commit you are publishing.
-
-Before `looprelay@1.0.0` is published, release-candidate polish commits may
-still be included in the first stable release by rerunning the full local
-release gate and refreshing the annotated tag on the verified main commit:
-
-```sh
-git tag -fa v1.0.0 -m "looprelay 1.0.0"
-git push origin v1.0.0 --force
-```
-
-After `looprelay@1.0.0` is published, do not retarget `v1.0.0`; bump the
-package version, rerun the full release gate, and create a new annotated tag
-for the next published release.
+`v1.0.0` must point at the commit being published and must never be moved. The
+current immutable tag predates the LoopRelay rename, so the renamed product must
+use a new version and tag after the maintainer selects that release number.
 
 Recommended version:
 
@@ -181,8 +170,9 @@ corepack pnpm smoke:release
 corepack pnpm smoke:package-install
 corepack pnpm evidence:quality -- --require-complete
 corepack pnpm looprelay quality-evidence --require-complete
-git tag -fa v1.0.0 -m "looprelay 1.0.0"
-git push origin v1.0.0 --force
+# after selecting a new version:
+git tag -a v<new-version> -m "looprelay <new-version>"
+git push origin v<new-version>
 corepack pnpm npm-publish:preflight
 git diff --check
 ```
@@ -221,8 +211,8 @@ corepack pnpm smoke:package-install
 - [ ] pre-publish privacy audit (`docs/PRE_PUBLISH_PRIVACY_AUDIT.md`) passes
 - [ ] npm account is authenticated
 - [ ] 2FA/OTP requirement is available if npm asks for it
-- [ ] annotated git tag `v1.0.0` is created or refreshed before `corepack pnpm npm-publish:preflight`
-- [ ] `origin/v1.0.0` points at the same release commit as local `v1.0.0`
+- [ ] a new annotated git tag matching `package.json#version` is created after the full gate
+- [ ] the origin tag points at the same release commit and has never been moved
 - [ ] `corepack pnpm npm-publish:preflight` passes
 - [ ] publish uses `--tag latest` for the first stable release
 
@@ -243,6 +233,6 @@ npm access list packages "$(npm whoami)" --json
 npm publish --tag latest
 npm dist-tag ls looprelay
 npm view looprelay versions --json
-git tag -fa v1.0.0 -m "looprelay 1.0.0"
-git push origin v1.0.0 --force
+git tag -a v<new-version> -m "looprelay <new-version>"
+git push origin v<new-version>
 ```

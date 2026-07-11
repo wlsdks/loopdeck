@@ -695,17 +695,10 @@ exit 1
     );
     expect(tagCheck).toMatchObject({ ok: false });
     expect(tagCheck?.detail).toContain("git checkout v1.0.0");
-    expect(tagCheck?.detail).toContain("tagged checkout");
-    expect(tagCheck?.detail).toContain("corepack pnpm npm-publish:preflight");
-    expect(tagCheck?.detail).toContain("If looprelay@1.0.0 is unpublished");
-    expect(tagCheck?.detail).toContain("git tag -fa v1.0.0");
-    expect(tagCheck?.detail).toContain(
-      "If looprelay@1.0.0 is already published",
-    );
+    expect(tagCheck?.detail).toContain("immutable");
     expect(tagCheck?.detail).toContain("bump version and create a new tag");
     expect(parsed.next_action).toContain("v1.0.0 tag does not point at HEAD");
     expect(parsed.next_action).toContain("git checkout v1.0.0");
-    expect(parsed.next_action).toContain("git tag -fa v1.0.0");
     expect(parsed.next_action).toContain("bump version");
     expect(tagCheck?.detail).not.toContain("manual npm checks");
     expect(tagCheck?.detail).not.toContain("predates this preflight");
@@ -761,10 +754,10 @@ exit 1
       check.label.endsWith("tag is annotated"),
     );
     expect(annotatedTagCheck).toMatchObject({ ok: false });
-    expect(annotatedTagCheck?.detail).toContain("git tag -fa v1.0.0");
-    expect(annotatedTagCheck?.detail).toContain("annotated tag");
+    expect(annotatedTagCheck?.detail).toContain("bump the package version");
+    expect(annotatedTagCheck?.detail).toContain("annotated release tag");
     expect(parsed.next_action).toContain("v1.0.0 tag is not annotated");
-    expect(parsed.next_action).toContain("git tag -fa v1.0.0");
+    expect(parsed.next_action).toContain("bump the package version");
   });
 
   it("requires the origin release tag to match the local release tag", () => {
@@ -821,12 +814,12 @@ exit 1
       check.label.endsWith("origin tag matches local release tag"),
     );
     expect(originTagCheck).toMatchObject({ ok: false });
-    expect(originTagCheck?.detail).toContain("git push origin v1.0.0");
+    expect(originTagCheck?.detail).toContain("must not be moved");
     expect(originTagCheck?.detail).toContain("origin/v1.0.0");
     expect(parsed.next_action).toContain(
       "origin v1.0.0 tag does not match local v1.0.0",
     );
-    expect(parsed.next_action).toContain("git push origin v1.0.0 --force");
+    expect(parsed.next_action).toContain("bump the package version");
   });
 
   it("emits the publish command only when every release preflight passes", () => {

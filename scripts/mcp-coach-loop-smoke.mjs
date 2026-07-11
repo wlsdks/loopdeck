@@ -84,6 +84,16 @@ try {
       },
     }),
   );
+  const rewrite = structured(
+    await request("tools/call", {
+      name: "improve_prompt",
+      arguments: {
+        prompt: "html 한번 열어봐줘",
+        language: "ko",
+        rewrite: true,
+      },
+    }),
+  );
   const answers = buildAnswers(improve.clarifying_questions);
   const applied = structured(
     await request("tools/call", {
@@ -106,7 +116,15 @@ try {
     }),
   );
 
-  assertSmokeResult({ initialize, score, coach, improve, applied, recorded });
+  assertSmokeResult({
+    initialize,
+    score,
+    coach,
+    improve,
+    rewrite,
+    applied,
+    recorded,
+  });
   console.log("mcp coach loop smoke passed");
 } catch (error) {
   console.error(error instanceof Error ? error.message : String(error));
@@ -293,6 +311,7 @@ function assertSmokeResult({
   initialize,
   score,
   improve,
+  rewrite,
   applied,
   recorded,
   coach,
@@ -348,8 +367,13 @@ function assertSmokeResult({
   );
   assertEqual(
     improve?.requires_user_approval,
+    false,
+    "diagnosis-only improve_prompt should not claim a rewrite approval gate.",
+  );
+  assertEqual(
+    rewrite?.requires_user_approval,
     true,
-    "improve_prompt should remain approval-gated.",
+    "explicit rewrite should remain approval-gated.",
   );
   assertEqual(
     applied?.is_error === true,
