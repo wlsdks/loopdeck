@@ -10,6 +10,14 @@
     "reasoning_effort": "medium",
     "preregistered_before_execution": true
   },
+  "minimums": {
+    "pairs": 10,
+    "task_types": 3,
+    "pairs_per_task_type": 2,
+    "independent_users": 3
+  },
+  "independent_users": [],
+  "independent_agent_operators": [],
   "critical_blockers": 0,
   "pairs": [
     {
@@ -201,6 +209,74 @@
         "baseline-proposed-retrying-unsupported-command",
         "treatment-preserved-unrelated-format-drift",
         "treatment-missed-stale-generic-node-gate"
+      ]
+    },
+    {
+      "id": "real-ambiguity-clarification-004",
+      "task_type": "ambiguity_clarification",
+      "order": "baseline_first",
+      "execution": {
+        "agent": "codex",
+        "agent_version": "0.144.1",
+        "model": "gpt-5.6-terra",
+        "reasoning_effort": "medium",
+        "sandbox": "read-only",
+        "fresh_session": true,
+        "repository_state": "commit:ffdf1e28",
+        "ground_truth": "sol-preregistered-product-checkpoint"
+      },
+      "baseline": {
+        "passed": false,
+        "core_task_recovered": false,
+        "clarification_accuracy": 0.5,
+        "actionability": 0.5,
+        "elapsed_ms": 37280,
+        "time_to_first_value_ms": 37280,
+        "tool_calls": 3,
+        "failed_tool_calls": 0,
+        "input_tokens": 120099,
+        "cached_input_tokens": 81152,
+        "output_tokens": 1021,
+        "reasoning_output_tokens": 361,
+        "friction_count": 0,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false
+      },
+      "looprelay": {
+        "passed": true,
+        "core_task_recovered": true,
+        "clarification_accuracy": 1,
+        "actionability": 1,
+        "elapsed_ms": 16620,
+        "time_to_first_value_ms": 16620,
+        "tool_calls": 0,
+        "failed_tool_calls": 0,
+        "input_tokens": 18551,
+        "cached_input_tokens": 0,
+        "output_tokens": 239,
+        "reasoning_output_tokens": 51,
+        "friction_count": 0,
+        "privacy_blocker": false,
+        "data_loss_blocker": false,
+        "install_blocker": false,
+        "adopted": true
+      },
+      "human_preference": "looprelay",
+      "judge": {
+        "position_consistent": true,
+        "score_consistent": false,
+        "preference": "looprelay",
+        "baseline_pass": false,
+        "looprelay_pass": true,
+        "baseline_score_range": [4, 5],
+        "looprelay_score_range": [8, 8]
+      },
+      "finding_labels": [
+        "baseline-asked-partial-reporting-scope",
+        "treatment-asked-all-six-reporting-decisions",
+        "treatment-avoided-repository-rediscovery",
+        "judge-preference-consistent-score-calibration-varied"
       ]
     }
   ]

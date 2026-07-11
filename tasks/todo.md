@@ -11345,3 +11345,17 @@
       and reserve the full release gate for an explicit final candidate.
 - [ ] RERUN: Verify the focused gate contract on a different real failure; do
       not reuse this command-formatting case as inflated evidence.
+
+## 2026-07-11 First Real Ambiguity-Clarification Pair
+
+- [x] CONTRACT: Confirm that latest usefulness results could refer to three
+      separate cohorts and graph artifacts with incompatible pooling rules.
+- [x] CHECKPOINT: Record six unresolved reporting decisions without choosing
+      an answer on the user's behalf.
+- [x] PREREGISTER: Freeze the question-coverage rubric with Sol before Terra.
+- [x] RUN: Execute a baseline-first pair on `ffdf1e28`; retain baseline partial
+      clarification and treatment complete clarification.
+- [x] SCORE: Preserve the position-consistent preference and the baseline score
+      calibration range of 4/8 to 5/8 rather than selecting a favorable score.
+- [x] GRAPH: Generate the first separate real-task summary and graph at four
+      pairs across three task types, with small-sample limits visible.

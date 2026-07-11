@@ -67,6 +67,10 @@ into the 30-pair GPT-5.4 aggregate.
 See the [cross-model ledger](reports/usefulness-sol-terra-pairs.json) and
 [generated cross-model summary](reports/usefulness-sol-terra-summary.json).
 
+### Unseen real-repository tasks
+
+![LoopRelay real-task baseline versus assisted results](docs/assets/usefulness-real-task-results.svg)
+
 The first separate real-repository session-recovery pair was strict fail/fail:
 baseline selected a different valid backlog item, while treatment recovered
 the selected task but omitted secondary brief constraints. That failure led to
@@ -84,6 +88,15 @@ strict all-criteria threshold, but position-swapped Sol review scored the
 failure-prevention concepts 0/5 for baseline and 4/5 for LoopRelay, preferring
 LoopRelay in both orders. The result remains a formal fail/fail and motivated
 removal of a stale generic Node gate from explicit checkpoint briefs.
+
+The fourth pair tested the ambiguous request to update “the latest usefulness
+graph.” Baseline asked about the result set and graph but omitted several
+reporting decisions; LoopRelay asked all six preregistered questions and
+withheld edits. Position-swapped Sol review scored LoopRelay 8/8 and baseline
+4/8 to 5/8. Across four real-task pairs and three task types, strict success is
+0% versus 50%, but the graph remains `INSUFFICIENT DATA`: the active threshold
+is 10 pairs with at least two per type, and only one type currently meets that
+minimum. See the [generated real-task summary](reports/usefulness-real-task-summary.json).
 
 After the npm package is published:
 

@@ -224,6 +224,30 @@ explicit final-candidate contract. This aligns the product with the study's
 focused-test-first release policy; a later failure-prevention pair must verify
 the remediation on a different real failure.
 
+## First Real Ambiguity-Clarification Pair
+
+The fourth real-task pair used the request “Update the usefulness graph with
+the latest results.” At commit `ffdf1e28`, three non-pooled cohorts and two
+existing graph artifacts made the target, aggregation, and reporting policy
+materially ambiguous. Sol preregistered six distinct questions: source cohort,
+target graph, pooling, formal fail/fail visibility, concept-score visibility,
+and whether N=3 across two types should render as insufficient or wait.
+
+Baseline withheld edits and asked about the result set and graph. Depending on
+presentation order, Sol credited 4/8 or 5/8 because pooling coverage was not
+equally explicit; that calibration difference is retained. Treatment asked all
+six decisions in three focused questions and scored 8/8 in both orders. It
+finished in 16.62s with no tools and 18,551 input tokens, versus baseline at
+37.28s, three tools, and 120,099 input tokens. Both position orders preferred
+LoopRelay and agreed on baseline fail, treatment pass.
+
+This brings the separate real-task cohort to four pairs across three task
+types. Strict success is 0/4 for baseline and 2/4 for LoopRelay, with two
+fail/fail pairs retained. The generated graph intentionally reports
+`INSUFFICIENT DATA`: the interpretation threshold is 10 pairs and at least two
+pairs per type, while only session recovery currently has two. These numbers
+are not pooled with either synthetic cohort and do not support a causal claim.
+
 ## Independent Codex Operator Holdout
 
 Three fresh Codex CLI 0.142.5 / GPT-5.4 sessions acted as first-time operators
