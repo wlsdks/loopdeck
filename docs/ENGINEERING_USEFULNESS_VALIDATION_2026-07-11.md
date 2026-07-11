@@ -288,6 +288,16 @@ forbids inserting fallback steps between stated actions. This same release
 case will not be rerun again as additional evidence; a different future
 release boundary must test the priority remediation.
 
+Preparing the first ordinary implementation-continuation pair exposed an
+additional operator failure before model execution. A checkpoint containing
+the safe option name `skip-readme` was rejected as an API key because the
+shared detector treated any word beginning with `sk` plus eight characters as
+a credential. Two retries were retained as friction. The detector now requires
+the separator used by actual `sk-` or `sk_` credentials while preserving
+Google, npm, GitHub, Stripe-style, Slack-style, and AWS key detection. Focused
+tests prove ordinary engineering terms remain usable and constructed fake
+credentials remain redacted.
+
 ## Independent Codex Operator Holdout
 
 Three fresh Codex CLI 0.142.5 / GPT-5.4 sessions acted as first-time operators

@@ -11375,3 +11375,14 @@
       remediation, as a paired fix verification rather than a new task claim.
 - [x] PRIORITY: Preserve exact selected-contract sequencing and prevent generic
       fallback steps from being inserted between explicit checkpoint actions.
+
+## 2026-07-11 Checkpoint Secret-Detector False Positive
+
+- [x] REPRODUCE: Retain two failed checkpoint attempts where the safe
+      `skip-readme` option was misclassified as an `sk` API key.
+- [x] RED: Require ordinary `skip-readme` and `skill-based` terms to remain
+      non-sensitive while a constructed `sk-` credential is still masked.
+- [x] GREEN: Require a key separator for `sk` and `pk` detector prefixes
+      without weakening other provider-token patterns.
+- [x] VERIFY: Run focused redaction/outcome/checkpoint tests, static checks,
+      live checkpoint creation, and privacy-safe diff hygiene.

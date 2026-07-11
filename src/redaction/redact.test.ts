@@ -61,6 +61,29 @@ describe("redactPrompt", () => {
     );
   });
 
+  it("does not treat ordinary sk-prefixed engineering words as API keys", () => {
+    const result = redactPrompt(
+      "Add --skip-readme for the skill-based task runner.",
+      "mask",
+    );
+
+    expect(result.is_sensitive).toBe(false);
+    expect(result.stored_text).toBe(
+      "Add --skip-readme for the skill-based task runner.",
+    );
+  });
+
+  it("still masks sk-prefixed credentials with a key separator", () => {
+    const rawKey = ["sk", "-", "0123456789abcdef"].join("");
+    const result = redactPrompt(`Use ${rawKey} for the request.`, "mask");
+
+    expect(result.is_sensitive).toBe(true);
+    expect(result.stored_text).not.toContain(rawKey);
+    expect(result.findings.map((finding) => finding.detector_type)).toContain(
+      "api_key",
+    );
+  });
+
   it("does not mask bearer token guidance as a credential", () => {
     const result = redactPrompt(
       "Missing or invalid bearer token. Reinstall the hook.",
