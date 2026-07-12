@@ -5,6 +5,8 @@ import {
   RESUME_RELIABILITY_PROGRAM,
 } from "./product-evidence-data.js";
 
+import "./resume-reliability-detail.css";
+
 export function ProductEvidencePanel() {
   const report = PRODUCT_EVIDENCE.primary;
   const successDelta =
@@ -90,6 +92,7 @@ export function ProductEvidencePanel() {
         </small>
         <small>{RESUME_RELIABILITY_PROGRAM.intervention.rationale}</small>
       </section>
+      <ResumeReliabilityDetail />
 
       <div className="product-evidence-metrics">
         <EvidenceMetric
@@ -170,6 +173,71 @@ export function ProductEvidencePanel() {
   );
 }
 
+function ResumeReliabilityDetail() {
+  const report = RESUME_RELIABILITY_PROGRAM;
+  return (
+    <section
+      className="resume-reliability-detail"
+      aria-label="Resume reliability evidence detail"
+    >
+      <div>
+        <p className="eyebrow">Decision basis</p>
+        <h3>What this cohort supports</h3>
+        <p>
+          The cohort supports a better first recovery action, not a broad
+          productivity claim or automatic intervention.
+        </p>
+      </div>
+      <div className="resume-reliability-detail-grid">
+        <ResumeMetric
+          baseline={report.baseline.correct_first_action_rate}
+          label="Correct first action"
+          treatment={report.looprelay.correct_first_action_rate}
+        />
+        <ResumeMetric
+          baseline={report.baseline.evidence_attached_rate}
+          label="Evidence attached"
+          treatment={report.looprelay.evidence_attached_rate}
+        />
+        <ResumeMetric
+          baseline={report.baseline.mean_friction_count}
+          label="Mean friction"
+          treatment={report.looprelay.mean_friction_count}
+          rawNumber
+        />
+      </div>
+      <small>
+        Retained transitions: {report.transitions.improved} improved ·{" "}
+        {report.transitions.regressed} regressed ·{" "}
+        {report.transitions.unchanged_failed} unchanged failed. Target selection
+        did not improve, so generic intervention remains off.
+      </small>
+    </section>
+  );
+}
+
+function ResumeMetric({
+  baseline,
+  label,
+  rawNumber = false,
+  treatment,
+}: {
+  baseline: number | null;
+  label: string;
+  rawNumber?: boolean;
+  treatment: number | null;
+}) {
+  return (
+    <div className="resume-reliability-detail-metric">
+      <span>{label}</span>
+      <strong>
+        {formatResumeMetric(baseline, rawNumber)} <small>→</small>{" "}
+        {formatResumeMetric(treatment, rawNumber)}
+      </strong>
+    </div>
+  );
+}
+
 function EvidenceMetric({
   baseline,
   delta,
@@ -194,6 +262,11 @@ function EvidenceMetric({
 
 function formatPercent(value: number): string {
   return `${(value * 100).toFixed(1)}%`;
+}
+
+function formatResumeMetric(value: number | null, rawNumber: boolean): string {
+  if (value === null) return "—";
+  return rawNumber ? value.toFixed(1) : formatPercent(value);
 }
 
 function formatSignedPoints(value: number): string {

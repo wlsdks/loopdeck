@@ -23,6 +23,9 @@ describe("ProductEvidencePanel", () => {
     expect(html).toContain("Scored from tool-event traces");
     expect(html).toContain("Agent-native blind recovery cohort");
     expect(html).toContain("Keep resume guidance opt-in");
+    expect(html).toContain("What this cohort supports");
+    expect(html).toContain("Correct first action");
+    expect(html).toContain("Retained transitions");
     expect(html).toContain("Scope decisions");
     expect(html).toContain("failure prevention");
     expect(html).toContain("0 independent users");

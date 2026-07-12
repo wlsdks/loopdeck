@@ -92,4 +92,26 @@ export const RESUME_RELIABILITY_PROGRAM = resumeReliabilityReport as {
     model_self_report_used: false;
   };
   status: "collecting" | "directional_evidence_ready";
+  baseline: {
+    correct_first_action_rate: number | null;
+    correct_target_rate: number | null;
+    evidence_attached_rate: number | null;
+    mean_friction_count: number | null;
+  };
+  looprelay: {
+    correct_first_action_rate: number | null;
+    correct_target_rate: number | null;
+    evidence_attached_rate: number | null;
+    mean_friction_count: number | null;
+  };
+  delta: {
+    correct_first_action_rate: number | null;
+    correct_target_rate: number | null;
+  };
+  transitions: {
+    improved: number;
+    regressed: number;
+    unchanged_failed: number;
+    unchanged_passed: number;
+  };
 };

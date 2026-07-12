@@ -1,0 +1,45 @@
+.resume-reliability-detail {
+  border: 1px solid var(--color-border-soft);
+  border-radius: 10px;
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.resume-reliability-detail h3 {
+  margin: 3px 0 5px;
+}
+
+.resume-reliability-detail p,
+.resume-reliability-detail > small {
+  color: var(--pm-text-muted);
+  line-height: 20px;
+  margin: 0;
+}
+
+.resume-reliability-detail-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.resume-reliability-detail-metric {
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 8px;
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+}
+
+.resume-reliability-detail-metric span,
+.resume-reliability-detail-metric small {
+  color: var(--pm-text-muted);
+  font-size: 12px;
+}
+
+@media (max-width: 767px) {
+  .resume-reliability-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
