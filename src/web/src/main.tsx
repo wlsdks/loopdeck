@@ -5,6 +5,7 @@ import { App } from "./App.js";
 import "./styles.css";
 import "./projects-view.css";
 import "./insight-inventory.css";
+import "./product-evidence-panel.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

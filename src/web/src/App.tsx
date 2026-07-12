@@ -65,6 +65,7 @@ import {
 } from "./error-message.js";
 import { CoachFeedbackPanel } from "./coach-feedback-panel.js";
 import { InsightInventory } from "./insight-inventory.js";
+import { ProductEvidencePanel } from "./product-evidence-panel.js";
 import { CommandCenter } from "./command-center.js";
 import { createPromptHabitCoach } from "./habit-coach.js";
 import { HabitCoachPanel } from "./habit-coach-panel.js";
@@ -1403,6 +1404,7 @@ function DashboardView({
         dashboard={dashboard}
         onOpenFilteredList={onOpenFilteredList}
       />
+      <ProductEvidencePanel />
       <AskModeSummaryPanel />
       <ArchiveScoreReviewPanel
         report={archiveScore}

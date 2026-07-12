@@ -342,7 +342,7 @@ try {
   await captureScreenshot(page, "overview-desktop");
 
   await page.getByLabel("Evidence").click();
-  await page.getByRole("heading", { name: "Evidence" }).waitFor();
+  await page.getByRole("heading", { name: "Evidence", exact: true }).waitFor();
   // Archive score review is rendered inside a <details> panel that is
   // collapsed by default; open it before asserting on its contents.
   await page.getByRole("heading", { name: "Archive score review" }).click();
@@ -368,8 +368,22 @@ try {
     "Evidence should show the archive effectiveness next action.",
   );
   await assertChartVisible(page, "evidence", 1);
+  await assertText(
+    page,
+    "Published product evidence",
+    "Evidence should separate versioned product evidence from the local archive.",
+  );
+  await assertText(
+    page,
+    "No causal claim",
+    "Evidence should not overstate matched-pair results as causal proof.",
+  );
   await assertBrowserSafe(page, "evidence");
   await captureScreenshot(page, "evidence-desktop");
+  await page
+    .getByRole("heading", { name: "Published product evidence", exact: true })
+    .scrollIntoViewIfNeeded();
+  await captureScreenshot(page, "product-evidence-desktop");
 
   await page.getByRole("button", { name: "Insights", exact: true }).click();
   await page.getByRole("heading", { name: "Insights" }).waitFor();
@@ -656,6 +670,23 @@ try {
     `Mobile layout should not overflow horizontally. scrollWidth=${viewport.scrollWidth}, innerWidth=${viewport.innerWidth}.`,
   );
   await captureScreenshot(page, "overview-mobile");
+
+  await page.goto(`${serverBaseUrl}/scores`);
+  await page
+    .getByRole("heading", { name: "Published product evidence", exact: true })
+    .waitFor();
+  const productEvidenceViewport = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    innerWidth: window.innerWidth,
+  }));
+  assert(
+    productEvidenceViewport.scrollWidth <= productEvidenceViewport.innerWidth,
+    `Mobile product evidence should not overflow horizontally. scrollWidth=${productEvidenceViewport.scrollWidth}, innerWidth=${productEvidenceViewport.innerWidth}.`,
+  );
+  await page
+    .getByRole("heading", { name: "Published product evidence", exact: true })
+    .scrollIntoViewIfNeeded();
+  await captureScreenshot(page, "product-evidence-mobile");
 
   await page.goto(`${serverBaseUrl}/settings`);
   await page.getByRole("heading", { name: "Settings" }).waitFor();
