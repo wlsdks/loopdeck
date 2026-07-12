@@ -479,6 +479,7 @@ export type LoopSummary = {
   worktree?: string;
   prompt_count: number;
   prompt_ids?: string[];
+  used_improvement_prompt_ids?: string[];
   average_prompt_score?: number;
   top_gaps: string[];
   outcome_status: string;
@@ -788,6 +789,7 @@ function isLoopSummary(value: unknown): value is LoopSummary {
     (loop.worktree === undefined || typeof loop.worktree === "string") &&
     typeof loop.prompt_count === "number" &&
     isOptionalStringArray(loop.prompt_ids) &&
+    isOptionalStringArray(loop.used_improvement_prompt_ids) &&
     (loop.average_prompt_score === undefined ||
       typeof loop.average_prompt_score === "number") &&
     Array.isArray(loop.top_gaps) &&
@@ -2844,6 +2846,12 @@ export type ProjectSummary = {
   quality_gap_rate: number;
   copied_count: number;
   bookmarked_count: number;
+  feedback?: {
+    helpful: number;
+    not_helpful: number;
+    wrong: number;
+    total: number;
+  };
   policy: ProjectPolicy;
   instruction_review?: ProjectInstructionReview;
 };
@@ -2859,6 +2867,7 @@ function parseProjectSummaryResponse(
       quality_gap_rate?: unknown;
       copied_count?: unknown;
       bookmarked_count?: unknown;
+      feedback?: unknown;
       policy?: {
         capture_disabled?: unknown;
         analysis_disabled?: unknown;
@@ -2891,6 +2900,18 @@ function parseProjectSummaryResponse(
     body.data.markdown !== undefined ||
     body.data.prompt_body !== undefined ||
     body.data.raw_path !== undefined
+  ) {
+    throw new Error(`${message}: Invalid response.`);
+  }
+  if (
+    body.data.feedback !== undefined &&
+    (typeof body.data.feedback !== "object" ||
+      body.data.feedback === null ||
+      !["helpful", "not_helpful", "wrong", "total"].every(
+        (key) =>
+          typeof (body.data!.feedback as Record<string, unknown>)[key] ===
+          "number",
+      ))
   ) {
     throw new Error(`${message}: Invalid response.`);
   }

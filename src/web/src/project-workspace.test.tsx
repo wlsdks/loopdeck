@@ -19,6 +19,7 @@ describe("ProjectWorkspace", () => {
               source: "hook",
               project: "sample-project",
               prompt_count: 2,
+              used_improvement_prompt_ids: ["prmt_01"],
               top_gaps: [],
               outcome_status: "blocked",
             },
@@ -37,6 +38,7 @@ describe("ProjectWorkspace", () => {
           quality_gap_rate: 0.5,
           copied_count: 1,
           bookmarked_count: 0,
+          feedback: { helpful: 1, not_helpful: 0, wrong: 0, total: 1 },
           policy: {
             capture_disabled: false,
             analysis_disabled: false,
@@ -52,6 +54,8 @@ describe("ProjectWorkspace", () => {
     expect(html).toContain("Review recovery");
     expect(html).toContain("Local project policy");
     expect(html).toContain("Anonymized export");
+    expect(html).toContain("Recommendation adoption");
+    expect(html).toContain("Attributed in latest outcome");
     expect(html).not.toContain("/Users/");
   });
 });

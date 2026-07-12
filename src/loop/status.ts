@@ -25,6 +25,7 @@ export type LoopRelayStatusSnapshot = {
   worktree?: string;
   prompt_count: number;
   prompt_ids?: string[];
+  used_improvement_prompt_ids?: string[];
   average_prompt_score?: number;
   top_gaps: string[];
   outcome_status: LoopSnapshot["outcome"]["status"];
@@ -574,6 +575,13 @@ export function toLoopRelayStatusSnapshot(
     prompt_count: snapshot.event_counts.prompts,
     ...(options.includePromptIds
       ? { prompt_ids: safeAttributionPromptIds(snapshot.prompt_ids) }
+      : {}),
+    ...(snapshot.outcome.used_improvement_prompt_ids
+      ? {
+          used_improvement_prompt_ids: safeAttributionPromptIds(
+            snapshot.outcome.used_improvement_prompt_ids,
+          ),
+        }
       : {}),
     ...(snapshot.quality.average_prompt_score === undefined
       ? {}

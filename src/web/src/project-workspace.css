@@ -117,6 +117,24 @@
   font-size: 16px;
 }
 
+.project-adoption-metrics {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.project-adoption-metrics .project-workspace-metric {
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 8px;
+}
+
+.project-adoption-metrics
+  .project-workspace-metric
+  + .project-workspace-metric {
+  border-left: 1px solid var(--color-border-soft);
+}
+
 .project-workspace-card-heading > svg {
   color: var(--pm-accent);
   flex: 0 0 auto;
@@ -172,6 +190,10 @@
   .project-workspace-metrics,
   .project-workspace-grid,
   .project-policy-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .project-adoption-metrics {
     grid-template-columns: 1fr;
   }
   .project-workspace-metric + .project-workspace-metric {

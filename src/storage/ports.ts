@@ -385,6 +385,12 @@ export type ProjectSummary = {
   quality_gap_rate: number;
   copied_count: number;
   bookmarked_count: number;
+  feedback?: {
+    helpful: number;
+    not_helpful: number;
+    wrong: number;
+    total: number;
+  };
   policy: ProjectPolicy;
   instruction_review?: ProjectInstructionReview;
 };

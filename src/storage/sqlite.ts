@@ -2528,6 +2528,12 @@ function listProjectsForPolicy(
       qualityGapCount: number;
       copiedCount: number;
       bookmarkedCount: number;
+      feedback: {
+        helpful: number;
+        notHelpful: number;
+        total: number;
+        wrong: number;
+      };
     }
   >();
 
@@ -2543,6 +2549,7 @@ function listProjectsForPolicy(
       qualityGapCount: 0,
       copiedCount: 0,
       bookmarkedCount: 0,
+      feedback: { helpful: 0, notHelpful: 0, total: 0, wrong: 0 },
     };
 
     current.promptCount += 1;
@@ -2555,6 +2562,26 @@ function listProjectsForPolicy(
     current.copiedCount += row.copied_count;
     current.bookmarkedCount += row.bookmarked_count;
     projects.set(descriptor.projectId, current);
+  }
+
+  const feedbackRows = db
+    .prepare("SELECT prompt_id, rating FROM coach_feedback")
+    .all() as Array<{
+    prompt_id: string;
+    rating: "helpful" | "not_helpful" | "wrong";
+  }>;
+  const promptProjectIds = new Map(
+    rows.map((row) => [row.id, projectDescriptor(row, hmacSecret).projectId]),
+  );
+  for (const feedback of feedbackRows) {
+    const project = projects.get(
+      promptProjectIds.get(feedback.prompt_id) ?? "",
+    );
+    if (!project) continue;
+    project.feedback.total += 1;
+    if (feedback.rating === "helpful") project.feedback.helpful += 1;
+    else if (feedback.rating === "wrong") project.feedback.wrong += 1;
+    else project.feedback.notHelpful += 1;
   }
 
   return {
@@ -2573,6 +2600,12 @@ function listProjectsForPolicy(
           quality_gap_rate: ratio(project.qualityGapCount, project.promptCount),
           copied_count: project.copiedCount,
           bookmarked_count: project.bookmarkedCount,
+          feedback: {
+            helpful: project.feedback.helpful,
+            not_helpful: project.feedback.notHelpful,
+            wrong: project.feedback.wrong,
+            total: project.feedback.total,
+          },
           policy: policy.policy,
           instruction_review: readProjectInstructionReview(
             db,

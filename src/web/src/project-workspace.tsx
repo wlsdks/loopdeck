@@ -57,6 +57,14 @@ export function ProjectWorkspace({
   const latestLoop = projectLoops[0];
   const status = getWorkspaceStatus(latestLoop);
   const policy = project.policy;
+  const feedback = project.feedback ?? {
+    helpful: 0,
+    not_helpful: 0,
+    total: 0,
+    wrong: 0,
+  };
+  const attributedImprovements =
+    latestLoop?.used_improvement_prompt_ids?.length ?? 0;
 
   return (
     <section className="project-workspace" aria-label="Project workspace">
@@ -182,6 +190,35 @@ export function ProjectWorkspace({
           </button>
         </section>
       </div>
+
+      <section className="panel project-workspace-card project-adoption-card">
+        <div className="project-workspace-card-heading">
+          <div>
+            <p className="eyebrow">Closed-loop evidence</p>
+            <h3>Recommendation adoption</h3>
+          </div>
+          <FileCheck2 size={19} />
+        </div>
+        <div className="project-adoption-metrics">
+          <Metric
+            label="Coach helpful"
+            value={`${feedback.helpful}/${feedback.total}`}
+          />
+          <Metric
+            label="Not helpful"
+            value={feedback.not_helpful + feedback.wrong}
+          />
+          <Metric
+            label="Attributed in latest outcome"
+            value={attributedImprovements}
+          />
+        </div>
+        <p>
+          Feedback records whether a recommendation was useful. Attribution is
+          counted only when the loop outcome explicitly records that an improved
+          prompt was actually used; neither measure proves causality.
+        </p>
+      </section>
 
       <section className="panel project-policy-workspace">
         <div className="project-workspace-card-heading">
