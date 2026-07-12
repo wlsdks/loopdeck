@@ -42,6 +42,7 @@ describe("ProjectWorkspace", () => {
           policy: {
             capture_disabled: false,
             analysis_disabled: false,
+            retention_candidate_days: 90,
             external_analysis_opt_in: false,
             export_disabled: false,
             version: 1,
@@ -54,6 +55,10 @@ describe("ProjectWorkspace", () => {
     expect(html).toContain("Review recovery");
     expect(html).toContain("Local project policy");
     expect(html).toContain("Anonymized export");
+    expect(html).toContain("Retention review");
+    expect(html).toContain("Review in 90 days");
+    expect(html).toContain("External analysis permission");
+    expect(html).toContain("makes no request");
     expect(html).toContain("Recommendation adoption");
     expect(html).toContain("Attributed in latest outcome");
     expect(html).not.toContain("/Users/");

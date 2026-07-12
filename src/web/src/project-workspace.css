@@ -156,6 +156,12 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.project-policy-lifecycle {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+}
+
 .project-policy-toggle {
   border: 1px solid var(--color-border-soft);
   border-radius: 8px;
@@ -179,6 +185,40 @@
   font-style: normal;
 }
 
+.project-policy-select {
+  align-items: center;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 8px;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  min-width: 0;
+  padding: 10px 12px;
+}
+
+.project-policy-select > span {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.project-policy-select small {
+  color: var(--pm-text-muted);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.project-policy-select select {
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 6px;
+  color: var(--pm-text);
+  flex: 0 0 auto;
+  font: inherit;
+  max-width: 164px;
+  padding: 6px 8px;
+}
+
 @media (max-width: 760px) {
   .project-workspace-heading {
     align-items: stretch;
@@ -189,7 +229,8 @@
   }
   .project-workspace-metrics,
   .project-workspace-grid,
-  .project-policy-actions {
+  .project-policy-actions,
+  .project-policy-lifecycle {
     grid-template-columns: 1fr;
   }
 

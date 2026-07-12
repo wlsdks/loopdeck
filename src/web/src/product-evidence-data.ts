@@ -84,6 +84,7 @@ export const RESUME_RELIABILITY_PROGRAM = resumeReliabilityReport as {
     looprelay_first: number;
   };
   recovery_class_coverage: {
+    counts: Record<string, number>;
     observed: number;
     required: number;
   };
@@ -113,5 +114,12 @@ export const RESUME_RELIABILITY_PROGRAM = resumeReliabilityReport as {
     regressed: number;
     unchanged_failed: number;
     unchanged_passed: number;
+  };
+  privacy: {
+    raw_free: true;
+    stores_prompt_bodies: false;
+    stores_raw_paths: false;
+    stores_branch_names: false;
+    stores_worktree_names: false;
   };
 };

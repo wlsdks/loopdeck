@@ -2871,6 +2871,7 @@ function parseProjectSummaryResponse(
       policy?: {
         capture_disabled?: unknown;
         analysis_disabled?: unknown;
+        retention_candidate_days?: unknown;
         external_analysis_opt_in?: unknown;
         export_disabled?: unknown;
         version?: unknown;
@@ -2894,6 +2895,10 @@ function parseProjectSummaryResponse(
     typeof body.data.bookmarked_count !== "number" ||
     typeof body.data.policy?.capture_disabled !== "boolean" ||
     typeof body.data.policy.analysis_disabled !== "boolean" ||
+    (body.data.policy.retention_candidate_days !== undefined &&
+      (typeof body.data.policy.retention_candidate_days !== "number" ||
+        !Number.isInteger(body.data.policy.retention_candidate_days) ||
+        body.data.policy.retention_candidate_days <= 0)) ||
     typeof body.data.policy.external_analysis_opt_in !== "boolean" ||
     typeof body.data.policy.export_disabled !== "boolean" ||
     typeof body.data.policy.version !== "number" ||

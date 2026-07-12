@@ -229,8 +229,9 @@ export function ProjectWorkspace({
           <ShieldCheck size={19} />
         </div>
         <p>
-          These controls change only this project's local collection and export
-          boundary. They do not send data or delete archived records.
+          These controls change only this project's local collection, export,
+          and future-review boundary. They never delete archived records or
+          start an external request by themselves.
         </p>
         <div className="project-policy-actions">
           <PolicyToggle
@@ -255,6 +256,43 @@ export function ProjectWorkspace({
             label="Anonymized export"
             onChange={() =>
               onUpdatePolicy({ export_disabled: !policy.export_disabled })
+            }
+          />
+        </div>
+        <div className="project-policy-lifecycle" aria-label="Data lifecycle">
+          <label className="project-policy-select">
+            <span>
+              <strong>Retention review</strong>
+              <small>
+                Sets a local review reminder only. It does not delete data.
+              </small>
+            </span>
+            <select
+              aria-label="Retention review"
+              onChange={(event) =>
+                onUpdatePolicy({
+                  retention_candidate_days:
+                    event.target.value === ""
+                      ? null
+                      : Number.parseInt(event.target.value, 10),
+                })
+              }
+              value={policy.retention_candidate_days ?? ""}
+            >
+              <option value="">No review date</option>
+              <option value="30">Review in 30 days</option>
+              <option value="90">Review in 90 days</option>
+              <option value="365">Review in 365 days</option>
+            </select>
+          </label>
+          <PolicyToggle
+            checked={policy.external_analysis_opt_in}
+            detail="Record permission for a separately confirmed future action; this switch makes no request."
+            label="External analysis permission"
+            onChange={() =>
+              onUpdatePolicy({
+                external_analysis_opt_in: !policy.external_analysis_opt_in,
+              })
             }
           />
         </div>

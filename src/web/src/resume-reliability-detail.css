@@ -38,6 +38,53 @@
   font-size: 12px;
 }
 
+.resume-reliability-method {
+  border-top: 1px solid var(--color-border-soft);
+  color: var(--pm-text-muted);
+  font-size: 12px;
+  line-height: 19px;
+  padding-top: 10px;
+}
+
+.resume-reliability-method summary {
+  color: var(--pm-text);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.resume-reliability-method > div {
+  display: grid;
+  gap: 8px;
+  padding-top: 10px;
+}
+
+.resume-reliability-method p {
+  margin: 0;
+}
+
+.resume-reliability-method dl {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+}
+
+.resume-reliability-method dl > div {
+  align-items: baseline;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.resume-reliability-method dt,
+.resume-reliability-method dd {
+  margin: 0;
+}
+
+.resume-reliability-method dd {
+  color: var(--pm-text);
+  white-space: nowrap;
+}
+
 @media (max-width: 767px) {
   .resume-reliability-detail-grid {
     grid-template-columns: 1fr;

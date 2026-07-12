@@ -26,6 +26,10 @@ describe("ProductEvidencePanel", () => {
     expect(html).toContain("What this cohort supports");
     expect(html).toContain("Correct first action");
     expect(html).toContain("Retained transitions");
+    expect(html).toContain("Inspect cohort coverage and data boundary");
+    expect(html).toContain("checkpoint focus");
+    expect(html).toContain("Raw-free archive");
+    expect(html).toContain("does not store");
     expect(html).toContain("Scope decisions");
     expect(html).toContain("failure prevention");
     expect(html).toContain("0 independent users");

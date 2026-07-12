@@ -383,12 +383,29 @@ try {
     "Resume reliability",
     "Evidence should show the next 10-pair resume reliability program.",
   );
+  await page
+    .getByText("Inspect cohort coverage and data boundary", { exact: true })
+    .click();
+  await assertText(
+    page,
+    "checkpoint focus",
+    "Evidence detail should expose recovery-class coverage without raw traces.",
+  );
+  await assertText(
+    page,
+    "Raw-free archive",
+    "Evidence detail should state the raw-free data boundary.",
+  );
   await assertBrowserSafe(page, "evidence");
   await captureScreenshot(page, "evidence-desktop");
   await page
     .getByRole("heading", { name: "Published product evidence", exact: true })
     .scrollIntoViewIfNeeded();
   await captureScreenshot(page, "product-evidence-desktop");
+  await page
+    .getByText("Inspect cohort coverage and data boundary", { exact: true })
+    .scrollIntoViewIfNeeded();
+  await captureScreenshot(page, "resume-reliability-method-desktop");
 
   await page.getByRole("button", { name: "Insights", exact: true }).click();
   await page.getByRole("heading", { name: "Insights" }).waitFor();
@@ -488,6 +505,35 @@ try {
     page,
     "Latest loop",
     "Project workspace should expose project-scoped loop continuity.",
+  );
+  const retentionReview = page.getByLabel("Retention review");
+  await retentionReview.selectOption("90");
+  await page.waitForFunction(
+    () =>
+      document.querySelector('select[aria-label="Retention review"]')?.value ===
+      "90",
+  );
+  assertEqual(
+    await retentionReview.inputValue(),
+    "90",
+    "Retention review should persist the selected local review window.",
+  );
+  const externalAnalysisPermission = page.getByLabel(
+    "External analysis permission",
+  );
+  await externalAnalysisPermission.click();
+  await page.waitForFunction(
+    () =>
+      [...document.querySelectorAll(".project-policy-toggle")]
+        .find((node) =>
+          node.textContent?.includes("External analysis permission"),
+        )
+        ?.querySelector("input")?.checked === true,
+  );
+  await assertText(
+    page,
+    "this switch makes no request",
+    "External-analysis permission should explain that the policy update is not a network action.",
   );
   await assertBrowserSafe(page, "project-workspace");
   await captureScreenshot(page, "project-workspace-desktop");

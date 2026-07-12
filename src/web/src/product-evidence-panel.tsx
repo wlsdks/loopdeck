@@ -212,6 +212,33 @@ function ResumeReliabilityDetail() {
         {report.transitions.unchanged_failed} unchanged failed. Target selection
         did not improve, so generic intervention remains off.
       </small>
+      <details className="resume-reliability-method">
+        <summary>Inspect cohort coverage and data boundary</summary>
+        <div>
+          <p>
+            {report.cohort.replaceAll("_", " ")} ·{" "}
+            {report.scoring.method.replaceAll("_", " ")} · model self-report{" "}
+            {report.scoring.model_self_report_used ? "included" : "excluded"}.
+          </p>
+          <dl>
+            {Object.entries(report.recovery_class_coverage.counts).map(
+              ([recoveryClass, count]) => (
+                <div key={recoveryClass}>
+                  <dt>{recoveryClass.replaceAll("_", " ")}</dt>
+                  <dd>
+                    {count} pair{count === 1 ? "" : "s"}
+                  </dd>
+                </div>
+              ),
+            )}
+          </dl>
+          <p>
+            Raw-free archive:{" "}
+            {report.privacy.stores_prompt_bodies ? "stores" : "does not store"}{" "}
+            prompt bodies, raw paths, branch names, or worktree names.
+          </p>
+        </div>
+      </details>
     </section>
   );
 }
