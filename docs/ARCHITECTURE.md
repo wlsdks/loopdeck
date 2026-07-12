@@ -128,6 +128,8 @@ Current known large modules:
   request shaping here; render and copy logic stay in components. Its quality
   budget is intentionally tight; extract a feature contract before a new
   response parser materially expands it.
+  The Adaptive Agent Guide currently adds its small read contract here; extract
+  a dedicated guide API module before adding write flows or further validators.
 - `src/web/src/i18n.ts`: web UI translation table. Korean strings stay grouped
   by screen so a single localization change touches one section.
 - `src/storage/sqlite.ts`: SQLite implementation boundary for queries,
@@ -138,6 +140,18 @@ Current known large modules:
   orchestrator plus the in-file `apply*Migration` helpers. Per-domain
   migrations (`agent-judgments.ts`, `coach-feedback.ts`, `judge-score.ts`)
   keep their migrations next to their domain code and are imported here.
+- `src/storage/continuation-receipts.ts`: selected-snapshot continuation
+  lineage, status transitions, privacy validation, and its colocated migration.
+  Receipt payloads remain raw-free and never store prompt or transcript text.
+- `src/storage/loop-close.ts`: one transaction for exact-snapshot outcome and
+  continuation-receipt closeout. A receipt from another snapshot aborts the
+  entire write.
+- `src/storage/failure-episodes.ts`: one operator-confirmed failure lifecycle
+  per failed/blocked snapshot, including its migration, raw-free validation,
+  and complete category-level aggregate. Action queues may be windowed, but
+  recurrence counts must never be derived from a UI list limit.
+- `src/storage/loop-evidence-storage.ts`: narrow SQLite composition for atomic
+  closeout and failure-episode ports; keeps `sqlite.ts` below its line budget.
 - `src/storage/sqlite-rows.ts`: SQLite result-row contracts only. Do not add
   queries or mappers here.
 - `src/storage/sqlite-json.ts`: defensive JSON decoding for SQLite JSON
@@ -174,6 +188,28 @@ Current known large modules:
   orchestration. Its user-visible terminal rendering lives in
   `src/cli/commands/loop-formatters.ts`; keep new text-only formatting there
   so storage selection and CLI wiring remain independently reviewable.
+- `src/cli/commands/loop-receipt.ts`: continuation receipt registration,
+  option parsing, and raw-free status recording. Keep this out of the already
+  broad loop command orchestrator.
+- `src/cli/commands/loop-close.ts`: explicit target selection, typed-evidence
+  parsing, and atomic outcome/receipt closeout. It must not fall back to the
+  global latest snapshot or auto-approve memory.
+- `src/loop/evidence.ts` and `src/web/src/loop-evidence-contract.ts`: matching
+  server and web contracts for raw-free typed engineering evidence.
+- `src/loop/action-inbox.ts`: pure latest-loop aggregation for explicit
+  continuity, evidence, failure, and memory debt plus local outcome coverage.
+  It never counts every intermediate hook snapshot as backlog.
+- `src/server/routes/actions.ts`: authenticated action/failure HTTP boundary;
+  writes require CSRF and shared failure validation.
+- `src/web/src/actions-page.tsx`: lazy route-level data boundary for the Actions
+  workspace. Contract/query/view/style modules remain independently testable.
+- `src/web/src/lazy-views.tsx`: canonical route-level code-splitting boundary.
+  The archive/list shell and primary navigation stay eager; Actions, Overview,
+  Loops, MCP, Project workspace, Prompt detail, and chart implementations load
+  only when rendered. Chart code must not return to the initial module preload.
+- `vite.web.config.ts`: production web builds fail closed when any entry chunk
+  exceeds 500,000 bytes. Do not raise or suppress the budget to hide growth;
+  move route-exclusive code behind the canonical lazy boundary instead.
 
 ### Shared helpers
 

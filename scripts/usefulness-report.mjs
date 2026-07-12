@@ -24,6 +24,11 @@ export function createUsefulnessReport(input) {
   const minimums = input.minimums;
   const independentUsers = input.independent_users ?? [];
   const independentAgentOperators = input.independent_agent_operators ?? [];
+  const agentOperatorEvidence = summarizeAgentOperatorEvidence(
+    independentAgentOperators,
+    minimums,
+  );
+  const matchedPairBlockers = summarizeMatchedPairBlockers(pairs);
   const participantCriticalBlockers = independentUsers.reduce(
     (count, user) =>
       count +
@@ -33,7 +38,10 @@ export function createUsefulnessReport(input) {
     0,
   );
   const criticalBlockers =
-    (input.critical_blockers ?? 0) + participantCriticalBlockers;
+    (input.critical_blockers ?? 0) +
+    participantCriticalBlockers +
+    agentOperatorEvidence.blocker_count +
+    matchedPairBlockers.open_pair_count;
   const requiredPairsPerTaskType = minimums.pairs_per_task_type ?? 1;
   const taskTypesMeetingPairMinimum = Array.from(taskTypes).filter(
     (taskType) =>
@@ -64,9 +72,11 @@ export function createUsefulnessReport(input) {
               operator.install_success && operator.first_value_success ? 1 : 0,
             ),
           ),
+    agent_operator_evidence: agentOperatorEvidence,
     public_readiness: publicReadiness(
       independentUsers,
       minimums.independent_users,
+      agentOperatorEvidence,
       criticalBlockers,
     ),
     task_types: Array.from(taskTypes).sort(),
@@ -149,6 +159,7 @@ export function createUsefulnessReport(input) {
         ),
       ),
     },
+    matched_pair_blockers: matchedPairBlockers,
     critical_blockers: criticalBlockers,
     note: "Observational matched-pair evidence only. Null and negative results are retained.",
   };
@@ -210,6 +221,72 @@ function aggregateIndependentUsers(users) {
       .length,
     install_blocker_count: users.filter((user) => user.install_blocker).length,
   };
+}
+
+function summarizeAgentOperatorEvidence(operators, minimums) {
+  const requiredCount = minimums.agent_operators ?? 0;
+  const requiredClientCount = minimums.agent_operator_clients ?? 0;
+  const requiredContinuations = minimums.agent_operator_continuations ?? 0;
+  const qualified = operators.filter(isQualifiedAgentOperator);
+  const clients = new Set(qualified.map((operator) => operator.client));
+  const successfulQualified = qualified.filter(
+    (operator) =>
+      operator.install_success &&
+      operator.first_value_success &&
+      !operator.privacy_blocker &&
+      !operator.data_loss_blocker &&
+      !operator.install_blocker,
+  );
+  const blockerCount = operators.reduce(
+    (count, operator) =>
+      count +
+      Number(operator.privacy_blocker === true) +
+      Number(operator.data_loss_blocker === true) +
+      Number(operator.install_blocker === true),
+    0,
+  );
+  const continuationSuccessCount = successfulQualified.filter(
+    (operator) => operator.continuation_brief_received === true,
+  ).length;
+  const ready =
+    requiredCount > 0 &&
+    successfulQualified.length >= requiredCount &&
+    clients.size >= requiredClientCount &&
+    continuationSuccessCount >= requiredContinuations &&
+    blockerCount === 0;
+
+  return {
+    observed_count: operators.length,
+    required_count: requiredCount,
+    required_client_count: requiredClientCount,
+    required_continuation_count: requiredContinuations,
+    qualified_count: qualified.length,
+    qualified_client_count: clients.size,
+    successful_qualified_count: successfulQualified.length,
+    continuation_success_count: continuationSuccessCount,
+    blocker_count: blockerCount,
+    human_usability_measured: false,
+    ready,
+  };
+}
+
+function isQualifiedAgentOperator(operator) {
+  return (
+    new Set(["codex", "claude-code"]).has(operator.client) &&
+    typeof operator.client_version === "string" &&
+    operator.fresh_session === true &&
+    operator.fresh_git_repository === true &&
+    /^[a-f0-9]{40}$/i.test(operator.candidate_commit ?? "") &&
+    /^[a-f0-9]{64}$/i.test(operator.candidate_sha256 ?? "") &&
+    operator.agent_execution_completed === true &&
+    operator.agent_execution_blocker === false &&
+    new Set(["mcp_readiness", "mcp_continuation"]).has(operator.workflow) &&
+    operator.mcp_called === true &&
+    operator.mcp_ready === true &&
+    operator.raw_content_exposed === false &&
+    operator.candidate_install_verified === true &&
+    typeof operator.install_blocker === "boolean"
+  );
 }
 
 export function renderUsefulnessSvg(report) {
@@ -325,29 +402,50 @@ export function renderReadmeResultBlock(report, locale) {
       : (report.delta.mean_input_tokens / report.baseline.mean_input_tokens) *
         100;
   const coverageEn = report.coverage.all_task_types_meet_pair_minimum
-    ? `All ${report.minimums.task_types} target task types meet the per-type minimum of ${report.coverage.required_pairs_per_task_type} pairs. Decisions remain directional because this is maintainer-run evidence and independent-user validation is incomplete.`
+    ? `All ${report.minimums.task_types} target task types meet the per-type minimum of ${report.coverage.required_pairs_per_task_type} pairs. Decisions remain directional because this is maintainer-run evidence and the agent-native gate does not establish human usability.`
     : `Only ${report.coverage.task_types_meeting_pair_minimum}/${report.minimums.task_types} target task types currently meet the per-type minimum of ${report.coverage.required_pairs_per_task_type} pairs, so every task-specific decision remains provisional until coverage is complete.`;
   const coverageKo = report.coverage.all_task_types_meet_pair_minimum
-    ? `목표 ${report.minimums.task_types}개 작업 유형 모두 유형별 최소 ${report.coverage.required_pairs_per_task_type}쌍을 충족했습니다. 다만 maintainer-run evidence이며 독립 사용자 검증이 끝나지 않았으므로 판단은 directional입니다.`
+    ? `목표 ${report.minimums.task_types}개 작업 유형 모두 유형별 최소 ${report.coverage.required_pairs_per_task_type}쌍을 충족했습니다. 다만 maintainer-run evidence이며 agent-native gate가 사람 사용성을 증명하지 않으므로 판단은 directional입니다.`
     : `현재 ${report.coverage.task_types_meeting_pair_minimum}/${report.minimums.task_types}개 목표 유형만 유형별 최소 ${report.coverage.required_pairs_per_task_type}쌍을 충족하므로 모든 유형별 판단은 충분한 표본 전까지 잠정적입니다.`;
 
   if (locale === "ko") {
-    return `현재 결과는 maintainer-run observational evidence이며 인과관계를 주장하지 않습니다. ${report.pair_count}개 matched pair와 ${report.task_type_count}개 작업 유형을 포함합니다. 독립 사용자 검증은 ${report.independent_user_count}/${report.minimums.independent_users}명입니다. 별도의 독립 Codex agent operator는 ${report.independent_agent_operator_count}개이며 첫 가치 성공률은 ${report.independent_agent_operator_success_rate === null ? "N/A" : percent(report.independent_agent_operator_success_rate * 100)}입니다. Agent operator는 사람 사용자로 계산하지 않습니다.
+    return `현재 결과는 maintainer-run observational evidence이며 인과관계를 주장하지 않습니다. ${report.pair_count}개 matched pair와 ${report.task_type_count}개 작업 유형을 포함합니다. 사람 사용성 관찰은 ${report.independent_user_count}건이며 agent-native gate에는 포함하지 않습니다. Agent operator는 ${report.independent_agent_operator_count}건 관찰됐고, checksum-pinned clean install과 fresh MCP session을 분리 검증한 성공 run은 ${report.agent_operator_evidence.successful_qualified_count}/${report.agent_operator_evidence.required_count}건, client 다양성은 ${report.agent_operator_evidence.qualified_client_count}/${report.agent_operator_evidence.required_client_count}, continuation brief 성공은 ${report.agent_operator_evidence.continuation_success_count}/${report.agent_operator_evidence.required_continuation_count}건입니다.
 
 | 작업 유형 | 쌍 | Baseline 성공률 | LoopRelay 성공률 | 차이 | 보수적 95% 범위 | Input token 차이 | 판단 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 ${taskRows}
 
-전체 성공률은 ${percent(report.baseline.success_rate * 100)}에서 ${percent(report.looprelay.success_rate * 100)}로 변했고 actionability는 ${percent(report.baseline.mean_actionability * 100)}에서 ${percent(report.looprelay.mean_actionability * 100)}로 변했습니다. 평균 input token 비용은 ${round(tokenDeltaPercent)}% 변했습니다. Cached token과 TTFV의 조건별 측정 coverage는 각각 ${percent(report.measurement_coverage.cached_input_tokens * 100)}, ${percent(report.measurement_coverage.time_to_first_value_ms * 100)}이며 누락값을 0으로 해석하지 않습니다. ${coverageKo} 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 독립 사용자 검증 전까지 causal claim은 false입니다.`;
+전체 성공률은 ${percent(report.baseline.success_rate * 100)}에서 ${percent(report.looprelay.success_rate * 100)}로 변했고 actionability는 ${percent(report.baseline.mean_actionability * 100)}에서 ${percent(report.looprelay.mean_actionability * 100)}로 변했습니다. 평균 input token 비용은 ${round(tokenDeltaPercent)}% 변했습니다. Cached token과 TTFV의 조건별 측정 coverage는 각각 ${percent(report.measurement_coverage.cached_input_tokens * 100)}, ${percent(report.measurement_coverage.time_to_first_value_ms * 100)}이며 누락값을 0으로 해석하지 않습니다. Matched pair에서 관찰된 blocker는 ${report.matched_pair_blockers.observed_pair_count}건이며, remediation이 기록된 사례는 ${report.matched_pair_blockers.remediated_pair_count}건, 공개를 막는 미해결 사례는 ${report.matched_pair_blockers.open_pair_count}건입니다. Agent-native gate는 checksum-pinned clean install과 Codex/Claude Code의 fresh MCP 성공 run ${report.agent_operator_evidence.required_count}건, 서로 다른 client ${report.agent_operator_evidence.required_client_count}개, continuation brief ${report.agent_operator_evidence.required_continuation_count}건을 요구합니다. ${coverageKo} 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 사람 사용성은 미측정이며 causal claim은 false입니다.`;
   }
 
-  return `Current results are maintainer-run observational evidence, not a causal claim. They include ${report.pair_count} matched pairs across ${report.task_type_count} task types and ${report.independent_user_count}/${report.minimums.independent_users} independent users. A separate cohort has ${report.independent_agent_operator_count} independent agent operators with ${report.independent_agent_operator_success_rate === null ? "N/A" : percent(report.independent_agent_operator_success_rate * 100)} first-value success; agent operators do not count as human users.
+  return `Current results are maintainer-run observational evidence, not a causal claim. They include ${report.pair_count} matched pairs across ${report.task_type_count} task types. Human usability has ${report.independent_user_count} observed flows and is not part of this agent-native gate. The operator cohort has ${report.independent_agent_operator_count} observed runs; ${report.agent_operator_evidence.successful_qualified_count}/${report.agent_operator_evidence.required_count} combine a checksum-pinned clean install with a successful fresh MCP session across ${report.agent_operator_evidence.qualified_client_count}/${report.agent_operator_evidence.required_client_count} client families, including ${report.agent_operator_evidence.continuation_success_count}/${report.agent_operator_evidence.required_continuation_count} continuation-brief runs.
 
 | Task type | Pairs | Baseline success | LoopRelay success | Delta | Conservative 95% bound | Input-token delta | Decision |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 ${taskRows}
 
-Aggregate success moved from ${percent(report.baseline.success_rate * 100)} to ${percent(report.looprelay.success_rate * 100)}, while actionability moved from ${percent(report.baseline.mean_actionability * 100)} to ${percent(report.looprelay.mean_actionability * 100)}. Mean input-token cost changed by ${round(tokenDeltaPercent)}%. Cached-token and TTFV condition coverage are ${percent(report.measurement_coverage.cached_input_tokens * 100)} and ${percent(report.measurement_coverage.time_to_first_value_ms * 100)} respectively; missing values are not interpreted as zero. ${coverageEn} Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. The causal claim remains false until independent-user validation is complete.`;
+Aggregate success moved from ${percent(report.baseline.success_rate * 100)} to ${percent(report.looprelay.success_rate * 100)}, while actionability moved from ${percent(report.baseline.mean_actionability * 100)} to ${percent(report.looprelay.mean_actionability * 100)}. Mean input-token cost changed by ${round(tokenDeltaPercent)}%. Cached-token and TTFV condition coverage are ${percent(report.measurement_coverage.cached_input_tokens * 100)} and ${percent(report.measurement_coverage.time_to_first_value_ms * 100)} respectively; missing values are not interpreted as zero. Matched pairs observed ${report.matched_pair_blockers.observed_pair_count} blocker-bearing cases: ${report.matched_pair_blockers.remediated_pair_count} documented as remediated and ${report.matched_pair_blockers.open_pair_count} unresolved cases that block public readiness. The agent-native gate requires ${report.agent_operator_evidence.required_count} qualified runs across ${report.agent_operator_evidence.required_client_count} client families and ${report.agent_operator_evidence.required_continuation_count} continuation brief. ${coverageEn} Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. Human usability remains unmeasured and the causal claim remains false.`;
+}
+
+function summarizeMatchedPairBlockers(pairs) {
+  const observed = pairs.filter((pair) => hasMatchedPairBlocker(pair));
+  return {
+    observed_pair_count: observed.length,
+    remediated_pair_count: observed.filter(
+      (pair) => pair.blocker_resolution === "remediated",
+    ).length,
+    open_pair_count: observed.filter(
+      (pair) => pair.blocker_resolution !== "remediated",
+    ).length,
+  };
+}
+
+function hasMatchedPairBlocker(pair) {
+  return [pair.baseline, pair.looprelay].some((condition) =>
+    ["privacy_blocker", "data_loss_blocker", "install_blocker"].some(
+      (key) => condition[key] === true,
+    ),
+  );
 }
 
 function renderMetric(metric, y) {
@@ -602,6 +700,18 @@ function validateLedger(input) {
   ) {
     throw new Error("integer minimums are required");
   }
+  for (const key of [
+    "agent_operators",
+    "agent_operator_clients",
+    "agent_operator_continuations",
+  ]) {
+    if (
+      input.minimums[key] !== undefined &&
+      (!Number.isInteger(input.minimums[key]) || input.minimums[key] < 0)
+    ) {
+      throw new Error(`invalid agent-operator minimum: ${key}`);
+    }
+  }
   if (!Array.isArray(input.independent_users)) {
     throw new Error("independent_users must be an array");
   }
@@ -632,6 +742,19 @@ function validateLedger(input) {
     }
     validateCondition(pair.baseline, false);
     validateCondition(pair.looprelay, true);
+    const hasBlocker = hasMatchedPairBlocker(pair);
+    if (
+      pair.blocker_resolution !== undefined &&
+      !new Set(["open", "remediated"]).has(pair.blocker_resolution)
+    ) {
+      throw new Error("invalid matched-pair blocker resolution");
+    }
+    if (hasBlocker && pair.blocker_resolution === undefined) {
+      throw new Error("matched-pair blocker resolution is required");
+    }
+    if (!hasBlocker && pair.blocker_resolution !== undefined) {
+      throw new Error("matched-pair blocker resolution requires a blocker");
+    }
     if (!new Set(["baseline", "looprelay", "tie"]).has(pair.human_preference)) {
       throw new Error("invalid human preference");
     }
@@ -674,9 +797,63 @@ function validateAgentOperator(operator) {
     "recovery_count",
     "friction_count",
   ]) {
-    if (!Number.isFinite(operator[key]) || operator[key] < 0) {
+    if (
+      operator[key] !== null &&
+      (!Number.isFinite(operator[key]) || operator[key] < 0)
+    ) {
       throw new Error(`invalid agent operator metric: ${key}`);
     }
+  }
+  if (
+    operator.client !== undefined &&
+    !new Set(["codex", "claude-code"]).has(operator.client)
+  ) {
+    throw new Error("invalid agent operator client");
+  }
+  if (
+    operator.client_version !== undefined &&
+    (typeof operator.client_version !== "string" ||
+      !/^[0-9A-Za-z._-]+$/.test(operator.client_version))
+  ) {
+    throw new Error("invalid agent operator client version");
+  }
+  if (
+    operator.workflow !== undefined &&
+    !new Set(["mcp_readiness", "mcp_continuation", "shell_first_value"]).has(
+      operator.workflow,
+    )
+  ) {
+    throw new Error("invalid agent operator workflow");
+  }
+  for (const key of [
+    "fresh_session",
+    "isolated_product_home",
+    "isolated_npm_prefix",
+    "fresh_git_repository",
+    "agent_execution_completed",
+    "agent_execution_blocker",
+    "mcp_called",
+    "mcp_ready",
+    "continuation_brief_received",
+    "raw_content_exposed",
+    "candidate_install_verified",
+    "install_blocker",
+  ]) {
+    if (operator[key] !== undefined && typeof operator[key] !== "boolean") {
+      throw new Error(`invalid agent operator field: ${key}`);
+    }
+  }
+  if (
+    operator.candidate_commit !== undefined &&
+    !/^[a-f0-9]{40}$/i.test(operator.candidate_commit)
+  ) {
+    throw new Error("invalid agent operator candidate commit");
+  }
+  if (
+    operator.candidate_sha256 !== undefined &&
+    !/^[a-f0-9]{64}$/i.test(operator.candidate_sha256)
+  ) {
+    throw new Error("invalid agent operator candidate checksum");
   }
 }
 
@@ -708,9 +885,19 @@ function validateIndependentUser(user) {
   }
 }
 
-function publicReadiness(users, requiredUsers, criticalBlockers) {
+function publicReadiness(
+  users,
+  requiredUsers,
+  agentOperatorEvidence,
+  criticalBlockers,
+) {
   if (criticalBlockers > 0) {
     return { ready: false, reason: "critical_blocker" };
+  }
+  if (agentOperatorEvidence.required_count > 0) {
+    return agentOperatorEvidence.ready
+      ? { ready: true, reason: "agent_operator_requirements_met" }
+      : { ready: false, reason: "agent_operator_evidence_missing" };
   }
   if (users.length < requiredUsers) {
     return { ready: false, reason: "independent_users_missing" };

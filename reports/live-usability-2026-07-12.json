@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "design": "agent_native_live_usability_and_remediation_pair",
+  "causal_claim": false,
+  "candidate": {
+    "commit": "b7df1b5a9416c5fbaeae74af71c849e2129b58ec",
+    "sha256": "d90541a10b2811ffd0e194398b230a3e3ede3bc6b4a4af73e7b5b4db73eef497"
+  },
+  "independent_human_observations": 0,
+  "client_first_value": {
+    "valid_agent_native_runs": [
+      {
+        "client": "codex",
+        "client_version": "0.144.1",
+        "install_elapsed_ms": 9446,
+        "time_to_first_value_ms": 60220,
+        "recovery_count": 1,
+        "friction_count": 2,
+        "install_success": true,
+        "first_value_success": true
+      },
+      {
+        "client": "claude-code",
+        "client_version": "2.1.207",
+        "install_elapsed_ms": 7063,
+        "time_to_first_value_ms": 53589,
+        "recovery_count": 0,
+        "friction_count": 0,
+        "install_success": true,
+        "first_value_success": true
+      }
+    ],
+    "excluded_harness_attempts": {
+      "count": 2,
+      "classification": "claude_add_dir_consumed_prompt",
+      "retained_as": "harness_friction",
+      "product_privacy_blocker": false,
+      "product_data_loss_blocker": false,
+      "product_install_blocker": false
+    }
+  },
+  "under_specified_predecessor": {
+    "classification": "checkpoint_evidence_under_specified",
+    "kept_separate": true,
+    "reason": "The checkpoint named the task but omitted the observations the rubric expected the agent to recover."
+  },
+  "remediation_recovery_pair": {
+    "task_type": "selected_local_state_recovery",
+    "agent": "codex",
+    "agent_version": "0.144.1",
+    "model": "gpt-5.6-terra",
+    "reasoning_effort": "default",
+    "sandbox": "read-only",
+    "fresh_session": true,
+    "strict_rubric_concepts": 5,
+    "baseline": {
+      "concepts_recovered": 2,
+      "strict_pass": false,
+      "elapsed_ms": 54000,
+      "tool_calls": 11,
+      "input_tokens": 177608,
+      "privacy_blocker": false,
+      "data_loss_blocker": false,
+      "install_blocker": false
+    },
+    "looprelay": {
+      "concepts_recovered": 4,
+      "strict_pass": false,
+      "elapsed_ms": 46000,
+      "tool_calls": 5,
+      "input_tokens": 216074,
+      "privacy_blocker": false,
+      "data_loss_blocker": false,
+      "install_blocker": false,
+      "adopted": true
+    },
+    "delta": {
+      "concepts_recovered": 2,
+      "elapsed_ms": -8000,
+      "tool_calls": -6,
+      "input_tokens": 38466
+    },
+    "retained_limit": "The treatment carried the exact local observations but still selected a repository release backlog as the immediate next task, so neither condition passed the strict rubric."
+  },
+  "decision": {
+    "exact_checkpoint_recovery": "retain_opt_in",
+    "generic_continuation_injection": "narrow",
+    "new_large_features": "hold",
+    "human_adoption_claim": "not_measured"
+  },
+  "note": "Raw-free agent-native observations only. This report is not pooled with the matched real-task ledger and does not establish human adoption or causality."
+}

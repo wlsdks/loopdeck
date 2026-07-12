@@ -153,6 +153,44 @@ describe("SQLite prompt storage", () => {
     storage.close();
   });
 
+  it("keeps loop reads available when stored metadata JSON is corrupt", () => {
+    const dataDir = createTempDir();
+    initializeLoopRelay({ dataDir });
+    const storage = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+    });
+    storage.createLoopSnapshot(loopSnapshot({ id: "loop_corrupt_json" }));
+    storage.close();
+
+    const db = new Database(join(dataDir, "looprelay.sqlite"));
+    db.prepare(
+      "UPDATE loop_snapshots SET prompt_ids_json = ?, event_counts_json = ?, quality_json = ?, outcome_json = ?, next_brief_json = ?, privacy_json = ? WHERE id = ?",
+    ).run("{", "{", "{", "{", "{", "{", "loop_corrupt_json");
+    db.close();
+
+    const reopened = createSqlitePromptStorage({
+      dataDir,
+      hmacSecret: "test-secret",
+    });
+    expect(reopened.listLoopSnapshots({ limit: 1 }).items).toEqual([
+      expect.objectContaining({
+        id: "loop_corrupt_json",
+        prompt_ids: [],
+        event_counts: { prompts: 0 },
+        quality: { top_gaps: [], unresolved_questions: [] },
+        outcome: { status: "unknown", summary: "", evidence_refs: [] },
+        next_brief: { generated: false, summary: "" },
+        privacy: {
+          local_only: true,
+          stores_prompt_bodies: false,
+          stores_raw_paths: false,
+        },
+      }),
+    ]);
+    reopened.close();
+  });
+
   it("records loop snapshot outcomes without prompt bodies or raw paths", () => {
     const dataDir = createTempDir();
     initializeLoopRelay({ dataDir });
@@ -707,6 +745,9 @@ describe("SQLite prompt storage", () => {
       { version: 17, name: "017_compact_boundaries" },
       { version: 18, name: "018_loop_memories" },
       { version: 19, name: "019_loop_merge_decisions" },
+      { version: 20, name: "020_agent_runs" },
+      { version: 21, name: "021_continuation_receipts" },
+      { version: 22, name: "022_failure_episodes" },
     ]);
     const db = new Database(join(dataDir, "looprelay.sqlite"));
     try {

@@ -1,0 +1,272 @@
+{
+  "version": 1,
+  "design": "matched_observational",
+  "cohort": "agent_native_blind_recovery",
+  "causal_claim": false,
+  "minimums": {
+    "pairs": 10,
+    "recovery_classes": 3
+  },
+  "pairs": [
+    {
+      "id": "resume-01",
+      "order": "baseline_first",
+      "recovery_class": "checkpoint_focus",
+      "assessment": "tool_event_trace",
+      "baseline": {
+        "passed": false,
+        "correct_target": true,
+        "correct_first_action": false,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 0,
+        "wrong_target_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "correct_target": true,
+        "correct_first_action": true,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 0,
+        "wrong_target_count": 0,
+        "adopted": true
+      },
+      "preference": "looprelay"
+    },
+    {
+      "id": "resume-02",
+      "order": "looprelay_first",
+      "recovery_class": "policy_recovery",
+      "assessment": "tool_event_trace",
+      "baseline": {
+        "passed": false,
+        "correct_target": true,
+        "correct_first_action": false,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 0,
+        "wrong_target_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "correct_target": true,
+        "correct_first_action": true,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 1,
+        "wrong_target_count": 0,
+        "adopted": true
+      },
+      "preference": "looprelay"
+    },
+    {
+      "id": "resume-03",
+      "order": "baseline_first",
+      "recovery_class": "worktree_resolution",
+      "assessment": "tool_event_trace",
+      "baseline": {
+        "passed": false,
+        "correct_target": true,
+        "correct_first_action": false,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 0,
+        "wrong_target_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "correct_target": true,
+        "correct_first_action": true,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 1,
+        "wrong_target_count": 0,
+        "adopted": true
+      },
+      "preference": "looprelay"
+    },
+    {
+      "id": "resume-04",
+      "order": "looprelay_first",
+      "recovery_class": "failure_outcome",
+      "assessment": "tool_event_trace",
+      "baseline": {
+        "passed": false,
+        "correct_target": true,
+        "correct_first_action": false,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 0,
+        "wrong_target_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "correct_target": true,
+        "correct_first_action": true,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 1,
+        "wrong_target_count": 0,
+        "adopted": true
+      },
+      "preference": "looprelay"
+    },
+    {
+      "id": "resume-05",
+      "order": "baseline_first",
+      "recovery_class": "compaction_handoff",
+      "assessment": "tool_event_trace",
+      "baseline": {
+        "passed": false,
+        "correct_target": true,
+        "correct_first_action": false,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 0,
+        "wrong_target_count": 0
+      },
+      "looprelay": {
+        "passed": false,
+        "correct_target": true,
+        "correct_first_action": false,
+        "evidence_attached": false,
+        "elapsed_ms": null,
+        "friction_count": 0,
+        "wrong_target_count": 0,
+        "adopted": true
+      },
+      "preference": "tie"
+    },
+    {
+      "id": "resume-06",
+      "order": "looprelay_first",
+      "recovery_class": "privacy_boundary",
+      "assessment": "tool_event_trace",
+      "baseline": {
+        "passed": false,
+        "correct_target": true,
+        "correct_first_action": false,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 0,
+        "wrong_target_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "correct_target": true,
+        "correct_first_action": true,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 1,
+        "wrong_target_count": 0,
+        "adopted": true
+      },
+      "preference": "looprelay"
+    },
+    {
+      "id": "resume-07",
+      "order": "baseline_first",
+      "recovery_class": "checkpoint_focus",
+      "assessment": "tool_event_trace",
+      "baseline": {
+        "passed": false,
+        "correct_target": true,
+        "correct_first_action": false,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 0,
+        "wrong_target_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "correct_target": true,
+        "correct_first_action": true,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 1,
+        "wrong_target_count": 0,
+        "adopted": true
+      },
+      "preference": "looprelay"
+    },
+    {
+      "id": "resume-08",
+      "order": "looprelay_first",
+      "recovery_class": "worktree_resolution",
+      "assessment": "tool_event_trace",
+      "baseline": {
+        "passed": false,
+        "correct_target": true,
+        "correct_first_action": false,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 0,
+        "wrong_target_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "correct_target": true,
+        "correct_first_action": true,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 1,
+        "wrong_target_count": 0,
+        "adopted": true
+      },
+      "preference": "looprelay"
+    },
+    {
+      "id": "resume-09",
+      "order": "baseline_first",
+      "recovery_class": "failure_outcome",
+      "assessment": "tool_event_trace",
+      "baseline": {
+        "passed": false,
+        "correct_target": true,
+        "correct_first_action": false,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 0,
+        "wrong_target_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "correct_target": true,
+        "correct_first_action": true,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 0,
+        "wrong_target_count": 0,
+        "adopted": true
+      },
+      "preference": "looprelay"
+    },
+    {
+      "id": "resume-10",
+      "order": "looprelay_first",
+      "recovery_class": "policy_recovery",
+      "assessment": "tool_event_trace",
+      "baseline": {
+        "passed": false,
+        "correct_target": true,
+        "correct_first_action": false,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 0,
+        "wrong_target_count": 0
+      },
+      "looprelay": {
+        "passed": true,
+        "correct_target": true,
+        "correct_first_action": true,
+        "evidence_attached": true,
+        "elapsed_ms": null,
+        "friction_count": 1,
+        "wrong_target_count": 0,
+        "adopted": true
+      },
+      "preference": "looprelay"
+    }
+  ]
+}

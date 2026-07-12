@@ -1,10 +1,12 @@
 # LoopRelay Next Backlog
 
-Last updated: 2026-07-11
+Last updated: 2026-07-12
 
 LoopRelay is in identity-consolidation and usefulness-validation mode. Large new
-features remain frozen until at least three independent users complete install
-and first-value continuity flows.
+features remain frozen while agent-native usefulness evidence is collected and
+used to narrow scope. The bounded local Adaptive Agent Guide is an
+explicit maintainer-approved exception on 2026-07-11; it remains subject to its
+own matched-pair retention decision and does not authorize provider automation.
 
 ## Current Product Contract
 
@@ -39,18 +41,33 @@ Primary value:
   is not pooled with the GPT-5.4 aggregate.
 - Current unseen real-task corpus: 11 Sol-preregistered/Terra-executed pairs
   across five task types with at least two pairs per type. It is directional only,
-  remains separate from both synthetic cohorts, and does not satisfy the
-  independent-human public-readiness gate.
-- Current independent-human candidate: commit `d1676748`, checksum-pinned in
+  remains separate from both synthetic cohorts and does not establish causality.
+- Current clean-install candidate: commit `07a3ba86`, checksum-pinned in
   `reports/independent-user-candidate.json`. Its isolated maintainer smoke
-  passed install-to-first-value in 8.507 seconds with zero raw-path hits, but it
-  remains validation-only and the independent-human count is 0/3.
-- Collect unseen real-task pairs and three independent human
-  install-to-first-value flows; do not inflate confidence with additional
+  passed installation in 6.396 seconds and install-to-first-value in 7.098
+  seconds with zero raw-path hits.
+- Fresh live Codex and Claude Code sessions have each ingested a new prompt,
+  called the read-only `get_looprelay_status` MCP tool, and produced a `doctor`
+  result with `status: ready`. A Claude Code run with an unrealistically low
+  US$0.10 budget was retained as a client-execution failure; a later
+  permission-scoped run completed. This validates the configured local path,
+  not external-user adoption.
+- The separate [2026-07-12 live usability observation](PRACTICAL_USEFULNESS_EVALUATION_2026-07-12.md)
+  passed fresh first value in both clients and showed one remediated explicit
+  recovery pair recover 4/5 selected concepts versus 2/5 baseline concepts.
+  Neither condition passed the strict rubric. It also retained an
+  under-specified checkpoint and two harness failures; it is agent-native,
+  unpooled, non-causal, and does not change the human-adoption boundary.
+- Collect unseen real-task pairs; do not inflate confidence with additional
   repeats of the current synthetic fixtures.
 - Separate baseline work from LoopRelay-assisted work explicitly.
 - Record completion rate, failure transition, continuation reuse, adopted
   guidance, time to first value, and user friction.
+- The `resume reliability` cohort is complete: 10 counterbalanced agent-native
+  blind-recovery pairs spanning six recovery classes. It measures correct target
+  selection, correct first action, evidence attachment, elapsed time,
+  wrong-target count, and friction without storing prompts, paths, branches,
+  worktrees, or sessions.
 - Treat results as observational evidence (`causal_claim: false`).
 - Include negative and null results in the report.
 
@@ -59,16 +76,48 @@ Primary value:
 Keep a feature only when it reduces rediscovery, prevents repeated failure, or
 improves evidence quality without adding disproportionate friction. Modify it
 when the value is visible but setup or interpretation is confusing. Remove or
-de-emphasize it when independent users do not adopt it or when it encourages
+de-emphasize it when agents do not adopt it in real tasks or when it encourages
 prompt-score optimization without better outcomes.
 
 Candidate focused slices:
 
-- show recurring failure patterns in CLI, MCP, and Loops UI consistently
+- add bounded time-window and project filters to confirmed failure patterns
 - measure continuation-brief reuse and time saved without storing prompt bodies
 - make outcome recording faster while preserving explicit attribution
 - improve safe selection when multiple worktrees or sessions are active
 - sharpen question generation for missing scope, constraints, and acceptance criteria
+
+## Active Evidence-First Sequence
+
+1. **Recovery Packet v2 + Continuation Receipt — implemented 2026-07-12.**
+   Selected CLI, MCP, and explicit Web brief flows now issue a raw-free receipt
+   bound to the exact snapshot. Copy, delivery, followed, partial, and ignored
+   states can be recorded without transcript capture. Retain only if unseen
+   recovery keeps wrong-target at 0 and evidence attachment reaches at least
+   95% without raising mean friction above 0.3.
+2. **Typed Evidence + `loop close` — implemented 2026-07-12.** Compatible
+   structured evidence now records kind, label, result, observation time,
+   optional HEAD hash, and declared versus locally verified provenance. The
+   explicit close flow atomically records outcome and exact receipt use, accepts
+   optional Guide attribution, rejects implicit global-latest selection, and
+   never infers or auto-approves an outcome. Retain only if critical false-ready
+   remains 0 and observed median closeout time falls below 15 seconds.
+3. **Action Inbox + Local Outcomes — implemented 2026-07-12.** The dedicated
+   Actions workspace, CLI, MCP, and HTTP contract aggregate the latest active
+   loop's continuity, evidence, failure, and memory debt. Operator-local
+   outcomes remain visually and semantically separate from bundled studies.
+4. **Confirmed failure episodes — implemented 2026-07-12.** Failed or blocked
+   snapshots now require an operator-confirmed category and intervention, then
+   remain actionable until resolved or explicitly marked wont-fix. No episode
+   is inferred from prompt text or transcripts. The Actions report and MCP
+   contract aggregate category-level total/open/resolved/wont-fix counts and
+   mark categories recurring only after confirmed episodes span two distinct,
+   explicit agent session IDs. Missing session metadata fails closed. The
+   pattern aggregate spans all local episodes; only the actionable queue is
+   windowed to recent records.
+5. **Agent Guide calibration.** Do not rank or automate models until at least
+   20 raw-free outcomes across three task types include recommendation,
+   selection, rejection/switch reason, attempts, TTFV, and focused tests.
 
 Current evidence decisions (30-pair maintainer-run cohort):
 
@@ -96,8 +145,8 @@ Evidence-based 1.0.x scope:
   repository state already determines the next action.
 - Remove generic diagnosis from the default ambiguity path; let the coding
   agent ask native focused questions and retain diagnosis as explicit opt-in.
-- Do not add a large feature until three independent humans complete install
-  and first value. The 30-pair cohort does not satisfy that gate.
+- Do not add a large feature without new real-task evidence. The 30-pair cohort
+  does not establish a general productivity claim.
 
 Current real-task decisions (11-pair maintainer-run cohort):
 
@@ -114,8 +163,47 @@ Current real-task decisions (11-pair maintainer-run cohort):
   cost without quality.
 - `narrow`: release continuity to factual handoff; both cases stayed fail/fail
   because action sequencing was not preserved.
-- `hold`: all large feature work and public release interpretation until three
-  independent humans complete install-to-first-value without critical blockers.
+- `hold`: all large feature work unless new real-task evidence changes the
+  narrow scope above. Agent-native readiness does not establish human adoption
+  or causality.
+
+Current resume-reliability decisions (10-pair agent-native cohort):
+
+- `retain`: explicit recovery guidance improves the scored correct-first-action
+  rate from 0.0% to 90.0%; keep it limited to checkpoint, failure, blocked, or
+  compaction signals.
+- `narrow`: correct-target selection stayed at 100.0% in both conditions, while
+  evidence attachment fell from 100.0% to 90.0% and mean friction rose from 0.0
+  to 0.7. Do not turn generic continuation intervention on by default.
+- `retain`: show recovery-class coverage, retained regressions, and the
+  raw-free data boundary in the product so the operator can judge the result
+  rather than infer a broad productivity claim.
+- `retain`: project-level recommendation feedback, outcome attribution, and
+  lifecycle settings remain explicit local controls. A retention review date
+  is not deletion; external-analysis permission does not perform a request.
+
+## Evidence-Driven 1.0.x Queue
+
+1. **Release blocker — independent install/first value.** Obtain three
+   independent install-to-first-continuation flows. Record failures, recovery,
+   elapsed time, and friction; do not substitute agent-native sessions for
+   human adoption.
+2. **Release blocker — final immutable release evidence.** On the final commit
+   only, run the complete release gate, publish npm and GitHub Release from the
+   same commit, and never move `v1.0.0`.
+3. **Collect, do not automate — adopted recommendation outcomes.** Accumulate
+   accepted/not-helpful/wrong feedback plus explicit outcome attribution across
+   real work. Keep the dashboard language non-causal until an appropriate
+   independent study exists. The selected-loop Guide now has an explicit
+   raw-free run-capture form for this purpose; it records no inferred run and
+   never switches a provider or model.
+4. **Modify only if observed — MCP execution friction.** Retain client budget,
+   permission, and deferred-tool-discovery failures as setup observations. Add
+   guidance only when it reduces a repeated, reproducible failure; do not add
+   provider auto-configuration or model auto-switching.
+5. **Do not build.** No large feature, automatic prompt submission, hidden
+   provider call, transcript scraping, automatic memory write, or automatic
+   instruction-file edit is authorized by the current evidence.
 
 No item above authorizes automatic prompt submission, hidden provider calls,
 private transcript scraping, automatic memory writes, or automatic instruction

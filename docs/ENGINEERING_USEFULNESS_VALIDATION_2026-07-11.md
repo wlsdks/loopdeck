@@ -527,16 +527,18 @@ raw-free cost and tool metrics. The synthetic fixture contract and output
 schema are under `evaluation/usefulness/`; raw Codex events and answer bodies
 remain outside Git.
 
-Three independent human install-to-first-value sessions are still required.
-Candidate commit `d1676748` has a validation-only tarball with the SHA-256
-recorded in `reports/independent-user-candidate.json` and a versioned handoff at
-`evaluation/usefulness/PARTICIPANT_HANDOFF_d1676748.md`. Its isolated maintainer
+The agent-native gate replaces the unavailable-human assumption. Candidate
+commit `07a3ba86` has a validation-only tarball with the SHA-256 recorded in
+`reports/independent-user-candidate.json` and a versioned handoff at
+`evaluation/usefulness/PARTICIPANT_HANDOFF_07a3ba86.md`. Its isolated clean
 smoke used an empty HOME, isolated npm prefix, Node 22.22.0, and a fresh Git
-repository. Installation and first continuation value succeeded in 8.507
-seconds with zero raw-path hits and no privacy, data-loss, or install blocker.
-It deliberately counts as zero independent humans. One excluded attempt used
-an unsupported worktree selector after creating a `primary` checkpoint. It is
-retained as harness error and is not counted as a product pass.
+repository. Installation succeeded in 6.396 seconds and first continuation
+value in 7.098 seconds with zero raw-path hits and no privacy, data-loss, or
+install blocker. Three fresh Codex/Claude Code MCP runs then passed across two
+clients, including one continuation brief. Two agent-shell onboarding attempts
+failed at sandbox/non-interactive execution boundaries; they remain raw-free
+friction records and are not misclassified as product installation failures.
+Human usability remains unmeasured and is not inferred from these agent runs.
 
 Returned raw-free results are appended with
 `pnpm evidence:participant-intake -- --append-to reports/usefulness-pairs.json

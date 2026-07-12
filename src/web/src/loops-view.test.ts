@@ -2,7 +2,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import { LoopsView } from "./loops-view.js";
+import { getAgentGuideSnapshotId, LoopsView } from "./loops-view.js";
 import type { LoopListResponse, LoopWorktreeResponse } from "./api.js";
 
 describe("LoopsView", () => {
@@ -236,6 +236,18 @@ describe("LoopsView", () => {
     expect(html).not.toContain("Make this better");
     expect(html).not.toContain("Safe worktree summary");
     expect(html).not.toContain("/Users/example");
+  });
+
+  it("scopes the agent guide to the selected worktree snapshot", () => {
+    const detail = loopWorktree();
+    const loops = loopList();
+
+    expect(getAgentGuideSnapshotId(loops.items, detail)).toBe(
+      detail.items[0]?.id,
+    );
+    expect(getAgentGuideSnapshotId(loops.items, undefined)).toBe(
+      loops.items[0]?.id,
+    );
   });
 
   it("renders a selected worktree continuation brief action", () => {

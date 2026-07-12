@@ -1,5 +1,10 @@
 # Full Feature Audit
 
+> **Historical snapshot:** this audit describes the 2026-05-02 product state
+> and its old scope. The canonical current inventory is
+> [LoopRelay Feature Inventory](FEATURE_INVENTORY.md). Do not use the counts or
+> release conclusion below as current evidence.
+
 Date: 2026-05-02
 
 ## Conclusion

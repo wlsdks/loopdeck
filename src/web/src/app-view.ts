@@ -28,23 +28,35 @@ export function getVisibleChrome(view: View): VisibleChrome {
   if (view.name === "projects") {
     return { eyebrow: "Local prompt archive", title: "Projects" };
   }
+  if (view.name === "project") {
+    return {
+      eyebrow: "Project continuity workspace",
+      title: "Project workspace",
+    };
+  }
   if (view.name === "loops") {
     return { eyebrow: "Agent loop memory", title: "Loops" };
   }
+  if (view.name === "actions") {
+    return { eyebrow: "Operator-local outcomes and debt", title: "Actions" };
+  }
   if (view.name === "scores") {
-    return { eyebrow: "Prompt habit analysis", title: "Prompt scores" };
+    return { eyebrow: "Observed outcomes and coverage", title: "Evidence" };
   }
   if (view.name === "coach") {
     return {
-      eyebrow: "Prompt improvement workspace",
-      title: "Prompt coach",
+      eyebrow: "Patterns, practice, and adoption signals",
+      title: "Insights",
     };
   }
   if (view.name === "detail") {
     return { eyebrow: "Local prompt archive", title: "Prompt detail" };
   }
   if (view.name === "dashboard") {
-    return { eyebrow: "Local prompt archive", title: "Quality dashboard" };
+    return {
+      eyebrow: "Local continuity and evidence layer",
+      title: "Overview",
+    };
   }
   return { eyebrow: "Local prompt archive", title: "Prompt archive" };
 }

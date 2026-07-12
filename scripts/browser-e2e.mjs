@@ -318,8 +318,31 @@ try {
     );
   }
 
-  await page.getByRole("button", { name: "Dashboard" }).click();
-  await page.getByRole("heading", { name: "Quality dashboard" }).waitFor();
+  await page.evaluate(() => window.scrollTo(999, 320));
+  await page.getByRole("button", { name: "Overview" }).click();
+  await page.getByRole("heading", { name: "Overview" }).waitFor();
+  const overviewScroll = await page.evaluate(() => ({
+    x: window.scrollX,
+    y: window.scrollY,
+  }));
+  assert(
+    overviewScroll.x === 0 && overviewScroll.y === 0,
+    `Workspace navigation should reset stale scroll offsets. Got ${JSON.stringify(overviewScroll)}.`,
+  );
+  await page.getByRole("heading", { name: "Loop health" }).waitFor();
+  await page.getByText("Evidence confidence").waitFor();
+  await page.getByText("Active worktrees").waitFor();
+  await captureScreenshot(page, "overview-loaded");
+  await page.getByRole("button", { name: "Open loop" }).click();
+  await page.getByRole("heading", { name: "Loops", level: 1 }).waitFor();
+  await page.getByRole("button", { name: "Overview" }).click();
+  await page.getByRole("heading", { name: "Overview" }).waitFor();
+  await assertChartVisible(page, "overview", 1);
+  await assertBrowserSafe(page, "overview");
+  await captureScreenshot(page, "overview-desktop");
+
+  await page.getByLabel("Evidence").click();
+  await page.getByRole("heading", { name: "Evidence", exact: true }).waitFor();
   // Archive score review is rendered inside a <details> panel that is
   // collapsed by default; open it before asserting on its contents.
   await page.getByRole("heading", { name: "Archive score review" }).click();
@@ -327,33 +350,69 @@ try {
   await assertText(
     page,
     "Average archive score",
-    "Dashboard should show average archive score after opening Archive score review.",
+    "Evidence should show average archive score after opening Archive score review.",
   );
   await assertText(
     page,
     "Effectiveness evidence",
-    "Dashboard should show archive-level prompt effectiveness evidence.",
+    "Evidence should show archive-level prompt effectiveness evidence.",
   );
   await assertText(
     page,
     "measured 1 / unmeasured 1",
-    "Dashboard should show measured vs unmeasured prompt effectiveness coverage.",
+    "Evidence should show measured vs unmeasured prompt effectiveness coverage.",
   );
   await assertText(
     page,
     "Link recent prompts to loop outcomes before claiming archive-wide effectiveness.",
-    "Dashboard should show the archive effectiveness next action.",
+    "Evidence should show the archive effectiveness next action.",
   );
-  await assertChartVisible(page, "dashboard", 1);
-  await assertBrowserSafe(page, "dashboard");
-  await captureScreenshot(page, "dashboard-desktop");
+  await assertChartVisible(page, "evidence", 1);
+  await assertText(
+    page,
+    "Published product evidence",
+    "Evidence should separate versioned product evidence from the local archive.",
+  );
+  await assertText(
+    page,
+    "No causal claim",
+    "Evidence should not overstate matched-pair results as causal proof.",
+  );
+  await assertText(
+    page,
+    "Resume reliability",
+    "Evidence should show the next 10-pair resume reliability program.",
+  );
+  await page
+    .getByText("Inspect cohort coverage and data boundary", { exact: true })
+    .click();
+  await assertText(
+    page,
+    "checkpoint focus",
+    "Evidence detail should expose recovery-class coverage without raw traces.",
+  );
+  await assertText(
+    page,
+    "Raw-free archive",
+    "Evidence detail should state the raw-free data boundary.",
+  );
+  await assertBrowserSafe(page, "evidence");
+  await captureScreenshot(page, "evidence-desktop");
+  await page
+    .getByRole("heading", { name: "Published product evidence", exact: true })
+    .scrollIntoViewIfNeeded();
+  await captureScreenshot(page, "product-evidence-desktop");
+  await page
+    .getByText("Inspect cohort coverage and data boundary", { exact: true })
+    .scrollIntoViewIfNeeded();
+  await captureScreenshot(page, "resume-reliability-method-desktop");
 
-  await page.getByRole("button", { name: "Coach", exact: true }).click();
-  await page.getByRole("heading", { name: "Prompt coach" }).waitFor();
+  await page.getByRole("button", { name: "Insights", exact: true }).click();
+  await page.getByRole("heading", { name: "Insights" }).waitFor();
   await assertTextAny(
     page,
-    ["Prompt improvement workspace", "프롬프트 개선 작업공간"],
-    "Coach should use the prompt improvement product identity.",
+    ["Patterns, practice, and adoption signals", "패턴, 연습, 채택 신호"],
+    "Insights should use the observed-improvement product identity.",
   );
   await page.getByText("Prompt habit command center").waitFor();
   await assertText(
@@ -370,6 +429,16 @@ try {
     page,
     "Bad prompt review queue",
     "Coach should show low score review queue.",
+  );
+  await assertText(
+    page,
+    "Insight coverage",
+    "Insights should expose every archive-level coaching signal.",
+  );
+  await assertText(
+    page,
+    "prompt bodies withheld",
+    "Insights should make its local-only data boundary visible.",
   );
   await assertTextAny(
     page,
@@ -402,12 +471,17 @@ try {
   );
   await assertBrowserSafe(page, "coach");
   await captureScreenshot(page, "coach-desktop");
+  await page
+    .getByRole("heading", { name: "Insight coverage", exact: true })
+    .scrollIntoViewIfNeeded();
+  await captureScreenshot(page, "insight-inventory-desktop");
+  await page
+    .getByRole("heading", { name: "Missing or weak fields", exact: true })
+    .scrollIntoViewIfNeeded();
+  await captureScreenshot(page, "insight-diagnosis-desktop");
 
-  // The standalone Scores tab was dropped in PR #174 (dashboard nav-card
-  // cleanup). Archive score review now lives inside the Dashboard panel and
-  // is already exercised above. Practice plan, benchmark, insights, and
-  // import surfaces were removed at the same time, so there is nothing left
-  // to assert on between Coach and Projects.
+  // Evidence and Insights now have separate navigation ownership: archive
+  // evidence is checked above, while behavior and practice remain here.
 
   await page.getByRole("button", { name: "Projects", exact: true }).click();
   await page.getByRole("heading", { name: "Projects" }).waitFor();
@@ -418,6 +492,54 @@ try {
   await page.getByRole("button", { name: "capture on" }).click();
   await page.getByRole("button", { name: "paused" }).waitFor();
   await captureScreenshot(page, "projects-desktop");
+  await page.getByRole("button", { name: "Open workspace" }).click();
+  await page
+    .getByRole("heading", { name: "Project workspace", level: 1 })
+    .waitFor();
+  await page.getByLabel("Project workspace").waitFor();
+  await assertText(
+    page,
+    "Local project policy",
+    "Project workspace should keep local policy with continuity evidence.",
+  );
+  await assertText(
+    page,
+    "Latest loop",
+    "Project workspace should expose project-scoped loop continuity.",
+  );
+  const retentionReview = page.getByLabel("Retention review");
+  await retentionReview.selectOption("90");
+  await page.waitForFunction(
+    () =>
+      document.querySelector('select[aria-label="Retention review"]')?.value ===
+      "90",
+  );
+  assertEqual(
+    await retentionReview.inputValue(),
+    "90",
+    "Retention review should persist the selected local review window.",
+  );
+  const externalAnalysisPermission = page.getByLabel(
+    "External analysis permission",
+  );
+  await externalAnalysisPermission.click();
+  await page.waitForFunction(
+    () =>
+      [...document.querySelectorAll(".project-policy-toggle")]
+        .find((node) =>
+          node.textContent?.includes("External analysis permission"),
+        )
+        ?.querySelector("input")?.checked === true,
+  );
+  await assertText(
+    page,
+    "this switch makes no request",
+    "External-analysis permission should explain that the policy update is not a network action.",
+  );
+  await assertBrowserSafe(page, "project-workspace");
+  await captureScreenshot(page, "project-workspace-desktop");
+  await page.getByLabel("Projects").click();
+  await page.getByRole("heading", { name: "Projects" }).waitFor();
 
   // MCP is now a sub-route of Settings (/mcp); the standalone sidebar
   // button is gone. Navigate via URL so the admin-fold <details> opens
@@ -434,6 +556,24 @@ try {
     "MCP readiness",
     "MCP page should show live readiness before the tool catalog.",
   );
+  await page
+    .getByRole("heading", { name: "Agent runtime readiness", exact: true })
+    .waitFor();
+  await page.locator(".mcp-runtime-card").first().waitFor({ timeout: 15_000 });
+  await assertText(
+    page,
+    "Codex",
+    "MCP page should expose the Codex live doctor result.",
+  );
+  await assertText(
+    page,
+    "Claude Code",
+    "MCP page should expose the Claude Code live doctor result.",
+  );
+  await page
+    .getByRole("heading", { name: "Agent runtime readiness", exact: true })
+    .scrollIntoViewIfNeeded();
+  await captureScreenshot(page, "mcp-runtime-desktop");
   await assertTextAny(
     page,
     ["Stored prompts", "저장된 프롬프트"],
@@ -513,6 +653,37 @@ try {
     true,
     "Selected worktree detail should expose an eligible memory candidate.",
   );
+  await page.getByRole("heading", { name: "Agent guide" }).waitFor();
+  await page.getByText("Record this run", { exact: true }).click();
+  const guideRunCapture = page.getByRole("form", {
+    name: "Agent guide run capture",
+  });
+  await guideRunCapture.waitFor();
+  await guideRunCapture.getByLabel("Outcome").selectOption("passed");
+  await guideRunCapture.getByLabel("First value (seconds)").fill("12");
+  await guideRunCapture.getByLabel("Focused tests").fill("2");
+  await guideRunCapture
+    .getByLabel("I used the recommendation for this run.")
+    .check();
+  await guideRunCapture.getByRole("button", { name: "Save local run" }).click();
+  await guideRunCapture.getByText("Recorded", { exact: true }).waitFor();
+  const recordedGuideRun = readAgentGuideRun(selectedMemorySnapshot.id);
+  assertEqual(
+    recordedGuideRun?.outcome_status,
+    "passed",
+    "Guide capture should record a declared local outcome.",
+  );
+  assertEqual(
+    recordedGuideRun?.accepted_recommendation,
+    1,
+    "Guide capture should record recommendation acceptance explicitly.",
+  );
+  assertEqual(
+    recordedGuideRun?.first_value_seconds,
+    12,
+    "Guide capture should retain only declared first-value timing.",
+  );
+  await captureScreenshot(page, "loops-agent-guide-capture-desktop");
   const selectedMemoryApprovalButton = page.getByRole("button", {
     name: /Approve selected memory|선택 메모리 승인/,
   });
@@ -569,6 +740,45 @@ try {
   await assertBrowserSafe(page, "selected loop memory approval");
   await captureScreenshot(page, "loops-selected-memory-desktop");
 
+  step("Verify action inbox failure confirmation and resolution");
+  const actionFailure = seedActionFailure();
+  await page.goto(`${serverBaseUrl}/actions`);
+  await page.getByRole("heading", { name: "Actions", level: 1 }).waitFor();
+  await page.getByRole("button", { name: "Confirm failure" }).click();
+  await page.getByLabel("Failure category").selectOption("tooling");
+  await page
+    .getByLabel("Confirmed intervention")
+    .fill("Retry the focused browser contract after checking local readiness.");
+  await page.getByRole("button", { name: "Confirm episode" }).click();
+  await page.getByRole("button", { name: "Resolve failure" }).waitFor();
+  await page.getByRole("button", { name: "Resolve failure" }).click();
+  await page
+    .locator("label")
+    .filter({ hasText: "Resolution status" })
+    .locator("select")
+    .selectOption("resolved");
+  await page
+    .getByLabel("Resolution evidence", { exact: true })
+    .fill("The focused browser interaction and local API checks passed.");
+  await page.getByRole("button", { name: "Confirm episode" }).click();
+  await page
+    .getByRole("button", { name: "Resolve failure" })
+    .waitFor({ state: "detached" });
+  const actionReport = await page.evaluate(async () => {
+    const response = await fetch("/api/v1/actions");
+    return response.json();
+  });
+  assert(
+    actionReport.data?.outcomes?.some(
+      (outcome) =>
+        outcome.snapshot_id === actionFailure.snapshot.id &&
+        outcome.failure_episode_status === "resolved",
+    ),
+    "Action inbox should retain the operator-confirmed resolved failure outcome.",
+  );
+  await assertBrowserSafe(page, "action inbox");
+  await captureScreenshot(page, "actions-desktop");
+
   // Export is now a sub-route of Settings (/exports); same reason as MCP.
   await page.goto(`${serverBaseUrl}/exports`);
   await page
@@ -605,6 +815,10 @@ try {
   await captureScreenshot(page, "settings-desktop");
 
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(`${serverBaseUrl}/dashboard`);
+  await page.getByRole("heading", { name: "Overview" }).waitFor();
+  await page.getByRole("heading", { name: "Loop health" }).waitFor();
+  await page.getByText("Evidence confidence").waitFor();
   const viewport = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
     innerWidth: window.innerWidth,
@@ -613,7 +827,58 @@ try {
     viewport.scrollWidth <= viewport.innerWidth,
     `Mobile layout should not overflow horizontally. scrollWidth=${viewport.scrollWidth}, innerWidth=${viewport.innerWidth}.`,
   );
+  await captureScreenshot(page, "overview-mobile");
+
+  await page.goto(`${serverBaseUrl}/scores`);
+  await page
+    .getByRole("heading", { name: "Published product evidence", exact: true })
+    .waitFor();
+  const productEvidenceViewport = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    innerWidth: window.innerWidth,
+  }));
+  assert(
+    productEvidenceViewport.scrollWidth <= productEvidenceViewport.innerWidth,
+    `Mobile product evidence should not overflow horizontally. scrollWidth=${productEvidenceViewport.scrollWidth}, innerWidth=${productEvidenceViewport.innerWidth}.`,
+  );
+  await page
+    .getByRole("heading", { name: "Published product evidence", exact: true })
+    .scrollIntoViewIfNeeded();
+  await captureScreenshot(page, "product-evidence-mobile");
+
+  await page.goto(
+    `${serverBaseUrl}/loops?worktree=browser-selected-memory&session=browser-selected-session&branch=codex%2Fbrowser-selected-memory`,
+  );
+  await page.getByRole("heading", { name: "Agent guide" }).waitFor();
+  await page.getByText("Record this run", { exact: true }).click();
+  const guideCaptureViewport = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    innerWidth: window.innerWidth,
+  }));
+  assert(
+    guideCaptureViewport.scrollWidth <= guideCaptureViewport.innerWidth,
+    `Mobile guide capture should not overflow horizontally. scrollWidth=${guideCaptureViewport.scrollWidth}, innerWidth=${guideCaptureViewport.innerWidth}.`,
+  );
+  await page
+    .getByRole("form", { name: "Agent guide run capture" })
+    .scrollIntoViewIfNeeded();
+  await captureScreenshot(page, "loops-agent-guide-mobile");
+
+  await page.goto(`${serverBaseUrl}/settings`);
+  await page.getByRole("heading", { name: "Settings" }).waitFor();
   await captureScreenshot(page, "settings-mobile");
+
+  await page.goto(`${serverBaseUrl}/actions`);
+  await page.getByRole("heading", { name: "Actions", level: 1 }).waitFor();
+  const actionViewport = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    innerWidth: window.innerWidth,
+  }));
+  assert(
+    actionViewport.scrollWidth <= actionViewport.innerWidth,
+    `Mobile actions should not overflow horizontally. scrollWidth=${actionViewport.scrollWidth}, innerWidth=${actionViewport.innerWidth}.`,
+  );
+  await captureScreenshot(page, "actions-mobile");
 
   assertEqual(
     consoleErrors.length,
@@ -674,6 +939,12 @@ function insertJudgeScoreForClaudePrompt({ score, reason }) {
 }
 
 function insertLoopOutcomeForClaudePrompt() {
+  const projectId = JSON.parse(
+    runCli(["project", "list", "--data-dir", dataDir, "--json"]),
+  ).items.find((project) => project.label === "private-project")?.project_id;
+  if (typeof projectId !== "string") {
+    throw new Error("No private-project record found to seed loop outcome.");
+  }
   const dbPath = join(dataDir, "looprelay.sqlite");
   const db = new Database(dbPath);
   try {
@@ -716,7 +987,7 @@ function insertLoopOutcomeForClaudePrompt() {
       "browser-e2e-loop",
       null,
       "private-project",
-      "proj_browser",
+      projectId,
       null,
       "codex/browser-effectiveness",
       "browser-effectiveness",
@@ -812,6 +1083,28 @@ function seedSelectedMemoryWorktrees() {
   return { ...selected, worktree_label: "browser-selected-memory" };
 }
 
+function seedActionFailure() {
+  return JSON.parse(
+    runCli([
+      "loop",
+      "checkpoint",
+      "--data-dir",
+      dataDir,
+      "--worktree",
+      "browser-action-failure",
+      "--branch",
+      "codex/browser-action-failure",
+      "--status",
+      "failed",
+      "--summary",
+      "Focused browser validation failed and needs operator confirmation.",
+      "--evidence-ref",
+      "test:browser-actions",
+      "--json",
+    ]),
+  );
+}
+
 function readUsedImprovementPromptIds(snapshotId) {
   const db = new Database(join(dataDir, "looprelay.sqlite"));
   try {
@@ -823,6 +1116,19 @@ function readUsedImprovementPromptIds(snapshotId) {
     return Array.isArray(outcome.used_improvement_prompt_ids)
       ? outcome.used_improvement_prompt_ids
       : [];
+  } finally {
+    db.close();
+  }
+}
+
+function readAgentGuideRun(snapshotId) {
+  const db = new Database(join(dataDir, "looprelay.sqlite"));
+  try {
+    return db
+      .prepare(
+        "SELECT outcome_status, accepted_recommendation, first_value_seconds FROM agent_runs WHERE snapshot_id = ? ORDER BY created_at DESC LIMIT 1",
+      )
+      .get(snapshotId);
   } finally {
     db.close();
   }

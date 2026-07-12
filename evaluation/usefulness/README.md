@@ -39,3 +39,9 @@ pnpm evidence:codex-metrics -- /private/path/events.jsonl 30000
 The ledger stores the metrics, fixture commit, outcome, order, and review
 labels. It does not store prompts, answers, transcripts, raw paths, credentials,
 or private Codex session identifiers.
+
+If either condition records `privacy_blocker`, `data_loss_blocker`, or
+`install_blocker`, the pair must set `blocker_resolution` to `open` or
+`remediated`. Open pair blockers prevent public readiness. A remediated blocker
+remains visible in the generated report as historical evidence and must not be
+silently removed from the ledger.

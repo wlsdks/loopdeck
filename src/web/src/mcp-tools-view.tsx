@@ -1,7 +1,12 @@
 import { Copy, ShieldCheck } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import type { QualityDashboard, SettingsResponse } from "./api.js";
+import {
+  getAgentReadiness,
+  type AgentReadiness,
+  type QualityDashboard,
+  type SettingsResponse,
+} from "./api.js";
 import { copyTextToClipboard } from "./clipboard.js";
 import {
   MCP_FLOW_STEPS,
@@ -9,6 +14,8 @@ import {
   createMcpReadiness,
   type McpReadiness,
 } from "./mcp-catalog.js";
+
+import "./mcp-runtime-readiness.css";
 
 export function McpToolsView({
   dashboard,
@@ -20,7 +27,25 @@ export function McpToolsView({
   settings?: SettingsResponse;
 }) {
   const [copiedKey, setCopiedKey] = useState<string | undefined>();
+  const [agentReadiness, setAgentReadiness] = useState<
+    AgentReadiness[] | undefined
+  >();
+  const [agentReadinessError, setAgentReadinessError] = useState(false);
   const readiness = createMcpReadiness({ dashboard, health, settings });
+
+  useEffect(() => {
+    let cancelled = false;
+    void getAgentReadiness()
+      .then((next) => {
+        if (!cancelled) setAgentReadiness(next);
+      })
+      .catch(() => {
+        if (!cancelled) setAgentReadinessError(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   async function copySnippet(key: string, value: string): Promise<void> {
     const copied = await copyTextToClipboard(value);
@@ -73,6 +98,10 @@ export function McpToolsView({
       </section>
 
       <McpReadinessPanel readiness={readiness} />
+      <AgentRuntimeReadinessPanel
+        error={agentReadinessError}
+        readiness={agentReadiness}
+      />
 
       <section className="mcp-flow panel" aria-label="Recommended MCP flow">
         <div className="panel-heading-row">
@@ -137,6 +166,63 @@ export function McpToolsView({
         ))}
       </section>
     </div>
+  );
+}
+
+function AgentRuntimeReadinessPanel({
+  error,
+  readiness,
+}: {
+  error: boolean;
+  readiness?: AgentReadiness[];
+}) {
+  return (
+    <section
+      className="mcp-runtime-readiness panel"
+      aria-label="Agent runtime readiness"
+    >
+      <div className="mcp-readiness-header">
+        <div>
+          <p className="eyebrow">Live local doctor</p>
+          <h2>Agent runtime readiness</h2>
+          <p>
+            Checks hook, MCP registration, and recent ingest separately for each
+            installed client. No settings body or raw path is shown.
+          </p>
+        </div>
+      </div>
+      {error && (
+        <p className="mcp-runtime-error">
+          Live doctor is unavailable. Run <code>looprelay doctor codex</code> or{" "}
+          <code>looprelay doctor claude-code</code>, then refresh this page.
+        </p>
+      )}
+      {!error && !readiness && <p className="muted">Checking local clients…</p>}
+      {readiness && (
+        <div className="mcp-runtime-grid">
+          {readiness.map((client) => (
+            <article className="mcp-runtime-card" key={client.tool}>
+              <div>
+                <strong>
+                  {client.tool === "codex" ? "Codex" : "Claude Code"}
+                </strong>
+                <span
+                  className={`status-pill ${client.status === "ready" ? "ready" : "warning"}`}
+                >
+                  {client.status.replaceAll("_", " ")}
+                </span>
+              </div>
+              <p>
+                Hook {client.hook_ok ? "ready" : "needs repair"} · MCP{" "}
+                {client.mcp_registered ? "registered" : "missing"} · ingest{" "}
+                {client.ingest.state}
+              </p>
+              <small>{client.next_action}</small>
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
 

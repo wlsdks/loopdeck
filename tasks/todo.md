@@ -1,5 +1,117 @@
 # 작업 계획
 
+## 2026-07-12 Practical Usefulness Evaluation
+
+- [x] BASELINE: inspect the current evidence ledger, user journeys, and live
+      runtime readiness; distinguish maintainer/agent-native observations from
+      independent-human adoption.
+- [x] PREREGISTER: freeze the raw-free fresh-client flow and selected-state
+      recovery pair with outcome/failure/friction criteria before either
+      recovery condition runs.
+- [x] RUN: execute matched baseline and LoopRelay-assisted conditions through
+      the real CLI/MCP and web workflows, preserving run artifacts and limits.
+- [x] AUDIT: capture and inspect the operator-facing flow, then measure first
+      value, correct-first-action, evidence attachment, recovery, and friction.
+- [x] DECIDE: publish an honest keep/narrow/remove decision with raw-free
+      tables/graphs; implement only a measured usability defect, not a feature
+      justified by assumed demand.
+- [x] VERIFY: run focused evaluation/report/UI checks and record any remaining
+      independent-user or causality gaps without the public release gate.
+
+## 2026-07-12 Whole-System Improvement Audit
+
+- [x] BASELINE: inspect current branch, architectural rules, public-surface
+      inventory, dependency health, quality budgets, and existing evidence.
+- [x] AUDIT: run structural, privacy, dead-code, dependency, and route-flow
+      checks; classify every finding as fix-now, tracked risk, or false positive.
+- [x] IMPLEMENT: use focused regression tests to correct only high-confidence
+      defects or maintainability friction found by the audit.
+- [x] VERIFY: run focused tests first, then full tests, lint, build, package
+      dry-run, and desktop/mobile UI patrol without the final release gate.
+- [x] DOCUMENT: record verified changes, evidence, retained risks, and one
+      intentional commit without publishing or pushing.
+
+## 2026-07-12 Web Entry Bundle Budget
+
+- [x] RED: turn the 500 kB entry-chunk warning into a fail-closed production
+      build budget instead of raising or suppressing the threshold.
+- [x] SPLIT: move route-exclusive React views behind explicit lazy boundaries
+      while preserving direct imports for shared first-screen controls.
+- [x] VERIFY: pass focused route/render tests, lint, production build, and prove
+      the entry chunk is below budget with no large-chunk warning.
+- [x] BROWSER: rerun the repository desktop/mobile UI patrol and primary route
+      interactions without blank screens, overlays, console errors, or overflow.
+- [x] COMMIT: document the bundle boundary and land one verified performance
+      commit without running the final release gate.
+
+## 2026-07-12 Action Inbox And Confirmed Failure Episodes
+
+- [x] RED: define raw-free action priority, local-outcome coverage, and
+      operator-confirmed failure-episode contracts before implementation.
+- [x] STORAGE: persist confirmed failure category, intervention, resolution,
+      and lifecycle without prompt bodies, transcripts, secrets, or raw paths.
+- [x] SURFACES: expose one consistent inbox through CLI, MCP, HTTP, and a
+      dedicated Actions workspace in the primary navigation.
+- [x] UX: separate operator-local outcomes from bundled product studies and
+      make each inbox item lead to an explicit, non-automatic next action.
+- [x] PATTERNS: aggregate operator-confirmed failure categories across sessions
+      and expose recurrence through the Actions report, UI, and MCP contract.
+- [x] QA: pass focused privacy/storage/CLI/MCP/web tests, lint, build, and real
+      desktop/mobile browser interaction checks without the final release gate.
+- [x] DOCS: update schema, architecture, feature inventory, README, changelog,
+      and evidence-first backlog in the same verified commit.
+
+## 2026-07-12 Agent-Native Release Validation
+
+- [x] POLICY: replace the unavailable-human gate with a bounded agent-native
+  gate without presenting agent observations as human adoption or causality.
+- [x] EVIDENCE: retain two failed shell-first agent onboarding runs, then pass
+  three fresh MCP runs across Codex and Claude Code with one continuation brief.
+- [x] REPORT: require checksum-pinned clean install separately from fresh MCP
+  evidence; expose client diversity, continuation coverage, and retained
+  friction in the raw-free ledger and README.
+- [ ] RELEASE: wait for npm authentication and select a new immutable release
+  version before running the one-time final release gate.
+
+## 2026-07-12 Independent First-Value Measurement
+
+- [x] RED: require the candidate assessor to reject raw isolated-path exposure
+  even when checkpoint and brief otherwise look successful.
+- [x] GREEN/VERIFY: add and run a raw-free clean-install → checkpoint → brief
+  measurement smoke; retain it as maintainer-only evidence, not an independent
+  participant result.
+
+## 2026-07-12 Independent Participant Candidate Refresh
+
+- [x] RUNTIME: confirm both Codex and Claude Code doctors report verified
+  recent ingest, installed hooks, registered MCP, and `ready` status.
+- [x] PACK: produce the checksum-pinned, validation-only tarball for commit
+  `07a3ba86`; retain its 6.396-second install and 7.098-second first-value
+  maintainer preflight separately from human evidence.
+- [x] HANDOFF: publish the raw-free participant handoff and candidate manifest;
+  preserve release authorization as false and independent-human count as 0/3.
+
+## 2026-07-11 Adaptive Agent Guide
+
+- [x] SOL PLAN: define the local-only, non-autonomous model-profile policy,
+  data boundary, two-tool contract, confidence calibration, and matched-pair
+  retention criteria in `docs/superpowers/specs/2026-07-11-adaptive-agent-guide-design.md`.
+- [x] TERRA RED: add failing policy, storage, CLI/MCP, and browser contracts
+  before implementing the guide.
+- [x] TERRA HARDEN: reject unsupported run metadata at the storage and MCP
+  boundaries, and scope web evidence to the selected loop snapshot project.
+- [x] TERRA VERIFY: call `record_agent_run` three times and
+  `recommend_agent_strategy` once from an isolated real Codex MCP session;
+  restore the canonical `looprelay` registration and confirm `doctor codex`
+  reports ready with recent ingest.
+- [x] TERRA AUDIT: review all TypeScript/TSX source with automated structural
+  analysis and privacy/SQL/dead-code scans; harden Guide runtime input
+  validation and corrupt loop-metadata recovery with regression coverage.
+- [x] TERRA GREEN: implement model-run ledger, deterministic recommendation,
+  CLI/MCP/web surfaces, and optional continuation brief guidance.
+- [x] VERIFY: pass lint, 143-file/1295-test unit suite, production build,
+  package dry-run, and diff hygiene; do not run the one-time public release gate.
+
 ## 2026-07-11 Whole-Codebase Architecture Hardening
 
 - [x] BASELINE: preserve the completed compact continuation-safety cleanup and

@@ -7,8 +7,10 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { initializeLoopRelay } from "../config/config.js";
 import type { LoopSnapshot } from "../loop/types.js";
+import type { AgentRun } from "../storage/agent-runs.js";
 import { createServer } from "./create-server.js";
 import type { CompactBoundary } from "../storage/compact-boundaries.js";
+import type { ContinuationReceipt } from "../storage/continuation-receipts.js";
 import type { LoopMergeDecision } from "../storage/loop-decisions.js";
 import type { LoopMemory } from "../storage/loop-memories.js";
 import type {
@@ -717,6 +719,89 @@ describe("createServer P2 ingest boundary", () => {
     expect(response.body).not.toContain("/Users/");
   });
 
+  it("scopes agent-guide evidence to the requested loop snapshot project", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({ id: "loop_other", project_id: "proj_other" }),
+      loopSnapshot({ id: "loop_selected", project_id: "proj_selected" }),
+    );
+    storage.agentRuns.push(
+      ...["passed", "passed", "passed"].map((outcome_status, index) =>
+        agentRun({
+          id: `selected_${index}`,
+          project_id: "proj_selected",
+          outcome_status: outcome_status as AgentRun["outcome_status"],
+        }),
+      ),
+      agentRun({
+        id: "other_0",
+        project_id: "proj_other",
+        outcome_status: "failed",
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "GET",
+      url: "/api/v1/agent-guide?task_type=implementation&snapshot_id=loop_selected",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      data: {
+        confidence: "medium",
+        evidence: { completed_runs: 3, passing_runs: 3, non_passing_runs: 0 },
+      },
+    });
+  });
+
+  it("records a raw-free agent-guide run against the selected snapshot", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({ id: "loop_selected", project_id: "proj_selected" }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "POST",
+      url: "/api/v1/agent-guide/runs",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+      payload: {
+        snapshot_id: "loop_selected",
+        task_type: "continuation",
+        tool: "codex",
+        model: "gpt-5.6-terra",
+        role: "implement",
+        outcome_status: "passed",
+        accepted_recommendation: true,
+        attempts: 1,
+        first_value_seconds: 18,
+        focused_test_count: 2,
+      },
+    });
+
+    expect(response.statusCode).toBe(201);
+    expect(response.json()).toMatchObject({
+      data: {
+        project_id: "proj_selected",
+        snapshot_id: "loop_selected",
+        tool: "codex",
+        model: "gpt-5.6-terra",
+        outcome_status: "passed",
+        accepted_recommendation: true,
+      },
+    });
+    expect(storage.agentRuns).toHaveLength(1);
+    expect(JSON.stringify(response.json())).not.toContain("/Users/");
+  });
+
   it("returns a worktree drilldown without prompt bodies or raw paths", async () => {
     const storage = createMemoryStorage();
     storage.loopSnapshots.push(
@@ -927,6 +1012,57 @@ describe("createServer P2 ingest boundary", () => {
     expect(serialized).not.toContain("Make this better");
     expect(serialized).not.toContain("Compact summary with sk-proj-secret");
     expect(serialized).not.toContain("/Users/example");
+  });
+
+  it("creates and updates a selected continuation receipt without global fallback", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({
+        id: "loop_selected_receipt",
+        worktree_label: "selected-worktree",
+      }),
+      loopSnapshot({
+        id: "loop_newer_receipt",
+        created_at: "2026-07-04T02:00:00.000Z",
+        worktree_label: "newer-worktree",
+      }),
+    );
+    const server = createTestServer({ storage });
+
+    const created = await server.inject({
+      method: "POST",
+      url: "/api/v1/loops/brief",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+      payload: { worktree: "selected-worktree" },
+    });
+    expect(created.statusCode).toBe(200);
+    const receipt = created.json<{ data: { receipt: ContinuationReceipt } }>()
+      .data.receipt;
+    expect(receipt).toMatchObject({
+      snapshot_id: "loop_selected_receipt",
+      status: "generated",
+    });
+
+    const copied = await server.inject({
+      method: "PATCH",
+      url: `/api/v1/loops/receipts/${receipt.id}`,
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+      payload: { status: "copied" },
+    });
+    expect(copied.statusCode).toBe(200);
+    expect(copied.json()).toMatchObject({
+      data: {
+        id: receipt.id,
+        snapshot_id: "loop_selected_receipt",
+        status: "copied",
+      },
+    });
   });
 
   it("guides web loop brief users to capture the first loop before retrying", async () => {
@@ -1729,6 +1865,16 @@ describe("createServer P2 ingest boundary", () => {
         summary: "  Focused web checks passed.  ",
         evidence_refs: [" test:web-loops ", "commit:abc1234"],
         used_improvement_prompt_ids: ["prmt_one"],
+        typed_evidence: [
+          {
+            kind: "test",
+            label: "focused web loop checks",
+            observed_at: "2026-07-12T04:00:00.000Z",
+            result: "passed",
+            verification: "locally_verified",
+            head_hash: "83b1c6f2",
+          },
+        ],
       },
     });
 
@@ -1742,6 +1888,13 @@ describe("createServer P2 ingest boundary", () => {
           summary: "Focused web checks passed.",
           evidence_refs: ["test:web-loops", "commit:abc1234"],
           used_improvement_prompt_ids: ["prmt_one"],
+          typed_evidence: [
+            expect.objectContaining({
+              kind: "test",
+              label: "focused web loop checks",
+              verification: "locally_verified",
+            }),
+          ],
         },
         next_actions: [
           "looprelay loop memory-candidate",
@@ -2358,6 +2511,7 @@ describe("createServer P2 ingest boundary", () => {
       "/benchmark",
       "/insights",
       "/loops",
+      "/actions",
       "/projects",
       "/mcp",
       "/exports",
@@ -3291,6 +3445,8 @@ function createMemoryStorage() {
     rating: "helpful" | "not_helpful" | "wrong";
     created_at: string;
   }> = [];
+  const agentRuns: AgentRun[] = [];
+  const continuationReceipts: ContinuationReceipt[] = [];
 
   return {
     events,
@@ -3300,6 +3456,8 @@ function createMemoryStorage() {
     compactBoundaries,
     loopMemories,
     loopMergeDecisions,
+    agentRuns,
+    continuationReceipts,
     exportJobs,
     instructionReviews,
     policyForIngest: undefined as
@@ -3424,6 +3582,66 @@ function createMemoryStorage() {
     },
     listLoopSnapshots() {
       return { items: loopSnapshots };
+    },
+    listAgentRuns(options: {
+      projectId: string;
+      taskType?: AgentRun["task_type"];
+    }) {
+      return agentRuns.filter(
+        (run) =>
+          run.project_id === options.projectId &&
+          (!options.taskType || run.task_type === options.taskType),
+      );
+    },
+    recordAgentRun(input: Omit<AgentRun, "id" | "created_at">) {
+      const run = agentRun({
+        ...input,
+        created_at: `2026-07-12T00:00:${String(agentRuns.length).padStart(2, "0")}.000Z`,
+        id: `arun_memory_${agentRuns.length + 1}`,
+      });
+      agentRuns.push(run);
+      return run;
+    },
+    recordContinuationReceipt(input: { snapshot_id: string }) {
+      const snapshot = loopSnapshots.find(
+        (item) => item.id === input.snapshot_id,
+      );
+      if (!snapshot)
+        throw new Error("Continuation receipt snapshot not found.");
+      const receipt: ContinuationReceipt = {
+        id: `brief_memory_${continuationReceipts.length + 1}`,
+        snapshot_id: snapshot.id,
+        project_id: snapshot.project_id,
+        policy_version: "recovery-packet-v2",
+        created_at: "2026-07-12T00:00:00.000Z",
+        status: "generated",
+        privacy: {
+          local_only: true,
+          stores_prompt_bodies: false,
+          stores_raw_paths: false,
+          stores_transcripts: false,
+        },
+      };
+      continuationReceipts.unshift(receipt);
+      return receipt;
+    },
+    updateContinuationReceipt(
+      id: string,
+      input: { status: ContinuationReceipt["status"] },
+    ) {
+      const index = continuationReceipts.findIndex((item) => item.id === id);
+      if (index < 0) return undefined;
+      continuationReceipts[index] = {
+        ...continuationReceipts[index]!,
+        status: input.status,
+        ...(input.status === "copied"
+          ? { copied_at: "2026-07-12T00:00:01.000Z" }
+          : {}),
+      };
+      return continuationReceipts[index];
+    },
+    listContinuationReceipts() {
+      return continuationReceipts;
     },
     getLatestLoopSnapshot() {
       return loopSnapshots.at(0);
@@ -3693,6 +3911,23 @@ function loopSnapshot(patch: Partial<LoopSnapshot> = {}): LoopSnapshot {
       stores_prompt_bodies: false,
       stores_raw_paths: false,
     },
+    ...patch,
+  };
+}
+
+function agentRun(patch: Partial<AgentRun> = {}): AgentRun {
+  return {
+    id: "arun_web",
+    created_at: "2026-07-11T00:00:00.000Z",
+    project_id: "proj_web",
+    tool: "codex",
+    model: "gpt-5.6-terra",
+    role: "implement",
+    task_type: "implementation",
+    outcome_status: "passed",
+    accepted_recommendation: true,
+    attempts: 1,
+    focused_test_count: 1,
     ...patch,
   };
 }

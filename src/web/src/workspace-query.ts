@@ -22,14 +22,17 @@ export function shouldLoadProjects(
   viewName: View["name"],
   projectCount: number,
 ): boolean {
-  return viewName === "projects" && projectCount === 0;
+  return (
+    ["dashboard", "projects", "project"].includes(viewName) &&
+    projectCount === 0
+  );
 }
 
 export function shouldLoadLoops(
   viewName: View["name"],
   hasLoops: boolean,
 ): boolean {
-  return viewName === "loops" && !hasLoops;
+  return ["dashboard", "loops", "project"].includes(viewName) && !hasLoops;
 }
 
 export function updateProjectListItem(
@@ -57,10 +60,10 @@ export function shouldNavigateLoopWorktree(
   selection: LoopWorktreeSelection,
 ): boolean {
   return (
-    view.name === "loops" &&
-    (view.worktree !== selection.worktree ||
-      view.session !== selection.session ||
-      view.branch !== selection.branch)
+    view.name !== "loops" ||
+    view.worktree !== selection.worktree ||
+    view.session !== selection.session ||
+    view.branch !== selection.branch
   );
 }
 

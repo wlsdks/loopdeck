@@ -1,3 +1,12 @@
+import {
+  isGeneratedContinuationReceipt,
+  isLoopBriefRecovery,
+  type LoopBrief,
+} from "./loop-brief-contract.js";
+import { isLoopEvidence, type LoopEvidence } from "./loop-evidence-contract.js";
+
+export type { LoopBrief } from "./loop-brief-contract.js";
+
 export type PromptSummary = {
   id: string;
   tool: string;
@@ -470,6 +479,7 @@ function parsePromptSummaryArrayResponse(
 
 export type LoopSummary = {
   id: string;
+  project_id?: string;
   created_at: string;
   tool: string;
   source: string;
@@ -478,6 +488,7 @@ export type LoopSummary = {
   worktree?: string;
   prompt_count: number;
   prompt_ids?: string[];
+  used_improvement_prompt_ids?: string[];
   average_prompt_score?: number;
   top_gaps: string[];
   outcome_status: string;
@@ -778,6 +789,7 @@ function isLoopSummary(value: unknown): value is LoopSummary {
   const loop = value as LoopSummary;
   return (
     typeof loop.id === "string" &&
+    (loop.project_id === undefined || typeof loop.project_id === "string") &&
     typeof loop.created_at === "string" &&
     typeof loop.tool === "string" &&
     typeof loop.source === "string" &&
@@ -786,6 +798,7 @@ function isLoopSummary(value: unknown): value is LoopSummary {
     (loop.worktree === undefined || typeof loop.worktree === "string") &&
     typeof loop.prompt_count === "number" &&
     isOptionalStringArray(loop.prompt_ids) &&
+    isOptionalStringArray(loop.used_improvement_prompt_ids) &&
     (loop.average_prompt_score === undefined ||
       typeof loop.average_prompt_score === "number") &&
     Array.isArray(loop.top_gaps) &&
@@ -1459,24 +1472,14 @@ export type LoopWorktreeResponse = {
   };
 };
 
-export type LoopBrief = {
-  title: string;
-  prompt: string;
-  source_snapshot_id: string;
-  compact_boundary?: LoopSummary["compact_boundary"];
-  privacy: {
-    local_only: true;
-    returns_prompt_bodies: false;
-    returns_raw_paths: false;
-  };
-};
-
 function parseLoopBriefResponse(
   body: {
     data?: {
       title?: unknown;
       prompt?: unknown;
       source_snapshot_id?: unknown;
+      recovery?: unknown;
+      receipt?: unknown;
       compact_boundary?: unknown;
       privacy?: {
         local_only?: unknown;
@@ -1491,6 +1494,9 @@ function parseLoopBriefResponse(
     typeof body.data?.title !== "string" ||
     typeof body.data.prompt !== "string" ||
     typeof body.data.source_snapshot_id !== "string" ||
+    !isLoopBriefRecovery(body.data.recovery) ||
+    (body.data.receipt !== undefined &&
+      !isGeneratedContinuationReceipt(body.data.receipt)) ||
     (body.data.compact_boundary !== undefined &&
       !isLoopCompactBoundary(body.data.compact_boundary)) ||
     body.data.privacy?.local_only !== true ||
@@ -1546,6 +1552,7 @@ export type LoopOutcomeRecordResult = {
     summary: string;
     evidence_refs: string[];
     used_improvement_prompt_ids?: string[];
+    typed_evidence?: LoopEvidence[];
   };
   next_actions: string[];
   privacy: {
@@ -1579,6 +1586,9 @@ function parseLoopOutcomeRecordResponse(
         !outcome.used_improvement_prompt_ids.every(
           (promptId) => typeof promptId === "string",
         ))) ||
+    (outcome.typed_evidence !== undefined &&
+      (!Array.isArray(outcome.typed_evidence) ||
+        !outcome.typed_evidence.every(isLoopEvidence))) ||
     !Array.isArray(data.next_actions) ||
     !data.next_actions.every((action) => typeof action === "string") ||
     privacy?.local_only !== true ||
@@ -1970,6 +1980,68 @@ export type SettingsResponse = {
     checked_at: string;
   };
 };
+
+export type AgentReadiness = {
+  tool: "codex" | "claude-code";
+  status: "ready" | "unverified" | "needs_attention";
+  server_ok: boolean;
+  token_ok: boolean;
+  hook_ok: boolean;
+  mcp_registered: boolean;
+  ingest: {
+    state: "recent" | "stale" | "never" | "failed";
+    verified: boolean;
+    age_seconds?: number;
+  };
+  next_action: string;
+};
+
+export async function getAgentReadiness(): Promise<AgentReadiness[]> {
+  await ensureSession();
+  const response = await fetch("/api/v1/agent-readiness", {
+    credentials: "same-origin",
+  });
+  if (!response.ok) {
+    await failApi(response, "Agent readiness failed");
+  }
+  const body = (await response.json()) as {
+    data?: { clients?: unknown; privacy?: { returns_raw_paths?: unknown } };
+  };
+  if (
+    !Array.isArray(body.data?.clients) ||
+    body.data.privacy?.returns_raw_paths !== false ||
+    !body.data.clients.every(isAgentReadiness)
+  ) {
+    throw new Error("Agent readiness failed: Invalid response.");
+  }
+  return body.data.clients;
+}
+
+function isAgentReadiness(value: unknown): value is AgentReadiness {
+  if (typeof value !== "object" || value === null) return false;
+  const readiness = value as AgentReadiness & {
+    raw_path?: unknown;
+    settings?: unknown;
+  };
+  return (
+    (readiness.tool === "codex" || readiness.tool === "claude-code") &&
+    ["ready", "unverified", "needs_attention"].includes(readiness.status) &&
+    typeof readiness.server_ok === "boolean" &&
+    typeof readiness.token_ok === "boolean" &&
+    typeof readiness.hook_ok === "boolean" &&
+    typeof readiness.mcp_registered === "boolean" &&
+    typeof readiness.ingest === "object" &&
+    readiness.ingest !== null &&
+    ["recent", "stale", "never", "failed"].includes(readiness.ingest.state) &&
+    typeof readiness.ingest.verified === "boolean" &&
+    (readiness.ingest.age_seconds === undefined ||
+      (Number.isInteger(readiness.ingest.age_seconds) &&
+        readiness.ingest.age_seconds >= 0)) &&
+    typeof readiness.next_action === "string" &&
+    readiness.raw_path === undefined &&
+    readiness.settings === undefined
+  );
+}
 
 function isArchiveScorePrivacy(
   value: unknown,
@@ -2780,6 +2852,12 @@ export type ProjectSummary = {
   quality_gap_rate: number;
   copied_count: number;
   bookmarked_count: number;
+  feedback?: {
+    helpful: number;
+    not_helpful: number;
+    wrong: number;
+    total: number;
+  };
   policy: ProjectPolicy;
   instruction_review?: ProjectInstructionReview;
 };
@@ -2795,9 +2873,11 @@ function parseProjectSummaryResponse(
       quality_gap_rate?: unknown;
       copied_count?: unknown;
       bookmarked_count?: unknown;
+      feedback?: unknown;
       policy?: {
         capture_disabled?: unknown;
         analysis_disabled?: unknown;
+        retention_candidate_days?: unknown;
         external_analysis_opt_in?: unknown;
         export_disabled?: unknown;
         version?: unknown;
@@ -2821,12 +2901,28 @@ function parseProjectSummaryResponse(
     typeof body.data.bookmarked_count !== "number" ||
     typeof body.data.policy?.capture_disabled !== "boolean" ||
     typeof body.data.policy.analysis_disabled !== "boolean" ||
+    (body.data.policy.retention_candidate_days !== undefined &&
+      (typeof body.data.policy.retention_candidate_days !== "number" ||
+        !Number.isInteger(body.data.policy.retention_candidate_days) ||
+        body.data.policy.retention_candidate_days <= 0)) ||
     typeof body.data.policy.external_analysis_opt_in !== "boolean" ||
     typeof body.data.policy.export_disabled !== "boolean" ||
     typeof body.data.policy.version !== "number" ||
     body.data.markdown !== undefined ||
     body.data.prompt_body !== undefined ||
     body.data.raw_path !== undefined
+  ) {
+    throw new Error(`${message}: Invalid response.`);
+  }
+  if (
+    body.data.feedback !== undefined &&
+    (typeof body.data.feedback !== "object" ||
+      body.data.feedback === null ||
+      !["helpful", "not_helpful", "wrong", "total"].every(
+        (key) =>
+          typeof (body.data!.feedback as Record<string, unknown>)[key] ===
+          "number",
+      ))
   ) {
     throw new Error(`${message}: Invalid response.`);
   }
@@ -3131,6 +3227,11 @@ export async function ensureSession(): Promise<void> {
   await sessionPromise;
 }
 
+export async function getApiCsrfToken(): Promise<string> {
+  await ensureSession();
+  return csrfToken ?? "";
+}
+
 export async function listPrompts(
   filters: PromptFilters,
   cursor?: string,
@@ -3403,12 +3504,15 @@ export async function listLoops(): Promise<LoopListResponse> {
 
 export async function getLoopBrief(id: string): Promise<LoopBrief> {
   await ensureSession();
-  const response = await fetch(
-    `/api/v1/loops/${encodeURIComponent(id)}/brief`,
-    {
-      credentials: "same-origin",
+  const response = await fetch("/api/v1/loops/brief", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "content-type": "application/json",
+      "x-csrf-token": csrfToken ?? "",
     },
-  );
+    body: JSON.stringify({ snapshot_id: id }),
+  });
 
   if (!response.ok) {
     await failApi(response, "Loop brief failed");
@@ -3426,11 +3530,18 @@ export async function getSelectedLoopBrief(options: {
   sessionId?: string;
 }): Promise<LoopBrief> {
   await ensureSession();
-  const params = new URLSearchParams({ worktree: options.worktree });
-  if (options.sessionId) params.set("session_id", options.sessionId);
-  if (options.branch) params.set("branch", options.branch);
-  const response = await fetch(`/api/v1/loops/brief?${params}`, {
+  const response = await fetch("/api/v1/loops/brief", {
+    method: "POST",
     credentials: "same-origin",
+    headers: {
+      "content-type": "application/json",
+      "x-csrf-token": csrfToken ?? "",
+    },
+    body: JSON.stringify({
+      worktree: options.worktree,
+      ...(options.sessionId ? { session_id: options.sessionId } : {}),
+      ...(options.branch ? { branch: options.branch } : {}),
+    }),
   });
 
   if (!response.ok) {
@@ -3441,6 +3552,26 @@ export async function getSelectedLoopBrief(options: {
     typeof parseLoopBriefResponse
   >[0];
   return parseLoopBriefResponse(body, "Selected loop brief failed");
+}
+
+export async function markContinuationReceipt(
+  id: string,
+  status: "copied" | "delivered" | "followed" | "partial" | "ignored",
+): Promise<void> {
+  await ensureSession();
+  const response = await fetch(
+    `/api/v1/loops/receipts/${encodeURIComponent(id)}`,
+    {
+      method: "PATCH",
+      credentials: "same-origin",
+      headers: {
+        "content-type": "application/json",
+        "x-csrf-token": csrfToken ?? "",
+      },
+      body: JSON.stringify({ status }),
+    },
+  );
+  if (!response.ok) await failApi(response, "Continuation receipt failed");
 }
 
 export async function getLoopWorktree(
@@ -3544,6 +3675,7 @@ export async function recordLoopOutcome(
     summary: string;
     evidenceRefs: string[];
     usedImprovementPromptIds?: string[];
+    typedEvidence?: LoopEvidence[];
   },
 ): Promise<LoopOutcomeRecordResult> {
   await ensureSession();
@@ -3562,6 +3694,9 @@ export async function recordLoopOutcome(
         evidence_refs: input.evidenceRefs,
         ...(input.usedImprovementPromptIds?.length
           ? { used_improvement_prompt_ids: input.usedImprovementPromptIds }
+          : {}),
+        ...(input.typedEvidence?.length
+          ? { typed_evidence: input.typedEvidence }
           : {}),
       }),
     },
@@ -3604,7 +3739,10 @@ export async function getLoopInstructionPatch(
   );
 }
 
-async function failApi(response: Response, label: string): Promise<never> {
+export async function failApi(
+  response: Response,
+  label: string,
+): Promise<never> {
   let detail = "";
   const textResponse =
     typeof response.clone === "function" ? response.clone() : response;

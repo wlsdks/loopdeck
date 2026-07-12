@@ -14,23 +14,30 @@
   AGENTS.md/CLAUDE.md patch proposal.
 - 🧭 Detects recurring failure patterns across loops and asks focused questions
   instead of rewriting ambiguous requests by default.
+- 🧩 Gives non-binding agent/model guidance and lets the operator record the
+  chosen profile and raw-free outcome against the selected loop snapshot.
+
+The canonical [feature inventory](docs/FEATURE_INVENTORY.md) lists every active,
+opt-in, validation-only, dormant, and reserved product surface.
 
 ## Measured Engineering Usefulness
 
 ![LoopRelay baseline versus assisted engineering results](docs/assets/usefulness-results.svg)
 
 <!-- USEFULNESS_RESULTS_START -->
-Current results are maintainer-run observational evidence, not a causal claim. They include 30 matched pairs across 5 task types and 0/3 independent users. A separate cohort has 3 independent agent operators with 100% first-value success; agent operators do not count as human users.
 
-| Task type | Pairs | Baseline success | LoopRelay success | Delta | Conservative 95% bound | Input-token delta | Decision |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| Ambiguity clarification | 6 | 83.3% | 50% | -33.3pp | -100..77.6pp | -8535.5 | Narrow |
-| Failure prevention | 6 | 0% | 100% | +100pp | -10.9..100pp | +1777.7 | Narrow |
-| Implementation continuation | 6 | 100% | 83.3% | -16.7pp | -100..94.2pp | +34913.2 | Narrow |
-| Release verification continuity | 6 | 100% | 100% | 0pp | -100..100pp | +42178.2 | Narrow |
-| Session recovery | 6 | 16.7% | 83.3% | +66.7pp | -44.2..100pp | -25189 | Retain |
+Current results are maintainer-run observational evidence, not a causal claim. They include 30 matched pairs across 5 task types. Human usability has 0 observed flows and is not part of this agent-native gate. The operator cohort has 8 observed runs; 3/3 combine a checksum-pinned clean install with a successful fresh MCP session across 2/2 client families, including 1/1 continuation-brief runs.
 
-Aggregate success moved from 60% to 83.3%, while actionability moved from 74% to 89.7%. Mean input-token cost changed by 11.1%. Cached-token and TTFV condition coverage are 66.7% and 66.7% respectively; missing values are not interpreted as zero. All 5 target task types meet the per-type minimum of 5 pairs. Decisions remain directional because this is maintainer-run evidence and independent-user validation is incomplete. Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. The causal claim remains false until independent-user validation is complete.
+| Task type                       | Pairs | Baseline success | LoopRelay success |   Delta | Conservative 95% bound | Input-token delta | Decision |
+| ------------------------------- | ----: | ---------------: | ----------------: | ------: | ---------------------: | ----------------: | -------- |
+| Ambiguity clarification         |     6 |            83.3% |               50% | -33.3pp |           -100..77.6pp |           -8535.5 | Narrow   |
+| Failure prevention              |     6 |               0% |              100% |  +100pp |           -10.9..100pp |           +1777.7 | Narrow   |
+| Implementation continuation     |     6 |             100% |             83.3% | -16.7pp |           -100..94.2pp |          +34913.2 | Narrow   |
+| Release verification continuity |     6 |             100% |              100% |     0pp |            -100..100pp |          +42178.2 | Narrow   |
+| Session recovery                |     6 |            16.7% |             83.3% | +66.7pp |           -44.2..100pp |            -25189 | Retain   |
+
+Aggregate success moved from 60% to 83.3%, while actionability moved from 74% to 89.7%. Mean input-token cost changed by 11.1%. Cached-token and TTFV condition coverage are 66.7% and 66.7% respectively; missing values are not interpreted as zero. Matched pairs observed 0 blocker-bearing cases: 0 documented as remediated and 0 unresolved cases that block public readiness. The agent-native gate requires 3 qualified runs across 2 client families and 1 continuation brief. All 5 target task types meet the per-type minimum of 5 pairs. Decisions remain directional because this is maintainer-run evidence and the agent-native gate does not establish human usability. Because ordinary implementation continuation regressed, LoopRelay should not intervene by default in every coding task. Human usability remains unmeasured and the causal claim remains false.
+
 <!-- USEFULNESS_RESULTS_END -->
 
 This chart is generated from the committed raw-free matched-pair ledger, not
@@ -46,13 +53,14 @@ pnpm evidence:usefulness
 See the [raw-free pair ledger](reports/usefulness-pairs.json),
 [generated summary](reports/usefulness-summary.json), and
 [evaluation protocol](docs/ENGINEERING_USEFULNESS_VALIDATION_2026-07-11.md).
-Independent humans use the
-[install-to-first-value protocol](evaluation/usefulness/INDEPENDENT_USER_PROTOCOL.md);
-agent operators do not satisfy that gate. The current validation-only
-[participant handoff](evaluation/usefulness/PARTICIPANT_HANDOFF_d1676748.md)
-pins candidate commit `d1676748` and its checksum. Its isolated maintainer
-smoke reached first value in 8.507 seconds with zero raw-path hits, but still
-counts as 0/3 independent humans and does not authorize release.
+The [agent-native protocol](evaluation/usefulness/AGENT_OPERATOR_PROTOCOL.md)
+does not invent unavailable human participants: it combines a clean,
+checksum-pinned candidate install with fresh Codex/Claude Code MCP sessions.
+The current validation-only
+[participant handoff](evaluation/usefulness/PARTICIPANT_HANDOFF_07a3ba86.md)
+pins candidate commit `07a3ba86`; its isolated clean smoke reached first value
+in 7.098 seconds (installation: 6.396 seconds) with zero raw-path hits. Human
+usability remains unmeasured and does not become an implied claim.
 
 ### Sol-planned, Terra-executed reproduction
 
@@ -82,8 +90,8 @@ averages 6.2s less TTFV, 2.8 fewer tools, and 87,199 fewer input tokens. Three
 failures improved, eight pairs remained failed, and human review preferred
 LoopRelay 8 times and baseline 3 times. This is directional maintainer-run
 evidence, not a causal or public-readiness claim. Every task-type interval still
-spans the full plausible range, several failures came from read-only test
-startup or strict plan/outcome mismatch, and independent humans remain 0/3.
+spans the full plausible range, and several failures came from read-only test
+startup or strict plan/outcome mismatch. Human usability remains unmeasured.
 
 Evidence-based scope at N=11:
 
@@ -94,7 +102,9 @@ Evidence-based scope at N=11:
 - `narrow`: implementation continuation to tasks with a genuinely hidden
   selected contract; a fully specified task received only overhead.
 - `narrow`: release continuity to fact handoff only; sequencing remained 0/2.
-- Keep all paths opt-in until three independent humans complete first value.
+- Keep all paths opt-in: shell-first agent onboarding produced retained sandbox
+  and non-interactive execution failures even though clean package install and
+  live MCP paths passed.
 
 The eleventh pair found a real concurrent lost-update risk in the new human
 evidence intake. Baseline and LoopRelay both scored 6/10 and failed; treatment
@@ -930,7 +940,7 @@ Codex, or any MCP client through a stdio MCP server:
 looprelay mcp
 ```
 
-The MCP server exposes 22 tools:
+The MCP server exposes 27 tools:
 
 - `get_looprelay_status`: check whether the local archive is initialized,
   whether prompts have been captured, and which MCP tool to call next.
@@ -971,6 +981,16 @@ The MCP server exposes 22 tools:
   (`prompt_improvement_drafts`). Returns metadata only (`draft_id`,
   `answers_count`, `changed_sections`, …) — the prompt body and the draft
   text are never echoed in the response. Local-only write tool.
+- `record_continuation_receipt`: record whether an exact continuation brief was
+  copied, delivered, followed, partially followed, or ignored, plus declared
+  target, first-action, TTFV, and friction metadata without transcript capture.
+- `get_looprelay_action_inbox`: return prioritized operator-local continuity,
+  evidence, failure, and memory debt, recent local outcomes, and category-level
+  recurring failure counts. It uses only the latest snapshot per active loop
+  and makes no causal claim.
+- `record_failure_episode`: confirm or resolve one failed/blocked snapshot with
+  a raw-free category, intervention, resolution, or wont-fix decision. It never
+  infers a failure episode from prompt text or transcripts.
 - `get_looprelay_loop_status`: check whether local LoopRelay loop snapshots
   exist and return safe latest-loop metadata plus compact-boundary awareness
   when a compact happened after the latest snapshot.
@@ -986,9 +1006,12 @@ The MCP server exposes 22 tools:
   `worktree`, `session_id`, and `branch` filters, without returning prompt
   bodies or raw paths. If the selected snapshot is older than a compact
   boundary, the brief says to refresh the loop snapshot but does not include
-  compact summaries or custom compact instructions.
+  compact summaries or custom compact instructions. Generated briefs return a
+  raw-free `recovery-packet-v2` receipt.
 - `record_loop_outcome`: store user-approved loop outcome metadata for a
-  LoopRelay snapshot without storing prompt bodies or raw paths. Pass
+  LoopRelay snapshot without storing prompt bodies or raw paths. Optional typed
+  evidence distinguishes declared from locally verified test, build, commit,
+  review, or external observations and can bind them to a HEAD hash. Pass
   `used_improvement_prompt_ids` only for snapshot prompts whose LoopRelay
   improvements were actually used; linked outcomes without this attribution
   remain unproven as improvement evidence. The web Loops outcome form provides
@@ -1019,7 +1042,8 @@ The MCP server exposes 22 tools:
   checklist status, and improvement hints.
 
 The matching local CLI surface is `looprelay loop status`,
-`looprelay loop collect`, `looprelay loop brief`, `looprelay loop outcome`,
+`looprelay loop collect`, `looprelay loop brief`, `looprelay loop close`,
+`looprelay loop actions`, `looprelay loop failure`, `looprelay loop outcome`,
 and `looprelay loop memory-candidate`; approved memories are recorded with
 `looprelay loop memory-approve`. Record a verified result before proposing a
 memory:
@@ -1031,6 +1055,14 @@ in the same project and do not read the hook transcript path.
 ```sh
 looprelay loop outcome --status passed --summary "Focused checks passed." \
   --evidence-ref "test:focused" --evidence-ref "build:pnpm-build"
+# Or atomically close an exact loop and its continuation receipt:
+looprelay loop close --snapshot-id "$SNAPSHOT_ID" --receipt-id "$RECEIPT_ID" \
+  --status passed --summary "Focused checks passed." \
+  --typed-evidence '{"kind":"test","label":"focused checks","observed_at":"2026-07-12T04:00:00.000Z","result":"passed","verification":"locally_verified"}'
+looprelay loop actions
+looprelay loop failure record --snapshot-id "$SNAPSHOT_ID" \
+  --category validation --status open \
+  --intervention "Run the focused contract before the build."
 looprelay loop memory-candidate
 looprelay loop memory-approve --approved-by user
 ```
@@ -1053,6 +1085,13 @@ cross-project inspection. `looprelay loop brief` accepts optional
 `--worktree`, `--session`, and `--branch` filters so a continuation prompt can
 resume the same worktree/session/branch selected in the Loops view instead of
 falling back to an unrelated latest snapshot. Use
+`looprelay loop close` when outcome, typed evidence, and exact receipt use must
+be recorded together; unlike `loop outcome`, close requires an explicit target
+and never falls back to the global latest snapshot. Use
+the dedicated web **Actions** workspace or `looprelay loop actions` to review
+only current operator-local debt and local outcomes. Failed/blocked work remains
+visible until its episode is confirmed and then resolved or marked wont-fix;
+bundled usefulness studies remain separate on Evidence. Use
 `looprelay loop instruction-patch --target-file AGENTS.md` to generate the
 review-only instruction patch from the latest approved memory. Use
 `looprelay loop instruction-apply --target-file AGENTS.md --confirm-apply`
@@ -1110,6 +1149,8 @@ instructions, transcript bodies, or raw paths.
   judge. `looprelay` does not call the provider for you.
 - `record_agent_judgments`: store advisory scores and notes produced by the
   active agent session, without storing prompt bodies or raw paths.
+- `recommend_agent_strategy`: return a local, non-binding model-role recommendation with switch conditions and evidence confidence.
+- `record_agent_run`: record operator-declared, raw-free model/task/outcome metadata for future guide calibration.
 
 All read tools are local-only and declare an MCP `outputSchema` for structured
 JSON metadata plus a text JSON fallback. `record_agent_rewrite` and

@@ -2,11 +2,11 @@
   "version": 1,
   "purpose": "independent-human-validation-only",
   "release_authorized": false,
-  "candidate_commit": "d1676748e6c72b4c933c0b7ec3cb5d7c6f70742b",
+  "candidate_commit": "07a3ba86508207185f0fe2854e4391ae03e59da5",
   "package_version": "1.0.0",
   "tarball_filename": "looprelay-1.0.0.tgz",
-  "sha256": "e24eafa5f8089678e42ef84bfc3c3e88c56b9483a3789b3df92e8d321112c38a",
-  "generated_at": "2026-07-11T11:43:01Z",
+  "sha256": "a74fae18899eef3e62e25a38569397e1d102d673903de76799a4488ac0a425f1",
+  "generated_at": "2026-07-11T15:44:01Z",
   "runtime": {
     "node": "22.22.0",
     "npm": "10.9.4"
@@ -18,19 +18,18 @@
     "fresh_git_repository": true,
     "install_success": true,
     "first_value_success": true,
-    "time_to_first_value_ms": 8507,
+    "install_elapsed_ms": 6396,
+    "time_to_first_value_ms": 7098,
     "raw_path_hits": 0,
     "privacy_blocker": false,
     "data_loss_blocker": false,
     "install_blocker": false
   },
   "harness_history": {
-    "attempt_count": 2,
-    "excluded_attempt_count": 1,
-    "excluded_reasons": [
-      "harness_unsupported_worktree_selector"
-    ],
-    "product_commands_succeeded_in_excluded_attempts": [false]
+    "attempt_count": 1,
+    "excluded_attempt_count": 0,
+    "excluded_reasons": [],
+    "product_commands_succeeded_in_excluded_attempts": []
   },
   "independent_user_count": 0,
   "required_independent_users": 3

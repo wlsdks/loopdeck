@@ -1,21 +1,5 @@
-import {
-  AlertTriangle,
-  BarChart3,
-  Copy,
-  Database,
-  Download,
-  FileText,
-  FolderCog,
-  ListChecks,
-  PanelLeftClose,
-  PanelLeftOpen,
-  RefreshCw,
-  Search,
-  Settings,
-  ShieldCheck,
-  Target,
-} from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Copy, Download, RefreshCw, Search } from "lucide-react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 
 import type { PromptImprovement } from "../../analysis/improve.js";
 import { selectReviewPrompts } from "./archive-review-model.js";
@@ -30,6 +14,7 @@ import {
   getCoachFeedbackSummary,
   getHealth,
   getSelectedLoopBrief,
+  markContinuationReceipt,
   getLoopWorktree,
   getPrompt,
   getQualityDashboard,
@@ -50,6 +35,7 @@ import {
   type ExportJob,
   type ExportPreset,
   type LoopWorktreeResponse,
+  type ProjectPolicyPatch,
   type ProjectSummary,
   type QualityDashboard,
   type PromptFilters,
@@ -80,21 +66,17 @@ import {
   selectedLoopBriefErrorMessage,
 } from "./error-message.js";
 import { CoachFeedbackPanel } from "./coach-feedback-panel.js";
+import { ProductEvidencePanel } from "./product-evidence-panel.js";
 import { createPromptHabitCoach } from "./habit-coach.js";
 import { HabitCoachPanel } from "./habit-coach-panel.js";
 import "./archive-effectiveness-summary.css";
 import { getQueueNavigation, getVisibleChrome } from "./app-view.js";
-import { LoopsView, type CommandCenterBriefSelection } from "./loops-view.js";
+import type { CommandCenterBriefSelection } from "./loops-view.js";
 import {
   createArchiveMeasurement,
   type ArchiveMeasurement,
 } from "./measurement.js";
-import { PromptDetailView } from "./prompt-detail-view.js";
-import {
-  GapRateChart,
-  QualityTrendChart,
-  ScoreDistributionChart,
-} from "./charts.js";
+import { PrimaryNavigation } from "./primary-navigation.js";
 import { copyTextToClipboard } from "./clipboard.js";
 import { copyFailureMessage } from "./copy-fallback-messages.js";
 import {
@@ -103,7 +85,6 @@ import {
   formatRulesFileCount,
   formatTrendDate,
 } from "./formatters.js";
-import { McpToolsView } from "./mcp-tools-view.js";
 import { getProjectEmptyState } from "./project-empty-state.js";
 import { getPromptEmptyState } from "./prompt-empty-state.js";
 import {
@@ -143,6 +124,19 @@ import {
   readSidebarCollapsed,
 } from "./sidebar-storage.js";
 import { useWorkspaceQuery } from "./workspace-query.js";
+import {
+  ActionsPage,
+  CommandCenter,
+  GapRateChart,
+  InsightInventory,
+  LoopsView,
+  McpToolsView,
+  ProjectWorkspace,
+  PromptDetailView,
+  QualityTrendChart,
+  ScoreDistributionChart,
+} from "./lazy-views.js";
+import "./command-center.css";
 
 const LIVE_MEASUREMENT_REFRESH_MS = 12_000;
 export function App() {
@@ -200,6 +194,8 @@ export function App() {
   const navigate = useCallback((next: View): void => {
     const path = pathForView(next);
     window.history.pushState({}, "", path);
+    window.scrollTo(0, 0);
+    setError(undefined);
     setView(next);
   }, []);
   const { loading, nextCursor, prompts, refreshList, updatePrompt } =
@@ -249,6 +245,10 @@ export function App() {
     navigate,
     onError: setError,
   });
+  const selectedProject =
+    view.name === "project"
+      ? projects.find((project) => project.project_id === view.id)
+      : undefined;
 
   useEffect(() => {
     persistLanguage(language);
@@ -411,6 +411,9 @@ export function App() {
         setError("Could not copy selected loop brief.");
         throw new Error("clipboard copy failed");
       }
+      if (brief.receipt) {
+        await markContinuationReceipt(brief.receipt.id, "copied");
+      }
     } catch {
       setError("Could not copy selected loop brief.");
       throw new Error("selected loop brief copy failed");
@@ -433,6 +436,9 @@ export function App() {
       if (!copied) {
         setError("Could not copy command center loop brief.");
         throw new Error("clipboard copy failed");
+      }
+      if (brief.receipt) {
+        await markContinuationReceipt(brief.receipt.id, "copied");
       }
     } catch {
       setError("Could not copy command center loop brief.");
@@ -583,15 +589,22 @@ export function App() {
     }
   }
 
-  async function toggleProjectCapture(project: ProjectSummary): Promise<void> {
+  async function updateProjectWorkspacePolicy(
+    project: ProjectSummary,
+    patch: ProjectPolicyPatch,
+  ): Promise<void> {
     try {
-      const updated = await updateProjectPolicy(project.project_id, {
-        capture_disabled: !project.policy.capture_disabled,
-      });
+      const updated = await updateProjectPolicy(project.project_id, patch);
       updateProject(updated);
     } catch (error) {
       setError(projectPolicyUpdateErrorMessage(error));
     }
+  }
+
+  async function toggleProjectCapture(project: ProjectSummary): Promise<void> {
+    await updateProjectWorkspacePolicy(project, {
+      capture_disabled: !project.policy.capture_disabled,
+    });
   }
 
   async function analyzeProjectRules(project: ProjectSummary): Promise<void> {
@@ -737,110 +750,15 @@ export function App() {
       <a className="skip-link" href="#workspace">
         Skip to content
       </a>
-      <aside className="sidebar" aria-label="Primary navigation">
-        <div className="sidebar-header">
-          <div className="brand">
-            <Database size={16} />
-            <span className="sidebar-label">looprelay</span>
-          </div>
-          <button
-            aria-expanded={!sidebarCollapsed}
-            aria-label={
-              sidebarCollapsed ? "Expand navigation" : "Collapse navigation"
-            }
-            className="sidebar-toggle"
-            onClick={toggleSidebar}
-            type="button"
-          >
-            {sidebarCollapsed ? (
-              <PanelLeftOpen size={16} />
-            ) : (
-              <PanelLeftClose size={16} />
-            )}
-          </button>
-        </div>
-        <button
-          aria-label="Prompts"
-          className={`nav-button ${view.name === "list" ? "active" : ""}`}
-          onClick={() => navigate({ name: "list" })}
-        >
-          <FileText size={16} />
-          <span className="sidebar-label">Prompts</span>
-        </button>
-        <button
-          aria-label="Dashboard"
-          className={`nav-button ${view.name === "dashboard" ? "active" : ""}`}
-          onClick={() => navigate({ name: "dashboard" })}
-        >
-          <BarChart3 size={16} />
-          <span className="sidebar-label">Dashboard</span>
-        </button>
-        <button
-          aria-label="Coach"
-          className={`nav-button ${view.name === "coach" ? "active" : ""}`}
-          onClick={() => navigate({ name: "coach" })}
-        >
-          <Target size={16} />
-          <span className="sidebar-label">Coach</span>
-        </button>
-        <button
-          aria-label="Loops"
-          className={`nav-button ${view.name === "loops" ? "active" : ""}`}
-          onClick={() => navigate({ name: "loops" })}
-        >
-          <ListChecks size={16} />
-          <span className="sidebar-label">Loops</span>
-        </button>
-        <button
-          aria-label="Projects"
-          className={`nav-button ${view.name === "projects" ? "active" : ""}`}
-          onClick={() => navigate({ name: "projects" })}
-        >
-          <FolderCog size={16} />
-          <span className="sidebar-label">Projects</span>
-        </button>
-        <button
-          aria-label="Settings"
-          className={`nav-button ${
-            view.name === "settings" ||
-            view.name === "mcp" ||
-            view.name === "exports"
-              ? "active"
-              : ""
-          }`}
-          onClick={() => navigate({ name: "settings" })}
-        >
-          <Settings size={16} />
-          <span className="sidebar-label">Settings</span>
-        </button>
-        <div
-          className="capture-status"
-          aria-label={health?.ok ? "Server OK" : "Checking status"}
-        >
-          {health?.ok ? <ShieldCheck size={16} /> : <AlertTriangle size={16} />}
-          <span className="sidebar-label">
-            {health?.ok ? "Server OK" : "Checking status"}
-          </span>
-        </div>
-        <div className="language-switch" aria-label="Language">
-          <button
-            aria-pressed={language === "en"}
-            className={language === "en" ? "active" : ""}
-            onClick={() => setLanguage("en")}
-            type="button"
-          >
-            EN
-          </button>
-          <button
-            aria-pressed={language === "ko"}
-            className={language === "ko" ? "active" : ""}
-            onClick={() => setLanguage("ko")}
-            type="button"
-          >
-            KO
-          </button>
-        </div>
-      </aside>
+      <PrimaryNavigation
+        health={health}
+        language={language}
+        onNavigate={navigate}
+        onSetLanguage={setLanguage}
+        onToggleSidebar={toggleSidebar}
+        sidebarCollapsed={sidebarCollapsed}
+        view={view}
+      />
 
       <section className="workspace" id="workspace">
         <header className="topbar">
@@ -1007,89 +925,132 @@ export function App() {
           </>
         )}
         {view.name === "detail" && (
-          <PromptDetailView
-            copied={selected?.id === copiedPromptId}
-            copiedImprovement={selected?.id === copiedImprovementId}
-            language={language}
-            manualCopyFallback={
-              selected?.id === manualCopyFallback?.promptId
-                ? manualCopyFallback
-                : undefined
-            }
-            savedImprovement={selected?.id === savedImprovementId}
-            onBookmark={toggleBookmark}
-            onBack={() => navigate({ name: "list" })}
-            onCloseManualCopyFallback={() => setManualCopyFallback(undefined)}
-            onCopy={copyPrompt}
-            onCopyImprovement={copyImprovedPrompt}
-            onCopySavedDraft={copySavedImprovementDraft}
-            onDelete={setPendingDelete}
-            onOpenQualityGap={(qualityGap) => {
-              setFilters({
-                isSensitive: "all",
-                focus: "quality-gap",
-                qualityGap,
-              });
-              navigate({ name: "list" });
-            }}
-            onNavigate={(id) => navigate({ name: "detail", id })}
-            onSaveImprovement={saveImprovementDraft}
-            prompt={selected}
-            queueNavigation={queueNavigation}
-          />
+          <Suspense fallback={<p className="empty-line">Loading detail…</p>}>
+            <PromptDetailView
+              copied={selected?.id === copiedPromptId}
+              copiedImprovement={selected?.id === copiedImprovementId}
+              language={language}
+              manualCopyFallback={
+                selected?.id === manualCopyFallback?.promptId
+                  ? manualCopyFallback
+                  : undefined
+              }
+              savedImprovement={selected?.id === savedImprovementId}
+              onBookmark={toggleBookmark}
+              onBack={() => navigate({ name: "list" })}
+              onCloseManualCopyFallback={() => setManualCopyFallback(undefined)}
+              onCopy={copyPrompt}
+              onCopyImprovement={copyImprovedPrompt}
+              onCopySavedDraft={copySavedImprovementDraft}
+              onDelete={setPendingDelete}
+              onOpenQualityGap={(qualityGap) => {
+                setFilters({
+                  isSensitive: "all",
+                  focus: "quality-gap",
+                  qualityGap,
+                });
+                navigate({ name: "list" });
+              }}
+              onNavigate={(id) => navigate({ name: "detail", id })}
+              onSaveImprovement={saveImprovementDraft}
+              prompt={selected}
+              queueNavigation={queueNavigation}
+            />
+          </Suspense>
         )}
-        {(view.name === "dashboard" || view.name === "scores") && (
-          <DashboardView
-            archiveScore={archiveScore}
-            coachFeedback={coachFeedback}
-            dashboard={dashboard}
-            loading={!dashboard}
-            measurementBusy={measurementBusy}
-            measurementCheckedAt={measurementCheckedAt}
-            onOpenFilteredList={(nextFilters) => {
-              setFilters({ isSensitive: "all", ...nextFilters });
-              navigate({ name: "list" });
-            }}
-            onMeasure={() => void measureArchive()}
-            onRefreshArchiveScore={() => void refreshArchiveScore()}
-            onSelect={(id) => navigate({ name: "detail", id })}
-            trendDays={trendDays}
-            onChangeTrendDays={(days) => {
-              setTrendDays(days);
-              setDashboard(undefined);
-            }}
-          />
+        {view.name === "dashboard" && (
+          <Suspense fallback={<p className="empty-line">Loading overview…</p>}>
+            <CommandCenter
+              archiveScore={archiveScore}
+              dashboard={dashboard}
+              health={health}
+              loading={!dashboard}
+              loops={loops}
+              measurementBusy={measurementBusy}
+              onChangeTrendDays={(days) => {
+                setTrendDays(days);
+                setDashboard(undefined);
+              }}
+              onMeasure={() => void measureArchive()}
+              onOpenEvidence={() => navigate({ name: "scores" })}
+              onOpenInsights={() => navigate({ name: "coach" })}
+              onOpenLoop={(worktree, branch) =>
+                void openLoopWorktree({
+                  worktree,
+                  ...(branch ? { branch } : {}),
+                })
+              }
+              onOpenProjects={() => navigate({ name: "projects" })}
+              projects={projects}
+              trendDays={trendDays}
+            />
+          </Suspense>
+        )}
+        {view.name === "scores" && (
+          <Suspense fallback={<p className="empty-line">Loading evidence…</p>}>
+            <DashboardView
+              archiveScore={archiveScore}
+              coachFeedback={coachFeedback}
+              dashboard={dashboard}
+              loading={!dashboard}
+              measurementBusy={measurementBusy}
+              measurementCheckedAt={measurementCheckedAt}
+              onOpenFilteredList={(nextFilters) => {
+                setFilters({ isSensitive: "all", ...nextFilters });
+                navigate({ name: "list" });
+              }}
+              onMeasure={() => void measureArchive()}
+              onRefreshArchiveScore={() => void refreshArchiveScore()}
+              onSelect={(id) => navigate({ name: "detail", id })}
+              trendDays={trendDays}
+              onChangeTrendDays={(days) => {
+                setTrendDays(days);
+                setDashboard(undefined);
+              }}
+            />
+          </Suspense>
         )}
         {view.name === "coach" && (
-          <CoachView
-            archiveScore={archiveScore}
-            dashboard={dashboard}
-            loading={!dashboard}
-            onOpenFilteredList={(nextFilters) => {
-              setFilters({ isSensitive: "all", ...nextFilters });
-              navigate({ name: "list" });
-            }}
-            onSelect={(id) => navigate({ name: "detail", id })}
-          />
+          <Suspense fallback={<p className="empty-line">Loading insights…</p>}>
+            <CoachView
+              archiveScore={archiveScore}
+              dashboard={dashboard}
+              loading={!dashboard}
+              onOpenEvidence={() => navigate({ name: "scores" })}
+              onOpenFilteredList={(nextFilters) => {
+                setFilters({ isSensitive: "all", ...nextFilters });
+                navigate({ name: "list" });
+              }}
+              onOpenProjects={() => navigate({ name: "projects" })}
+              onSelect={(id) => navigate({ name: "detail", id })}
+            />
+          </Suspense>
         )}
         {view.name === "loops" && (
-          <LoopsView
-            loops={loops}
-            loading={!loops}
-            onApproveMemoryCandidate={() => approveLatestLoopMemory()}
-            onApproveSelectedMemory={(snapshotId) =>
-              approveSelectedLoopMemory(snapshotId)
-            }
-            onCopyCommandCenterBrief={(selection) =>
-              copyCommandCenterLoopBrief(selection)
-            }
-            onCopySelectedBrief={(detail) => copySelectedLoopBrief(detail)}
-            onRecordOutcome={(snapshotId, input) =>
-              recordSelectedLoopOutcome(snapshotId, input)
-            }
-            onSelectWorktree={(worktree) => openLoopWorktree({ worktree })}
-            worktreeDetail={loopWorktree}
-          />
+          <Suspense fallback={<p className="empty-line">Loading loops…</p>}>
+            <LoopsView
+              loops={loops}
+              loading={!loops}
+              onApproveMemoryCandidate={() => approveLatestLoopMemory()}
+              onApproveSelectedMemory={(snapshotId) =>
+                approveSelectedLoopMemory(snapshotId)
+              }
+              onCopyCommandCenterBrief={(selection) =>
+                copyCommandCenterLoopBrief(selection)
+              }
+              onCopySelectedBrief={(detail) => copySelectedLoopBrief(detail)}
+              onRecordOutcome={(snapshotId, input) =>
+                recordSelectedLoopOutcome(snapshotId, input)
+              }
+              onSelectWorktree={(worktree) => openLoopWorktree({ worktree })}
+              worktreeDetail={loopWorktree}
+            />
+          </Suspense>
+        )}
+        {view.name === "actions" && (
+          <Suspense fallback={<p className="empty-line">Loading actions…</p>}>
+            <ActionsPage onError={setError} />
+          </Suspense>
         )}
         {view.name === "projects" && (
           <ProjectsView
@@ -1097,9 +1058,43 @@ export function App() {
             onAnalyzeInstructions={(project) =>
               void analyzeProjectRules(project)
             }
+            onOpenProject={(project) =>
+              navigate({ name: "project", id: project.project_id })
+            }
             onToggleCapture={(project) => void toggleProjectCapture(project)}
             projects={projects}
           />
+        )}
+        {view.name === "project" && (
+          <Suspense fallback={<p className="empty-line">Loading project…</p>}>
+            <ProjectWorkspace
+              instructionBusy={Boolean(
+                selectedProject &&
+                projectInstructionBusy[selectedProject.project_id],
+              )}
+              loops={loops}
+              onAnalyzeInstructions={() => {
+                if (selectedProject) void analyzeProjectRules(selectedProject);
+              }}
+              onBack={() => navigate({ name: "projects" })}
+              onOpenLoop={(worktree, branch) => {
+                if (!worktree) {
+                  navigate({ name: "loops" });
+                  return;
+                }
+                void openLoopWorktree({
+                  worktree,
+                  ...(branch ? { branch } : {}),
+                });
+              }}
+              onUpdatePolicy={(patch) => {
+                if (selectedProject) {
+                  void updateProjectWorkspacePolicy(selectedProject, patch);
+                }
+              }}
+              project={selectedProject}
+            />
+          </Suspense>
         )}
         {(view.name === "settings" ||
           view.name === "mcp" ||
@@ -1115,11 +1110,15 @@ export function App() {
                 <h2>MCP integration</h2>
                 <span>Setup commands, tool catalog</span>
               </summary>
-              <McpToolsView
-                dashboard={dashboard}
-                health={health}
-                settings={settings}
-              />
+              <Suspense
+                fallback={<p className="empty-line">Loading MCP tools…</p>}
+              >
+                <McpToolsView
+                  dashboard={dashboard}
+                  health={health}
+                  settings={settings}
+                />
+              </Suspense>
             </details>
             <details
               className="panel admin-fold"
@@ -1483,6 +1482,7 @@ function DashboardView({
         dashboard={dashboard}
         onOpenFilteredList={onOpenFilteredList}
       />
+      <ProductEvidencePanel />
       <AskModeSummaryPanel />
       <ArchiveScoreReviewPanel
         report={archiveScore}
@@ -1498,13 +1498,17 @@ function CoachView({
   archiveScore,
   dashboard,
   loading,
+  onOpenEvidence,
   onOpenFilteredList,
+  onOpenProjects,
   onSelect,
 }: {
   archiveScore?: ArchiveScoreReport;
   dashboard?: QualityDashboard;
   loading: boolean;
+  onOpenEvidence(): void;
   onOpenFilteredList(filters: PromptFilters): void;
+  onOpenProjects(): void;
   onSelect(id: string): void;
 }) {
   if (loading || !dashboard) {
@@ -1518,6 +1522,13 @@ function CoachView({
       <HabitCoachPanel
         coach={habitCoach}
         onOpenFilteredList={onOpenFilteredList}
+        onSelect={onSelect}
+      />
+      <InsightInventory
+        dashboard={dashboard}
+        onOpenEvidence={onOpenEvidence}
+        onOpenFilteredList={onOpenFilteredList}
+        onOpenProjects={onOpenProjects}
         onSelect={onSelect}
       />
       <RepeatedPatternsPanel dashboard={dashboard} />
@@ -2231,11 +2242,13 @@ function SettingsView({
 function ProjectsView({
   instructionBusy,
   onAnalyzeInstructions,
+  onOpenProject,
   onToggleCapture,
   projects,
 }: {
   instructionBusy: Record<string, boolean>;
   onAnalyzeInstructions(project: ProjectSummary): void;
+  onOpenProject(project: ProjectSummary): void;
   onToggleCapture(project: ProjectSummary): void;
   projects: ProjectSummary[];
 }) {
@@ -2263,16 +2276,28 @@ function ProjectsView({
         {projects.map((project) => (
           <div className="project-row" key={project.project_id} role="row">
             <span className="project-name-cell">
-              <strong>{project.label}</strong>
-              <small>
-                {project.path_kind === "project_root" ? "project root" : "cwd"}{" "}
-                · {project.project_id}
-              </small>
+              <button
+                className="project-open-workspace"
+                onClick={() => onOpenProject(project)}
+                type="button"
+              >
+                <strong>{project.label}</strong>
+                <small>
+                  {project.path_kind === "project_root"
+                    ? "project root"
+                    : "cwd"}{" "}
+                  · {project.project_id}
+                </small>
+                <em>Open workspace</em>
+              </button>
             </span>
-            <span>
+            <span className="project-latest" data-label="Latest capture">
               {project.latest_ingest ? formatDate(project.latest_ingest) : "-"}
             </span>
-            <span className="status-cell">
+            <span
+              className="project-quality status-cell"
+              data-label="Quality / sensitivity"
+            >
               <span className="badge gap-badge">
                 gap {Math.round(project.quality_gap_rate * 100)}%
               </span>
@@ -2282,7 +2307,7 @@ function ProjectsView({
                 </span>
               )}
             </span>
-            <span className="status-cell">
+            <span className="project-reuse status-cell" data-label="Reuse">
               <span className="badge reuse-badge">
                 copy {project.copied_count}
               </span>
@@ -2290,7 +2315,7 @@ function ProjectsView({
                 saved {project.bookmarked_count}
               </span>
             </span>
-            <span className="project-instruction-cell">
+            <span className="project-instruction-cell" data-label="Agent rules">
               {project.instruction_review ? (
                 <span className="instruction-review-summary">
                   <span
@@ -2325,7 +2350,7 @@ function ProjectsView({
                   : "Analyze rules"}
               </button>
             </span>
-            <span>
+            <span className="project-capture" data-label="Capture">
               <button
                 aria-pressed={project.policy.capture_disabled}
                 className={`toggle-button ${

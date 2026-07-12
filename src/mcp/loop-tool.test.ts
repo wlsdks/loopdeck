@@ -345,6 +345,16 @@ describe("LoopRelay MCP tools", () => {
         summary: "Focused MCP tests and full build passed.",
         evidence_refs: ["test:src/mcp/loop-tool.test.ts", "build:pnpm-build"],
         used_improvement_prompt_ids: ["prmt_one"],
+        typed_evidence: [
+          {
+            kind: "test",
+            label: "focused MCP loop tests",
+            observed_at: "2026-07-12T04:00:00.000Z",
+            result: "passed",
+            verification: "locally_verified",
+            head_hash: "83b1c6f2",
+          },
+        ],
       },
       { dataDir },
     );
@@ -358,6 +368,13 @@ describe("LoopRelay MCP tools", () => {
         summary: "Focused MCP tests and full build passed.",
         evidence_refs: ["test:src/mcp/loop-tool.test.ts", "build:pnpm-build"],
         used_improvement_prompt_ids: ["prmt_one"],
+        typed_evidence: [
+          expect.objectContaining({
+            kind: "test",
+            label: "focused MCP loop tests",
+            verification: "locally_verified",
+          }),
+        ],
       },
       privacy: {
         local_only: true,
@@ -391,6 +408,30 @@ describe("LoopRelay MCP tools", () => {
       message:
         "Loop outcome summary and evidence refs must not include secrets or raw local paths.",
     });
+  });
+
+  it("rejects raw paths inside typed evidence", () => {
+    const dataDir = seedLoopSnapshot();
+
+    expect(
+      recordLoopOutcomeTool(
+        {
+          snapshot_id: "loop_mcp",
+          status: "passed",
+          summary: "Focused checks passed.",
+          typed_evidence: [
+            {
+              kind: "test",
+              label: "Result at /Users/example/private/result.log",
+              observed_at: "2026-07-12T04:00:00.000Z",
+              result: "passed",
+              verification: "locally_verified",
+            },
+          ],
+        },
+        { dataDir },
+      ),
+    ).toMatchObject({ is_error: true, error_code: "invalid_input" });
   });
 
   it("rejects improvement attribution from another snapshot as invalid input", () => {

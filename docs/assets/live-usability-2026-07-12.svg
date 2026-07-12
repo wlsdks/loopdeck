@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="640" viewBox="0 0 920 640" role="img" aria-labelledby="title desc">
+  <title id="title">LoopRelay live agent-native usability observation</title>
+  <desc id="desc">Fresh Codex and Claude Code first-value results and one remediated selected-state recovery comparison. The observation is non-causal and has no independent human users.</desc>
+  <rect width="920" height="640" rx="12" fill="#111212"/>
+  <text x="36" y="48" fill="#f5f4f0" font-family="system-ui,sans-serif" font-size="24" font-weight="700">Live usability observation</text>
+  <text x="36" y="74" fill="#a9aaa6" font-family="system-ui,sans-serif" font-size="13">Fresh agent-native clients + one selected-state recovery pair · causal claim: false</text>
+  <rect x="688" y="28" width="196" height="30" rx="15" fill="#2a2414" stroke="#8b6b20"/>
+  <text x="786" y="48" text-anchor="middle" fill="#f2ba4a" font-family="system-ui,sans-serif" font-size="11" font-weight="700">HUMAN VALIDATION UNMEASURED</text>
+
+  <text x="36" y="126" fill="#a9aaa6" font-family="system-ui,sans-serif" font-size="11" font-weight="700">FRESH INSTALL TO FIRST VALUE</text>
+  <rect x="36" y="142" width="412" height="148" rx="10" fill="#1a1b1b" stroke="#353633"/>
+  <text x="58" y="174" fill="#f5f4f0" font-family="system-ui,sans-serif" font-size="16" font-weight="700">Codex CLI</text>
+  <text x="58" y="200" fill="#a9aaa6" font-family="system-ui,sans-serif" font-size="12">install 9.446s · first value 60.220s · friction 2</text>
+  <rect x="58" y="222" width="300" height="14" rx="7" fill="#2c2d2b"/>
+  <rect x="58" y="222" width="300" height="14" rx="7" fill="#65d8af"/>
+  <text x="374" y="234" fill="#65d8af" font-family="ui-monospace,monospace" font-size="12" font-weight="700">PASS</text>
+  <text x="58" y="264" fill="#8f918c" font-family="system-ui,sans-serif" font-size="11">privacy / data loss / install blockers: 0</text>
+  <rect x="472" y="142" width="412" height="148" rx="10" fill="#1a1b1b" stroke="#353633"/>
+  <text x="494" y="174" fill="#f5f4f0" font-family="system-ui,sans-serif" font-size="16" font-weight="700">Claude Code</text>
+  <text x="494" y="200" fill="#a9aaa6" font-family="system-ui,sans-serif" font-size="12">install 7.063s · first value 53.589s · friction 0</text>
+  <rect x="494" y="222" width="300" height="14" rx="7" fill="#2c2d2b"/>
+  <rect x="494" y="222" width="300" height="14" rx="7" fill="#65d8af"/>
+  <text x="810" y="234" fill="#65d8af" font-family="ui-monospace,monospace" font-size="12" font-weight="700">PASS</text>
+  <text x="494" y="264" fill="#8f918c" font-family="system-ui,sans-serif" font-size="11">two earlier harness-only failures retained separately</text>
+
+  <line x1="36" y1="326" x2="884" y2="326" stroke="#353633"/>
+  <text x="36" y="362" fill="#a9aaa6" font-family="system-ui,sans-serif" font-size="11" font-weight="700">REMEDIATED SELECTED-STATE RECOVERY · N=1</text>
+  <text x="36" y="394" fill="#f5f4f0" font-family="system-ui,sans-serif" font-size="14" font-weight="700">Strict concepts recovered</text>
+  <text x="36" y="417" fill="#8f918c" font-family="system-ui,sans-serif" font-size="12">Neither condition passed the 5/5 strict rubric.</text>
+  <text x="290" y="386" fill="#a9aaa6" font-family="system-ui,sans-serif" font-size="11">BASELINE</text>
+  <rect x="290" y="396" width="226" height="22" rx="4" fill="#777a76"/>
+  <text x="528" y="413" fill="#f5f4f0" font-family="ui-monospace,monospace" font-size="12">2 / 5</text>
+  <text x="290" y="448" fill="#a9aaa6" font-family="system-ui,sans-serif" font-size="11">LOOPRELAY BRIEF</text>
+  <rect x="290" y="458" width="452" height="22" rx="4" fill="#65d8af"/>
+  <text x="754" y="475" fill="#f5f4f0" font-family="ui-monospace,monospace" font-size="12">4 / 5</text>
+
+  <text x="36" y="532" fill="#a9aaa6" font-family="system-ui,sans-serif" font-size="12">Elapsed</text>
+  <text x="118" y="532" fill="#f5f4f0" font-family="ui-monospace,monospace" font-size="13">54s → 46s</text>
+  <text x="286" y="532" fill="#a9aaa6" font-family="system-ui,sans-serif" font-size="12">Tool calls</text>
+  <text x="375" y="532" fill="#f5f4f0" font-family="ui-monospace,monospace" font-size="13">11 → 5</text>
+  <text x="512" y="532" fill="#a9aaa6" font-family="system-ui,sans-serif" font-size="12">Input tokens</text>
+  <text x="614" y="532" fill="#f5f4f0" font-family="ui-monospace,monospace" font-size="13">177.6k → 216.1k</text>
+
+  <rect x="36" y="566" width="848" height="46" rx="8" fill="#1a1b1b" stroke="#353633"/>
+  <text x="54" y="586" fill="#f2ba4a" font-family="system-ui,sans-serif" font-size="12" font-weight="700">DECISION</text>
+  <text x="54" y="604" fill="#d7d8d3" font-family="system-ui,sans-serif" font-size="12">Retain opt-in exact recovery. Narrow generic injection. Hold large features. Do not claim human adoption.</text>
+</svg>

@@ -108,6 +108,15 @@ describe("MCP stdio server", () => {
             name: "record_clarifications",
           }),
           expect.objectContaining({
+            name: "record_continuation_receipt",
+          }),
+          expect.objectContaining({
+            name: "get_looprelay_action_inbox",
+          }),
+          expect.objectContaining({
+            name: "record_failure_episode",
+          }),
+          expect.objectContaining({
             name: "get_looprelay_loop_status",
             outputSchema: expect.objectContaining({
               properties: expect.objectContaining({
@@ -289,6 +298,12 @@ describe("MCP stdio server", () => {
           expect.objectContaining({
             name: "record_agent_judgments",
           }),
+          expect.objectContaining({
+            name: "recommend_agent_strategy",
+          }),
+          expect.objectContaining({
+            name: "record_agent_run",
+          }),
         ],
       },
     });
@@ -303,15 +318,19 @@ describe("MCP stdio server", () => {
 
     const tools = (response?.result as { tools: Array<unknown> }).tools;
 
-    expect(tools).toHaveLength(22);
+    expect(tools).toHaveLength(27);
     for (const tool of tools.filter(
       (tool) =>
         ![
           "record_agent_rewrite",
           "record_agent_judgments",
+          "record_agent_run",
           "record_clarifications",
+          "record_continuation_receipt",
+          "record_failure_episode",
           "record_loop_outcome",
           "record_loop_memory",
+          "prepare_loop_brief",
           "apply_instruction_patch",
         ].includes((tool as { name?: string }).name ?? ""),
     )) {
@@ -339,6 +358,24 @@ describe("MCP stdio server", () => {
         }),
         expect.objectContaining({
           name: "record_clarifications",
+          annotations: expect.objectContaining({
+            destructiveHint: false,
+            idempotentHint: false,
+            openWorldHint: false,
+            readOnlyHint: false,
+          }),
+        }),
+        expect.objectContaining({
+          name: "record_continuation_receipt",
+          annotations: expect.objectContaining({
+            destructiveHint: false,
+            idempotentHint: false,
+            openWorldHint: false,
+            readOnlyHint: false,
+          }),
+        }),
+        expect.objectContaining({
+          name: "prepare_loop_brief",
           annotations: expect.objectContaining({
             destructiveHint: false,
             idempotentHint: false,

@@ -38,6 +38,9 @@ import {
 } from "./generated-ids.js";
 import { getLoopRelayPaths, supportsPosixMode } from "./paths.js";
 import { buildPromptFilters } from "./sqlite-prompt-filters.js";
+import * as agentRuns from "./agent-runs.js";
+import * as continuationReceipts from "./continuation-receipts.js";
+import { createLoopEvidenceStorage } from "./loop-evidence-storage.js";
 import {
   markPromptImprovementDraftCopied,
   readPromptImprovementDrafts,
@@ -153,6 +156,7 @@ export function createSqlitePromptStorage(
   db.pragma("foreign_keys = ON");
   applyMigrations(db);
   restrictDatabaseFileMode(paths.databasePath);
+  const now = () => options.now?.() ?? new Date();
 
   return {
     async storePrompt(input) {
@@ -198,6 +202,16 @@ export function createSqlitePromptStorage(
       ),
     listLoopMergeDecisions: (options = {}) =>
       loopDecisions.listLoopMergeDecisions(db, options),
+    recordAgentRun: (input) =>
+      agentRuns.recordAgentRun(db, input, options.now?.() ?? new Date()),
+    listAgentRuns: (input) => agentRuns.listAgentRuns(db, input),
+    recordContinuationReceipt: (input) =>
+      continuationReceipts.recordContinuationReceipt(db, input, now()),
+    updateContinuationReceipt: (id, input) =>
+      continuationReceipts.updateContinuationReceipt(db, id, input, now()),
+    listContinuationReceipts: (input = {}) =>
+      continuationReceipts.listContinuationReceipts(db, input),
+    ...createLoopEvidenceStorage(db, now),
     listPrompts(options) {
       return listPrompts(db, options);
     },
@@ -2524,6 +2538,12 @@ function listProjectsForPolicy(
       qualityGapCount: number;
       copiedCount: number;
       bookmarkedCount: number;
+      feedback: {
+        helpful: number;
+        notHelpful: number;
+        total: number;
+        wrong: number;
+      };
     }
   >();
 
@@ -2539,6 +2559,7 @@ function listProjectsForPolicy(
       qualityGapCount: 0,
       copiedCount: 0,
       bookmarkedCount: 0,
+      feedback: { helpful: 0, notHelpful: 0, total: 0, wrong: 0 },
     };
 
     current.promptCount += 1;
@@ -2551,6 +2572,26 @@ function listProjectsForPolicy(
     current.copiedCount += row.copied_count;
     current.bookmarkedCount += row.bookmarked_count;
     projects.set(descriptor.projectId, current);
+  }
+
+  const feedbackRows = db
+    .prepare("SELECT prompt_id, rating FROM coach_feedback")
+    .all() as Array<{
+    prompt_id: string;
+    rating: "helpful" | "not_helpful" | "wrong";
+  }>;
+  const promptProjectIds = new Map(
+    rows.map((row) => [row.id, projectDescriptor(row, hmacSecret).projectId]),
+  );
+  for (const feedback of feedbackRows) {
+    const project = projects.get(
+      promptProjectIds.get(feedback.prompt_id) ?? "",
+    );
+    if (!project) continue;
+    project.feedback.total += 1;
+    if (feedback.rating === "helpful") project.feedback.helpful += 1;
+    else if (feedback.rating === "wrong") project.feedback.wrong += 1;
+    else project.feedback.notHelpful += 1;
   }
 
   return {
@@ -2569,6 +2610,12 @@ function listProjectsForPolicy(
           quality_gap_rate: ratio(project.qualityGapCount, project.promptCount),
           copied_count: project.copiedCount,
           bookmarked_count: project.bookmarkedCount,
+          feedback: {
+            helpful: project.feedback.helpful,
+            not_helpful: project.feedback.notHelpful,
+            wrong: project.feedback.wrong,
+            total: project.feedback.total,
+          },
           policy: policy.policy,
           instruction_review: readProjectInstructionReview(
             db,

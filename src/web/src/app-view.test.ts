@@ -12,9 +12,25 @@ describe("app view model", () => {
       eyebrow: "Agent loop memory",
       title: "Loops",
     });
+    expect(getVisibleChrome({ name: "actions" })).toEqual({
+      eyebrow: "Operator-local outcomes and debt",
+      title: "Actions",
+    });
     expect(getVisibleChrome({ name: "mcp" })).toEqual({
       eyebrow: "Agent-native coach tools",
       title: "MCP tools",
+    });
+    expect(getVisibleChrome({ name: "dashboard" })).toEqual({
+      eyebrow: "Local continuity and evidence layer",
+      title: "Overview",
+    });
+    expect(getVisibleChrome({ name: "scores" })).toEqual({
+      eyebrow: "Observed outcomes and coverage",
+      title: "Evidence",
+    });
+    expect(getVisibleChrome({ name: "project", id: "proj_local123" })).toEqual({
+      eyebrow: "Project continuity workspace",
+      title: "Project workspace",
     });
   });
 

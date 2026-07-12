@@ -21,6 +21,13 @@ import {
   loopOutcomeForCli,
   loopStatusForCli,
 } from "./loop.js";
+import { loopCloseForCli } from "./loop-close.js";
+import { loopActionsForCli } from "./loop-actions.js";
+import {
+  loopFailureListForCli,
+  loopFailureRecordForCli,
+} from "./loop-failure.js";
+import { loopReceiptForCli } from "./loop-receipt.js";
 
 const tempDirs: string[] = [];
 
@@ -511,6 +518,212 @@ describe("loop CLI command", () => {
     expect(text).toContain("Run looprelay loop collect again");
     expect(text).not.toContain("Compact summary with sk-proj-secret");
     expect(text).not.toContain("/Users/example");
+  });
+
+  it("records continuation delivery and use against the generated receipt", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    loopCollectForCli({
+      dataDir,
+      cwdPrefix: "/Users/example/private-project",
+      cwd: "/Users/example/private-project",
+      worktree: "selected-worktree",
+    });
+    const brief = JSON.parse(
+      loopBriefForCli({
+        dataDir,
+        cwd: "/Users/example/private-project",
+        worktree: "selected-worktree",
+        json: true,
+      }),
+    ) as { receipt: { id: string; snapshot_id: string; status: string } };
+
+    expect(brief.receipt).toMatchObject({
+      snapshot_id: expect.stringMatching(/^loop_/),
+      status: "generated",
+    });
+    expect(
+      JSON.parse(
+        loopReceiptForCli({
+          dataDir,
+          receiptId: brief.receipt.id,
+          status: "followed",
+          targetCorrect: "yes",
+          firstActionCorrect: "yes",
+          firstValueSeconds: "12",
+          frictionScore: "0",
+          json: true,
+        }),
+      ),
+    ).toMatchObject({
+      recorded: true,
+      receipt: {
+        id: brief.receipt.id,
+        status: "followed",
+        target_correct: true,
+        first_action_correct: true,
+        first_value_seconds: 12,
+        friction_score: 0,
+      },
+    });
+  });
+
+  it("atomically closes an explicitly selected loop with typed evidence and its receipt", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    const snapshot = JSON.parse(
+      loopCollectForCli({
+        dataDir,
+        json: true,
+        cwdPrefix: "/Users/example/private-project",
+        cwd: "/Users/example/private-project",
+        worktree: "selected-worktree",
+      }),
+    ) as { id: string };
+    const brief = JSON.parse(
+      loopBriefForCli({
+        dataDir,
+        cwd: "/Users/example/private-project",
+        worktree: "selected-worktree",
+        json: true,
+      }),
+    ) as { receipt: { id: string } };
+
+    const result = JSON.parse(
+      loopCloseForCli({
+        dataDir,
+        json: true,
+        snapshotId: snapshot.id,
+        receiptId: brief.receipt.id,
+        receiptStatus: "followed",
+        targetCorrect: "yes",
+        firstActionCorrect: "yes",
+        firstValueSeconds: "9",
+        frictionScore: "0",
+        status: "passed",
+        summary: "Focused close flow passed.",
+        evidenceRef: ["test:loop-close"],
+        typedEvidence: [
+          JSON.stringify({
+            kind: "test",
+            label: "focused loop close tests",
+            observed_at: "2026-07-12T04:00:00.000Z",
+            result: "passed",
+            verification: "locally_verified",
+            head_hash: "83b1c6f2",
+          }),
+        ],
+      }),
+    );
+
+    expect(result).toMatchObject({
+      closed: true,
+      snapshot_id: snapshot.id,
+      outcome: {
+        status: "passed",
+        evidence_refs: ["test:loop-close"],
+        typed_evidence: [
+          {
+            kind: "test",
+            label: "focused loop close tests",
+            result: "passed",
+            verification: "locally_verified",
+          },
+        ],
+      },
+      receipt: {
+        id: brief.receipt.id,
+        status: "followed",
+        target_correct: true,
+        first_action_correct: true,
+        first_value_seconds: 9,
+        friction_score: 0,
+      },
+      privacy: { auto_approves_memory: false },
+    });
+  });
+
+  it("requires an explicit loop selection before close", () => {
+    expect(() =>
+      loopCloseForCli({
+        dataDir: createTempDir(),
+        status: "passed",
+        summary: "Must not select the global latest loop.",
+      }),
+    ).toThrow(
+      "Select the loop to close with --snapshot-id or worktree/session/branch filters.",
+    );
+  });
+
+  it("shows local action debt and clears a confirmed failure action", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    const snapshot = JSON.parse(
+      loopCollectForCli({
+        dataDir,
+        json: true,
+        cwdPrefix: "/Users/example/private-project",
+        cwd: "/Users/example/private-project",
+        worktree: "failure-worktree",
+      }),
+    ) as { id: string };
+    loopOutcomeForCli({
+      dataDir,
+      snapshotId: snapshot.id,
+      status: "failed",
+      summary: "Focused validation failed.",
+      evidenceRefs: ["test:focused"],
+    });
+
+    expect(
+      JSON.parse(loopActionsForCli({ dataDir, json: true })).items,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          kind: "confirm_failure",
+          snapshot_id: snapshot.id,
+        }),
+      ]),
+    );
+    const recorded = JSON.parse(
+      loopFailureRecordForCli({
+        dataDir,
+        json: true,
+        snapshotId: snapshot.id,
+        category: "validation",
+        status: "open",
+        intervention: "Run the focused contract before the build.",
+        confirmedBy: "user",
+      }),
+    );
+    expect(recorded.episode).toMatchObject({
+      snapshot_id: snapshot.id,
+      category: "validation",
+      status: "open",
+    });
+    expect(loopActionsForCli({ dataDir })).toContain(
+      "validation: 1 confirmed · 1 session · 1 open · 0 resolved",
+    );
+    expect(
+      JSON.parse(loopActionsForCli({ dataDir, json: true })).failure_patterns,
+    ).toEqual([
+      expect.objectContaining({
+        category: "validation",
+        total: 1,
+        session_count: 1,
+        recurring: false,
+      }),
+    ]);
+    expect(
+      JSON.parse(loopActionsForCli({ dataDir, json: true })).items,
+    ).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ kind: "confirm_failure" }),
+      ]),
+    );
+    expect(
+      JSON.parse(loopFailureListForCli({ dataDir, json: true })).total,
+    ).toBe(1);
   });
 
   it("prints compact-aware loop status without prompt bodies or raw paths", async () => {

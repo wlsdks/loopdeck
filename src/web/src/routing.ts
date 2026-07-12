@@ -6,9 +6,11 @@ export type View =
   | { name: "detail"; id: string }
   | { name: "dashboard" }
   | { name: "coach" }
+  | { name: "actions" }
   | { name: "loops"; worktree?: string; session?: string; branch?: string }
   | { name: "scores" }
   | { name: "projects" }
+  | { name: "project"; id: string }
   | { name: "mcp" }
   | { name: "exports" }
   | { name: "settings" };
@@ -22,6 +24,10 @@ export function routeFromLocation(): View {
 
   if (window.location.pathname === "/coach") {
     return { name: "coach" };
+  }
+
+  if (window.location.pathname === "/actions") {
+    return { name: "actions" };
   }
 
   if (window.location.pathname === "/loops") {
@@ -43,6 +49,11 @@ export function routeFromLocation(): View {
 
   if (window.location.pathname === "/projects") {
     return { name: "projects" };
+  }
+
+  const projectMatch = window.location.pathname.match(/^\/projects\/([^/]+)$/);
+  if (projectMatch?.[1]) {
+    return { name: "project", id: decodeURIComponent(projectMatch[1]) };
   }
 
   if (window.location.pathname === "/mcp") {
@@ -69,6 +80,7 @@ export function pathForView(view: View): string {
   if (view.name === "detail") return `/prompts/${encodeURIComponent(view.id)}`;
   if (view.name === "dashboard") return "/dashboard";
   if (view.name === "coach") return "/coach";
+  if (view.name === "actions") return "/actions";
   if (view.name === "scores") return "/scores";
   if (view.name === "loops") {
     if (!view.worktree) return "/loops";
@@ -78,6 +90,9 @@ export function pathForView(view: View): string {
     return `/loops?${params.toString()}`;
   }
   if (view.name === "projects") return "/projects";
+  if (view.name === "project") {
+    return `/projects/${encodeURIComponent(view.id)}`;
+  }
   if (view.name === "mcp") return "/mcp";
   if (view.name === "exports") return "/exports";
   if (view.name === "settings") return "/settings";

@@ -1,0 +1,121 @@
+.agent-guide-panel,
+.agent-guide-capture form {
+  display: grid;
+  gap: 10px;
+}
+
+.agent-guide-heading,
+.agent-guide-capture-actions {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.agent-guide-heading h2 {
+  margin: 2px 0 0;
+}
+
+.agent-guide-panel > p,
+.agent-guide-capture p {
+  color: var(--pm-text-muted);
+  line-height: 20px;
+  margin: 0;
+}
+
+.agent-guide-recommendation,
+.agent-guide-evidence {
+  color: var(--pm-text) !important;
+}
+
+.agent-guide-confidence,
+.agent-guide-saved {
+  border: 1px solid var(--color-border-soft);
+  border-radius: 999px;
+  color: var(--pm-accent);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 8px;
+  white-space: nowrap;
+}
+
+.agent-guide-capture {
+  border-top: 1px solid var(--color-border-soft);
+  margin-top: 2px;
+  padding-top: 10px;
+}
+
+.agent-guide-capture summary {
+  color: var(--pm-text);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.agent-guide-capture form {
+  padding-top: 10px;
+}
+
+.agent-guide-capture-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.agent-guide-capture-grid label {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.agent-guide-capture-grid label > span,
+.agent-guide-acceptance {
+  color: var(--pm-text-muted);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.agent-guide-capture-grid input,
+.agent-guide-capture-grid select {
+  background: var(--pm-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  box-sizing: border-box;
+  color: var(--pm-text);
+  font: inherit;
+  font-size: 13px;
+  height: 36px;
+  min-width: 0;
+  padding: 7px 9px;
+  width: 100%;
+}
+
+.agent-guide-capture-grid input:focus,
+.agent-guide-capture-grid select:focus {
+  border-color: var(--pm-accent);
+  outline: 2px solid color-mix(in srgb, var(--pm-accent) 20%, transparent);
+  outline-offset: 1px;
+}
+
+.agent-guide-acceptance {
+  align-items: center;
+  display: flex;
+  gap: 7px;
+}
+
+.agent-guide-acceptance input {
+  accent-color: var(--pm-accent);
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .agent-guide-heading,
+  .agent-guide-capture-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .agent-guide-capture-grid {
+    grid-template-columns: 1fr;
+  }
+}

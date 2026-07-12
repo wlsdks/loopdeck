@@ -7,6 +7,7 @@ import type {
 } from "./api.js";
 import { getLoopInstructionPatch } from "./api.js";
 import { LoopActivitySummary } from "./loop-activity-summary.js";
+import { AgentGuidePanel } from "./agent-guide-panel.js";
 import { LoopBenchmarkReadiness } from "./loop-benchmark-readiness.js";
 import { LoopInstructionPatchPanel } from "./loop-instruction-patch-panel.js";
 import type { LoopOutcomeInput } from "./loop-outcome-form.js";
@@ -160,6 +161,9 @@ export function LoopsView({
         </div>
       </div>
       <LoopInstructionPatchPanel proposal={patchProposal} />
+      <AgentGuidePanel
+        snapshotId={getAgentGuideSnapshotId(items, worktreeDetail)}
+      />
       {worktreeDetail && (
         <div className="loop-table panel">
           <div className="loop-worktree-detail">
@@ -200,3 +204,10 @@ export type CommandCenterBriefSelection = {
   worktree: string;
   branch?: string;
 };
+
+export function getAgentGuideSnapshotId(
+  items: LoopListResponse["items"],
+  worktreeDetail: LoopWorktreeResponse | undefined,
+): string {
+  return worktreeDetail?.items[0]?.id ?? items[0]!.id;
+}

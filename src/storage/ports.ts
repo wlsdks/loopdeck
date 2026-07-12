@@ -27,6 +27,19 @@ import type {
   CoachFeedbackSummary,
 } from "./coach-feedback.js";
 import type { JudgeScoreEntry, JudgeTool } from "./judge-score.js";
+import type { AgentRun, RecordAgentRunInput } from "./agent-runs.js";
+import type {
+  ContinuationReceipt,
+  RecordContinuationReceiptInput,
+  UpdateContinuationReceiptInput,
+} from "./continuation-receipts.js";
+import type { CloseLoopInput, CloseLoopResult } from "./loop-close.js";
+import type {
+  FailureEpisode,
+  FailureEpisodePatternCounts,
+  FailureEpisodeStatus,
+  RecordFailureEpisodeInput,
+} from "../loop/failure-episode.js";
 
 export type {
   CoachFeedbackEntry,
@@ -185,6 +198,46 @@ export type LoopMergeDecisionStoragePort = {
     projectId?: string;
     worktree?: string;
   }): LoopMergeDecisionListResult;
+};
+
+export type AgentRunStoragePort = {
+  recordAgentRun(input: RecordAgentRunInput): AgentRun;
+  listAgentRuns(options: {
+    projectId: string;
+    taskType?: import("../agent-guide/recommendation.js").AgentGuideTaskType;
+    limit?: number;
+  }): AgentRun[];
+};
+
+export type ContinuationReceiptStoragePort = {
+  recordContinuationReceipt(
+    input: RecordContinuationReceiptInput,
+  ): ContinuationReceipt;
+  updateContinuationReceipt(
+    id: string,
+    input: UpdateContinuationReceiptInput,
+  ): ContinuationReceipt | undefined;
+  listContinuationReceipts(options?: {
+    snapshotId?: string;
+    projectId?: string;
+    limit?: number;
+  }): ContinuationReceipt[];
+};
+
+export type LoopCloseStoragePort = {
+  closeLoop(input: CloseLoopInput): CloseLoopResult | undefined;
+};
+
+export type FailureEpisodeStoragePort = {
+  recordFailureEpisode(input: RecordFailureEpisodeInput): FailureEpisode;
+  getFailureEpisodePatternCounts(options?: {
+    projectId?: string;
+  }): FailureEpisodePatternCounts[];
+  listFailureEpisodes(options?: {
+    projectId?: string;
+    status?: FailureEpisodeStatus;
+    limit?: number;
+  }): FailureEpisode[];
 };
 
 export type DeletePromptResult = {
@@ -375,6 +428,12 @@ export type ProjectSummary = {
   quality_gap_rate: number;
   copied_count: number;
   bookmarked_count: number;
+  feedback?: {
+    helpful: number;
+    not_helpful: number;
+    wrong: number;
+    total: number;
+  };
   policy: ProjectPolicy;
   instruction_review?: ProjectInstructionReview;
 };

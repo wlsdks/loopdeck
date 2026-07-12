@@ -10,9 +10,13 @@ import {
 import type { RedactionPolicy } from "../shared/schema.js";
 import type {
   AskEventStoragePort,
+  AgentRunStoragePort,
   CoachFeedbackStoragePort,
   CompactBoundaryStoragePort,
   ExportJobStoragePort,
+  FailureEpisodeStoragePort,
+  ContinuationReceiptStoragePort,
+  LoopMemoryStoragePort,
   LoopSnapshotStoragePort,
   ProjectInstructionStoragePort,
   ProjectPolicyStoragePort,
@@ -22,6 +26,8 @@ import type {
 import type { ServerAuthConfig } from "./auth.js";
 import { HttpProblem, problem } from "./errors.js";
 import { registerCoachFeedbackRoutes } from "./routes/coach-feedback.js";
+import { registerAgentGuideRoutes } from "./routes/agent-guide.js";
+import { registerAgentReadinessRoutes } from "./routes/agent-readiness.js";
 import { registerExportRoutes } from "./routes/exports.js";
 import { registerImportRoutes } from "./routes/import.js";
 import { registerHealthRoutes } from "./routes/health.js";
@@ -31,6 +37,7 @@ import { registerPromptRoutes } from "./routes/prompts.js";
 import { registerProjectRoutes } from "./routes/projects.js";
 import { registerSessionRoutes } from "./routes/session.js";
 import { registerSettingsRoutes } from "./routes/settings.js";
+import { registerActionRoutes } from "./routes/actions.js";
 import { registerStaticRoutes, type WebAssets } from "./routes/static.js";
 
 export type CreateServerOptions = {
@@ -43,8 +50,12 @@ export type CreateServerOptions = {
     Partial<ExportJobStoragePort> &
     Partial<AskEventStoragePort> &
     Partial<CoachFeedbackStoragePort> &
+    Partial<AgentRunStoragePort> &
     Partial<LoopSnapshotStoragePort> &
-    Partial<CompactBoundaryStoragePort>;
+    Partial<CompactBoundaryStoragePort> &
+    Partial<ContinuationReceiptStoragePort> &
+    Partial<LoopMemoryStoragePort> &
+    Partial<FailureEpisodeStoragePort>;
   redactionMode: RedactionPolicy;
   excludedProjectRoots?: string[];
   maxBodyBytes?: number;
@@ -194,6 +205,18 @@ export function createServer(options: CreateServerOptions): FastifyInstance {
   registerLoopRoutes(server, {
     auth: options.auth,
     storage: options.storage,
+  });
+  registerActionRoutes(server, {
+    auth: options.auth,
+    storage: options.storage,
+  });
+  registerAgentGuideRoutes(server, {
+    auth: options.auth,
+    storage: options.storage,
+  });
+  registerAgentReadinessRoutes(server, {
+    auth: options.auth,
+    dataDir: options.dataDir,
   });
   registerPromptRoutes(server, {
     auth: options.auth,

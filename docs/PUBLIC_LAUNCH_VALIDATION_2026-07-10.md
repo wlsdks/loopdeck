@@ -4,6 +4,11 @@ This document is the evidence ledger for the public-launch and usefulness
 validation phase. Product feature development is frozen unless evidence below
 identifies a privacy, data-loss, installation, or first-value blocker.
 
+> Current gate note (2026-07-12): the historical independent-human 0/3 gate in
+> this document is superseded by the raw-free agent-native protocol at
+> `evaluation/usefulness/AGENT_OPERATOR_PROTOCOL.md`. Human usability remains
+> unmeasured; no agent result is presented as a human result.
+
 ## Current Verdict
 
 LoopRelay is not publicly launched yet. The current release-candidate work is

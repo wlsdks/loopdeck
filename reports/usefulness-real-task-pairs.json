@@ -14,7 +14,10 @@
     "pairs": 10,
     "task_types": 3,
     "pairs_per_task_type": 2,
-    "independent_users": 3
+    "independent_users": 0,
+    "agent_operators": 3,
+    "agent_operator_clients": 2,
+    "agent_operator_continuations": 1
   },
   "independent_users": [],
   "independent_agent_operators": [],
@@ -691,6 +694,7 @@
       "id": "real-failure-prevention-011",
       "task_type": "failure_prevention",
       "order": "looprelay_first",
+      "blocker_resolution": "remediated",
       "execution": {
         "agent": "codex",
         "agent_version": "0.144.1",

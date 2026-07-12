@@ -4,6 +4,55 @@ All notable changes to looprelay will be documented in this file.
 
 The format follows a simple reverse-chronological release log.
 
+## Unreleased
+
+### Web performance
+
+- Reduced the production web entry chunk from 504.07 kB to 389.84 kB by moving
+  route-exclusive React views behind explicit lazy boundaries. Added a
+  fail-closed 500,000-byte entry budget so future growth fails the build instead
+  of returning as a non-blocking warning. The 368.86 kB chart bundle is also no
+  longer preloaded by the initial document and loads only on chart-bearing
+  Evidence or Insights views.
+
+### Documentation and verification
+
+- Added a canonical, status-classified feature inventory covering all current
+  CLI, MCP, HTTP, web-view, hook, storage, package-script, and binary surfaces.
+- Added an exhaustive dated inventory audit that records resolved omissions,
+  privacy and runtime verification, live Codex/Claude Code doctor readiness,
+  maintainability debt, compatibility aliases, and evidence limitations.
+- Added a drift guard that derives registered surfaces from the current source
+  and initialized SQLite schema so undocumented additions fail focused tests.
+- Marked the 2026-05-02 feature audit as a historical snapshot rather than
+  current release evidence.
+
+### Continuity and evidence
+
+- Added `recovery-packet-v2` metadata to continuation briefs and raw-free,
+  selected-snapshot continuation receipts across CLI, MCP, and explicit Web
+  copy flows.
+- Added `looprelay loop receipt` and the
+  `record_continuation_receipt` MCP tool for copy, delivery, followed, partial,
+  and ignored lineage without transcript or prompt-body capture.
+- Added compatible typed outcome evidence across CLI, MCP, HTTP, storage, and
+  web API contracts with explicit declared versus locally verified provenance.
+- Added `looprelay loop close`, which requires an explicit snapshot or
+  worktree/session/branch selection and atomically records outcome evidence with
+  exact continuation-receipt use without approving memory.
+- Added an operator-local Actions workspace plus `looprelay loop actions` and
+  `get_looprelay_action_inbox` for prioritized continuity, evidence, failure,
+  and memory debt without turning intermediate hook snapshots into backlog.
+- Added operator-confirmed failure episodes across SQLite, CLI, MCP, HTTP, and
+  web UI. Episodes record category, intervention, resolution/wont-fix state,
+  never infer transcript content, and stay actionable until closed. The Actions
+  report now exposes raw-free category counts and recurring cross-session
+  patterns without causal claims. Recurrence fails closed unless at least two
+  distinct explicit agent sessions are represented.
+- Corrected failure-pattern aggregation so recurrence is computed across the
+  full local episode history, while the operator action list remains bounded to
+  recent records. No session IDs or failure narratives are returned.
+
 ## 1.0.0 - 2026-07-08
 
 This is the first stable public release. The release covers local capture, storage,

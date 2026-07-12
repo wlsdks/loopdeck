@@ -10,22 +10,27 @@
 - 🧠 evidence가 있는 승인된 lesson만 memory 또는 AGENTS.md/CLAUDE.md 제안으로 승격합니다.
 - 🧭 여러 loop에서 반복되는 실패 패턴을 찾고, 불명확한 요청은 rewrite 대신 질문합니다.
 
+정본 [기능 인벤토리](docs/FEATURE_INVENTORY.md)에서 현재 활성, opt-in,
+검증 전용, 휴면, 예약 기능을 모두 구분해 확인할 수 있습니다.
+
 ## 측정된 엔지니어링 효용
 
 ![LoopRelay 미사용 대비 사용 조건 엔지니어링 결과](docs/assets/usefulness-results.svg)
 
 <!-- USEFULNESS_RESULTS_START -->
-현재 결과는 maintainer-run observational evidence이며 인과관계를 주장하지 않습니다. 30개 matched pair와 5개 작업 유형을 포함합니다. 독립 사용자 검증은 0/3명입니다. 별도의 독립 Codex agent operator는 3개이며 첫 가치 성공률은 100%입니다. Agent operator는 사람 사용자로 계산하지 않습니다.
 
-| 작업 유형 | 쌍 | Baseline 성공률 | LoopRelay 성공률 | 차이 | 보수적 95% 범위 | Input token 차이 | 판단 |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| Ambiguity clarification | 6 | 83.3% | 50% | -33.3pp | -100..77.6pp | -8535.5 | Narrow |
-| Failure prevention | 6 | 0% | 100% | +100pp | -10.9..100pp | +1777.7 | Narrow |
-| Implementation continuation | 6 | 100% | 83.3% | -16.7pp | -100..94.2pp | +34913.2 | Narrow |
-| Release verification continuity | 6 | 100% | 100% | 0pp | -100..100pp | +42178.2 | Narrow |
-| Session recovery | 6 | 16.7% | 83.3% | +66.7pp | -44.2..100pp | -25189 | Retain |
+현재 결과는 maintainer-run observational evidence이며 인과관계를 주장하지 않습니다. 30개 matched pair와 5개 작업 유형을 포함합니다. 사람 사용성 관찰은 0건이며 agent-native gate에는 포함하지 않습니다. Agent operator는 8건 관찰됐고, checksum-pinned clean install과 fresh MCP session을 분리 검증한 성공 run은 3/3건, client 다양성은 2/2, continuation brief 성공은 1/1건입니다.
 
-전체 성공률은 60%에서 83.3%로 변했고 actionability는 74%에서 89.7%로 변했습니다. 평균 input token 비용은 11.1% 변했습니다. Cached token과 TTFV의 조건별 측정 coverage는 각각 66.7%, 66.7%이며 누락값을 0으로 해석하지 않습니다. 목표 5개 작업 유형 모두 유형별 최소 5쌍을 충족했습니다. 다만 maintainer-run evidence이며 독립 사용자 검증이 끝나지 않았으므로 판단은 directional입니다. 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 독립 사용자 검증 전까지 causal claim은 false입니다.
+| 작업 유형                       |  쌍 | Baseline 성공률 | LoopRelay 성공률 |    차이 | 보수적 95% 범위 | Input token 차이 | 판단   |
+| ------------------------------- | --: | --------------: | ---------------: | ------: | --------------: | ---------------: | ------ |
+| Ambiguity clarification         |   6 |           83.3% |              50% | -33.3pp |    -100..77.6pp |          -8535.5 | Narrow |
+| Failure prevention              |   6 |              0% |             100% |  +100pp |    -10.9..100pp |          +1777.7 | Narrow |
+| Implementation continuation     |   6 |            100% |            83.3% | -16.7pp |    -100..94.2pp |         +34913.2 | Narrow |
+| Release verification continuity |   6 |            100% |             100% |     0pp |     -100..100pp |         +42178.2 | Narrow |
+| Session recovery                |   6 |           16.7% |            83.3% | +66.7pp |    -44.2..100pp |           -25189 | Retain |
+
+전체 성공률은 60%에서 83.3%로 변했고 actionability는 74%에서 89.7%로 변했습니다. 평균 input token 비용은 11.1% 변했습니다. Cached token과 TTFV의 조건별 측정 coverage는 각각 66.7%, 66.7%이며 누락값을 0으로 해석하지 않습니다. Matched pair에서 관찰된 blocker는 0건이며, remediation이 기록된 사례는 0건, 공개를 막는 미해결 사례는 0건입니다. Agent-native gate는 checksum-pinned clean install과 Codex/Claude Code의 fresh MCP 성공 run 3건, 서로 다른 client 2개, continuation brief 1건을 요구합니다. 목표 5개 작업 유형 모두 유형별 최소 5쌍을 충족했습니다. 다만 maintainer-run evidence이며 agent-native gate가 사람 사용성을 증명하지 않으므로 판단은 directional입니다. 일반 implementation continuation에서 회귀가 있으므로 LoopRelay를 모든 coding task에 기본 적용해서는 안 됩니다. 사람 사용성은 미측정이며 causal claim은 false입니다.
+
 <!-- USEFULNESS_RESULTS_END -->
 
 이 그래프는 수작업 마케팅 수치가 아니라 commit된 raw-free matched-pair
@@ -42,13 +47,13 @@ pnpm evidence:usefulness
 [생성된 summary](reports/usefulness-summary.json),
 [평가 프로토콜](docs/ENGINEERING_USEFULNESS_VALIDATION_2026-07-11.md)을 함께
 확인할 수 있습니다.
-독립 인간 사용자는
-[설치부터 첫 가치 프로토콜](evaluation/usefulness/INDEPENDENT_USER_PROTOCOL.md)을
-사용하며 agent operator는 이 gate를 충족하지 않습니다. 현재 validation-only
-[참가자 handoff](evaluation/usefulness/PARTICIPANT_HANDOFF_d1676748.md)는 후보
-커밋 `d1676748`와 checksum을 고정합니다. 격리 maintainer smoke는 8.507초에
-첫 가치에 도달했고 raw-path hit는 0건이었지만, 독립 인간 수는 여전히 0/3이며
-release를 승인하지 않습니다.
+[agent-native 프로토콜](evaluation/usefulness/AGENT_OPERATOR_PROTOCOL.md)은
+존재하지 않는 사람 참가자를 만들지 않습니다. checksum-pinned clean install과
+fresh Codex/Claude Code MCP session을 결합합니다. 현재 validation-only
+[참가자 handoff](evaluation/usefulness/PARTICIPANT_HANDOFF_07a3ba86.md)는 후보
+커밋 `07a3ba86`와 checksum을 고정합니다. 격리 clean smoke는 설치 6.396초,
+첫 가치 7.098초였고 raw-path hit는 0건입니다. 사람 사용성은 미측정이며 이를
+암묵적 효용 주장으로 바꾸지 않습니다.
 
 ### Sol 설계, Terra 실행 재현 검사
 
@@ -78,10 +83,10 @@ actionability는 52.7% 대 83.6%였습니다. LoopRelay는 평균 TTFV 6.2초, t
 2.8회, input token 87,199를 줄였습니다. 실패 3건이 개선됐고 8쌍은
 fail/fail로 남았으며 human review는 LoopRelay 8회, baseline 3회를
 선호했습니다. 이는 maintainer-run
-directional evidence이지 인과 또는 public-readiness 근거가 아닙니다. 모든
-유형별 interval은 여전히 전체 가능 범위를 가로지르고, 여러 실패가 read-only
-test startup 또는 plan/outcome rubric mismatch에서 발생했으며 독립 인간은
-0/3입니다.
+directional evidence이지 인과 또는 일반 생산성 근거가 아닙니다. 모든 유형별
+interval은 여전히 전체 가능 범위를 가로지르고, 여러 실패가 read-only test
+startup 또는 plan/outcome rubric mismatch에서 발생했습니다. 사람 사용성은
+미측정입니다.
 
 N=11 evidence 기반 scope:
 
@@ -90,7 +95,8 @@ N=11 evidence 기반 scope:
   증가했으므로 다른 실제 사례의 strict success 전까지 제한
 - `narrow`: implementation continuation은 숨은 selected contract가 있을 때만
 - `narrow`: release continuity는 fact handoff로 제한, sequencing은 0/2
-- 독립 인간 3명이 first value를 완료할 때까지 모든 경로를 opt-in으로 유지
+- shell-first agent onboarding에서 sandbox와 non-interactive execution 실패가
+  보존됐으므로 모든 경로를 opt-in으로 유지
 
 열한 번째 pair는 새 human evidence intake의 concurrent lost-update 위험을
 찾았습니다. Baseline과 LoopRelay 모두 6/10 fail이었고 treatment는 quality
@@ -818,7 +824,7 @@ privacy/safety, 보고 규칙을 보는 deterministic local rubric입니다.
 looprelay mcp
 ```
 
-MCP server는 22개의 tool을 제공합니다.
+MCP server는 27개의 tool을 제공합니다.
 
 - `get_looprelay_status`: 로컬 archive가 초기화되었는지, prompt가 캡처되었는지, 다음에 어떤 MCP tool을 호출하면 좋은지 확인합니다.
 - `coach_prompt`: Claude Code/Codex 안에서 로컬 readiness, 최신 prompt 점수, gap 진단과 확인 질문, 누적 습관, 프로젝트 규칙, 다음 요청 가이드를 한 번에 받습니다.
@@ -827,11 +833,14 @@ MCP server는 22개의 tool을 제공합니다.
 - `apply_clarifications`: 사용자가 직접 답한 답변(각 항목은 `origin: "user"` 필수)을 받아 최종 승인용 draft를 합성합니다. agent가 자기 ask UI로 답을 모은 뒤 호출합니다.
 - `ask_clarifying_questions`: looprelay가 ask-then-apply 흐름 자체를 주도합니다. 클라이언트가 elicitation capability를 광고하면(Claude Code 2.1.76+) MCP `elicitation/create`로 직접 사용자에게 묻고 final draft를 합성하며, 미지원 / 거부 / 타임아웃 시 clarifying_questions metadata로 fallback합니다. rewrite를 자동 제출하지 않습니다. 비대화형 Claude Code print 실행(`claude -p`)에서는 MCP tool routing이 성공해도 사용자가 답하지 않으면 `interaction_status: declined`가 반환될 수 있습니다. 이 경우 실패로 보지 말고 반환된 `clarifying_questions`를 agent의 native ask UI로 다시 물은 뒤, 먼저 `apply_clarifications`로 최종 승인용 draft를 채팅에 보여주고, 사용자가 저장도 원할 때만 `record_clarifications`를 호출합니다.
 - `record_clarifications`: 사용자가 답한 verbatim 답변과 합성된 최종 draft를 prompt id에 묶어 로컬 archive(`prompt_improvement_drafts`)에 영구 저장합니다. 응답에는 metadata(`draft_id`, `answers_count`, `changed_sections` 등)만 들어가고 prompt body나 draft 본문은 echo하지 않습니다.
+- `record_continuation_receipt`: continuation brief의 고유 receipt가 복사·전달·사용·부분 사용·무시됐는지와 target/첫 행동/TTFV/friction을 transcript 없이 기록합니다.
+- `get_looprelay_action_inbox`: active loop별 최신 snapshot만 사용해 운영자 로컬 continuity/evidence/failure/memory 미처리 항목, 최근 local outcome, category별 반복 실패 count를 반환합니다. 인과관계를 주장하지 않습니다.
+- `record_failure_episode`: failed/blocked snapshot 하나의 category, intervention, resolution 또는 wont-fix 결정을 명시적으로 확인합니다. prompt나 transcript에서 failure episode를 추론하지 않습니다.
 - `get_looprelay_loop_status`: 로컬 loop snapshot 존재 여부, 최신 loop metadata, compact-boundary 상태를 prompt body/raw path 없이 확인합니다.
 - `get_benchmark_candidates`: 최근 loop snapshot에서 body-free real benchmark readiness, 단계별 count, safe candidate id, 다음 evidence 행동을 확인합니다.
 - `get_paired_benchmark_candidates`: operator가 task 동등성을 검토하고 paired fixture를 만들기 전에 body-free baseline과 명시적으로 귀속된 LoopRelay 후보 그룹을 확인합니다. snapshot id와 outcome content를 반환하지 않고 인과성을 추정하지 않습니다.
 - `prepare_loop_brief`: 최신 snapshot 또는 선택한 `worktree`, `session_id`, `branch`에 맞는 snapshot에서 copy-ready continuation prompt를 준비합니다.
-- `record_loop_outcome`: 사용자가 승인한 loop outcome metadata와 evidence ref만 저장하고 prompt body/raw path는 저장하지 않습니다.
+- `record_loop_outcome`: 사용자가 승인한 loop outcome metadata, compatibility evidence ref, optional typed evidence만 저장하고 prompt body/raw path는 저장하지 않습니다. typed evidence는 test/build/commit/review/external 관찰이 선언인지 로컬 검증인지 구분하고 optional HEAD hash에 연결할 수 있습니다.
 - `propose_loop_memory_candidate`: 검증된 loop outcome이 사용자 승인 memory 후보가 될 만큼 evidence-backed인지 판단합니다. 이 단계는 read-only입니다.
 - `record_loop_memory`: 사용자가 승인한 LoopRelay memory를 로컬 storage에 기록합니다. instruction file은 쓰지 않습니다.
 - `propose_instruction_patch`: 최신 승인 memory를 `AGENTS.md` 또는 `CLAUDE.md`에 반영하는 review-only patch와 explicit apply gate를 반환합니다.
@@ -842,6 +851,8 @@ MCP server는 22개의 tool을 제공합니다.
 - `record_agent_rewrite`: 사용자가 승인한 agent rewrite를 redacted improvement draft로 저장하고, rewrite 본문은 반환하지 않습니다.
 - `prepare_agent_judge_batch`: 현재 Claude Code/Codex/Gemini CLI 세션이 직접 LLM judge로 평가할 수 있도록, bounded redacted prompt packet과 rubric을 준비합니다. `looprelay`가 provider를 대신 호출하지 않습니다.
 - `record_agent_judgments`: 현재 agent 세션이 만든 advisory score와 제안을 prompt body/raw path 없이 저장합니다.
+- `recommend_agent_strategy`: local evidence를 바탕으로 비강제 모델 역할 추천, 전환 조건, 신뢰도를 반환합니다.
+- `record_agent_run`: 이후 추천 보정을 위해 사용자가 선언한 raw-free 모델/작업/결과 metadata를 기록합니다.
 
 CLI만 사용하는 경우에도 검증 결과를 기록한 뒤 승인형 memory 흐름을 이어갈 수 있습니다.
 기본 `looprelay loop status`와 `looprelay loop brief`는 현재 프로젝트만
@@ -858,6 +869,14 @@ LoopRelay 개선안을 사용한 경우에만 `--used-improvement-prompt`로 선
 ```sh
 looprelay loop outcome --status passed --summary "Focused checks passed." \
   --evidence-ref "test:focused" --evidence-ref "build:pnpm-build"
+# 또는 정확한 loop와 continuation receipt를 한 transaction으로 종료합니다.
+looprelay loop close --snapshot-id "$SNAPSHOT_ID" --receipt-id "$RECEIPT_ID" \
+  --status passed --summary "Focused checks passed." \
+  --typed-evidence '{"kind":"test","label":"focused checks","observed_at":"2026-07-12T04:00:00.000Z","result":"passed","verification":"locally_verified"}'
+looprelay loop actions
+looprelay loop failure record --snapshot-id "$SNAPSHOT_ID" \
+  --category validation --status open \
+  --intervention "Run the focused contract before the build."
 looprelay loop memory-candidate
 looprelay loop memory-approve --approved-by user
 ```
@@ -870,6 +889,13 @@ filter를 섞으면 global latest로 fallback하지 않고 거부합니다.
 `loop outcome`은 기본적으로 최신 snapshot을 사용하며 `--snapshot-id` 또는
 `--worktree`, `--session`, `--branch` 선택자를 지원합니다. summary와 evidence
 ref에 secret 또는 raw local path가 있으면 SQLite에 쓰기 전에 거부합니다.
+`loop close`는 outcome, typed evidence, 정확한 receipt 사용을 함께 기록하며
+반드시 snapshot 또는 worktree/session/branch를 명시해야 합니다. global latest로
+fallback하거나 outcome을 추론하거나 memory를 자동 승인하지 않습니다.
+전용 웹 **Actions** 화면과 `looprelay loop actions`는 각 active loop의 최신
+운영자 로컬 미처리 항목과 outcome만 보여줍니다. failed/blocked 작업은 episode를
+확인한 뒤 resolution 또는 wont-fix를 기록할 때까지 남으며, 번들 usefulness
+연구는 Evidence 화면에 분리됩니다.
 설정된 Stop hook은 현재 hook `session_id`에서 캡처한 prompt만 snapshot에
 포함합니다. 같은 project의 이전 session prompt를 재사용하거나 hook transcript
 path를 읽지 않습니다.

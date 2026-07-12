@@ -2,13 +2,17 @@ import type { ExperimentalRuleId } from "../analysis/analyze.js";
 import type { RedactionPolicy } from "../shared/schema.js";
 import type {
   AgentPromptJudgmentStoragePort,
+  AgentRunStoragePort,
   AskEventStoragePort,
   CoachFeedbackStoragePort,
   CompactBoundaryStoragePort,
+  ContinuationReceiptStoragePort,
   ExportJobStoragePort,
+  FailureEpisodeStoragePort,
   ImportJobStoragePort,
   JudgeScoreStoragePort,
   LoopMemoryStoragePort,
+  LoopCloseStoragePort,
   LoopMergeDecisionStoragePort,
   LoopSnapshotStoragePort,
   ProjectInstructionStoragePort,
@@ -40,7 +44,11 @@ export type SqlitePromptStorage = PromptStoragePort &
   LoopSnapshotStoragePort &
   CompactBoundaryStoragePort &
   LoopMemoryStoragePort &
-  LoopMergeDecisionStoragePort & {
+  LoopMergeDecisionStoragePort &
+  AgentRunStoragePort &
+  ContinuationReceiptStoragePort &
+  FailureEpisodeStoragePort &
+  LoopCloseStoragePort & {
     close(): void;
     getAppliedMigrations(): AppliedMigration[];
     listPromptRows(): PromptRow[];

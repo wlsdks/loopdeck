@@ -192,6 +192,24 @@ describe("web api export client", () => {
           data: {
             title: "Continue agent loop loop_web",
             source_snapshot_id: "loop_web",
+            recovery: {
+              policy_version: "recovery-packet-v2",
+              authority: "snapshot_metadata",
+              selected_target: {
+                project: "private-project",
+                tool: "claude-code",
+              },
+              outcome_status: "in_progress",
+              evidence_count: 1,
+              compact_boundary_after_snapshot: true,
+            },
+            receipt: {
+              id: "brief_web",
+              snapshot_id: "loop_web",
+              policy_version: "recovery-packet-v2",
+              created_at: "2026-07-04T01:06:00.000Z",
+              status: "generated",
+            },
             prompt:
               "## Goal\nContinue the current coding-agent loop.\n\n## Compaction Boundary\nPostCompact at 2026-07-04T01:05:00.000Z.",
             compact_boundary: {
@@ -222,8 +240,14 @@ describe("web api export client", () => {
         after_latest_snapshot: true,
       },
     });
-    expect(fetchMock).toHaveBeenLastCalledWith("/api/v1/loops/loop_web/brief", {
+    expect(fetchMock).toHaveBeenLastCalledWith("/api/v1/loops/brief", {
+      method: "POST",
       credentials: "same-origin",
+      headers: {
+        "content-type": "application/json",
+        "x-csrf-token": "csrf-1",
+      },
+      body: JSON.stringify({ snapshot_id: "loop_web" }),
     });
     expect(JSON.stringify(brief)).not.toContain("Make this better");
     expect(JSON.stringify(brief)).not.toContain("Compact summary");
@@ -238,6 +262,27 @@ describe("web api export client", () => {
           data: {
             title: "Continue agent loop loop_web",
             source_snapshot_id: "loop_web",
+            recovery: {
+              policy_version: "recovery-packet-v2",
+              authority: "explicit_checkpoint",
+              selected_target: {
+                project: "private-project",
+                tool: "codex",
+                session: "session-web",
+                branch: "feature/branch-filter",
+                worktree: "agent-loop-worktree",
+              },
+              outcome_status: "in_progress",
+              evidence_count: 1,
+              compact_boundary_after_snapshot: false,
+            },
+            receipt: {
+              id: "brief_selected",
+              snapshot_id: "loop_web",
+              policy_version: "recovery-packet-v2",
+              created_at: "2026-07-04T01:06:00.000Z",
+              status: "generated",
+            },
             prompt:
               "worktree: agent-loop-worktree\nsession: session-web\nbranch: feature/branch-filter",
             privacy: {
@@ -258,12 +303,19 @@ describe("web api export client", () => {
 
     expect(brief.source_snapshot_id).toBe("loop_web");
     expect(brief.prompt).toContain("worktree: agent-loop-worktree");
-    expect(fetchMock).toHaveBeenLastCalledWith(
-      "/api/v1/loops/brief?worktree=agent-loop-worktree&session_id=session-web&branch=feature%2Fbranch-filter",
-      {
-        credentials: "same-origin",
+    expect(fetchMock).toHaveBeenLastCalledWith("/api/v1/loops/brief", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "content-type": "application/json",
+        "x-csrf-token": "csrf-1",
       },
-    );
+      body: JSON.stringify({
+        worktree: "agent-loop-worktree",
+        session_id: "session-web",
+        branch: "feature/branch-filter",
+      }),
+    });
   });
 
   it("reports malformed selected loop brief responses without returning incomplete continuation data", async () => {
@@ -1176,6 +1228,16 @@ describe("web api export client", () => {
               summary: "Focused web checks passed.",
               evidence_refs: ["test:web-loops"],
               used_improvement_prompt_ids: ["prmt_one"],
+              typed_evidence: [
+                {
+                  kind: "test",
+                  label: "focused web API tests",
+                  observed_at: "2026-07-12T04:00:00.000Z",
+                  result: "passed",
+                  verification: "locally_verified",
+                  head_hash: "83b1c6f2",
+                },
+              ],
             },
             next_actions: [
               "looprelay loop memory-candidate",
@@ -1198,6 +1260,16 @@ describe("web api export client", () => {
       summary: "Focused web checks passed.",
       evidenceRefs: ["test:web-loops"],
       usedImprovementPromptIds: ["prmt_one"],
+      typedEvidence: [
+        {
+          kind: "test",
+          label: "focused web API tests",
+          observed_at: "2026-07-12T04:00:00.000Z",
+          result: "passed",
+          verification: "locally_verified",
+          head_hash: "83b1c6f2",
+        },
+      ],
     });
 
     expect(result.recorded).toBe(true);
@@ -1215,6 +1287,16 @@ describe("web api export client", () => {
           summary: "Focused web checks passed.",
           evidence_refs: ["test:web-loops"],
           used_improvement_prompt_ids: ["prmt_one"],
+          typed_evidence: [
+            {
+              kind: "test",
+              label: "focused web API tests",
+              observed_at: "2026-07-12T04:00:00.000Z",
+              result: "passed",
+              verification: "locally_verified",
+              head_hash: "83b1c6f2",
+            },
+          ],
         }),
       },
     );
