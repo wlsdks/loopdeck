@@ -255,9 +255,11 @@ from the newest snapshot matching optional `worktree`, `session_id`, and
 `branch` filters, without prompt bodies, raw paths, or auto-submission; when the
 selected snapshot is pre-compact, it asks the user to refresh the snapshot
 instead of replaying compact summaries or custom compact instructions.
-`record_loop_outcome` writes only user-approved status, summary, and evidence
-references for a LoopRelay snapshot; it does not store prompt bodies, raw paths,
-or external LLM results.
+`record_loop_outcome` writes only user-approved status, summary, compatibility
+evidence references, and optional typed evidence for a LoopRelay snapshot.
+Typed evidence distinguishes declared from locally verified observations and
+may bind to a HEAD hash; it does not store prompt bodies, raw paths, or external
+LLM results.
 `propose_loop_memory_candidate` is the semantic-memory decision gate: it checks
 the latest passed loop outcome and safe evidence refs, then returns a
 user-reviewable candidate without writing memory or instruction files.
@@ -273,7 +275,7 @@ explicit apply gate. The web review panel does not write those files.
 raw paths.
 
 The local CLI mirrors that loop surface with `looprelay loop status`,
-`looprelay loop collect`, `looprelay loop brief`, and
+`looprelay loop collect`, `looprelay loop brief`, `looprelay loop close`, and
 `looprelay loop memory-candidate`; approved memories are recorded with
 `looprelay loop memory-approve`. `looprelay loop brief` accepts optional
 `--worktree`, `--session`, and `--branch` filters so Codex or Claude Code can

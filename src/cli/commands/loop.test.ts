@@ -21,6 +21,7 @@ import {
   loopOutcomeForCli,
   loopStatusForCli,
 } from "./loop.js";
+import { loopCloseForCli } from "./loop-close.js";
 import { loopReceiptForCli } from "./loop-receipt.js";
 
 const tempDirs: string[] = [];
@@ -560,6 +561,93 @@ describe("loop CLI command", () => {
         friction_score: 0,
       },
     });
+  });
+
+  it("atomically closes an explicitly selected loop with typed evidence and its receipt", async () => {
+    const dataDir = createTempDir();
+    await seedPrompts(dataDir);
+    const snapshot = JSON.parse(
+      loopCollectForCli({
+        dataDir,
+        json: true,
+        cwdPrefix: "/Users/example/private-project",
+        cwd: "/Users/example/private-project",
+        worktree: "selected-worktree",
+      }),
+    ) as { id: string };
+    const brief = JSON.parse(
+      loopBriefForCli({
+        dataDir,
+        cwd: "/Users/example/private-project",
+        worktree: "selected-worktree",
+        json: true,
+      }),
+    ) as { receipt: { id: string } };
+
+    const result = JSON.parse(
+      loopCloseForCli({
+        dataDir,
+        json: true,
+        snapshotId: snapshot.id,
+        receiptId: brief.receipt.id,
+        receiptStatus: "followed",
+        targetCorrect: "yes",
+        firstActionCorrect: "yes",
+        firstValueSeconds: "9",
+        frictionScore: "0",
+        status: "passed",
+        summary: "Focused close flow passed.",
+        evidenceRef: ["test:loop-close"],
+        typedEvidence: [
+          JSON.stringify({
+            kind: "test",
+            label: "focused loop close tests",
+            observed_at: "2026-07-12T04:00:00.000Z",
+            result: "passed",
+            verification: "locally_verified",
+            head_hash: "83b1c6f2",
+          }),
+        ],
+      }),
+    );
+
+    expect(result).toMatchObject({
+      closed: true,
+      snapshot_id: snapshot.id,
+      outcome: {
+        status: "passed",
+        evidence_refs: ["test:loop-close"],
+        typed_evidence: [
+          {
+            kind: "test",
+            label: "focused loop close tests",
+            result: "passed",
+            verification: "locally_verified",
+          },
+        ],
+      },
+      receipt: {
+        id: brief.receipt.id,
+        status: "followed",
+        target_correct: true,
+        first_action_correct: true,
+        first_value_seconds: 9,
+        friction_score: 0,
+      },
+      privacy: { auto_approves_memory: false },
+    });
+  });
+
+  it("requires an explicit loop selection before close", () => {
+    expect(() =>
+      loopCloseForCli({
+        dataDir: createTempDir(),
+        status: "passed",
+        summary: "Must not select the global latest loop.",
+      }),
+    ).toThrow(
+      "Select the loop to close with --snapshot-id or worktree/session/branch filters.",
+    );
   });
 
   it("prints compact-aware loop status without prompt bodies or raw paths", async () => {

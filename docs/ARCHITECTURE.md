@@ -143,6 +143,9 @@ Current known large modules:
 - `src/storage/continuation-receipts.ts`: selected-snapshot continuation
   lineage, status transitions, privacy validation, and its colocated migration.
   Receipt payloads remain raw-free and never store prompt or transcript text.
+- `src/storage/loop-close.ts`: one transaction for exact-snapshot outcome and
+  continuation-receipt closeout. A receipt from another snapshot aborts the
+  entire write.
 - `src/storage/sqlite-rows.ts`: SQLite result-row contracts only. Do not add
   queries or mappers here.
 - `src/storage/sqlite-json.ts`: defensive JSON decoding for SQLite JSON
@@ -182,6 +185,11 @@ Current known large modules:
 - `src/cli/commands/loop-receipt.ts`: continuation receipt registration,
   option parsing, and raw-free status recording. Keep this out of the already
   broad loop command orchestrator.
+- `src/cli/commands/loop-close.ts`: explicit target selection, typed-evidence
+  parsing, and atomic outcome/receipt closeout. It must not fall back to the
+  global latest snapshot or auto-approve memory.
+- `src/loop/evidence.ts` and `src/web/src/loop-evidence-contract.ts`: matching
+  server and web contracts for raw-free typed engineering evidence.
 
 ### Shared helpers
 

@@ -97,6 +97,7 @@ export function recordLoopOutcome(
     summary: outcome.summary,
     evidenceRefs: outcome.evidence_refs,
     usedImprovementPromptIds: outcome.used_improvement_prompt_ids,
+    typedEvidence: outcome.typed_evidence,
   });
   if (!parsed.ok) {
     throw new Error(parsed.message);
@@ -212,7 +213,20 @@ function readOutcome(value: string): LoopSnapshot["outcome"] {
           ),
         }
       : {}),
+    ...parseTypedEvidence(record.typed_evidence),
   };
+}
+
+function parseTypedEvidence(value: unknown): {
+  typed_evidence?: LoopSnapshot["outcome"]["typed_evidence"];
+} {
+  const parsed = parseLoopOutcomeInput({
+    status: "unknown",
+    summary: "Read stored typed evidence.",
+    typedEvidence: value,
+  });
+  if (!parsed.ok || !parsed.outcome.typed_evidence) return {};
+  return { typed_evidence: parsed.outcome.typed_evidence };
 }
 
 function readNextBrief(value: string): LoopSnapshot["next_brief"] {

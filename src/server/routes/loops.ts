@@ -104,6 +104,22 @@ const LoopOutcomeBodySchema = z.object({
     .array(z.string().trim().min(1).max(120))
     .max(100)
     .optional(),
+  typed_evidence: z
+    .array(
+      z.object({
+        kind: z.enum(["test", "commit", "build", "review", "external"]),
+        label: z.string().trim().min(1).max(200),
+        observed_at: z.string().datetime(),
+        result: z.enum(["passed", "failed", "unknown"]),
+        verification: z.enum(["declared", "locally_verified"]),
+        head_hash: z
+          .string()
+          .regex(/^[a-f0-9]{7,64}$/i)
+          .optional(),
+      }),
+    )
+    .max(20)
+    .optional(),
 });
 
 const LoopBriefSelectionQuerySchema = z.object({
@@ -574,6 +590,7 @@ export function registerLoopRoutes(
       summary: body.summary,
       evidenceRefs: body.evidence_refs,
       usedImprovementPromptIds: body.used_improvement_prompt_ids,
+      typedEvidence: body.typed_evidence,
     });
     if (!parsed.ok) {
       throw problem(400, "Bad Request", parsed.message, request.url);

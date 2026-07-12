@@ -570,6 +570,23 @@ export const RECORD_LOOP_OUTCOME_TOOL_DEFINITION: LoopRelayMcpToolDefinition = {
         description:
           "Optional prompt ids from this snapshot whose LoopRelay improvement drafts were actually used for the recorded loop. Omit when use was not verified.",
       },
+      typed_evidence: {
+        type: "array",
+        maxItems: 20,
+        items: {
+          type: "object",
+          required: ["kind", "label", "observed_at", "result", "verification"],
+          properties: {
+            kind: { enum: ["test", "commit", "build", "review", "external"] },
+            label: { type: "string", maxLength: 200 },
+            observed_at: { type: "string" },
+            result: { enum: ["passed", "failed", "unknown"] },
+            verification: { enum: ["declared", "locally_verified"] },
+            head_hash: { type: "string", pattern: "^[a-fA-F0-9]{7,64}$" },
+          },
+          additionalProperties: false,
+        },
+      },
     },
     additionalProperties: false,
   },
@@ -589,6 +606,7 @@ export const RECORD_LOOP_OUTCOME_TOOL_DEFINITION: LoopRelayMcpToolDefinition = {
             type: "array",
             items: { type: "string" },
           },
+          typed_evidence: { type: "array", items: { type: "object" } },
         },
       },
       next_action: { type: "string" },

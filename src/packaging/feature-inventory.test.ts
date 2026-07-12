@@ -92,7 +92,7 @@ describe("canonical feature inventory", () => {
   it("lists every CLI command path exposed by Commander", () => {
     const commandPaths = collectCommandPaths(createProgram());
 
-    expect(commandPaths).toHaveLength(69);
+    expect(commandPaths).toHaveLength(70);
     for (const commandPath of commandPaths) {
       expect(inventory, `missing CLI command: ${commandPath}`).toContain(
         `\`${commandPath}\``,

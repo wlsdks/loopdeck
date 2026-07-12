@@ -838,7 +838,7 @@ MCP server는 25개의 tool을 제공합니다.
 - `get_benchmark_candidates`: 최근 loop snapshot에서 body-free real benchmark readiness, 단계별 count, safe candidate id, 다음 evidence 행동을 확인합니다.
 - `get_paired_benchmark_candidates`: operator가 task 동등성을 검토하고 paired fixture를 만들기 전에 body-free baseline과 명시적으로 귀속된 LoopRelay 후보 그룹을 확인합니다. snapshot id와 outcome content를 반환하지 않고 인과성을 추정하지 않습니다.
 - `prepare_loop_brief`: 최신 snapshot 또는 선택한 `worktree`, `session_id`, `branch`에 맞는 snapshot에서 copy-ready continuation prompt를 준비합니다.
-- `record_loop_outcome`: 사용자가 승인한 loop outcome metadata와 evidence ref만 저장하고 prompt body/raw path는 저장하지 않습니다.
+- `record_loop_outcome`: 사용자가 승인한 loop outcome metadata, compatibility evidence ref, optional typed evidence만 저장하고 prompt body/raw path는 저장하지 않습니다. typed evidence는 test/build/commit/review/external 관찰이 선언인지 로컬 검증인지 구분하고 optional HEAD hash에 연결할 수 있습니다.
 - `propose_loop_memory_candidate`: 검증된 loop outcome이 사용자 승인 memory 후보가 될 만큼 evidence-backed인지 판단합니다. 이 단계는 read-only입니다.
 - `record_loop_memory`: 사용자가 승인한 LoopRelay memory를 로컬 storage에 기록합니다. instruction file은 쓰지 않습니다.
 - `propose_instruction_patch`: 최신 승인 memory를 `AGENTS.md` 또는 `CLAUDE.md`에 반영하는 review-only patch와 explicit apply gate를 반환합니다.
@@ -867,6 +867,10 @@ LoopRelay 개선안을 사용한 경우에만 `--used-improvement-prompt`로 선
 ```sh
 looprelay loop outcome --status passed --summary "Focused checks passed." \
   --evidence-ref "test:focused" --evidence-ref "build:pnpm-build"
+# 또는 정확한 loop와 continuation receipt를 한 transaction으로 종료합니다.
+looprelay loop close --snapshot-id "$SNAPSHOT_ID" --receipt-id "$RECEIPT_ID" \
+  --status passed --summary "Focused checks passed." \
+  --typed-evidence '{"kind":"test","label":"focused checks","observed_at":"2026-07-12T04:00:00.000Z","result":"passed","verification":"locally_verified"}'
 looprelay loop memory-candidate
 looprelay loop memory-approve --approved-by user
 ```
@@ -879,6 +883,9 @@ filter를 섞으면 global latest로 fallback하지 않고 거부합니다.
 `loop outcome`은 기본적으로 최신 snapshot을 사용하며 `--snapshot-id` 또는
 `--worktree`, `--session`, `--branch` 선택자를 지원합니다. summary와 evidence
 ref에 secret 또는 raw local path가 있으면 SQLite에 쓰기 전에 거부합니다.
+`loop close`는 outcome, typed evidence, 정확한 receipt 사용을 함께 기록하며
+반드시 snapshot 또는 worktree/session/branch를 명시해야 합니다. global latest로
+fallback하거나 outcome을 추론하거나 memory를 자동 승인하지 않습니다.
 설정된 Stop hook은 현재 hook `session_id`에서 캡처한 prompt만 snapshot에
 포함합니다. 같은 project의 이전 session prompt를 재사용하거나 hook transcript
 path를 읽지 않습니다.

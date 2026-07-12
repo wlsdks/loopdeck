@@ -89,11 +89,13 @@ Candidate focused slices:
    states can be recorded without transcript capture. Retain only if unseen
    recovery keeps wrong-target at 0 and evidence attachment reaches at least
    95% without raising mean friction above 0.3.
-2. **Typed Evidence + `loop close` — next.** Add compatible structured evidence
-   (`kind`, `result`, `observed_at`, `head_hash`, `verification`) and one
-   explicit closeout flow that records outcome, evidence, receipt use, and
-   optional Guide attribution. Critical false-ready must remain 0; median
-   closeout time must fall below 15 seconds without automatic outcome inference.
+2. **Typed Evidence + `loop close` — implemented 2026-07-12.** Compatible
+   structured evidence now records kind, label, result, observation time,
+   optional HEAD hash, and declared versus locally verified provenance. The
+   explicit close flow atomically records outcome and exact receipt use, accepts
+   optional Guide attribution, rejects implicit global-latest selection, and
+   never infers or auto-approves an outcome. Retain only if critical false-ready
+   remains 0 and observed median closeout time falls below 15 seconds.
 3. **Action Inbox + Local Outcomes.** Aggregate existing evidence debt and
    receipt/outcome coverage before adding new chart families. Keep bundled
    product studies visually and semantically separate from operator-local data.

@@ -1228,6 +1228,16 @@ describe("web api export client", () => {
               summary: "Focused web checks passed.",
               evidence_refs: ["test:web-loops"],
               used_improvement_prompt_ids: ["prmt_one"],
+              typed_evidence: [
+                {
+                  kind: "test",
+                  label: "focused web API tests",
+                  observed_at: "2026-07-12T04:00:00.000Z",
+                  result: "passed",
+                  verification: "locally_verified",
+                  head_hash: "83b1c6f2",
+                },
+              ],
             },
             next_actions: [
               "looprelay loop memory-candidate",
@@ -1250,6 +1260,16 @@ describe("web api export client", () => {
       summary: "Focused web checks passed.",
       evidenceRefs: ["test:web-loops"],
       usedImprovementPromptIds: ["prmt_one"],
+      typedEvidence: [
+        {
+          kind: "test",
+          label: "focused web API tests",
+          observed_at: "2026-07-12T04:00:00.000Z",
+          result: "passed",
+          verification: "locally_verified",
+          head_hash: "83b1c6f2",
+        },
+      ],
     });
 
     expect(result.recorded).toBe(true);
@@ -1267,6 +1287,16 @@ describe("web api export client", () => {
           summary: "Focused web checks passed.",
           evidence_refs: ["test:web-loops"],
           used_improvement_prompt_ids: ["prmt_one"],
+          typed_evidence: [
+            {
+              kind: "test",
+              label: "focused web API tests",
+              observed_at: "2026-07-12T04:00:00.000Z",
+              result: "passed",
+              verification: "locally_verified",
+              head_hash: "83b1c6f2",
+            },
+          ],
         }),
       },
     );

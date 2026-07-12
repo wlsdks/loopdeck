@@ -3,6 +3,7 @@ import {
   isLoopBriefRecovery,
   type LoopBrief,
 } from "./loop-brief-contract.js";
+import { isLoopEvidence, type LoopEvidence } from "./loop-evidence-contract.js";
 
 export type { LoopBrief } from "./loop-brief-contract.js";
 
@@ -1551,6 +1552,7 @@ export type LoopOutcomeRecordResult = {
     summary: string;
     evidence_refs: string[];
     used_improvement_prompt_ids?: string[];
+    typed_evidence?: LoopEvidence[];
   };
   next_actions: string[];
   privacy: {
@@ -1584,6 +1586,9 @@ function parseLoopOutcomeRecordResponse(
         !outcome.used_improvement_prompt_ids.every(
           (promptId) => typeof promptId === "string",
         ))) ||
+    (outcome.typed_evidence !== undefined &&
+      (!Array.isArray(outcome.typed_evidence) ||
+        !outcome.typed_evidence.every(isLoopEvidence))) ||
     !Array.isArray(data.next_actions) ||
     !data.next_actions.every((action) => typeof action === "string") ||
     privacy?.local_only !== true ||
@@ -3670,6 +3675,7 @@ export async function recordLoopOutcome(
     summary: string;
     evidenceRefs: string[];
     usedImprovementPromptIds?: string[];
+    typedEvidence?: LoopEvidence[];
   },
 ): Promise<LoopOutcomeRecordResult> {
   await ensureSession();
@@ -3688,6 +3694,9 @@ export async function recordLoopOutcome(
         evidence_refs: input.evidenceRefs,
         ...(input.usedImprovementPromptIds?.length
           ? { used_improvement_prompt_ids: input.usedImprovementPromptIds }
+          : {}),
+        ...(input.typedEvidence?.length
+          ? { typed_evidence: input.typedEvidence }
           : {}),
       }),
     },

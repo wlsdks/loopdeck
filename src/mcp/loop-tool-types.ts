@@ -1,4 +1,5 @@
 import type { LoopOutcomeStatus } from "../loop/types.js";
+import type { LoopEvidence } from "../loop/evidence.js";
 import type { LoopBrief, LoopBriefCompactBoundary } from "../loop/brief.js";
 import type { ContinuationReceiptSummary } from "../loop/continuation.js";
 import type { LoopRelayStatus } from "../loop/status.js";
@@ -28,6 +29,7 @@ export type RecordLoopOutcomeToolArguments = {
   summary: string;
   evidence_refs?: string[];
   used_improvement_prompt_ids?: string[];
+  typed_evidence?: LoopEvidence[];
 };
 
 export type ProposeLoopMemoryCandidateToolArguments = {
@@ -124,6 +126,7 @@ export type RecordLoopOutcomeToolResult =
         summary: string;
         evidence_refs: string[];
         used_improvement_prompt_ids?: string[];
+        typed_evidence?: LoopEvidence[];
       };
       next_action: string;
       privacy: LoopRelayToolPrivacy & {

@@ -1865,6 +1865,16 @@ describe("createServer P2 ingest boundary", () => {
         summary: "  Focused web checks passed.  ",
         evidence_refs: [" test:web-loops ", "commit:abc1234"],
         used_improvement_prompt_ids: ["prmt_one"],
+        typed_evidence: [
+          {
+            kind: "test",
+            label: "focused web loop checks",
+            observed_at: "2026-07-12T04:00:00.000Z",
+            result: "passed",
+            verification: "locally_verified",
+            head_hash: "83b1c6f2",
+          },
+        ],
       },
     });
 
@@ -1878,6 +1888,13 @@ describe("createServer P2 ingest boundary", () => {
           summary: "Focused web checks passed.",
           evidence_refs: ["test:web-loops", "commit:abc1234"],
           used_improvement_prompt_ids: ["prmt_one"],
+          typed_evidence: [
+            expect.objectContaining({
+              kind: "test",
+              label: "focused web loop checks",
+              verification: "locally_verified",
+            }),
+          ],
         },
         next_actions: [
           "looprelay loop memory-candidate",

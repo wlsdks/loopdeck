@@ -229,6 +229,7 @@ export function recordLoopOutcomeTool(
     summary: args.summary,
     evidenceRefs: args.evidence_refs,
     usedImprovementPromptIds: args.used_improvement_prompt_ids,
+    typedEvidence: args.typed_evidence,
   });
   if (!parsed.ok) {
     return loopToolError("invalid_input", parsed.message);

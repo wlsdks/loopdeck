@@ -1,7 +1,7 @@
 # LoopRelay Feature Inventory
 
 Status: canonical product capability inventory  
-Reviewed against: `36511155` plus the continuation-receipt working slice
+Reviewed against: `83b1c6f2` plus the typed-evidence/loop-close working slice
 Last reviewed: 2026-07-12
 
 This is the source of truth for what LoopRelay currently does. It separates
@@ -46,7 +46,7 @@ cloud account/synchronization service.
 | Prompt capture and privacy  | Active                 | Codex/Claude Code ingest, redaction, exclusions, deduplication                 |
 | Long-loop continuity        | Active                 | Snapshot collection, checkpoint, compact boundary, selected-loop brief         |
 | Continuation receipts       | Active                 | Brief generation, copy/delivery/use lineage, raw-free recovery outcome         |
-| Outcome evidence            | Active                 | Passed/failed/blocked/unknown outcome and evidence-reference capture           |
+| Outcome evidence            | Active                 | Typed test/build/commit/review/external evidence plus compatibility references |
 | Memory and instructions     | Active, approval-gated | Candidate proposal, approval, patch proposal, explicit apply                   |
 | Adaptive Agent Guide        | Active, non-binding    | Role/model guidance, switch condition, selected-loop run capture               |
 | Prompt archive and coaching | Active                 | Search, score, improve, clarify, bookmark, reuse and pattern analysis          |
@@ -234,8 +234,12 @@ support tables are implementation details and are not counted separately.
 ### Active
 
 - Record `passed`, `failed`, `blocked`, or `unknown` against a selected loop.
+- Close an explicitly selected loop atomically with its exact continuation
+  receipt, typed evidence, and optional Guide attribution.
 - Attach focused-test or other evidence references without storing a private
   reasoning transcript.
+- Store evidence kind, label, observation time, result, verification source,
+  and optional HEAD hash while retaining legacy evidence-reference support.
 - Link the outcome to the prompt and to an accepted improvement draft.
 - Track failure transitions, recommendation adoption, attempts, time to first
   value, and focused-test evidence where the flow supplies them.
@@ -355,7 +359,7 @@ to the archive view; they are not separate active product pages.
 
 ## 11. Complete CLI command tree
 
-The current Commander tree contains 69 command paths. Parent commands are
+The current Commander tree contains 70 command paths. Parent commands are
 listed because they provide their own help and, in some cases, behavior.
 
 ### Setup, runtime, and integrations
@@ -393,6 +397,7 @@ listed because they provide their own help and, in some cases, behavior.
 - `loop checkpoint`
 - `loop brief`
 - `loop receipt`
+- `loop close`
 - `loop outcome`
 - `loop memory-candidate`
 - `loop memory-approve`

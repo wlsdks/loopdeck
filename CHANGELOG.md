@@ -26,6 +26,11 @@ The format follows a simple reverse-chronological release log.
 - Added `looprelay loop receipt` and the
   `record_continuation_receipt` MCP tool for copy, delivery, followed, partial,
   and ignored lineage without transcript or prompt-body capture.
+- Added compatible typed outcome evidence across CLI, MCP, HTTP, storage, and
+  web API contracts with explicit declared versus locally verified provenance.
+- Added `looprelay loop close`, which requires an explicit snapshot or
+  worktree/session/branch selection and atomically records outcome evidence with
+  exact continuation-receipt use without approving memory.
 
 ## 1.0.0 - 2026-07-08
 

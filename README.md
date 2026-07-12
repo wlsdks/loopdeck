@@ -1002,7 +1002,9 @@ The MCP server exposes 25 tools:
   compact summaries or custom compact instructions. Generated briefs return a
   raw-free `recovery-packet-v2` receipt.
 - `record_loop_outcome`: store user-approved loop outcome metadata for a
-  LoopRelay snapshot without storing prompt bodies or raw paths. Pass
+  LoopRelay snapshot without storing prompt bodies or raw paths. Optional typed
+  evidence distinguishes declared from locally verified test, build, commit,
+  review, or external observations and can bind them to a HEAD hash. Pass
   `used_improvement_prompt_ids` only for snapshot prompts whose LoopRelay
   improvements were actually used; linked outcomes without this attribution
   remain unproven as improvement evidence. The web Loops outcome form provides
@@ -1033,7 +1035,8 @@ The MCP server exposes 25 tools:
   checklist status, and improvement hints.
 
 The matching local CLI surface is `looprelay loop status`,
-`looprelay loop collect`, `looprelay loop brief`, `looprelay loop outcome`,
+`looprelay loop collect`, `looprelay loop brief`, `looprelay loop close`,
+`looprelay loop outcome`,
 and `looprelay loop memory-candidate`; approved memories are recorded with
 `looprelay loop memory-approve`. Record a verified result before proposing a
 memory:
@@ -1045,6 +1048,10 @@ in the same project and do not read the hook transcript path.
 ```sh
 looprelay loop outcome --status passed --summary "Focused checks passed." \
   --evidence-ref "test:focused" --evidence-ref "build:pnpm-build"
+# Or atomically close an exact loop and its continuation receipt:
+looprelay loop close --snapshot-id "$SNAPSHOT_ID" --receipt-id "$RECEIPT_ID" \
+  --status passed --summary "Focused checks passed." \
+  --typed-evidence '{"kind":"test","label":"focused checks","observed_at":"2026-07-12T04:00:00.000Z","result":"passed","verification":"locally_verified"}'
 looprelay loop memory-candidate
 looprelay loop memory-approve --approved-by user
 ```
@@ -1067,6 +1074,9 @@ cross-project inspection. `looprelay loop brief` accepts optional
 `--worktree`, `--session`, and `--branch` filters so a continuation prompt can
 resume the same worktree/session/branch selected in the Loops view instead of
 falling back to an unrelated latest snapshot. Use
+`looprelay loop close` when outcome, typed evidence, and exact receipt use must
+be recorded together; unlike `loop outcome`, close requires an explicit target
+and never falls back to the global latest snapshot. Use
 `looprelay loop instruction-patch --target-file AGENTS.md` to generate the
 review-only instruction patch from the latest approved memory. Use
 `looprelay loop instruction-apply --target-file AGENTS.md --confirm-apply`

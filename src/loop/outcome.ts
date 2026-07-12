@@ -1,5 +1,6 @@
 import { detectSensitiveValues } from "../redaction/detectors.js";
 import type { LoopOutcomeStatus, LoopSnapshot } from "./types.js";
+import { parseLoopEvidence } from "./evidence.js";
 
 const LOOP_OUTCOME_STATUSES: LoopOutcomeStatus[] = [
   "unknown",
@@ -15,6 +16,7 @@ type LoopOutcomeInput = {
   summary: unknown;
   evidenceRefs?: unknown;
   usedImprovementPromptIds?: unknown;
+  typedEvidence?: unknown;
 };
 
 type LoopOutcomeInputResult =
@@ -83,6 +85,8 @@ export function parseLoopOutcomeInput(
       (input.usedImprovementPromptIds ?? []).map((promptId) => promptId.trim()),
     ),
   );
+  const typedEvidence = parseLoopEvidence(input.typedEvidence);
+  if (!typedEvidence.ok) return typedEvidence;
   const containsSensitiveValue = [
     summary,
     ...evidenceRefs,
@@ -105,6 +109,9 @@ export function parseLoopOutcomeInput(
       evidence_refs: evidenceRefs,
       ...(usedImprovementPromptIds.length > 0
         ? { used_improvement_prompt_ids: usedImprovementPromptIds }
+        : {}),
+      ...(typedEvidence.evidence.length > 0
+        ? { typed_evidence: typedEvidence.evidence }
         : {}),
     },
   };

@@ -1,3 +1,5 @@
+import type { LoopEvidence } from "./evidence.js";
+
 export type LoopSnapshotSource = "hook" | "cli" | "mcp" | "service";
 
 export type LoopSnapshotTool = "codex" | "claude-code" | "gemini" | "unknown";
@@ -40,6 +42,7 @@ export type LoopSnapshot = {
     summary: string;
     evidence_refs: string[];
     used_improvement_prompt_ids?: string[];
+    typed_evidence?: LoopEvidence[];
   };
   next_brief: {
     generated: boolean;

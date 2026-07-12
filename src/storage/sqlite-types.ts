@@ -11,6 +11,7 @@ import type {
   ImportJobStoragePort,
   JudgeScoreStoragePort,
   LoopMemoryStoragePort,
+  LoopCloseStoragePort,
   LoopMergeDecisionStoragePort,
   LoopSnapshotStoragePort,
   ProjectInstructionStoragePort,
@@ -44,7 +45,8 @@ export type SqlitePromptStorage = PromptStoragePort &
   LoopMemoryStoragePort &
   LoopMergeDecisionStoragePort &
   AgentRunStoragePort &
-  ContinuationReceiptStoragePort & {
+  ContinuationReceiptStoragePort &
+  LoopCloseStoragePort & {
     close(): void;
     getAppliedMigrations(): AppliedMigration[];
     listPromptRows(): PromptRow[];

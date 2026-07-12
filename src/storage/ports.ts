@@ -33,6 +33,7 @@ import type {
   RecordContinuationReceiptInput,
   UpdateContinuationReceiptInput,
 } from "./continuation-receipts.js";
+import type { CloseLoopInput, CloseLoopResult } from "./loop-close.js";
 
 export type {
   CoachFeedbackEntry,
@@ -215,6 +216,10 @@ export type ContinuationReceiptStoragePort = {
     projectId?: string;
     limit?: number;
   }): ContinuationReceipt[];
+};
+
+export type LoopCloseStoragePort = {
+  closeLoop(input: CloseLoopInput): CloseLoopResult | undefined;
 };
 
 export type DeletePromptResult = {
