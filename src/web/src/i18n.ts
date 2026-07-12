@@ -980,6 +980,7 @@ const UI_TRANSLATIONS: Record<string, string> = {
   "Copy or save an improved draft from Coach to start reuse.":
     "Coach에서 개선 초안을 복사하거나 저장하면 재사용 루프가 시작됩니다.",
   "Needs attention": "확인 필요",
+  "Ready to continue": "계속 진행 가능",
   Waiting: "대기",
   "Goal clarity": "목표 명확성",
   "Background context": "배경 맥락",

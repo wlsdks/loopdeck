@@ -187,6 +187,7 @@ export function App() {
   const navigate = useCallback((next: View): void => {
     const path = pathForView(next);
     window.history.pushState({}, "", path);
+    window.scrollTo(0, 0);
     setError(undefined);
     setView(next);
   }, []);
@@ -2185,10 +2186,13 @@ function ProjectsView({
                 · {project.project_id}
               </small>
             </span>
-            <span>
+            <span className="project-latest" data-label="Latest capture">
               {project.latest_ingest ? formatDate(project.latest_ingest) : "-"}
             </span>
-            <span className="status-cell">
+            <span
+              className="project-quality status-cell"
+              data-label="Quality / sensitivity"
+            >
               <span className="badge gap-badge">
                 gap {Math.round(project.quality_gap_rate * 100)}%
               </span>
@@ -2198,7 +2202,7 @@ function ProjectsView({
                 </span>
               )}
             </span>
-            <span className="status-cell">
+            <span className="project-reuse status-cell" data-label="Reuse">
               <span className="badge reuse-badge">
                 copy {project.copied_count}
               </span>
@@ -2206,7 +2210,7 @@ function ProjectsView({
                 saved {project.bookmarked_count}
               </span>
             </span>
-            <span className="project-instruction-cell">
+            <span className="project-instruction-cell" data-label="Agent rules">
               {project.instruction_review ? (
                 <span className="instruction-review-summary">
                   <span
@@ -2241,7 +2245,7 @@ function ProjectsView({
                   : "Analyze rules"}
               </button>
             </span>
-            <span>
+            <span className="project-capture" data-label="Capture">
               <button
                 aria-pressed={project.policy.capture_disabled}
                 className={`toggle-button ${

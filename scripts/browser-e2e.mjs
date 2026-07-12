@@ -318,8 +318,17 @@ try {
     );
   }
 
+  await page.evaluate(() => window.scrollTo(999, 320));
   await page.getByRole("button", { name: "Overview" }).click();
   await page.getByRole("heading", { name: "Overview" }).waitFor();
+  const overviewScroll = await page.evaluate(() => ({
+    x: window.scrollX,
+    y: window.scrollY,
+  }));
+  assert(
+    overviewScroll.x === 0 && overviewScroll.y === 0,
+    `Workspace navigation should reset stale scroll offsets. Got ${JSON.stringify(overviewScroll)}.`,
+  );
   await page.getByRole("heading", { name: "Loop health" }).waitFor();
   await page.getByText("Evidence confidence").waitFor();
   await page.getByText("Active worktrees").waitFor();

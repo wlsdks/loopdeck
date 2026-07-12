@@ -112,7 +112,9 @@ export function CommandCenter({
           <div>
             <span className="command-center-kicker">Action queue</span>
             <h3 id="priority-heading">
-              Needs attention {reviewCount > 0 ? reviewCount : ""}
+              {reviewCount > 0
+                ? `Needs attention ${reviewCount}`
+                : "Ready to continue"}
             </h3>
           </div>
           <button
