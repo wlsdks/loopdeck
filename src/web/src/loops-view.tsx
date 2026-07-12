@@ -161,7 +161,9 @@ export function LoopsView({
         </div>
       </div>
       <LoopInstructionPatchPanel proposal={patchProposal} />
-      <AgentGuidePanel snapshotId={items[0]!.id} />
+      <AgentGuidePanel
+        snapshotId={getAgentGuideSnapshotId(items, worktreeDetail)}
+      />
       {worktreeDetail && (
         <div className="loop-table panel">
           <div className="loop-worktree-detail">
@@ -202,3 +204,10 @@ export type CommandCenterBriefSelection = {
   worktree: string;
   branch?: string;
 };
+
+export function getAgentGuideSnapshotId(
+  items: LoopListResponse["items"],
+  worktreeDetail: LoopWorktreeResponse | undefined,
+): string {
+  return worktreeDetail?.items[0]?.id ?? items[0]!.id;
+}

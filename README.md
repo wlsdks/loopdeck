@@ -14,6 +14,8 @@
   AGENTS.md/CLAUDE.md patch proposal.
 - 🧭 Detects recurring failure patterns across loops and asks focused questions
   instead of rewriting ambiguous requests by default.
+- 🧩 Gives non-binding agent/model guidance and lets the operator record the
+  chosen profile and raw-free outcome against the selected loop snapshot.
 
 ## Measured Engineering Usefulness
 

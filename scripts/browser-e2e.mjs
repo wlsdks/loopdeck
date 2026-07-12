@@ -652,6 +652,37 @@ try {
     true,
     "Selected worktree detail should expose an eligible memory candidate.",
   );
+  await page.getByRole("heading", { name: "Agent guide" }).waitFor();
+  await page.getByText("Record this run", { exact: true }).click();
+  const guideRunCapture = page.getByRole("form", {
+    name: "Agent guide run capture",
+  });
+  await guideRunCapture.waitFor();
+  await guideRunCapture.getByLabel("Outcome").selectOption("passed");
+  await guideRunCapture.getByLabel("First value (seconds)").fill("12");
+  await guideRunCapture.getByLabel("Focused tests").fill("2");
+  await guideRunCapture
+    .getByLabel("I used the recommendation for this run.")
+    .check();
+  await guideRunCapture.getByRole("button", { name: "Save local run" }).click();
+  await guideRunCapture.getByText("Recorded", { exact: true }).waitFor();
+  const recordedGuideRun = readAgentGuideRun(selectedMemorySnapshot.id);
+  assertEqual(
+    recordedGuideRun?.outcome_status,
+    "passed",
+    "Guide capture should record a declared local outcome.",
+  );
+  assertEqual(
+    recordedGuideRun?.accepted_recommendation,
+    1,
+    "Guide capture should record recommendation acceptance explicitly.",
+  );
+  assertEqual(
+    recordedGuideRun?.first_value_seconds,
+    12,
+    "Guide capture should retain only declared first-value timing.",
+  );
+  await captureScreenshot(page, "loops-agent-guide-capture-desktop");
   const selectedMemoryApprovalButton = page.getByRole("button", {
     name: /Approve selected memory|선택 메모리 승인/,
   });
@@ -774,6 +805,24 @@ try {
     .getByRole("heading", { name: "Published product evidence", exact: true })
     .scrollIntoViewIfNeeded();
   await captureScreenshot(page, "product-evidence-mobile");
+
+  await page.goto(
+    `${serverBaseUrl}/loops?worktree=browser-selected-memory&session=browser-selected-session&branch=codex%2Fbrowser-selected-memory`,
+  );
+  await page.getByRole("heading", { name: "Agent guide" }).waitFor();
+  await page.getByText("Record this run", { exact: true }).click();
+  const guideCaptureViewport = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    innerWidth: window.innerWidth,
+  }));
+  assert(
+    guideCaptureViewport.scrollWidth <= guideCaptureViewport.innerWidth,
+    `Mobile guide capture should not overflow horizontally. scrollWidth=${guideCaptureViewport.scrollWidth}, innerWidth=${guideCaptureViewport.innerWidth}.`,
+  );
+  await page
+    .getByRole("form", { name: "Agent guide run capture" })
+    .scrollIntoViewIfNeeded();
+  await captureScreenshot(page, "loops-agent-guide-mobile");
 
   await page.goto(`${serverBaseUrl}/settings`);
   await page.getByRole("heading", { name: "Settings" }).waitFor();
@@ -993,6 +1042,19 @@ function readUsedImprovementPromptIds(snapshotId) {
     return Array.isArray(outcome.used_improvement_prompt_ids)
       ? outcome.used_improvement_prompt_ids
       : [];
+  } finally {
+    db.close();
+  }
+}
+
+function readAgentGuideRun(snapshotId) {
+  const db = new Database(join(dataDir, "looprelay.sqlite"));
+  try {
+    return db
+      .prepare(
+        "SELECT outcome_status, accepted_recommendation, first_value_seconds FROM agent_runs WHERE snapshot_id = ? ORDER BY created_at DESC LIMIT 1",
+      )
+      .get(snapshotId);
   } finally {
     db.close();
   }

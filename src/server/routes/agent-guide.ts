@@ -2,7 +2,11 @@ import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 
 import {
+  AGENT_GUIDE_MODELS,
+  AGENT_GUIDE_OUTCOME_STATUSES,
+  AGENT_GUIDE_ROLES,
   AGENT_GUIDE_TASK_TYPES,
+  AGENT_GUIDE_TOOLS,
   recommendAgentStrategy,
 } from "../../agent-guide/recommendation.js";
 import type {
@@ -10,6 +14,7 @@ import type {
   LoopSnapshotStoragePort,
 } from "../../storage/ports.js";
 import { requireAppAccess, type ServerAuthConfig } from "../auth.js";
+import { problem } from "../errors.js";
 import { requireStorageCapabilities } from "../storage-capabilities.js";
 
 const querySchema = z.object({
@@ -19,6 +24,21 @@ const querySchema = z.object({
   worktree_count: z.coerce.number().int().min(0).optional(),
   requires_independent_review: z.coerce.boolean().optional(),
 });
+
+const recordRunSchema = z
+  .object({
+    snapshot_id: z.string().min(1),
+    task_type: z.enum(AGENT_GUIDE_TASK_TYPES),
+    tool: z.enum(AGENT_GUIDE_TOOLS),
+    model: z.enum(AGENT_GUIDE_MODELS),
+    role: z.enum(AGENT_GUIDE_ROLES),
+    outcome_status: z.enum(AGENT_GUIDE_OUTCOME_STATUSES),
+    accepted_recommendation: z.boolean(),
+    attempts: z.number().int().min(1),
+    first_value_seconds: z.number().int().min(0).optional(),
+    focused_test_count: z.number().int().min(0),
+  })
+  .strict();
 
 export function registerAgentGuideRoutes(
   server: FastifyInstance,
@@ -65,5 +85,32 @@ export function registerAgentGuideRoutes(
         .map((run) => ({ outcomeStatus: run.outcome_status })),
     });
     return reply.send({ data: guide });
+  });
+
+  server.post("/api/v1/agent-guide/runs", async (request, reply) => {
+    requireAppAccess(request, options.auth, { csrf: true });
+    const input = recordRunSchema.parse(request.body);
+    const storage = requireStorageCapabilities(
+      options.storage,
+      ["recordAgentRun", "listLoopSnapshots"],
+      { label: "Agent guide storage", instance: request.url },
+    );
+    const snapshot = storage
+      .listLoopSnapshots({ limit: 100 })
+      .items.find((item) => item.id === input.snapshot_id);
+    if (!snapshot) {
+      throw problem(
+        404,
+        "Not Found",
+        "Loop snapshot not found. Refresh the local loop list before recording this run.",
+        request.url,
+      );
+    }
+
+    const run = storage.recordAgentRun({
+      project_id: snapshot.project_id,
+      ...input,
+    });
+    return reply.code(201).send({ data: run });
   });
 }

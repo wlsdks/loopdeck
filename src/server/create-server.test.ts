@@ -758,6 +758,49 @@ describe("createServer P2 ingest boundary", () => {
     });
   });
 
+  it("records a raw-free agent-guide run against the selected snapshot", async () => {
+    const storage = createMemoryStorage();
+    storage.loopSnapshots.push(
+      loopSnapshot({ id: "loop_selected", project_id: "proj_selected" }),
+    );
+    const server = createTestServer({ storage });
+
+    const response = await server.inject({
+      method: "POST",
+      url: "/api/v1/agent-guide/runs",
+      headers: {
+        authorization: "Bearer app-token",
+        host: "127.0.0.1:17373",
+      },
+      payload: {
+        snapshot_id: "loop_selected",
+        task_type: "continuation",
+        tool: "codex",
+        model: "gpt-5.6-terra",
+        role: "implement",
+        outcome_status: "passed",
+        accepted_recommendation: true,
+        attempts: 1,
+        first_value_seconds: 18,
+        focused_test_count: 2,
+      },
+    });
+
+    expect(response.statusCode).toBe(201);
+    expect(response.json()).toMatchObject({
+      data: {
+        project_id: "proj_selected",
+        snapshot_id: "loop_selected",
+        tool: "codex",
+        model: "gpt-5.6-terra",
+        outcome_status: "passed",
+        accepted_recommendation: true,
+      },
+    });
+    expect(storage.agentRuns).toHaveLength(1);
+    expect(JSON.stringify(response.json())).not.toContain("/Users/");
+  });
+
   it("returns a worktree drilldown without prompt bodies or raw paths", async () => {
     const storage = createMemoryStorage();
     storage.loopSnapshots.push(
@@ -3477,6 +3520,15 @@ function createMemoryStorage() {
           run.project_id === options.projectId &&
           (!options.taskType || run.task_type === options.taskType),
       );
+    },
+    recordAgentRun(input: Omit<AgentRun, "id" | "created_at">) {
+      const run = agentRun({
+        ...input,
+        created_at: `2026-07-12T00:00:${String(agentRuns.length).padStart(2, "0")}.000Z`,
+        id: `arun_memory_${agentRuns.length + 1}`,
+      });
+      agentRuns.push(run);
+      return run;
     },
     getLatestLoopSnapshot() {
       return loopSnapshots.at(0);

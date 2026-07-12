@@ -81,7 +81,9 @@ reports passing and non-passing counts so a high count cannot hide poor results.
 - MCP: `recommend_agent_strategy` and `record_agent_run`.
 - Web: a Guide panel in the Loops workspace scoped to the selected loop
   snapshot, showing the recommendation, evidence counts, and switch condition.
-  Run recording remains an explicit CLI or MCP action.
+  The operator can explicitly record the chosen supported profile, outcome,
+  attempts, optional first-value seconds, focused-test count, and whether the
+  recommendation was followed. No run is inferred or recorded automatically.
 - Continuation brief: append a compact advisory Guide section only when one is
   available.
 
@@ -103,6 +105,6 @@ or remove weak profile mappings rather than adding opaque model scoring.
 - TDD for policy precedence, validation, privacy rejection, and confidence.
 - Storage migration and foreign-key tests.
 - CLI/MCP parity tests and source-hygiene assertions.
-- Browser interaction test for the Guide panel.
+- Browser interaction test for the Guide panel and selected-snapshot run capture.
 - Focused tests during implementation; full release gate only immediately
   before a public release.

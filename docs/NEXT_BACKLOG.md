@@ -156,7 +156,9 @@ Current resume-reliability decisions (10-pair agent-native cohort):
 3. **Collect, do not automate — adopted recommendation outcomes.** Accumulate
    accepted/not-helpful/wrong feedback plus explicit outcome attribution across
    real work. Keep the dashboard language non-causal until an appropriate
-   independent study exists.
+   independent study exists. The selected-loop Guide now has an explicit
+   raw-free run-capture form for this purpose; it records no inferred run and
+   never switches a provider or model.
 4. **Modify only if observed — MCP execution friction.** Retain client budget,
    permission, and deferred-tool-discovery failures as setup observations. Add
    guidance only when it reduces a repeated, reproducible failure; do not add
