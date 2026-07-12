@@ -54,6 +54,12 @@ describe("routing", () => {
 
     stubLocation("/prompts/prompt%201");
     expect(routeFromLocation()).toEqual({ id: "prompt 1", name: "detail" });
+
+    stubLocation("/projects/proj_local123");
+    expect(routeFromLocation()).toEqual({
+      id: "proj_local123",
+      name: "project",
+    });
   });
 
   it("parses list filters from the URL", () => {
@@ -89,6 +95,9 @@ describe("routing", () => {
   });
 
   it("writes stable loop worktree URLs", () => {
+    expect(pathForView({ name: "project", id: "proj local/1" })).toBe(
+      "/projects/proj%20local%2F1",
+    );
     expect(pathForView({ name: "loops" })).toBe("/loops");
     expect(
       pathForView({ name: "loops", worktree: "agent loop/worktree" }),

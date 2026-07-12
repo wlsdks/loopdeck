@@ -1,0 +1,48 @@
+.mcp-runtime-readiness {
+  display: grid;
+  gap: 14px;
+}
+.mcp-runtime-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.mcp-runtime-card {
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 10px;
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+}
+.mcp-runtime-card > div {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+.mcp-runtime-card p,
+.mcp-runtime-card small,
+.mcp-runtime-error {
+  color: var(--pm-text-muted);
+  line-height: 20px;
+  margin: 0;
+}
+.mcp-runtime-card small {
+  font-size: 12px;
+}
+.mcp-runtime-error {
+  background: var(--pm-warning-weak);
+  border: 1px solid rgba(154, 91, 0, 0.24);
+  border-radius: 8px;
+  color: var(--pm-warning);
+  padding: 10px 12px;
+}
+@media (max-width: 767px) {
+  .mcp-runtime-grid {
+    display: block;
+  }
+  .mcp-runtime-card {
+    margin-bottom: 12px;
+  }
+}

@@ -95,7 +95,7 @@ export function PrimaryNavigation({
         onClick={() => onNavigate({ name: "list" })}
       />
       <NavigationButton
-        active={view.name === "projects"}
+        active={view.name === "projects" || view.name === "project"}
         icon={<FolderCog size={16} />}
         label="Projects"
         onClick={() => onNavigate({ name: "projects" })}

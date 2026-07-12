@@ -475,6 +475,24 @@ try {
   await page.getByRole("button", { name: "capture on" }).click();
   await page.getByRole("button", { name: "paused" }).waitFor();
   await captureScreenshot(page, "projects-desktop");
+  await page.getByRole("button", { name: "Open workspace" }).click();
+  await page
+    .getByRole("heading", { name: "Project workspace", level: 1 })
+    .waitFor();
+  await assertText(
+    page,
+    "Local project policy",
+    "Project workspace should keep local policy with continuity evidence.",
+  );
+  await assertText(
+    page,
+    "Latest loop",
+    "Project workspace should expose project-scoped loop continuity.",
+  );
+  await assertBrowserSafe(page, "project-workspace");
+  await captureScreenshot(page, "project-workspace-desktop");
+  await page.getByLabel("Projects").click();
+  await page.getByRole("heading", { name: "Projects" }).waitFor();
 
   // MCP is now a sub-route of Settings (/mcp); the standalone sidebar
   // button is gone. Navigate via URL so the admin-fold <details> opens
@@ -491,6 +509,24 @@ try {
     "MCP readiness",
     "MCP page should show live readiness before the tool catalog.",
   );
+  await page
+    .getByRole("heading", { name: "Agent runtime readiness", exact: true })
+    .waitFor();
+  await page.locator(".mcp-runtime-card").first().waitFor({ timeout: 15_000 });
+  await assertText(
+    page,
+    "Codex",
+    "MCP page should expose the Codex live doctor result.",
+  );
+  await assertText(
+    page,
+    "Claude Code",
+    "MCP page should expose the Claude Code live doctor result.",
+  );
+  await page
+    .getByRole("heading", { name: "Agent runtime readiness", exact: true })
+    .scrollIntoViewIfNeeded();
+  await captureScreenshot(page, "mcp-runtime-desktop");
   await assertTextAny(
     page,
     ["Stored prompts", "저장된 프롬프트"],
@@ -756,6 +792,12 @@ function insertJudgeScoreForClaudePrompt({ score, reason }) {
 }
 
 function insertLoopOutcomeForClaudePrompt() {
+  const projectId = JSON.parse(
+    runCli(["project", "list", "--data-dir", dataDir, "--json"]),
+  ).items.find((project) => project.label === "private-project")?.project_id;
+  if (typeof projectId !== "string") {
+    throw new Error("No private-project record found to seed loop outcome.");
+  }
   const dbPath = join(dataDir, "looprelay.sqlite");
   const db = new Database(dbPath);
   try {
@@ -798,7 +840,7 @@ function insertLoopOutcomeForClaudePrompt() {
       "browser-e2e-loop",
       null,
       "private-project",
-      "proj_browser",
+      projectId,
       null,
       "codex/browser-effectiveness",
       "browser-effectiveness",

@@ -1,3 +1,25 @@
+.project-open-workspace {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: grid;
+  gap: 3px;
+  padding: 0;
+  text-align: left;
+}
+
+.project-open-workspace:hover strong,
+.project-open-workspace:focus-visible strong {
+  color: var(--pm-accent);
+}
+
+.project-open-workspace em {
+  color: var(--pm-text-muted);
+  font-size: 11px;
+  font-style: normal;
+}
+
 @media (max-width: 1380px) {
   .project-row {
     gap: 10px;

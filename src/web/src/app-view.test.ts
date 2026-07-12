@@ -24,6 +24,10 @@ describe("app view model", () => {
       eyebrow: "Observed outcomes and coverage",
       title: "Evidence",
     });
+    expect(getVisibleChrome({ name: "project", id: "proj_local123" })).toEqual({
+      eyebrow: "Project continuity workspace",
+      title: "Project workspace",
+    });
   });
 
   it("derives detail queue navigation from visible prompts", () => {

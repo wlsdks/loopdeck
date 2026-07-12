@@ -22,14 +22,17 @@ export function shouldLoadProjects(
   viewName: View["name"],
   projectCount: number,
 ): boolean {
-  return ["dashboard", "projects"].includes(viewName) && projectCount === 0;
+  return (
+    ["dashboard", "projects", "project"].includes(viewName) &&
+    projectCount === 0
+  );
 }
 
 export function shouldLoadLoops(
   viewName: View["name"],
   hasLoops: boolean,
 ): boolean {
-  return ["dashboard", "loops"].includes(viewName) && !hasLoops;
+  return ["dashboard", "loops", "project"].includes(viewName) && !hasLoops;
 }
 
 export function updateProjectListItem(

@@ -470,6 +470,7 @@ function parsePromptSummaryArrayResponse(
 
 export type LoopSummary = {
   id: string;
+  project_id?: string;
   created_at: string;
   tool: string;
   source: string;
@@ -778,6 +779,7 @@ function isLoopSummary(value: unknown): value is LoopSummary {
   const loop = value as LoopSummary;
   return (
     typeof loop.id === "string" &&
+    (loop.project_id === undefined || typeof loop.project_id === "string") &&
     typeof loop.created_at === "string" &&
     typeof loop.tool === "string" &&
     typeof loop.source === "string" &&
@@ -1970,6 +1972,68 @@ export type SettingsResponse = {
     checked_at: string;
   };
 };
+
+export type AgentReadiness = {
+  tool: "codex" | "claude-code";
+  status: "ready" | "unverified" | "needs_attention";
+  server_ok: boolean;
+  token_ok: boolean;
+  hook_ok: boolean;
+  mcp_registered: boolean;
+  ingest: {
+    state: "recent" | "stale" | "never" | "failed";
+    verified: boolean;
+    age_seconds?: number;
+  };
+  next_action: string;
+};
+
+export async function getAgentReadiness(): Promise<AgentReadiness[]> {
+  await ensureSession();
+  const response = await fetch("/api/v1/agent-readiness", {
+    credentials: "same-origin",
+  });
+  if (!response.ok) {
+    await failApi(response, "Agent readiness failed");
+  }
+  const body = (await response.json()) as {
+    data?: { clients?: unknown; privacy?: { returns_raw_paths?: unknown } };
+  };
+  if (
+    !Array.isArray(body.data?.clients) ||
+    body.data.privacy?.returns_raw_paths !== false ||
+    !body.data.clients.every(isAgentReadiness)
+  ) {
+    throw new Error("Agent readiness failed: Invalid response.");
+  }
+  return body.data.clients;
+}
+
+function isAgentReadiness(value: unknown): value is AgentReadiness {
+  if (typeof value !== "object" || value === null) return false;
+  const readiness = value as AgentReadiness & {
+    raw_path?: unknown;
+    settings?: unknown;
+  };
+  return (
+    (readiness.tool === "codex" || readiness.tool === "claude-code") &&
+    ["ready", "unverified", "needs_attention"].includes(readiness.status) &&
+    typeof readiness.server_ok === "boolean" &&
+    typeof readiness.token_ok === "boolean" &&
+    typeof readiness.hook_ok === "boolean" &&
+    typeof readiness.mcp_registered === "boolean" &&
+    typeof readiness.ingest === "object" &&
+    readiness.ingest !== null &&
+    ["recent", "stale", "never", "failed"].includes(readiness.ingest.state) &&
+    typeof readiness.ingest.verified === "boolean" &&
+    (readiness.ingest.age_seconds === undefined ||
+      (Number.isInteger(readiness.ingest.age_seconds) &&
+        readiness.ingest.age_seconds >= 0)) &&
+    typeof readiness.next_action === "string" &&
+    readiness.raw_path === undefined &&
+    readiness.settings === undefined
+  );
+}
 
 function isArchiveScorePrivacy(
   value: unknown,

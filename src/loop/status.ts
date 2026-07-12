@@ -16,6 +16,7 @@ export type LoopRelayStatusPrivacy = {
 
 export type LoopRelayStatusSnapshot = {
   id: string;
+  project_id: string;
   created_at: string;
   tool: string;
   source: string;
@@ -563,6 +564,7 @@ export function toLoopRelayStatusSnapshot(
 ): LoopRelayStatusSnapshot {
   return {
     id: snapshot.id,
+    project_id: snapshot.project_id,
     created_at: snapshot.created_at,
     tool: snapshot.tool,
     source: snapshot.source,

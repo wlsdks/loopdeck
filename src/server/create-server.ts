@@ -24,6 +24,7 @@ import type { ServerAuthConfig } from "./auth.js";
 import { HttpProblem, problem } from "./errors.js";
 import { registerCoachFeedbackRoutes } from "./routes/coach-feedback.js";
 import { registerAgentGuideRoutes } from "./routes/agent-guide.js";
+import { registerAgentReadinessRoutes } from "./routes/agent-readiness.js";
 import { registerExportRoutes } from "./routes/exports.js";
 import { registerImportRoutes } from "./routes/import.js";
 import { registerHealthRoutes } from "./routes/health.js";
@@ -201,6 +202,10 @@ export function createServer(options: CreateServerOptions): FastifyInstance {
   registerAgentGuideRoutes(server, {
     auth: options.auth,
     storage: options.storage,
+  });
+  registerAgentReadinessRoutes(server, {
+    auth: options.auth,
+    dataDir: options.dataDir,
   });
   registerPromptRoutes(server, {
     auth: options.auth,

@@ -34,6 +34,7 @@ import {
   type ExportJob,
   type ExportPreset,
   type LoopWorktreeResponse,
+  type ProjectPolicyPatch,
   type ProjectSummary,
   type QualityDashboard,
   type PromptFilters,
@@ -93,6 +94,7 @@ import {
 } from "./formatters.js";
 import { McpToolsView } from "./mcp-tools-view.js";
 import { getProjectEmptyState } from "./project-empty-state.js";
+import { ProjectWorkspace } from "./project-workspace.js";
 import { getPromptEmptyState } from "./prompt-empty-state.js";
 import {
   activeFilterChips,
@@ -240,6 +242,10 @@ export function App() {
     navigate,
     onError: setError,
   });
+  const selectedProject =
+    view.name === "project"
+      ? projects.find((project) => project.project_id === view.id)
+      : undefined;
 
   useEffect(() => {
     persistLanguage(language);
@@ -574,15 +580,22 @@ export function App() {
     }
   }
 
-  async function toggleProjectCapture(project: ProjectSummary): Promise<void> {
+  async function updateProjectWorkspacePolicy(
+    project: ProjectSummary,
+    patch: ProjectPolicyPatch,
+  ): Promise<void> {
     try {
-      const updated = await updateProjectPolicy(project.project_id, {
-        capture_disabled: !project.policy.capture_disabled,
-      });
+      const updated = await updateProjectPolicy(project.project_id, patch);
       updateProject(updated);
     } catch (error) {
       setError(projectPolicyUpdateErrorMessage(error));
     }
+  }
+
+  async function toggleProjectCapture(project: ProjectSummary): Promise<void> {
+    await updateProjectWorkspacePolicy(project, {
+      capture_disabled: !project.policy.capture_disabled,
+    });
   }
 
   async function analyzeProjectRules(project: ProjectSummary): Promise<void> {
@@ -1018,8 +1031,40 @@ export function App() {
             onAnalyzeInstructions={(project) =>
               void analyzeProjectRules(project)
             }
+            onOpenProject={(project) =>
+              navigate({ name: "project", id: project.project_id })
+            }
             onToggleCapture={(project) => void toggleProjectCapture(project)}
             projects={projects}
+          />
+        )}
+        {view.name === "project" && (
+          <ProjectWorkspace
+            instructionBusy={Boolean(
+              selectedProject &&
+              projectInstructionBusy[selectedProject.project_id],
+            )}
+            loops={loops}
+            onAnalyzeInstructions={() => {
+              if (selectedProject) void analyzeProjectRules(selectedProject);
+            }}
+            onBack={() => navigate({ name: "projects" })}
+            onOpenLoop={(worktree, branch) => {
+              if (!worktree) {
+                navigate({ name: "loops" });
+                return;
+              }
+              void openLoopWorktree({
+                worktree,
+                ...(branch ? { branch } : {}),
+              });
+            }}
+            onUpdatePolicy={(patch) => {
+              if (selectedProject) {
+                void updateProjectWorkspacePolicy(selectedProject, patch);
+              }
+            }}
+            project={selectedProject}
           />
         )}
         {(view.name === "settings" ||
@@ -2164,11 +2209,13 @@ function SettingsView({
 function ProjectsView({
   instructionBusy,
   onAnalyzeInstructions,
+  onOpenProject,
   onToggleCapture,
   projects,
 }: {
   instructionBusy: Record<string, boolean>;
   onAnalyzeInstructions(project: ProjectSummary): void;
+  onOpenProject(project: ProjectSummary): void;
   onToggleCapture(project: ProjectSummary): void;
   projects: ProjectSummary[];
 }) {
@@ -2196,11 +2243,20 @@ function ProjectsView({
         {projects.map((project) => (
           <div className="project-row" key={project.project_id} role="row">
             <span className="project-name-cell">
-              <strong>{project.label}</strong>
-              <small>
-                {project.path_kind === "project_root" ? "project root" : "cwd"}{" "}
-                · {project.project_id}
-              </small>
+              <button
+                className="project-open-workspace"
+                onClick={() => onOpenProject(project)}
+                type="button"
+              >
+                <strong>{project.label}</strong>
+                <small>
+                  {project.path_kind === "project_root"
+                    ? "project root"
+                    : "cwd"}{" "}
+                  · {project.project_id}
+                </small>
+                <em>Open workspace</em>
+              </button>
             </span>
             <span className="project-latest" data-label="Latest capture">
               {project.latest_ingest ? formatDate(project.latest_ingest) : "-"}

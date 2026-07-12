@@ -28,6 +28,12 @@ export function getVisibleChrome(view: View): VisibleChrome {
   if (view.name === "projects") {
     return { eyebrow: "Local prompt archive", title: "Projects" };
   }
+  if (view.name === "project") {
+    return {
+      eyebrow: "Project continuity workspace",
+      title: "Project workspace",
+    };
+  }
   if (view.name === "loops") {
     return { eyebrow: "Agent loop memory", title: "Loops" };
   }
