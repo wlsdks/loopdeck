@@ -938,6 +938,7 @@ export function App() {
             health={health}
             loading={!dashboard}
             loops={loops}
+            measurementBusy={measurementBusy}
             onChangeTrendDays={(days) => {
               setTrendDays(days);
               setDashboard(undefined);

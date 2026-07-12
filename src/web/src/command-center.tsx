@@ -34,6 +34,7 @@ export function CommandCenter({
   health,
   loading,
   loops,
+  measurementBusy,
   onMeasure,
   onOpenEvidence,
   onOpenInsights,
@@ -48,6 +49,7 @@ export function CommandCenter({
   health?: { ok: boolean; version: string; instance_id: string };
   loading: boolean;
   loops?: LoopListResponse;
+  measurementBusy: boolean;
   onMeasure(): void;
   onOpenEvidence(): void;
   onOpenInsights(): void;
@@ -90,8 +92,14 @@ export function CommandCenter({
           >
             <FileCheck2 size={15} /> Evidence
           </button>
-          <button className="primary-action" onClick={onMeasure} type="button">
-            <RefreshCw size={15} /> Refresh measurement
+          <button
+            className="primary-action"
+            disabled={measurementBusy}
+            onClick={onMeasure}
+            type="button"
+          >
+            <RefreshCw size={15} />
+            {measurementBusy ? "Measuring..." : "Refresh measurement"}
           </button>
         </div>
       </section>
