@@ -46,6 +46,25 @@ describe("resume reliability report", () => {
     expect(report.delta.correct_target_rate).toBe(-0.9);
   });
 
+  it("keeps a full but order-imbalanced cohort in collection", () => {
+    const report = createResumeReliabilityReport(
+      ledger(
+        Array.from({ length: 10 }, (_, index) => ({
+          ...pair(`resume-${String(index + 1).padStart(2, "0")}`),
+          order: "baseline_first",
+        })),
+      ),
+    );
+
+    expect(report).toMatchObject({
+      status: "collecting",
+      pair_count: 10,
+      pairs_remaining: 0,
+      counterbalanced: false,
+      intervention: { decision: "collect" },
+    });
+  });
+
   it("rejects raw path-like keys and missing treatment adoption", () => {
     expect(() =>
       validateResumeReliabilityLedger({

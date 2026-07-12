@@ -31,7 +31,12 @@ export function createResumeReliabilityReport(input) {
     },
     { improved: 0, regressed: 0, unchanged_passed: 0, unchanged_failed: 0 },
   );
-  const completed = pairs.length >= minimumPairs;
+  const requiredPerOrder = minimumPairs / 2;
+  const counterbalanced =
+    Number.isInteger(requiredPerOrder) &&
+    order.baseline_first >= requiredPerOrder &&
+    order.looprelay_first >= requiredPerOrder;
+  const completed = pairs.length >= minimumPairs && counterbalanced;
   const targetDelta = nullableDelta(
     looprelay.correct_target_rate,
     baseline.correct_target_rate,
@@ -55,6 +60,7 @@ export function createResumeReliabilityReport(input) {
     pair_count: pairs.length,
     minimum_pairs: minimumPairs,
     pairs_remaining: Math.max(minimumPairs - pairs.length, 0),
+    counterbalanced,
     order,
     baseline,
     looprelay,

@@ -3,46 +3,47 @@
   "design": "matched_observational",
   "causal_claim": false,
   "status": "collecting",
-  "pair_count": 0,
+  "pair_count": 2,
   "minimum_pairs": 10,
-  "pairs_remaining": 10,
+  "pairs_remaining": 8,
+  "counterbalanced": false,
   "order": {
-    "baseline_first": 0,
-    "looprelay_first": 0
+    "baseline_first": 1,
+    "looprelay_first": 1
   },
   "baseline": {
-    "success_rate": null,
-    "correct_target_rate": null,
-    "correct_first_action_rate": null,
-    "evidence_attached_rate": null,
+    "success_rate": 0,
+    "correct_target_rate": 1,
+    "correct_first_action_rate": 0,
+    "evidence_attached_rate": 1,
     "mean_elapsed_ms": null,
-    "mean_friction_count": null,
-    "mean_wrong_target_count": null
+    "mean_friction_count": 0,
+    "mean_wrong_target_count": 0
   },
   "looprelay": {
-    "success_rate": null,
-    "correct_target_rate": null,
-    "correct_first_action_rate": null,
-    "evidence_attached_rate": null,
+    "success_rate": 1,
+    "correct_target_rate": 1,
+    "correct_first_action_rate": 1,
+    "evidence_attached_rate": 1,
     "mean_elapsed_ms": null,
-    "mean_friction_count": null,
-    "mean_wrong_target_count": null
+    "mean_friction_count": 0.5,
+    "mean_wrong_target_count": 0
   },
   "delta": {
-    "correct_target_rate": null,
-    "correct_first_action_rate": null,
-    "evidence_attached_rate": null,
+    "correct_target_rate": 0,
+    "correct_first_action_rate": 1,
+    "evidence_attached_rate": 0,
     "mean_elapsed_ms": null,
-    "mean_friction_count": null,
-    "mean_wrong_target_count": null
+    "mean_friction_count": 0.5,
+    "mean_wrong_target_count": 0
   },
   "transitions": {
-    "improved": 0,
+    "improved": 2,
     "regressed": 0,
     "unchanged_passed": 0,
     "unchanged_failed": 0
   },
-  "adoption_rate": null,
+  "adoption_rate": 1,
   "intervention": {
     "decision": "collect",
     "rationale": "Collect 10 counterbalanced resume pairs before changing the default intervention policy."

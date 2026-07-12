@@ -70,6 +70,7 @@ export const PRODUCT_EVIDENCE = {
 
 export const RESUME_RELIABILITY_PROGRAM = resumeReliabilityReport as {
   causal_claim: false;
+  counterbalanced: boolean;
   intervention: {
     decision: "collect" | "narrow" | "retain_opt_in";
     rationale: string;
@@ -77,5 +78,9 @@ export const RESUME_RELIABILITY_PROGRAM = resumeReliabilityReport as {
   minimum_pairs: number;
   pair_count: number;
   pairs_remaining: number;
+  order: {
+    baseline_first: number;
+    looprelay_first: number;
+  };
   status: "collecting" | "directional_evidence_ready";
 };

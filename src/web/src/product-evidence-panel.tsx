@@ -69,6 +69,12 @@ export function ProductEvidencePanel() {
           {RESUME_RELIABILITY_PROGRAM.minimum_pairs} pairs
         </strong>
         <span>{RESUME_RELIABILITY_PROGRAM.status}</span>
+        <small>
+          Order balance: {RESUME_RELIABILITY_PROGRAM.order.baseline_first}/5
+          &nbsp;baseline first ·{" "}
+          {RESUME_RELIABILITY_PROGRAM.order.looprelay_first}
+          /5 LoopRelay first
+        </small>
         <small>{RESUME_RELIABILITY_PROGRAM.intervention.rationale}</small>
       </section>
 
