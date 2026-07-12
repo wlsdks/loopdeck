@@ -64,6 +64,7 @@ import {
   selectedLoopBriefErrorMessage,
 } from "./error-message.js";
 import { CoachFeedbackPanel } from "./coach-feedback-panel.js";
+import { InsightInventory } from "./insight-inventory.js";
 import { CommandCenter } from "./command-center.js";
 import { createPromptHabitCoach } from "./habit-coach.js";
 import { HabitCoachPanel } from "./habit-coach-panel.js";
@@ -982,10 +983,12 @@ export function App() {
             archiveScore={archiveScore}
             dashboard={dashboard}
             loading={!dashboard}
+            onOpenEvidence={() => navigate({ name: "scores" })}
             onOpenFilteredList={(nextFilters) => {
               setFilters({ isSensitive: "all", ...nextFilters });
               navigate({ name: "list" });
             }}
+            onOpenProjects={() => navigate({ name: "projects" })}
             onSelect={(id) => navigate({ name: "detail", id })}
           />
         )}
@@ -1415,13 +1418,17 @@ function CoachView({
   archiveScore,
   dashboard,
   loading,
+  onOpenEvidence,
   onOpenFilteredList,
+  onOpenProjects,
   onSelect,
 }: {
   archiveScore?: ArchiveScoreReport;
   dashboard?: QualityDashboard;
   loading: boolean;
+  onOpenEvidence(): void;
   onOpenFilteredList(filters: PromptFilters): void;
+  onOpenProjects(): void;
   onSelect(id: string): void;
 }) {
   if (loading || !dashboard) {
@@ -1435,6 +1442,13 @@ function CoachView({
       <HabitCoachPanel
         coach={habitCoach}
         onOpenFilteredList={onOpenFilteredList}
+        onSelect={onSelect}
+      />
+      <InsightInventory
+        dashboard={dashboard}
+        onOpenEvidence={onOpenEvidence}
+        onOpenFilteredList={onOpenFilteredList}
+        onOpenProjects={onOpenProjects}
         onSelect={onSelect}
       />
       <RepeatedPatternsPanel dashboard={dashboard} />

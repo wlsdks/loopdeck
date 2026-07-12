@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { App } from "./App.js";
 import "./styles.css";
 import "./projects-view.css";
+import "./insight-inventory.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

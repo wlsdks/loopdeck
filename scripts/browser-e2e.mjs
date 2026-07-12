@@ -394,6 +394,16 @@ try {
     "Bad prompt review queue",
     "Coach should show low score review queue.",
   );
+  await assertText(
+    page,
+    "Insight coverage",
+    "Insights should expose every archive-level coaching signal.",
+  );
+  await assertText(
+    page,
+    "prompt bodies withheld",
+    "Insights should make its local-only data boundary visible.",
+  );
   await assertTextAny(
     page,
     ["Next request brief", "다음 요청 브리프"],
@@ -425,6 +435,14 @@ try {
   );
   await assertBrowserSafe(page, "coach");
   await captureScreenshot(page, "coach-desktop");
+  await page
+    .getByRole("heading", { name: "Insight coverage", exact: true })
+    .scrollIntoViewIfNeeded();
+  await captureScreenshot(page, "insight-inventory-desktop");
+  await page
+    .getByRole("heading", { name: "Missing or weak fields", exact: true })
+    .scrollIntoViewIfNeeded();
+  await captureScreenshot(page, "insight-diagnosis-desktop");
 
   // Evidence and Insights now have separate navigation ownership: archive
   // evidence is checked above, while behavior and practice remain here.
