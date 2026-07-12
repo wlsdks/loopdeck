@@ -8,7 +8,7 @@ import {
   rmSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { basename, join } from "node:path";
+import { basename, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const summary =
@@ -195,6 +195,7 @@ function runAgent({
         ]
       : [
           "--print",
+          "--safe-mode",
           "--no-session-persistence",
           "--permission-mode",
           "bypassPermissions",
@@ -202,9 +203,9 @@ function runAgent({
           "json",
           "--json-schema",
           '{"type":"object","properties":{"completed":{"type":"boolean"},"recovery_count":{"type":"integer","minimum":0},"friction_count":{"type":"integer","minimum":0}},"required":["completed","recovery_count","friction_count"],"additionalProperties":false}',
+          prompt,
           "--add-dir",
           root,
-          prompt,
         ];
   return run(client === "codex" ? "codex" : "claude", args, repo, env, {
     detached: client === "codex",
@@ -243,7 +244,19 @@ function run(command, args, cwd, env, options = {}) {
 function classifyAgentFailure(result) {
   const text = `${result.stdout}\n${result.stderr}`.toLowerCase();
   if (/permission denied|sandbox|not allowed/.test(text)) return "sandbox";
-  if (/authentication|unauthorized|login/.test(text)) return "authentication";
+  if (
+    /authentication|unauthorized|login|sign in|api key|credential|token/.test(
+      text,
+    )
+  ) {
+    return "authentication";
+  }
+  if (/rate limit|quota|overloaded|model.+unavailable/.test(text)) {
+    return "capacity";
+  }
+  if (/json schema|structured output|invalid json/.test(text)) {
+    return "response_format";
+  }
   if (/npm|install|node-gyp|build/.test(text)) return "installation";
   if (/timeout|timed out/.test(text)) return "timeout";
   return "unknown";
@@ -303,6 +316,9 @@ function print(result) {
   process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (
+  process.argv[1] &&
+  resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+) {
   main();
 }

@@ -52,6 +52,12 @@ Primary value:
   US$0.10 budget was retained as a client-execution failure; a later
   permission-scoped run completed. This validates the configured local path,
   not external-user adoption.
+- The separate [2026-07-12 live usability observation](PRACTICAL_USEFULNESS_EVALUATION_2026-07-12.md)
+  passed fresh first value in both clients and showed one remediated explicit
+  recovery pair recover 4/5 selected concepts versus 2/5 baseline concepts.
+  Neither condition passed the strict rubric. It also retained an
+  under-specified checkpoint and two harness failures; it is agent-native,
+  unpooled, non-causal, and does not change the human-adoption boundary.
 - Collect unseen real-task pairs; do not inflate confidence with additional
   repeats of the current synthetic fixtures.
 - Separate baseline work from LoopRelay-assisted work explicitly.

@@ -1,5 +1,23 @@
 # 작업 계획
 
+## 2026-07-12 Practical Usefulness Evaluation
+
+- [x] BASELINE: inspect the current evidence ledger, user journeys, and live
+      runtime readiness; distinguish maintainer/agent-native observations from
+      independent-human adoption.
+- [x] PREREGISTER: freeze the raw-free fresh-client flow and selected-state
+      recovery pair with outcome/failure/friction criteria before either
+      recovery condition runs.
+- [x] RUN: execute matched baseline and LoopRelay-assisted conditions through
+      the real CLI/MCP and web workflows, preserving run artifacts and limits.
+- [x] AUDIT: capture and inspect the operator-facing flow, then measure first
+      value, correct-first-action, evidence attachment, recovery, and friction.
+- [x] DECIDE: publish an honest keep/narrow/remove decision with raw-free
+      tables/graphs; implement only a measured usability defect, not a feature
+      justified by assumed demand.
+- [x] VERIFY: run focused evaluation/report/UI checks and record any remaining
+      independent-user or causality gaps without the public release gate.
+
 ## 2026-07-12 Whole-System Improvement Audit
 
 - [x] BASELINE: inspect current branch, architectural rules, public-surface

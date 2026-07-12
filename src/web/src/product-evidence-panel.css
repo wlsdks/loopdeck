@@ -51,9 +51,39 @@
 }
 
 .product-evidence-cohorts,
-.product-evidence-metrics {
+.product-evidence-metrics,
+.product-evidence-scope {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.product-evidence-scope {
+  border: 1px solid var(--pm-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.product-evidence-scope > div {
+  border-right: 1px solid var(--pm-border);
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 13px 14px;
+}
+
+.product-evidence-scope > div:last-child {
+  border-right: 0;
+}
+
+.product-evidence-scope strong {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.product-evidence-scope span {
+  color: var(--pm-text-muted);
+  font-size: 12px;
+  line-height: 18px;
 }
 
 .resume-reliability-program {
@@ -308,6 +338,10 @@
     grid-template-columns: 1fr;
   }
 
+  .product-evidence-scope {
+    grid-template-columns: 1fr;
+  }
+
   .resume-reliability-program {
     align-items: start;
   }
@@ -318,6 +352,15 @@
   }
 
   .product-evidence-cohort:last-child {
+    border-bottom: 0;
+  }
+
+  .product-evidence-scope > div {
+    border-bottom: 1px solid var(--pm-border);
+    border-right: 0;
+  }
+
+  .product-evidence-scope > div:last-child {
     border-bottom: 0;
   }
 

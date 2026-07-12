@@ -10,6 +10,10 @@ describe("ProductEvidencePanel", () => {
 
     expect(html).toContain("Published product evidence");
     expect(html).toContain("No causal claim");
+    expect(html).toContain("Use for explicit recovery");
+    expect(html).toContain("Do not inject by default");
+    expect(html).toContain("Human validation pending");
+    expect(html).toContain("0 independent users measured");
     expect(html).toContain("30 matched pairs");
     expect(html).toContain("11 matched pairs");
     expect(html).toContain("5 matched pairs");

@@ -42,6 +42,47 @@ export function ProductEvidencePanel() {
         </span>
       </header>
 
+      <section
+        className="product-evidence-scope"
+        aria-label="Evidence scope decision"
+      >
+        <div>
+          <p className="eyebrow">Use for explicit recovery</p>
+          <strong>
+            Recover selected local state that Git does not contain.
+          </strong>
+          <span>
+            Agent-native correct first action:{" "}
+            {formatPercent(
+              RESUME_RELIABILITY_PROGRAM.looprelay.correct_first_action_rate,
+            )}
+            . Keep it opt-in for checkpoint, blocked, failure, or compaction
+            signals.
+          </span>
+        </div>
+        <div>
+          <p className="eyebrow">Do not inject by default</p>
+          <strong>
+            Do not add generic context to routine implementation or release
+            work.
+          </strong>
+          <span>
+            Repository state already settles many of those tasks; the observed
+            scope remains narrow.
+          </span>
+        </div>
+        <div>
+          <p className="eyebrow">Human validation pending</p>
+          <strong>
+            {report.independent_user_count} independent users measured
+          </strong>
+          <span>
+            Agent-native evidence guides scope decisions but does not establish
+            human adoption.
+          </span>
+        </div>
+      </section>
+
       <div className="product-evidence-cohorts">
         {PRODUCT_EVIDENCE.cohorts.map((cohort) => (
           <div className="product-evidence-cohort" key={cohort.label}>
@@ -287,7 +328,8 @@ function EvidenceMetric({
   );
 }
 
-function formatPercent(value: number): string {
+function formatPercent(value: number | null): string {
+  if (value === null) return "—";
   return `${(value * 100).toFixed(1)}%`;
 }
 
