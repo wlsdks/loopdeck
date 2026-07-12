@@ -3,19 +3,19 @@
   "design": "matched_observational",
   "causal_claim": false,
   "status": "collecting",
-  "pair_count": 6,
+  "pair_count": 7,
   "minimum_pairs": 10,
-  "pairs_remaining": 4,
+  "pairs_remaining": 3,
   "counterbalanced": false,
   "order": {
-    "baseline_first": 3,
+    "baseline_first": 4,
     "looprelay_first": 3
   },
   "recovery_class_coverage": {
     "observed": 6,
     "required": 3,
     "counts": {
-      "checkpoint_focus": 1,
+      "checkpoint_focus": 2,
       "policy_recovery": 1,
       "worktree_resolution": 1,
       "failure_outcome": 1,
@@ -37,24 +37,24 @@
     "mean_wrong_target_count": 0
   },
   "looprelay": {
-    "success_rate": 0.833333,
+    "success_rate": 0.857143,
     "correct_target_rate": 1,
-    "correct_first_action_rate": 0.833333,
-    "evidence_attached_rate": 0.833333,
+    "correct_first_action_rate": 0.857143,
+    "evidence_attached_rate": 0.857143,
     "mean_elapsed_ms": null,
-    "mean_friction_count": 0.666667,
+    "mean_friction_count": 0.714286,
     "mean_wrong_target_count": 0
   },
   "delta": {
     "correct_target_rate": 0,
-    "correct_first_action_rate": 0.833333,
-    "evidence_attached_rate": -0.166667,
+    "correct_first_action_rate": 0.857143,
+    "evidence_attached_rate": -0.142857,
     "mean_elapsed_ms": null,
-    "mean_friction_count": 0.666667,
+    "mean_friction_count": 0.714286,
     "mean_wrong_target_count": 0
   },
   "transitions": {
-    "improved": 5,
+    "improved": 6,
     "regressed": 0,
     "unchanged_passed": 0,
     "unchanged_failed": 1
