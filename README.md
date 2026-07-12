@@ -17,6 +17,9 @@
 - 🧩 Gives non-binding agent/model guidance and lets the operator record the
   chosen profile and raw-free outcome against the selected loop snapshot.
 
+The canonical [feature inventory](docs/FEATURE_INVENTORY.md) lists every active,
+opt-in, validation-only, dormant, and reserved product surface.
+
 ## Measured Engineering Usefulness
 
 ![LoopRelay baseline versus assisted engineering results](docs/assets/usefulness-results.svg)

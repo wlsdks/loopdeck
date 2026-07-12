@@ -4,6 +4,20 @@ All notable changes to looprelay will be documented in this file.
 
 The format follows a simple reverse-chronological release log.
 
+## Unreleased
+
+### Documentation and verification
+
+- Added a canonical, status-classified feature inventory covering all current
+  CLI, MCP, HTTP, web-view, hook, storage, package-script, and binary surfaces.
+- Added an exhaustive dated inventory audit that records resolved omissions,
+  privacy and runtime verification, live Codex/Claude Code doctor readiness,
+  maintainability debt, compatibility aliases, and evidence limitations.
+- Added a drift guard that derives registered surfaces from the current source
+  and initialized SQLite schema so undocumented additions fail focused tests.
+- Marked the 2026-05-02 feature audit as a historical snapshot rather than
+  current release evidence.
+
 ## 1.0.0 - 2026-07-08
 
 This is the first stable public release. The release covers local capture, storage,

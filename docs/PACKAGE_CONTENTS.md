@@ -30,6 +30,12 @@ The npm package intentionally includes:
 - `README.md`, `README.ko.md`, `CHANGELOG.md`, `LICENSE`, `SECURITY.md`,
   `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and `SUPPORT.md`
 - public product and release docs under `docs/`
+  - includes `docs/FEATURE_INVENTORY.md` as the canonical, status-classified
+    inventory of every shipped CLI, MCP, web, runtime, validation, dormant, and
+    reserved capability
+  - includes `docs/FEATURE_INVENTORY_AUDIT_2026-07-12.md` as the dated source,
+    drift-guard, privacy, build, and open-debt verification record for that
+    inventory
   - includes `docs/LEGAL_USAGE_GUIDE.md` so users can inspect the provider
     documentation boundary for agent-judge mode
   - includes `docs/LOOPRELAY.md`, `docs/LOOPRELAY-RUNTIME-HISTORY.md`,

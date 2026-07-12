@@ -10,6 +10,9 @@
 - 🧠 evidence가 있는 승인된 lesson만 memory 또는 AGENTS.md/CLAUDE.md 제안으로 승격합니다.
 - 🧭 여러 loop에서 반복되는 실패 패턴을 찾고, 불명확한 요청은 rewrite 대신 질문합니다.
 
+정본 [기능 인벤토리](docs/FEATURE_INVENTORY.md)에서 현재 활성, opt-in,
+검증 전용, 휴면, 예약 기능을 모두 구분해 확인할 수 있습니다.
+
 ## 측정된 엔지니어링 효용
 
 ![LoopRelay 미사용 대비 사용 조건 엔지니어링 결과](docs/assets/usefulness-results.svg)
